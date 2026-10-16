@@ -53,7 +53,7 @@
 
 /* segmented choices */
 .ttl .segbar { position: absolute; display: flex; border-radius: 8px; box-shadow: 0 0 0 2px var(--greyDark); background: #e6e4e1; overflow: hidden; }
-.ttl .opt { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; border-right: 2px solid var(--greyDark); transition: background 0.15s, color 0.15s; }
+.ttl .opt { position: relative; flex: 1; box-sizing: border-box; display: flex; align-items: center; justify-content: center; cursor: pointer; border-right: 2px solid var(--greyDark); transition: background 0.15s, color 0.15s; }
 .ttl .opt:last-child { border-right: 0; }
 .ttl .opt .tx { position: static; font-weight: 700; transition: translate 0.15s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .ttl .opt.on { background: var(--red); }

@@ -1341,6 +1341,13 @@
   "src": "assets/ui/p5_front.webp",
   "w": 1920
  },
+ "ui/p5_girls": {
+  "dom": true,
+  "h": 1117,
+  "seal": "canonical",
+  "src": "assets/ui/p5_girls.webp",
+  "w": 1957
+ },
  "ui/p5_header_slash": {
   "dom": true,
   "h": 423,
@@ -1564,6 +1571,13 @@
   "seal": "canonical (from ui/t_girls)",
   "src": "assets/ui/t_girls_ext.webp",
   "w": 1522
+ },
+ "ui/t_girls_ref": {
+  "dom": true,
+  "h": 957,
+  "seal": "canonical",
+  "src": "assets/ui/t_girls_ref.webp",
+  "w": 1688
  },
  "ui/t_glass_text": {
   "dom": true,

@@ -4,7 +4,7 @@ For each entry of art/seal_placements.json:
   1. the generated seal is erased: red line pixels inside "erase" [x0, y0, x1, y1] are filled from the fur around them;
   2. the canonical decal is laid on: its ring centre on "center" [x, y], ring diameter "ring" px, rotated "rot" degrees
      (counter-clockwise = the pendant swings to the right), optionally squashed by "squash" (foreshortening);
-  3. the result goes to the base pack as ui/<out>.webp (or a PNG path with "png").
+  3. the result goes to the base pack as ui/<out>.webp (or a PNG path with "png"), trimmed to its pixels unless "keep_frame".
 usage: python -I tools/seal_fix.py [name ...]   (no names = all)   --preview <dir> writes before/after crops
 """
 import sys, json, pathlib
@@ -95,7 +95,7 @@ def run(name, p, preview=None):
     if "png" in p:
         fixed.save(ROOT / p["png"])
     else:
-        out = fixed.crop(fixed.getbbox())
+        out = fixed if p.get("keep_frame") else fixed.crop(fixed.getbbox())   # keep_frame: layers placed 1:1 on a mockup
         mp = OUT / "manifest.json"; man = json.loads(mp.read_text())
         out.save(OUT / "ui" / f"{p['out']}.webp", quality=92, method=6)
         man[f"ui/{p['out']}"] = {**man.get(f"ui/{p['out']}", {}), "src": f"assets/ui/{p['out']}.webp", "w": out.width, "h": out.height, "dom": True, "seal": "canonical"}

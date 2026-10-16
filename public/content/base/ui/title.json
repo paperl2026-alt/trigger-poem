@@ -8,7 +8,7 @@
     "layers": {
       "back": { "img": "ui/p5_plate", "depth": 0.06, "_doc": "整版底图（白色面板+红黑背景），参考图原样拆出，人物和UI已去掉" },
       "panel": { "depth": 0.06, "_doc": "UI 跟着这一层动；深度和底图相同，UI 才不会在白面板上漂。要单独的面板图就加 img + box" },
-      "girls": { "img": "ui/t_girls_ext", "box": [445.4, 13, 1743, 1175.9], "_ext": "t_girls 往左/下补画了被切掉的袖子和身体（tools/r16_import.py），原图部分和 t_girls 完全相同，框按原比例换算（原框 [633,13,1743,954]）", "depth": 0.28, "breath": 0.25, "_anchors": "eyes (970,330) (1405,380) = girls2.png (395,390) (905,452)" },
+      "girls": { "img": "ui/t_girls_ref", "box": [0, 0, 1688, 957], "depth": 0.28, "breath": 0.25, "_doc": "参考图里的两个人物原样抠出（同一画框，偏移 0），只把猫爪咒印换成标准咒印；右/下边多出 16px 是边缘延伸，防视差露缝。tools/r17_import.py" },
       "front": { "img": "ui/p5_front", "depth": 0.55 }
     },
     "header": { "icon": { "img": "ui/p5_icon_gear", "box": [64, 80, 136, 152] }, "slash": { "img": "ui/p5_header_slash", "box": [28, 92, 340, 182] },
@@ -16,17 +16,18 @@
     "rows": [
       { "id": "bgm", "y": 235, "icon": { "img": "ui/p5_icon_speaker", "off": "ui/p5_icon_speaker_off", "box": [44, 212, 98, 258] },
         "label": { "key": "bgm", "x": 115, "size": 30, "italic": true },
-        "toggle": { "box": [217, 216, 292, 254] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "size": 30 } },
+        "toggle": { "box": [217, 216, 292, 254] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "y": 236.6, "size": 27, "_fit": "比这宽（如 100%）就缩小，不压拖动条" } },
       { "id": "sfx", "y": 326, "icon": { "img": "ui/p5_icon_speaker", "off": "ui/p5_icon_speaker_off", "box": [44, 302, 98, 350] },
         "label": { "key": "sfx", "x": 115, "size": 30, "italic": true },
-        "toggle": { "box": [217, 308, 292, 346] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "size": 30 } }
+        "toggle": { "box": [217, 308, 292, 346] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "y": 327.6, "size": 27 } }
     ],
     "lines": [{ "x0": 46, "x1": 640, "y": 279 }, { "x0": 46, "x1": 640, "y": 372 }, { "x0": 46, "x1": 640, "y": 492 }],
     "segments": [
-      { "id": "language", "y": 437, "icon": { "img": "ui/p5_icon_globe", "box": [40, 411, 94, 464] }, "label": { "key": "lang", "x": 117, "size": 32 },
-        "box": [217, 409, 640, 465], "options": [["zh", "中文"], ["ja", "日本語"], ["en", "English"]], "size": 23 },
-      { "id": "display", "y": 548, "icon": { "img": "ui/p5_icon_monitor", "box": [44, 521, 98, 570] }, "label": { "key": "display", "x": 115, "size": 32 },
-        "box": [254, 521, 619, 575], "options": [["fullscreen", "@fullscreen"], ["window", "@window"]], "size": 21 }
+      { "id": "language", "y": 437, "icon": { "img": "ui/p5_icon_globe", "box": [40, 411, 94, 464] }, "label": { "key": "lang", "x": 114, "y": 440, "size": 31 },
+        "box": [216, 408, 642, 464], "splits": [349, 494], "options": [["zh", "中文"], ["ja", "日本語"], ["en", "English", 22.1]], "size": 23,
+        "_doc": "splits = 各格分界线 x（参考图里三格不等宽）；option 第三项 = 这一格单独的字号" },
+      { "id": "display", "y": 548, "icon": { "img": "ui/p5_icon_monitor", "box": [44, 521, 98, 570] }, "label": { "key": "display", "x": 113, "y": 550, "size": 28.5 },
+        "box": [255, 520, 618, 575], "splits": [435], "options": [["fullscreen", "@fullscreen"], ["window", "@window"]], "size": 22.5 }
     ],
     "start": { "poly": [[70, 618], [586, 618], [548, 748], [30, 748]], "shadow": [10, 10], "border": 7, "icon": { "img": "ui/p5_icon_play", "box": [108, 644, 168, 716] },
                "text": { "key": "startGame", "x": 205, "size": 73 } },

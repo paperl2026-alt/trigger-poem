@@ -103,7 +103,7 @@ export function showTitle(act) {
     const row = el('div', 'row', U); row.dataset.id = R.id;
     const hl = el('div', 'rowhl', row); Object.assign(hl.style, { left: px(30), top: px(R.y - 34), width: px(626), height: px(68) });
     const icon = put(row, R.icon.img, R.icon.box, 'ico');
-    const lab = text(row, R.label, 'lab', null, R.toggle.box[0] - R.label.x - 12); Object.assign(lab.style, { left: px(R.label.x), top: px(R.y - R.label.size * 0.68) });
+    const lab = text(row, R.label, 'lab', null, R.toggle.box[0] - R.label.x - 12); Object.assign(lab.style, { left: px(R.label.x), top: px((R.label.y ?? R.y) - R.label.size * 0.68) });
     const tg = el('div', 'tg', row); box(tg, R.toggle.box); tg.dataset.cur = 'hover';
     el('div', 'knob', tg);
     const sl = el('div', 'sl', row); sl.dataset.cur = 'grab';
@@ -111,8 +111,9 @@ export function showTitle(act) {
     const track = el('div', 'track', sl), fill = el('div', 'fill', track), knob = el('div', 'knob', sl);
     Object.assign(track.style, { left: px(14), right: px(14), top: px(22 - R.slider.h / 2), height: px(R.slider.h) });
     Object.assign(knob.style, { width: px(R.slider.knob * 2), height: px(R.slider.knob * 2), top: px(22 - R.slider.knob) });
-    const val = el('div', 'tx val', row); val.style.fontSize = px(R.value.size);   // a number, not a translation: not in texts
-    Object.assign(val.style, { right: px(L.refSize[0] - R.value.x1), top: px(R.y - R.value.size * 0.68) });
+    const val = el('div', 'tx val', row);   // a number, not a translation: not in texts
+    const vy = R.value.y ?? R.y, room = (R.value.x1 - R.slider.x1 - R.slider.knob - 6) * RS;   // never over the slider's end
+    val.style.right = px(L.refSize[0] - R.value.x1);
     const key = R.id, onKey = `${R.id}On`;
     const apply = () => {
       const v = SET[key] ?? 0.7, on = SET[onKey] !== false;
@@ -120,6 +121,9 @@ export function showTitle(act) {
       fill.style.width = `${v * 100}%`;
       knob.style.left = `calc(${px(14 - R.slider.knob)} + ${v} * (100% - ${px(28)}))`;
       val.textContent = `${Math.round(v * 100)}%`;
+      val.style.fontSize = px(R.value.size);
+      const fs = val.offsetWidth > room ? R.value.size * room / val.offsetWidth : R.value.size;
+      Object.assign(val.style, { fontSize: px(fs), top: px(vy - R.value.size * 0.68 + 0.55 * (R.value.size - fs)) });   // shrinks about its centre
       row.classList.toggle('off', !on); tg.classList.toggle('on', on);
       if (has(R.icon.off)) icon.src = url(on ? R.icon.img : R.icon.off);
     };
@@ -141,11 +145,14 @@ export function showTitle(act) {
     const row = el('div', 'row seg', U);
     const hl = el('div', 'rowhl', row); Object.assign(hl.style, { left: px(30), top: px(G.y - 36), width: px(626), height: px(72) });
     put(row, G.icon.img, G.icon.box, 'ico');
-    const lab = text(row, G.label, 'lab', null, G.box[0] - G.label.x - 12); Object.assign(lab.style, { left: px(G.label.x), top: px(G.y - G.label.size * 0.7) });
+    const lab = text(row, G.label, 'lab', null, G.box[0] - G.label.x - 12); Object.assign(lab.style, { left: px(G.label.x), top: px((G.label.y ?? G.y) - G.label.size * 0.7) });
     const bar = el('div', 'segbar', row); box(bar, G.box);
-    for (const [opt, label] of G.options) {
+    // cell edges: measured on the mockup (its cells are not equal), else equal parts
+    const edges = [G.box[0], ...(G.splits || G.options.slice(1).map((_, i) => G.box[0] + (G.box[2] - G.box[0]) * (i + 1) / G.options.length)), G.box[2]];
+    for (const [i, [opt, label, size]] of G.options.entries()) {
       const o = el('div', 'opt', bar); o.dataset.cur = 'hover';
-      text(o, { size: G.size }, 'otx', label, (G.box[2] - G.box[0]) / G.options.length - 14);
+      const cw = edges[i + 1] - edges[i]; o.style.flex = `0 0 ${px(cw)}`;
+      text(o, { size: size || G.size }, 'otx', label, cw - 14);
       segs.push({ o, opt, group: G.id });
       o.onpointerdown = (e) => {
         e.stopPropagation(); sfx.ui(); pop(o, e);
