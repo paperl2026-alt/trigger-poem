@@ -6,7 +6,15 @@
   "order": 0,
   "requires": [],
   "data": {
-    "tuning": ["tuning/combat.json", "tuning/fever.json", "tuning/economy.json", "tuning/behaviors.json", "tuning/layout.json", "tuning/settings.json", "tuning/soft.json"],
+    "tuning": [
+      "tuning/combat.json",
+      "tuning/fever.json",
+      "tuning/economy.json",
+      "tuning/behaviors.json",
+      "tuning/layout.json",
+      "tuning/settings.json",
+      "tuning/soft.json"
+    ],
     "characters": ["characters/pink.json", "characters/cat.json"],
     "enemies": ["enemies.json"],
     "projectiles": ["projectiles.json"],

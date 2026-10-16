@@ -5,14 +5,18 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SOURCES = ['node_modules/@fontsource/zcool-qingke-huangyou/index.css', 'node_modules/@fontsource/dela-gothic-one/index.css'];
+const SOURCES = ['node_modules/@fontsource/zcool-qingke-huangyou/index.css', 'node_modules/@fontsource/dela-gothic-one/index.css',
+  'node_modules/@fontsource/noto-sans-sc/700.css', 'node_modules/@fontsource/noto-sans-sc/900.css'];
 
 // every character in the source + full printable ASCII + some UI punctuation
 const used = new Set();
 for (let c = 0x20; c < 0x7f; c++) used.add(c);
 for (const ch of '…—–·「」『』！？：，。、♥★☆▶◀◆●○✕×÷%％～ー') used.add(ch.codePointAt(0));
-const walk = (d) => { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, f.name); if (f.isDirectory()) { if (f.name !== 'fonts') walk(p); } else if (/\.(js|css|html)$/.test(f.name)) for (const ch of fs.readFileSync(p, 'utf8')) used.add(ch.codePointAt(0)); } };
+const walk = (d) => { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, f.name); if (f.isDirectory()) { if (f.name !== 'fonts') walk(p); } else if (/\.(js|css|html|json)$/.test(f.name)) for (const ch of fs.readFileSync(p, 'utf8')) used.add(ch.codePointAt(0)); } };
 walk(path.join(root, 'src'));
+// the text of the content packs (UI strings, names, episodes ...)
+const walkJson = (d) => { for (const f of fs.readdirSync(d, { withFileTypes: true })) { const p = path.join(d, f.name); if (f.isDirectory()) { if (f.name !== 'assets') walkJson(p); } else if (f.name.endsWith('.json')) for (const ch of fs.readFileSync(p, 'utf8')) used.add(ch.codePointAt(0)); } };
+walkJson(path.join(root, 'public/content'));
 for (const ch of fs.readFileSync(path.join(root, 'index.html'), 'utf8')) used.add(ch.codePointAt(0));
 
 const parseRange = (s) => s.split(',').map((r) => r.trim().replace(/^U\+/i, '')).map((r) => {

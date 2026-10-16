@@ -983,130 +983,151 @@
   "w": 400
  },
  "ui/d0": {
+  "clean": true,
   "dom": true,
-  "h": 240,
+  "h": 226,
   "src": "assets/ui/d0.webp",
-  "w": 195
+  "w": 181
  },
  "ui/d1": {
+  "clean": true,
   "dom": true,
-  "h": 248,
+  "h": 234,
   "src": "assets/ui/d1.webp",
-  "w": 170
+  "w": 156
  },
  "ui/d2": {
+  "clean": true,
   "dom": true,
-  "h": 245,
+  "h": 231,
   "src": "assets/ui/d2.webp",
-  "w": 196
- },
- "ui/d3": {
-  "dom": true,
-  "h": 246,
-  "src": "assets/ui/d3.webp",
-  "w": 184
- },
- "ui/d4": {
-  "dom": true,
-  "h": 244,
-  "src": "assets/ui/d4.webp",
-  "w": 206
- },
- "ui/d5": {
-  "dom": true,
-  "h": 249,
-  "src": "assets/ui/d5.webp",
-  "w": 186
- },
- "ui/d6": {
-  "dom": true,
-  "h": 250,
-  "src": "assets/ui/d6.webp",
-  "w": 195
- },
- "ui/d7": {
-  "dom": true,
-  "h": 249,
-  "src": "assets/ui/d7.webp",
-  "w": 185
- },
- "ui/d8": {
-  "dom": true,
-  "h": 248,
-  "src": "assets/ui/d8.webp",
-  "w": 196
- },
- "ui/d9": {
-  "dom": true,
-  "h": 249,
-  "src": "assets/ui/d9.webp",
   "w": 180
  },
- "ui/dpct": {
+ "ui/d3": {
+  "clean": true,
+  "dom": true,
+  "h": 232,
+  "src": "assets/ui/d3.webp",
+  "w": 169
+ },
+ "ui/d4": {
+  "clean": true,
+  "dom": true,
+  "h": 229,
+  "src": "assets/ui/d4.webp",
+  "w": 192
+ },
+ "ui/d5": {
+  "clean": true,
+  "dom": true,
+  "h": 234,
+  "src": "assets/ui/d5.webp",
+  "w": 173
+ },
+ "ui/d6": {
+  "clean": true,
   "dom": true,
   "h": 236,
+  "src": "assets/ui/d6.webp",
+  "w": 179
+ },
+ "ui/d7": {
+  "clean": true,
+  "dom": true,
+  "h": 235,
+  "src": "assets/ui/d7.webp",
+  "w": 176
+ },
+ "ui/d8": {
+  "clean": true,
+  "dom": true,
+  "h": 234,
+  "src": "assets/ui/d8.webp",
+  "w": 189
+ },
+ "ui/d9": {
+  "clean": true,
+  "dom": true,
+  "h": 234,
+  "src": "assets/ui/d9.webp",
+  "w": 171
+ },
+ "ui/dpct": {
+  "clean": true,
+  "dom": true,
+  "h": 221,
   "src": "assets/ui/dpct.webp",
-  "w": 226
+  "w": 213
  },
  "ui/en_bgm": {
+  "clean": true,
   "dom": true,
-  "h": 173,
+  "h": 149,
   "src": "assets/ui/en_bgm.webp",
-  "w": 473
+  "w": 449
  },
  "ui/en_display": {
+  "clean": true,
   "dom": true,
-  "h": 162,
+  "h": 138,
   "src": "assets/ui/en_display.webp",
-  "w": 568
+  "w": 509
  },
  "ui/en_english": {
+  "clean": true,
   "dom": true,
-  "h": 193,
+  "h": 643,
   "src": "assets/ui/en_english.webp",
-  "w": 535
+  "w": 1857
  },
  "ui/en_fullscreen": {
+  "clean": true,
   "dom": true,
-  "h": 155,
+  "h": 122,
   "src": "assets/ui/en_fullscreen.webp",
-  "w": 614
+  "w": 548
  },
  "ui/en_language": {
+  "clean": true,
   "dom": true,
-  "h": 159,
+  "h": 135,
   "src": "assets/ui/en_language.webp",
-  "w": 611
+  "w": 541
  },
  "ui/en_quit": {
+  "clean": true,
   "dom": true,
-  "h": 201,
+  "h": 177,
   "src": "assets/ui/en_quit.webp",
-  "w": 480
+  "w": 408
  },
  "ui/en_settings": {
+  "clean": true,
   "dom": true,
-  "h": 171,
+  "h": 147,
   "src": "assets/ui/en_settings.webp",
-  "w": 660
+  "w": 597
  },
  "ui/en_sfx": {
+  "clean": true,
   "dom": true,
-  "h": 170,
+  "h": 145,
   "src": "assets/ui/en_sfx.webp",
-  "w": 407
+  "w": 327
  },
  "ui/en_start": {
+  "clean": true,
   "dom": true,
-  "h": 300,
+  "h": 274,
   "src": "assets/ui/en_start.webp",
-  "w": 712
+  "w": 686
  },
  "ui/en_window": {
+  "clean": true,
   "dom": true,
-  "h": 162,
+  "h": 138,
   "src": "assets/ui/en_window.webp",
-  "w": 602
+  "w": 520
  },
  "ui/fx_dust": {
   "dom": true,
@@ -1217,52 +1238,60 @@
   "w": 296
  },
  "ui/ja_display": {
+  "clean": true,
   "dom": true,
-  "h": 213,
+  "h": 180,
   "src": "assets/ui/ja_display.webp",
-  "w": 580
+  "w": 494
  },
  "ui/ja_fullscreen": {
+  "clean": true,
   "dom": true,
-  "h": 198,
+  "h": 146,
   "src": "assets/ui/ja_fullscreen.webp",
-  "w": 579
+  "w": 524
  },
  "ui/ja_japanese": {
+  "clean": true,
   "dom": true,
-  "h": 218,
+  "h": 178,
   "src": "assets/ui/ja_japanese.webp",
-  "w": 537
+  "w": 406
  },
  "ui/ja_language": {
+  "clean": true,
   "dom": true,
-  "h": 239,
+  "h": 202,
   "src": "assets/ui/ja_language.webp",
-  "w": 450
+  "w": 345
  },
  "ui/ja_quit": {
+  "clean": true,
   "dom": true,
-  "h": 201,
+  "h": 167,
   "src": "assets/ui/ja_quit.webp",
-  "w": 550
+  "w": 458
  },
  "ui/ja_settings": {
+  "clean": true,
   "dom": true,
-  "h": 238,
+  "h": 199,
   "src": "assets/ui/ja_settings.webp",
-  "w": 475
+  "w": 336
  },
  "ui/ja_start": {
+  "clean": true,
   "dom": true,
-  "h": 343,
+  "h": 296,
   "src": "assets/ui/ja_start.webp",
-  "w": 640
+  "w": 578
  },
  "ui/ja_window": {
+  "clean": true,
   "dom": true,
-  "h": 213,
+  "h": 182,
   "src": "assets/ui/ja_window.webp",
-  "w": 567
+  "w": 469
  },
  "ui/knob_bunny": {
   "dom": true,
@@ -1299,6 +1328,78 @@
   "h": 766,
   "src": "assets/ui/logo_zh.webp",
   "w": 1400
+ },
+ "ui/p5_back": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/p5_back.webp",
+  "w": 1920
+ },
+ "ui/p5_front": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/p5_front.webp",
+  "w": 1920
+ },
+ "ui/p5_header_slash": {
+  "dom": true,
+  "h": 423,
+  "src": "assets/ui/p5_header_slash.webp",
+  "w": 1600
+ },
+ "ui/p5_icon_exit": {
+  "dom": true,
+  "h": 1073,
+  "src": "assets/ui/p5_icon_exit.webp",
+  "w": 1046
+ },
+ "ui/p5_icon_gear": {
+  "dom": true,
+  "h": 1187,
+  "src": "assets/ui/p5_icon_gear.webp",
+  "w": 1138
+ },
+ "ui/p5_icon_globe": {
+  "dom": true,
+  "h": 1144,
+  "src": "assets/ui/p5_icon_globe.webp",
+  "w": 1155
+ },
+ "ui/p5_icon_monitor": {
+  "dom": true,
+  "h": 936,
+  "src": "assets/ui/p5_icon_monitor.webp",
+  "w": 1096
+ },
+ "ui/p5_icon_play": {
+  "dom": true,
+  "h": 1227,
+  "src": "assets/ui/p5_icon_play.webp",
+  "w": 1075
+ },
+ "ui/p5_icon_speaker": {
+  "dom": true,
+  "h": 1052,
+  "src": "assets/ui/p5_icon_speaker.webp",
+  "w": 1270
+ },
+ "ui/p5_icon_speaker_off": {
+  "dom": true,
+  "h": 1036,
+  "src": "assets/ui/p5_icon_speaker_off.webp",
+  "w": 1227
+ },
+ "ui/p5_panel": {
+  "dom": true,
+  "h": 1173,
+  "src": "assets/ui/p5_panel.webp",
+  "w": 1236
+ },
+ "ui/p5_plate": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/p5_plate.webp",
+  "w": 1920
  },
  "ui/paw_stamp": {
   "dom": true,
@@ -1456,6 +1557,13 @@
   "seal": "canonical",
   "src": "assets/ui/t_girls.webp",
   "w": 1302
+ },
+ "ui/t_girls_ext": {
+  "dom": true,
+  "h": 1364,
+  "seal": "canonical (from ui/t_girls)",
+  "src": "assets/ui/t_girls_ext.webp",
+  "w": 1522
  },
  "ui/t_glass_text": {
   "dom": true,
@@ -1683,51 +1791,59 @@
   "w": 1920
  },
  "ui/zh_chinese": {
+  "clean": true,
   "dom": true,
-  "h": 200,
+  "h": 172,
   "src": "assets/ui/zh_chinese.webp",
-  "w": 369
+  "w": 256
  },
  "ui/zh_display": {
+  "clean": true,
   "dom": true,
-  "h": 186,
+  "h": 157,
   "src": "assets/ui/zh_display.webp",
-  "w": 500
+  "w": 436
  },
  "ui/zh_fullscreen": {
+  "clean": true,
   "dom": true,
-  "h": 185,
+  "h": 151,
   "src": "assets/ui/zh_fullscreen.webp",
-  "w": 541
+  "w": 456
  },
  "ui/zh_language": {
+  "clean": true,
   "dom": true,
-  "h": 231,
+  "h": 200,
   "src": "assets/ui/zh_language.webp",
-  "w": 437
+  "w": 313
  },
  "ui/zh_quit": {
+  "clean": true,
   "dom": true,
-  "h": 210,
+  "h": 182,
   "src": "assets/ui/zh_quit.webp",
-  "w": 559
+  "w": 475
  },
  "ui/zh_settings": {
+  "clean": true,
   "dom": true,
-  "h": 210,
+  "h": 177,
   "src": "assets/ui/zh_settings.webp",
-  "w": 394
+  "w": 295
  },
  "ui/zh_start": {
+  "clean": true,
   "dom": true,
-  "h": 367,
+  "h": 338,
   "src": "assets/ui/zh_start.webp",
-  "w": 981
+  "w": 936
  },
  "ui/zh_window": {
+  "clean": true,
   "dom": true,
-  "h": 195,
+  "h": 164,
   "src": "assets/ui/zh_window.webp",
-  "w": 472
+  "w": 393
  }
 }

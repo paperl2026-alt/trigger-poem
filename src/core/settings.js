@@ -13,7 +13,7 @@ export function initSettings() {
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { /* storage blocked */ }
   Object.assign(SET, T.defaultSettings, saved);
-  setVolume(SET.volume); setMusicVolume(SET.bgm); setSfxVolume(SET.sfx);
+  setVolume(SET.volume); setMusicVolume(SET.bgmOn === false ? 0 : SET.bgm); setSfxVolume(SET.sfxOn === false ? 0 : SET.sfx);
 }
 export const saveSettings = () => { try { localStorage.setItem(KEY, JSON.stringify(SET)); } catch (e) { /* storage blocked */ } };
 

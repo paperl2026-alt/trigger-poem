@@ -1,109 +1,36 @@
 {
-  "_doc": "标题+设置屏。布局严格照用户定稿的参考图 art/ref/ui_user_mock.png（1672x941）：每个元素的 box = 它在参考图里的框 [x0,y0,x1,y1]（参考图像素），程序按比例换算到屏幕，图片在框里等比放（align: bottom / top = 贴底 / 贴顶；fit: width = 按框宽放、高度可以超出框，人物用这个）。拆解图：art/ref/ui_breakdown.jpg。depth = 鼠标视差深度（0 不动，越大越近、动得越多），board 组（软木板+设置项）还会随鼠标轻微倾斜 tilt 度。letters：文字用用户选的 1 号美术字，每种语言一张图。",
+  "_doc": "标题+设置屏（红黑白风格，用户定稿参考图 art/ref/ui_p5.png，1672x941）。所有位置都是参考图像素 [x0,y0,x1,y1]，程序按比例换算到屏幕。画出来的部分（背景、面板、前景装饰、图标）是从参考图原样拆出的图片；开关、滑条、分段选择、开始/离开按钮、分隔线由程序按这里的尺寸画。depth = 鼠标视差深度。颜色在 colors 里。文字从 text/ui.json 读（中日英），size 是字号（参考图像素）。",
   "title": {
     "design": [1920, 1080],
     "refSize": [1672, 941],
-    "parallax": { "max": 40, "ease": 5 },
-    "scene": { "far": "ui/t_far", "room": "ui/t_room", "farDepth": 0.08, "roomDepth": 0.2, "farFlip": true },
-    "dust": { "box": [760, 40, 1672, 600], "count": 24, "depth": 0.24 },
-    "petals": { "far": 10, "near": 5 },
-    "girls": {
-      "img": "ui/t_girls",
-      "box": [688, 35, 1684, 880],
-      "fit": "exact",
-      "depth": 0.45,
-      "breath": 0.25,
-      "_anchors": "mockup eyes (990,320) (1380,370) = girls2.png (395,390) (905,452), scale 0.765"
+    "parallax": { "max": 34, "ease": 5 },
+    "colors": { "red": "#d8141e", "redDark": "#9e0a12", "ink": "#121012", "paper": "#f3f1ee", "grey": "#c9c7c5", "greyDark": "#8e8c8a", "line": "#a9a6a3" },
+    "layers": {
+      "back": { "img": "ui/p5_plate", "depth": 0.06, "_doc": "整版底图（白色面板+红黑背景），参考图原样拆出，人物和UI已去掉" },
+      "panel": { "depth": 0.06, "_doc": "UI 跟着这一层动；深度和底图相同，UI 才不会在白面板上漂。要单独的面板图就加 img + box" },
+      "girls": { "img": "ui/t_girls_ext", "box": [445.4, 13, 1743, 1175.9], "_ext": "t_girls 往左/下补画了被切掉的袖子和身体（tools/r16_import.py），原图部分和 t_girls 完全相同，框按原比例换算（原框 [633,13,1743,954]）", "depth": 0.28, "breath": 0.25, "_anchors": "eyes (970,330) (1405,380) = girls2.png (395,390) (905,452)" },
+      "front": { "img": "ui/p5_front", "depth": 0.55 }
     },
-    "glassText": { "img": "ui/t_glass_text", "box": [1380, 50, 1600, 165], "depth": 0.2 },
-    "books": { "img": "ui/t_books", "box": [680, 800, 1672, 941], "align": "bottom", "depth": 0.95 },
-    "board": { "img": "ui/t_board", "box": [40, 18, 722, 893], "depth": 0.1, "tilt": 3.5 },
-    "decor": [
-      { "img": "ui/t_photo_small", "box": [0, 188, 68, 286], "hover": "tilt" },
-      { "img": "ui/t_polaroid", "box": [0, 350, 124, 646], "hover": "tilt" },
-      { "img": "ui/t_tassel_left", "box": [4, 112, 66, 214], "sway": true },
-      { "img": "ui/t_note_hw", "box": [556, 26, 778, 196], "hover": "tilt" },
-      { "img": "ui/t_cat_peek", "box": [372, 0, 530, 90], "peek": true },
-      { "img": "ui/t_sakura_a", "box": [24, 34, 140, 106] },
-      { "img": "ui/t_sakura_a", "box": [596, 0, 712, 64] },
-      { "img": "ui/t_sakura_a", "box": [560, 500, 640, 560] },
-      { "img": "ui/t_sakura_a", "box": [420, 820, 520, 885] },
-      { "img": "ui/t_pin", "box": [60, 24, 110, 70], "metal": true },
-      { "img": "ui/t_pin", "box": [650, 24, 700, 70], "metal": true }
+    "header": { "icon": { "img": "ui/p5_icon_gear", "box": [64, 80, 136, 152] }, "slash": { "img": "ui/p5_header_slash", "box": [28, 92, 340, 182] },
+                "text": { "key": "settings", "box": [150, 92, 300, 152], "size": 56 } },
+    "rows": [
+      { "id": "bgm", "y": 235, "icon": { "img": "ui/p5_icon_speaker", "off": "ui/p5_icon_speaker_off", "box": [44, 212, 98, 258] },
+        "label": { "key": "bgm", "x": 115, "size": 30, "italic": true },
+        "toggle": { "box": [217, 216, 292, 254] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "size": 30 } },
+      { "id": "sfx", "y": 326, "icon": { "img": "ui/p5_icon_speaker", "off": "ui/p5_icon_speaker_off", "box": [44, 302, 98, 350] },
+        "label": { "key": "sfx", "x": 115, "size": 30, "italic": true },
+        "toggle": { "box": [217, 308, 292, 346] }, "slider": { "x0": 316, "x1": 576, "h": 16, "knob": 15 }, "value": { "x1": 652, "size": 30 } }
     ],
-    "rows": {
-      "bgm": {
-        "strip": { "img": "ui/t_strip_bgm", "box": [66, 80, 606, 246] },
-        "icon": { "img": "ui/t_icon_note", "box": [82, 105, 143, 171] },
-        "label": { "letter": "bgm", "box": [148, 100, 290, 176] },
-        "slider": {
-          "x0": 132,
-          "x1": 512,
-          "y": 190,
-          "ropeH": 22,
-          "knob": "ui/t_bell_knob",
-          "knobH": 74,
-          "rope": "ui/t_rope_red",
-          "rod": "ui/t_rod_metal",
-          "cap": { "img": "ui/t_cat_cap", "box": [520, 132, 574, 186] }
-        },
-        "value": { "box": [484, 200, 552, 234] }
-      },
-      "sfx": {
-        "strip": { "img": "ui/t_strip_sfx", "box": [66, 236, 678, 358] },
-        "icon": { "img": "ui/t_icon_speaker", "box": [82, 265, 148, 327] },
-        "label": { "letter": "sfx", "box": [148, 262, 258, 334] },
-        "bar": {
-          "frame": { "img": "ui/t_bar_frame", "box": [252, 280, 512, 330] },
-          "slots": 10,
-          "bullet": "ui/t_bullet",
-          "slotPad": [14, 8],
-          "knob": "ui/t_bunny_knob",
-          "knobH": 62,
-          "rod": "ui/t_rod_metal",
-          "rodTo": 590
-        },
-        "value": { "box": [600, 304, 668, 332] }
-      },
-      "language": {
-        "strip": { "img": "ui/t_strip_lang", "box": [86, 352, 683, 475] },
-        "icon": { "img": "ui/t_icon_globe", "box": [105, 379, 173, 447] },
-        "label": { "letter": "language", "box": [174, 380, 270, 448] },
-        "chips": [
-          { "opt": "zh", "size": "s", "box": [268, 372, 424, 461] },
-          { "opt": "ja", "size": "s", "box": [418, 379, 550, 465] },
-          { "opt": "en", "size": "s", "box": [548, 379, 680, 465] }
-        ]
-      },
-      "display": {
-        "strip": { "img": "ui/t_strip_disp", "box": [130, 476, 678, 583] },
-        "icon": { "img": "ui/t_icon_monitor", "box": [155, 501, 220, 564] },
-        "label": { "letter": "display", "box": [222, 498, 352, 560] },
-        "chips": [{ "opt": "fullscreen", "size": "w", "box": [340, 484, 536, 577] }, { "opt": "window", "size": "w", "box": [527, 493, 673, 572] }]
-      }
-    },
-    "chipImg": { "s": { "on": "ui/t_chip_on_s", "off": "ui/t_chip_off_s" }, "w": { "on": "ui/t_chip_on_w", "off": "ui/t_chip_off_w" } },
-    "chipText": [0.8, 0.64],
-    "start": {
-      "sheet": { "img": "ui/t_start_sheet", "box": [122, 584, 742, 866] },
-      "cord": { "img": "ui/t_start_cord", "box": [600, 552, 790, 800] },
-      "label": { "letter": "start", "box": [196, 636, 690, 800] }
-    },
-    "quit": { "note": { "img": "ui/t_quit_note", "box": [4, 652, 214, 890] }, "label": { "letter": "quit", "box": [30, 738, 158, 818] } },
-    "letters": {
-      "start": { "zh": "ui/zh_start", "ja": "ui/ja_start", "en": "ui/en_start" },
-      "quit": { "zh": "ui/zh_quit", "ja": "ui/ja_quit", "en": "ui/en_quit" },
-      "language": { "zh": "ui/zh_language", "ja": "ui/ja_language", "en": "ui/en_language" },
-      "display": { "zh": "ui/zh_display", "ja": "ui/ja_display", "en": "ui/en_display" },
-      "fullscreen": { "zh": "ui/zh_fullscreen", "ja": "ui/ja_fullscreen", "en": "ui/en_fullscreen" },
-      "window": { "zh": "ui/zh_window", "ja": "ui/ja_window", "en": "ui/en_window" },
-      "bgm": { "all": "ui/en_bgm" },
-      "sfx": { "all": "ui/en_sfx" },
-      "zh": { "all": "ui/zh_chinese" },
-      "ja": { "all": "ui/ja_japanese" },
-      "en": { "all": "ui/en_english" }
-    },
-    "digits": ["ui/d0", "ui/d1", "ui/d2", "ui/d3", "ui/d4", "ui/d5", "ui/d6", "ui/d7", "ui/d8", "ui/d9"],
-    "percent": "ui/dpct"
+    "lines": [{ "x0": 46, "x1": 640, "y": 279 }, { "x0": 46, "x1": 640, "y": 372 }, { "x0": 46, "x1": 640, "y": 492 }],
+    "segments": [
+      { "id": "language", "y": 437, "icon": { "img": "ui/p5_icon_globe", "box": [40, 411, 94, 464] }, "label": { "key": "lang", "x": 117, "size": 32 },
+        "box": [217, 409, 640, 465], "options": [["zh", "中文"], ["ja", "日本語"], ["en", "English"]], "size": 23 },
+      { "id": "display", "y": 548, "icon": { "img": "ui/p5_icon_monitor", "box": [44, 521, 98, 570] }, "label": { "key": "display", "x": 115, "size": 32 },
+        "box": [254, 521, 619, 575], "options": [["fullscreen", "@fullscreen"], ["window", "@window"]], "size": 21 }
+    ],
+    "start": { "poly": [[70, 618], [586, 618], [548, 748], [30, 748]], "shadow": [10, 10], "border": 7, "icon": { "img": "ui/p5_icon_play", "box": [108, 644, 168, 716] },
+               "text": { "key": "startGame", "x": 205, "size": 73 } },
+    "quit": { "poly": [[185, 777], [548, 777], [521, 860], [157, 860]], "shadow": [8, 8], "border": 5, "icon": { "img": "ui/p5_icon_exit", "box": [216, 790, 266, 842] },
+              "text": { "key": "quitGame", "x": 290, "size": 43 } }
   }
 }

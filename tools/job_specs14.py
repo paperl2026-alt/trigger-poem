@@ -105,3 +105,11 @@ JOBS["R14_f"] = [
      "Where the books, bullets and petals covered them, paint only what is directly behind (the cat girl's dark obi sash with the brass bell and red cord knot, "
      "the pink girl's frilly pink lap): NO legs, NO knees, NO shoes. Everything that is not the two girls must be fully transparent. Do not add anything."),
 ]
+
+# "English" again: in the lettering sheet a sakura sticker covered half of its 'h'
+JOBS["R14_g"] = [
+    ("art/raw/r14/en_english_clean.png", ["art/raw/letters_src/en_english.webp", "art/ref/lettering_style1.png"],
+     "Reference image 1 is a word in an approved game lettering style. This is NOT a redesign task. Draw the same word English in EXACTLY the same lettering style, "
+     "colors, outline thickness, gloss and letter shapes as reference image 1, but with NO decorations at all: no sakura, no sparkles, no sticker border. "
+     "Every letter complete and fully visible, including the h. Fully transparent background."),
+]

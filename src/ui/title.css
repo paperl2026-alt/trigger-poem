@@ -1,91 +1,104 @@
-/* ---------------------------------------------------------------- title + settings (src/ui/title.js, layout: content ui/title.json) */
-.screen.ttl { background: #2a1420; }
+/* ---------------------------------------------------------------- title + settings, red / black / white (src/ui/title.js, content ui/title.json) */
+.screen.ttl { background: var(--ink, #121012); overflow: hidden; }
 .ttl-stage { position: absolute; left: 50%; top: 50%; transform-origin: 50% 50%; }
 .ttl .plx { position: absolute; inset: 0; will-change: transform; pointer-events: none; }
 .ttl .plx > * { pointer-events: auto; }
-.ttl .plx.bg > *, .ttl .plx.front > * { pointer-events: none; }
-.ttl-stage .ti, .ttl-stage .glint, .ttl-stage .sweep { position: absolute; user-select: none; -webkit-user-drag: none; }
-.ttl-stage .chip, .ttl-stage .startbtn, .ttl-stage .quitbtn { position: absolute; inset: 0; pointer-events: none; }
-.ttl-stage .chip > *, .ttl-stage .startbtn > *, .ttl-stage .quitbtn > * { pointer-events: auto; }
+.ttl .plx.bg > *, .ttl .plx.pnl > * { pointer-events: none; }
+.ttl-stage .ti { position: absolute; user-select: none; -webkit-user-drag: none; }
 .ttl .uifx { z-index: 1; }
+.ttl .tx { position: absolute; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-weight: 900; color: var(--ink); white-space: nowrap; line-height: 1; letter-spacing: 0.01em; user-select: none; }
 
 /* heroines: breathe; a squash-bounce when the cursor touches them */
 .ttl .chr { transform-origin: 50% 100%; animation: ttlBreath 4s ease-in-out infinite; }
 @keyframes ttlBreath { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.003, 1.009); } }
-.ttl .chr.poke { animation: ttlBreath 4s ease-in-out infinite, ttlPoke 0.55s cubic-bezier(0.3, 1.6, 0.5, 1); }
-@keyframes ttlPoke { 0% { scale: 1 1; } 25% { scale: 1.018 0.98; } 55% { scale: 0.995 1.016; } 100% { scale: 1 1; } }
-.ttl .board { filter: drop-shadow(6px 10px 14px #2a0c1c88); }
-.ttl .strip { filter: drop-shadow(2px 4px 4px #2a0c1c40); }
+.ttl .chr.poke { animation: ttlBreath 4s ease-in-out infinite, ttlPoke 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes ttlPoke { 0% { scale: 1 1; } 25% { scale: 1.016 0.982; } 55% { scale: 0.996 1.014; } 100% { scale: 1 1; } }
 
-/* metal glint: a light sweep masked by the image itself */
-.ttl .glint { pointer-events: none; -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
-  background: linear-gradient(105deg, transparent 38%, rgba(255, 252, 235, 0.95) 49%, rgba(255, 255, 255, 0.2) 53%, transparent 62%) 0 0 / 320% 100% no-repeat;
-  animation: ttlGlint 3.8s ease-in-out infinite; mix-blend-mode: screen; }
-@keyframes ttlGlint { 0%, 55% { background-position: 120% 0; } 85%, 100% { background-position: -40% 0; } }
+/* header */
+.ttl .head { font-weight: 900; letter-spacing: 0.04em; }
+.ttl .gear { animation: ttlGear 9s linear infinite; }
+@keyframes ttlGear { to { rotate: 360deg; } }
 
-/* language / display tags: grey = not chosen, red marker frame + paw stamp = chosen; hover lifts and brightens */
-.ttl .chip .ti { transition: opacity 0.16s, translate 0.2s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.2s cubic-bezier(0.2, 1.8, 0.4, 1), filter 0.2s; transform-origin: 50% 60%; }
-.ttl .chip .on { opacity: 0; }
-.ttl .chip.sel .on { opacity: 1; }
-.ttl .chip.sel .off { opacity: 0; }
-.ttl .chip:hover .ti { translate: 0 -5px; scale: 1.05; }
-.ttl .chip:hover .off { filter: brightness(1.08) drop-shadow(0 0 8px #ff8ab8cc); }
-.ttl .chip.down .ti { translate: 0 2px; scale: 0.96; transition-duration: 0.05s; }
-.ttl .let.flip { animation: ttlFlip 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
-@keyframes ttlFlip { 0% { scale: 1 0.2; } 60% { scale: 1 1.15; } 100% { scale: 1 1; } }
+/* rows: a red slash sweeps in behind the row under the cursor, the label steps right */
+.ttl .row { position: absolute; inset: 0; pointer-events: none; }
+.ttl .row > * { pointer-events: auto; }
+.ttl .row > .ico, .ttl .row > .lab, .ttl .row > .val, .ttl .row > .rowhl { pointer-events: none; }
+.ttl .rowhl { position: absolute; background: linear-gradient(100deg, transparent 0 2%, #d8141e18 2% 70%, transparent 70%); transform: skewX(-18deg) scaleX(0); transform-origin: 0 50%; transition: transform 0.22s cubic-bezier(0.2, 1.2, 0.4, 1); }
+.ttl .row:hover .rowhl { transform: skewX(-18deg) scaleX(1); }
+.ttl .row .lab { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), color 0.15s; }
+.ttl .row:hover .lab { translate: calc(8px) 0; color: var(--red); }
+.ttl .row .ico { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), scale 0.18s; }
+.ttl .row:hover .ico { scale: 1.08; }
+.ttl .hr { position: absolute; height: 2px; background: var(--line); opacity: 0.85; }
 
-/* START: alive — a glow pulse and a wiggle now and then; hover lifts it and sweeps a light across */
-.ttl .startbtn .ti, .ttl .startbtn .sweep { transition: translate 0.22s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.22s cubic-bezier(0.2, 1.8, 0.4, 1); transform-origin: 50% 60%; }
-.ttl .startbtn .sheet { animation: ttlGlow 2.8s ease-in-out infinite; }
-@keyframes ttlGlow { 0%, 100% { filter: drop-shadow(3px 6px 6px #2a0c1c55); } 50% { filter: drop-shadow(0 0 16px #ff7ab0cc); } }
-.ttl .startbtn .stext { animation: ttlStart 2.8s ease-in-out infinite; }
-@keyframes ttlStart { 0%, 100% { rotate: 0deg; } 6% { rotate: -2deg; } 12% { rotate: 1.8deg; } 18% { rotate: 0deg; } }
-.ttl .startbtn:hover .ti, .ttl .startbtn:hover .sweep { translate: 0 -8px; scale: 1.035; }
-.ttl .startbtn.down .ti, .ttl .startbtn.down .sweep { translate: 0 3px; scale: 0.98; transition-duration: 0.05s; }
-.ttl .sweep { pointer-events: none; opacity: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.8) 50%, transparent 65%) 0 0 / 300% 100% no-repeat; mix-blend-mode: screen; }
-.ttl .startbtn:hover .sweep { animation: ttlSweep 0.8s ease-out; }
-@keyframes ttlSweep { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 1; background-position: -30% 0; } }
-/* the cord on the START sheet and the tassel sway from their knots */
-.ttl .cord { transform-origin: 40% 8%; animation: ttlSway 3.6s ease-in-out infinite; }
-.ttl .deco.sway { transform-origin: 50% 0; animation: ttlSway 3.1s ease-in-out infinite; }
-@keyframes ttlSway { 0%, 100% { rotate: -2.2deg; } 50% { rotate: 2.2deg; } }
-/* QUIT note swings on its pin when hovered */
-.ttl .quitbtn .ti { transform-origin: 46% 6%; transition: rotate 0.3s cubic-bezier(0.3, 1.8, 0.5, 1); }
-.ttl .quitbtn:hover .ti { rotate: 7deg; }
-/* the cat peeks over the board, photos and the note wiggle when touched */
-.ttl .deco.peek { animation: ttlPeek 5s ease-in-out infinite; }
-@keyframes ttlPeek { 0%, 70%, 100% { translate: 0 0; } 78% { translate: 0 -10px; } 86% { translate: 0 -6px; } }
-.ttl .deco.tilt.wig { animation: ttlWig 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
-@keyframes ttlWig { 0% { rotate: 0deg; } 30% { rotate: -4deg; } 65% { rotate: 2.5deg; } 100% { rotate: 0deg; } }
+/* on / off toggle: red pill, white knob; off = grey */
+.ttl .tg { position: absolute; border-radius: 999px; background: var(--red); box-shadow: inset 0 0 0 3px var(--redDark); cursor: pointer; transition: background 0.18s, box-shadow 0.18s, scale 0.15s; }
+.ttl .tg .knob { position: absolute; top: 12%; height: 76%; aspect-ratio: 1 / 1; left: 94%; translate: -100% 0; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--redDark); transition: left 0.22s cubic-bezier(0.3, 1.6, 0.5, 1), translate 0.22s cubic-bezier(0.3, 1.6, 0.5, 1), box-shadow 0.18s, background 0.18s; }
+.ttl .tg:not(.on) { background: var(--greyDark); box-shadow: inset 0 0 0 3px #6d6b69; }
+.ttl .tg:not(.on) .knob { left: 6%; translate: 0 0; box-shadow: 0 0 0 3px #6d6b69; background: #e7e5e2; }
+.ttl .tg:hover { scale: 1.06; }
 
-/* BGM rope + bell */
-.ttl .slider { position: absolute; cursor: pointer; }
-.ttl .slider .fill { transition: clip-path 0.1s; }
-.ttl .slider .knob { position: absolute; transform-origin: 50% 8%; transition: left 0.1s cubic-bezier(0.3, 1.4, 0.5, 1); filter: drop-shadow(0 3px 3px #2a0c1c66); }
-.ttl .slider .knob.ring { animation: ttlRing 0.8s ease-out; }
-@keyframes ttlRing { 0% { rotate: 0deg; } 15% { rotate: 18deg; } 40% { rotate: -13deg; } 65% { rotate: 7deg; } 85% { rotate: -3deg; } 100% { rotate: 0deg; } }
-.ttl .slider:hover .knob { scale: 1.1; }
-/* SFX bullets: lit = brass, empty = a faded ghost of the cartridge */
-.ttl .bullet { position: absolute; cursor: pointer; transition: translate 0.15s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.ttl .bullet .ti, .ttl .bullet .glint { transition: opacity 0.12s, filter 0.12s; }
-.ttl .bullet.empty .ti { filter: grayscale(1) brightness(1.6); opacity: 0.32; }
-.ttl .bullet.empty .glint { opacity: 0; }
-.ttl .bullet:hover { translate: 0 -6px; }
-.ttl .bullet.kick { animation: ttlKick 0.32s ease-out; }
-@keyframes ttlKick { 0% { rotate: 0deg; } 30% { rotate: -10deg; translate: 0 -14px; } 100% { rotate: 0deg; translate: 0 0; } }
-.ttl .knobb { transition: left 0.18s cubic-bezier(0.3, 1.5, 0.5, 1); filter: drop-shadow(0 3px 3px #2a0c1c55); }
-.ttl .dg { animation: ttlFlip 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+/* slider: grey track, red fill, white knob with a dark ring */
+.ttl .sl { position: absolute; cursor: pointer; }
+.ttl .sl .track { position: absolute; border-radius: 999px; background: var(--grey); overflow: hidden; }
+.ttl .sl .fill { height: 100%; background: var(--red); border-radius: 999px; transition: width 0.08s; }
+.ttl .sl .knob { position: absolute; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--ink), 0 3px 6px #0005; transition: left 0.08s, scale 0.15s; }
+.ttl .sl:hover .knob, .ttl .sl.drag .knob { scale: 1.18; }
+.ttl .sl.drag .knob { box-shadow: 0 0 0 3px var(--red), 0 0 0 9px #d8141e33; }
+.ttl .val { font-weight: 900; }
+/* a row switched off goes grey, like the mockup's SFX row */
+.ttl .row.off .lab, .ttl .row.off .val { color: var(--greyDark); }
+.ttl .row.off .sl .fill { background: var(--greyDark); }
+.ttl .row.off .sl .knob { box-shadow: 0 0 0 3px var(--greyDark), 0 3px 6px #0003; }
 
-/* entrance: the board pieces drop in from the left, the heroines slide in from the right */
-.ttl .boardgrp > *, .ttl .chr, .ttl .front > * { transition: translate 0.75s cubic-bezier(0.2, 1.25, 0.4, 1), opacity 0.5s; }
-.ttl:not(.in) .boardgrp > * { opacity: 0; translate: -180px 0; }
-.ttl:not(.in) .chr { opacity: 0; translate: 200px 0; }
-.ttl:not(.in) .front > * { opacity: 0; translate: 0 120px; }
-/* leaving: everything flies apart, the screen washes to blossom pink */
-.ttl.leave .boardgrp > * { translate: -260px 0; opacity: 0; transition-duration: 0.45s; transition-timing-function: ease-in; }
-.ttl.leave .chr { translate: 260px 0; opacity: 0; }
-.ttl::after { content: ""; position: absolute; inset: 0; background: #ffd6e4; opacity: 0; pointer-events: none; transition: opacity 0.5s 0.15s; }
-.ttl.leave::after { opacity: 1; }
+/* segmented choices */
+.ttl .segbar { position: absolute; display: flex; border-radius: 8px; box-shadow: 0 0 0 2px var(--greyDark); background: #e6e4e1; overflow: hidden; }
+.ttl .opt { position: relative; flex: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; border-right: 2px solid var(--greyDark); transition: background 0.15s, color 0.15s; }
+.ttl .opt:last-child { border-right: 0; }
+.ttl .opt .tx { position: static; font-weight: 700; transition: translate 0.15s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.ttl .opt.on { background: var(--red); }
+.ttl .opt.on .tx { color: #fff; }
+.ttl .opt:not(.on):hover { background: #f4d9da; }
+.ttl .opt:not(.on):hover .tx { color: var(--red); translate: 0 -2px; }
+.ttl .opt.pop { animation: ttlPop 0.32s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes ttlPop { 0% { scale: 0.92; } 60% { scale: 1.05; } 100% { scale: 1; } }
+.ttl .tg.pop { animation: ttlPop 0.32s cubic-bezier(0.3, 1.6, 0.5, 1); }
+
+/* START / QUIT slabs */
+.ttl .slab { position: absolute; cursor: pointer; transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1), scale 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.ttl .slab > div { position: absolute; inset: 0; }
+.ttl .slab .sh { background: var(--ink); transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.ttl .slab .bd { background: #fff; }
+.ttl .slab .face { background: var(--red); overflow: hidden; }
+.ttl .slab.start .face { background: linear-gradient(175deg, #e3202a 0%, var(--red) 55%, #b80e17 100%); }
+.ttl .slab.quit .face { background: var(--ink); transition: background 0.18s; }
+.ttl .slab .dots { position: absolute; inset: 0; opacity: 0.22; background: radial-gradient(circle, #000 1.1px, transparent 1.6px) 0 0 / 7px 7px; -webkit-mask-image: linear-gradient(100deg, #000 0%, transparent 35%, transparent 65%, #000 100%); mask-image: linear-gradient(100deg, #000 0%, transparent 35%, transparent 65%, #000 100%); }
+.ttl .slab.quit .dots { opacity: 0.12; background-image: radial-gradient(circle, #fff 1.1px, transparent 1.6px); }
+.ttl .slab .sweep { position: absolute; inset: 0; background: linear-gradient(105deg, transparent 35%, #ffffffaa 48%, transparent 60%) 0 0 / 300% 100% no-repeat; background-position: 130% 0; }
+.ttl .slab .sico { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.ttl .slab .stx { color: #fff; font-style: italic; translate: 0 -50%; letter-spacing: 0.04em; }
+.ttl .slab.quit .stx { font-style: normal; }
+.ttl .slab:hover { translate: 6px -4px; scale: 1.025; }
+.ttl .slab:hover .sh { translate: 6px 6px; }
+.ttl .slab:hover .sweep { animation: ttlSweep 0.6s ease-out; }
+@keyframes ttlSweep { from { background-position: 130% 0; } to { background-position: -30% 0; } }
+.ttl .slab:hover .sico { translate: 8px 0; }
+.ttl .slab.quit:hover .face { background: var(--red); }
+.ttl .slab.down { translate: 2px 2px; scale: 0.98; transition-duration: 0.05s; }
+.ttl .slab.down .sh { translate: -4px -4px; }
+.ttl .slab.start .stx { animation: ttlBeat 2.4s ease-in-out infinite; }
+@keyframes ttlBeat { 0%, 70%, 100% { scale: 1; } 78% { scale: 1.06; } 86% { scale: 0.99; } }
+
+/* entrance: the panel and its pieces slash in from the left, the heroines slide in, the backdrop zooms */
+.ttl .plx.pnl > *, .ttl .uil > *, .ttl .chr, .ttl .plx.back > * { transition: translate 0.6s cubic-bezier(0.2, 1.15, 0.4, 1), opacity 0.4s, scale 0.8s cubic-bezier(0.2, 1, 0.4, 1); }
+.ttl .uil > * { transition-delay: calc(0.15s + var(--i, 0) * 0.03s); }
+.ttl:not(.in) .plx.pnl > *, .ttl:not(.in) .uil > * { opacity: 0; translate: -220px 0; }
+.ttl:not(.in) .chr { opacity: 0; translate: 240px 0; }
+.ttl:not(.in) .plx.back > * { scale: 1.12; }
+.ttl.leave .uil > *, .ttl.leave .plx.pnl > * { translate: -300px 0; opacity: 0; transition-delay: 0s; transition-duration: 0.35s; transition-timing-function: ease-in; }
+.ttl.leave .chr { translate: 300px 0; opacity: 0; }
+.ttl::after { content: ""; position: absolute; inset: 0; background: var(--red); clip-path: polygon(0 0, 0 0, -20% 100%, -20% 100%); pointer-events: none; transition: clip-path 0.45s 0.2s cubic-bezier(0.6, 0, 0.4, 1); }
+.ttl.leave::after { clip-path: polygon(0 0, 120% 0, 100% 100%, -20% 100%); }
 body:has(.screen.ttl) #dbg-btn { display: none; }
 
 /* custom cursor (src/ui/cursor.js) */

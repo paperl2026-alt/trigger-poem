@@ -55,7 +55,14 @@
     "skill": { "zh": "主动", "en": "SKILL", "ja": "スキル" },
     "cost": { "zh": "占用", "en": "COST", "ja": "コスト" },
     "ai": { "zh": "AI 队友", "en": "AI", "ja": "AI" },
-    "rotate": { "zh": "请横过来玩", "en": "Please rotate your device", "ja": "横向きでプレイしてね" }
+    "rotate": { "zh": "请横过来玩", "en": "Please rotate your device", "ja": "横向きでプレイしてね" },
+    "bgm": { "zh": "BGM", "en": "BGM", "ja": "BGM" },
+    "sfx": { "zh": "SFX", "en": "SFX", "ja": "SFX" },
+    "display": { "zh": "显示模式", "en": "DISPLAY", "ja": "表示モード" },
+    "fullscreen": { "zh": "无边框全屏", "en": "FULLSCREEN", "ja": "フルスクリーン" },
+    "window": { "zh": "窗口模式", "en": "WINDOW", "ja": "ウィンドウ" },
+    "startGame": { "zh": "开始游戏", "en": "START", "ja": "スタート" },
+    "quitGame": { "zh": "离开游戏", "en": "QUIT", "ja": "ゲーム終了" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望少女们的", "big": "扣击诗" },
