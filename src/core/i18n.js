@@ -17,6 +17,8 @@ export function setLang(l) {
   document.documentElement.lang = l === 'zh' ? 'zh-CN' : l;
   const fonts = C.theme.fonts;
   if (fonts && fonts[l]) document.documentElement.style.setProperty('--font', fonts[l]);
+  // every screen re-writes its text at once, wherever the language was changed (title, the settings panel, ...)
+  window.dispatchEvent(new CustomEvent('langchange', { detail: l }));
 }
 export const initLang = () => setLang(lang);   // after the content packs are loaded
 export const t = (k) => { const s = C.text.ui && C.text.ui[k]; return s ? s[lang] ?? s.en : k; };

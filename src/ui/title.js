@@ -156,7 +156,7 @@ export function showTitle(act) {
       segs.push({ o, opt, group: G.id });
       o.onpointerdown = (e) => {
         e.stopPropagation(); sfx.ui(); pop(o, e);
-        if (G.id === 'language') { setLang(opt); for (const f of texts) f(); } else if ((opt === 'fullscreen') !== !!document.fullscreenElement) toggleFullscreen();
+        if (G.id === 'language') setLang(opt); else if ((opt === 'fullscreen') !== !!document.fullscreenElement) toggleFullscreen();
         refresh();
       };
     }
@@ -205,6 +205,8 @@ export function showTitle(act) {
   }
   refresh();
   document.addEventListener('fullscreenchange', refresh);
+  const onLang = () => { for (const f of texts) f(); refresh(); };   // also when changed elsewhere (the Esc settings panel)
+  window.addEventListener('langchange', onLang);
 
   // ---- loop: parallax + particles (rAF, with a timer fallback when frames are throttled)
   for (let k = 0; k < 8; k++) { const p = fxBack.petal(Math.random() * 0.4 + 0.2); p.y = Math.random() * DH; }
@@ -227,7 +229,7 @@ export function showTitle(act) {
   // entrance: the UI pieces arrive one after another (CSS uses --i)
   [...U.children].forEach((c, i) => c.style.setProperty('--i', i));
   setTimeout(() => root.classList.add('in'), 60);
-  const api = { start: go, refresh, dispose: () => { alive = false; window.removeEventListener('resize', fit); document.removeEventListener('fullscreenchange', refresh); } };
+  const api = { start: go, refresh, dispose: () => { alive = false; window.removeEventListener('resize', fit); document.removeEventListener('fullscreenchange', refresh); window.removeEventListener('langchange', onLang); } };
   root.dispose = api.dispose;
   return api;
 }

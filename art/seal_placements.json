@@ -113,5 +113,22 @@
     "rot": -15,
     "out": "t_girls_ref",
     "keep_frame": true
+  },
+  "sel_card_cat": {
+    "src": "art/raw/r20/card_cat.png",
+    "erase": [
+      52,
+      296,
+      106,
+      406
+    ],
+    "center": [
+      77,
+      340
+    ],
+    "ring": 38,
+    "rot": -8,
+    "out": "sel_card_cat",
+    "keep_frame": true
   }
 }

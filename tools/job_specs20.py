@@ -57,3 +57,54 @@ JOBS = {
         ("art/raw/r20/chevrons.png", [P + "row1.png"], strict("white double chevron '»' at the right end of the bar (only the chevron)", "Remove everything else.")),
     ],
 }
+
+# the clean plate: Codex fills ONLY the magenta areas (tools/plate_mask.py); the import keeps the mockup's own pixels elsewhere
+JOBS["R20_fill"] = [
+    ("art/raw/r20/sel_fill.png", [P + "plate_magenta.png"],
+     "Reference image 1 is an approved game screen on which some areas have been painted solid magenta (#FF00FF). " + NOREDESIGN +
+     "Output the SAME 16:9 image, same size, with ONLY the magenta areas filled in: continue exactly what surrounds each magenta area, as if nothing had "
+     "ever been drawn there: the clean off-white paper of the panels and card bodies (with their faint paper texture), the panels' black grunge edges, the "
+     "black-and-white jagged shards, the red halftone background, the red and black city silhouettes. Do not add any text, letters, numbers, icons, buttons, "
+     "frames, characters or objects. Everything that is not magenta must stay exactly as it is, pixel for pixel.", "OPAQUE"),
+]
+
+# the exact footprint of the game-drawn controls (its alpha becomes the plate mask, so only what the controls cover is refilled)
+JOBS["R20_ui"] = [
+    ("art/raw/r20/sel_ui.png", [MOCK],
+     "Reference image 1 is an approved game chapter-select screen. " + NOREDESIGN +
+     "Output the SAME 16:9 image, same size, with ONLY the user-interface controls kept, exactly where and how they are: the '回到标题' button, the coin "
+     "counter, the gear tile, the two tabs '队伍' and '书包', 'CHAPTER 0', the chapter title and subtitle lettering, the three stage rows, 'BEST 0', the red "
+     "'出发！' slab with its white border and black shadow, the dark '第1话' chapter card, the two triangle arrows, the '1P' / '2P' name bars, the mastery rows "
+     "with their bars, the outfit chips, and the '交换 1P/2P' button with its border and shadow. Do not move or resize anything. Everything else (the "
+     "background, the panels, the card frames, the girls, the sakura, the red slash lines) removed and fully transparent."),
+]
+
+# the controls' plates without any lettering / icons / pictures: cut into pieces, they are the buttons' and rows' own art
+JOBS["R20_uibase"] = [
+    ("art/raw/r20/sel_uibase.png", ["art/raw/r20/sel_ui.png"],
+     "Reference image 1 shows the user-interface controls of an approved game screen on a transparent background. " + NOREDESIGN +
+     "Output the SAME image, same size, every control at exactly the same place and size, but with ALL lettering, numbers, icons and pictures removed from "
+     "them: no text at all, no arrows, no skull, crown, coin, gear, people, bag, shirt, padlock or swords icons, no house picture, no greyscale stage "
+     "pictures and no '»' chevrons. Keep each control's own shape exactly: its fill colour, its red halftone dots and grunge, its white border, its black "
+     "outline and its black drop shadow; where the lettering or an icon was, continue the control's plain fill. For the three stage rows keep the red number "
+     "block (black for the boss row) and the white bar, and continue the white bar where its picture was. Keep the grey tracks of the mastery bars empty "
+     "(no red fill). Everything that is not a control stays fully transparent."),
+]
+
+# the controls without their lettering / icons: only the magenta strokes are repainted with the control's own fill (tools/text_mask.py)
+JOBS["R20_notext"] = [
+    ("art/raw/r20/sel_notext.png", [P + "notext_magenta.png"],
+     "Reference image 1 is an approved game screen on which the lettering, numbers, icons, small pictures and bars have been painted solid magenta "
+     "(#FF00FF). " + NOREDESIGN + "Output the SAME 16:9 image, same size, with ONLY the magenta pixels repainted: continue exactly the surface each magenta "
+     "area sits on, as if nothing had ever been written or drawn there: the red slabs with their red halftone dots and grunge, the black slabs and bars, "
+     "the white bars and panels with their faint paper texture, the grey and red chips, the card bodies, the panel paper, the background. Do not add any "
+     "text, letters, numbers, icons, pictures or objects. Everything that is not magenta must stay exactly as it is, pixel for pixel.", "OPAQUE"),
+]
+
+# the next-chapter card keeps its own picture: only its lettering and padlock (magenta) are repainted
+JOBS["R20_nextfill"] = [
+    ("art/raw/r20/next_fill.png", [P + "next_magenta.png"],
+     "Reference image 1 is a crop of an approved game screen: a dark chapter card with a black-and-white haunted house picture, on which the lettering and a "
+     "padlock have been painted solid magenta (#FF00FF). " + NOREDESIGN + "Output the SAME image, same size, with ONLY the magenta pixels repainted, continuing "
+     "the dark card and the house picture behind them. Do not add any text, letters, icons or objects. Everything that is not magenta stays exactly as it is.", "OPAQUE"),
+]

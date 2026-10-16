@@ -1462,6 +1462,253 @@
   "src": "assets/ui/pin3.webp",
   "w": 200
  },
+ "ui/sel_arrow_l": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_arrow_l.webp",
+  "w": 822
+ },
+ "ui/sel_arrow_r": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_arrow_r.webp",
+  "w": 863
+ },
+ "ui/sel_card_cat": {
+  "box": [
+   824,
+   109,
+   1253,
+   584
+  ],
+  "dom": true,
+  "h": 475,
+  "seal": "canonical",
+  "src": "assets/ui/sel_card_cat.webp",
+  "w": 429,
+  "window": [
+   880,
+   165,
+   1253,
+   584
+  ]
+ },
+ "ui/sel_card_pink": {
+  "box": [
+   1262,
+   109,
+   1691,
+   584
+  ],
+  "dom": true,
+  "h": 475,
+  "src": "assets/ui/sel_card_pink.webp",
+  "w": 410,
+  "window": [
+   1262,
+   165,
+   1635,
+   584
+  ]
+ },
+ "ui/sel_chevrons": {
+  "dom": true,
+  "h": 889,
+  "src": "assets/ui/sel_chevrons.webp",
+  "w": 1176
+ },
+ "ui/sel_icon_bag": {
+  "dom": true,
+  "h": 1000,
+  "src": "assets/ui/sel_icon_bag.webp",
+  "w": 1200
+ },
+ "ui/sel_icon_coin": {
+  "dom": true,
+  "h": 1107,
+  "src": "assets/ui/sel_icon_coin.webp",
+  "w": 1047
+ },
+ "ui/sel_icon_crown": {
+  "dom": true,
+  "h": 912,
+  "src": "assets/ui/sel_icon_crown.webp",
+  "w": 1200
+ },
+ "ui/sel_icon_gear_w": {
+  "dom": true,
+  "h": 1050,
+  "src": "assets/ui/sel_icon_gear_w.webp",
+  "w": 1200
+ },
+ "ui/sel_icon_lock": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_icon_lock.webp",
+  "w": 958
+ },
+ "ui/sel_icon_lock_big": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_icon_lock_big.webp",
+  "w": 966
+ },
+ "ui/sel_icon_shirt": {
+  "dom": true,
+  "h": 1051,
+  "src": "assets/ui/sel_icon_shirt.webp",
+  "w": 1200
+ },
+ "ui/sel_icon_skull": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_icon_skull.webp",
+  "w": 1051
+ },
+ "ui/sel_icon_swap": {
+  "dom": true,
+  "h": 1020,
+  "src": "assets/ui/sel_icon_swap.webp",
+  "w": 1160
+ },
+ "ui/sel_icon_swords": {
+  "dom": true,
+  "h": 1005,
+  "src": "assets/ui/sel_icon_swords.webp",
+  "w": 1047
+ },
+ "ui/sel_icon_team": {
+  "dom": true,
+  "h": 782,
+  "src": "assets/ui/sel_icon_team.webp",
+  "w": 1200
+ },
+ "ui/sel_next": {
+  "dom": true,
+  "h": 1200,
+  "src": "assets/ui/sel_next.webp",
+  "w": 520
+ },
+ "ui/sel_next_ep1": {
+  "dom": true,
+  "h": 562,
+  "src": "assets/ui/sel_next_ep1.webp",
+  "w": 200
+ },
+ "ui/sel_pc_back": {
+  "dom": true,
+  "h": 81,
+  "src": "assets/ui/sel_pc_back.webp",
+  "w": 279
+ },
+ "ui/sel_pc_best": {
+  "dom": true,
+  "h": 61,
+  "src": "assets/ui/sel_pc_best.webp",
+  "w": 194
+ },
+ "ui/sel_pc_coins": {
+  "dom": true,
+  "h": 63,
+  "src": "assets/ui/sel_pc_coins.webp",
+  "w": 224
+ },
+ "ui/sel_pc_gear": {
+  "dom": true,
+  "h": 87,
+  "src": "assets/ui/sel_pc_gear.webp",
+  "w": 94
+ },
+ "ui/sel_pc_go": {
+  "dom": true,
+  "h": 225,
+  "src": "assets/ui/sel_pc_go.webp",
+  "w": 649
+ },
+ "ui/sel_pc_header": {
+  "dom": true,
+  "h": 248,
+  "src": "assets/ui/sel_pc_header.webp",
+  "w": 639
+ },
+ "ui/sel_pc_low_cat": {
+  "dom": true,
+  "h": 203,
+  "src": "assets/ui/sel_pc_low_cat.webp",
+  "w": 396
+ },
+ "ui/sel_pc_low_pink": {
+  "dom": true,
+  "h": 208,
+  "src": "assets/ui/sel_pc_low_pink.webp",
+  "w": 409
+ },
+ "ui/sel_pc_row_boss": {
+  "dom": true,
+  "h": 76,
+  "src": "assets/ui/sel_pc_row_boss.webp",
+  "w": 546
+ },
+ "ui/sel_pc_row_n": {
+  "dom": true,
+  "h": 75,
+  "src": "assets/ui/sel_pc_row_n.webp",
+  "w": 546
+ },
+ "ui/sel_pc_swap": {
+  "dom": true,
+  "h": 113,
+  "src": "assets/ui/sel_pc_swap.webp",
+  "w": 418
+ },
+ "ui/sel_pc_tab_bag": {
+  "dom": true,
+  "h": 79,
+  "src": "assets/ui/sel_pc_tab_bag.webp",
+  "w": 307
+ },
+ "ui/sel_pc_tab_bag_on": {
+  "dom": true,
+  "h": 79,
+  "src": "assets/ui/sel_pc_tab_bag_on.webp",
+  "w": 307
+ },
+ "ui/sel_pc_tab_team": {
+  "dom": true,
+  "h": 80,
+  "src": "assets/ui/sel_pc_tab_team.webp",
+  "w": 370
+ },
+ "ui/sel_pc_tab_team_off": {
+  "dom": true,
+  "h": 80,
+  "src": "assets/ui/sel_pc_tab_team_off.webp",
+  "w": 370
+ },
+ "ui/sel_plate": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/sel_plate.webp",
+  "w": 1920
+ },
+ "ui/sel_thumb1": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb1.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb2": {
+  "dom": true,
+  "h": 368,
+  "src": "assets/ui/sel_thumb2.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_boss": {
+  "dom": true,
+  "h": 491,
+  "src": "assets/ui/sel_thumb_boss.webp",
+  "w": 1200
+ },
  "ui/sheet_h": {
   "dom": true,
   "h": 308,

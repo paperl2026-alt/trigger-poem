@@ -24,8 +24,16 @@ app.whenReady().then(async () => {
   win.webContents.setFrameRate(30);
   log('load', url, w, h);
   win.webContents.on('render-process-gone', (e, d) => log('renderer gone', JSON.stringify(d)));
+  win.webContents.on('console-message', (e, level, message, line, src) => { if (level >= 2) log('console', level, message, `${src}:${line}`); });
   await win.loadURL(url);
   log('loaded');
+  // SHOT_PRE="<js>": run once the first screen is up (e.g. "__G.titleStart()" to go to the chapter select), then wait for <selector>
+  if (process.env.SHOT_PRE) {
+    await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if (document.querySelector('.screen') && window.__G?.ready) return ok(); setTimeout(poll, 100); })(); })`);
+    await new Promise((r) => setTimeout(r, 800));
+    await win.webContents.executeJavaScript(process.env.SHOT_PRE);
+    await new Promise((r) => setTimeout(r, +(process.env.SHOT_WAIT || 2600)));
+  }
   const js = `new Promise((ok) => { const t0 = Date.now(); (function poll() {
       const el = document.querySelector(${JSON.stringify(wait)});
       const imgs = [...document.images];
@@ -55,6 +63,8 @@ app.whenReady().then(async () => {
     s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important} #cursor{display:none!important}';
     document.head.appendChild(s); document.querySelector(${JSON.stringify(wait)})?.classList.add('in'); })()`);
   await new Promise((r) => setTimeout(r, 600));
+  if (process.env.SHOT_EVAL) log('eval', JSON.stringify(await win.webContents.executeJavaScript(process.env.SHOT_EVAL)));   // SHOT_EVAL: inspect the page
+  win.webContents.invalidate(); await new Promise((r) => setTimeout(r, 400));   // offscreen windows can sit on an old frame: repaint first
   const img = await win.webContents.capturePage();
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
   fs.writeFileSync(out, img.toPNG());

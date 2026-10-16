@@ -1,0 +1,85 @@
+/* chapter select, red / black / white (src/ui/select.s-js, content ui/select.s-json) */
+.screen.sel { background: var(--ink, #121012); overflow: hidden; }
+.s-sel-stage { position: absolute; left: 50%; top: 50%; transform-origin: 50% 50%; }
+.sel .s-plx { position: absolute; inset: 0; will-change: transform; pointer-events: none; }
+.sel .s-si { position: absolute; user-select: none; -webkit-user-drag: none; pointer-events: auto; }
+.sel .s-plate .s-si { pointer-events: none; }
+.sel .uifx { z-index: 1; }
+.sel .s-grp { position: absolute; inset: 0; pointer-events: none; }
+.sel .s-grp > .s-si, .sel .s-chip > .s-si { pointer-events: auto; }
+.sel .s-tx { position: absolute; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-weight: 900; white-space: nowrap; line-height: 1; letter-spacing: 0.01em; user-select: none; pointer-events: none; }
+.sel .s-tx.s-wh { color: #fff; }
+.sel .s-tx.s-ink { color: var(--ink); }
+.sel .s-tx.s-red { color: var(--red); }
+.sel .s-tx.s-lt { color: var(--light); }
+.sel .s-tx.s-mast, .sel .s-chip .s-tx { font-weight: 700; }
+.sel .s-none { display: none !important; }
+
+/* buttons: a little hop toward the cursor, a press */
+.sel .s-btn { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), filter 0.18s; }
+.sel .s-btn:hover { translate: 5px -3px; filter: drop-shadow(0 0 10px #ffffff55); }
+.sel .s-btn.s-down { translate: 2px 2px; transition-duration: 0.05s; }
+.sel .s-back:hover .s-tri { translate: -5px 0; }
+.sel .s-back .s-tri { position: absolute; background: #fff; transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-gear .s-gico { transition: rotate 0.6s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.sel .s-gear:hover .s-gico { rotate: 120deg; }
+.sel .s-tab:hover { translate: 0 -4px; }
+.sel .s-tab.s-on { filter: drop-shadow(0 0 8px #d8141e66); }
+.sel .s-tab .s-ttx { color: var(--ink); }
+.sel .s-tab.s-on .s-ttx { color: #fff; }
+.sel .s-tab .s-tico { transition: scale 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-tab:hover .s-tico { scale: 1.12; }
+
+/* chapter: rows slide in one after another; switching chapters slides the panel content */
+.sel .s-row { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-row .s-si:first-child { transition: filter 0.15s; }
+.sel .s-row:hover .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(4px 4px 0 #d8141e); }
+.sel .s-row .s-chev { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-row:hover .s-chev { translate: 8px 0; }
+.sel .s-row .s-thumb { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); filter: grayscale(1) contrast(1.05); }
+.sel .s-chap.s-in-r .s-head, .sel .s-chap.s-in-r .s-rows, .sel .s-chap.s-in-r .s-best { animation: selInR 0.38s cubic-bezier(0.2, 1.2, 0.4, 1); }
+.sel .s-chap.s-in-l .s-head, .sel .s-chap.s-in-l .s-rows, .sel .s-chap.s-in-l .s-best { animation: selInL 0.38s cubic-bezier(0.2, 1.2, 0.4, 1); }
+@keyframes selInR { from { translate: 90px 0; opacity: 0; } to { translate: 0 0; opacity: 1; } }
+@keyframes selInL { from { translate: -90px 0; opacity: 0; } to { translate: 0 0; opacity: 1; } }
+
+/* GO: a light sweep runs over it, it beats; locked = grey */
+.sel .s-go .s-gtx { animation: selBeat 2.4s ease-in-out infinite; }
+@keyframes selBeat { 0%, 70%, 100% { scale: 1; } 78% { scale: 1.05; } 86% { scale: 0.99; } }
+.sel .s-go .s-sweep { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 40%, #ffffff66 50%, transparent 60%) 0 0 / 300% 100% no-repeat; background-position: 130% 0; mix-blend-mode: screen; }
+.sel .s-go:hover .s-sweep { animation: selSweep 0.7s ease-out; }
+@keyframes selSweep { from { background-position: 130% 0; } to { background-position: -30% 0; } }
+.sel .s-go:hover .s-gtri { translate: 8px 0; }
+.sel .s-go .s-gtri { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-go.s-locked { filter: grayscale(1) brightness(0.8); }
+
+/* next chapter card + arrows */
+.sel .s-next:hover { translate: 4px -4px; }
+.sel .s-next .s-nlock { animation: selSway 3s ease-in-out infinite; transform-origin: 50% 20%; }
+@keyframes selSway { 0%, 100% { rotate: -4deg; } 50% { rotate: 4deg; } }
+.sel .s-arrow { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.2s; }
+.sel .s-a-l:hover { translate: -6px 0; }
+.sel .s-a-r:hover { translate: 6px 0; }
+.sel .s-arrow.s-off { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
+.sel .s-a-r:not(.s-off) .s-si { animation: selNudge 1.6s ease-in-out infinite; }
+@keyframes selNudge { 0%, 60%, 100% { translate: 0 0; } 75% { translate: 6px 0; } }
+
+/* team cards: the pictures slide past each other on a swap and bounce when touched */
+.sel .s-card { transition: translate 0s; z-index: 2; }
+.sel .s-card.s-moving { transition: translate 0.55s cubic-bezier(0.5, -0.3, 0.3, 1.3); }
+.sel .s-card.s-poke { animation: selPoke 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes selPoke { 0% { scale: 1 1; } 25% { scale: 1.012 0.985; } 55% { scale: 0.997 1.01; } 100% { scale: 1 1; } }
+.sel .s-card { transform-origin: 50% 100%; }
+.sel .s-low .s-bar { position: absolute; border-radius: 999px; background: var(--grey); overflow: hidden; box-shadow: inset 0 0 0 1px #0002; }
+.sel .s-low .s-bar i { display: block; height: 100%; background: var(--red); border-radius: 999px; transition: width 0.5s cubic-bezier(0.2, 1, 0.4, 1); }
+.sel .s-chip { position: absolute; inset: 0; pointer-events: none; }
+.sel .s-chip > .s-si { transition: translate 0.15s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-chip:hover > .s-si { translate: 0 -2px; }
+.sel .s-swap .s-sico { transition: rotate 0.4s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.sel .s-swap:hover .s-sico { rotate: 180deg; }
+
+.sel .s-pop { animation: selPop 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes selPop { 0% { scale: 0.96; } 60% { scale: 1.03; } 100% { scale: 1; } }
+.sel .s-shake { animation: selShake 0.36s; }
+@keyframes selShake { 0%, 100% { translate: 0 0; } 20% { translate: -7px 0; } 40% { translate: 6px 0; } 60% { translate: -4px 0; } 80% { translate: 3px 0; } }
+
+body:has(.screen.sel) #dbg-btn { display: none; }
