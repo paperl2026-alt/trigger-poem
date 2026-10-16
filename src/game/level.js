@@ -1,10 +1,13 @@
 // Level sets: real 3D rooms (tiled floors / walls / ceilings), paper set pieces, light anchors, and the camera
-// stations an episode's stages are made of. One set per episode. Floor is y = 0; the camera rides at ~1.6 m; rooms run down -Z.
+// stations an episode's stages are made of. One set per episode, all data: content sets/<id>.json
+// (rooms, calm / invaded palettes, stations + waves, and a "dressing" list that this builder lays out).
+// Floor is y = 0; the camera rides at ~1.6 m; rooms run down -Z.
 // A station = where the camera stops to fight: { via (rail points from the previous stop), cam, look, covers, waves }.
 // Anomaly (0 = calm, 1 = invaded): the world lerps its palette, set pieces float up, and tears open in the paper world.
 import * as THREE from 'three';
 import { tex } from '../engine/assets.js';
 import { paperMesh } from '../engine/paper.js';
+import { C } from '../core/content.js';
 
 export const FLOOR = 0;
 const LAMBERT = (map, extra = {}) => new THREE.MeshLambertMaterial({ map, ...extra });
@@ -30,105 +33,11 @@ function tiledPlane(w, h, key, tileW, tileH = tileW, opts = {}) {
   return m;
 }
 
-// =================================================================== SCHOOL (episode 0)
-// A calm after-school sunset. The evil god breaks in: the paper world tears, the sunset turns wrong, desks float.
-// classroom (z 2 .. -12) -> corridor (-12 .. -46) -> schoolyard (-46 .. -104, open sky, boss)
-const S_ROOMS = {
-  classroom: { x0: -5, x1: 5, z0: 2, z1: -12, h: 3.4, floor: ['tex/class_floor', 2.2], wallL: ['tex/class_wall', 3.4], wall: ['tex/corridor_wall', 3.4], ceil: ['tex/school_ceiling', 2.6], fog: 0.03, glow: 0.3 },
-  corridor: { x0: -2.2, x1: 2.2, z0: -12, z1: -46, h: 3.2, floor: ['tex/class_floor', 2.2], wallL: ['tex/class_wall', 3.2], wall: ['tex/corridor_wall', 3.2], ceil: ['tex/school_ceiling', 2.6], fog: 0.035, glow: 0.28 },
-  yard: { x0: -60, x1: 60, z0: -46, z1: -104, floor: ['tex/yard', 3.2], fog: 0.012, glow: 0.45 },
-};
-const SCHOOL = {
-  rooms: S_ROOMS,
-  // palettes: calm sunset -> invaded (cold violet light, magenta rims, darker paper)
-  calm: { fog: 0x6a3a40, hemi: [0xffd0a8, 0x5a3438, 1.55], sky: 0xf0a070, base: [0.66, 0.56, 0.52], surface: 0xffffff },
-  invaded: { fog: 0x241030, hemi: [0xa890ff, 0x2a1030, 1.25], sky: 0x2a1040, base: [0.46, 0.38, 0.6], surface: 0x9a88b8 },
-  stations: {
-    class1: {
-      via: [[0, 1.5, 1.6]], cam: [0, 1.5, -0.6], look: [0, 1.35, -11],
-      covers: [{ k: 'cover/desks', x: -1.05, z: -2.7, h: 0.92 }, { k: 'cover/desks', x: 1.05, z: -2.7, h: 0.92, flip: true }],
-      invade: true, tutorial: true,
-      waves: [
-        [{ t: 0.4, type: 'zomb', from: 'pop', x: -1.2, z: -7.2 }, { t: 2.2, type: 'zomb', from: 'far', x: 1.4, z: -10.6 }],
-        [{ t: 0.0, type: 'sheet', from: 'far', x: -3, y: 2.2, z: -10.5 }, { t: 0.6, type: 'sheet', from: 'far', x: 3, y: 2.4, z: -10.5 }, { t: 1.4, type: 'zomb', from: 'pop', x: 1.2, z: -5.2 },
-          { t: 2.4, type: 'zomb', from: 'pop', x: -3.4, z: -9.2 }],
-        [{ t: 0.0, type: 'lantern', from: 'pop', x: -2.6, z: -9.6 }, { t: 0.5, type: 'zomb', from: 'pop', x: 1.2, z: -7.2 }, { t: 1.0, type: 'zomb', from: 'pop', x: 3.4, z: -9.2 },
-          { t: 1.8, type: 'sheet', from: 'far', x: 0, y: 2.6, z: -11 }, { t: 2.2, type: 'sheet', from: 'far', x: -2.5, y: 2, z: -11 }, { t: 2.6, type: 'sheet', from: 'far', x: 2.5, y: 2.2, z: -11 }],
-      ],
-    },
-    hall1: {
-      via: [[0, 1.5, -6], [1.6, 1.5, -10.5], [0.2, 1.5, -13.5]], cam: [0, 1.5, -16], look: [0, 1.35, -34],
-      covers: [{ k: 'cover/desks', x: -0.95, z: -18.6, h: 0.9 }, { k: 'cover/desks', x: 0.95, z: -18.6, h: 0.9, flip: true }],
-      waves: [
-        [{ t: 0.2, type: 'lantern', from: 'pop', x: -1.3, z: -27 }, { t: 0.9, type: 'zomb', from: 'far', x: 0.6, z: -33 }, { t: 1.8, type: 'sheet', from: 'far', x: 0.8, y: 2.3, z: -34 },
-          { t: 2.3, type: 'sheet', from: 'far', x: -0.8, y: 2.0, z: -34 }],
-        [{ t: 0.0, type: 'umbrella', x: 0.6, z: -30 }, { t: 0.7, type: 'lantern', from: 'pop', x: 1.3, z: -30 }, { t: 1.5, type: 'zomb', from: 'far', x: -0.8, z: -34 },
-          { t: 2.6, type: 'zomb', from: 'drop', x: 0.9, z: -26 }, { t: 3.2, type: 'sheet', from: 'far', x: 0, y: 2.4, z: -36 }],
-      ],
-    },
-    hall2: {
-      via: [[0.3, 1.5, -22], [-0.2, 1.5, -27]], cam: [0, 1.5, -30], look: [0, 1.35, -46],
-      covers: [{ k: 'cover/desks', x: -0.95, z: -32.6, h: 0.9 }, { k: 'cover/desks', x: 0.95, z: -32.6, h: 0.9, flip: true }],
-      waves: [
-        [{ t: 0.2, type: 'lantern', from: 'pop', x: -1.2, z: -40 }, { t: 0.5, type: 'lantern', from: 'pop', x: 1.2, z: -42 }, { t: 1.4, type: 'zomb', from: 'far', x: 0, z: -45 },
-          { t: 2.2, type: 'umbrella', x: -0.5, z: -44 }, { t: 2.6, type: 'sheet', from: 'far', x: -1, y: 2.0, z: -46 }],
-        [{ t: 0.0, type: 'zomb', from: 'drop', x: -0.6, z: -38 }, { t: 0.4, type: 'zomb', from: 'drop', x: 0.7, z: -40 }, { t: 1.2, type: 'lantern', from: 'pop', x: 0, z: -44 },
-          { t: 2.0, type: 'sheet', from: 'far', x: -1, y: 2.4, z: -46 }, { t: 2.3, type: 'sheet', from: 'far', x: 1, y: 2.2, z: -46 }, { t: 2.6, type: 'umbrella', x: 0.4, z: -45 },
-          { t: 3.4, type: 'zomb', from: 'far', x: 0.4, z: -46 }],
-      ],
-    },
-    yard: {
-      via: [[0, 1.6, -40], [0, 1.7, -46], [0, 1.8, -50]], cam: [0, 1.8, -54], look: [0, 4.0, -74],
-      covers: [{ k: 'cover/vault', x: -1.3, z: -56.8, h: 0.95 }, { k: 'cover/vault', x: 1.3, z: -56.8, h: 0.95, flip: true }],
-    },
-  },
-  fogAt(z) { const R = S_ROOMS; return z > R.classroom.z1 ? R.classroom.fog : z > R.corridor.z1 ? R.corridor.fog : R.yard.fog; },
-  ceilAt(z) { const R = S_ROOMS; return z > R.classroom.z1 ? R.classroom.h : z > R.corridor.z1 ? R.corridor.h : 12; },
-  build(lv) {
-    const C = S_ROOMS.classroom, H = S_ROOMS.corridor, Y = S_ROOMS.yard;
-    lv.room(C, { openStart: false, openEnd: { w: 2.4, h: 2.7 } });
-    lv.room(H, { openStart: false, openEnd: { w: 3.0, h: 2.8 } });
-    const g = tiledPlane(Y.x1 - Y.x0, Y.z0 - Y.z1, Y.floor[0], Y.floor[1], Y.floor[1], { glow: Y.glow });
-    g.rotation.x = -Math.PI / 2; g.position.set(0, 0, (Y.z0 + Y.z1) / 2); lv.group.add(g);
-    lv.surfaces.push(g);
-    lv.backdrop('bg/yard_calm', 130, 0, -9, Y.z1);
-    // classroom: rows of desks (they float up when the anomaly hits), lectern, blackboard, locker, plant
-    for (const z of [-5.2, -7.2, -9.2]) for (const x of [-3.6, -1.2, 1.2, 3.6]) lv.flat('prop/desk', 1.15, x + (Math.random() - 0.5) * 0.2, 0, z, { float: (Math.abs(x) > 2 || z < -8) && Math.random() < 0.75 ? 1.7 + Math.random() * 0.5 : 0 });
-    lv.flat('prop/lectern', 1.2, 0.4, 0, -10.9, { float: 1.8 });
-    const board = lv.flat('prop/chalkboard', 2.2, -2.4, 0.15, -11.85);
-    if (board) board.scale.x = 1.25;
-    lv.flat('prop/plant', 1.1, 4.4, 0, -11.4, { float: 1.2 });
-    lv.flat('prop/locker', 1.8, -4.4, 0, -11.5);
-    for (const z of [-1.5, -5, -8.5]) lv.light(C.x0 + 0.8, 2.4, z, 0xffa060, 1.3, 0.15, 0x9a5cff); // sunset through the windows
-    lv.light(0, 3.0, -10, 0xffc8a0, 1.0, 0.2, 0xff3aa0);
-    lv.light(2.5, 3.1, -3, 0xfff0d8, 0.8, 0.05, 0x7a6aff);
-    // tears in the paper world (open when the evil god breaks in)
-    lv.rip(0, C.x0 + 0.03, 2.1, -6.5, Math.PI / 2, 1.6);
-    lv.rip(1, C.x1 - 0.03, 1.8, -8.8, -Math.PI / 2, 1.4);
-    lv.rip(2, 2.4, 2.4, C.z1 + 0.03, 0, 1.5);
-    lv.rip(3, C.x1 - 0.03, 2.3, -3.5, -Math.PI / 2, 1.1);
-    // corridor: lockers on the inner wall, shoe cubbies at the exit, tears along the walls
-    for (let z = -15; z > -44; z -= 3.6) lv.onWall('prop/locker', 1.85, 1, H.x1, 0, z);
-    for (const z of [-21, -35]) lv.onWall('prop/plant', 1.0, -1, H.x0, 0, z);
-    for (const x of [-1.6, 1.6]) lv.flat('prop/shoebox', 1.4, x, 0, -44.8, { float: 0.7 });
-    for (let z = -14; z > -46; z -= 4.5) { lv.light(H.x0 + 0.6, 2.3, z, 0xff9a58, 1.1, 0.1, 0x9a5cff); lv.light(0.8, 3.0, z - 2, 0xfff0d8, 0.5, 0.3, 0xff3aa0); }
-    [[4, H.x0 + 0.03, 2.0, -24, Math.PI / 2, 1.3], [5, H.x1 - 0.03, 2.2, -31, -Math.PI / 2, 1.2], [0, H.x0 + 0.03, 1.9, -39, Math.PI / 2, 1.2]].forEach((r) => lv.rip(...r));
-    // yard: sunset key light; when invaded the sky itself is torn
-    lv.light(-8, 9, -66, 0xffa060, 3.4, 0.05, 0x8a5cff);
-    lv.light(8, 7, -70, 0xffb080, 2.6, 0.1, 0xff3aa0);
-    lv.light(0, 4, -58, 0xffc890, 1.6, 0.1, 0xb070ff);
-    for (const [x, z] of [[-9, -70], [9, -64], [-12, -84], [12, -80]]) lv.flat('prop/plant', 2.2, x, 0, z, { billboard: true });
-    [[2, -24, 30, -101, 0, 16], [1, 18, 24, -101, 0, 12], [5, -2, 34, -101, 0, 10], [3, 34, 16, -101, 0, 9]].forEach((r) => lv.rip(...r, true));
-  },
-};
-
-export const SETS = { school: SCHOOL };
-
 // =================================================================== builder
 export class Level {
   constructor(world, setId) {
     this.world = world;
-    this.set = SETS[setId];
+    this.set = C.sets[setId];
     this.group = new THREE.Group();
     this.lights = [];     // anchors {p, color (calm), alt (invaded), power, flicker}
     this.billboards = []; // props that turn toward the camera around Y
@@ -136,11 +45,48 @@ export class Level {
     this.floaters = [];   // set pieces that lift off when the anomaly hits
     this.rips = [];       // torn-paper holes into the void
     this.anomaly = -1;
-    this.set.build(this);
+    // rooms in the order the camera meets them (they run down -Z)
+    this.zones = Object.values(this.set.rooms).sort((a, b) => b.z0 - a.z0);
+    for (const d of this.set.dressing || []) this.dress(d);
   }
-  ceilAt(z) { return this.set.ceilAt(z); }
+  zone(z) { return this.zones.find((r) => z > r.z1) || this.zones[this.zones.length - 1]; }
+  ceilAt(z) { return this.zone(z).h ?? this.set.openCeiling ?? 12; }
+  fogAt(z) { return this.zone(z).fog ?? 0.02; }
+
+  // one entry of the set's dressing list
+  dress(d) {
+    const R = this.set.rooms, deg = Math.PI / 180;
+    switch (d.do) {
+      case 'room': this.room(R[d.room], d); break;
+      case 'ground': {
+        const Y = R[d.room];
+        const g = tiledPlane(Y.x1 - Y.x0, Y.z0 - Y.z1, Y.floor[0], Y.floor[1], Y.floor[1], { glow: Y.glow });
+        g.rotation.x = -Math.PI / 2; g.position.set((Y.x0 + Y.x1) / 2, 0, (Y.z0 + Y.z1) / 2);
+        this.group.add(g); this.surfaces.push(g);
+        break;
+      }
+      case 'backdrop': this.backdrop(d.key, d.w, d.x || 0, d.y || 0, d.z); break;
+      case 'flat': {
+        const m = this.flat(d.key, d.h, d.x, d.y || 0, d.z, { rotY: (d.rotY || 0) * deg, billboard: !!d.billboard, float: d.float || 0 });
+        if (m && d.scaleX) m.scale.x = d.scaleX;
+        break;
+      }
+      case 'grid': // rows of the same prop, slightly jittered; some float up when the anomaly hits
+        for (const z of d.zs) for (const x of d.xs) {
+          const f = d.float, lifts = f && (Math.abs(x) > (f.ifAbsXOver ?? -1) || z < (f.orZUnder ?? -1e9)) && Math.random() < f.chance;
+          this.flat(d.key, d.h, x + (Math.random() - 0.5) * (d.jitter || 0), 0, z, { float: lifts ? f.lift[0] + Math.random() * (f.lift[1] - f.lift[0]) : 0 });
+        }
+        break;
+      case 'row': for (let z = d.z0; z > d.z1; z -= d.step) this.onWall(d.key, d.h, d.wall, d.xWall, 0, z); break;
+      case 'onWall': this.onWall(d.key, d.h, d.side, d.xWall, d.y || 0, d.z); break;
+      case 'light': this.light(d.x, d.y, d.z, d.color, d.power ?? 1, d.flicker ?? 1, d.alt ?? null); break;
+      case 'rip': this.rip(d.i, d.x, d.y, d.z, (d.rotY || 0) * deg, d.size, !!d.sky); break;
+      default: console.warn('unknown dressing', d);
+    }
+  }
 
   room(r, { openStart = null, openEnd = null } = {}) {
+    if (!r) return;
     const g = this.group, w = r.x1 - r.x0, d = r.z0 - r.z1, cx = (r.x0 + r.x1) / 2, cz = (r.z0 + r.z1) / 2;
     const G = { glow: r.glow || 0 };
     const add = (m) => { g.add(m); this.surfaces.push(m); return m; };

@@ -9,11 +9,14 @@ import { sfx } from '../engine/audio.js';
 import { Actor } from './enemies.js';
 import { COL } from './fx.js';
 
+// Numbers per boss: content bosses.json (pairs written [a, b] are [phase 1, phase 2]).
 const rnd = (a, b) => a + Math.random() * (b - a);
-const EYE_MULT = 1.5, BODY_MULT = 0.75;
+const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
 
 // shared boss behaviour: eyes from sprite meta, part multipliers, poise / stagger, one HP bar, death
 class BossBase extends Actor {
+  // ph(pair): the value for the current phase
+  ph(v) { return Array.isArray(v) ? v[this.phase2 ? 1 : 0] : v; }
   init(hp, poise) {
     this.hp = this.maxHp = hp;
     this.poiseMax = poise; this.poise = 0; this.poiseCD = 0;
@@ -30,7 +33,7 @@ class BossBase extends Actor {
     const { u, v } = info.uv;
     let eye = -1;
     this.eyes().forEach((e, i) => { if (Math.hypot(u - e[0], (v - e[1]) / this.ar) < e[2] * 1.15) eye = i; });
-    const mult = eye >= 0 ? EYE_MULT : BODY_MULT;
+    const mult = eye >= 0 ? this.def.eyeMul : this.def.bodyMul;
     const dmg = info.dmg * mult;
     info.dealt = dmg;
     this.lastHitBy = info.by;
@@ -49,11 +52,11 @@ class BossBase extends Actor {
     if (!this.alive) return;
     this.hp -= dmg;
     if (info) this.game.onHit(this, kind, info);
-    if (!this.phase2 && this.hp < this.maxHp * 0.5) this.toPhase2();
+    if (!this.phase2 && this.hp < this.maxHp * this.def.phase2At) this.toPhase2();
     if (this.hp <= 0) this.die();
   }
   baseTick(dt) {
-    this.poise = Math.max(0, this.poise - this.poiseMax * 0.12 * dt);
+    this.poise = Math.max(0, this.poise - this.poiseMax * this.def.poiseDrain * dt);
     this.poiseCD -= dt;
     this.staggerT -= dt;
     this.poseT -= dt;
@@ -62,9 +65,9 @@ class BossBase extends Actor {
     const g = this.game;
     this.seq++;
     this.poise = 0;
-    this.poiseCD = 4;
-    this.staggerT = 1.6;
-    this.pose('stagger', 1.6);
+    this.poiseCD = this.def.poiseCooldown;
+    this.staggerT = this.def.staggerTime;
+    this.pose('stagger', this.def.staggerTime);
     this.flash = 1;
     this.endAttack();
     g.post.shake(0.8);
@@ -97,25 +100,26 @@ class BossBase extends Actor {
 
 // ------------------------------------------------------------------ the runaway mascot float (episode 0)
 export class MascotFloat extends BossBase {
-  constructor(game) {
-    super(game, 'boss/f_idle', 8.5, 'bottom');
+  constructor(game, def) {
+    super(game, `${def.sprite}idle`, def.h, 'bottom');
+    this.def = def;
     this.type = 'boss';
-    this.name = { zh: '暴走吉祥物花车', en: 'THE RUNAWAY MASCOT FLOAT', ja: '暴走マスコット山車' };
-    this.prefix = 'boss/f_';
-    this.init(2600, 380);
+    this.name = def.name;
+    this.prefix = def.sprite;
+    this.init(def.hp, def.poise);
     const c = game.world.camPos;
-    this.home = new THREE.Vector3(c.x, 0, c.z - 21);
-    this.root.position.set(this.home.x + 14, 0, this.home.z - 6);
-    this.pattern = ['spit', 'stomp', 'summon', 'spit', 'stomp', 'spit'];
+    this.home = new THREE.Vector3(c.x, 0, c.z - def.homeDist);
+    this.root.position.set(this.home.x + def.enterFrom[0], 0, this.home.z + def.enterFrom[1]);
+    this.pattern = def.pattern;
     this.pi = 0;
-    this.timer = 2.6;
+    this.timer = def.firstDelay;
     this.stompLock = null;
     game.world.scene.add(this.root);
     this.shadowM = game.world.makeShadow(this.w * 0.6);
     this.root.add(this.shadowM);
     // it comes rolling in from the side of the yard, lanterns swinging
     this.busy = true;
-    this.run(this.home.x, this.home.z, 1.6, () => { this.busy = false; this.pose('stomp', 0.8); game.post.shake(1); sfx.slam(); });
+    this.run(this.home.x, this.home.z, def.enterTime, () => { this.busy = false; this.pose('stomp', 0.8); game.post.shake(1); sfx.slam(); });
   }
   run(x, z, dur, done) {
     const P = this.root.position, x0 = P.x, z0 = P.z;
@@ -157,31 +161,33 @@ export class MascotFloat extends BossBase {
     else this.summon();
   }
   spit() {
-    const g = this.game, n = this.phase2 ? 5 : 3;
+    const g = this.game, S = this.def.spit, n = this.ph(S.shots);
     this.pose('throw', 0.5 + n * 0.32);
     sfx.roar();
     for (let i = 0; i < n; i++) {
-      this.later(0.35 + i * (this.phase2 ? 0.28 : 0.38), () => {
+      this.later(0.35 + i * this.ph(S.gap), () => {
         this.pose('throw', 0.4);
-        g.spawnProjectile(i % 3 === 2 ? 'balloon' : 'takoyaki', this.uvToWorld(rnd(0.42, 0.58), 0.62), { time: this.phase2 ? 1.5 : 1.8, slot: g.pickTarget(i % 2 ? 1 : -1), curve: (i % 2 ? 1 : -1) * 2.5, dmg: 20 });
+        g.spawnProjectile(S.projectiles[i % S.projectiles.length], this.uvToWorld(rnd(0.42, 0.58), 0.62), { time: this.ph(S.flight), slot: g.pickTarget(i % 2 ? 1 : -1), curve: (i % 2 ? 1 : -1) * S.curve, dmg: S.dmg });
         sfx.throwIt(0);
       });
     }
-    this.timer = (this.phase2 ? 2.4 : 3.2) + n * 0.3;
+    this.timer = this.ph(S.rest) + n * S.restPerShot;
     // after spitting it rolls to a new spot
-    this.later(0.6 + n * 0.35, () => { if (this.staggerT <= 0) { this.busy = true; this.run(this.home.x + rnd(-3.2, 3.2), this.home.z + rnd(-1.5, 1.5), this.phase2 ? 0.7 : 1.0, () => { this.busy = false; }); } });
+    const [rx, rz] = S.roam;
+    this.later(0.6 + n * 0.35, () => { if (this.staggerT <= 0) { this.busy = true; this.run(this.home.x + rnd(-rx, rx), this.home.z + rnd(-rz, rz), this.ph(S.roamTime), () => { this.busy = false; }); } });
   }
   // jumps up and slams the yard: can't be interrupted, hit everyone not in cover
   stomp() {
     const g = this.game, P = this.root.position;
     this.armor = true;
     this.pose('stomp', 9);
-    this.stompDur = this.phase2 ? 1.3 : 1.6;
+    const S = this.def.stomp;
+    this.stompDur = this.ph(S.windup);
     this.stompT = 0;
     this.stompLock = this.lock = g.fx.lock('heavy', -1);
     sfx.warn(); setTimeout(() => sfx.warn(), 300);
     g.warnSlam();
-    g.tweens.to(P, { y: 2.6 }, this.stompDur * 0.85, { ease: Ease.outCubic });
+    g.tweens.to(P, { y: S.height }, this.stompDur * 0.85, { ease: Ease.outCubic });
     this.later(this.stompDur, () => {
       if (this.stompLock) { this.stompLock.remove(); this.stompLock = null; this.lock = null; }
       g.post.u.warn.value = 0;
@@ -194,24 +200,23 @@ export class MascotFloat extends BossBase {
           const c = g.world.camPos;
           for (const x of [-2, 0, 2]) g.fx.confetti(new THREE.Vector3(c.x + x, 0.3, c.z - 4), 18, 1.8, [COL.bone, COL.paper]);
           g.fx.stamp('don', g.W * 0.5, g.H * 0.75, 0.3, 0);
-          g.playerAttacked({ kind: 'ranged', dmg: 30, from: this, heavy: true, slot: -1 });
+          g.playerAttacked({ kind: 'ranged', dmg: S.dmg, from: this, heavy: true, slot: -1 });
           this.armor = false;
           this.pose('idle', 0.4);
         },
       });
     });
-    this.timer = this.stompDur + (this.phase2 ? 1.4 : 2.0);
+    this.timer = this.stompDur + this.ph(S.rest);
   }
   summon() {
     const g = this.game;
     sfx.roar();
     this.pose('stomp', 1.2);
     g.post.shake(0.5);
-    const z = this.home.z + 3;
-    const spawns = [{ type: 'sheet', x: -3, y: 3, z }, { type: 'sheet', x: 3, y: 3.4, z }, { type: 'zomb', from: 'far', x: rnd(-2, 2), z: z - 1 }];
-    if (this.phase2) spawns.push({ type: 'sheet', x: 0, y: 4, z }, { type: 'zomb', from: 'far', x: rnd(-2, 2), z: z - 2 });
+    const S = this.def.summon;
+    const spawns = [...S.spawns, ...(this.phase2 ? S.phase2Extra : [])].map(({ dz, ...s }) => ({ ...s, x: rr(s.x), z: this.home.z + dz }));
     spawns.forEach((s, i) => this.later(0.3 + i * 0.35, () => g.spawnEnemy({ ...s, x: s.x + this.home.x })));
-    this.timer = 4.2;
+    this.timer = S.rest;
   }
   toPhase2() {
     this.phase2 = true;
@@ -235,4 +240,5 @@ export class MascotFloat extends BossBase {
   }
 }
 
+// boss behaviours by name (bosses.json "beh"); a new boss type in a pack can reuse one of these with its own numbers and art
 export const BOSSES = { float: MascotFloat };

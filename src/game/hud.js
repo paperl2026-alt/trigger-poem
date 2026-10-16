@@ -6,13 +6,13 @@
 //   Fever: level-ups shout across the screen; P1's damage multiplier sits in a big rank badge
 //   boss: one fat bar on top. Reticles: one per player (reload ring, slow beam circle + ghost dot).
 import { url, meta } from '../engine/assets.js';
-import { t, tr, lang, FEVER_LABEL } from './i18n.js';
+import { t, tr, lang } from './i18n.js';
+import { C, T } from '../core/content.js';
 import { FEVER_KEYS } from './fever.js';
 
 const $ = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
 const L3 = (zh, en, ja) => ({ zh, en, ja }[lang] || en);
-const FEVER_NAME = { dmg: () => L3('伤害', 'POWER', '威力'), acc: () => L3('准头', 'AIM', '精度'), combo: () => L3('连击', 'CHAIN', '連撃') };
-const RANKS = ['C', 'C', 'B', 'B', 'A', 'A', 'S', 'S', 'S', '极'];
+// Fever names / labels: content text/ui.json; rank letters: tuning/fever.json; shout colours: theme.json
 
 class Panel {
   constructor(root, p) {
@@ -48,7 +48,7 @@ class Panel {
     this.fv = {};
     for (const k of FEVER_KEYS) {
       const b = $('div', `fb k-${k}`, fv);
-      $('b', 'kj', b).textContent = tr(FEVER_LABEL[k]);
+      $('b', 'kj', b).textContent = tr(C.text.feverLabel[k]);
       const track = $('div', 'tr', b);
       const fill = $('i', '', track);
       const lv = $('em', '', b);
@@ -245,11 +245,11 @@ export class Hud {
     for (const p of g.players) {
       while (p.fever.ups.length) {
         const k = p.fever.ups.shift(), lv = p.fever.level(k);
-        this.shout(`${FEVER_NAME[k]()} FEVER ${lv >= 3 ? 'MAX' : `Lv${lv}`}!!`, { dmg: '#ff5a4a', acc: '#4ad8ff', combo: '#ffd23a' }[k], p.slot ? 26 : 20);
+        this.shout(`${tr(C.text.feverName[k])} FEVER ${lv >= T.fever.maxLevel ? 'MAX' : `Lv${lv}`}!!`, C.theme.feverColor[k], p.slot ? 26 : 20);
       }
     }
     const p1 = g.players[0], lvSum = FEVER_KEYS.reduce((a, k) => a + p1.fever.level(k), 0);
-    const r = RANKS[lvSum];
+    const r = T.fever.rankBadge[lvSum];
     if (r !== this.lastRank) { this.lastRank = r; this.rankC.textContent = r; this.rank.dataset.r = r; this.rank.classList.remove('pop'); void this.rank.offsetWidth; this.rank.classList.add('pop'); }
     this.rankM.textContent = `${L3('伤害', 'DMG', '与ダメ')}×${p1.fever.dmgMul.toFixed(2)}`;
     this.rank.classList.toggle('hidden', !g.combat && !this.game.boss);

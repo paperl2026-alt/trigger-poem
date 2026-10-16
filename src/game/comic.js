@@ -2,22 +2,10 @@
 import { url, meta } from '../engine/assets.js';
 import { sfx } from '../engine/audio.js';
 import { t } from './i18n.js';
+import { C } from '../core/content.js';
 
-// rects are % of a 16:9 page; clip is a polygon in % of the panel; pos = background focus; in = entrance
-export const COMICS = {
-  // ---- episode 0
-  ep0_intro: [[
-    { img: 'comic/t1', rect: [1.5, 2.5, 97, 50], clip: '0 0,100% 0,100% 90%,0 100%', pos: '50% 40%', in: 'slideL', at: 0.1, sfx: [{ k: 'sfx2/ba', x: 70, y: 6, w: 20, r: 8, at: 0.6 }] },
-    { img: 'comic/t2', rect: [1.5, 48.5, 97, 49], clip: '0 9%,100% 0,100% 100%,0 100%', pos: '50% 45%', in: 'punch', at: 1.4, sfx: [{ k: 'sfx2/don', x: 6, y: 56, w: 20, r: -10, at: 1.8, shake: true }] },
-  ]],
-  ep0_boss: [[
-    { img: 'comic/t3', rect: [1.5, 2.5, 97, 95], clip: '0 0,100% 0,100% 100%,0 100%', pos: '50% 50%', in: 'drop', at: 0.1, sfx: [{ k: 'sfx2/gogogo', x: 74, y: 8, w: 22, r: 8, at: 0.7, shake: true }] },
-  ]],
-  ep0_end: [[
-    { img: 'comic/t4', rect: [1.5, 2.5, 59, 95], clip: '0 0,100% 0,93% 100%,0 100%', pos: '50% 45%', in: 'slideL', at: 0.1, sfx: [{ k: 'sfx2/gaan', x: 4, y: 6, w: 22, r: -10, at: 0.7, shake: true }] },
-    { img: 'comic/t5', rect: [56.5, 2.5, 42, 95], clip: '9% 0,100% 0,100% 100%,0 100%', pos: '50% 50%', in: 'slideR', at: 1.5 },
-  ]],
-};
+// Pages: content comics.json. rects are % of a 16:9 page; clip is a polygon in % of the panel; pos = background focus; in = entrance
+const COMICS = C.comics;
 
 export class Comic {
   constructor() {

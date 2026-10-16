@@ -1,0 +1,44 @@
+{
+  "_doc": "Boss。beh 选代码里的 Boss 行为（目前只有 float：教学关旧版的暴走花车，占位）。sprite 是图的前缀，h 高度（米），hp 血量，poise 硬直值，eyeMul / bodyMul 打眼睛 / 打身体的伤害倍率，phase2At 血量比例低于它进入二阶段。各招式的数值成对写的是 [一阶段, 二阶段]。",
+  "float": {
+    "beh": "float",
+    "sprite": "boss/f_",
+    "name": { "zh": "暴走吉祥物花车", "en": "THE RUNAWAY MASCOT FLOAT", "ja": "暴走マスコット山車" },
+    "h": 8.5,
+    "hp": 2600,
+    "poise": 380,
+    "eyeMul": 1.5,
+    "bodyMul": 0.75,
+    "phase2At": 0.5,
+    "poiseDrain": 0.12,
+    "poiseCooldown": 4,
+    "staggerTime": 1.6,
+    "homeDist": 21,
+    "enterFrom": [14, -6],
+    "enterTime": 1.6,
+    "firstDelay": 2.6,
+    "pattern": ["spit", "stomp", "summon", "spit", "stomp", "spit"],
+    "spit": {
+      "shots": [3, 5],
+      "gap": [0.38, 0.28],
+      "flight": [1.8, 1.5],
+      "dmg": 20,
+      "curve": 2.5,
+      "rest": [3.2, 2.4],
+      "restPerShot": 0.3,
+      "roam": [3.2, 1.5],
+      "roamTime": [1, 0.7],
+      "projectiles": ["takoyaki", "takoyaki", "balloon"]
+    },
+    "stomp": { "windup": [1.6, 1.3], "height": 2.6, "dmg": 30, "rest": [2, 1.4] },
+    "summon": {
+      "rest": 4.2,
+      "spawns": [
+        { "type": "sheet", "x": -3, "y": 3, "dz": 3 },
+        { "type": "sheet", "x": 3, "y": 3.4, "dz": 3 },
+        { "type": "zomb", "from": "far", "x": [-2, 2], "dz": 2 }
+      ],
+      "phase2Extra": [{ "type": "sheet", "x": 0, "y": 4, "dz": 3 }, { "type": "zomb", "from": "far", "x": [-2, 2], "dz": 1 }]
+    }
+  }
+}

@@ -156,7 +156,7 @@ async function main() {
     Promise.all(poses.map((p) => fetch(`jiggle/${p}_rig.json`).then((r) => r.json()))),
     Promise.all(names.map((n) => load(`jiggle/${n}.png`))),
     Promise.all(poses.map((p) => Promise.all([0, 1, 2, 3].map((i) => load(`jiggle/${p}_w${i}.png`, true))))),
-    load('assets/bg/yard_calm.webp'),
+    load('content/base/assets/bg/yard_calm.webp'),
   ]);
   const tex = Object.fromEntries(names.map((n, i) => [n, texList[i]]));
   const A = { meta, tex, flesh, rigs: Object.fromEntries(poses.map((p, i) => [p, rigList[i]])), weights: Object.fromEntries(poses.map((p, i) => [p, wList[i]])) };

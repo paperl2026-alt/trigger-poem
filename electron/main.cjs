@@ -9,6 +9,8 @@ const fs = require('node:fs');
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
 
 const DIST = path.join(__dirname, '..', 'dist');
+// content-pack mods (DLC / Workshop share the format): <folder of the exe>/mods/<id>/pack.json; in development <project>/mods
+const MODS = app.isPackaged ? path.join(path.dirname(process.execPath), 'mods') : path.join(__dirname, '..', 'mods');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml' };
 const selfTest = process.env.NOA_SELFTEST;
 // `electron . --page=jiggle.html` opens another page of the build (e.g. the jiggle tech validation)
@@ -41,8 +43,14 @@ app.whenReady().then(() => {
   protocol.handle('app', async (req) => {
     let p = decodeURIComponent(new URL(req.url).pathname);
     if (p === '/' || p === '') p = '/index.html';
-    const file = path.normalize(path.join(DIST, p));
-    if (!file.startsWith(DIST)) return new Response('forbidden', { status: 403 });
+    if (p === '/__mods.json') {
+      let list = [];
+      try { list = fs.readdirSync(MODS).filter((d) => fs.existsSync(path.join(MODS, d, 'pack.json'))); } catch (e) { /* no mods folder */ }
+      return new Response(JSON.stringify(list), { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
+    }
+    const root = p.startsWith('/mods/') ? MODS : DIST;
+    const file = path.normalize(path.join(root, p.startsWith('/mods/') ? p.slice(5) : p));
+    if (!file.startsWith(root)) return new Response('forbidden', { status: 403 });
     try {
       const data = await fs.promises.readFile(file);
       return new Response(data, { headers: { 'content-type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream', 'cache-control': 'no-store' } });

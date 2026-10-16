@@ -155,7 +155,7 @@ export class World {
     }
     // fog per room
     this.applyAnomaly();
-    const want = this.level.set.fogAt(this.camPos.z - 1) * (1 + this.anomaly * 0.6);
+    const want = this.level.fogAt(this.camPos.z - 1) * (1 + this.anomaly * 0.6);
     this.scene.fog.density += (want - this.scene.fog.density) * Math.min(1, dt * 2);
     FOG.density.value = this.scene.fog.density;
     // camera: rail position + look sway toward 1P's reticle

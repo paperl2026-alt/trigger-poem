@@ -1,0 +1,47 @@
+{
+  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），sprite 图的前缀，hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。",
+  "zomb": {
+    "beh": "walker",
+    "sprite": "zomb",
+    "hp": 80,
+    "h": 1.75,
+    "speed": 1.6,
+    "windup": 0.95,
+    "poise": 40,
+    "first": "w0",
+    "frames": { "idle": ["w0"], "walk": ["w0", "w1", "w2", "w3"], "crouch": ["a0"], "leap": ["a1"], "bite": ["a2"], "recoil": ["a3"], "hurt": ["a3"] }
+  },
+  "sheet": {
+    "beh": "flyer",
+    "sprite": "sheet",
+    "hp": 26,
+    "h": 1,
+    "windup": 0.85,
+    "poise": 12,
+    "first": "f0",
+    "frames": { "fly": ["f0", "f1", "f2", "f1"], "windup": ["f0"], "dive": ["f3"], "hurt": ["f2"] }
+  },
+  "lantern": {
+    "beh": "thrower",
+    "sprite": "lantern",
+    "hp": 100,
+    "h": 1.6,
+    "windup": 1,
+    "poise": 50,
+    "first": "p0",
+    "hides": false,
+    "proj": "wisp",
+    "frames": { "hide": ["p0"], "rise": ["p0"], "idle": ["p0"], "windup": ["p1"], "throw": ["p2"], "hurt": ["p3"] }
+  },
+  "umbrella": {
+    "beh": "crawler",
+    "sprite": "umbrella",
+    "hp": 45,
+    "h": 1.2,
+    "windup": 0.85,
+    "poise": 20,
+    "first": "c0",
+    "drawnUpsideDown": true,
+    "frames": { "crawl": ["c0", "c1"], "drop": ["d"], "atk": ["a"], "hurt": ["d"] }
+  }
+}

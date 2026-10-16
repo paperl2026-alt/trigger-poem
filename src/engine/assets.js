@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { C } from '../core/content.js';
 
 export const tex = {};   // key -> THREE.Texture (key like "enemy/doll_idle")
 export const meta = {};  // key -> manifest entry
@@ -7,11 +8,11 @@ export const masks = {}; // key -> { w, h, a: Uint8Array } low-res alpha for hit
 let renderer = null;
 export function setRenderer(r) { renderer = r; }
 
-const base = () => import.meta.env.BASE_URL || './';
-// portable build (double-click index.html): images ride along as data URIs, because browsers refuse
-// file:// images in WebGL; window.__NOA_ASSETS is set by assets-data.js
-const EMB = typeof window !== 'undefined' ? window.__NOA_ASSETS : null;
-export const url = (key) => (EMB ? EMB.files[meta[key]?.src] || '' : `${base()}${meta[key]?.src || ''}`);
+// images come from the content packs (C.assets: key -> { url, w, h, ... }); a later pack can replace any image.
+// portable build (double-click index.html): images ride along as data URIs (window.__NOA_CONTENT), because browsers
+// refuse file:// images in WebGL
+const EMB = typeof window !== 'undefined' ? window.__NOA_CONTENT : null;
+export const url = (key) => { const u = meta[key]?.url || ''; return EMB && EMB[u] ? EMB[u] : u; };
 
 function buildMask(key, img) {
   const s = Math.min(1, 160 / Math.max(img.width, img.height));
@@ -36,7 +37,7 @@ export function alphaAt(key, u, v) {
 }
 
 export async function loadAll(onProgress) {
-  const manifest = EMB ? EMB.manifest : await (await fetch(`${base()}assets/manifest.json`)).json();
+  const manifest = C.assets;
   const keys = Object.keys(manifest);
   const loader = new THREE.TextureLoader();
   let done = 0;

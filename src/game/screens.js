@@ -2,11 +2,10 @@
 // Chapter select reads like flipping through a colour manga: each episode is a chapter cover + a facing page.
 import { url, meta } from '../engine/assets.js';
 import { sfx } from '../engine/audio.js';
-import { t, tr, GAME_TITLE } from './i18n.js';
-import { EPISODES, EP, STAGE_NAME } from './episodes.js';
-import { CHARS, CHAR_IDS } from './characters.js';
-import { ITEMS, ITEM, bagCost } from './items.js';
-import { SAVE, persist, levelProgress, nextCap, MAX_LV } from './save.js';
+import { t, tr } from './i18n.js';
+import { bagCost } from './items.js';
+import { SAVE, persist, levelProgress, nextCap, maxLv } from './save.js';
+import { C, list } from '../core/content.js';
 
 const ui = () => document.getElementById('ui');
 const h = (html) => { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; };
@@ -32,7 +31,7 @@ export function showTitle(onStart, act) {
   const start = s.querySelector('.tstart'), set = s.querySelector('.set'), quit = s.querySelector('.quit');
   const logo = s.querySelector('.tlogo');
   const refresh = () => {
-    const T = tr(GAME_TITLE);
+    const T = tr(C.text.gameTitle);
     logo.innerHTML = `<small>${T.small}</small><b>${T.big}</b>${T.ruby ? `<i>${T.ruby}</i>` : ''}`;
     start.textContent = t('start'); set.textContent = `⚙ ${t('settings')}`; if (quit) quit.textContent = t('quit'); };
   refresh();
@@ -46,7 +45,7 @@ export function showTitle(onStart, act) {
 export function showSelect(act) {
   const el = ui();
   el.innerHTML = '';
-  const eps = EPISODES;
+  const eps = list('episodes');
   let idx = Math.max(0, eps.findIndex((e) => e.id === (SAVE.lastEp || 'ep0')));
   let tab = 'team';
   let note = '';
@@ -70,7 +69,7 @@ export function showSelect(act) {
     L.className = `pg l ${open ? '' : e.teaser ? 'teaser' : 'locked'}`;
     L.innerHTML = has(e.cover || '') ? `<div class="cover" style="background-image:url(${img(e.cover)})"></div>` : `<div class="cover blank"><span>${e.teaser ? '?' : open ? e.no : '🔒'}</span></div>`;
     L.insertAdjacentHTML('beforeend', `<div class="pno">${String(e.no * 2 + 1).padStart(2, '0')}</div>`);
-    const stl = (e.steps || []).filter((st) => !st.comic).map((st, i) => `<li class="${st.boss ? 'boss' : ''}"><i><b>${st.boss ? '☠' : i + 1}</b></i>${tr(st.boss ? st.name : STAGE_NAME[st.stage])}</li>`).join('');
+    const stl = (e.steps || []).filter((st) => !st.comic).map((st, i) => `<li class="${st.boss ? 'boss' : ''}"><i><b>${st.boss ? '☠' : i + 1}</b></i>${tr(st.name)}</li>`).join('');
     R.innerHTML = `<div class="chap">CHAPTER ${e.no}</div><h2>${tr(e.title)}</h2><div class="sub">${tr(e.sub)}</div>
       ${e.blurb ? `<p class="blurb">${tr(e.blurb)}</p>` : ''}
       ${stl ? `<ol class="stl">${stl}</ol>` : ''}
@@ -102,12 +101,12 @@ export function showSelect(act) {
     body.innerHTML = '';
     const wrap = h('<div class="team"></div>');
     SAVE.team.forEach((id, slot) => {
-      const c = CHARS[id], st = SAVE.chars[id], pr = levelProgress(st.xp);
+      const c = C.characters[id], st = SAVE.chars[id], pr = levelProgress(st.xp);
       const card = h(`<div class="card" style="--pc:${c.color}">
         <div class="slot">${slot ? '2P / AI' : '1P'}</div>
         <img class="fig" src="${img(c.front)}" draggable="false">
         <div class="ci"><div class="cn"><b>${tr(c.name)}</b><span>${tr(c.role)}</span></div>
-          <div class="lvl"><small>${t('mastery')}</small><b>Lv${pr.lv}${pr.lv >= MAX_LV ? ' MAX' : ''}</b><i style="--f:${pr.frac}"></i></div>
+          <div class="lvl"><small>${t('mastery')}</small><b>Lv${pr.lv}${pr.lv >= maxLv() ? ' MAX' : ''}</b><i style="--f:${pr.frac}"></i></div>
           <p>${tr(c.blurb)}</p><p class="sk"><b>${t('skill')}</b> ${tr(c.skill)}</p>
           <div class="outfits"><button class="on">${t('base')}</button><button class="lock" title="${t('needLv')}">${t('limit')} 🔒</button></div>
         </div></div>`);
@@ -128,7 +127,7 @@ export function showSelect(act) {
     const more = top.querySelector('.more');
     if (more) tap(more, () => { if (SAVE.dd < nc[1]) { say(t('poor')); return; } SAVE.dd -= nc[1]; SAVE.cap = nc[0]; persist(); sfx.clear(); renderAll(); });
     const grid = h('<div class="items"></div>');
-    for (const it of ITEMS) {
+    for (const it of list('items')) {
       const own = SAVE.items.includes(it.id), on = SAVE.bag.includes(it.id);
       const icon = has(it.icon) ? `<img src="${img(it.icon)}" draggable="false">` : '<span class="noi">?</span>';
       const card = h(`<div class="item ${own ? 'own' : ''} ${on ? 'on' : ''}">${icon}
@@ -167,12 +166,12 @@ export function showSelect(act) {
 export function showResults(st, onDone) {
   const el = ui();
   el.innerHTML = '';
-  const ep = EP[st.ep];
+  const ep = C.episodes[st.ep];
   const panels = ['comic/t1', 'comic/t2', 'comic/t3', 'comic/t4'].map((k, i) => (has(k) ? k : ['comic/c1', 'comic/c2', 'comic/c4', 'comic/c7'][i]));
   const rows = [
     [t('kills'), st.kills], [t('acc'), `${Math.round(st.acc * 100)}%`], [t('combo'), st.combo], [t('time'), fmtT(st.time)],
   ];
-  const team = st.team.map((id) => CHARS[id]);
+  const team = st.team.map((id) => C.characters[id]);
   const s = h(`<div class="screen results sb">
     <div class="sheet">
       <div class="shead"><span class="ttl">${tr(ep.title)}</span><span class="kind">${t('result')}</span><span class="no">No. ${String(ep.no).padStart(3, '0')}</span></div>
@@ -185,7 +184,7 @@ export function showResults(st, onDone) {
     <div class="rew">
       <div class="dd"><span>刀盾</span><b>+${st.dd}</b>${st.firstClear ? `<em>${t('firstClear')} +300</em>` : ''}</div>
       ${team.map((c) => { const x = st.xp[c.id]; if (!x) return ''; const pr = levelProgress(x.xp); return `<div class="mx" style="--pc:${c.color}"><img src="${img(c.cam.happy)}"><div><b>${tr(c.name)}</b> Lv${pr.lv} <small>+${x.gain} XP</small>${x.after > x.before ? `<em>${t('lvUp')}</em>` : ''}<i style="--f:${pr.frac}"></i></div></div>`; }).join('')}
-      ${st.unlocked.length ? `<div class="unl">${t('unlocked')}<br><b>${st.unlocked.map((id) => tr(EP[id].title)).join('<br>')}</b></div>` : ''}
+      ${st.unlocked.length ? `<div class="unl">${t('unlocked')}<br><b>${st.unlocked.map((id) => tr(C.episodes[id].title)).join('<br>')}</b></div>` : ''}
       <button class="ok">${t('toSelect')} ▶</button>
     </div>
     <img class="rfig" src="${img(team[0].poses.victory)}" draggable="false">
@@ -199,7 +198,7 @@ export function showResults(st, onDone) {
 export function showGameOver(st, onRetry, onSelect) {
   const el = ui();
   el.innerHTML = '';
-  const c = CHARS[st.team[0]];
+  const c = C.characters[st.team[0]];
   const s = h(`<div class="screen over">
     <img class="obust" src="${img(c.cam.hurt)}" draggable="false">
     <div class="otitle">${t('over')}</div>

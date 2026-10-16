@@ -22,10 +22,29 @@ const shots = {
   },
 };
 
+// dev: content-pack mods from <project>/mods/<id>/ (the packaged game reads the mods folder next to the exe, see electron/main.cjs)
+const MIME = { '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.ogg': 'audio/ogg', '.mp3': 'audio/mpeg' };
+const mods = {
+  name: 'dev-mods',
+  configureServer(server) {
+    const dir = path.resolve('mods');
+    server.middlewares.use('/__mods.json', (req, res) => {
+      const list = fs.existsSync(dir) ? fs.readdirSync(dir).filter((d) => fs.existsSync(path.join(dir, d, 'pack.json'))) : [];
+      res.setHeader('content-type', 'application/json'); res.end(JSON.stringify(list));
+    });
+    server.middlewares.use('/mods/', (req, res, next) => {
+      const f = path.normalize(path.join(dir, decodeURIComponent(req.url.split('?')[0])));
+      if (!f.startsWith(dir) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { next(); return; }
+      res.setHeader('content-type', MIME[path.extname(f).toLowerCase()] || 'application/octet-stream');
+      res.end(fs.readFileSync(f));
+    });
+  },
+};
+
 export default defineConfig({
   base: './',
   define: { __BUILD__: JSON.stringify(new Date().toLocaleString('zh-CN', { hour12: false })) },
-  plugins: [shots],
+  plugins: [shots, mods],
   server: { port: 5300, strictPort: true },
   build: { chunkSizeWarningLimit: 2000, rollupOptions: { input: { main: path.resolve('index.html'), jiggle: path.resolve('jiggle.html') } } },
 });

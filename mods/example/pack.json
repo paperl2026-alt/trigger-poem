@@ -1,0 +1,10 @@
+{
+  "_doc": "示例模组（默认不启用）。把 enabled 改成 true 就会叠在本体上：这里只改了地雷妹（pink）的射击间隔和伤害，其余全部沿用本体。做新模组：复制这个文件夹，改 id，在 data 里列出你的文件。文件格式和本体 content/base 里的一样。",
+  "id": "example",
+  "name": { "zh": "示例模组", "en": "Example mod", "ja": "サンプルMOD" },
+  "version": "1.0.0",
+  "order": 100,
+  "enabled": false,
+  "requires": ["base"],
+  "data": { "characters": ["characters/pink_faster.json"] }
+}

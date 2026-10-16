@@ -1,3 +1,5 @@
+// Data: content enemies.json (types), projectiles.json, tuning/behaviors.json (the numbers of each behaviour template;
+// an enemy type can override any of them in its own "params").
 // Paper monsters living in the 3D level. Each is a camera-facing cut-out (turns around Y to face the lens),
 // animated as a stop-motion flipbook of strongly different key frames, lit by nearby candles, fogged by distance.
 // Hits paint holes / cuts / scorch; deaths: knock (falls flat), shatter, slice, burn.
@@ -7,10 +9,11 @@ import { paperMesh, DamageMap, attachDamage } from '../engine/paper.js';
 import { makeShatter } from '../engine/particles.js';
 import { Ease } from '../engine/tween.js';
 import { sfx } from '../engine/audio.js';
-import { ENEMY, PROJ, HIT } from './stage.js';
+import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
+const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r); // [a, b] = random between, a number = itself
 const STEP = 1 / 12;
 const V = new THREE.Vector3();
 
@@ -197,18 +200,20 @@ export class Actor {
 }
 
 // ---------------------------------------------------------------------------
-// Things that can't be staggered mid-move (super armour): leaps, dives, throws, pounces, entrances.
-const ARMOR = { walker: ['enter', 'leap', 'bite', 'recoil'], flyer: ['enter', 'dive', 'recoil'], thrower: ['enter', 'thrown'], crawler: ['crawl', 'drop', 'pounce', 'retreat'] };
-const THREAT = { walker: 'melee', flyer: 'ranged', thrower: 'ranged', crawler: 'ranged' };
+// Behaviour templates: walker (melee leaper), flyer (diver), thrower (ranged), crawler (ceiling pouncer).
+// armor = the states it can't be staggered in (super armour): leaps, dives, throws, pounces, entrances.
+const enemyHit = () => T.combat.enemyHit;
 
 export class Enemy extends Actor {
   constructor(game, s) {
-    const def = ENEMY[s.type];
+    const def = C.enemies[s.type];
     const pivot = def.beh === 'flyer' || def.beh === 'crawler' ? 'center' : 'bottom';
     super(game, `enemy/${def.sprite}_${def.first}`, def.h, pivot);
     this.type = s.type;
     this.def = def;
     this.beh = def.beh;
+    const B = T.behaviors;
+    this.bp = { ...B.common, ...B[def.beh], ...def.params };   // this enemy's behaviour numbers
     this.frames = def.frames;
     this.hp = def.hp;
     this.state = 'enter';
@@ -218,25 +223,26 @@ export class Enemy extends Actor {
     this.poise = 0; this.poiseCD = 0; this.stunT = 0;
     this.walkPhase = Math.random() * 6;
     const world = game.world, lv = world.level;
-    this.threat = THREAT[this.beh];
+    const bp = this.bp;
+    this.threat = bp.threat;
     this.targetSlot = game.pickTarget(s.x ?? 0);
     const cov = world.covers[this.targetSlot]?.def || { x: 0, z: world.camPos.z - 2.8 };
     const side = this.targetSlot ? 1 : -1;
     // walk up toward the targeted player's barricade, but stay near the middle so the player sprites don't hide it
-    this.goal = new THREE.Vector3(world.camPos.x + side * rnd(0.15, 0.6), 0, cov.z - 1.1);
+    this.goal = new THREE.Vector3(world.camPos.x + side * rr(bp.goalSpread || [0.15, 0.6]), 0, cov.z - (bp.goalBeforeCover ?? 1.1));
     world.scene.add(this.root);
     const P = this.root.position;
     if (this.beh === 'flyer') {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
-      this.home = new THREE.Vector3(c.x + rnd(-1.6, 1.6), Math.min(ceil - 0.6, rnd(1.4, 2.9)), c.z - rnd(6, 9));
+      this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
       this.shadowM = world.makeShadow(this.w * 0.35); world.scene.add(this.shadowM);
       this.play('fly', 14);
-      game.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, 1.6, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'enter') { this.state = 'hover'; this.timer = rnd(0.8, 1.8); } } });
+      game.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.enterTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'enter') { this.state = 'hover'; this.timer = rr(bp.hoverFirst); } } });
       sfx.whoosh(0);
     } else if (this.beh === 'crawler') {
       const roomH = s.y ?? lv.ceilAt(s.z);
-      P.set(s.x, roomH - 0.45, s.z);
+      P.set(s.x, roomH - bp.ceilingGap, s.z);
       if (!this.def.drawnUpsideDown) this.inner.rotation.z = Math.PI; // clinging to the ceiling
       this.play('crawl', 9);
       this.state = 'crawl';
@@ -249,11 +255,11 @@ export class Enemy extends Actor {
   }
 
   enter(s, lv) {
-    const tw = this.game.tweens, P = this.root.position, walker = this.beh === 'walker';
+    const tw = this.game.tweens, P = this.root.position, walker = this.beh === 'walker', bp = this.bp;
     const ready = () => {
       if (!this.alive || this.state !== 'enter') return;
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
-      this.timer = rnd(0.6, 1.4);
+      this.timer = rr(bp.startDelay);
     };
     if (walker) this.play('walk', 7); else this.play('rise');
     if (s.from === 'drop') {
@@ -262,12 +268,12 @@ export class Enemy extends Actor {
       this.string = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xeee2c8, transparent: true, opacity: 0.85 }));
       this.inner.add(this.string);
       this.play('idle');
-      tw.to(P, { y: 0 }, 0.85, { ease: Ease.outBack, onDone: () => { this.game.fx.puff(P, 4); ready(); } });
+      tw.to(P, { y: 0 }, bp.dropTime, { ease: Ease.outBack, onDone: () => { this.game.fx.puff(P, 4); ready(); } });
     } else if (s.from === 'pop') {
       P.set(s.x, s.y || 0, s.z);
       this.inner.rotation.x = -Math.PI / 2;
       sfx.popup();
-      tw.to(this.inner.rotation, { x: 0 }, 0.5, { ease: Ease.outBack, onDone: ready });
+      tw.to(this.inner.rotation, { x: 0 }, bp.popTime, { ease: Ease.outBack, onDone: ready });
     } else {
       P.set(s.x, s.y || 0, s.z);
       ready();
@@ -280,7 +286,7 @@ export class Enemy extends Actor {
     const g = this.game;
     this.hurtT -= dt;
     this.poiseCD -= dt;
-    this.poise = Math.max(0, this.poise - this.def.poise * 0.35 * dt);
+    this.poise = Math.max(0, this.poise - this.def.poise * this.bp.poiseDrain * dt);
     if (this.shadowM && this.pivot === 'center') this.shadowM.position.set(this.root.position.x, 0.02, this.root.position.z);
     if (this.state === 'stun') {
       this.stunT -= dt;
@@ -312,14 +318,14 @@ export class Enemy extends Actor {
   endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
 
   // ---- stagger: enough sustained hits interrupt whatever it was about to do
-  canStagger() { return this.alive && this.state !== 'stun' && this.poiseCD <= 0 && !ARMOR[this.beh].includes(this.state); }
+  canStagger() { return this.alive && this.state !== 'stun' && this.poiseCD <= 0 && !(this.bp.armor || []).includes(this.state); }
   stagger(time) {
     const g = this.game;
     this.endWindup();
     this.state = 'stun';
     this.stunT = time;
     this.poise = 0;
-    this.poiseCD = time + 0.6;
+    this.poiseCD = time + this.bp.poiseCooldown;
     this.play('hurt');
     this.flash = 1;
     this.inner.scale.setScalar(1);
@@ -327,22 +333,24 @@ export class Enemy extends Actor {
     g.fx.star(this.uvToWorld(0.5, 0.85), 0.9, COL.lime);
     sfx.thud(0);
     const P = this.root.position, c = g.world.camPos, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
-    if (this.beh === 'walker') { P.x += dx / d * 0.35; P.z += dz / d * 0.35; } else if (this.beh === 'flyer') { g.tweens.kill(P); P.z -= 0.6; P.y += 0.3; }
+    const bp = this.bp;
+    if (this.beh === 'walker') { P.x += dx / d * bp.staggerPush; P.z += dz / d * bp.staggerPush; } else if (this.beh === 'flyer') { g.tweens.kill(P); P.z -= bp.staggerKnock[0]; P.y += bp.staggerKnock[1]; }
   }
   recover() {
     this.inner.position.x = 0;
-    if (this.beh === 'walker') { this.state = 'walk'; this.play('walk', 7); } else if (this.beh === 'flyer') { this.state = 'hover'; this.timer = rnd(0.8, 1.6); this.play('fly', 14); } else if (this.beh === 'thrower') { this.state = 'stand'; this.timer = rnd(0.4, 0.8); this.play('idle'); } else { this.startWindup(0.9); this.play('atk'); }
+    const bp = this.bp;
+    if (this.beh === 'walker') { this.state = 'walk'; this.play('walk', 7); } else if (this.beh === 'flyer') { this.state = 'hover'; this.timer = rr(bp.hoverAfterStun); this.play('fly', 14); } else if (this.beh === 'thrower') { this.state = 'stand'; this.timer = rr(bp.standAfterStun); this.play('idle'); } else { this.startWindup(bp.windupAfterStun); this.play('atk'); }
   }
 
   updateWalker(dt, t) {
-    const g = this.game, P = this.root.position, tw = g.tweens;
+    const g = this.game, P = this.root.position, tw = g.tweens, bp = this.bp;
     if (this.state === 'walk') {
       const dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz);
       const sp = this.def.speed * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
       if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; }
       this.walkPhase += dt * 7;
       this.inner.position.y = Math.abs(Math.sin(this.walkPhase)) * 0.1;
-      if (d < 0.35) {
+      if (d < bp.windupDist) {
         this.play('crouch');
         this.startWindup(this.def.windup);
         this.inner.position.y = 0;
@@ -357,20 +365,20 @@ export class Enemy extends Actor {
         this.play('leap');
         // jump onto the barricade, right in your face
         const cov = g.world.covers[this.targetSlot]?.def;
-        const tz = cov ? cov.z - 0.35 : P.z + 1.5, ty = cov ? cov.h * 0.75 : 0.6, z0 = P.z, y0 = P.y;
-        tw.run(0.24, (e) => { P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * 0.5; }, {
+        const tz = cov ? cov.z - bp.leapOntoCover : P.z + 1.5, ty = cov ? cov.h * bp.leapHeight : 0.6, z0 = P.z, y0 = P.y;
+        tw.run(bp.leapTime, (e) => { P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * bp.leapArc; }, {
           onDone: () => {
             if (!this.alive) return;
             this.state = 'bite';
             this.play('bite');
             g.post.shake(0.6);
-            g.playerAttacked({ kind: 'melee', dmg: HIT, from: this, slot: this.targetSlot });
-            tw.wait(0.4, () => {
+            g.playerAttacked({ kind: 'melee', dmg: enemyHit(), from: this, slot: this.targetSlot });
+            tw.wait(bp.biteHold, () => {
               if (!this.alive) return;
               this.state = 'recoil';
               this.play('recoil');
               const zz = P.z, yy = P.y;
-              tw.run(0.5, (e) => { P.z = zz - 3 * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); } } });
+              tw.run(bp.recoilTime, (e) => { P.z = zz - bp.recoilDist * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); } } });
             });
           },
         });
@@ -379,31 +387,31 @@ export class Enemy extends Actor {
   }
 
   updateFlyer(dt, t) {
-    const g = this.game, P = this.root.position;
+    const g = this.game, P = this.root.position, bp = this.bp;
     if (this.state === 'hover') {
-      P.x += (this.home.x + Math.sin(t * 1.3 + this.seed) * 1.3 - P.x) * dt * 2;
-      P.y += (this.home.y + Math.sin(t * 2.1 + this.seed) * 0.5 - P.y) * dt * 2;
+      P.x += (this.home.x + Math.sin(t * 1.3 + this.seed) * bp.swayX - P.x) * dt * 2;
+      P.y += (this.home.y + Math.sin(t * 2.1 + this.seed) * bp.swayY - P.y) * dt * 2;
       P.z += (this.home.z - P.z) * dt * 2;
       if (this.lastStep % 4 === 0) sfx.mothFlap(0);
       this.timer -= dt;
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
     } else if (this.state === 'windup') {
       this.timer -= dt;
-      P.z -= dt * 1.2;
+      P.z -= dt * bp.windupDrift;
       if (this.timer <= 0) {
         this.endWindup();
         this.state = 'dive';
         this.play('dive');
         sfx.whoosh(0);
         const c = g.world.camPos;
-        g.tweens.to(P, { x: c.x + (this.targetSlot ? 0.7 : -0.7) + rnd(-0.2, 0.2), y: c.y - 0.3, z: c.z - 2.2 }, 0.5, {
+        g.tweens.to(P, { x: c.x + (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter), y: c.y - bp.diveDrop, z: c.z - bp.diveStop }, bp.diveTime, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
-            g.playerAttacked({ kind: 'ranged', dmg: HIT, from: this, slot: this.targetSlot });
+            g.playerAttacked({ kind: 'ranged', dmg: enemyHit(), from: this, slot: this.targetSlot });
             this.state = 'recoil';
             this.play('fly', 14);
-            g.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, 0.9, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rnd(1.6, 3.0); } } });
+            g.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.returnTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rr(bp.hoverAgain); } } });
           },
         });
       }
@@ -411,12 +419,13 @@ export class Enemy extends Actor {
   }
 
   updateThrower(dt, t) {
+    const bp = this.bp;
     this.timer -= dt;
     if (this.state === 'hide') {
       this.inner.position.y = 0;
-      if (this.timer <= 0) { this.state = 'rise'; this.play('rise'); this.timer = 0.35; sfx.popup(); this.inner.scale.set(1.1, 0.85, 1); this.game.tweens.to(this.inner.scale, { x: 1, y: 1 }, 0.25, { ease: Ease.outBack }); }
+      if (this.timer <= 0) { this.state = 'rise'; this.play('rise'); this.timer = bp.riseTime; sfx.popup(); this.inner.scale.set(1.1, 0.85, 1); this.game.tweens.to(this.inner.scale, { x: 1, y: 1 }, 0.25, { ease: Ease.outBack }); }
     } else if (this.state === 'rise') {
-      if (this.timer <= 0) { this.state = 'stand'; this.play('idle'); this.timer = rnd(0.3, 0.7); }
+      if (this.timer <= 0) { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterRise); }
     } else if (this.state === 'stand') {
       this.inner.rotation.z = Math.sin(t * 1.7 + this.seed) * 0.04;
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
@@ -425,24 +434,24 @@ export class Enemy extends Actor {
       if (this.timer <= 0) {
         this.endWindup();
         this.play('throw');
-        this.game.spawnProjectile(this.def.proj, this.uvToWorld(0.45, 0.8), { slot: this.targetSlot });
+        this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot });
         sfx.throwIt(0);
         this.state = 'thrown';
-        this.timer = 0.45;
+        this.timer = bp.throwRecover;
       }
     } else if (this.state === 'thrown') {
       if (this.timer <= 0) {
-        if (this.def.hides) { this.state = 'hide'; this.play('hide'); this.timer = rnd(1.2, 2.2); } else { this.state = 'stand'; this.play('idle'); this.timer = rnd(1.4, 2.4); }
+        if (this.def.hides) { this.state = 'hide'; this.play('hide'); this.timer = rr(bp.hideAfterThrow); } else { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterThrow); }
       }
     }
   }
 
   updateCrawler(dt, t) {
-    const g = this.game, P = this.root.position, c = g.world.camPos;
+    const g = this.game, P = this.root.position, c = g.world.camPos, bp = this.bp;
     if (this.state === 'crawl') {
-      P.z += dt * 2.2;
-      P.x += Math.sin(t * 3 + this.seed) * dt * 0.8;
-      if (P.z > c.z - 6.5) {
+      P.z += dt * bp.crawlSpeed;
+      P.x += Math.sin(t * 3 + this.seed) * dt * bp.wiggle;
+      if (P.z > c.z - bp.dropDist) {
         this.state = 'drop';
         this.play('drop');
         this.inner.rotation.z = 0;
@@ -450,7 +459,7 @@ export class Enemy extends Actor {
         this.string = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xeee2c8, transparent: true, opacity: 0.8 }));
         this.inner.add(this.string);
         sfx.whoosh(0);
-        g.tweens.to(P, { y: 1.5 }, 0.55, { ease: Ease.outBack, onDone: () => { if (this.alive) { this.startWindup(0.85); this.play('atk'); } } });
+        g.tweens.to(P, { y: bp.dropY }, bp.dropTime, { ease: Ease.outBack, onDone: () => { if (this.alive) { this.startWindup(bp.firstWindup); this.play('atk'); } } });
       }
     } else if (this.state === 'windup') {
       this.timer -= dt;
@@ -459,16 +468,16 @@ export class Enemy extends Actor {
         this.endWindup();
         this.state = 'pounce';
         const z0 = P.z, y0 = P.y;
-        const x0 = P.x, tx = c.x + (this.targetSlot ? 0.7 : -0.7);
-        g.tweens.run(0.3, (e) => { P.z = z0 + (c.z - 2.2 - z0) * e; P.y = y0 + (c.y - 0.4 - y0) * e; P.x = x0 + (tx - x0) * e; }, {
+        const x0 = P.x, tx = c.x + (this.targetSlot ? bp.pounceSide : -bp.pounceSide);
+        g.tweens.run(bp.pounceTime, (e) => { P.z = z0 + (c.z - bp.pounceStop - z0) * e; P.y = y0 + (c.y - bp.pounceDrop - y0) * e; P.x = x0 + (tx - x0) * e; }, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
-            g.playerAttacked({ kind: 'ranged', dmg: HIT, from: this, slot: this.targetSlot });
+            g.playerAttacked({ kind: 'ranged', dmg: enemyHit(), from: this, slot: this.targetSlot });
             this.inner.scale.setScalar(1);
             this.state = 'retreat';
             this.play('drop');
-            g.tweens.to(P, { z: c.z - 7.5, y: 2.6 }, 0.8, { ease: Ease.outCubic, onDone: () => { if (this.alive) { this.startWindup(1.0); this.play('atk'); } } });
+            g.tweens.to(P, { z: c.z - bp.retreatDist, y: bp.retreatY }, bp.retreatTime, { ease: Ease.outCubic, onDone: () => { if (this.alive) { this.startWindup(bp.nextWindup); this.play('atk'); } } });
           },
         });
       }
@@ -479,7 +488,7 @@ export class Enemy extends Actor {
   hit(info) {
     if (!this.alive) return;
     let dmg = info.dmg;
-    if (this.def.hides && this.state === 'hide') dmg *= 0.5;
+    if (this.def.hides && this.state === 'hide') dmg *= this.bp.hiddenDmgMul ?? 0.5;
     this.lastHitBy = info.by;
     this.paint(info);
     this.flash = info.kind === 'beam' ? 0.45 : 0.85;
@@ -496,7 +505,7 @@ export class Enemy extends Actor {
     }
     if (this.beh === 'walker' && this.state === 'walk') { // a little push back per hit
       const c = this.game.world.camPos, P = this.root.position, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
-      const k = info.kind === 'mantra' ? 0.18 : 0.04;
+      const k = this.bp.hitPush?.[info.kind] ?? this.bp.hitPush?.rifle ?? 0.04;
       P.x += dx / d * k; P.z += dz / d * k;
     }
     info.dealt = dmg;
@@ -529,7 +538,7 @@ export class Enemy extends Actor {
 // ---------------------------------------------------------------------------
 export class Projectile extends Actor {
   constructor(game, kind, from, opts = {}) {
-    const P = PROJ[kind];
+    const P = C.projectiles[kind], bp = T.behaviors.projectile;
     super(game, `enemy/${P.keys[Math.floor(Math.random() * P.keys.length)]}`, opts.size || P.size, 'center');
     this.kind = kind;
     this.hp = 1;
@@ -538,13 +547,13 @@ export class Projectile extends Actor {
     const c = game.world.camPos;
     this.threat = 'shot';
     this.targetSlot = opts.slot ?? game.pickTarget(from.x - c.x);
-    const side = (this.targetSlot ? 1 : -1) * (0.7 + Math.random() * 0.5);
-    this.to = new THREE.Vector3(c.x + side, c.y - 0.45 + Math.random() * 0.3, c.z - 1.8);
-    this.ctrl = this.from.clone().lerp(this.to, 0.5).add(new THREE.Vector3((Math.random() - 0.5) * 3 + (opts.curve || 0), opts.arc ?? (kind === 'orb' ? 1.5 : 2.2), 0));
-    this.T = opts.time || 1.5;
+    const side = (this.targetSlot ? 1 : -1) * rr(bp.side);
+    this.to = new THREE.Vector3(c.x + side, c.y + rr(bp.dropY), c.z - bp.stop);
+    this.ctrl = this.from.clone().lerp(this.to, 0.5).add(new THREE.Vector3((Math.random() - 0.5) * bp.wobble + (opts.curve || 0), opts.arc ?? P.arc ?? bp.arc, 0));
+    this.T = opts.time || bp.time;
     this.t = 0;
     this.spin = P.spin;
-    this.dmg = opts.dmg || HIT;
+    this.dmg = opts.dmg || enemyHit();
     this.lock = game.fx.lock('shot', this.targetSlot);
     game.world.scene.add(this.root);
   }

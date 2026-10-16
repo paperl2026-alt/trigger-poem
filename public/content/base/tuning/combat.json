@@ -1,0 +1,33 @@
+{
+  "_doc": "战斗手感。playerHp 主角血量，heartHp 一颗心是多少血，enemyHit 杂鱼一下打主角多少血。pierceDmgMul 穿透到第二个目标后的伤害倍率。focusTime 秒内连续打同一目标算'集中'（猫爪伤害递增、枪的硬直递增）。rifleStaggerRamp：枪每次集中命中硬直多加多少，最多 rifleStaggerRampMax 次。aimRadius*：准星吸附半径（屏幕高度的比例）。beam：猫爪必杀光束（每 tick 秒结算一次，宽度/判定半径是屏幕高度比例）。comboTime 秒内不击杀连击就断。waveGap 两波怪之间的间隔，spawnDelay 每只怪出场前的延迟。player：受伤无敌时间、受伤硬直、倒地时间、复活血量比例、松开左键后还在外面停留的时间、躲进掩体多久自动装填、自动装填时间倍率、加特林散布倍率、后坐姿势持续、掩体里偷看的间隔和时长。",
+  "combat": {
+    "playerHp": 100,
+    "heartHp": 20,
+    "enemyHit": 20,
+    "pierceDmgMul": 0.7,
+    "focusTime": 0.7,
+    "rifleStaggerRamp": 0.2,
+    "rifleStaggerRampMax": 8,
+    "aimRadiusMouse": 0.02,
+    "aimRadiusPad": 0.035,
+    "beam": { "tick": 0.06, "width": 0.09, "radius": 0.75, "stagger": 5, "stun": 0.6, "grace": 0.4 },
+    "comboTime": 3,
+    "tauntCombo": 3,
+    "waveGap": 0.9,
+    "spawnDelay": 0.4,
+    "player": {
+      "invuln": 1.3,
+      "hurtTime": 0.6,
+      "downTime": 8,
+      "reviveHp": 0.6,
+      "reviveInvuln": 2,
+      "outLinger": 0.16,
+      "autoReloadAfter": 0.45,
+      "autoReloadMul": 0.8,
+      "gatlingSpread": 1.6,
+      "recoilPose": 0.06,
+      "peekEvery": [2.2, 4.5],
+      "peekHold": 0.7
+    }
+  }
+}

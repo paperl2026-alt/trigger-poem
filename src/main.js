@@ -1,15 +1,17 @@
 import * as THREE from 'three';
 import './fonts/fonts.css';
+import { loadContent, C, T } from './core/content.js';
 import { loadAll, setRenderer } from './engine/assets.js';
 import { Tweens } from './engine/tween.js';
 import { Post } from './engine/post.js';
 import { initAudio, sfx } from './engine/audio.js';
 import { Game } from './game/game.js';
 import { showTitle, showSelect, showResults, showGameOver } from './game/screens.js';
-import { EP } from './game/episodes.js';
-import { SAVE } from './game/save.js';
+import { SAVE, initSave } from './game/save.js';
+import { initLang } from './game/i18n.js';
+import { initTheme } from './game/fx.js';
 import { DBG, mountDebug } from './game/debug.js';
-import { SET, saveSettings, mountSettings } from './game/settings.js';
+import { SET, saveSettings, mountSettings, initSettings } from './game/settings.js';
 import { HybridCtrl, PadBook, PAD } from './game/input.js';
 
 THREE.ColorManagement.enabled = false;
@@ -44,13 +46,14 @@ window.__G = G; // debug handle for automated checks
 
 // Any window size / aspect: the 3D view widens (panorama), the HUD + characters stay inside the HUD frame.
 function resize() {
+  if (!G.ready) return; // settings + layout come from the content packs
   const w = window.innerWidth, h = window.innerHeight;
   G.dpr = Math.max(0.5, Math.min(2.5, Math.min(2, window.devicePixelRatio || 1) * SET.scale));
   renderer.setPixelRatio(G.dpr);
   renderer.setSize(w, h, false);
   G.post.setSize(w, h, G.dpr);
   G.W = w; G.H = h;
-  const lim = SET.hud === '16:9' ? 16 / 9 : SET.hud === '21:9' ? 21 / 9 : 99;
+  const lim = T.layout.hudFrame[SET.hud] ?? 99;
   const fw = Math.min(w, h * lim);
   G.frame = { x: (w - fw) / 2, w: fw };
   const hud = document.getElementById('hud');
@@ -107,7 +110,7 @@ function startRun(epId = 'ep0', step = 0) {
   document.getElementById('ui').innerHTML = '';
   if (G.game) G.game.dispose();
   resetFx();
-  const ep = EP[epId] || EP.ep0;
+  const ep = C.episodes[epId] || C.episodes.ep0;
   G.game = new Game(G, { ep, team: [...SAVE.team], bag: [...SAVE.bag] });
   G.game.start(step);
 }
@@ -189,8 +192,13 @@ G.shot = async (name = 'shot') => {
 };
 
 async function boot() {
-  resize();
   const bar = document.getElementById('loadbar');
+  // 1) content packs (base + mods): every number, text, level and the image list; 2) everything that reads them
+  await loadContent(import.meta.env.BASE_URL || './');
+  initSettings(); initSave(); initLang(); initTheme();
+  G.content = C; // debug handle
+  G.ready = true;
+  resize();
   await loadAll((p) => { bar.style.width = `${Math.round(p * 100)}%`; });
   await document.fonts?.ready;
   document.getElementById('loading').remove();

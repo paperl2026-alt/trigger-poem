@@ -4,12 +4,18 @@
 // HUD frame keeps the HUD and characters inside 16:9 or 21:9 on very wide screens.
 import { sfx, isMuted, setMuted, setVolume, getVolume } from '../engine/audio.js';
 import { lang, setLang, LANGS } from './i18n.js';
+import { T } from '../core/content.js';
 
 const KEY = 'noa.settings';
-const DEF = { scale: 1, hud: '21:9', p2: 'ai', volume: 0.8 };
-export const SET = (() => { try { return { ...DEF, ...JSON.parse(localStorage.getItem(KEY) || '{}') }; } catch (e) { return { ...DEF }; } })();
+// defaults: content tuning/settings.json; initSettings() runs once the packs are loaded
+export const SET = {};
+export function initSettings() {
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { /* storage blocked */ }
+  Object.assign(SET, T.defaultSettings, saved);
+  setVolume(SET.volume);
+}
 export const saveSettings = () => { try { localStorage.setItem(KEY, JSON.stringify(SET)); } catch (e) { /* storage blocked */ } };
-setVolume(SET.volume);
 
 const L = (zh, en, ja) => ({ zh, en, ja }[lang] || en);
 

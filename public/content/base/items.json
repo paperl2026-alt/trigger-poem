@@ -1,0 +1,83 @@
+{
+  "_doc": "书包道具。cost 占书包几格，price 用刀盾买的价格。effects 效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 刀盾收入倍率，stageHeal 每个小关结束回多少血。",
+  "charm": {
+    "id": "charm",
+    "icon": "item/charm",
+    "cost": 3,
+    "price": 400,
+    "name": { "zh": "备用护符", "en": "Spare Charm", "ja": "予備のお守り" },
+    "desc": { "zh": "体力上限 +1 心", "en": "+1 max heart", "ja": "体力上限 +1" },
+    "order": 0,
+    "effects": { "hp": 20 }
+  },
+  "loader": {
+    "id": "loader",
+    "icon": "item/loader",
+    "cost": 2,
+    "price": 300,
+    "name": { "zh": "速装器", "en": "Speed Loader", "ja": "スピードローダー" },
+    "desc": { "zh": "装填时间 −20%", "en": "Reload −20%", "ja": "リロード −20%" },
+    "order": 1,
+    "effects": { "reload": 0.8 }
+  },
+  "drum": {
+    "id": "drum",
+    "icon": "item/drum",
+    "cost": 2,
+    "price": 300,
+    "name": { "zh": "大号弹鼓", "en": "Big Drum", "ja": "ドラムマガジン" },
+    "desc": { "zh": "弹匣 +25%", "en": "Magazine +25%", "ja": "装弾数 +25%" },
+    "order": 2,
+    "effects": { "mag": 1.25 }
+  },
+  "energy": {
+    "id": "energy",
+    "icon": "item/energy",
+    "cost": 3,
+    "price": 500,
+    "name": { "zh": "能量饮料", "en": "Energy Drink", "ja": "エナドリ" },
+    "desc": { "zh": "主动技能充能 +25%", "en": "Skill charge +25%", "ja": "スキル充填 +25%" },
+    "order": 3,
+    "effects": { "charge": 1.25 }
+  },
+  "anpan": {
+    "id": "anpan",
+    "icon": "item/anpan",
+    "cost": 2,
+    "price": 350,
+    "name": { "zh": "红豆面包", "en": "Anpan", "ja": "あんぱん" },
+    "desc": { "zh": "Fever 衰减 −40%", "en": "Fever decays 40% slower", "ja": "フィーバー減衰 −40%" },
+    "order": 4,
+    "effects": { "feverDecay": 0.6 }
+  },
+  "cat": {
+    "id": "cat",
+    "icon": "item/cat",
+    "cost": 1,
+    "price": 600,
+    "name": { "zh": "招财猫", "en": "Lucky Cat", "ja": "招き猫" },
+    "desc": { "zh": "刀盾收入 +25%", "en": "+25% 刀盾", "ja": "刀盾 +25%" },
+    "order": 5,
+    "effects": { "dd": 1.25 }
+  },
+  "armband": {
+    "id": "armband",
+    "icon": "item/armband",
+    "cost": 4,
+    "price": 800,
+    "name": { "zh": "学生会臂章", "en": "Council Armband", "ja": "生徒会の腕章" },
+    "desc": { "zh": "Fever 三项从 1 级开始", "en": "Fever starts at Lv1", "ja": "フィーバー Lv1 から" },
+    "order": 6,
+    "effects": { "feverStart": 1 }
+  },
+  "bandaid": {
+    "id": "bandaid",
+    "icon": "item/bandaid",
+    "cost": 2,
+    "price": 400,
+    "name": { "zh": "爱心创可贴", "en": "Heart Band-aid", "ja": "ハートの絆創膏" },
+    "desc": { "zh": "每个小关结束回 1 心", "en": "Heal 1 heart after each stage", "ja": "ステージ毎に 1 回復" },
+    "order": 7,
+    "effects": { "stageHeal": 20 }
+  }
+}

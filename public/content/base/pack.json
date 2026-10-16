@@ -1,0 +1,22 @@
+{
+  "_doc": "内容包说明。本体（base）和以后的 DLC / 创意工坊包都是这种文件夹：pack.json 列出包里有哪些数据文件，assets 是图片清单。模组包放进游戏目录的 mods/<包名>/ 里，按 order 从小到大叠在本体上面：同名的条目覆盖（可以只写要改的那几项），新名字就是新增。",
+  "id": "base",
+  "name": { "zh": "本体", "en": "Base game", "ja": "本編" },
+  "version": "0.1.0",
+  "order": 0,
+  "requires": [],
+  "data": {
+    "tuning": ["tuning/combat.json", "tuning/fever.json", "tuning/economy.json", "tuning/behaviors.json", "tuning/layout.json", "tuning/settings.json", "tuning/soft.json"],
+    "characters": ["characters/pink.json", "characters/cat.json"],
+    "enemies": ["enemies.json"],
+    "projectiles": ["projectiles.json"],
+    "bosses": ["bosses.json"],
+    "items": ["items.json"],
+    "episodes": ["episodes.json"],
+    "comics": ["comics.json"],
+    "sets": ["sets/school.json"],
+    "text": ["text/ui.json"],
+    "theme": ["theme.json"]
+  },
+  "assets": "assets/manifest.json"
+}

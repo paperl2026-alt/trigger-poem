@@ -1,0 +1,6 @@
+{
+  "_doc": "飞行物。keys 随机用哪张图，size 大小（米），spin 旋转速度。",
+  "wisp": { "keys": ["wisp"], "size": 0.7, "spin": 3 },
+  "takoyaki": { "keys": ["takoyaki"], "size": 0.9, "spin": -7 },
+  "balloon": { "keys": ["balloon"], "size": 1, "spin": 1.5 }
+}

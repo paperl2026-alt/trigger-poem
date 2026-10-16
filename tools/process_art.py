@@ -1,6 +1,6 @@
 """Cut generated sheets into game sprites.
 usage: python -I tools/process_art.py [job ...]
-Writes public/assets/<group>/<name>.webp and public/assets/manifest.json
+Writes public/content/base/assets/<group>/<name>.webp and its manifest.json (src paths are relative to the pack)
 """
 import json, sys, pathlib
 from PIL import Image
@@ -9,7 +9,7 @@ from scipy import ndimage
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "art" / "raw"
-OUT = ROOT / "public" / "assets"
+OUT = ROOT / "public" / "content" / "base" / "assets"
 
 
 def alpha_np(im):

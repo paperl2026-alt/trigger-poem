@@ -6,3 +6,4 @@ art/_shots/
 art/jiggle_test/
 tools/__pycache__/
 *.log
+tools/models/

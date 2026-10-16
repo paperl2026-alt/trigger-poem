@@ -1,32 +1,36 @@
 // A heroine seen from behind, riding with the camera (1P on the left, 2P on the right, NIKKE-style).
 // Pose packs are drawn for the left side; on the right they are mirrored. Layout is in screen pixels (origin bottom-left).
 // Out of cover while firing (mouse: holding the button) — cover = safe from blockable hits, reloads, drains Fever if you stay.
-// Active skills: Tsubaki's gatling (endless belt, heals on hits), Kagura's mantra beam (piercing, slow aim, cancel = heal).
+// Active skills: the gunner's gatling (endless belt, heals on hits), the cat paw's mantra beam (piercing, slow aim, cancel = heal).
+// Numbers: content characters/<id>.json (gun, skill, poses), tuning/combat.json "player" + "beam", tuning/layout.json.
 import * as THREE from 'three';
 import { tex, meta } from '../engine/assets.js';
 import { paperMesh } from '../engine/paper.js';
 import { sfx } from '../engine/audio.js';
-import { CHARS, buildStats } from './characters.js';
+import { buildStats } from './characters.js';
 import { Fever } from './fever.js';
-import { bagHas } from './items.js';
+import { bagFx } from './items.js';
+import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 import { Soft } from './soft.js';
 
-const D = 1.4;
 const rnd = (a, b) => a + Math.random() * (b - a);
+const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
+const PL = () => T.combat.player;
 
 export class Player {
   constructor(game, charId, slot, prof = { xp: 0, bag: [] }) {
     this.game = game;
     this.id = charId;
-    this.c = CHARS[charId];
+    this.c = C.characters[charId];
     this.slot = slot;           // 0 = 1P (left), 1 = 2P (right)
     this.side = slot ? 1 : -1;
     this.mirror = (slot === 1) !== (this.c.drawnSide === 'right');
     const st = buildStats(charId, prof.xp, prof.bag);
     this.w = st.w; this.a = st.a; this.lv = st.lv;
     this.maxHp = st.hp; this.hp = this.maxHp;
-    this.fever = new Fever(this.w, { slowDecay: bagHas(prof.bag, 'anpan'), startLv: bagHas(prof.bag, 'armband') ? 1 : 0 });
+    const fx = bagFx(prof.bag);
+    this.fever = new Fever(this.w, { slowDecay: fx.feverDecay, startLv: fx.feverStart });
     this.group = new THREE.Group();
     game.world.camera.add(this.group);
     this.poses = {};
@@ -53,7 +57,7 @@ export class Player {
     this.state = 'away'; // cover | out | reload | hurt | down | run | victory | away
     this.exposed = false;
     this.linger = 0; this.coverTime = 0; this.reloadT = 0; this.reloadT0 = 1; this.fireCD = 0; this.hurtT = 0; this.invuln = 0; this.downT = 0;
-    this.kick = 0; this.pop = 1; this.recoilT = 0; this.peekT = rnd(1.5, 3.5); this.tauntT = 0; this.glyphI = 0;
+    this.kick = 0; this.pop = 1; this.recoilT = 0; this.peekT = rr(PL().peekEvery); this.tauntT = 0; this.glyphI = 0;
     this.shots = 0; this.hits = 0; this.kills = 0; this.dealt = 0; this.taken = 0;
     this.focus = { a: null, n: 0, t: 0 };
     this.aimX = game.W * (slot ? 0.62 : 0.38); this.aimY = game.H * 0.45;
@@ -63,16 +67,17 @@ export class Player {
 
   layout(W, H, frame) {
     this.W = W; this.H = H;
+    const Lo = T.layout, D = Lo.heroineDist;
     const k = 2 * D * Math.tan(THREE.MathUtils.degToRad(this.game.world.baseFov / 2)) / H;
     this.group.position.set(-W / 2 * k, -H / 2 * k, -D);
     this.group.scale.set(k, k, k);
     // full body on screen like a third-person game: a standing pose is about half the screen tall, feet on the bottom edge.
     // Each girl's body centre sits at 20% / 80% of the HUD frame (ultrawide screens don't fling her to the far edge).
     this.frame = frame;
-    this.margin = H * 0.012;
-    this.baseX = this.slot ? frame.x + frame.w * 0.8 : frame.x + frame.w * 0.2;
-    this.bottom = H * 0.025;
-    const standH = H * 0.52;
+    this.margin = H * Lo.margin;
+    this.baseX = frame.x + frame.w * Lo.bodyX[this.slot ? 1 : 0];
+    this.bottom = H * Lo.bottom;
+    const standH = H * Lo.standHeight;
     // every pose of a pack shares one scale: the tallest standing pose maps to standH
     const ref = Math.max(...['aim', 'cover', 'run'].map((r) => this.poses[r]?.userData.rawH || 0)) || 1000;
     for (const role in this.poses) {
@@ -104,21 +109,21 @@ export class Player {
   get activeOn() { return this.activeT > 0; }
   get gatling() { return this.activeT > 0 && this.a.kind === 'gatling'; }
   get beaming() { return this.activeT > 0 && this.a.kind === 'beam'; }
-  get hearts() { return this.hp / 20; }
+  get hearts() { return this.hp / T.combat.heartHp; }
   get alive() { return this.state !== 'down' && this.state !== 'away'; }
 
   damage(n) {
     if (this.invuln > 0 || this.game.G.god || this.state === 'down') return false;
     this.hp = Math.max(0, this.hp - n);
     this.taken += n;
-    this.invuln = 1.3;
+    this.invuln = PL().invuln;
     this.exposed = false;
     this.fever.hurt();
     if (this.beaming) this.endActive(false);
     this.soft.kick(1.4);
-    if (this.hp <= 0) { this.state = 'down'; this.downT = 8; return true; }
+    if (this.hp <= 0) { this.state = 'down'; this.downT = PL().downTime; return true; }
     this.state = 'hurt';
-    this.hurtT = 0.6;
+    this.hurtT = PL().hurtTime;
     return true;
   }
   heal(n) { if (this.state !== 'down') this.hp = Math.min(this.maxHp, this.hp + n); }
@@ -136,7 +141,7 @@ export class Player {
     g.G.stop(0.85);
     g.post.flash(0.6, this.c.hex);
     g.hud.setFace(this.slot, 'hype', this.a.dur);
-    if (this.a.kind === 'beam') { this.beamGrace = 0.4; this.beam = g.fx.beam(this.c.hex); this.beamTick = 0; }
+    if (this.a.kind === 'beam') { this.beamGrace = T.combat.beam.grace; this.beam = g.fx.beam(this.c.hex); this.beamTick = 0; }
   }
   endActive(cancelled) {
     if (this.a.kind === 'beam') {
@@ -163,7 +168,7 @@ export class Player {
       }
       if (this.state === 'down') {
         this.downT -= dt;
-        if (this.downT <= 0) { this.hp = this.maxHp * 0.6; this.state = 'cover'; this.invuln = 2; sfx.clear(); }
+        if (this.downT <= 0) { this.hp = this.maxHp * PL().reviveHp; this.state = 'cover'; this.invuln = PL().reviveInvuln; sfx.clear(); }
       } else if (this.state === 'hurt') {
         this.hurtT -= dt;
         if (this.hurtT <= 0) this.state = 'cover';
@@ -179,14 +184,14 @@ export class Player {
           if (this.beamGrace <= 0 && !wantOut) { this.endActive(true); this.state = 'cover'; this.coverTime = 0; }
         } else if (wantOut) {
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); this.soft.kick(0.8); }
-          this.linger = 0.16;
+          this.linger = PL().outLinger;
         } else if (this.state === 'out') {
           this.linger -= dt;
           if (this.linger <= 0 || c.hide) { this.state = 'cover'; this.coverTime = 0; this.soft.kick(0.8); }
         }
         if (this.state === 'cover') {
           this.coverTime += dt;
-          if (this.ammo < this.w.mag && (this.coverTime > 0.45 || this.ammo === 0) && !this.gatling) this.startReload(0.8);
+          if (this.ammo < this.w.mag && (this.coverTime > PL().autoReloadAfter || this.ammo === 0) && !this.gatling) this.startReload(PL().autoReloadMul);
         }
       }
       if (c.skill && this.charge >= 1 && !this.activeOn && this.state !== 'down' && this.state !== 'hurt') this.startActive();
@@ -205,7 +210,7 @@ export class Player {
     else if (this.state === 'cover') {
       this.peekT -= dt;
       if (this.tauntT > 0) pose = 'taunt';
-      else if (this.peekT < 0) { pose = 'peek'; if (this.peekT < -0.7) this.peekT = rnd(2.2, 4.5); }
+      else if (this.peekT < 0) { pose = 'peek'; if (this.peekT < -PL().peekHold) this.peekT = rr(PL().peekEvery); }
     }
     this.setPose(pose);
     this.kick = Math.max(0, this.kick - dt * 10);
@@ -254,11 +259,11 @@ export class Player {
     if (!this.gatling) this.ammo--;
     this.shots++;
     this.fever.shot();
-    const sp = this.H * w.spread * (this.gatling ? 1.6 : 1);
+    const sp = this.H * w.spread * (this.gatling ? PL().gatlingSpread : 1);
     const sx = this.aimX + rnd(-sp, sp), sy = this.aimY + rnd(-sp, sp);
     const res = g.shoot(this, sx, sy);
     if (res.n) this.hits++;
-    this.recoilT = 0.06;
+    this.recoilT = PL().recoilPose;
     const mz = this.muzzlePos();
     if (w.kind === 'mantra') { g.fx.mantra(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit, this.c.glyph); if (this.c.glyph === 'jade') g.fx.rune(mz.x, mz.y, this.H * 0.11); }
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
@@ -279,15 +284,15 @@ export class Player {
 
   updateBeam(dt, t) {
     const g = this.game, mz = this.muzzlePos();
-    const width = g.H * 0.09;
+    const B = T.combat.beam, width = g.H * B.width;
     if (this.beam) this.beam.set(mz.x, mz.y, this.aimX, g.H - this.aimY, width, t);
     this.kick = 0.6;
     this.beamTick -= dt;
     if (this.beamTick > 0) return;
-    this.beamTick = 0.06;
+    this.beamTick = B.tick;
     this.soft.kick(0.3);
     this.fever.shot();
-    const n = g.beamHit(this, this.aimX, this.aimY, width * 0.75, this.a.dps * 0.06);
+    const n = g.beamHit(this, this.aimX, this.aimY, width * B.radius, this.a.dps * B.tick);
     if (n) this.hits++;
     this.shots++;
     if (this.slot === 0) g.post.shake(0.12);

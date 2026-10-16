@@ -1,0 +1,20 @@
+{
+  "_doc": "Fever 三项（伤害/准头/连击），每项 0~3 级。dmgMul 等数组按等级取值（下标 0 = 0 级）。accPerShot、accMissPerShot 乘的是武器射击间隔（射得越慢每发涨得越多）。idleDelay 秒不开枪后 dmg/acc 按 idleDrain 每秒掉；连击断了按 comboDrain 每秒掉；被打中三项各掉 hurtLoss。rankBadge：三项等级加起来（0~9）对应的评价字母。",
+  "fever": {
+    "maxLevel": 3,
+    "dmgMul": [1, 1.15, 1.3, 1.45],
+    "critRate": [0, 0.1, 0.2, 0.32],
+    "critMul": [1.5, 1.5, 1.75, 2],
+    "reloadMul": [1, 0.8, 0.65, 0.5],
+    "dmgSecondsPerLevel": 4.5,
+    "accPerShot": 0.33,
+    "accMissPerShot": 0.12,
+    "comboPerKill": 0.45,
+    "chainTime": 3.2,
+    "hurtLoss": 0.9,
+    "idleDelay": 1.4,
+    "idleDrain": 0.35,
+    "comboDrain": 0.5,
+    "rankBadge": ["C", "C", "B", "B", "A", "A", "S", "S", "S", "极"]
+  }
+}

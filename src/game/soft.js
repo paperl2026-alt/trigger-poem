@@ -7,15 +7,8 @@
 //   ear    a quick twitch every few seconds
 // Drivers: idle (breathing, weight shift from hip to hip, wag), kicks (shots, popping up / ducking, hits, landing) and inertia
 // against the sprite's own motion (recoil shove, run bob).
-const KIND = {
-  butt: { f: 2.9, z: 0.085, amp: 0.024, max: 0.05, swell: 7, impY: 1, impX: 0.35, idle: 'hips' },
-  chest: { f: 3.3, z: 0.095, amp: 0.02, max: 0.042, swell: 6, impY: 1, impX: 0.25, idle: 'breath' },
-  skirt: { f: 2.1, z: 0.14, amp: 0.024, max: 0.055, swell: 0, impY: 0.8, impX: 0.7, idle: 'drift' },
-  hair: { f: 1.25, z: 0.17, amp: 0.034, max: 0.075, swell: 0, impY: 0.5, impX: 1, idle: 'drift' },
-  tail: { f: 1.7, z: 0.2, amp: 0.022, max: 0.07, swell: 0, impY: 0.45, impX: 0.8, idle: 'wag', wag: [0.02, 0.006], lag: 0 },
-  tailtip: { f: 1.4, z: 0.18, amp: 0.034, max: 0.1, swell: 0, impY: 0.6, impX: 1, idle: 'wag', wag: [0.05, 0.014], lag: 1.0 },
-  ear: { f: 7, z: 0.22, amp: 0, max: 0.03, swell: 0, impY: 0, impX: 0, idle: 'twitch' },
-};
+// spring settings per region kind: content tuning/soft.json (T.softKinds)
+import { T } from '../core/content.js';
 const TAU = Math.PI * 2;
 const N = 6;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -52,7 +45,7 @@ export class Soft {
     for (let i = 0; i < N; i++) {
       const r = regs[i], sp = this.s[i];
       if (!r) { u.softA.value[i].set(0, 0, 1e-3, 1e-3); u.softD.value[i].set(0, 0, 0); continue; }
-      const K = KIND[r[4]] || KIND.butt;
+      const K = T.softKinds[r[4]] || T.softKinds.butt;
       const w = TAU * K.f * (1 + 0.09 * (i % 3));
       if (imp && K.amp) {
         sp.vy -= imp * K.amp * w * K.impY * rnd(0.85, 1.15);

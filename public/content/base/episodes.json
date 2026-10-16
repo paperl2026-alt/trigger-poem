@@ -1,0 +1,38 @@
+{
+  "ep0": {
+    "id": "ep0",
+    "no": 0,
+    "set": "school",
+    "cover": "ui/cover_ep0",
+    "par": 300,
+    "unlocks": ["ep1"],
+    "title": { "zh": "第0话　放学后的限定蜜瓜包", "en": "Ep.0  The Limited Melon Bread", "ja": "第0話　放課後の限定メロンパン" },
+    "sub": { "zh": "教学关 · 文化祭鬼屋失控", "en": "Tutorial · The festival haunted house runs wild", "ja": "チュートリアル・文化祭お化け屋敷の暴走" },
+    "blurb": {
+      "zh": "明天就是文化祭。三年A班的纸板鬼屋刚搭完，椿只想冲去小卖部抢限定蜜瓜包——结果鬼屋自己活了，邪神的气息一漏，整座学校都变成了鬼屋：纸板僵尸、床单鬼、提灯妖、唐伞妖满地跑，操场上的吉祥物花车也睁开了眼。椿：「谁也别想拦着我买面包！」",
+      "en": "The cultural festival is tomorrow. Class 3-A just finished its cardboard haunted house, and Tsubaki only wants to grab the limited melon bread — until the haunted house comes alive and an evil god's breath turns the whole school into one: cardboard zombies, bedsheet ghosts, lantern and umbrella yokai, and the mascot float in the yard opens its eyes. Tsubaki: \"Nobody gets between me and that bread!\"",
+      "ja": "明日は文化祭。3年A組の段ボールお化け屋敷が完成した直後、限定メロンパンを買いに走りたいツバキ——なのにお化け屋敷が勝手に動き出し、邪神の気配で学校まるごとお化け屋敷に。段ボールゾンビ、シーツおばけ、提灯お化け、唐傘お化け、校庭のマスコット山車まで目を開けた。ツバキ「パンの邪魔はさせない！」"
+    },
+    "steps": [
+      { "comic": "ep0_intro" },
+      { "stage": "classroom", "stations": ["class1"], "name": { "zh": "3年A班 鬼屋", "en": "CLASS 3-A HAUNTED HOUSE", "ja": "3年A組 お化け屋敷" } },
+      { "stage": "corridor", "stations": ["hall1", "hall2"], "name": { "zh": "文化祭走廊", "en": "FESTIVAL CORRIDOR", "ja": "文化祭の廊下" } },
+      { "comic": "ep0_boss" },
+      { "boss": "float", "station": "yard", "name": { "zh": "暴走吉祥物花车", "en": "THE RUNAWAY MASCOT FLOAT", "ja": "暴走マスコット山車" } },
+      { "comic": "ep0_end" }
+    ]
+  },
+  "ep1": {
+    "id": "ep1",
+    "no": 1,
+    "teaser": true,
+    "title": { "zh": "第1话　甜蜜之家（制作中）", "en": "Ep.1  Sweet Home (in production)", "ja": "第1話　スウィートホーム（制作中）" },
+    "sub": { "zh": "致敬：《スウィートホーム》(1989)", "en": "Homage: Sweet Home (1989)", "ja": "オマージュ：スウィートホーム (1989)" },
+    "blurb": {
+      "zh": "废弃洋馆、壁画、焚化炉……下一个异变已经在敲门了。",
+      "en": "An abandoned mansion, frescoes, an incinerator… the next anomaly is already knocking.",
+      "ja": "廃洋館、フレスコ画、焼却炉……次の異変がもう扉を叩いている。"
+    },
+    "steps": []
+  }
+}

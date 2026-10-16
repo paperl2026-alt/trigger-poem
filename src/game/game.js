@@ -1,5 +1,6 @@
 // One episode run: walks the episode's steps (comics, small stages, bosses), owns the world, the two heroines,
 // enemies, shooting rules (pierce / ramp / Fever crits / stagger), rewards at the end.
+// Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { alphaAt } from '../engine/assets.js';
 import { sfx, playMusic, stopMusic, setIntensity } from '../engine/audio.js';
@@ -13,14 +14,12 @@ import { Hud } from './hud.js';
 import { Comic } from './comic.js';
 import { AICtrl, PadCtrl, KeyCtrl } from './input.js';
 import { SET } from './settings.js';
-import { STAGE_NAME } from './episodes.js';
 import { SAVE, persist, levelOf } from './save.js';
-import { bagHas } from './items.js';
+import { bagFx } from './items.js';
+import { C, T } from '../core/content.js';
 import { t, tr } from './i18n.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-const RANK_DD = { S: 500, A: 350, B: 200, C: 100 };
-const RANK_XP = { S: 100, A: 70, B: 40, C: 20 };
 
 export class Game {
   // run: { ep, team: [id1P, id2P], bag: [...] }
@@ -99,7 +98,7 @@ export class Game {
     if (st.stage) {
       this.stationQ = [...st.stations];
       this.goStation(this.stationQ.shift(), false);
-      const nm = STAGE_NAME[st.stage];
+      const nm = st.name;
       if (nm) this.tweens.wait(0.3, () => this.hud.showBanner(tr(nm), 'stage', 1.4));
     } else if (st.boss) this.goStation(st.station, true);
   }
@@ -170,14 +169,14 @@ export class Game {
     const wave = this.S.waves[this.waveIndex];
     this.pendingSpawns = wave.length;
     this.waveLive = true;
-    for (const s of wave) this.tweens.wait(s.t + 0.4, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+    for (const s of wave) this.tweens.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
     if (this.actors.some((a) => a.alive && !(a instanceof Projectile))) return;
     this.waveLive = false;
     this.waveIndex++;
-    if (this.waveIndex < this.S.waves.length) { this.tweens.wait(0.9, () => this.combat && this.startWave()); return; }
+    if (this.waveIndex < this.S.waves.length) { this.tweens.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();
     sfx.clear();
@@ -187,14 +186,16 @@ export class Game {
       this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
     } else {
       this.hud.showBanner(t('stageClear'), 'clear big', 1.6);
-      if (bagHas(this.run.bag, 'bandaid')) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(20); this.hud.healPop(p.slot, 20); } });
+      const heal = bagFx(this.run.bag).stageHeal;
+      if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });
       this.tweens.wait(1.7, () => this.nextStep());
     }
   }
-  spawnBoss(kind) {
+  spawnBoss(id) {
     this.clearActors();
-    const B = BOSSES[kind];
-    this.boss = new B(this);
+    const def = C.bosses[id], B = BOSSES[def?.beh];
+    if (!B) { console.warn('unknown boss', id); this.onBossDead(); return; }
+    this.boss = new B(this, def);
     this.actors.push(this.boss);
     playMusic('boss');
     this.hud.boss(tr(this.boss.name), 1);
@@ -237,26 +238,27 @@ export class Game {
       taken: p1.taken, team: this.run.team, bag: this.run.bag,
       players: ps.map((p) => ({ id: p.id, kills: p.kills, dealt: Math.round(p.dealt), acc: p.shots ? p.hits / p.shots : 0 })),
     };
-    const score = st.acc * 35 + clamp(1 - st.taken / 200, 0, 1) * 25 + Math.min(20, st.combo) + clamp((this.ep.par || 300) / Math.max(1, st.time), 0, 1) * 20;
+    const K = T.economy.score;
+    const score = st.acc * K.acc + clamp(1 - st.taken / K.takenRef, 0, 1) * K.taken + Math.min(K.comboMax, st.combo) + clamp((this.ep.par || K.defaultPar) / Math.max(1, st.time), 0, 1) * K.time;
     st.score = Math.round(score);
-    st.rank = win ? (score >= 80 ? 'S' : score >= 65 ? 'A' : score >= 50 ? 'B' : 'C') : null;
+    st.rank = win ? (score >= K.rankAt.S ? 'S' : score >= K.rankAt.A ? 'A' : score >= K.rankAt.B ? 'B' : 'C') : null;
     return st;
   }
   // 刀盾 + mastery XP; clearing an episode unlocks the next ones. Applied to the save right away.
   applyRewards(st) {
-    const cat = bagHas(this.run.bag, 'cat') ? 1.25 : 1;
+    const E = T.economy, ddMul = bagFx(this.run.bag).dd;
     const rec = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null });
-    let dd = st.win ? RANK_DD[st.rank] : st.kills * 3;
+    let dd = st.win ? E.rankDd[st.rank] : st.kills * E.lossDdPerKill;
     st.firstClear = st.win && !rec.cleared && !this.ep.debug;
-    if (st.firstClear) dd += 300;
-    st.dd = Math.round(dd * cat);
+    if (st.firstClear) dd += E.firstClearDd;
+    st.dd = Math.round(dd * ddMul);
     st.xp = {};
     st.unlocked = [];
     if (this.ep.debug) { st.dd = 0; return; }
     SAVE.dd += st.dd;
     for (const id of new Set(st.team)) {
       const c = SAVE.chars[id];
-      const gain = st.win ? RANK_XP[st.rank] + st.kills * 2 : st.kills;
+      const gain = st.win ? E.rankXp[st.rank] + st.kills * E.winXpPerKill : st.kills * E.lossXpPerKill;
       st.xp[id] = { gain, before: levelOf(c.xp), after: levelOf(c.xp + gain), xp: c.xp + gain };
       c.xp += gain;
     }
@@ -346,7 +348,8 @@ export class Game {
   // Crits only come from the accuracy Fever. Returns { n: targets hit, crit }.
   shoot(p, sx, sy) {
     const w = p.w;
-    const hits = this.targetsAt(sx, sy, this.H * (p.ctrl?.kind === 'mouse' ? 0.02 : 0.035), 1 + (w.pierce || 0));
+    const K = T.combat;
+    const hits = this.targetsAt(sx, sy, this.H * (p.ctrl?.kind === 'mouse' ? K.aimRadiusMouse : K.aimRadiusPad), 1 + (w.pierce || 0));
     if (!hits.length) {
       // the bullet still lands somewhere — leave a hole in the room
       this.world.ray.setFromCamera(this.world.ndc(sx, sy), this.world.camera);
@@ -358,14 +361,14 @@ export class Game {
     }
     let crit = false;
     hits.forEach((tg, i) => {
-      if (i === 0) { if (p.focus.a === tg.a && p.focus.t > 0) p.focus.n++; else { p.focus.a = tg.a; p.focus.n = 0; } p.focus.t = 0.7; }
+      if (i === 0) { if (p.focus.a === tg.a && p.focus.t > 0) p.focus.n++; else { p.focus.a = tg.a; p.focus.n = 0; } p.focus.t = K.focusTime; }
       const n = i === 0 ? p.focus.n : 0;
-      let dmg = w.dmg * (i ? 0.7 : 1) * p.fever.dmgMul;
+      let dmg = w.dmg * (i ? K.pierceDmgMul : 1) * p.fever.dmgMul;
       if (p.gatling) dmg *= p.a.dmg;
       if (w.ramp) dmg *= 1 + w.ramp * Math.min(n, w.rampMax);
       const c = Math.random() < p.fever.critRate;
       if (c) { dmg *= p.fever.critMul; crit = true; }
-      const stagger = w.stagger * (w.kind === 'rifle' ? 1 + 0.2 * Math.min(n, 8) : 1) * (p.gatling ? p.a.stagger : 1);
+      const stagger = w.stagger * (w.kind === 'rifle' ? 1 + K.rifleStaggerRamp * Math.min(n, K.rifleStaggerRampMax) : 1) * (p.gatling ? p.a.stagger : 1);
       tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, by: p, crit: c, stagger, stun: w.stun });
     });
     return { n: hits.length, crit };
@@ -378,7 +381,7 @@ export class Game {
       const uv = this.boxUV(a, sx, sy);
       if (!uv || uv.d > R) continue;
       const c = Math.random() < p.fever.critRate;
-      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? p.fever.critMul : 1), uv, by: p, crit: c, stagger: 5, stun: 0.6 });
+      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? p.fever.critMul : 1), uv, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
       n++;
     }
     return n;
@@ -438,10 +441,10 @@ export class Game {
     if (target instanceof Projectile) return;
     this.kills++;
     if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
-    this.combo++; this.comboT = 3;
+    this.combo++; this.comboT = T.combat.comboTime;
     this.maxCombo = Math.max(this.maxCombo, this.combo);
     if (crit && !(by && by.activeOn)) { const s = this.world.project(target.center()); this.fx.stamp('don', s.x, this.H - s.y + this.H * 0.06, 0.15, 0.8); this.G.stop(0.05); }
-    if (this.combo >= 3 && by && by.state === 'cover') by.tauntT = 0.7;
+    if (this.combo >= T.combat.tauntCombo && by && by.state === 'cover') by.tauntT = 0.7;
     sfx.viewer();
   }
 

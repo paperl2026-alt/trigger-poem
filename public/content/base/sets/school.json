@@ -1,0 +1,181 @@
+{
+  "_doc": "关卡场景（一个大关一套）。rooms：房间范围（米，地面 y=0，沿 -Z 往前走）、贴图、雾、天花板高。calm / invaded：平静和异变后的配色。stations：镜头停下来打的点（via 镜头路过的点，cam 停的位置，look 看向，covers 掩体，waves 每波刷怪：t 第几秒出、type 敌人、from 出场方式 pop/far/drop、x y z 位置）。dressing：场景布置清单（do = room 房间 / ground 地面 / backdrop 远景画 / flat 立着的纸片道具 / grid 成排的道具 / row 沿墙一排 / onWall 贴墙 / light 灯光（color 平静色，alt 异变色）/ rip 空间撕裂口）。",
+  "school": {
+    "rooms": {
+      "classroom": {
+        "x0": -5,
+        "x1": 5,
+        "z0": 2,
+        "z1": -12,
+        "h": 3.4,
+        "floor": ["tex/class_floor", 2.2],
+        "wallL": ["tex/class_wall", 3.4],
+        "wall": ["tex/corridor_wall", 3.4],
+        "ceil": ["tex/school_ceiling", 2.6],
+        "fog": 0.03,
+        "glow": 0.3
+      },
+      "corridor": {
+        "x0": -2.2,
+        "x1": 2.2,
+        "z0": -12,
+        "z1": -46,
+        "h": 3.2,
+        "floor": ["tex/class_floor", 2.2],
+        "wallL": ["tex/class_wall", 3.2],
+        "wall": ["tex/corridor_wall", 3.2],
+        "ceil": ["tex/school_ceiling", 2.6],
+        "fog": 0.035,
+        "glow": 0.28
+      },
+      "yard": { "x0": -60, "x1": 60, "z0": -46, "z1": -104, "floor": ["tex/yard", 3.2], "fog": 0.012, "glow": 0.45 }
+    },
+    "calm": { "fog": "#6a3a40", "hemi": ["#ffd0a8", "#5a3438", 1.55], "sky": "#f0a070", "base": [0.66, 0.56, 0.52], "surface": "#ffffff" },
+    "invaded": { "fog": "#241030", "hemi": ["#a890ff", "#2a1030", 1.25], "sky": "#2a1040", "base": [0.46, 0.38, 0.6], "surface": "#9a88b8" },
+    "stations": {
+      "class1": {
+        "via": [[0, 1.5, 1.6]],
+        "cam": [0, 1.5, -0.6],
+        "look": [0, 1.35, -11],
+        "covers": [{ "k": "cover/desks", "x": -1.05, "z": -2.7, "h": 0.92 }, { "k": "cover/desks", "x": 1.05, "z": -2.7, "h": 0.92, "flip": true }],
+        "invade": true,
+        "tutorial": true,
+        "waves": [
+          [
+            { "t": 0.4, "type": "zomb", "from": "pop", "x": -1.2, "z": -7.2 },
+            { "t": 2.2, "type": "zomb", "from": "far", "x": 1.4, "z": -10.6 }
+          ],
+          [
+            { "t": 0, "type": "sheet", "from": "far", "x": -3, "y": 2.2, "z": -10.5 },
+            { "t": 0.6, "type": "sheet", "from": "far", "x": 3, "y": 2.4, "z": -10.5 },
+            { "t": 1.4, "type": "zomb", "from": "pop", "x": 1.2, "z": -5.2 },
+            { "t": 2.4, "type": "zomb", "from": "pop", "x": -3.4, "z": -9.2 }
+          ],
+          [
+            { "t": 0, "type": "lantern", "from": "pop", "x": -2.6, "z": -9.6 },
+            { "t": 0.5, "type": "zomb", "from": "pop", "x": 1.2, "z": -7.2 },
+            { "t": 1, "type": "zomb", "from": "pop", "x": 3.4, "z": -9.2 },
+            { "t": 1.8, "type": "sheet", "from": "far", "x": 0, "y": 2.6, "z": -11 },
+            { "t": 2.2, "type": "sheet", "from": "far", "x": -2.5, "y": 2, "z": -11 },
+            { "t": 2.6, "type": "sheet", "from": "far", "x": 2.5, "y": 2.2, "z": -11 }
+          ]
+        ]
+      },
+      "hall1": {
+        "via": [[0, 1.5, -6], [1.6, 1.5, -10.5], [0.2, 1.5, -13.5]],
+        "cam": [0, 1.5, -16],
+        "look": [0, 1.35, -34],
+        "covers": [{ "k": "cover/desks", "x": -0.95, "z": -18.6, "h": 0.9 }, { "k": "cover/desks", "x": 0.95, "z": -18.6, "h": 0.9, "flip": true }],
+        "waves": [
+          [
+            { "t": 0.2, "type": "lantern", "from": "pop", "x": -1.3, "z": -27 },
+            { "t": 0.9, "type": "zomb", "from": "far", "x": 0.6, "z": -33 },
+            { "t": 1.8, "type": "sheet", "from": "far", "x": 0.8, "y": 2.3, "z": -34 },
+            { "t": 2.3, "type": "sheet", "from": "far", "x": -0.8, "y": 2, "z": -34 }
+          ],
+          [
+            { "t": 0, "type": "umbrella", "x": 0.6, "z": -30 },
+            { "t": 0.7, "type": "lantern", "from": "pop", "x": 1.3, "z": -30 },
+            { "t": 1.5, "type": "zomb", "from": "far", "x": -0.8, "z": -34 },
+            { "t": 2.6, "type": "zomb", "from": "drop", "x": 0.9, "z": -26 },
+            { "t": 3.2, "type": "sheet", "from": "far", "x": 0, "y": 2.4, "z": -36 }
+          ]
+        ]
+      },
+      "hall2": {
+        "via": [[0.3, 1.5, -22], [-0.2, 1.5, -27]],
+        "cam": [0, 1.5, -30],
+        "look": [0, 1.35, -46],
+        "covers": [{ "k": "cover/desks", "x": -0.95, "z": -32.6, "h": 0.9 }, { "k": "cover/desks", "x": 0.95, "z": -32.6, "h": 0.9, "flip": true }],
+        "waves": [
+          [
+            { "t": 0.2, "type": "lantern", "from": "pop", "x": -1.2, "z": -40 },
+            { "t": 0.5, "type": "lantern", "from": "pop", "x": 1.2, "z": -42 },
+            { "t": 1.4, "type": "zomb", "from": "far", "x": 0, "z": -45 },
+            { "t": 2.2, "type": "umbrella", "x": -0.5, "z": -44 },
+            { "t": 2.6, "type": "sheet", "from": "far", "x": -1, "y": 2, "z": -46 }
+          ],
+          [
+            { "t": 0, "type": "zomb", "from": "drop", "x": -0.6, "z": -38 },
+            { "t": 0.4, "type": "zomb", "from": "drop", "x": 0.7, "z": -40 },
+            { "t": 1.2, "type": "lantern", "from": "pop", "x": 0, "z": -44 },
+            { "t": 2, "type": "sheet", "from": "far", "x": -1, "y": 2.4, "z": -46 },
+            { "t": 2.3, "type": "sheet", "from": "far", "x": 1, "y": 2.2, "z": -46 },
+            { "t": 2.6, "type": "umbrella", "x": 0.4, "z": -45 },
+            { "t": 3.4, "type": "zomb", "from": "far", "x": 0.4, "z": -46 }
+          ]
+        ]
+      },
+      "yard": {
+        "via": [[0, 1.6, -40], [0, 1.7, -46], [0, 1.8, -50]],
+        "cam": [0, 1.8, -54],
+        "look": [0, 4, -74],
+        "covers": [{ "k": "cover/vault", "x": -1.3, "z": -56.8, "h": 0.95 }, { "k": "cover/vault", "x": 1.3, "z": -56.8, "h": 0.95, "flip": true }]
+      }
+    },
+    "openCeiling": 12,
+    "dressing": [
+      { "do": "room", "room": "classroom", "openStart": false, "openEnd": { "w": 2.4, "h": 2.7 } },
+      { "do": "room", "room": "corridor", "openStart": false, "openEnd": { "w": 3, "h": 2.8 } },
+      { "do": "ground", "room": "yard" },
+      { "do": "backdrop", "key": "bg/yard_calm", "w": 130, "x": 0, "y": -9, "z": -104 },
+      {
+        "do": "grid",
+        "key": "prop/desk",
+        "h": 1.15,
+        "xs": [-3.6, -1.2, 1.2, 3.6],
+        "zs": [-5.2, -7.2, -9.2],
+        "jitter": 0.2,
+        "float": { "chance": 0.75, "lift": [1.7, 2.2], "ifAbsXOver": 2, "orZUnder": -8 }
+      },
+      { "do": "flat", "key": "prop/lectern", "h": 1.2, "x": 0.4, "y": 0, "z": -10.9, "float": 1.8 },
+      { "do": "flat", "key": "prop/chalkboard", "h": 2.2, "x": -2.4, "y": 0.15, "z": -11.85, "scaleX": 1.25 },
+      { "do": "flat", "key": "prop/plant", "h": 1.1, "x": 4.4, "y": 0, "z": -11.4, "float": 1.2 },
+      { "do": "flat", "key": "prop/locker", "h": 1.8, "x": -4.4, "y": 0, "z": -11.5 },
+      { "do": "light", "x": -4.2, "y": 2.4, "z": -1.5, "color": "#ffa060", "power": 1.3, "flicker": 0.15, "alt": "#9a5cff" },
+      { "do": "light", "x": -4.2, "y": 2.4, "z": -5, "color": "#ffa060", "power": 1.3, "flicker": 0.15, "alt": "#9a5cff" },
+      { "do": "light", "x": -4.2, "y": 2.4, "z": -8.5, "color": "#ffa060", "power": 1.3, "flicker": 0.15, "alt": "#9a5cff" },
+      { "do": "light", "x": 0, "y": 3, "z": -10, "color": "#ffc8a0", "power": 1, "flicker": 0.2, "alt": "#ff3aa0" },
+      { "do": "light", "x": 2.5, "y": 3.1, "z": -3, "color": "#fff0d8", "power": 0.8, "flicker": 0.05, "alt": "#7a6aff" },
+      { "do": "rip", "i": 0, "x": -4.97, "y": 2.1, "z": -6.5, "rotY": 90, "size": 1.6 },
+      { "do": "rip", "i": 1, "x": 4.97, "y": 1.8, "z": -8.8, "rotY": -90, "size": 1.4 },
+      { "do": "rip", "i": 2, "x": 2.4, "y": 2.4, "z": -11.97, "rotY": 0, "size": 1.5 },
+      { "do": "rip", "i": 3, "x": 4.97, "y": 2.3, "z": -3.5, "rotY": -90, "size": 1.1 },
+      { "do": "row", "key": "prop/locker", "h": 1.85, "wall": 1, "xWall": 2.2, "z0": -15, "z1": -44, "step": 3.6 },
+      { "do": "onWall", "key": "prop/plant", "h": 1, "side": -1, "xWall": -2.2, "y": 0, "z": -21 },
+      { "do": "onWall", "key": "prop/plant", "h": 1, "side": -1, "xWall": -2.2, "y": 0, "z": -35 },
+      { "do": "flat", "key": "prop/shoebox", "h": 1.4, "x": -1.6, "y": 0, "z": -44.8, "float": 0.7 },
+      { "do": "flat", "key": "prop/shoebox", "h": 1.4, "x": 1.6, "y": 0, "z": -44.8, "float": 0.7 },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -14, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -16, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -18.5, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -20.5, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -23, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -25, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -27.5, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -29.5, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -32, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -34, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -36.5, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -38.5, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -41, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -43, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "light", "x": -1.6, "y": 2.3, "z": -45.5, "color": "#ff9a58", "power": 1.1, "flicker": 0.1, "alt": "#9a5cff" },
+      { "do": "light", "x": 0.8, "y": 3, "z": -47.5, "color": "#fff0d8", "power": 0.5, "flicker": 0.3, "alt": "#ff3aa0" },
+      { "do": "rip", "i": 4, "x": -2.17, "y": 2, "z": -24, "rotY": 90, "size": 1.3 },
+      { "do": "rip", "i": 5, "x": 2.17, "y": 2.2, "z": -31, "rotY": -90, "size": 1.2 },
+      { "do": "rip", "i": 0, "x": -2.17, "y": 1.9, "z": -39, "rotY": 90, "size": 1.2 },
+      { "do": "light", "x": -8, "y": 9, "z": -66, "color": "#ffa060", "power": 3.4, "flicker": 0.05, "alt": "#8a5cff" },
+      { "do": "light", "x": 8, "y": 7, "z": -70, "color": "#ffb080", "power": 2.6, "flicker": 0.1, "alt": "#ff3aa0" },
+      { "do": "light", "x": 0, "y": 4, "z": -58, "color": "#ffc890", "power": 1.6, "flicker": 0.1, "alt": "#b070ff" },
+      { "do": "flat", "key": "prop/plant", "h": 2.2, "x": -9, "y": 0, "z": -70, "billboard": true },
+      { "do": "flat", "key": "prop/plant", "h": 2.2, "x": 9, "y": 0, "z": -64, "billboard": true },
+      { "do": "flat", "key": "prop/plant", "h": 2.2, "x": -12, "y": 0, "z": -84, "billboard": true },
+      { "do": "flat", "key": "prop/plant", "h": 2.2, "x": 12, "y": 0, "z": -80, "billboard": true },
+      { "do": "rip", "i": 2, "x": -24, "y": 30, "z": -101, "rotY": 0, "size": 16, "sky": true },
+      { "do": "rip", "i": 1, "x": 18, "y": 24, "z": -101, "rotY": 0, "size": 12, "sky": true },
+      { "do": "rip", "i": 5, "x": -2, "y": 34, "z": -101, "rotY": 0, "size": 10, "sky": true },
+      { "do": "rip", "i": 3, "x": 34, "y": 16, "z": -101, "rotY": 0, "size": 9, "sky": true }
+    ]
+  }
+}

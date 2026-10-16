@@ -1,14 +1,17 @@
 // Effects: particles in the world and on the overlay, tracers, slash trail, lock-on rings, SFX stamps.
+import { C } from '../core/content.js';
 import * as THREE from 'three';
 import { tex } from '../engine/assets.js';
 import { Particles, buildAtlas, FR } from '../engine/particles.js';
 import { paperMaterial } from '../engine/paper.js';
 import { Ease } from '../engine/tween.js';
 
-export const COL = {
-  pink: [1, 0.22, 0.6], hot: [1, 0.1, 0.45], lime: [0.78, 1, 0.2], white: [1, 1, 1], bone: [0.94, 0.89, 0.8],
-  ember: [1, 0.55, 0.12], fire: [1, 0.8, 0.5], ash: [0.16, 0.13, 0.13], violet: [0.62, 0.32, 1], red: [0.85, 0.05, 0.12], paper: [0.96, 0.93, 0.86], gold: [1, 0.82, 0.3],
-};
+// colours / threat rings / mantra glyphs: content theme.json (filled by initTheme() once the packs are loaded)
+export const COL = {};
+export function initTheme() {
+  Object.assign(COL, C.theme.col);
+  Object.assign(THREAT, C.theme.threat);
+}
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
@@ -33,7 +36,7 @@ export const shadowTex = () => canvasTex(128, 64, (g) => {
 //  ranged (yellow, 4 ticks)    hide or kill
 //  shot   (orange, dashed)     a thing in flight: shoot it down
 //  heavy  (violet, chevrons)   can't be stopped: hide
-export const THREAT = { melee: 0xff2448, ranged: 0xffd23a, shot: 0xff8a1f, heavy: 0xb05cff };
+export const THREAT = {};
 const threatTex = (type) => canvasTex(256, 256, (g) => {
   g.translate(128, 128);
   g.strokeStyle = '#fff'; g.fillStyle = '#fff';
@@ -67,10 +70,8 @@ const holeTex = () => canvasTex(128, 128, (g) => {
 });
 
 // the six syllables of the mantra, burned gold
-export const MANTRA = ['唵', '嘛', '呢', '叭', '咪', '吽'];
-const GLYPH_PAL = { gold: ['rgba(255,190,60,0.95)', '#3a0c00', '#ffd86a'], jade: ['rgba(90,255,190,0.95)', '#062a20', '#8affd0'] };
 const glyphTex = (ch, pal = 'gold') => canvasTex(256, 256, (g) => {
-  const [glow, ink, fill] = GLYPH_PAL[pal];
+  const [glow, ink, fill] = C.theme.glyphPal[pal];
   g.textAlign = 'center'; g.textBaseline = 'middle';
   g.font = '900 190px "SimSun", "Songti SC", "Noto Serif SC", "Microsoft YaHei", serif';
   g.shadowColor = glow; g.shadowBlur = 28;
@@ -185,7 +186,7 @@ export class FX {
     }
     this.tracerI = 0;
     this.stampCD = {};
-    this.glyphs = { gold: MANTRA.map((c) => glyphTex(c, 'gold')), jade: MANTRA.map((c) => glyphTex(c, 'jade')) };
+    this.glyphs = { gold: C.theme.mantra.map((c) => glyphTex(c, 'gold')), jade: C.theme.mantra.map((c) => glyphTex(c, 'jade')) };
     this.runeT = runeTex();
   }
 

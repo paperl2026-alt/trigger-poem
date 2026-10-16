@@ -1,0 +1,26 @@
+{
+  "_doc": "画面风格。col 特效颜色（RGB 0~1），threat 攻击预警圈颜色，mantra 猫爪射出的真言字，glyphPal 真言字的配色，feverColor Fever 升级喊话颜色，fonts 各语言字体（之后换成美术字素材）。",
+  "col": {
+    "pink": [1, 0.22, 0.6],
+    "hot": [1, 0.1, 0.45],
+    "lime": [0.78, 1, 0.2],
+    "white": [1, 1, 1],
+    "bone": [0.94, 0.89, 0.8],
+    "ember": [1, 0.55, 0.12],
+    "fire": [1, 0.8, 0.5],
+    "ash": [0.16, 0.13, 0.13],
+    "violet": [0.62, 0.32, 1],
+    "red": [0.85, 0.05, 0.12],
+    "paper": [0.96, 0.93, 0.86],
+    "gold": [1, 0.82, 0.3]
+  },
+  "threat": { "melee": "#ff2448", "ranged": "#ffd23a", "shot": "#ff8a1f", "heavy": "#b05cff" },
+  "mantra": ["唵", "嘛", "呢", "叭", "咪", "吽"],
+  "glyphPal": { "gold": ["rgba(255,190,60,0.95)", "#3a0c00", "#ffd86a"], "jade": ["rgba(90,255,190,0.95)", "#062a20", "#8affd0"] },
+  "feverColor": { "dmg": "#ff5a4a", "acc": "#4ad8ff", "combo": "#ffd23a" },
+  "fonts": {
+    "zh": "\"ZCOOL QingKe HuangYou\", \"Dela Gothic One\", \"Microsoft YaHei\", \"PingFang SC\", sans-serif",
+    "en": "\"Dela Gothic One\", \"Arial Black\", sans-serif",
+    "ja": "\"Dela Gothic One\", \"Hiragino Sans\", \"Yu Gothic\", sans-serif"
+  }
+}
