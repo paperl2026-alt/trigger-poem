@@ -9,7 +9,7 @@ const params = new URLSearchParams(location.search);
 const SCENE = params.get('scene') || 'corridor';
 // ?auto=1: a scripted camera sweep (for recordings); ?flat=1: the flat card for comparison
 const AUTO = params.get('auto') === '1';
-const opt = { near: 1.4, far: 15, fov: 52, move: 0.6, sway: true, flat: false, light: true, tear: 1.35, crop: 0.9 };
+const opt = { near: 1.4, far: 15, fov: 52, move: 0.6, sway: true, flat: false, light: true, tear: 1.35, crop: 0.84 };
 
 const canvas = document.getElementById('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -64,7 +64,8 @@ function rebuild() {
   }
   // the backdrop: the same painting, flat, just behind the farthest point, so a tear shows roughly what lies behind it
   const t = Math.tan((opt.fov * Math.PI) / 360), z = opt.flat ? 9.5 : opt.far * 1.05;
-  back.scale.set(2 * t * (S.size[0] / S.size[1]) * z * 1.15, 2 * t * z * 1.15, 1); back.position.set(0, 0, -z);
+  // exactly the painting's frame at that distance: at rest the outside view lines up with the windows
+  back.scale.set(2 * t * (S.size[0] / S.size[1]) * z, 2 * t * z, 1); back.position.set(0, 0, -z);
   cam.fov = 2 * Math.atan(Math.tan((opt.fov * Math.PI) / 360) * opt.crop) * 180 / Math.PI; cam.updateProjectionMatrix();   // a little zoomed in: the edges never show
 }
 
@@ -72,9 +73,11 @@ async function boot() {
   S = await (await fetch(`${BASE}${SCENE}/scene.json`)).json();
   const P = S.plate;
   const tex = await loadTex(`${BASE}${SCENE}/${P.img}`);
-  plateMesh = surface(await loadBin(`${BASE}${SCENE}/${P.depth}`), P.dims, 0, 0, new THREE.MeshBasicMaterial({ map: tex }));
+  // the plate may have holes (window panes): the outside view is a far layer behind them
+  plateMesh = surface(await loadBin(`${BASE}${SCENE}/${P.depth}`), P.dims, 0, 0, new THREE.MeshBasicMaterial({ map: tex, transparent: true, alphaTest: 0.5 }));
   scene.add(plateMesh);
-  back = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tex, color: 0xb8a8b0 })); back.renderOrder = -5; scene.add(back);
+  const farTex = S.far ? await loadTex(`${BASE}${SCENE}/${S.far.img}`) : tex;
+  back = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: farTex, color: S.far ? 0xffffff : 0xb8a8b0 })); back.renderOrder = -5; scene.add(back);
   for (const c of S.covers) {
     const t = await loadTex(`${BASE}${SCENE}/${c.img}`);
     const mat = new THREE.MeshLambertMaterial({ map: t, transparent: true, alphaTest: 0.35, emissive: 0xffffff, emissiveMap: t, emissiveIntensity: 0.55 });

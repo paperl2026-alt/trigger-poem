@@ -4,8 +4,13 @@ camera moves, no "2D card with a thickness").
 Depth Anything gives relative inverse depth up to scale and shift per image; the covers' depth (taken from the concept image,
 where they still stand) is brought onto the plate's scale by a straight-line fit over the pixels both images share (floor,
 walls), so they stand at the right distance in front of it.
+Windows (optional, env DM_HOLES = a copy of the plate whose window panes are transparent, DM_HOLE_X = only holes right of this
+fraction of the width, DM_FAR = the outside view): the panes become holes in the plate; the plate's depth inside them is the
+depth of the wall / frame around them (the glass is flush with the wall, nothing stretches), and the outside view is its
+own far layer seen through them.
 usage: python -I tools/depth_mesh.py <name> <plate.png> <plate_depth.png> <concept_depth.png> [cover.png ...]
-  -> public/proto/<name>/plate.webp, plate.bin, <cover>.webp, <cover>.bin, scene.json"""
+  -> public/proto/<name>/plate.webp, plate.bin, <cover>.webp, <cover>.bin, [far.webp], scene.json"""
+import os
 import sys, json, pathlib
 import numpy as np
 from PIL import Image
@@ -43,6 +48,19 @@ if __name__ == "__main__":
     resid = np.abs(dp - (a * dc + b))[keep]; good = keep.copy(); good[keep] = resid < np.percentile(resid, 70)
     a, b = np.polyfit(dc[good][::23], dp[good][::23], 1)
     print(f"concept depth -> plate depth: {a:.3f} x + {b:.3f}")
+    holes = None
+    if os.environ.get("DM_HOLES"):
+        ha = np.asarray(Image.open(os.environ["DM_HOLES"]).convert("RGBA").resize((W, H)))[..., 3] < 128
+        ha[:, : int(float(os.environ.get("DM_HOLE_X", 0)) * W)] = False
+        lab, n = ndimage.label(ha); sizes = ndimage.sum(ha, lab, range(1, n + 1))
+        holes = np.isin(lab, 1 + np.where(sizes > 400)[0])
+        # glass flush with the wall: the depth inside a pane is the nearest frame / wall value just outside it
+        ring = ~ndimage.binary_dilation(holes, iterations=6)
+        idx = ndimage.distance_transform_edt(~ring, return_distances=False, return_indices=True)
+        dp = np.where(holes | ~ring, ndimage.gaussian_filter(dp[idx[0], idx[1]], 4), dp)
+        soft = ndimage.gaussian_filter((~holes).astype(np.float32), 0.8)
+        plate = Image.fromarray(np.dstack([np.asarray(plate), (soft * 255).astype(np.uint8)]))
+        print("window holes", round(holes.mean(), 3))
     plate.save(out / "plate.webp", quality=90, method=6)
     gp = grid(dp, GRID); gp.tofile(out / "plate.bin")
     scene = {"size": [W, H], "grid": GRID, "plate": {"img": "plate.webp", "depth": "plate.bin", "dims": [int(gp.shape[1]), int(gp.shape[0])]}, "covers": []}
@@ -66,5 +84,8 @@ if __name__ == "__main__":
             d = ndimage.gaussian_filter(d, 2.0)
         gc = grid(d, GRID); gc.tofile(out / f"{n}.bin")
         scene["covers"].append({"name": n, "img": f"{n}.webp", "depth": f"{n}.bin", "box": [x0, y0, x1, y1], "dims": [int(gc.shape[1]), int(gc.shape[0])]})
+    if os.environ.get("DM_FAR"):
+        Image.open(os.environ["DM_FAR"]).convert("RGB").resize((W, H), Image.LANCZOS).save(out / "far.webp", quality=88, method=6)
+        scene["far"] = {"img": "far.webp"}
     (out / "scene.json").write_text(json.dumps(scene, indent=1))
     print("->", out)

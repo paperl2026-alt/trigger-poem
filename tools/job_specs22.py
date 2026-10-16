@@ -43,3 +43,13 @@ JOBS["R22_window"] = [
      "perspective as seen through the windows, and continue that landscape naturally behind the window frames, mullions and curtains so it is complete. "
      "Everything below and left of the windows (the corridor itself) fully transparent.", "OPAQUE"),
 ]
+
+# the outside view, aligned: everything that is not a window pane is magenta; Codex paints the landscape on into it
+JOBS["R22_far"] = [
+    ("art/raw/r22/corridor_far.png", ["art/raw/r22/outside_magenta.png"],
+     "Reference image 1 shows the view through some windows (sky, clouds, buildings, trees, a fence and a red running track at sunset); everything else has "
+     "been painted solid magenta (#FF00FF). " + NOREDESIGN + "Output the SAME image, same size, with ONLY the magenta areas repainted: continue the outside "
+     "landscape seen through the windows across the whole frame, in the same light, colours, painting style, perspective and scale, as if there were no wall "
+     "and no window frames: more sky and clouds above, the buildings, trees, fence and running track continuing left and down. No window frames, no curtains, "
+     "no corridor, no text. Everything that is not magenta stays exactly as it is, pixel for pixel.", "OPAQUE"),
+]
