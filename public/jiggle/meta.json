@@ -1,0 +1,42 @@
+{
+ "cat_cover": {
+  "src": "set_4/cat_01_cover_idle",
+  "w": 973,
+  "h": 1161,
+  "canvasH": 1536
+ },
+ "cat_fire": {
+  "src": "set_1/cat_05_firing_forward",
+  "w": 954,
+  "h": 1494,
+  "canvasH": 1536
+ },
+ "pink_cover": {
+  "src": "set_3/pink_02_cover_peek",
+  "w": 991,
+  "h": 1317,
+  "canvasH": 1536
+ },
+ "pink_fire": {
+  "src": "set_1/pink_07_firing_recoil",
+  "w": 968,
+  "h": 1476,
+  "canvasH": 1536
+ },
+ "cover_obj": {
+  "src": "set_4/cover_school_bookcase",
+  "w": 987,
+  "h": 1095,
+  "canvasH": 1536
+ },
+ "fx_pink": {
+  "w": 879,
+  "h": 732,
+  "canvasH": 1536
+ },
+ "fx_cat": {
+  "w": 975,
+  "h": 801,
+  "canvasH": 1536
+ }
+}

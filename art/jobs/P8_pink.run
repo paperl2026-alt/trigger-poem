@@ -1,0 +1,16 @@
+exit=0 log=art/jobs/P8_pink.log
++I can't generate sexualized imagery of a high-school student, including see-through clothing over lingerie-style attire.
+
+codex
+art/raw/pink_cover_aim.refused.txt: Refused sexualized imagery of a high-school student; no image dimensions.
+diff --git a/art/raw/pink_cover_aim.refused.txt b/art/raw/pink_cover_aim.refused.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..23d234e2cd9dbdd32c37517ece5aef436f5d7aa4
+--- /dev/null
++++ b/art/raw/pink_cover_aim.refused.txt
+@@ -0,0 +1 @@
++I can't generate sexualized imagery of a high-school student, including see-through clothing over lingerie-style attire.
+
+tokens used
+8,712
+art/raw/pink_cover_aim.refused.txt: Refused sexualized imagery of a high-school student; no image dimensions.

@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>晃动技术验证</title>
+  <style>
+    html, body { margin: 0; height: 100%; overflow: hidden; background: #1a0f20; font-family: "Microsoft YaHei", sans-serif; }
+    #c { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; cursor: crosshair; }
+    #ui { position: fixed; left: 16px; top: 16px; z-index: 2; background: #000c; color: #fff; padding: 14px 16px; border: 3px solid #fff; box-shadow: 6px 6px 0 #ff4fa8;
+      width: 300px; font-size: 15px; line-height: 1.5; user-select: none; }
+    #ui h1 { margin: 0 0 6px; font-size: 20px; color: #ff7ac0; }
+    #ui p { margin: 0 0 10px; color: #ddd; font-size: 13px; }
+    #ui label { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 6px 0; }
+    #ui input[type=range] { width: 150px; }
+    #ui .row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    #ui button { font: 14px "Microsoft YaHei", sans-serif; background: #222; color: #fff; border: 2px solid #666; padding: 5px 10px; cursor: pointer; }
+    #ui button.on { border-color: #ff7ac0; color: #ff7ac0; }
+    #ui.min > *:not(h1) { display: none; }
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div id="ui">
+    <h1>NIKKE 式晃动 · 技术验证</h1>
+    <p>按住左键：两人起身射击（每发都有后坐力）<br>松开：蹲回掩体<br>空格：自动演示　H：隐藏面板</p>
+    <label>晃动强度 <input id="amp" type="range" min="0" max="1.5" step="0.05" value="0.35"><b id="ampv">0.35</b></label>
+    <label>射击节奏 <input id="rhythm" type="range" min="0.8" max="3" step="0.05" value="1.6"><b id="rhythmv">1.60 Hz</b></label>
+    <label>汗液 <input id="sweat" type="range" min="0" max="1" step="0.05" value="0.8"><b id="sweatv">0.80</b></label>
+    <div class="row">
+      <button id="auto">自动演示</button>
+      <button id="slow">慢放 ×0.25</button>
+      <button id="regions">显示：正常</button>
+    </div>
+    <div class="row">
+      <button id="cam" data-v="close">镜头：特写</button>
+      <button id="cover" class="on">掩体：开</button>
+      <button id="atmo">环境氛围：关</button>
+      <button id="blur" class="on">动态模糊：开</button>
+    </div>
+  </div>
+  <script type="module" src="/src/jiggle/main.js"></script>
+</body>
+</html>

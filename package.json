@@ -1,0 +1,28 @@
+{
+  "name": "trigger-poem",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "art": "python -I tools/process_art.py",
+    "portable": "vite build --config vite.portable.config.js && node tools/portable.mjs",
+    "fonts": "node tools/make_fonts.mjs",
+    "app": "vite build && electron .",
+    "exe": "vite build && node tools/package_exe.mjs"
+  },
+  "dependencies": {
+    "@fontsource/dela-gothic-one": "^5.3.0",
+    "@fontsource/zcool-qingke-huangyou": "^5.3.0",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "@electron/packager": "^18.4.4",
+    "electron": "^33.4.11",
+    "vite": "^5.4.10"
+  },
+  "main": "electron/main.cjs",
+  "productName": "Trigger Poem"
+}

@@ -1,0 +1,8 @@
+# 能重新生成的东西不进存档
+node_modules/
+dist/
+release/
+art/_shots/
+art/jiggle_test/
+tools/__pycache__/
+*.log

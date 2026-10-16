@@ -1,0 +1,480 @@
+// One episode run: walks the episode's steps (comics, small stages, bosses), owns the world, the two heroines,
+// enemies, shooting rules (pierce / ramp / Fever crits / stagger), rewards at the end.
+import * as THREE from 'three';
+import { alphaAt } from '../engine/assets.js';
+import { sfx, playMusic, stopMusic, setIntensity } from '../engine/audio.js';
+import { Ease } from '../engine/tween.js';
+import { World } from './world.js';
+import { FX, COL } from './fx.js';
+import { Player } from './player.js';
+import { Enemy, Projectile } from './enemies.js';
+import { BOSSES } from './boss.js';
+import { Hud } from './hud.js';
+import { Comic } from './comic.js';
+import { AICtrl, PadCtrl, KeyCtrl } from './input.js';
+import { SET } from './settings.js';
+import { STAGE_NAME } from './episodes.js';
+import { SAVE, persist, levelOf } from './save.js';
+import { bagHas } from './items.js';
+import { t, tr } from './i18n.js';
+
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const RANK_DD = { S: 500, A: 350, B: 200, C: 100 };
+const RANK_XP = { S: 100, A: 70, B: 40, C: 20 };
+
+export class Game {
+  // run: { ep, team: [id1P, id2P], bag: [...] }
+  constructor(G, run) {
+    this.G = G;
+    this.run = run;
+    this.ep = run.ep;
+    this.tweens = G.tweens;
+    this.post = G.post;
+    this.pointer = G.pointer;
+    this.overlay = new THREE.Scene();
+    this.ortho = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100);
+    this.world = new World(this, this.ep.set);
+    this.fx = new FX(this);
+    this.players = run.team.map((id, i) => new Player(this, id, i, { xp: SAVE.chars[id]?.xp || 0, bag: run.bag }));
+    this.hud = new Hud(this);
+    this.comic = new Comic();
+    this.actors = [];
+    this.boxes = new Map();
+    this.combat = false;
+    this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
+    this.time = 0; this.playT = 0;
+    this.camPlaced = false;
+    this.assignControllers();
+    this.layout(G.W, G.H);
+  }
+  get W() { return this.G.W; }
+  get H() { return this.G.H; }
+  get player() { return this.players[0]; }
+  p2on() { return SET.p2 !== 'off'; }
+
+  assignControllers() {
+    const [p1, p2] = this.players, G = this.G;
+    p1.ctrl = G.auto ? new AICtrl(G, p1, 0.95) : G.p1ctrl;
+    if (SET.p2 === 'pad' && G.p2pad !== null) p2.ctrl = new PadCtrl(G, G.p2pad);
+    else if (SET.p2 === 'keys') p2.ctrl = new KeyCtrl(G);
+    else p2.ctrl = new AICtrl(G, p2, 0.5);
+  }
+  applyP2() {
+    this.assignControllers();
+    const p2 = this.players[1];
+    const on = this.p2on();
+    this.hud.panels[1].el.classList.toggle('hidden', !on);
+    if (!on) { p2.state = 'away'; p2.poses[p2.pose] && (p2.poses[p2.pose].visible = false); }
+    else if (p2.state === 'away' && this.combat) { p2.state = 'cover'; p2.y0 = 0; }
+  }
+
+  layout(W, H) {
+    this.ortho.right = W; this.ortho.top = H; this.ortho.updateProjectionMatrix();
+    this.world.setSize(W, H);
+    this.players.forEach((p) => p.layout(W, H, this.G.frame));
+  }
+
+  // ------------------------------------------------------------------ episode flow
+  start(step = 0) {
+    this.applyP2();
+    this.hud.show(false);
+    this.stepIdx = step - 1;
+    this.nextStep();
+  }
+  nextStep() {
+    this.stepIdx++;
+    const st = this.ep.steps[this.stepIdx];
+    if (!st) { this.finish(); return; }
+    this.checkpoint = this.stepIdx;
+    if (st.comic) {
+      if (this.G.skipComics || !Comic.ready(st.comic)) { this.afterComic = true; this.nextStep(); return; }
+      this.hud.show(false);
+      stopMusic();
+      const play = () => this.comic.play(st.comic, () => { this.post.u.wipe.value = 0; this.afterComic = true; this.nextStep(); });
+      if (this.camPlaced) this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: play }); else play();
+      return;
+    }
+    this.stage = st;
+    this.hud.show(true);
+    if (st.stage) {
+      this.stationQ = [...st.stations];
+      this.goStation(this.stationQ.shift(), false);
+      const nm = STAGE_NAME[st.stage];
+      if (nm) this.tweens.wait(0.3, () => this.hud.showBanner(tr(nm), 'stage', 1.4));
+    } else if (st.boss) this.goStation(st.station, true);
+  }
+  station(id) { return this.world.level.set.stations[id]; }
+  goStation(id, boss) {
+    const S = this.station(id);
+    this.S = S;
+    this.combat = false;
+    this.world.dropCovers();
+    let pts;
+    if (!this.camPlaced || this.afterComic) { this.world.place(S.via[0], S.look); pts = [...S.via, S.cam]; } else pts = [this.world.camPos.toArray(), ...S.via, S.cam];
+    this.camPlaced = true; this.afterComic = false;
+    this.post.u.wipe.value = 0;
+    // the calm after-school world until the invasion station; invaded from then on
+    if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+    playMusic('stage');
+    this.setAll('run');
+    let len = 0;
+    for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
+    const go = () => this.arrive(S, boss);
+    if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, Math.max(1.6, len / 6.5), go);
+  }
+  // everyone runs to the next stop; a downed 2P gets back up for it
+  setAll(state) {
+    for (const p of this.players) {
+      if (p.slot && !this.p2on()) continue;
+      if (p.state === 'down') p.hp = Math.max(p.hp, p.maxHp * 0.4);
+      p.state = state;
+    }
+  }
+
+  arrive(S, boss) {
+    this.world.setCovers(S.covers);
+    if (boss) this.spawnBoss(this.stage.boss);
+    if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
+    this.enterCover(() => { if (!boss) this.beginStation(); });
+  }
+  // the evil god breaks into the calm after-school world: a hit, the paper world tears, the light turns wrong, desks float up
+  invade(then) {
+    const w = this.world;
+    sfx.slam(); sfx.madness();
+    this.G.stop(0.25);
+    this.post.flash(0.9, 0xff3aa0);
+    this.post.shake(1.4);
+    this.hud.showBanner(t('invade'), 'warn', 1.8);
+    this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.6); p.soft.kick(1.6); });
+    this.tweens.to(w, { anomaly: 1 }, 1.8, { ease: Ease.outCubic });
+    this.tweens.wait(0.5, () => { sfx.tear(0); this.post.shake(0.8); });
+    this.tweens.wait(2.0, () => { this.combat = true; then && then(); });
+  }
+  // calm: take places but keep combat off (the world hasn't been invaded yet)
+  enterCover(then, calm = false) {
+    this.players.forEach((p, i) => {
+      if (i && !this.p2on()) return;
+      p.state = 'cover';
+      p.y0 = -this.H * 0.5;
+      p.soft.kick(1.2);
+      this.tweens.to(p, { y0: 0 }, 0.4, { ease: Ease.outBack, delay: 0.1 + i * 0.08 });
+    });
+    this.tweens.wait(0.55, () => { if (calm) return; this.combat = true; then && then(); });
+  }
+  beginStation() {
+    this.waveIndex = 0;
+    this.startWave();
+    if (this.S.tutorial) this.hud.tutorial('fire');
+  }
+  startWave() {
+    const wave = this.S.waves[this.waveIndex];
+    this.pendingSpawns = wave.length;
+    this.waveLive = true;
+    for (const s of wave) this.tweens.wait(s.t + 0.4, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+  }
+  checkWave() {
+    if (!this.waveLive || this.pendingSpawns > 0) return;
+    if (this.actors.some((a) => a.alive && !(a instanceof Projectile))) return;
+    this.waveLive = false;
+    this.waveIndex++;
+    if (this.waveIndex < this.S.waves.length) { this.tweens.wait(0.9, () => this.combat && this.startWave()); return; }
+    this.combat = false;
+    this.clearProjectiles();
+    sfx.clear();
+    this.players.forEach((p) => { p.tauntT = 1.1; if (p.activeOn) p.endActive(false); });
+    if (this.stationQ.length) {
+      this.hud.showBanner(t('clear'), 'clear', 1.2);
+      this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
+    } else {
+      this.hud.showBanner(t('stageClear'), 'clear big', 1.6);
+      if (bagHas(this.run.bag, 'bandaid')) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(20); this.hud.healPop(p.slot, 20); } });
+      this.tweens.wait(1.7, () => this.nextStep());
+    }
+  }
+  spawnBoss(kind) {
+    this.clearActors();
+    const B = BOSSES[kind];
+    this.boss = new B(this);
+    this.actors.push(this.boss);
+    playMusic('boss');
+    this.hud.boss(tr(this.boss.name), 1);
+    sfx.roar();
+    this.post.shake(1);
+  }
+  onBossDead() {
+    this.combat = false;
+    this.hud.boss(null);
+    this.clearProjectiles();
+    this.players.forEach((p) => { if (p.activeOn) p.endActive(false); });
+    this.tweens.wait(3.4, () => {
+      stopMusic();
+      sfx.victory();
+      this.setAll('victory');
+      this.tweens.wait(1.4, () => this.nextStep());
+    });
+  }
+  gameOver() {
+    this.combat = false;
+    stopMusic();
+    sfx.defeat();
+    this.players[0].state = 'down';
+    const st = this.stats(false);
+    this.applyRewards(st);
+    this.tweens.to(this.post.u.wipe, { value: 1 }, 1.2, { delay: 0.6, ease: Ease.inQuad, onDone: () => this.G.showGameOver(st) });
+  }
+  finish() {
+    stopMusic();
+    const st = this.stats(true);
+    this.applyRewards(st);
+    this.G.showResults(st);
+  }
+  stats(win) {
+    const ps = this.players.filter((p, i) => i === 0 || this.p2on());
+    const shots = ps.reduce((a, p) => a + p.shots, 0), hits = ps.reduce((a, p) => a + p.hits, 0);
+    const p1 = this.players[0];
+    const st = {
+      win, ep: this.ep.id, kills: this.kills, acc: shots ? hits / shots : 0, combo: this.maxCombo, time: this.playT, checkpoint: this.checkpoint,
+      taken: p1.taken, team: this.run.team, bag: this.run.bag,
+      players: ps.map((p) => ({ id: p.id, kills: p.kills, dealt: Math.round(p.dealt), acc: p.shots ? p.hits / p.shots : 0 })),
+    };
+    const score = st.acc * 35 + clamp(1 - st.taken / 200, 0, 1) * 25 + Math.min(20, st.combo) + clamp((this.ep.par || 300) / Math.max(1, st.time), 0, 1) * 20;
+    st.score = Math.round(score);
+    st.rank = win ? (score >= 80 ? 'S' : score >= 65 ? 'A' : score >= 50 ? 'B' : 'C') : null;
+    return st;
+  }
+  // 刀盾 + mastery XP; clearing an episode unlocks the next ones. Applied to the save right away.
+  applyRewards(st) {
+    const cat = bagHas(this.run.bag, 'cat') ? 1.25 : 1;
+    const rec = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null });
+    let dd = st.win ? RANK_DD[st.rank] : st.kills * 3;
+    st.firstClear = st.win && !rec.cleared && !this.ep.debug;
+    if (st.firstClear) dd += 300;
+    st.dd = Math.round(dd * cat);
+    st.xp = {};
+    st.unlocked = [];
+    if (this.ep.debug) { st.dd = 0; return; }
+    SAVE.dd += st.dd;
+    for (const id of new Set(st.team)) {
+      const c = SAVE.chars[id];
+      const gain = st.win ? RANK_XP[st.rank] + st.kills * 2 : st.kills;
+      st.xp[id] = { gain, before: levelOf(c.xp), after: levelOf(c.xp + gain), xp: c.xp + gain };
+      c.xp += gain;
+    }
+    if (st.win) {
+      rec.cleared = true;
+      const order = 'CBAS';
+      if (!rec.best || order.indexOf(st.rank) > order.indexOf(rec.best)) rec.best = st.rank;
+      for (const id of this.ep.unlocks || []) if (!SAVE.eps[id]?.open) { SAVE.eps[id] = { open: true, cleared: false, best: null }; st.unlocked.push(id); }
+    }
+    persist();
+  }
+  clearActors() { for (const a of this.actors) if (!a.removed) a.dispose(); this.actors.length = 0; }
+  clearProjectiles() { for (const a of this.actors) if (a instanceof Projectile && a.alive) { a.alive = false; if (a.lock) { a.lock.remove(); a.lock = null; } a.dieShatter({ u: 0.5, v: 0.5 }, 0.6); } }
+  dispose() {
+    this.clearActors();
+    this.fx.clear();
+    this.comic.abort();
+    stopMusic();
+    this.hud.show(false);
+    this.hud.dispose();
+    this.players.forEach((p) => { if (p.beam) p.beam.remove(); this.world.camera.remove(p.group); });
+  }
+
+  // ------------------------------------------------------------------ spawning / set pieces
+  spawnEnemy(s) { const e = new Enemy(this, s); this.actors.push(e); return e; }
+  spawnProjectile(kind, from, opts) { const p = new Projectile(this, kind, from, opts); this.actors.push(p); return p; }
+  // which player an attack goes for: mostly the one on the attacker's side of the screen
+  pickTarget(x = 0) {
+    if (!this.p2on()) return 0;
+    let slot = x > 0.3 ? 1 : x < -0.3 ? 0 : Math.random() < 0.5 ? 0 : 1;
+    if (Math.random() < 0.25) slot = 1 - slot;
+    const s = this.players[slot].state;
+    if (s === 'down' || s === 'away') slot = 1 - slot;
+    return slot;
+  }
+
+  // ------------------------------------------------------------------ combat queries
+  box(a) { let b = this.boxes.get(a); if (!b) { b = a.screenBox(); this.boxes.set(a, b); } return b; }
+  hitMeshes() { const out = []; for (const a of this.actors) if (a.alive) out.push(...a.hitMeshes()); return out; }
+  // for gamepad aim-assist: the enemy under (x, y), if any
+  overTarget(x, y) {
+    const m = this.H * 0.02;
+    for (const a of this.actors) {
+      if (!a.alive || !a.hitMeshes().length) continue;
+      const b = this.box(a);
+      if (x > b.x0 - m && x < b.x1 + m && y > b.y0 - m && y < b.y1 + m) return { x: (b.x0 + b.x1) / 2, y: b.y0 + (b.y1 - b.y0) * 0.45 };
+    }
+    return null;
+  }
+  boxUV(a, sx, sy) {
+    const b = this.box(a);
+    const cx = clamp(sx, b.x0, b.x1), cy = clamp(sy, b.y0, b.y1);
+    let u = (cx - b.x0) / Math.max(1, b.x1 - b.x0), v = 1 - (cy - b.y0) / Math.max(1, b.y1 - b.y0);
+    if (alphaAt(a.mesh.userData.texKey, u, v) < 110) { u = 0.5; v = 0.5; if (alphaAt(a.mesh.userData.texKey, u, v) < 110) return null; }
+    return { u, v, d: Math.hypot(cx - sx, cy - sy) };
+  }
+  assist(sx, sy, radius) {
+    let best = null, bd = radius;
+    for (const a of this.actors) {
+      if (!a.alive || !a.hitMeshes().length) continue;
+      const uv = this.boxUV(a, sx, sy);
+      if (!uv || uv.d > bd) continue;
+      best = { a, uv }; bd = uv.d;
+    }
+    return best;
+  }
+  // everything the shot passes through, nearest first (up to max)
+  targetsAt(sx, sy, radius, max) {
+    const w = this.world;
+    w.ray.setFromCamera(w.ndc(sx, sy), w.camera);
+    const out = [], seen = new Set();
+    for (const h of w.ray.intersectObjects(this.hitMeshes(), false)) {
+      if (!h.uv) continue;
+      const mu = h.object.material.uniforms;
+      if (mu && mu.sliceOn && mu.sliceOn.value) continue;
+      const a = h.object.userData.owner;
+      if (seen.has(a) || alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) <= 110) continue;
+      seen.add(a);
+      out.push({ a, uv: { u: h.uv.x, v: h.uv.y } });
+      if (out.length >= max) break;
+    }
+    if (!out.length) { const as = this.assist(sx, sy, radius); if (as) out.push(as); }
+    return out;
+  }
+
+  // One shot from player p at screen (sx, sy). Rifle rounds pierce; mantra hits ramp up on the same target.
+  // Crits only come from the accuracy Fever. Returns { n: targets hit, crit }.
+  shoot(p, sx, sy) {
+    const w = p.w;
+    const hits = this.targetsAt(sx, sy, this.H * (p.ctrl?.kind === 'mouse' ? 0.02 : 0.035), 1 + (w.pierce || 0));
+    if (!hits.length) {
+      // the bullet still lands somewhere — leave a hole in the room
+      this.world.ray.setFromCamera(this.world.ndc(sx, sy), this.world.camera);
+      const hit = this.world.ray.intersectObject(this.world.level.group, true)
+        .find((h) => !h.object.userData.texKey || (h.uv && alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) > 110));
+      if (hit) { this.fx.decal(hit); sfx.miss((sx / this.W - 0.5) * 0.6); }
+      p.fever.miss();
+      return { n: 0, crit: false };
+    }
+    let crit = false;
+    hits.forEach((tg, i) => {
+      if (i === 0) { if (p.focus.a === tg.a && p.focus.t > 0) p.focus.n++; else { p.focus.a = tg.a; p.focus.n = 0; } p.focus.t = 0.7; }
+      const n = i === 0 ? p.focus.n : 0;
+      let dmg = w.dmg * (i ? 0.7 : 1) * p.fever.dmgMul;
+      if (p.gatling) dmg *= p.a.dmg;
+      if (w.ramp) dmg *= 1 + w.ramp * Math.min(n, w.rampMax);
+      const c = Math.random() < p.fever.critRate;
+      if (c) { dmg *= p.fever.critMul; crit = true; }
+      const stagger = w.stagger * (w.kind === 'rifle' ? 1 + 0.2 * Math.min(n, 8) : 1) * (p.gatling ? p.a.stagger : 1);
+      tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, by: p, crit: c, stagger, stun: w.stun });
+    });
+    return { n: hits.length, crit };
+  }
+  // Kagura's beam tick: everything around the aim point along the line of sight takes damage (pierces all).
+  beamHit(p, sx, sy, R, dmg) {
+    let n = 0;
+    for (const a of [...this.actors]) {
+      if (!a.alive || !a.hitMeshes().length) continue;
+      const uv = this.boxUV(a, sx, sy);
+      if (!uv || uv.d > R) continue;
+      const c = Math.random() < p.fever.critRate;
+      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? p.fever.critMul : 1), uv, by: p, crit: c, stagger: 5, stun: 0.6 });
+      n++;
+    }
+    return n;
+  }
+
+  // returns true when nobody got hurt (blocked by cover / missed)
+  playerAttacked({ kind, dmg, from, heavy, slot = 0 }) {
+    const targets = slot === -1 ? this.players : [this.players[slot] || this.players[0]];
+    let hurt = false;
+    for (const p of targets) {
+      if (!this.combat || ['run', 'away', 'down', 'victory'].includes(p.state)) continue;
+      if (kind !== 'melee' && !p.exposed) { this.coverHit(p, from, heavy); continue; }
+      if (!p.damage(dmg)) continue;
+      hurt = true;
+      sfx.hurt();
+      if (p.slot === 0) { this.post.u.hurt.value = 1; this.post.kick(2); this.fx.screenInk(heavy ? 12 : 7); } else this.post.u.hurt.value = Math.max(this.post.u.hurt.value, 0.35);
+      this.post.shake(p.slot === 0 ? 1 : 0.5);
+      this.hud.setFace(p.slot, 'scared', 1.2);
+      this.combo = 0;
+    }
+    if (this.players[0].state === 'down' && this.combat) this.gameOver();
+    return !hurt;
+  }
+  coverHit(p, from, heavy) {
+    const cov = this.world.covers[p.slot];
+    if (!cov) return;
+    const s = from && from.center ? this.world.project(from.center()) : { x: this.W * (p.slot ? 0.7 : 0.3) };
+    const l = this.world.project(cov.m.localToWorld(new THREE.Vector3(-cov.w / 2, cov.h * 0.6, 0)));
+    const r = this.world.project(cov.m.localToWorld(new THREE.Vector3(cov.w / 2, cov.h * 0.6, 0)));
+    const u = clamp((s.x - l.x) / Math.max(1, r.x - l.x), 0.08, 0.92), v = 0.45 + Math.random() * 0.4;
+    if (from instanceof Projectile && from.kind === 'takoyaki') { cov.dm.cut([[u - 0.12, v + 0.1], [u + 0.12, v - 0.08]], 0.012); sfx.clang(); } else if (heavy) { cov.dm.cut([[0.15, 0.85], [0.85, 0.45]], 0.02); cov.dm.hole(0.5, 0.65, 0.09); } else cov.dm.hole(u, v, 0.05);
+    cov.m.material.uniforms.flash.value = 0.6;
+    sfx.coverHit();
+    this.post.shake(heavy ? 1.1 : 0.4);
+    this.fx.sparks(l.x + u * (r.x - l.x), this.H - l.y, 6, COL.bone, 0.8);
+  }
+
+  warnClose() { this.players.forEach((p) => this.hud.setFace(p.slot, 'scared', 0.8)); }
+  warnSlam() { this.players.forEach((p) => this.hud.setFace(p.slot, 'scared', 1.0)); }
+  onStep(i) { sfx.run(i); }
+
+  onHit(target, kind, info) {
+    const by = info?.by;
+    if (!by) return;
+    const dealt = info.dealt || 0;
+    if (dealt) { by.dealt += dealt; by.fever.hit(dealt); }
+    if (by.a.charge.hit) by.addCharge(by.a.charge.hit);
+    if (by.gatling && dealt) by.heal(by.a.heal);
+    // every hit shows: one counter per enemy above its head that keeps adding up
+    if (dealt) {
+      const b = this.box(target);
+      this.hud.dmg(target, (b.x0 + b.x1) / 2, Math.max(this.H * 0.12, b.y0), dealt, !!info.crit, by.c.color);
+    }
+  }
+  onKill(target, how, crit) {
+    const by = target.lastHitBy;
+    if (target instanceof Projectile) return;
+    this.kills++;
+    if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
+    this.combo++; this.comboT = 3;
+    this.maxCombo = Math.max(this.maxCombo, this.combo);
+    if (crit && !(by && by.activeOn)) { const s = this.world.project(target.center()); this.fx.stamp('don', s.x, this.H - s.y + this.H * 0.06, 0.15, 0.8); this.G.stop(0.05); }
+    if (this.combo >= 3 && by && by.state === 'cover') by.tauntT = 0.7;
+    sfx.viewer();
+  }
+
+  // ------------------------------------------------------------------ frame
+  update(dt, now, pads = []) {
+    this.time = now;
+    if (this.combat) this.playT += dt;
+    this.boxes.clear();
+    this.world.update(dt, now);
+    for (const p of this.players) {
+      if (p.slot && !this.p2on()) continue;
+      if (p.ctrl) p.ctrl.update(dt, this, pads);
+      p.update(dt, now);
+    }
+    for (const a of this.actors) a.update(dt, now);
+    for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
+    if (this.combat && !this.boss) this.checkWave();
+    this.fx.update(dt, now);
+    this.comboT -= dt;
+    if (this.comboT <= 0) this.combo = 0;
+    const active = this.players.some((p) => p.activeOn);
+    const mu = this.post.u.madness;
+    mu.value += ((active ? 0.22 : 0) - mu.value) * Math.min(1, dt * 3);
+    const hid = ['cover', 'reload'].includes(this.players[0].state);
+    this.post.u.dim.value += ((hid ? 0.5 : 0) - this.post.u.dim.value) * Math.min(1, dt * 8);
+    this.post.u.warn.value = Math.max(0, this.post.u.warn.value - dt * 1.5);
+    if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp);
+    setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.12 + (active ? 0.4 : 0)) : 0.2);
+    this.hud.update(dt);
+  }
+
+  render(r) {
+    r.render(this.world.scene, this.world.camera);
+    r.render(this.overlay, this.ortho);
+  }
+}

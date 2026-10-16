@@ -1,0 +1,16 @@
+exit=0 log=art/jobs/R9_env.log
+
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "New-Item -ItemType Directory -Force art/raw | Out-Null
+Copy-Item -LiteralPath 'C:\\Users\\Administrator\\.codex\\generated_images\\01a13e82-8110-7c30-8f3f-9295ce5904d1\\exec-b87771ce-e460-46a7-acc9-c3e8587cda4f.png' -Destination art/raw/bg_yard_calm.png" in C:\Users\Administrator\Downloads\short\trigger-poem
+ succeeded in 183ms:
+exec
+"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -Command "Copy-Item -LiteralPath 'C:\\Users\\Administrator\\.codex\\generated_images\\01a13e82-8110-7c30-8f3f-9295ce5904d1\\exec-b9481ca7-9c95-4c9e-a23b-36cd302b202d.png' -Destination art/raw/rips.png" in C:\Users\Administrator\Downloads\short\trigger-poem
+ succeeded in 191ms:
+codex
+art/raw/bg_yard_calm.png, 1672 x 941
+art/raw/rips.png, 1536 x 1024
+tokens used
+35,425
+art/raw/bg_yard_calm.png, 1672 x 941
+art/raw/rips.png, 1536 x 1024
