@@ -1,13 +1,14 @@
-// Title + settings (one scene, docs/DESIGN.md). A stack of depth layers that slide at different speeds as the mouse moves
-// (sunset sky -> light shafts -> classroom -> dust -> the two heroines -> the settings board -> foreground desk / blossoms),
-// like the stacked backgrounds of old scrolling games. The heroines are approved standing art (never redrawn into UI art).
-// The settings board is hand-made craft UI: BGM = a red cord with a bell knob, SFX = a row of cartridges, language / display
-// = paper tabs, START = a sketchbook sheet, QUIT = a paper tag. Every piece has normal / highlighted / pressed looks, metal
-// glints, and particle feedback (uifx.js). Layout, images, lettering: content ui/title.json (design canvas 1920x1080).
+// Title + settings (one scene, docs/DESIGN.md), built STRICTLY from the user's approved mockup (art/ref/ui_user_mock.png):
+// every piece was cut out of that mockup and is placed by its box in it (content ui/title.json, map: art/ref/ui_breakdown.jpg).
+// Depth layers slide at different speeds with the mouse (window view -> room -> heroines -> board -> books in front), the board
+// group tilts toward the mouse. The settings live on the board: BGM = red rope + bell knob, SFX = bullets in a bar + bunny knob,
+// language / display = paper tags (chosen = red marker frame + paw stamp), START = notebook sheet, QUIT = pinned note.
+// Lettering is the user's chosen bubble style (one image per language). Feedback: lifts, light sweeps, metal glints,
+// particles (uifx.js), the cat-paw cursor (cursor.js).
 import { url, meta } from '../core/assets.js';
 import { sfx, initAudio, setMusicVolume, setSfxVolume } from '../core/audio.js';
 import { C } from '../core/content.js';
-import { t, lang, setLang } from '../core/i18n.js';
+import { lang, setLang } from '../core/i18n.js';
 import { SET, saveSettings, toggleFullscreen } from '../core/settings.js';
 import { UiFx } from './uifx.js';
 import { cursorScene } from './cursor.js';
@@ -16,41 +17,6 @@ import './title.css';
 const el = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
 const has = (k) => !!(k && meta[k]);
 const ar = (k) => (has(k) ? meta[k].h / meta[k].w : 1);
-// an image at design coordinates; w or h (the other follows the image's aspect)
-function img(parent, key, { x = 0, y = 0, w, h, rot = 0, cls = '' } = {}) {
-  const i = el('img', `ti ${cls}`, parent);
-  i.draggable = false;
-  if (has(key)) i.src = url(key);
-  const W = w ?? h / ar(key), H = h ?? w * ar(key);
-  Object.assign(i.style, { left: `${x}px`, top: `${y}px`, width: `${W}px`, height: `${H}px`, transform: rot ? `rotate(${rot}deg)` : '' });
-  return i;
-}
-// a metal glint that sweeps across an image now and then (masked by the image itself)
-function glint(parent, i, delay = 0) {
-  const g = el('div', 'glint', parent);
-  for (const k of ['left', 'top', 'width', 'height', 'transform']) g.style[k] = i.style[k];
-  g.style.webkitMaskImage = g.style.maskImage = `url(${i.src})`;
-  g.style.animationDelay = `${delay}s`;
-  return g;
-}
-// a paper button: three stacked looks (normal / highlighted / pressed), a light sweep, and its lettering on top
-function paper(parent, base, { x, y, w, rot = 0 }) {
-  const b = el('div', 'tbtn', parent);
-  b.dataset.cur = 'hover';
-  const n = meta[`${base}_n`] || { w: 1, h: 1 };
-  const H = w * n.h / n.w;
-  Object.assign(b.style, { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${H}px`, '--rot': `${rot}deg` });
-  for (const s of ['n', 'h', 'p']) {
-    const k = `${base}_${s}`, m = meta[k];
-    if (!m) continue;
-    const i = el('img', `st ${s}`, b); i.src = url(k); i.draggable = false;
-    // the looks were drawn at one scale: keep their real size relative to the normal one, centred
-    const sw = w * m.w / n.w, sh = sw * m.h / m.w;
-    Object.assign(i.style, { width: `${sw}px`, height: `${sh}px`, left: `${(w - sw) / 2}px`, top: `${(H - sh) / 2}px` });
-    if (s === 'h') { const sh2 = el('div', 'sweep', b); Object.assign(sh2.style, { width: i.style.width, height: i.style.height, left: i.style.left, top: i.style.top }); sh2.style.webkitMaskImage = sh2.style.maskImage = `url(${url(k)})`; }
-  }
-  return b;
-}
 
 export function showTitle(act) {
   const L = C.ui.title, ui = document.getElementById('ui');
@@ -59,221 +25,256 @@ export function showTitle(act) {
   const root = el('div', 'screen ttl', ui);
   const stage = el('div', 'ttl-stage', root);
   const [DW, DH] = L.design;
+  const RS = DW / L.refSize[0];   // reference pixels -> design pixels
   Object.assign(stage.style, { width: `${DW}px`, height: `${DH}px` });
   const PX = L.parallax;
 
-  // ---- parallax: every layer slides by -mouse * depth * max (eased); the board group also tilts toward the mouse
+  // an image fitted into its box from the reference: contain + centred by default; align: bottom / top sticks it to that edge;
+  // fit: width = as wide as the box whatever the height (it may run past the box, e.g. the heroines below the screen edge)
+  function put(parent, key, box, { cls = '', align = 'center', fit = 'contain' } = {}) {
+    const [x0, y0, x1, y1] = box.map((v) => v * RS), bw = x1 - x0, bh = y1 - y0, a = ar(key);
+    let w = bw, h = bw * a;
+    if (fit === 'contain' && h > bh) { h = bh; w = bh / a; }
+    if (fit === 'exact') h = bh;   // the box IS the image's rect (placed by anchors measured on the mockup)
+    const x = x0 + (bw - w) / 2, y = align === 'bottom' ? y1 - h : align === 'top' ? y0 : y0 + (bh - h) / 2;
+    const n = el('img', `ti ${cls}`, parent);
+    n.draggable = false;
+    if (has(key)) n.src = url(key);
+    Object.assign(n.style, { left: `${x}px`, top: `${y}px`, width: `${w}px`, height: `${h}px` });
+    return n;
+  }
+  // a metal glint sweeping across an image now and then (masked by the image itself)
+  function glint(parent, i, delay = 0) {
+    const g = el('div', 'glint', parent);
+    for (const k of ['left', 'top', 'width', 'height']) g.style[k] = i.style[k];
+    g.style.webkitMaskImage = g.style.maskImage = `url(${i.src})`;
+    g.style.animationDelay = `${delay}s`;
+    return g;
+  }
+
+  // ---- parallax layers
   const layers = [];
   const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
   const shift = (d) => [-mouse.x * d * PX.max, -mouse.y * d * PX.max * 0.55];
   function layer(depth, cls = '') { const d = el('div', `plx ${cls}`, stage); d.dataset.depth = depth; layers.push(d); return d; }
-  const coverImg = (parent, key, depth) => { const pad = PX.max * depth + 12; return img(parent, key, { x: -pad, y: -pad * 0.6, w: DW + pad * 2, h: DH + pad * 1.2 }); };
-
-  for (const Ly of L.layers) {
-    const d = layer(Ly.depth, 'bg');
-    if (Ly.img) coverImg(d, Ly.img, Ly.depth);
-    for (const s of Ly.shafts || []) { const i = img(d, 'ui/fx_shaft', { ...s, cls: 'shaft' }); i.style.animationDelay = `${-Math.random() * 6}s`; }
+  const S = L.scene;
+  for (const [key, depth] of [[S.far, S.farDepth], [S.room, S.roomDepth]]) {
+    const d = layer(depth, 'bg');
+    const pad = PX.max * depth + 10;   // bigger than the screen so the slide never shows an edge
+    const i = el('img', 'ti', d); i.draggable = false; if (has(key)) i.src = url(key);
+    Object.assign(i.style, { left: `${-pad}px`, top: `${-pad * 0.6}px`, width: `${DW + pad * 2}px`, height: `${DH + pad * 1.2}px` });
+    if (key === S.far && S.farFlip) i.style.transform = 'scaleX(-1)';   // puts the blossoms behind the window panes
   }
-  // back particle layer: far petals + dust in the light
+  if (L.glassText) put(layer(L.glassText.depth, 'bg'), L.glassText.img, L.glassText.box);
   const fxBack = new UiFx(stage, DW, DH, shift);
-  // heroines
-  const chars = L.characters.map((c) => {
-    const d = layer(c.depth, 'chrl');
-    const w = c.h / ar(c.img);
-    const i = img(d, c.img, { x: c.x - w / 2, y: c.y, h: c.h, cls: 'chr' });
-    i.style.animationDuration = `${1 / (c.breath || 0.25)}s`;
-    return { i, c, w };
-  });
-  // logo
-  const logoL = layer(L.logo.depth || 0.3, 'logol');
-  const logo = img(logoL, L.logos[lang], { x: L.logo.x, y: L.logo.y, w: L.logo.w, rot: L.logo.rot, cls: 'logo' });
-  logo.dataset.cur = 'hover';
-  const logoGlint = glint(logoL, logo, 1.5);
-  // the board group (board + every setting) tilts with the mouse
+  const gl = layer(L.girls.depth, 'chrl');
+  const girls = put(gl, L.girls.img, L.girls.box, { cls: 'chr', align: L.girls.align, fit: L.girls.fit });
+  girls.style.animationDuration = `${1 / (L.girls.breath || 0.25)}s`;
+  girls.dataset.cur = 'hover';
+
+  // ---- the board group
   const grp = layer(L.board.depth, 'boardgrp');
-  img(grp, L.board.img, { x: L.board.x, y: L.board.y, w: L.board.w, rot: L.board.rot, cls: 'board' });
-  for (const d of L.decor || []) img(grp, d.img, d);
-  L.pins?.forEach((p, k) => glint(grp, img(grp, p.img, { ...p, cls: 'pin' }), 0.7 + k * 1.3));
-  // foreground (nearest, blurred, slides the most)
-  for (const f of L.front || []) {
-    const d = layer(f.depth, 'front');
-    const i = img(d, f.img, f);
-    if (f.blur) i.style.filter = `blur(${f.blur}px)`;
-    if (f.flip) i.style.transform = `${i.style.transform} scaleX(-1)`;
-  }
-  // front particle layer: near petals + all UI feedback
-  const fx = new UiFx(stage, DW, DH, shift);
+  put(grp, L.board.img, L.board.box, { cls: 'board' });
+  const decor = (d) => {
+    const n = put(grp, d.img, d.box, { cls: `deco ${d.hover ? 'tilt' : ''} ${d.sway ? 'sway' : ''} ${d.peek ? 'peek' : ''}` });
+    if (d.hover) n.dataset.cur = 'hover';
+    if (d.metal) glint(grp, n, Math.random() * 3);
+    return n;
+  };
+  // decorations under the strips (photos, note, tassel) first; flowers and pins go on top at the end
+  const under = (L.decor || []).filter((d) => !/sakura|pin/.test(d.img)), over = (L.decor || []).filter((d) => /sakura|pin/.test(d.img));
+  under.forEach(decor);
 
-  // pointer -> design coordinates (the stage is scaled to fit the window)
-  const toDesign = (cx, cy) => { const r = stage.getBoundingClientRect(); return [(cx - r.left) / r.width * DW, (cy - r.top) / r.height * DH]; };
-  const boxOf = (n) => { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; };
-  root.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth * 2 - 1; mouse.ty = e.clientY / window.innerHeight * 2 - 1; });
-
-  // ---- lettering for the current language (plain text until that image exists)
+  // lettering for the current language, fitted into its box
   const letterKey = (name) => { const m = L.letters[name] || {}; return m.all || m[lang]; };
   const letters = [];
-  function letter(parent, name, box) {
-    const k = letterKey(name);
-    let n;
-    if (has(k)) n = img(parent, k, box);
-    else { n = el('div', 'tfallback', parent); n.textContent = t(name); Object.assign(n.style, { left: `${box.x}px`, top: `${box.y}px`, height: `${box.h}px`, fontSize: `${box.h * 0.6}px` }); }
-    n.classList.add('let');
-    letters.push({ n, name, box });
-    return n;
+  function letter(parent, name, box, cls = '') { const n = put(parent, letterKey(name), box, { cls: `let ${cls}` }); letters.push({ n, name, box }); return n; }
+  // a value in hand-lettered digits, right-aligned in its box
+  function digits(R, v) {
+    grp.querySelectorAll(`.dg[data-row="${R}"]`).forEach((d) => d.remove());
+    const [, y0, x1, y1] = L.rows[R].value.box.map((q) => q * RS), h = y1 - y0;
+    const keys = [...`${Math.round(v * 100)}`].map((c) => L.digits[+c]).concat(L.percent);
+    const ws = keys.map((k) => h / ar(k) * 0.86);
+    let x = x1 - ws.reduce((a, b) => a + b, 0);
+    keys.forEach((k, i) => {
+      const d = el('img', 'ti dg', grp); d.src = url(k); d.dataset.row = R; d.draggable = false;
+      Object.assign(d.style, { left: `${x}px`, top: `${y0}px`, width: `${h / ar(k)}px`, height: `${h}px` });
+      x += ws[i];
+    });
   }
-  const row = (r) => {
-    img(grp, r.icon, { x: L.rowIcon.x, y: r.y - L.rowIcon.w / 2, w: L.rowIcon.w, cls: 'ico' });
-    letter(grp, r.label, { x: L.rowLabel.x, y: r.y - L.rowLabel.h / 2, h: L.rowLabel.h });
+  const row = (R) => {
+    const r = L.rows[R];
+    put(grp, r.strip.img, r.strip.box, { cls: 'strip' });
+    put(grp, r.icon.img, r.icon.box, { cls: 'ico' });
+    letter(grp, r.label.letter, r.label.box);
+    return r;
   };
-  // a value in hand-lettered digits ("70%"), bouncing when it changes
-  function digits(v, x, yMid, h = 46) {
-    grp.querySelectorAll(`.dg[data-row="${yMid}"]`).forEach((d) => d.remove());
-    let cx = x;
-    for (const ch of [...`${Math.round(v * 100)}`].map(Number).concat('%')) {
-      const k = ch === '%' ? L.percent : L.digits[ch];
-      const d = img(grp, k, { x: cx, y: yMid - h / 2, h, cls: 'dg' });
-      d.dataset.row = yMid;
-      cx += h / ar(k) * 0.84;
-    }
-  }
 
-  // ---- BGM: the red cord (filled) over the pale one, knots at the ends, the bell is the knob
+  // ---- BGM: the red rope (filled) over the metal rod (empty), the bell is the knob, a cat sticker caps the end
   {
-    const B = L.bgm, [x0, x1] = B.track, cordH = 30;
-    row(B);
+    const r = row('bgm'), Sl = r.slider;
+    const x0 = Sl.x0 * RS, x1 = Sl.x1 * RS, yc = Sl.y * RS, rh = Sl.ropeH * RS;
     const box = el('div', 'slider', grp);
     box.dataset.cur = 'grab';
-    Object.assign(box.style, { left: `${x0 - 30}px`, top: `${B.y - 50}px`, width: `${x1 - x0 + 60}px`, height: '100px' });
-    img(box, 'ui/cord_off', { x: 30, y: 50 - cordH / 2, w: x1 - x0, h: cordH });
-    const on = img(box, 'ui/cord_on', { x: 30, y: 50 - cordH / 2, w: x1 - x0, h: cordH, cls: 'fill' });
-    img(box, 'ui/knot_l', { x: -6, y: 20, h: 96 });
-    img(box, 'ui/knot_r', { x: x1 - x0 + 4, y: 20, h: 96 });
-    const bellW = 78 / ar('ui/bell');
-    const bellBox = el('div', 'knob', box);
-    Object.assign(bellBox.style, { top: '8px', width: `${bellW}px`, height: '78px' });
-    const bell = img(bellBox, 'ui/bell', { x: 0, y: 0, h: 78 });
-    glint(bellBox, bell, 0.3);
+    Object.assign(box.style, { left: `${x0 - 20}px`, top: `${yc - 46}px`, width: `${x1 - x0 + 40}px`, height: '92px' });
+    const lay = (key, h, cls) => { const i = el('img', `ti ${cls}`, box); i.src = url(key); i.draggable = false; Object.assign(i.style, { left: '20px', top: `${46 - h / 2}px`, width: `${x1 - x0}px`, height: `${h}px` }); return i; };
+    lay(Sl.rod, rh * 0.62, 'rod');
+    const rope = lay(Sl.rope, rh, 'fill');
+    put(grp, Sl.cap.img, Sl.cap.box, { cls: 'cap' });
+    const kh = Sl.knobH * RS, kw = kh / ar(Sl.knob);
+    const knob = el('div', 'knob', box);
+    Object.assign(knob.style, { top: `${46 - kh * 0.55}px`, width: `${kw}px`, height: `${kh}px` });
+    const bell = el('img', 'ti', knob); bell.src = url(Sl.knob); bell.draggable = false;
+    Object.assign(bell.style, { left: '0', top: '0', width: `${kw}px`, height: `${kh}px` });
+    glint(knob, bell, 0.4);
     let lastStep = -1;
     const set = (v, ring) => {
       SET.bgm = Math.max(0, Math.min(1, Math.round(v * 20) / 20)); setMusicVolume(SET.bgm);
-      on.style.clipPath = `inset(0 ${(1 - SET.bgm) * 100}% 0 0)`;
-      bellBox.style.left = `${30 + SET.bgm * (x1 - x0) - bellW / 2}px`;
-      digits(SET.bgm, B.value, B.y);
-      const st = Math.round(SET.bgm * 20);
-      if (ring || st !== lastStep) { bellBox.classList.remove('ring'); void bellBox.offsetWidth; bellBox.classList.add('ring'); }
-      lastStep = st;
+      rope.style.clipPath = `inset(0 ${(1 - SET.bgm) * 100}% 0 0)`;
+      knob.style.left = `${20 + SET.bgm * (x1 - x0) - kw / 2}px`;
+      digits('bgm', SET.bgm);
+      const s = Math.round(SET.bgm * 20);
+      if (ring || s !== lastStep) { knob.classList.remove('ring'); void knob.offsetWidth; knob.classList.add('ring'); }
+      lastStep = s;
     };
     set(SET.bgm ?? 0.7);
-    const at = (e) => { const r = box.getBoundingClientRect(); return (e.clientX - r.left) / r.width * (x1 - x0 + 60) - 30; };
+    const at = (e) => { const b = box.getBoundingClientRect(); return ((e.clientX - b.left) / b.width * (x1 - x0 + 40) - 20) / (x1 - x0); };
     box.onpointerdown = (e) => {
       e.stopPropagation(); initAudio(); box.setPointerCapture(e.pointerId);
-      set(at(e) / (x1 - x0), true); sfx.ui();
-      const [bx, by, bw] = boxOf(bellBox); fx.sparks(bx + bw / 2, by + 30, 6);
-      box.onpointermove = (ev) => set(at(ev) / (x1 - x0), false);
+      set(at(e), true); sfx.ui();
+      const [bx, by, bw] = boxOf(knob); fx.sparks(bx + bw / 2, by + 20, 6);
+      box.onpointermove = (ev) => set(at(ev), false);
       box.onpointerup = () => { box.onpointermove = null; saveSettings(); };
     };
-    box.onpointerenter = () => { bellBox.classList.remove('ring'); void bellBox.offsetWidth; bellBox.classList.add('ring'); };
+    box.onpointerenter = () => { knob.classList.remove('ring'); void knob.offsetWidth; knob.classList.add('ring'); };
   }
-  // ---- SFX: one cartridge per 10 %
+  // ---- SFX: one cartridge per 10 % inside the bar, the bunny knob marks the level, the metal rod runs on to the end
   {
-    const S = L.sfx, [x0, x1] = S.track, n = S.bullets, step = (x1 - x0) / n;
-    row(S);
+    const r = row('sfx'), Bc = r.bar;
+    const [fx0, fy0, fx1, fy1] = Bc.frame.box.map((q) => q * RS);
+    const rod = el('img', 'ti rod', grp); rod.src = url(Bc.rod); rod.draggable = false;
+    Object.assign(rod.style, { left: `${fx1 - 6}px`, top: `${(fy0 + fy1) / 2 - 7}px`, width: `${Bc.rodTo * RS - fx1 + 6}px`, height: '14px' });
+    put(grp, Bc.frame.img, Bc.frame.box, { cls: 'barframe' });
+    const n = Bc.slots, [px, py] = Bc.slotPad.map((q) => q * RS);
+    const step = (fx1 - fx0 - px * 2) / n, bh = fy1 - fy0 - py * 2;
     const bul = [];
     for (let i = 0; i < n; i++) {
       const b = el('div', 'bullet', grp);
       b.dataset.cur = 'hover';
-      Object.assign(b.style, { left: `${x0 + i * step}px`, top: `${S.y - 44}px`, width: `${step}px`, height: '88px' });
-      const on = img(b, 'ui/bullet_on', { x: (step - 26) / 2, y: 0, h: 88, cls: 'on' });
-      const g = glint(b, on, 0.15 * i);
-      const off = img(b, 'ui/bullet_off', { x: (step - 30) / 2, y: 0, h: 88, cls: 'off' });
-      bul.push({ on, off, g });
+      Object.assign(b.style, { left: `${fx0 + px + i * step}px`, top: `${fy0 + py}px`, width: `${step}px`, height: `${bh}px` });
+      const w = bh / ar(Bc.bullet);
+      const on = el('img', 'ti on', b); on.src = url(Bc.bullet); on.draggable = false;
+      Object.assign(on.style, { left: `${(step - w) / 2}px`, top: '0', width: `${w}px`, height: `${bh}px` });
+      glint(b, on, 0.12 * i);
+      bul.push(b);
       b.onpointerdown = (e) => {
         e.stopPropagation(); initAudio();
         const v = (i + 1) / n;
         set(Math.abs(v - SET.sfx) < 1e-3 ? i / n : v); saveSettings(); sfx.shell(); sfx.ui();
         b.classList.remove('kick'); void b.offsetWidth; b.classList.add('kick');
-        const [bx, by, bw] = boxOf(b); fx.sparks(bx + bw / 2, by + 10, 5);
+        const [bx, by, bw] = boxOf(b); fx.sparks(bx + bw / 2, by + 6, 5);
       };
     }
+    const kh = Bc.knobH * RS, kw = kh / ar(Bc.knob);
+    const knob = el('img', 'ti knobb', grp); knob.src = url(Bc.knob); knob.draggable = false;
+    Object.assign(knob.style, { top: `${(fy0 + fy1) / 2 - kh / 2}px`, width: `${kw}px`, height: `${kh}px` });
     function set(v) {
       SET.sfx = Math.max(0, Math.min(1, v)); setSfxVolume(SET.sfx);
-      bul.forEach((b, i) => { const lit = i < Math.round(SET.sfx * n); b.on.style.opacity = b.g.style.opacity = lit ? 1 : 0; b.off.style.opacity = lit ? 0 : 1; });
-      digits(SET.sfx, S.value, S.y);
+      const lit = Math.round(SET.sfx * n);
+      bul.forEach((b, i) => b.classList.toggle('empty', i >= lit));
+      knob.style.left = `${fx0 + px + lit * step - kw / 2}px`;
+      digits('sfx', SET.sfx);
     }
     set(SET.sfx ?? 0.8);
   }
-  // ---- language / display: paper tabs, the chosen one stays highlighted
-  const tabs = [];
-  function tabRow(R, current, choose) {
-    row(R);
-    R.tabs.options.forEach((opt, i) => {
-      const b = paper(grp, 'ui/tab', { x: R.tabs.x[i], y: R.tabs.y - 40, w: R.tabs.w, rot: (i % 2 ? 1.5 : -1.2) });
-      b.classList.add('opt'); // an option: dimmed until chosen
-      const H = parseFloat(b.style.height);
-      letter(b, opt, { x: R.tabs.w * 0.14, y: H * 0.2, h: H * 0.5 });
-      tabs.push({ b, opt, current });
-      b.onpointerdown = (e) => {
-        e.stopPropagation(); b.classList.add('down'); sfx.ui();
-        const [px, py] = toDesign(e.clientX, e.clientY); fx.stamp(px, py); fx.click(px, py);
-        choose(opt); refresh(true);
+  // ---- language / display: paper tags, the chosen one shows the red marker frame + paw stamp
+  const chips = [];
+  function chipRow(R, current, choose) {
+    const r = row(R);
+    for (const c of r.chips) {
+      const I = L.chipImg[c.size];
+      const wrap = el('div', 'chip', grp);
+      wrap.dataset.cur = 'hover';
+      put(wrap, I.off, c.box, { cls: 'off' });
+      const on = put(wrap, I.on, c.box, { cls: 'on' });
+      // the text sits in the middle of the tag (a little left of centre: the paw stamp is on the right)
+      const [x0, y0, x1, y1] = c.box, cw = (x1 - x0) * L.chipText[0], ch = (y1 - y0) * L.chipText[1], sh = c.size === 's' ? 6 : 8;
+      letter(wrap, c.opt, [x0 + (x1 - x0 - cw) / 2 - sh, y0 + (y1 - y0 - ch) / 2, x0 + (x1 - x0 + cw) / 2 - sh, y0 + (y1 - y0 + ch) / 2], 'ctext');
+      chips.push({ wrap, opt: c.opt, current });
+      wrap.onpointerdown = (e) => {
+        e.stopPropagation(); wrap.classList.add('down'); sfx.ui();
+        const [qx, qy] = toDesign(e.clientX, e.clientY); fx.stamp(qx, qy); fx.click(qx, qy);
+        choose(c.opt); refresh(true);
       };
-      b.onpointerup = b.onpointerleave = () => b.classList.remove('down');
-    });
+      wrap.onpointerup = wrap.onpointerleave = () => wrap.classList.remove('down');
+      wrap.onpointerenter = () => { const [bx, by, bw, bh] = boxOf(on); fx.hover(bx, by, bw, bh, 3); };
+    }
   }
-  tabRow(L.language, () => lang, (o) => setLang(o));
-  tabRow(L.display, () => (document.fullscreenElement ? 'fullscreen' : 'window'), (o) => { if ((o === 'fullscreen') !== !!document.fullscreenElement) toggleFullscreen(); });
-  // ---- START / QUIT
-  const start = paper(grp, 'ui/sheet', L.start);
-  start.classList.add('start');
-  const sH = parseFloat(start.style.height);
-  letter(start, 'start', { x: L.start.w * 0.1, y: sH * 0.3, h: L.start.letterH });
-  start.onpointerdown = (e) => { e.stopPropagation(); start.classList.add('down'); sfx.ui(); };
-  start.onpointerup = () => { if (!start.classList.contains('down')) return; start.classList.remove('down'); go(); };
-  start.onpointerleave = () => start.classList.remove('down');
-  const quit = paper(grp, 'ui/tag', L.quit);
-  const qH = parseFloat(quit.style.height);
-  letter(quit, 'quit', { x: L.quit.w * 0.16, y: qH * 0.42, h: L.quit.letterH });
-  quit.onpointerdown = (e) => { e.stopPropagation(); sfx.ui(); window.close(); };
+  chipRow('language', () => lang, (o) => setLang(o));
+  chipRow('display', () => (document.fullscreenElement ? 'fullscreen' : 'window'), (o) => { if ((o === 'fullscreen') !== !!document.fullscreenElement) toggleFullscreen(); });
 
-  // hover feedback for every paper button: twinkles around it (the CSS lifts it and sweeps a light across)
-  for (const b of grp.querySelectorAll('.tbtn')) b.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(b); fx.hover(x, y, w, h, b.classList.contains('start') ? 7 : 4); });
-  // the heroines react when the cursor touches them; the logo wobbles
-  for (const ch of chars) {
-    ch.i.dataset.cur = 'hover';
-    ch.i.addEventListener('pointerenter', () => { ch.i.classList.remove('poke'); void ch.i.offsetWidth; ch.i.classList.add('poke'); const [x, y, w] = boxOf(ch.i); fx.hearts(x + w / 2, y + 220, 3); });
-  }
-  logo.addEventListener('pointerenter', () => { logo.classList.remove('wob'); void logo.offsetWidth; logo.classList.add('wob'); const [x, y, w, h] = boxOf(logo); fx.hover(x, y, w, h, 6); });
+  // ---- START: the notebook sheet (its cord sways), QUIT: the pinned note
+  const st = L.start;
+  const startEl = el('div', 'startbtn', grp);
+  startEl.dataset.cur = 'hover';
+  const sheet = put(startEl, st.sheet.img, st.sheet.box, { cls: 'sheet' });
+  const sweep = el('div', 'sweep', startEl);
+  for (const k of ['left', 'top', 'width', 'height']) sweep.style[k] = sheet.style[k];
+  sweep.style.webkitMaskImage = sweep.style.maskImage = `url(${sheet.src})`;
+  letter(startEl, 'start', st.label.box, 'stext');
+  put(grp, st.cord.img, st.cord.box, { cls: 'cord' });
+  startEl.onpointerdown = (e) => { e.stopPropagation(); startEl.classList.add('down'); sfx.ui(); };
+  startEl.onpointerup = () => { if (!startEl.classList.contains('down')) return; startEl.classList.remove('down'); go(); };
+  startEl.onpointerleave = () => startEl.classList.remove('down');
+  startEl.onpointerenter = () => { const [bx, by, bw, bh] = boxOf(sheet); fx.hover(bx, by, bw, bh, 8); };
+  const qt = L.quit;
+  const quitEl = el('div', 'quitbtn', grp);
+  quitEl.dataset.cur = 'hover';
+  put(quitEl, qt.note.img, qt.note.box, { cls: 'note' });
+  letter(quitEl, 'quit', qt.label.box, 'qtext');
+  quitEl.onpointerdown = (e) => { e.stopPropagation(); sfx.ui(); window.close(); };
+  over.forEach(decor);
+
+  // ---- the books in front (nearest layer); the heroines react to the cursor
+  if (L.books) put(layer(L.books.depth, 'front'), L.books.img, L.books.box, { align: L.books.align });
+  const fx = new UiFx(stage, DW, DH, shift);
+  const toDesign = (cx, cy) => { const r = stage.getBoundingClientRect(); return [(cx - r.left) / r.width * DW, (cy - r.top) / r.height * DH]; };
+  function boxOf(n) { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; }
+  root.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth * 2 - 1; mouse.ty = e.clientY / window.innerHeight * 2 - 1; });
+  girls.addEventListener('pointerenter', (e) => { girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3); });
+  for (const n of grp.querySelectorAll('.deco.tilt')) n.addEventListener('pointerenter', () => { n.classList.remove('wig'); void n.offsetWidth; n.classList.add('wig'); });
 
   let gone = false;
   function go() {
     if (gone) return;
     gone = true; initAudio(); sfx.clear();
-    const [x, y, w, h] = boxOf(start); fx.click(x + w / 2, y + h / 2, true);
+    const [x, y, w, h] = boxOf(sheet); fx.click(x + w / 2, y + h / 2, true);
     root.classList.add('leave');
     setTimeout(() => act.start(), 650);
   }
 
   function refresh(bump) {
-    for (const tb of tabs) tb.b.classList.toggle('on', tb.current() === tb.opt);
-    for (const L2 of letters) {
-      const k = letterKey(L2.name);
-      if (L2.n.tagName === 'IMG' && has(k)) { L2.n.src = url(k); L2.n.style.width = `${L2.box.h / ar(k)}px`; } else if (L2.n.tagName !== 'IMG') L2.n.textContent = t(L2.name);
-      if (bump) { L2.n.classList.remove('flip'); void L2.n.offsetWidth; L2.n.classList.add('flip'); }
-    }
-    if (has(L.logos[lang])) {
-      logo.src = url(L.logos[lang]); logo.style.height = `${L.logo.w * ar(L.logos[lang])}px`;
-      logoGlint.style.height = logo.style.height; logoGlint.style.webkitMaskImage = logoGlint.style.maskImage = `url(${logo.src})`;
+    for (const c of chips) c.wrap.classList.toggle('sel', c.current() === c.opt);
+    for (const q of letters) {
+      const k = letterKey(q.name);
+      if (!has(k) || q.n.getAttribute('src') === url(k)) continue;
+      // refit the new language's image into the same box
+      const [x0, y0, x1, y1] = q.box.map((v) => v * RS), bw = x1 - x0, bh = y1 - y0, a = ar(k);
+      let w = bw, h = bw * a; if (h > bh) { h = bh; w = bh / a; }
+      q.n.src = url(k);
+      Object.assign(q.n.style, { left: `${x0 + (bw - w) / 2}px`, top: `${y0 + (bh - h) / 2}px`, width: `${w}px`, height: `${h}px` });
+      if (bump) { q.n.classList.remove('flip'); void q.n.offsetWidth; q.n.classList.add('flip'); }
     }
   }
   refresh();
   document.addEventListener('fullscreenchange', () => refresh());
 
-  // ---- ambient: petals (far ones behind the heroines, near ones in front), dust in the light
+  // ---- ambient: petals (far ones behind the heroines, near ones in front), dust in the window light
   for (let k = 0; k < L.petals.far; k++) { const p = fxBack.petal(Math.random() * 0.4 + 0.2); p.y = Math.random() * DH; }
   for (let k = 0; k < L.petals.near; k++) { const p = fx.petal(1 + Math.random() * 0.4); p.y = Math.random() * DH; }
-  const D = L.dust;
+  const D = L.dust, dustBox = D.box.map((v) => v * RS);
 
-  // ---- frame loop: parallax, particles
+  // ---- frame loop: parallax + particles (rAF, with a timer fallback when frames are throttled)
   let last = performance.now(), lastRaf = last, alive = true;
   function frame(now) {
     if (!alive) return;
@@ -286,27 +287,22 @@ export function showTitle(act) {
         ? `translate(${dx}px, ${dy}px) perspective(1800px) rotateY(${mouse.x * L.board.tilt}deg) rotateX(${-mouse.y * L.board.tilt * 0.6}deg)`
         : `translate(${dx}px, ${dy}px)`;
     }
-    if (fxBack.count < L.petals.far + D.count && Math.random() < dt * 3) fxBack.dust(...D.box, D.depth);
+    if (fxBack.count < L.petals.far + D.count && Math.random() < dt * 3) fxBack.dust(...dustBox, D.depth);
     if (Math.random() < dt * L.petals.far / 14) fxBack.petal(Math.random() * 0.4 + 0.2);
     if (Math.random() < dt * L.petals.near / 10) fx.petal(1 + Math.random() * 0.4);
     fxBack.update(dt); fx.update(dt);
   }
   const raf = (now) => { if (!alive) return; lastRaf = now; frame(now); requestAnimationFrame(raf); };
   requestAnimationFrame(raf);
-  // fallback driver when animation frames are throttled (hidden / embedded windows)
   const backup = setInterval(() => { if (!alive) clearInterval(backup); else if (performance.now() - lastRaf > 100) frame(performance.now()); }, 33);
 
-  // fit the design canvas into the window
-  function fit() {
-    const s = Math.min(window.innerWidth / DW, window.innerHeight / DH);
-    stage.style.transform = `translate(-50%, -50%) scale(${s})`;
-  }
+  function fit() { const s = Math.min(window.innerWidth / DW, window.innerHeight / DH); stage.style.transform = `translate(-50%, -50%) scale(${s})`; }
   fit();
   window.addEventListener('resize', fit);
   // entrance: the board pieces arrive one after another (the stagger is removed afterwards so hovers stay snappy)
   const kids = [...grp.children];
-  kids.forEach((c, i) => { c.style.transitionDelay = `${0.12 + i * 0.022}s`; });
-  setTimeout(() => kids.forEach((c) => { c.style.transitionDelay = ''; }), 1800);
+  kids.forEach((c, i) => { c.style.transitionDelay = `${0.1 + i * 0.012}s`; });
+  setTimeout(() => kids.forEach((c) => { c.style.transitionDelay = ''; }), 1600);
   setTimeout(() => root.classList.add('in'), 60);
   const api = { start: go, refresh, dispose: () => { alive = false; window.removeEventListener('resize', fit); } };
   root.dispose = api.dispose;

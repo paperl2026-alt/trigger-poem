@@ -40,5 +40,6 @@
     "ring": 62,
     "rot": 22,
     "out": "cur_grab"
-  }
+  },
+  "t_girls2": { "src": "art/raw/r14/girls2.png", "erase": [6, 575, 116, 744], "center": [59, 632], "ring": 70, "rot": -12, "out": "t_girls" }
 }

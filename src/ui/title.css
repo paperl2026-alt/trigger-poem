@@ -4,28 +4,18 @@
 .ttl .plx { position: absolute; inset: 0; will-change: transform; pointer-events: none; }
 .ttl .plx > * { pointer-events: auto; }
 .ttl .plx.bg > *, .ttl .plx.front > * { pointer-events: none; }
-.ttl-stage .ti, .ttl-stage .tbtn, .ttl-stage .tfallback, .ttl-stage .glint { position: absolute; user-select: none; -webkit-user-drag: none; }
-.ttl-stage .tfallback { font-family: var(--font); color: #ff6f8e; -webkit-text-stroke: 3px #4a1830; paint-order: stroke fill; white-space: nowrap; line-height: 1.2; }
+.ttl-stage .ti, .ttl-stage .glint, .ttl-stage .sweep { position: absolute; user-select: none; -webkit-user-drag: none; }
+.ttl-stage .chip, .ttl-stage .startbtn, .ttl-stage .quitbtn { position: absolute; inset: 0; pointer-events: none; }
+.ttl-stage .chip > *, .ttl-stage .startbtn > *, .ttl-stage .quitbtn > * { pointer-events: auto; }
 .ttl .uifx { z-index: 1; }
 
-/* light shafts breathe */
-.ttl .shaft { mix-blend-mode: screen; opacity: 0.45; animation: ttlShaft 7s ease-in-out infinite; transform-origin: 50% 0; }
-@keyframes ttlShaft { 0%, 100% { opacity: 0.32; } 50% { opacity: 0.62; } }
-
 /* heroines: breathe; a squash-bounce when the cursor touches them */
-.ttl .chr { transform-origin: 50% 100%; animation: ttlBreath 4s ease-in-out infinite; filter: drop-shadow(0 12px 24px #2a0c1c80); }
-@keyframes ttlBreath { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.004, 1.012); } }
+.ttl .chr { transform-origin: 50% 100%; animation: ttlBreath 4s ease-in-out infinite; }
+@keyframes ttlBreath { 0%, 100% { transform: scale(1, 1); } 50% { transform: scale(1.003, 1.009); } }
 .ttl .chr.poke { animation: ttlBreath 4s ease-in-out infinite, ttlPoke 0.55s cubic-bezier(0.3, 1.6, 0.5, 1); }
-@keyframes ttlPoke { 0% { scale: 1 1; } 25% { scale: 1.025 0.97; } 55% { scale: 0.99 1.025; } 100% { scale: 1 1; } }
-.ttl .board { filter: drop-shadow(8px 14px 18px #2a0c1c99); }
-.ttl .ico { filter: drop-shadow(0 3px 4px #2a0c1c55); }
-.ttl .pin { filter: drop-shadow(2px 4px 3px #2a0c1c88); }
-
-/* logo: bobs, glints, wobbles like jelly on hover */
-.ttl .logo { filter: drop-shadow(0 8px 14px #2a0c1c80); animation: ttlBob 3.4s ease-in-out infinite; }
-@keyframes ttlBob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -7px; } }
-.ttl .logo.wob { animation: ttlBob 3.4s ease-in-out infinite, ttlWob 0.7s cubic-bezier(0.3, 1.5, 0.5, 1); }
-@keyframes ttlWob { 0% { scale: 1 1; } 20% { scale: 1.08 0.92; } 45% { scale: 0.95 1.06; } 70% { scale: 1.02 0.98; } 100% { scale: 1 1; } }
+@keyframes ttlPoke { 0% { scale: 1 1; } 25% { scale: 1.018 0.98; } 55% { scale: 0.995 1.016; } 100% { scale: 1 1; } }
+.ttl .board { filter: drop-shadow(6px 10px 14px #2a0c1c88); }
+.ttl .strip { filter: drop-shadow(2px 4px 4px #2a0c1c40); }
 
 /* metal glint: a light sweep masked by the image itself */
 .ttl .glint { pointer-events: none; -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
@@ -33,58 +23,67 @@
   animation: ttlGlint 3.8s ease-in-out infinite; mix-blend-mode: screen; }
 @keyframes ttlGlint { 0%, 55% { background-position: 120% 0; } 85%, 100% { background-position: -40% 0; } }
 
-/* paper buttons: three looks stacked; hover / chosen = highlighted + a light sweep, held = pressed */
-.tbtn { cursor: pointer; transform: rotate(var(--rot)); transition: transform 0.22s cubic-bezier(0.2, 1.8, 0.4, 1), filter 0.2s; }
-.tbtn .st { position: absolute; pointer-events: none; transition: opacity 0.14s; }
-.tbtn .st.h, .tbtn .st.p { opacity: 0; }
-.tbtn:hover .st.n, .tbtn.on .st.n { opacity: 0; }
-.tbtn:hover .st.h, .tbtn.on .st.h { opacity: 1; }
-.tbtn:hover, .tbtn.on { transform: rotate(calc(var(--rot) * -1)) translateY(-6px) scale(1.05); }
-.tbtn:hover { filter: drop-shadow(0 10px 12px #2a0c1c55); }
-.tbtn.down .st.n, .tbtn.down .st.h { opacity: 0; }
-.tbtn.down .st.p { opacity: 1; }
-.tbtn.down { transform: rotate(var(--rot)) translateY(3px) scale(0.96); transition-duration: 0.06s; }
-.tbtn .sweep { position: absolute; pointer-events: none; opacity: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
-  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.85) 50%, transparent 65%) 0 0 / 300% 100% no-repeat; mix-blend-mode: screen; }
-.tbtn:hover .sweep { animation: ttlSweep 0.7s ease-out; }
-@keyframes ttlSweep { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 1; background-position: -30% 0; } }
-.tbtn .let { pointer-events: none; transition: filter 0.18s; }
-.tbtn.opt:not(.on):not(:hover) .let { filter: saturate(0.3) brightness(1.08) opacity(0.75); }
+/* language / display tags: grey = not chosen, red marker frame + paw stamp = chosen; hover lifts and brightens */
+.ttl .chip .ti { transition: opacity 0.16s, translate 0.2s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.2s cubic-bezier(0.2, 1.8, 0.4, 1), filter 0.2s; transform-origin: 50% 60%; }
+.ttl .chip .on { opacity: 0; }
+.ttl .chip.sel .on { opacity: 1; }
+.ttl .chip.sel .off { opacity: 0; }
+.ttl .chip:hover .ti { translate: 0 -5px; scale: 1.05; }
+.ttl .chip:hover .off { filter: brightness(1.08) drop-shadow(0 0 8px #ff8ab8cc); }
+.ttl .chip.down .ti { translate: 0 2px; scale: 0.96; transition-duration: 0.05s; }
 .ttl .let.flip { animation: ttlFlip 0.45s cubic-bezier(0.3, 1.6, 0.5, 1); }
 @keyframes ttlFlip { 0% { scale: 1 0.2; } 60% { scale: 1 1.15; } 100% { scale: 1 1; } }
 
-/* START: always alive — a wiggle now and then and a glow pulse; it grows on hover */
-.tbtn.start { animation: ttlStart 2.8s ease-in-out infinite; }
-@keyframes ttlStart { 0%, 100% { rotate: 0deg; } 6% { rotate: -1.8deg; } 12% { rotate: 1.6deg; } 18% { rotate: 0deg; } }
-.tbtn.start .st.n { opacity: 0; }
-.tbtn.start .st.h { opacity: 1; animation: ttlGlow 2.8s ease-in-out infinite; }
-@keyframes ttlGlow { 0%, 100% { filter: drop-shadow(0 0 0 #ff7ab0); } 50% { filter: drop-shadow(0 0 18px #ff7ab0cc); } }
-.tbtn.start:hover { transform: translateY(-12px) scale(1.08); }
+/* START: alive — a glow pulse and a wiggle now and then; hover lifts it and sweeps a light across */
+.ttl .startbtn .ti, .ttl .startbtn .sweep { transition: translate 0.22s cubic-bezier(0.2, 1.8, 0.4, 1), scale 0.22s cubic-bezier(0.2, 1.8, 0.4, 1); transform-origin: 50% 60%; }
+.ttl .startbtn .sheet { animation: ttlGlow 2.8s ease-in-out infinite; }
+@keyframes ttlGlow { 0%, 100% { filter: drop-shadow(3px 6px 6px #2a0c1c55); } 50% { filter: drop-shadow(0 0 16px #ff7ab0cc); } }
+.ttl .startbtn .stext { animation: ttlStart 2.8s ease-in-out infinite; }
+@keyframes ttlStart { 0%, 100% { rotate: 0deg; } 6% { rotate: -2deg; } 12% { rotate: 1.8deg; } 18% { rotate: 0deg; } }
+.ttl .startbtn:hover .ti, .ttl .startbtn:hover .sweep { translate: 0 -8px; scale: 1.035; }
+.ttl .startbtn.down .ti, .ttl .startbtn.down .sweep { translate: 0 3px; scale: 0.98; transition-duration: 0.05s; }
+.ttl .sweep { pointer-events: none; opacity: 0; -webkit-mask-size: 100% 100%; mask-size: 100% 100%; background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.8) 50%, transparent 65%) 0 0 / 300% 100% no-repeat; mix-blend-mode: screen; }
+.ttl .startbtn:hover .sweep { animation: ttlSweep 0.8s ease-out; }
+@keyframes ttlSweep { 0% { opacity: 1; background-position: 120% 0; } 100% { opacity: 1; background-position: -30% 0; } }
+/* the cord on the START sheet and the tassel sway from their knots */
+.ttl .cord { transform-origin: 40% 8%; animation: ttlSway 3.6s ease-in-out infinite; }
+.ttl .deco.sway { transform-origin: 50% 0; animation: ttlSway 3.1s ease-in-out infinite; }
+@keyframes ttlSway { 0%, 100% { rotate: -2.2deg; } 50% { rotate: 2.2deg; } }
+/* QUIT note swings on its pin when hovered */
+.ttl .quitbtn .ti { transform-origin: 46% 6%; transition: rotate 0.3s cubic-bezier(0.3, 1.8, 0.5, 1); }
+.ttl .quitbtn:hover .ti { rotate: 7deg; }
+/* the cat peeks over the board, photos and the note wiggle when touched */
+.ttl .deco.peek { animation: ttlPeek 5s ease-in-out infinite; }
+@keyframes ttlPeek { 0%, 70%, 100% { translate: 0 0; } 78% { translate: 0 -10px; } 86% { translate: 0 -6px; } }
+.ttl .deco.tilt.wig { animation: ttlWig 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes ttlWig { 0% { rotate: 0deg; } 30% { rotate: -4deg; } 65% { rotate: 2.5deg; } 100% { rotate: 0deg; } }
 
-/* sliders */
+/* BGM rope + bell */
 .ttl .slider { position: absolute; cursor: pointer; }
 .ttl .slider .fill { transition: clip-path 0.1s; }
-.ttl .slider .knob { position: absolute; transform-origin: 50% 8%; transition: left 0.1s cubic-bezier(0.3, 1.4, 0.5, 1); filter: drop-shadow(0 4px 4px #2a0c1c66); }
+.ttl .slider .knob { position: absolute; transform-origin: 50% 8%; transition: left 0.1s cubic-bezier(0.3, 1.4, 0.5, 1); filter: drop-shadow(0 3px 3px #2a0c1c66); }
 .ttl .slider .knob.ring { animation: ttlRing 0.8s ease-out; }
 @keyframes ttlRing { 0% { rotate: 0deg; } 15% { rotate: 18deg; } 40% { rotate: -13deg; } 65% { rotate: 7deg; } 85% { rotate: -3deg; } 100% { rotate: 0deg; } }
 .ttl .slider:hover .knob { scale: 1.1; }
+/* SFX bullets: lit = brass, empty = a faded ghost of the cartridge */
 .ttl .bullet { position: absolute; cursor: pointer; transition: translate 0.15s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.ttl .bullet .ti { transition: opacity 0.12s; }
-.ttl .bullet:hover { translate: 0 -7px; }
+.ttl .bullet .ti, .ttl .bullet .glint { transition: opacity 0.12s, filter 0.12s; }
+.ttl .bullet.empty .ti { filter: grayscale(1) brightness(1.6); opacity: 0.32; }
+.ttl .bullet.empty .glint { opacity: 0; }
+.ttl .bullet:hover { translate: 0 -6px; }
 .ttl .bullet.kick { animation: ttlKick 0.32s ease-out; }
-@keyframes ttlKick { 0% { rotate: 0deg; } 30% { rotate: -10deg; translate: 0 -16px; } 100% { rotate: 0deg; translate: 0 0; } }
+@keyframes ttlKick { 0% { rotate: 0deg; } 30% { rotate: -10deg; translate: 0 -14px; } 100% { rotate: 0deg; translate: 0 0; } }
+.ttl .knobb { transition: left 0.18s cubic-bezier(0.3, 1.5, 0.5, 1); filter: drop-shadow(0 3px 3px #2a0c1c55); }
 .ttl .dg { animation: ttlFlip 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
 
-/* entrance: the board pieces drop in from the left, heroines slide in from the right, the logo stamps down */
-.ttl .boardgrp > *, .ttl .chr, .ttl .logo, .ttl .front > * { transition: translate 0.75s cubic-bezier(0.2, 1.25, 0.4, 1), opacity 0.5s, scale 0.6s cubic-bezier(0.2, 1.6, 0.4, 1); }
+/* entrance: the board pieces drop in from the left, the heroines slide in from the right */
+.ttl .boardgrp > *, .ttl .chr, .ttl .front > * { transition: translate 0.75s cubic-bezier(0.2, 1.25, 0.4, 1), opacity 0.5s; }
 .ttl:not(.in) .boardgrp > * { opacity: 0; translate: -180px 0; }
-.ttl:not(.in) .chr { opacity: 0; translate: 220px 0; }
-.ttl:not(.in) .logo { opacity: 0; scale: 1.8; }
+.ttl:not(.in) .chr { opacity: 0; translate: 200px 0; }
 .ttl:not(.in) .front > * { opacity: 0; translate: 0 120px; }
 /* leaving: everything flies apart, the screen washes to blossom pink */
 .ttl.leave .boardgrp > * { translate: -260px 0; opacity: 0; transition-duration: 0.45s; transition-timing-function: ease-in; }
 .ttl.leave .chr { translate: 260px 0; opacity: 0; }
-.ttl.leave .logo { scale: 1.3; opacity: 0; }
 .ttl::after { content: ""; position: absolute; inset: 0; background: #ffd6e4; opacity: 0; pointer-events: none; transition: opacity 0.5s 0.15s; }
 .ttl.leave::after { opacity: 1; }
 body:has(.screen.ttl) #dbg-btn { display: none; }

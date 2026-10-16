@@ -1372,6 +1372,217 @@
   "src": "assets/ui/sheet_p.webp",
   "w": 494
  },
+ "ui/t_bar_frame": {
+  "dom": true,
+  "h": 229,
+  "src": "assets/ui/t_bar_frame.webp",
+  "w": 1600
+ },
+ "ui/t_bell_knob": {
+  "dom": true,
+  "h": 1039,
+  "src": "assets/ui/t_bell_knob.webp",
+  "w": 1038
+ },
+ "ui/t_board": {
+  "dom": true,
+  "h": 1390,
+  "src": "assets/ui/t_board.webp",
+  "w": 1105
+ },
+ "ui/t_books": {
+  "dom": true,
+  "h": 236,
+  "src": "assets/ui/t_books.webp",
+  "w": 1600
+ },
+ "ui/t_bullet": {
+  "dom": true,
+  "h": 1403,
+  "src": "assets/ui/t_bullet.webp",
+  "w": 534
+ },
+ "ui/t_bunny_knob": {
+  "dom": true,
+  "h": 1134,
+  "src": "assets/ui/t_bunny_knob.webp",
+  "w": 882
+ },
+ "ui/t_cat_cap": {
+  "dom": true,
+  "h": 973,
+  "src": "assets/ui/t_cat_cap.webp",
+  "w": 1216
+ },
+ "ui/t_cat_peek": {
+  "dom": true,
+  "h": 930,
+  "src": "assets/ui/t_cat_peek.webp",
+  "w": 1587
+ },
+ "ui/t_chip_off_s": {
+  "dom": true,
+  "h": 901,
+  "src": "assets/ui/t_chip_off_s.webp",
+  "w": 1477
+ },
+ "ui/t_chip_off_w": {
+  "dom": true,
+  "h": 731,
+  "src": "assets/ui/t_chip_off_w.webp",
+  "w": 1600
+ },
+ "ui/t_chip_on_s": {
+  "dom": true,
+  "h": 834,
+  "src": "assets/ui/t_chip_on_s.webp",
+  "w": 1596
+ },
+ "ui/t_chip_on_w": {
+  "dom": true,
+  "h": 716,
+  "src": "assets/ui/t_chip_on_w.webp",
+  "w": 1600
+ },
+ "ui/t_far": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/t_far.webp",
+  "w": 1920
+ },
+ "ui/t_girls": {
+  "dom": true,
+  "h": 1104,
+  "seal": "canonical",
+  "src": "assets/ui/t_girls.webp",
+  "w": 1302
+ },
+ "ui/t_glass_text": {
+  "dom": true,
+  "h": 894,
+  "src": "assets/ui/t_glass_text.webp",
+  "w": 1432
+ },
+ "ui/t_icon_globe": {
+  "dom": true,
+  "h": 1195,
+  "src": "assets/ui/t_icon_globe.webp",
+  "w": 1145
+ },
+ "ui/t_icon_monitor": {
+  "dom": true,
+  "h": 1079,
+  "src": "assets/ui/t_icon_monitor.webp",
+  "w": 1154
+ },
+ "ui/t_icon_note": {
+  "dom": true,
+  "h": 1192,
+  "src": "assets/ui/t_icon_note.webp",
+  "w": 1034
+ },
+ "ui/t_icon_speaker": {
+  "dom": true,
+  "h": 1064,
+  "src": "assets/ui/t_icon_speaker.webp",
+  "w": 1223
+ },
+ "ui/t_note_hw": {
+  "dom": true,
+  "h": 969,
+  "src": "assets/ui/t_note_hw.webp",
+  "w": 1386
+ },
+ "ui/t_photo_small": {
+  "dom": true,
+  "h": 1430,
+  "src": "assets/ui/t_photo_small.webp",
+  "w": 990
+ },
+ "ui/t_pin": {
+  "dom": true,
+  "h": 1121,
+  "src": "assets/ui/t_pin.webp",
+  "w": 1029
+ },
+ "ui/t_polaroid": {
+  "dom": true,
+  "h": 1600,
+  "src": "assets/ui/t_polaroid.webp",
+  "w": 722
+ },
+ "ui/t_quit_note": {
+  "dom": true,
+  "h": 1315,
+  "src": "assets/ui/t_quit_note.webp",
+  "w": 1164
+ },
+ "ui/t_rod_metal": {
+  "dom": true,
+  "h": 130,
+  "src": "assets/ui/t_rod_metal.webp",
+  "w": 1600
+ },
+ "ui/t_room": {
+  "dom": true,
+  "h": 1080,
+  "src": "assets/ui/t_room.webp",
+  "w": 1920
+ },
+ "ui/t_rope_red": {
+  "dom": true,
+  "h": 77,
+  "src": "assets/ui/t_rope_red.webp",
+  "w": 1600
+ },
+ "ui/t_sakura_a": {
+  "dom": true,
+  "h": 961,
+  "src": "assets/ui/t_sakura_a.webp",
+  "w": 1495
+ },
+ "ui/t_start_cord": {
+  "dom": true,
+  "h": 1311,
+  "src": "assets/ui/t_start_cord.webp",
+  "w": 1098
+ },
+ "ui/t_start_sheet": {
+  "dom": true,
+  "h": 616,
+  "src": "assets/ui/t_start_sheet.webp",
+  "w": 1600
+ },
+ "ui/t_strip_bgm": {
+  "dom": true,
+  "h": 431,
+  "src": "assets/ui/t_strip_bgm.webp",
+  "w": 1600
+ },
+ "ui/t_strip_disp": {
+  "dom": true,
+  "h": 325,
+  "src": "assets/ui/t_strip_disp.webp",
+  "w": 1600
+ },
+ "ui/t_strip_lang": {
+  "dom": true,
+  "h": 314,
+  "src": "assets/ui/t_strip_lang.webp",
+  "w": 1600
+ },
+ "ui/t_strip_sfx": {
+  "dom": true,
+  "h": 311,
+  "src": "assets/ui/t_strip_sfx.webp",
+  "w": 1600
+ },
+ "ui/t_tassel_left": {
+  "dom": true,
+  "h": 1597,
+  "src": "assets/ui/t_tassel_left.webp",
+  "w": 902
+ },
  "ui/tab_h": {
   "dom": true,
   "h": 209,

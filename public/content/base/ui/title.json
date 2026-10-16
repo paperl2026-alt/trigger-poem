@@ -1,44 +1,95 @@
 {
-  "_doc": "标题+设置屏（同一个画面）的布局。坐标是 1920x1080 设计画布上的像素，游戏按窗口大小等比缩放。x y = 左上角，w / h = 显示宽或高（只给一个就按图片比例），rot = 旋转角度。depth = 视差深度：鼠标移动时这一层平移 parallax.max x depth 像素（0 不动，越大越近、动得越多；>1 是镜头前的前景）。layers 从远到近排列；characters 的 x 是人物中线、y 是图片顶边。board 整组（软木板+所有设置项）会随鼠标轻微倾斜 tilt 度。letters：每个文字素材在三种语言下用哪张图（all = 共用）。图片键名见 assets/manifest.json 里 ui/ 开头的条目。",
+  "_doc": "标题+设置屏。布局严格照用户定稿的参考图 art/ref/ui_user_mock.png（1672x941）：每个元素的 box = 它在参考图里的框 [x0,y0,x1,y1]（参考图像素），程序按比例换算到屏幕，图片在框里等比放（align: bottom / top = 贴底 / 贴顶；fit: width = 按框宽放、高度可以超出框，人物用这个）。拆解图：art/ref/ui_breakdown.jpg。depth = 鼠标视差深度（0 不动，越大越近、动得越多），board 组（软木板+设置项）还会随鼠标轻微倾斜 tilt 度。letters：文字用用户选的 1 号美术字，每种语言一张图。",
   "title": {
     "design": [1920, 1080],
-    "parallax": { "max": 46, "ease": 5 },
-    "layers": [
-      { "img": "ui/title_sky", "cover": true, "depth": 0.1 },
-      { "shafts": [{ "x": 980, "y": -160, "w": 900, "rot": 8 }, { "x": 1320, "y": -120, "w": 760, "rot": 2 }], "depth": 0.2 },
-      { "img": "ui/title_room", "cover": true, "depth": 0.24 }
-    ],
-    "dust": { "box": [1000, 120, 1900, 760], "count": 26, "depth": 0.3 },
-    "petals": { "far": 10, "near": 4 },
-    "characters": [
-      { "img": "ui/title_pink", "x": 1800, "y": 40, "h": 1640, "breath": 0.22, "depth": 0.48 },
-      { "img": "ui/title_cat", "x": 1462, "y": 70, "h": 1640, "breath": 0.27, "depth": 0.58 }
-    ],
-    "front": [
-      { "img": "ui/title_front_desk", "x": 1470, "y": 760, "w": 560, "depth": 1.05 },
-      { "img": "ui/title_front_branch", "x": -170, "y": -170, "w": 480, "depth": 1.35, "blur": 3 }
-    ],
-    "logo": { "x": 786, "y": 24, "w": 470, "rot": -4, "depth": 0.35 },
-    "board": { "img": "ui/corkboard", "x": 26, "y": 18, "w": 770, "rot": -1.2, "depth": 0.12, "tilt": 5 },
-    "pins": [{ "img": "ui/pin3", "x": 50, "y": 34, "w": 46 }, { "img": "ui/pin3", "x": 728, "y": 40, "w": 46 }],
-    "bgm": { "icon": "ui/icon_music", "label": "bgm", "y": 140, "track": [352, 580], "value": 668 },
-    "sfx": { "icon": "ui/icon_speaker", "label": "sfx", "y": 262, "track": [352, 580], "bullets": 10, "value": 668 },
-    "language": {
-      "icon": "ui/icon_globe",
-      "label": "language",
-      "y": 372,
-      "tabs": { "y": 452, "x": [96, 316, 536], "w": 200, "options": ["zh", "ja", "en"] }
+    "refSize": [1672, 941],
+    "parallax": { "max": 40, "ease": 5 },
+    "scene": { "far": "ui/t_far", "room": "ui/t_room", "farDepth": 0.08, "roomDepth": 0.2, "farFlip": true },
+    "dust": { "box": [760, 40, 1672, 600], "count": 24, "depth": 0.24 },
+    "petals": { "far": 10, "near": 5 },
+    "girls": {
+      "img": "ui/t_girls",
+      "box": [688, 35, 1684, 880],
+      "fit": "exact",
+      "depth": 0.45,
+      "breath": 0.25,
+      "_anchors": "mockup eyes (990,320) (1380,370) = girls2.png (395,390) (905,452), scale 0.765"
     },
-    "display": {
-      "icon": "ui/icon_monitor",
-      "label": "display",
-      "y": 556,
-      "tabs": { "y": 636, "x": [96, 416], "w": 290, "options": ["fullscreen", "window"] }
+    "glassText": { "img": "ui/t_glass_text", "box": [1380, 50, 1600, 165], "depth": 0.2 },
+    "books": { "img": "ui/t_books", "box": [680, 800, 1672, 941], "align": "bottom", "depth": 0.95 },
+    "board": { "img": "ui/t_board", "box": [40, 18, 722, 893], "depth": 0.1, "tilt": 3.5 },
+    "decor": [
+      { "img": "ui/t_photo_small", "box": [0, 188, 68, 286], "hover": "tilt" },
+      { "img": "ui/t_polaroid", "box": [0, 350, 124, 646], "hover": "tilt" },
+      { "img": "ui/t_tassel_left", "box": [4, 112, 66, 214], "sway": true },
+      { "img": "ui/t_note_hw", "box": [556, 26, 778, 196], "hover": "tilt" },
+      { "img": "ui/t_cat_peek", "box": [372, 0, 530, 90], "peek": true },
+      { "img": "ui/t_sakura_a", "box": [24, 34, 140, 106] },
+      { "img": "ui/t_sakura_a", "box": [596, 0, 712, 64] },
+      { "img": "ui/t_sakura_a", "box": [560, 500, 640, 560] },
+      { "img": "ui/t_sakura_a", "box": [420, 820, 520, 885] },
+      { "img": "ui/t_pin", "box": [60, 24, 110, 70], "metal": true },
+      { "img": "ui/t_pin", "box": [650, 24, 700, 70], "metal": true }
+    ],
+    "rows": {
+      "bgm": {
+        "strip": { "img": "ui/t_strip_bgm", "box": [66, 80, 606, 246] },
+        "icon": { "img": "ui/t_icon_note", "box": [82, 105, 143, 171] },
+        "label": { "letter": "bgm", "box": [148, 100, 290, 176] },
+        "slider": {
+          "x0": 132,
+          "x1": 512,
+          "y": 190,
+          "ropeH": 22,
+          "knob": "ui/t_bell_knob",
+          "knobH": 74,
+          "rope": "ui/t_rope_red",
+          "rod": "ui/t_rod_metal",
+          "cap": { "img": "ui/t_cat_cap", "box": [520, 132, 574, 186] }
+        },
+        "value": { "box": [484, 200, 552, 234] }
+      },
+      "sfx": {
+        "strip": { "img": "ui/t_strip_sfx", "box": [66, 236, 678, 358] },
+        "icon": { "img": "ui/t_icon_speaker", "box": [82, 265, 148, 327] },
+        "label": { "letter": "sfx", "box": [148, 262, 258, 334] },
+        "bar": {
+          "frame": { "img": "ui/t_bar_frame", "box": [252, 280, 512, 330] },
+          "slots": 10,
+          "bullet": "ui/t_bullet",
+          "slotPad": [14, 8],
+          "knob": "ui/t_bunny_knob",
+          "knobH": 62,
+          "rod": "ui/t_rod_metal",
+          "rodTo": 590
+        },
+        "value": { "box": [600, 304, 668, 332] }
+      },
+      "language": {
+        "strip": { "img": "ui/t_strip_lang", "box": [86, 352, 683, 475] },
+        "icon": { "img": "ui/t_icon_globe", "box": [105, 379, 173, 447] },
+        "label": { "letter": "language", "box": [174, 380, 270, 448] },
+        "chips": [
+          { "opt": "zh", "size": "s", "box": [268, 372, 424, 461] },
+          { "opt": "ja", "size": "s", "box": [418, 379, 550, 465] },
+          { "opt": "en", "size": "s", "box": [548, 379, 680, 465] }
+        ]
+      },
+      "display": {
+        "strip": { "img": "ui/t_strip_disp", "box": [130, 476, 678, 583] },
+        "icon": { "img": "ui/t_icon_monitor", "box": [155, 501, 220, 564] },
+        "label": { "letter": "display", "box": [222, 498, 352, 560] },
+        "chips": [{ "opt": "fullscreen", "size": "w", "box": [340, 484, 536, 577] }, { "opt": "window", "size": "w", "box": [527, 493, 673, 572] }]
+      }
     },
-    "rowIcon": { "x": 70, "w": 72 },
-    "rowLabel": { "x": 156, "h": 58 },
-    "start": { "x": 104, "y": 704, "w": 600, "letterH": 150 },
-    "quit": { "x": 706, "y": 892, "w": 150, "rot": 8, "letterH": 46 },
+    "chipImg": { "s": { "on": "ui/t_chip_on_s", "off": "ui/t_chip_off_s" }, "w": { "on": "ui/t_chip_on_w", "off": "ui/t_chip_off_w" } },
+    "chipText": [0.8, 0.64],
+    "start": {
+      "sheet": { "img": "ui/t_start_sheet", "box": [122, 584, 742, 866] },
+      "cord": { "img": "ui/t_start_cord", "box": [600, 552, 790, 800] },
+      "label": { "letter": "start", "box": [196, 636, 690, 800] }
+    },
+    "quit": { "note": { "img": "ui/t_quit_note", "box": [4, 652, 214, 890] }, "label": { "letter": "quit", "box": [30, 738, 158, 818] } },
     "letters": {
       "start": { "zh": "ui/zh_start", "ja": "ui/ja_start", "en": "ui/en_start" },
       "quit": { "zh": "ui/zh_quit", "ja": "ui/ja_quit", "en": "ui/en_quit" },
@@ -52,14 +103,7 @@
       "ja": { "all": "ui/ja_japanese" },
       "en": { "all": "ui/en_english" }
     },
-    "logos": { "zh": "ui/logo_zh", "ja": "ui/logo_ja", "en": "ui/logo_en" },
     "digits": ["ui/d0", "ui/d1", "ui/d2", "ui/d3", "ui/d4", "ui/d5", "ui/d6", "ui/d7", "ui/d8", "ui/d9"],
-    "percent": "ui/dpct",
-    "decor": [
-      { "img": "ui/tape_pink", "x": 560, "y": 8, "w": 190, "rot": 22 },
-      { "img": "ui/tape_mint", "x": 10, "y": 640, "w": 150, "rot": -64 },
-      { "img": "ui/cat_sticker", "x": 22, "y": 962, "w": 96, "rot": 10 },
-      { "img": "ui/heart", "x": 700, "y": 600, "w": 44, "rot": -12 }
-    ]
+    "percent": "ui/dpct"
   }
 }
