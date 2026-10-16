@@ -4,9 +4,9 @@
 // Active skills: the gunner's gatling (endless belt, heals on hits), the cat paw's mantra beam (piercing, slow aim, cancel = heal).
 // Numbers: content characters/<id>.json (gun, skill, poses), tuning/combat.json "player" + "beam", tuning/layout.json.
 import * as THREE from 'three';
-import { tex, meta } from '../engine/assets.js';
-import { paperMesh } from '../engine/paper.js';
-import { sfx } from '../engine/audio.js';
+import { tex, meta } from '../core/assets.js';
+import { paperMesh } from '../core/paper.js';
+import { sfx } from '../core/audio.js';
 import { buildStats } from './characters.js';
 import { Fever } from './fever.js';
 import { bagFx } from './items.js';

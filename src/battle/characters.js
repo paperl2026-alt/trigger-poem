@@ -7,7 +7,7 @@
 // size: { pose, h } = world height in metres of one reference pose; every other pose of the pack scales with it (same source scale).
 // Data: content characters/<id>.json (one file per heroine).
 import { C, T } from '../core/content.js';
-import { levelOf } from './save.js';
+import { levelOf } from '../core/save.js';
 import { bagFx } from './items.js';
 
 // Final per-run stats: base gun + mastery + backpack.

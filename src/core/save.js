@@ -2,7 +2,7 @@
 // Everything unlocked is permanent; there are no consumables and no other currencies.
 // The starting save, the mastery table and the backpack expansions are content (tuning/economy.json);
 // initSave() runs once the content packs are loaded.
-import { C, T } from '../core/content.js';
+import { C, T } from './content.js';
 
 const KEY = 'noa.save.v1';
 // ids renamed when the heroines' data moved to content packs (old saves keep their progress)

@@ -2,22 +2,22 @@
 // enemies, shooting rules (pierce / ramp / Fever crits / stagger), rewards at the end.
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
-import { alphaAt } from '../engine/assets.js';
-import { sfx, playMusic, stopMusic, setIntensity } from '../engine/audio.js';
-import { Ease } from '../engine/tween.js';
+import { alphaAt } from '../core/assets.js';
+import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
+import { Ease } from '../core/tween.js';
 import { World } from './world.js';
 import { FX, COL } from './fx.js';
 import { Player } from './player.js';
 import { Enemy, Projectile } from './enemies.js';
 import { BOSSES } from './boss.js';
-import { Hud } from './hud.js';
-import { Comic } from './comic.js';
-import { AICtrl, PadCtrl, KeyCtrl } from './input.js';
-import { SET } from './settings.js';
-import { SAVE, persist, levelOf } from './save.js';
+import { Hud } from '../ui/hud.js';
+import { Comic } from '../ui/comic.js';
+import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
+import { SET } from '../core/settings.js';
+import { SAVE, persist, levelOf } from '../core/save.js';
 import { bagFx } from './items.js';
 import { C, T } from '../core/content.js';
-import { t, tr } from './i18n.js';
+import { t, tr } from '../core/i18n.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 

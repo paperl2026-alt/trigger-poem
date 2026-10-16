@@ -1,10 +1,10 @@
 // The out-of-run scenes (DOM): Title (+ settings), Chapter select (+ team / outfit / school bag), results, game over.
 // Chapter select reads like flipping through a colour manga: each episode is a chapter cover + a facing page.
-import { url, meta } from '../engine/assets.js';
-import { sfx } from '../engine/audio.js';
-import { t, tr } from './i18n.js';
-import { bagCost } from './items.js';
-import { SAVE, persist, levelProgress, nextCap, maxLv } from './save.js';
+import { url, meta } from '../core/assets.js';
+import { sfx } from '../core/audio.js';
+import { t, tr } from '../core/i18n.js';
+import { bagCost } from '../battle/items.js';
+import { SAVE, persist, levelProgress, nextCap, maxLv } from '../core/save.js';
 import { C, list } from '../core/content.js';
 
 const ui = () => document.getElementById('ui');

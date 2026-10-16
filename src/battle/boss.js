@@ -3,9 +3,9 @@
 //   float — the runaway mascot float of the school festival (episode 0): spits takoyaki and balloons, rolls around,
 //           rears up and slams the yard, calls the haunted house's ghosts.
 import * as THREE from 'three';
-import { meta } from '../engine/assets.js';
-import { Ease } from '../engine/tween.js';
-import { sfx } from '../engine/audio.js';
+import { meta } from '../core/assets.js';
+import { Ease } from '../core/tween.js';
+import { sfx } from '../core/audio.js';
 import { Actor } from './enemies.js';
 import { COL } from './fx.js';
 

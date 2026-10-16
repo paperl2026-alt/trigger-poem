@@ -1,7 +1,7 @@
 // Manga-page transitions: panels slam in one by one, baked katakana SFX stamp on top. Tap = show all / next.
-import { url, meta } from '../engine/assets.js';
-import { sfx } from '../engine/audio.js';
-import { t } from './i18n.js';
+import { url, meta } from '../core/assets.js';
+import { sfx } from '../core/audio.js';
+import { t } from '../core/i18n.js';
 import { C } from '../core/content.js';
 
 // Pages: content comics.json. rects are % of a 16:9 page; clip is a polygon in % of the panel; pos = background focus; in = entrance

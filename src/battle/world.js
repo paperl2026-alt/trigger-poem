@@ -1,9 +1,9 @@
 // 3D world: the level geometry, pooled flickering candle lights, fog, the camera on its rail,
 // and the paper barricade (cover) that folds up from the floor at each station.
 import * as THREE from 'three';
-import { tex, alphaAt } from '../engine/assets.js';
-import { paperMesh, DamageMap, attachDamage, FOG } from '../engine/paper.js';
-import { Ease } from '../engine/tween.js';
+import { tex, alphaAt } from '../core/assets.js';
+import { paperMesh, DamageMap, attachDamage, FOG } from '../core/paper.js';
+import { Ease } from '../core/tween.js';
 import { Level } from './level.js';
 import { shadowTex } from './fx.js';
 

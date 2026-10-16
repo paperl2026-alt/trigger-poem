@@ -2,9 +2,9 @@
 // Display: always landscape; any window size or aspect works (ultrawide shows more panorama, never black bars).
 // Fullscreen is borderless (browser / Electron fullscreen), render scale trades sharpness for speed,
 // HUD frame keeps the HUD and characters inside 16:9 or 21:9 on very wide screens.
-import { sfx, isMuted, setMuted, setVolume, getVolume } from '../engine/audio.js';
+import { sfx, isMuted, setMuted, setVolume, getVolume } from './audio.js';
 import { lang, setLang, LANGS } from './i18n.js';
-import { T } from '../core/content.js';
+import { T } from './content.js';
 
 const KEY = 'noa.settings';
 // defaults: content tuning/settings.json; initSettings() runs once the packs are loaded

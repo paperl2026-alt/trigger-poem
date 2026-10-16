@@ -1,10 +1,10 @@
 // Effects: particles in the world and on the overlay, tracers, slash trail, lock-on rings, SFX stamps.
 import { C } from '../core/content.js';
 import * as THREE from 'three';
-import { tex } from '../engine/assets.js';
-import { Particles, buildAtlas, FR } from '../engine/particles.js';
-import { paperMaterial } from '../engine/paper.js';
-import { Ease } from '../engine/tween.js';
+import { tex } from '../core/assets.js';
+import { Particles, buildAtlas, FR } from '../core/particles.js';
+import { paperMaterial } from '../core/paper.js';
+import { Ease } from '../core/tween.js';
 
 // colours / threat rings / mantra glyphs: content theme.json (filled by initTheme() once the packs are loaded)
 export const COL = {};

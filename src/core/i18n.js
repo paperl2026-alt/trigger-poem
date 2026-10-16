@@ -1,5 +1,5 @@
 // UI text in three languages. Everything decorative (logo, sound effects) is baked into images.
-import { C } from '../core/content.js';
+import { C } from './content.js';
 
 // all strings live in the content packs: text/ui.json (ui = keyed sentences, gameTitle, feverLabel, feverName)
 export const LANGS = [['zh', '中文'], ['en', 'EN'], ['ja', '日本語']];

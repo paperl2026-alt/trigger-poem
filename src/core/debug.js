@@ -1,6 +1,6 @@
 // Debug / test menu: the ` key or Settings → Debug. Jump to any stage, auto-play, god mode, FPS, skip comics,
 // cheats. Toggles persist per browser. Opening the menu pauses the game.
-import { sfx } from '../engine/audio.js';
+import { sfx } from './audio.js';
 import { SAVE, persist, resetSave } from './save.js';
 
 const KEY = 'noa.debug';

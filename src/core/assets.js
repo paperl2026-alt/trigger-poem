@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { C } from '../core/content.js';
+import { C } from './content.js';
 
 export const tex = {};   // key -> THREE.Texture (key like "enemy/doll_idle")
 export const meta = {};  // key -> manifest entry

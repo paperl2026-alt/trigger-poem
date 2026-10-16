@@ -1,4 +1,4 @@
-// Finishes the portable build: images -> assets-data.js (data URIs), classic <script> tags, README, zip.
+// Finishes the portable build: the base content pack -> assets-data.js (JSON + data-URI images), classic <script> tags, README, zip.
 // usage: npm run portable
 import fs from 'node:fs';
 import path from 'node:path';
@@ -7,18 +7,25 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const out = path.join(root, 'dist-portable');
-const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/assets/manifest.json'), 'utf8'));
+// the whole base content pack rides along: JSON as objects, images as data URIs, keyed by the URL the game asks for
 const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const packDir = path.join(root, 'public/content/base');
 const files = {};
-let bytes = 0;
-for (const k of Object.keys(manifest)) {
-  const src = manifest[k].src;
-  if (files[src]) continue;
-  const buf = fs.readFileSync(path.join(root, 'public', src));
-  bytes += buf.length;
-  files[src] = `data:${MIME[path.extname(src)] || 'application/octet-stream'};base64,${buf.toString('base64')}`;
-}
-fs.writeFileSync(path.join(out, 'assets-data.js'), `window.__NOA_ASSETS=${JSON.stringify({ manifest, files })};\n`);
+let bytes = 0, images = 0;
+const walk = (d) => {
+  for (const f of fs.readdirSync(d)) {
+    const p = path.join(d, f);
+    if (fs.statSync(p).isDirectory()) { walk(p); continue; }
+    const key = './content/base/' + path.relative(packDir, p).split(path.sep).join('/');
+    const buf = fs.readFileSync(p);
+    bytes += buf.length;
+    if (p.endsWith('.json')) files[key] = JSON.parse(buf.toString('utf8'));
+    else { files[key] = `data:${MIME[path.extname(p)] || 'application/octet-stream'};base64,${buf.toString('base64')}`; images++; }
+  }
+};
+walk(packDir);
+fs.writeFileSync(path.join(out, 'assets-data.js'), `window.__NOA_CONTENT=${JSON.stringify(files)};
+`);
 
 let html = fs.readFileSync(path.join(out, 'index.html'), 'utf8');
 html = html.replace(/<script type="module" crossorigin src="\.\/game\.js"><\/script>/, '<script src="./assets-data.js"></script>\n  <script defer src="./game.js"></script>');
@@ -44,5 +51,5 @@ const zip = path.join(root, 'trigger-poem-portable.zip');
 fs.rmSync(zip, { force: true });
 execSync(`powershell -NoProfile -Command "Compress-Archive -Path '${out}\*' -DestinationPath '${zip}' -CompressionLevel Optimal"`, { stdio: 'inherit' });
 const size = (p) => (fs.statSync(p).size / 1048576).toFixed(1) + ' MB';
-console.log(`images embedded: ${Object.keys(files).length} (${(bytes / 1048576).toFixed(1)} MB)`);
+console.log(`content embedded: ${Object.keys(files).length} files, ${images} images (${(bytes / 1048576).toFixed(1)} MB)`);
 console.log(`assets-data.js ${size(path.join(out, 'assets-data.js'))}, game.js ${size(path.join(out, 'game.js'))}, zip ${size(zip)}`);

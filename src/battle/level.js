@@ -5,8 +5,8 @@
 // A station = where the camera stops to fight: { via (rail points from the previous stop), cam, look, covers, waves }.
 // Anomaly (0 = calm, 1 = invaded): the world lerps its palette, set pieces float up, and tears open in the paper world.
 import * as THREE from 'three';
-import { tex } from '../engine/assets.js';
-import { paperMesh } from '../engine/paper.js';
+import { tex } from '../core/assets.js';
+import { paperMesh } from '../core/paper.js';
 import { C } from '../core/content.js';
 
 export const FLOOR = 0;

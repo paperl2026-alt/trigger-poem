@@ -7,3 +7,5 @@ art/jiggle_test/
 tools/__pycache__/
 *.log
 tools/models/
+dist-portable/
+trigger-poem-portable.zip

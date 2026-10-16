@@ -4,11 +4,11 @@
 // animated as a stop-motion flipbook of strongly different key frames, lit by nearby candles, fogged by distance.
 // Hits paint holes / cuts / scorch; deaths: knock (falls flat), shatter, slice, burn.
 import * as THREE from 'three';
-import { tex, alphaAt, meta } from '../engine/assets.js';
-import { paperMesh, DamageMap, attachDamage } from '../engine/paper.js';
-import { makeShatter } from '../engine/particles.js';
-import { Ease } from '../engine/tween.js';
-import { sfx } from '../engine/audio.js';
+import { tex, alphaAt, meta } from '../core/assets.js';
+import { paperMesh, DamageMap, attachDamage } from '../core/paper.js';
+import { makeShatter } from '../core/particles.js';
+import { Ease } from '../core/tween.js';
+import { sfx } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 
