@@ -1,0 +1,47 @@
+{
+ "size": [
+  1672,
+  941
+ ],
+ "grid": 4,
+ "plate": {
+  "img": "plate.webp",
+  "depth": "plate.bin",
+  "dims": [
+   418,
+   236
+  ]
+ },
+ "covers": [
+  {
+   "name": "cover_cart",
+   "img": "cover_cart.webp",
+   "depth": "cover_cart.bin",
+   "box": [
+    20,
+    364,
+    697,
+    913
+   ],
+   "dims": [
+    170,
+    138
+   ]
+  },
+  {
+   "name": "cover_bench",
+   "img": "cover_bench.webp",
+   "depth": "cover_bench.bin",
+   "box": [
+    1152,
+    644,
+    1672,
+    941
+   ],
+   "dims": [
+    130,
+    75
+   ]
+  }
+ ]
+}

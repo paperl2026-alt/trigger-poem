@@ -37,7 +37,7 @@ app.whenReady().then(async () => {
   const js = `new Promise((ok) => { const t0 = Date.now(); (function poll() {
       const el = document.querySelector(${JSON.stringify(wait)});
       const imgs = [...document.images];
-      if (el && imgs.length && imgs.every((i) => i.complete) && document.fonts.status === 'loaded') return ok(true);
+      if (el && (imgs.length || window.__sceneReady) && imgs.every((i) => i.complete) && document.fonts.status === 'loaded') return ok(true);
       if (Date.now() - t0 > 20000) return ok(false);
       setTimeout(poll, 100); })(); })`;
   const ready = await win.webContents.executeJavaScript(js);
