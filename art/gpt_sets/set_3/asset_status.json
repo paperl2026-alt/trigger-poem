@@ -1,0 +1,113 @@
+{
+  "mode": "built-in image_gen",
+  "reference_policy": "Only four user original images or their byte-for-byte stable copies. Every image generated independently from scratch; no generated-image editing or reference reuse.",
+  "output_directory": "D:/etc/auto/output/five_full_sets/set_3",
+  "total_png": 30,
+  "previous_completed": [
+    "cat_10_hit.png",
+    "cat_12_running_a.png",
+    "cat_13_running_b.png",
+    "cat_14_victory.png"
+  ],
+  "this_run_generated_saved": [
+    "cat_03_cover_reload.png",
+    "cat_05_firing_forward.png",
+    "cat_06_firing_outward.png",
+    "cat_09_skill_outward.png",
+    "cat_portrait_happy.png",
+    "cat_portrait_startled.png",
+    "cat_portrait_fired_up.png",
+    "cat_portrait_hurt.png",
+    "cat_skill_cutin.png",
+    "cat_team_standing.png",
+    "pink_portrait_happy.png",
+    "pink_portrait_startled.png",
+    "pink_portrait_fired_up.png",
+    "pink_portrait_hurt.png",
+    "pink_skill_cutin.png",
+    "title_key_art.png",
+    "episode_00_01_bell.png",
+    "episode_00_02_anomaly.png",
+    "episode_00_04_sold_out.png",
+    "episode_00_05_sunset.png",
+    "cat_fx_paw_charge.png",
+    "cat_fx_palm_shockwave_forward.png",
+    "cat_fx_palm_shockwave_outward.png",
+    "pink_fx_muzzle_flash_forward.png",
+    "pink_fx_muzzle_flash_outward.png",
+    "pink_fx_gatling_flash.png"
+  ],
+  "this_run_safety_blocked": [
+    {
+      "name": "cat_11_knocked_down.png",
+      "status": "failed",
+      "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 028dead4-23b3-424f-8317-d311dce247bb.\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"other\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "pink_10_hit.png",
+      "status": "failed",
+      "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID b6cf5331-5fb2-48a5-a412-356c7ecebd9a. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "pink_11_knocked_down.png",
+      "status": "failed",
+      "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 6b0fa94e-60c9-4186-9ed6-d0cb1c4036a9. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "pink_team_standing.png",
+      "status": "failed",
+      "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 2747d16f-a4d5-43b9-992a-23b41901de52. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "episode_00_cover.png",
+      "status": "failed",
+      "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID fd77c004-6e60-427f-ab35-d104d9506342. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    }
+  ],
+  "previously_blocked_not_attempted": [
+    "cat_01_cover_idle.png",
+    "cat_02_cover_peek.png",
+    "cat_04_cover_taunt.png",
+    "cat_07_firing_recoil.png",
+    "cat_08_skill_forward.png",
+    "pink_01_cover_idle.png",
+    "pink_02_cover_peek.png",
+    "pink_03_cover_reload.png",
+    "pink_04_cover_taunt.png",
+    "pink_05_firing_forward.png",
+    "pink_06_firing_outward.png",
+    "pink_07_firing_recoil.png",
+    "pink_08_skill_forward.png",
+    "pink_09_skill_outward.png",
+    "pink_12_running_a.png",
+    "pink_13_running_b.png",
+    "pink_14_victory.png",
+    "episode_00_03_boss.png"
+  ],
+  "later_global_blocks_already_generated_before_notice": [
+    "cat_05_firing_forward.png",
+    "pink_skill_cutin.png",
+    "title_key_art.png",
+    "episode_00_01_bell.png",
+    "episode_00_02_anomaly.png"
+  ],
+  "known_issues": [
+    "cat_03_cover_reload.png: kneeling sprite was enlarged to nearly fill the portrait, rather than preserving standing scale.",
+    "cat_03_cover_reload.png, cat_06_firing_outward.png, cat_09_skill_outward.png: transformed paw appears to be on the anatomical left arm in these rear views, despite explicit RIGHT-arm prompting.",
+    "All eight HUD portraits extend to the waist or lower instead of strictly chest-up; portrait head placements and framing are not pixel-identical.",
+    "episode_00_04_sold_out.png: the cat has two transformed paws, contrary to the single anatomical RIGHT-paw requirement.",
+    "pink_fx_*: generator added heart, lace and rabbit motifs beyond a plain muzzle flash; prompts requested only the isolated effect and no other effects.",
+    "title_key_art.png: generated dimensions 1672x941 are only approximately 16:9, not exact. Tool chose a reclining group scene without user-specified scene instructions.",
+    "cat_skill_cutin.png and pink_skill_cutin.png: tool returned 2172x724, exact 3:1, rather than the prompted 1536x512.",
+    "Generation is not certified as a fully compliant complete set. Preserved generated files and documented deviations rather than silently presenting them as correct."
+  ],
+  "deferred": "F: entire second outfit A/B/C, as requested.",
+  "prompt_records": [
+    "prompts_round_3.txt",
+    "prompts_remaining.json"
+  ],
+  "result_records": [
+    "results_remaining.json",
+    "validation.json"
+  ]
+}

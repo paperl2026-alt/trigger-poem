@@ -1,0 +1,1 @@
+cat_03_cover_reload.png viewed as requested. No physical cover object present. Its cat03 prompt also explicitly says no scenery or cover object. Kept unchanged. Not used as image_gen reference.

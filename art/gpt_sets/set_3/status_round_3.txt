@@ -1,0 +1,10 @@
+Built-in image_gen; independent new images.
+cat_09_skill_outward.png: FAILED before generation. Tool could not read original reference 3 because the original path no longer existed. No retry.
+cat_10_hit.png: COMPLETED. Used the four original images already visible in context (num_last_images_to_include=4); no generated-image reference. Saved 1024x1536 PNG, Format32bppArgb, sampled background alpha=0. Rear-facing, no look-back; full body visible.
+cat_12_running_a.png: COMPLETED. Original reference stable byte-for-byte copies 01_style_cat.png and 03_design_cat.png only. 1024x1536 ARGB PNG. Rear-facing running, full body, no look-back.
+cat_13_running_b.png: COMPLETED. Original reference stable byte-for-byte copies 01_style_cat.png and 03_design_cat.png only. 1024x1536 ARGB PNG. Rear-facing opposite running stride, full body, no look-back.
+cat_14_victory.png: COMPLETED. Original reference stable byte-for-byte copies 01_style_cat.png and 03_design_cat.png only. 1024x1536 ARGB PNG. Front-facing victory, full body.
+Exact submitted prompts: prompts_round_3.txt. For cat09 only original references 1 and 3 were requested; tool failed reading 3. For cat10 four original context images were supplied.
+cat12/cat13/cat14: sampled corner and left-background alpha=0. No generated outputs used as generation references.
+This round: 4 completed, 0 safety blocks, 1 file-input failure skipped. Remaining full-set work is assigned by parent.
+Later continuation: cat09 successfully generated using stable original-reference copies. See asset_status.json for the latest complete status; this file preserves the earlier round history only.

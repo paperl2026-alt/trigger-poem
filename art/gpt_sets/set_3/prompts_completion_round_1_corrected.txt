@@ -1,0 +1,32 @@
+Built-in image_gen. Inputs: 01_style_cat.png, 03_design_cat.png only. Viewed 05_gameplay_context.png only to understand left-side game direction; it is not an image_gen input.
+Earlier cat01 call was interrupted and returned no result. No file was saved.
+
+cat_01_cover_idle.png
+Use case: stylized-concept
+Asset type: single transparent game character asset, one pose only.
+Generate a new image from the two original reference images. Image 1 (01_style_cat.png) is the art style reference only. Image 2 (03_design_cat.png) is the character design reference only. Neither reference supplies the required pose or perspective. Match the original character, face, hair, cat ears, red glasses, clothing and accessories without changing the costume design.
+Subject: the adult cat heroine. Her cat paw is her own right arm. She uses no gun.
+Canvas: 1024 x 1536 portrait, genuinely transparent PNG background.
+Scale: a standing version's head to sole would occupy about 90% of canvas height, with soles on the shared baseline. Keep that same scale for this crouched or kneeling pose; do not enlarge it to fill the canvas.
+Full body, with all hair, cat tail, legs, shoes and right paw uncropped.
+The tail comes from below the complete skirt hem; no hole or split in the skirt for the tail.
+Draw for the left side of the screen. Rear view facing into the picture and slightly right, not looking at the camera.
+No visual effects on this asset; effects are separate assets. One character and one pose, no grid or extra asset.
+Nonsexual adult game battle artwork. Do not increase the reference's sexualization, do not focus the composition on breasts, buttocks or underwear, and do not alter the clothing design.
+Game standing direction: the character belongs to the lower-left side of the game screen, with back toward viewer and attention toward the right-front inside the picture. The implied low cover is in front of her, not a tall wall alongside her. This is a character-only PNG: no physical cover, no wall, no box, no cabinet, no scene or background. Do not draw leaning sideways around a tall wall.
+Pose A01: crouched or kneeling low in cover-idle posture, back toward the viewer, looking forward into the picture. Only the character.
+
+cat_02_cover_peek.png
+Use case: stylized-concept
+Asset type: single transparent game character asset, one pose only.
+Generate a new image from the two original reference images. Image 1 (01_style_cat.png) is the art style reference only. Image 2 (03_design_cat.png) is the character design reference only. Neither reference supplies the required pose or perspective. Match the original character, face, hair, cat ears, red glasses, clothing and accessories without changing the costume design.
+Subject: the adult cat heroine. Her cat paw is her own right arm. She uses no gun.
+Canvas: 1024 x 1536 portrait, genuinely transparent PNG background.
+Scale: a standing version's head to sole would occupy about 90% of canvas height, with soles on the shared baseline. Keep that same scale for this crouched or kneeling pose; do not enlarge it to fill the canvas.
+Full body, with all hair, cat tail, legs, shoes and right paw uncropped.
+The tail comes from below the complete skirt hem; no hole or split in the skirt for the tail.
+Draw for the left side of the screen. Rear view facing into the picture and slightly right, not looking at the camera.
+No visual effects on this asset; effects are separate assets. One character and one pose, no grid or extra asset.
+Nonsexual adult game battle artwork. Do not increase the reference's sexualization, do not focus the composition on breasts, buttocks or underwear, and do not alter the clothing design.
+Game standing direction: the character belongs to the lower-left side of the game screen, with back toward viewer and attention toward the right-front inside the picture. The implied low cover is in front of her, not a tall wall alongside her. This is a character-only PNG: no physical cover, no wall, no box, no cabinet, no scene or background. Do not draw leaning sideways around a tall wall.
+Pose A02: rising slightly from a low crouched or kneeling posture to look forward into the picture. Back toward viewer, not looking back. Only the character.

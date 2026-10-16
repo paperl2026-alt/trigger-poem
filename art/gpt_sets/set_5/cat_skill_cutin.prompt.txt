@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Generate a completely new image from scratch. Attached images are references only, not edit targets. Image 1 is the required illustration style; image 2 is the character design. Keep the reference illustration style and character design without aesthetic redesign. Do not use reference poses or perspective as the requested direction.
+Cat heroine from the reference: white hair and cat ears, red glasses, original clothing and accessories, white tail; her cat paw is always her RIGHT arm. No gun. The tail comes out from below the skirt, not through a hole in it.
+Game skill cut-in, horizontal 3:1 banner, waist up, facing the camera. Single cat heroine only, transparent background, original reference design and illustration style. No skill effects over the character; effects are separate assets. No text, grid, panels or watermark.

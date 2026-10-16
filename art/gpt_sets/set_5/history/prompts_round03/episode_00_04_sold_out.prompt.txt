@@ -1,0 +1,4 @@
+Use case: illustration-story
+Create a completely new single landscape comic panel from scratch. The four attached images are references only, not edit targets: images 1 and 2 establish the required illustration style; image 3 establishes the cat heroine character design; image 4 establishes the pink heroine character design. Retain their original character clothing, accessories, identities and the reference illustration style. Do not redesign their outfits or imitate reference perspective.
+Episode 0 comic panel: Sold out, crying. Both heroines together, crying because the limited food / merchandise has sold out.
+One landscape image, no split panels, no grids, no additional main characters. Cat heroine has no gun; her cat paw is always her right arm and tail comes from below the skirt, not through a hole. No text, watermark or effects over characters.

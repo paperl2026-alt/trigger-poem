@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Generate a completely new image from scratch. Attached images are references only, not edit targets. Image 1 is the required illustration style; image 2 is the character design. Keep the reference illustration style and character design without aesthetic redesign. Do not use reference poses or perspective as the requested direction.
+Pink heroine with her original black twin tails, pink eyes, original pink and mint costume and accessories, exactly as the character design reference.
+Single HUD portrait, one expression: fired-up for skill. Chest up, facing the viewer. Same size and framing for all four HUD expressions, 1024x1536 portrait transparent canvas. Crop at the chest, do not show waist, hips or full body. No effects, additional figures, text, grid, panels, backdrop or watermark.

@@ -1,0 +1,281 @@
+{
+  "tool": "built-in image_gen",
+  "requestedSets": 5,
+  "expectedBase": 235,
+  "generatedBase": 181.0,
+  "notGenerated": 54,
+  "unattemptedBase": [],
+  "deferred": "F limit-break forms",
+  "missing": [
+    {
+      "set": "set_1",
+      "file": "pink_01_cover_idle.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_02_cover_peek.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_03_cover_reload.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_04_cover_taunt.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_05_firing_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_06_firing_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_08_skill_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_12_running_a.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "pink_skill_cutin.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_1",
+      "file": "episode_00_cover.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_02_cover_peek.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_03_cover_reload.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_04_cover_taunt.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_05_firing_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_06_firing_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_07_firing_recoil.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_08_skill_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_09_skill_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_11_knocked_down.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_12_running_a.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_13_running_b.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "pink_14_victory.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_2",
+      "file": "episode_00_03_boss.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_01_cover_idle.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_03_cover_reload.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_04_cover_taunt.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_05_firing_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_06_firing_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_07_firing_recoil.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_08_skill_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_09_skill_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_12_running_a.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_3",
+      "file": "pink_team_standing.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_01_cover_idle.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_02_cover_peek.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_03_cover_reload.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_05_firing_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_07_firing_recoil.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_08_skill_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_4",
+      "file": "pink_12_running_a.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "cat_04_cover_taunt.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "cat_11_knocked_down.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_01_cover_idle.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_02_cover_peek.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_03_cover_reload.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_04_cover_taunt.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_05_firing_forward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_06_firing_outward.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_11_knocked_down.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_12_running_a.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_13_running_b.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_14_victory.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "pink_team_standing.png",
+      "status": "generation_tool_refused"
+    },
+    {
+      "set": "set_5",
+      "file": "episode_00_01_bell.png",
+      "status": "generation_tool_refused"
+    }
+  ]
+}

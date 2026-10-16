@@ -1,0 +1,8 @@
+Use case: stylized-concept
+Asset type: single full-body transparent PNG game battle sprite, cat_04_cover_taunt.png.
+Reference images only: 01_style_cat.png supplies the drawing style; 03_design_cat.png supplies the character design and clothing. Do not use their pose or perspective.
+Create the same adult cat-eared woman performing cover taunt: crouched or kneeling in her cover position with her back toward the viewer and her body facing into the picture slightly toward the picture's right; she turns back toward the viewer and makes a peace sign with her normal left hand. Show the single character only; do not draw the cover object.
+Keep her original character and clothing design: white hair, cat ears, red glasses, cream wide-sleeved sailor-kimono top, dark skirt, red cords and bells, shoes, fluffy white tail, and the white furry claw/paw as her own RIGHT arm. The cat girl has no gun. Her tail emerges underneath the complete skirt hem, not through a hole in the skirt.
+Canvas 1024 x 1536 portrait. Full body including all hair, ears, tail, legs, shoes, and paw, uncropped. Use the same scale as a standing character whose head to soles occupy about 90 percent of this canvas; the crouched/kneeling character naturally occupies less canvas height, do not enlarge her to fill it. Soles on the common near-bottom baseline.
+Exactly one pose, one character, no grid, no alternate views, no captions. Genuine transparent background. No effects layered on the character; effects must remain separate assets.
+Adult non-sexual combat asset. Do not increase sexualization from the references, do not focus the composition on chest, buttocks, or underwear, and do not change the clothing design.

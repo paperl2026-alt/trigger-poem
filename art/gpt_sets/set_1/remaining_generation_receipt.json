@@ -1,0 +1,117 @@
+[
+  {
+    "file": "cat_07_firing_recoil.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-ee83e3df-bdff-4feb-9157-678b68a6d520.png"
+  },
+  {
+    "file": "cat_11_knocked_down.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-f1a4ea7a-28cc-437d-b1fb-8c354b88428c.png"
+  },
+  {
+    "file": "pink_01_cover_idle.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID b7a4f629-1944-47dc-af1e-39ac61f88cda. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_02_cover_peek.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 4d3e1ae0-267c-48b9-9474-d0391047e581. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_03_cover_reload.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID fdb51ce8-cc83-40bb-a357-742674255352. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_04_cover_taunt.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID ffd80ffb-2572-48fd-9e2c-357db4fa8b3a. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_05_firing_forward.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID f01c3c5a-7f4a-4e41-ad96-dd5900e5129c. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_06_firing_outward.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 267e56c5-c909-4f18-985b-24e155e22a2c. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_07_firing_recoil.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-8ee2edae-9417-42dc-9ec1-185aa31d69fc.png"
+  },
+  {
+    "file": "pink_08_skill_forward.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 12ce12a6-911a-4d96-af6a-a12cdf041c0b. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_09_skill_outward.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-17d72047-d7de-435d-8f77-68b7468b9c2b.png"
+  },
+  {
+    "file": "pink_10_hit.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-768088cb-616a-4aad-b93c-d4cc622dd270.png"
+  },
+  {
+    "file": "pink_11_knocked_down.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-a6a298f4-b8f0-4df3-b82d-575386a4fd25.png"
+  },
+  {
+    "file": "pink_12_running_a.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID a59eb341-ef74-4ef4-8947-7cc2f3da594e. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_13_running_b.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-8f763797-85f2-44f6-90cc-9381eb738f0f.png"
+  },
+  {
+    "file": "pink_14_victory.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-61cafdf8-5ef8-4da3-97f2-bd297fa54455.png"
+  },
+  {
+    "file": "pink_skill_cutin.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID aab8395c-5651-9b9a-9d15-9fc3e9c6d4c9. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "pink_team_standing.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-8e9412cd-5fa0-4069-b763-5a228c34614e.png"
+  },
+  {
+    "file": "title_key_art.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-05cfb19c-a7e6-4cd8-aaef-a35aab21d183.png"
+  },
+  {
+    "file": "episode_00_cover.png",
+    "status": "tool_error",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID e7afb376-fbe0-48ec-aab3-be17c6a74a59. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "file": "episode_00_01_bell.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-78efc66e-4538-4611-af5a-4feda455a790.png"
+  },
+  {
+    "file": "episode_00_02_anomaly.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-97755780-1487-4773-bbc8-a27dc4076c38.png"
+  },
+  {
+    "file": "episode_00_03_boss.png",
+    "status": "saved",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13ee7-d9cf-72b2-9c85-4aa988b81e32\\exec-d20ad3fb-58ed-434c-bad4-26dc2e7ac2a1.png"
+  }
+]

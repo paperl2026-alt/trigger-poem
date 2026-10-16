@@ -1,0 +1,302 @@
+[
+  {
+    "Name": "cat_03_cover_reload.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_05_firing_forward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_06_firing_outward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_09_skill_outward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_10_hit.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_12_running_a.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_13_running_b.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_14_victory.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_fx_palm_shockwave_forward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_fx_palm_shockwave_outward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_fx_paw_charge.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_portrait_fired_up.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 232
+  },
+  {
+    "Name": "cat_portrait_happy.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 247
+  },
+  {
+    "Name": "cat_portrait_hurt.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 246
+  },
+  {
+    "Name": "cat_portrait_startled.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_skill_cutin.png",
+    "Width": 2172,
+    "Height": 724,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "cat_team_standing.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "episode_00_01_bell.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "TopLeftAlpha": 255,
+    "TopRightAlpha": 255,
+    "BottomLeftAlpha": 255,
+    "BottomRightAlpha": 255
+  },
+  {
+    "Name": "episode_00_02_anomaly.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "TopLeftAlpha": 255,
+    "TopRightAlpha": 255,
+    "BottomLeftAlpha": 255,
+    "BottomRightAlpha": 255
+  },
+  {
+    "Name": "episode_00_04_sold_out.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "TopLeftAlpha": 255,
+    "TopRightAlpha": 255,
+    "BottomLeftAlpha": 255,
+    "BottomRightAlpha": 255
+  },
+  {
+    "Name": "episode_00_05_sunset.png",
+    "Width": 1536,
+    "Height": 1024,
+    "PixelFormat": "Format24bppRgb",
+    "TopLeftAlpha": 255,
+    "TopRightAlpha": 255,
+    "BottomLeftAlpha": 255,
+    "BottomRightAlpha": 255
+  },
+  {
+    "Name": "pink_fx_gatling_flash.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "pink_fx_muzzle_flash_forward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "pink_fx_muzzle_flash_outward.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "pink_portrait_fired_up.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 248,
+    "BottomRightAlpha": 227
+  },
+  {
+    "Name": "pink_portrait_happy.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 202,
+    "BottomRightAlpha": 249
+  },
+  {
+    "Name": "pink_portrait_hurt.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 249,
+    "BottomRightAlpha": 26
+  },
+  {
+    "Name": "pink_portrait_startled.png",
+    "Width": 1024,
+    "Height": 1536,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "pink_skill_cutin.png",
+    "Width": 2172,
+    "Height": 724,
+    "PixelFormat": "Format32bppArgb",
+    "TopLeftAlpha": 0,
+    "TopRightAlpha": 0,
+    "BottomLeftAlpha": 0,
+    "BottomRightAlpha": 0
+  },
+  {
+    "Name": "title_key_art.png",
+    "Width": 1672,
+    "Height": 941,
+    "PixelFormat": "Format24bppRgb",
+    "TopLeftAlpha": 255,
+    "TopRightAlpha": 255,
+    "BottomLeftAlpha": 255,
+    "BottomRightAlpha": 255
+  }
+]

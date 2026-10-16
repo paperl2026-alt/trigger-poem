@@ -1,0 +1,1 @@
+Initial portrait generations reached the belt/waist or lower torso rather than chest-up. Original PNGs are retained. New from-scratch v2 generations use only the original references and explicitly enforce the requested chest-up crop, without editing previous output.

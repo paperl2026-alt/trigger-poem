@@ -1,0 +1,4 @@
+Use case: stylized-concept
+New image from scratch, not an edit. The attached first image is the required illustration style, and the second image is the character design. Preserve original style and visible character design, not the reference poses or perspective.
+HUD portrait of the pink heroine, expression: startled. Facing the viewer. CHEST UP ONLY: show head, face, neck, shoulders and upper chest. The lower edge of the character illustration cuts through the upper chest. Nothing below the chest is visible: no lower torso, abdomen, waist, belt or hips. The portrait must not reach the waist. All four expressions use this same chest-up framing.
+1024x1536 portrait transparent canvas. One portrait only. No effects, text, background, grid or multiple panels.

@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Generate a completely new standalone game VFX image from scratch. Attached images are style and character references only, not edit targets. Match their illustration rendering style.
+The pink heroine's hip-fired gatling skill muzzle flash. Only the gatling muzzle flash effect.
+1024x1536 portrait transparent background. Exactly one named effect, no character, no body parts, no paw or hand, no weapon, no background, no additional symbols or patterns, no text, no watermark.

@@ -1,0 +1,293 @@
+[
+  {
+    "name": "cat_03_cover_reload.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: rear-view cover reload, crouched or kneeling, shaking out or charging her RIGHT cat paw. No visible charge effects.",
+    "transparent": true
+  },
+  {
+    "name": "cat_05_firing_forward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: firing forward, rear view, extending the RIGHT cat paw toward the action into the picture slightly RIGHT. No gun, no energy effect.",
+    "transparent": true
+  },
+  {
+    "name": "cat_06_firing_outward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: firing outward, rear view, extending the RIGHT cat paw toward the UPPER LEFT. No gun, no energy effect.",
+    "transparent": true
+  },
+  {
+    "name": "cat_09_skill_outward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: outward skill, rear view, releasing a palm shockwave toward the UPPER LEFT with her RIGHT cat-paw palm. Only the character's skill pose; no shockwave or other effect visible.",
+    "transparent": true
+  },
+  {
+    "name": "cat_11_knocked_down.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: knocked down after a blow, viewed from behind, not facing the viewer. Non-graphic, no wounds or blood.",
+    "transparent": true
+  },
+  {
+    "name": "pink_10_hit.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: hit reaction, knocked backward by a blow. Keep her original pink gun entirely in frame. Non-graphic, no wounds or blood.",
+    "transparent": true
+  },
+  {
+    "name": "pink_11_knocked_down.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. Full body, all hair, tail or twin tails, legs, shoes and any weapon uncropped. The left-screen actor faces away from the viewer into the picture, slightly toward picture RIGHT, except that outward actions face UPPER LEFT. Rear-view head faces the action, NO looking at the camera, NO looking back. Use a fixed standing scale: head-to-sole approximately 90 percent of canvas height and common sole baseline at 95 percent of canvas height. Crouched, kneeling and down poses keep that identical character scale and are naturally shorter; never enlarge to fill the canvas. No scenery or cover object. NO visual effects over the character; effects are separate assets. Pose: knocked down after a blow, viewed from behind, not facing the viewer. Keep her original pink gun entirely in frame. Non-graphic, no wounds or blood.",
+    "transparent": true
+  },
+  {
+    "name": "cat_portrait_happy.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: happy. No visual effects, no extra objects."
+  },
+  {
+    "name": "cat_portrait_startled.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: startled. No visual effects, no extra objects."
+  },
+  {
+    "name": "cat_portrait_fired_up.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: fired-up for her skill. No visual effects, no extra objects."
+  },
+  {
+    "name": "cat_portrait_hurt.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: hurt, non-graphic with no wounds or blood. No visual effects, no extra objects."
+  },
+  {
+    "name": "cat_skill_cutin.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background. Horizontal 3:1 game skill cut-in banner, 1536x512. Waist up, facing the camera. One character only. No visual effects, no extra objects."
+  },
+  {
+    "name": "cat_team_standing.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same white-haired cat girl, red glasses, cat ears, original cream-and-navy kimono sailor outfit and shoes, original hair accessories, white tail, and transformed white feline paw with red claws and red palm emblem on her anatomical RIGHT arm only. The left hand remains human. She NEVER uses guns. Tail is below the skirt hem, never emerging through a hole in the skirt. Transparent background, 1024x1536 portrait. Front-view full-body standing art for the team screen, facing the audience. All hair, ears, tail or twin tails, legs and shoes uncropped. Standing head-to-sole approximately 90 percent of canvas height; sole baseline at 95 percent of canvas height. No visual effects. No gun."
+  },
+  {
+    "name": "pink_portrait_happy.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: happy. No visual effects, no extra objects."
+  },
+  {
+    "name": "pink_portrait_startled.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: startled. No visual effects, no extra objects."
+  },
+  {
+    "name": "pink_portrait_fired_up.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: fired-up for her skill. No visual effects, no extra objects."
+  },
+  {
+    "name": "pink_portrait_hurt.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. One chest-up HUD portrait facing the viewer. Same chest-up size and framing for all four expressions; leave hair and ears uncropped. Expression: hurt, non-graphic with no wounds or blood. No visual effects, no extra objects."
+  },
+  {
+    "name": "pink_skill_cutin.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background. Horizontal 3:1 game skill cut-in banner, 1536x512. Waist up, facing the camera. One character only. No visual effects, no extra objects."
+  },
+  {
+    "name": "pink_team_standing.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW image from scratch, not an edit. One asset only, no grid, no multiple views. Preserve the original character design and exact original drawing style without redesign or additions. No text or watermark. Attached original image 1 is the drawing-style reference and attached original image 2 is the character-design reference. Draw the same pink girl with the original long black twin tails, pink and mint bows, accessories, pink outfit, lace details and shoes. Preserve the original design. Transparent background, 1024x1536 portrait. Front-view full-body standing art for the team screen, facing the audience. All hair, ears, tail or twin tails, legs and shoes uncropped. Standing head-to-sole approximately 90 percent of canvas height; sole baseline at 95 percent of canvas height. No visual effects. Her original pink gun is fully visible."
+  },
+  {
+    "name": "title_key_art.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: 16:9 landscape, 1536x864. Scene: Title key art of both girls together. No title text."
+  },
+  {
+    "name": "episode_00_cover.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: 2:3 portrait, 1024x1536. Scene: Episode 0 chapter cover of both girls together. No title text."
+  },
+  {
+    "name": "episode_00_01_bell.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: landscape, 1536x1024. Scene: The bell rings; the two girls each dash for the limited food or merch."
+  },
+  {
+    "name": "episode_00_02_anomaly.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: landscape, 1536x1024. Scene: The school suddenly turns anomalous; both girls get angry."
+  },
+  {
+    "name": "episode_00_04_sold_out.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: landscape, 1536x1024. Scene: The limited food or merch is sold out; both girls are crying."
+  },
+  {
+    "name": "episode_00_05_sunset.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false,
+    "prompt": "Use case: illustration-story. Generate a NEW image from scratch, not an edit. Use the four attached USER ORIGINAL images only. Originals 1 and 2 define the drawing style; originals 3 and 4 define the cat and pink characters. Preserve both original designs and outfits without adding or redesigning. The cat's transformed paw is always her anatomical RIGHT arm; cat never uses guns. Her white tail emerges below the skirt hem, not through a skirt hole. Both original girls together in ONE single scene, not a grid or asset sheet. No visual effects over the characters. No text or watermark. Composition: landscape, 1536x1024. Scene: Both girls walk home at sunset."
+  },
+  {
+    "name": "cat_fx_paw_charge.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. The cat-paw charge energy effect from the original cat reference, isolated without the paw. One charge effect only. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  },
+  {
+    "name": "cat_fx_palm_shockwave_forward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. One cat palm shockwave effect traveling into the picture slightly toward picture RIGHT. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  },
+  {
+    "name": "cat_fx_palm_shockwave_outward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. One cat palm shockwave effect traveling toward the UPPER LEFT. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  },
+  {
+    "name": "pink_fx_muzzle_flash_forward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. One pink girl's gun muzzle flash effect firing into the picture slightly toward picture RIGHT. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  },
+  {
+    "name": "pink_fx_muzzle_flash_outward.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. One pink girl's gun muzzle flash effect firing toward the UPPER LEFT. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  },
+  {
+    "name": "pink_fx_gatling_flash.png",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true,
+    "prompt": "Use case: stylized-concept. Generate a NEW standalone game visual-effect asset from scratch. Use the attached original references for matching the drawing style. Actual transparent background, 1024x1536 portrait. One pink girl's gatling muzzle flash effect. The canvas contains ONLY this isolated effect: NO character, NO body, NO hands, NO paw, NO weapon, NO scenery, NO other effects. No text, no grid, no multiple assets."
+  }
+]

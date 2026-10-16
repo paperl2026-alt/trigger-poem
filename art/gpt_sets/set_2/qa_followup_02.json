@@ -1,0 +1,61 @@
+{
+  "set": "set_2",
+  "newSavedAssets": [
+    "cat_04_cover_taunt.png",
+    "cat_07_firing_recoil.png",
+    "cat_08_skill_forward.png",
+    "cat_11_knocked_down.png",
+    "pink_01_cover_idle.png",
+    "title_key_art.png",
+    "episode_00_cover.png",
+    "episode_00_01_bell.png"
+  ],
+  "characters": {
+    "count": 5,
+    "width": 1024,
+    "height": 1536,
+    "pixelFormat": "32bpp ARGB",
+    "cornerAlpha": "0 except cat_08 top-left 1"
+  },
+  "story": {
+    "title_key_art": [
+      1672,
+      941
+    ],
+    "episode_00_cover": [
+      1024,
+      1536
+    ],
+    "episode_00_01_bell": [
+      1672,
+      941
+    ]
+  },
+  "policy": "All returned originals saved verbatim without selection, deletion, resizing, retouching, or retries. Existing assets left unchanged. Visual and dimension checks do not constitute acceptance as qualified.",
+  "observations": [
+    "Sprites contain visible low-opacity halo-like surrounding pixels in preview despite alpha-transparent corners; originals retained untouched.",
+    "Some generated pose scale/direction or crop details do not strictly follow prompt; originals retained without v2."
+  ],
+  "currentBaseSaved": 34,
+  "expectedBase": 47,
+  "currentMissingBase": [
+    "pink_02_cover_peek.png",
+    "pink_03_cover_reload.png",
+    "pink_04_cover_taunt.png",
+    "pink_05_firing_forward.png",
+    "pink_06_firing_outward.png",
+    "pink_07_firing_recoil.png",
+    "pink_08_skill_forward.png",
+    "pink_09_skill_outward.png",
+    "pink_11_knocked_down.png",
+    "pink_12_running_a.png",
+    "pink_13_running_b.png",
+    "pink_14_victory.png",
+    "episode_00_03_boss.png"
+  ],
+  "calledThisRun": 21,
+  "notCalled": [],
+  "refusedThisRun": 13,
+  "technicalFailuresThisRun": 0,
+  "deferred": "F limit-break forms"
+}

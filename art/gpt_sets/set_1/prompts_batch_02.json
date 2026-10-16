@@ -1,0 +1,81 @@
+{
+  "mode": "built-in image_gen",
+  "references": [
+    "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+    "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+    "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+  ],
+  "jobs": [
+    {
+      "id": "cat_portrait_happy",
+      "name": "cat_portrait_happy.png",
+      "prompt": "Use case: stylized-concept. Asset type: single character HUD portrait. Generate exactly ONE chest-up portrait of the cat-girl, facing the viewer directly, on genuinely transparent background. Canvas 1024x1536 portrait. Match the four portraits' size and framing: head and cat ears fully visible, centered face, framing from above ears down to chest, same face scale and chest crop in each expression. Reference images 1 and 2 ONLY define finished drawing style: crisp expressive anime linework, detailed shaded rendering. Reference 3 ONLY defines the character design, not pose, perspective or expression. Preserve her white bob haircut with small braids, white cat ears with pink interiors, red eyes and thin red glasses, red ribbon and gold bell ornament, cream kimono-style sailor top, navy sailor collar, red ties, and mint sleeve lining. Do not change design. If arms appear, her RIGHT ARM alone is the white furry clawed paw with red markings, left arm is human. No gun, no visual effects or aura. No full-body figure, no second pose, no grids, no text, no background, no border, no watermark.\nExpression: HAPPY. A clearly cheerful warm smile, relaxed brows and bright happy eyes looking directly at the viewer. Keep the same chest-up portrait framing.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_happy.png",
+      "qa": "1024x1536 PNG alpha, facing viewer, intended expression present. Generated framing extends to waist rather than chest; face scale and pose vary between four independent portraits."
+    },
+    {
+      "id": "cat_portrait_startled",
+      "name": "cat_portrait_startled.png",
+      "prompt": "Use case: stylized-concept. Asset type: single character HUD portrait. Generate exactly ONE chest-up portrait of the cat-girl, facing the viewer directly, on genuinely transparent background. Canvas 1024x1536 portrait. Match the four portraits' size and framing: head and cat ears fully visible, centered face, framing from above ears down to chest, same face scale and chest crop in each expression. Reference images 1 and 2 ONLY define finished drawing style: crisp expressive anime linework, detailed shaded rendering. Reference 3 ONLY defines the character design, not pose, perspective or expression. Preserve her white bob haircut with small braids, white cat ears with pink interiors, red eyes and thin red glasses, red ribbon and gold bell ornament, cream kimono-style sailor top, navy sailor collar, red ties, and mint sleeve lining. Do not change design. If arms appear, her RIGHT ARM alone is the white furry clawed paw with red markings, left arm is human. No gun, no visual effects or aura. No full-body figure, no second pose, no grids, no text, no background, no border, no watermark.\nExpression: STARTLED. Widened surprised eyes, raised brows, and a slightly open mouth, looking directly at the viewer. Keep the same chest-up portrait framing.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_startled.png",
+      "qa": "1024x1536 PNG alpha, facing viewer, intended expression present. Generated framing extends to waist rather than chest; face scale and pose vary between four independent portraits."
+    },
+    {
+      "id": "cat_portrait_fired_up",
+      "name": "cat_portrait_fired_up.png",
+      "prompt": "Use case: stylized-concept. Asset type: single character HUD portrait. Generate exactly ONE chest-up portrait of the cat-girl, facing the viewer directly, on genuinely transparent background. Canvas 1024x1536 portrait. Match the four portraits' size and framing: head and cat ears fully visible, centered face, framing from above ears down to chest, same face scale and chest crop in each expression. Reference images 1 and 2 ONLY define finished drawing style: crisp expressive anime linework, detailed shaded rendering. Reference 3 ONLY defines the character design, not pose, perspective or expression. Preserve her white bob haircut with small braids, white cat ears with pink interiors, red eyes and thin red glasses, red ribbon and gold bell ornament, cream kimono-style sailor top, navy sailor collar, red ties, and mint sleeve lining. Do not change design. If arms appear, her RIGHT ARM alone is the white furry clawed paw with red markings, left arm is human. No gun, no visual effects or aura. No full-body figure, no second pose, no grids, no text, no background, no border, no watermark.\nExpression: FIRED UP for a skill. Fierce focused determined eyes, lowered brows, an energetic confident open-mouth expression, looking directly at the viewer. Show the facial expression only, no skill effects or glow. Keep the same chest-up portrait framing.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_fired_up.png",
+      "qa": "1024x1536 PNG alpha, facing viewer, intended expression present. Generated framing extends to waist rather than chest; face scale and pose vary between four independent portraits."
+    },
+    {
+      "id": "cat_portrait_hurt",
+      "name": "cat_portrait_hurt.png",
+      "prompt": "Use case: stylized-concept. Asset type: single character HUD portrait. Generate exactly ONE chest-up portrait of the cat-girl, facing the viewer directly, on genuinely transparent background. Canvas 1024x1536 portrait. Match the four portraits' size and framing: head and cat ears fully visible, centered face, framing from above ears down to chest, same face scale and chest crop in each expression. Reference images 1 and 2 ONLY define finished drawing style: crisp expressive anime linework, detailed shaded rendering. Reference 3 ONLY defines the character design, not pose, perspective or expression. Preserve her white bob haircut with small braids, white cat ears with pink interiors, red eyes and thin red glasses, red ribbon and gold bell ornament, cream kimono-style sailor top, navy sailor collar, red ties, and mint sleeve lining. Do not change design. If arms appear, her RIGHT ARM alone is the white furry clawed paw with red markings, left arm is human. No gun, no visual effects or aura. No full-body figure, no second pose, no grids, no text, no background, no border, no watermark.\nExpression: HURT. Pained strained brows and eyes, tense mouth in a small wince, still facing the viewer directly. Non-graphic expression only, no injury detail, no blood, no effects. Keep the same chest-up portrait framing.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_hurt.png",
+      "qa": "1024x1536 PNG alpha, facing viewer, intended expression present. Generated framing extends to waist rather than chest; face scale and pose vary between four independent portraits."
+    },
+    {
+      "id": "cat_team_standing",
+      "name": "cat_team_standing.png",
+      "prompt": "undefined\nD team_standing. FRONT VIEW, full-body standing art for chapter select and team screen. Facing the viewer directly, calm assured expression, relaxed upright standing stance, arms naturally resting at sides with the RIGHT furry cat-paw arm and LEFT human arm visibly correct. Do not touch her legs. Head to shoe soles fills about 90 percent of 1024x1536 canvas, soles baseline y=1459 and a little breathing room above ears; entire ears, hair, tail, legs and shoes uncropped. No action effects. This is front view, not rear, not a turnaround sheet.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_team_standing.png",
+      "qa": "1024x1536 PNG alpha, front full-body, right paw and tail below hem present. Character fills slightly more than requested 90 percent."
+    }
+  ],
+  "newBlocked": [],
+  "blockedExternalAdded": [
+    "pink03",
+    "pink05",
+    "pink13",
+    "pink14"
+  ],
+  "remaining": [
+    "cat04",
+    "cat09",
+    "cat10",
+    "cat11",
+    "cat12",
+    "cat13",
+    "cat14",
+    "cat_skill_cutin",
+    "pink10",
+    "pink11",
+    "pink_portrait_happy",
+    "pink_portrait_startled",
+    "pink_portrait_fired_up",
+    "pink_portrait_hurt",
+    "pink_skill_cutin",
+    "pink_team_standing",
+    "title_key_art",
+    "episode_00_cover",
+    "episode_00_01_bell",
+    "episode_00_02_anomaly",
+    "episode_00_04_sold_out",
+    "episode_00_05_sunset"
+  ]
+}

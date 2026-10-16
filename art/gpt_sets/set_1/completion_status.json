@@ -1,0 +1,441 @@
+{
+  "set": "set_1",
+  "outputDirectory": "D:/etc/auto/output/five_full_sets/set_1",
+  "mode": "built-in image_gen",
+  "generatedCount": 27,
+  "lastDispatchGenerated": 18,
+  "lastDispatchNewBlocked": 0,
+  "prompts": [
+    "prompts_batch_01.json",
+    "prompts_batch_02.json",
+    "prompts_batch_03.json"
+  ],
+  "generatedFiles": [
+    {
+      "name": "cat_03_cover_reload.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3060,
+      "partial_alpha_samples": 3084,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_03_cover_reload.png"
+    },
+    {
+      "name": "cat_05_firing_forward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3969,
+      "partial_alpha_samples": 2175,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_05_firing_forward.png"
+    },
+    {
+      "name": "cat_06_firing_outward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3963,
+      "partial_alpha_samples": 2181,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_06_firing_outward.png"
+    },
+    {
+      "name": "cat_08_skill_forward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3802,
+      "partial_alpha_samples": 2342,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_08_skill_forward.png"
+    },
+    {
+      "name": "cat_09_skill_outward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4081,
+      "partial_alpha_samples": 2063,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_09_skill_outward.png"
+    },
+    {
+      "name": "cat_10_hit.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3711,
+      "partial_alpha_samples": 2433,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_10_hit.png"
+    },
+    {
+      "name": "cat_12_running_a.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4394,
+      "partial_alpha_samples": 1750,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_12_running_a.png"
+    },
+    {
+      "name": "cat_13_running_b.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4412,
+      "partial_alpha_samples": 1732,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_13_running_b.png"
+    },
+    {
+      "name": "cat_14_victory.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4371,
+      "partial_alpha_samples": 1773,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_14_victory.png"
+    },
+    {
+      "name": "cat_fx_charge.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3031,
+      "partial_alpha_samples": 3113,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_charge.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_forward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4600,
+      "partial_alpha_samples": 1544,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_palm_shockwave_forward.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_outward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 3836,
+      "partial_alpha_samples": 2308,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_palm_shockwave_outward.png"
+    },
+    {
+      "name": "cat_portrait_fired_up.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 927,
+      "partial_alpha_samples": 5217,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_fired_up.png"
+    },
+    {
+      "name": "cat_portrait_happy.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 1121,
+      "partial_alpha_samples": 5023,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_happy.png"
+    },
+    {
+      "name": "cat_portrait_hurt.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 1271,
+      "partial_alpha_samples": 4873,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_hurt.png"
+    },
+    {
+      "name": "cat_portrait_startled.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 1300,
+      "partial_alpha_samples": 4844,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_portrait_startled.png"
+    },
+    {
+      "name": "cat_skill_cutin.png",
+      "width": 2172,
+      "height": 724,
+      "transparent_samples": 4248,
+      "partial_alpha_samples": 2008,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_skill_cutin.png"
+    },
+    {
+      "name": "cat_team_standing.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4366,
+      "partial_alpha_samples": 1778,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/cat_team_standing.png"
+    },
+    {
+      "name": "episode_00_04_sold_out.png",
+      "width": 1672,
+      "height": 941,
+      "transparent_samples": 0,
+      "partial_alpha_samples": 0,
+      "opaque_samples": 6195,
+      "max_sampled_alpha": 255,
+      "corner_alpha": 255,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/episode_00_04_sold_out.png"
+    },
+    {
+      "name": "episode_00_05_sunset.png",
+      "width": 1672,
+      "height": 941,
+      "transparent_samples": 0,
+      "partial_alpha_samples": 0,
+      "opaque_samples": 6195,
+      "max_sampled_alpha": 255,
+      "corner_alpha": 255,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/episode_00_05_sunset.png"
+    },
+    {
+      "name": "pink_fx_gatling_flash.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4707,
+      "partial_alpha_samples": 1437,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_gatling_flash.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_forward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 5165,
+      "partial_alpha_samples": 979,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_muzzle_flash_forward.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_outward.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 4618,
+      "partial_alpha_samples": 1526,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 254,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_muzzle_flash_outward.png"
+    },
+    {
+      "name": "pink_portrait_fired_up.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 980,
+      "partial_alpha_samples": 5164,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_fired_up.png"
+    },
+    {
+      "name": "pink_portrait_happy.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 1185,
+      "partial_alpha_samples": 4959,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_happy.png"
+    },
+    {
+      "name": "pink_portrait_hurt.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 1326,
+      "partial_alpha_samples": 4818,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_hurt.png"
+    },
+    {
+      "name": "pink_portrait_startled.png",
+      "width": 1024,
+      "height": 1536,
+      "transparent_samples": 738,
+      "partial_alpha_samples": 5406,
+      "opaque_samples": 0,
+      "max_sampled_alpha": 253,
+      "corner_alpha": 0,
+      "path": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_startled.png"
+    }
+  ],
+  "missingCount": 26,
+  "missing": [
+    {
+      "name": "cat_01_cover_idle.png",
+      "status": "locally_safety_blocked"
+    },
+    {
+      "name": "cat_02_cover_peek.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "cat_04_cover_taunt.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "cat_07_firing_recoil.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "cat_11_knocked_down.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_01_cover_idle.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_02_cover_peek.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_03_cover_reload.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_04_cover_taunt.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_05_firing_forward.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_06_firing_outward.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_07_firing_recoil.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_08_skill_forward.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_09_skill_outward.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_10_hit.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_11_knocked_down.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_12_running_a.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_13_running_b.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_14_victory.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_skill_cutin.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "pink_team_standing.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "title_key_art.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "episode_00_cover.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "episode_00_01_bell.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "episode_00_02_anomaly.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    },
+    {
+      "name": "episode_00_03_boss.png",
+      "status": "global_safety_blocked_do_not_attempt"
+    }
+  ],
+  "globalBlockedButPreviouslyGeneratedRetained": [
+    "cat_05_firing_forward.png",
+    "cat_08_skill_forward.png"
+  ],
+  "remainingAllowedUnattempted": [],
+  "deferred": [
+    "F limit-break second A/B/C"
+  ],
+  "knownIssues": [
+    "cat03 crouched sprite enlarged to nearly fill canvas rather than fixed standing scale.",
+    "cat06 and cat09 furry paw appears on LEFT arm, not requested RIGHT arm.",
+    "cat12 and cat13 running strides are too similar rather than opposite.",
+    "cat four HUD portraits extend to waist rather than chest and are not exactly same framing.",
+    "Pink portraits do not share exact face scale and framing; happy crop extends low on chest.",
+    "cat_skill_cutin top ear cropped and actual canvas 2172x724, although exact 3:1.",
+    "Battle poses and standing body scales/baselines not exactly uniform.",
+    "episode_00_04_sold_out lower legs and shoes cropped.",
+    "episode_00_05_sunset model added shoulder bags and camera-facing glances.",
+    "Both E scenes include opaque environments; generated 1672x941 landscape.",
+    "Generated PNG alpha has sampled maximum 253 or 254, not fully opaque 255, except the two opaque E scenes."
+  ],
+  "notes": "All allowed outstanding items from final dispatch were attempted once and saved. No global or local safety-blocked request was retried, paraphrased or worked around. No generated image was used as a reference. No output post-processing, resizing or alpha editing performed."
+}

@@ -1,0 +1,16 @@
+Tool: built-in image_gen
+
+cat_02_cover_peek.png
+
+第一张参考图是画风，第二张参考图是猫爪娘人设，不参考它们的动作与透视方向。按原设定绘制成年角色的非色情游戏战斗资产，不增加参考图的性化程度，画面表现动作，不强调胸、臀或内衣。
+
+Cover peek: rising slightly to look forward.
+Draw everything for the left side of the screen. Rear views aim toward the right of the picture.
+背面掩体探头，稍微起身向画内右前方看，不回头看镜头。
+The cat girl’s paw is always her right arm.
+猫爪娘不用枪。尾巴在裙摆下面，裙子不开洞。
+
+One pose per image, transparent background, 1024×1536 portrait.
+Standing head to sole fills about 90% of canvas height, soles on the same baseline. Crouched and kneeling poses keep the same scale; they are naturally shorter, do not enlarge them to fill the canvas.
+Full body: hair, cat tail, legs and shoes all uncropped.
+特效单独出，本张不叠加特效。

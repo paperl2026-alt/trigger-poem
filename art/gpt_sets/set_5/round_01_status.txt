@@ -1,0 +1,28 @@
+Set 5, round 1, built-in image_gen. Five requested items attempted once each; no rejected request retried.
+
+Generated and saved (1024x1536 PNG with alpha, sampled corner/edge alpha = 0):
+cat_03_cover_reload.png
+cat_05_firing_forward.png
+cat_06_firing_outward.png
+
+Visual QA notes, no edits applied:
+cat_03_cover_reload: single full-body rear-facing crouch, right paw and tail present; crouched scale was enlarged to almost fill canvas rather than retaining standing scale.
+cat_05_firing_forward: single full-body rear view aiming picture-right; paw appears on right arm; no gun/effects.
+cat_06_firing_outward: single full-body rear view aiming upper-left, but generated paw appears on anatomical left arm, contrary to prompt.
+
+Blocked by tool safety system, skipped permanently:
+cat_04_cover_taunt: moderation_blocked, output stage, sexual; request ID 27923413-1a13-4979-8bdd-ecbae376d871.
+cat_08_skill_forward: moderation_blocked, output stage, sexual; request ID fccff613-af7d-4cec-b9b1-8eff1d35e4c8.
+
+Actual prompt text saved beside all five item names as .prompt.txt.
+
+Remaining eligible work pending parent assignment:
+Cat A: 09 skill outward; 10 hit; 11 knocked down; 12 running A; 13 running B; 14 victory.
+Pink A: 10 hit; 11 knocked down.
+Both heroines B: happy, startled, fired-up, hurt portraits.
+Both heroines C: horizontal 3:1 skill cut-ins.
+Both heroines D: front-view standing art.
+E: title key art; episode 0 chapter cover; comic bell/dash; anomalous school/angry; sold-out/crying; sunset walk.
+Separate requested VFX assets not yet generated; F deferred.
+
+Previously blocked, never attempted by this agent: cat01, cat02, cat07; pink01-09, pink12-14; E03boss.

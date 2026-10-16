@@ -1,0 +1,482 @@
+[
+  {
+    "file": "cat_03_cover_reload.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 869989,
+    "partial": 702875,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      37,
+      150,
+      989,
+      1448
+    ]
+  },
+  {
+    "file": "cat_05_firing_forward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1001914,
+    "partial": 570950,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      21,
+      10,
+      994,
+      1482
+    ]
+  },
+  {
+    "file": "cat_06_firing_outward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 989012,
+    "partial": 583852,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      50,
+      17,
+      1013,
+      1495
+    ]
+  },
+  {
+    "file": "cat_09_skill_outward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 999354,
+    "partial": 573510,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      90,
+      44,
+      1019,
+      1492
+    ]
+  },
+  {
+    "file": "cat_10_hit.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 938283,
+    "partial": 634581,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      64,
+      35,
+      987,
+      1441
+    ]
+  },
+  {
+    "file": "cat_12_running_a.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1085618,
+    "partial": 487246,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      82,
+      29,
+      973,
+      1489
+    ]
+  },
+  {
+    "file": "cat_13_running_b.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1043888,
+    "partial": 528976,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      52,
+      1,
+      911,
+      1518
+    ]
+  },
+  {
+    "file": "cat_14_victory.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1032058,
+    "partial": 540806,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      79,
+      6,
+      875,
+      1514
+    ]
+  },
+  {
+    "file": "cat_fx_palm_shockwave_forward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 808374,
+    "partial": 764490,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      20,
+      54,
+      1011,
+      1458
+    ]
+  },
+  {
+    "file": "cat_fx_palm_shockwave_outward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 869181,
+    "partial": 703683,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      12,
+      29,
+      1012,
+      1511
+    ]
+  },
+  {
+    "file": "cat_fx_paw_charge.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 731577,
+    "partial": 841287,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 253,
+    "solid_bbox": [
+      64,
+      48,
+      965,
+      1480
+    ]
+  },
+  {
+    "file": "cat_portrait_fired_up.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 232337,
+    "partial": 1340527,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      1,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "cat_portrait_happy.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 302513,
+    "partial": 1270351,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      0,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "cat_portrait_hurt.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 330909,
+    "partial": 1241955,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      0,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "cat_portrait_startled.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 343435,
+    "partial": 1229429,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      8,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "cat_skill_cutin.png",
+    "width": 2172,
+    "height": 724,
+    "transparent": 557410,
+    "partial": 1014991,
+    "opaque": 127,
+    "min_alpha": 0,
+    "max_alpha": 255,
+    "solid_bbox": [
+      97,
+      0,
+      2149,
+      723
+    ]
+  },
+  {
+    "file": "cat_team_standing.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1048325,
+    "partial": 524539,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      116,
+      14,
+      839,
+      1512
+    ]
+  },
+  {
+    "file": "episode_00_02_anomaly.png",
+    "width": 1672,
+    "height": 941,
+    "transparent": 0,
+    "partial": 0,
+    "opaque": 1573352,
+    "min_alpha": 255,
+    "max_alpha": 255,
+    "solid_bbox": [
+      0,
+      0,
+      1671,
+      940
+    ]
+  },
+  {
+    "file": "episode_00_04_sold_out.png",
+    "width": 1672,
+    "height": 941,
+    "transparent": 0,
+    "partial": 0,
+    "opaque": 1573352,
+    "min_alpha": 255,
+    "max_alpha": 255,
+    "solid_bbox": [
+      0,
+      0,
+      1671,
+      940
+    ]
+  },
+  {
+    "file": "episode_00_05_sunset.png",
+    "width": 1672,
+    "height": 941,
+    "transparent": 0,
+    "partial": 0,
+    "opaque": 1573352,
+    "min_alpha": 255,
+    "max_alpha": 255,
+    "solid_bbox": [
+      0,
+      0,
+      1671,
+      940
+    ]
+  },
+  {
+    "file": "pink_10_hit.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 893683,
+    "partial": 679181,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      11,
+      14,
+      1022,
+      1416
+    ]
+  },
+  {
+    "file": "pink_fx_gatling_flash.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1045460,
+    "partial": 527404,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      28,
+      383,
+      996,
+      1147
+    ]
+  },
+  {
+    "file": "pink_fx_muzzle_flash_forward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1091215,
+    "partial": 481649,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      38,
+      97,
+      995,
+      1324
+    ]
+  },
+  {
+    "file": "pink_fx_muzzle_flash_outward.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 1119609,
+    "partial": 453255,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      33,
+      71,
+      1000,
+      1210
+    ]
+  },
+  {
+    "file": "pink_portrait_fired_up.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 168503,
+    "partial": 1404361,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      38,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "pink_portrait_happy.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 196854,
+    "partial": 1376010,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      40,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "pink_portrait_hurt.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 145136,
+    "partial": 1427728,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      0,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "pink_portrait_startled.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 212748,
+    "partial": 1360116,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      0,
+      58,
+      1023,
+      1535
+    ]
+  },
+  {
+    "file": "pink_skill_cutin.png",
+    "width": 2172,
+    "height": 724,
+    "transparent": 456353,
+    "partial": 1115942,
+    "opaque": 233,
+    "min_alpha": 0,
+    "max_alpha": 255,
+    "solid_bbox": [
+      12,
+      0,
+      2165,
+      723
+    ]
+  },
+  {
+    "file": "pink_team_standing.png",
+    "width": 1024,
+    "height": 1536,
+    "transparent": 897990,
+    "partial": 674874,
+    "opaque": 0,
+    "min_alpha": 0,
+    "max_alpha": 254,
+    "solid_bbox": [
+      146,
+      12,
+      985,
+      1522
+    ]
+  }
+]

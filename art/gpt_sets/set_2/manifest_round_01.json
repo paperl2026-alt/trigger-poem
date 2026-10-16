@@ -1,0 +1,109 @@
+{
+  "round": 1,
+  "tool": "built-in image_gen",
+  "generation_attempts": 5,
+  "generated": [
+    {
+      "name": "pink_10_hit",
+      "file": "D:/etc/auto/output/five_full_sets/set_2/pink_10_hit.png",
+      "status": "generated_with_qa_flags",
+      "dimensions": [
+        1024,
+        1536
+      ],
+      "alpha": {
+        "transparent": 893683,
+        "partial": 679181,
+        "opaque": 0
+      },
+      "qa_flags": [
+        "Gun muzzle appears to touch the right canvas edge; uncropped framing is not fully satisfied.",
+        "True alpha channel is present, but foreground is partially transparent throughout (no fully opaque pixels)."
+      ],
+      "source": "C:/Users/Administrator/.codex/generated_images/01a13f3f-6e0c-7bd3-85eb-6de14cee57ad/exec-a7a45253-a7b6-4723-a3bf-9ac925efcb54.png"
+    }
+  ],
+  "blocked": [
+    {
+      "name": "pink_05_firing_forward",
+      "request_id": "2bcb0dea-4223-4411-bc06-7e66d75cbacf",
+      "status": "moderation_blocked",
+      "category": "sexual",
+      "retry": false
+    },
+    {
+      "name": "pink_03_cover_reload",
+      "request_id": "23824800-f210-4115-915f-75061e3de68d",
+      "status": "moderation_blocked",
+      "category": "sexual",
+      "retry": false
+    },
+    {
+      "name": "pink_13_running_b",
+      "request_id": "848fcf2b-d2c3-423f-b943-efad6a1e2b0d",
+      "status": "moderation_blocked",
+      "category": "sexual",
+      "retry": false
+    },
+    {
+      "name": "pink_14_victory",
+      "request_id": "aa584eb5-6f9d-4a9e-b92c-9b150fc0e9f0",
+      "status": "moderation_blocked",
+      "category": "sexual",
+      "retry": false
+    }
+  ],
+  "previously_blocked": [
+    "cat_02",
+    "cat_07",
+    "pink_01",
+    "pink_02",
+    "pink_04",
+    "pink_06",
+    "pink_07",
+    "pink_08",
+    "pink_09",
+    "pink_12",
+    "E_03_boss"
+  ],
+  "remaining": {
+    "cat_A": [
+      "01_cover_idle",
+      "03_cover_reload",
+      "04_cover_taunt",
+      "05_firing_forward",
+      "06_firing_outward",
+      "08_skill_forward",
+      "09_skill_outward",
+      "10_hit",
+      "11_knocked_down",
+      "12_running_a",
+      "13_running_b",
+      "14_victory"
+    ],
+    "pink_A": [
+      "11_knocked_down"
+    ],
+    "both_B": [
+      "portrait_happy",
+      "portrait_startled",
+      "portrait_fired_up",
+      "portrait_hurt"
+    ],
+    "both_C": [
+      "skill_cutin"
+    ],
+    "both_D": [
+      "team_standing"
+    ],
+    "E": [
+      "title_key_art",
+      "episode_00_cover",
+      "episode_00_01_bell",
+      "episode_00_02_anomaly",
+      "episode_00_04_sold_out",
+      "episode_00_05_sunset"
+    ],
+    "F": "deferred; do not produce"
+  }
+}

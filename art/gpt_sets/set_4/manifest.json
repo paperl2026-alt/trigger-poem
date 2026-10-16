@@ -1,0 +1,502 @@
+{
+  "mode": "built-in image_gen",
+  "references": [
+    "01_style_cat.png",
+    "02_style_pink.png",
+    "03_design_cat.png",
+    "04_design_pink.png"
+  ],
+  "generated_png_count": 33,
+  "unique_asset_count": 27,
+  "selected_variants": {
+    "cat_portrait_happy": "cat_portrait_happy_v2.png",
+    "cat_portrait_startled": "cat_portrait_startled_v2.png",
+    "cat_portrait_fired_up": "cat_portrait_fired_up_v2.png",
+    "cat_portrait_hurt": "cat_portrait_hurt_v2.png",
+    "cat_fx_palm_shockwave_forward": "cat_fx_palm_shockwave_forward_v2.png"
+  },
+  "prior_batch_generated": [
+    "cat_09_skill_outward",
+    "cat_10_hit",
+    "cat_12_running_a",
+    "cat_13_running_b",
+    "cat_14_victory"
+  ],
+  "remaining_batch_results": [
+    {
+      "name": "cat_03_cover_reload",
+      "status": "generated"
+    },
+    {
+      "name": "cat_05_firing_forward",
+      "status": "blocked",
+      "detail": "sexual output moderation, request e9c45b61-32eb-4a56-abd5-59f074e704ae"
+    },
+    {
+      "name": "cat_06_firing_outward",
+      "status": "generated"
+    },
+    {
+      "name": "cat_11_knocked_down",
+      "status": "global_blocked_skip"
+    },
+    {
+      "name": "pink_10_hit",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_10_hit.png"
+    },
+    {
+      "name": "pink_11_knocked_down",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_11_knocked_down.png"
+    },
+    {
+      "name": "cat_portrait_happy",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_happy.png"
+    },
+    {
+      "name": "cat_portrait_startled",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_startled.png"
+    },
+    {
+      "name": "cat_portrait_fired_up",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_fired_up.png"
+    },
+    {
+      "name": "cat_portrait_hurt",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_hurt.png"
+    },
+    {
+      "name": "pink_portrait_happy",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_portrait_happy.png"
+    },
+    {
+      "name": "pink_portrait_startled",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_portrait_startled.png"
+    },
+    {
+      "name": "pink_portrait_fired_up",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_portrait_fired_up.png"
+    },
+    {
+      "name": "pink_portrait_hurt",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_portrait_hurt.png"
+    },
+    {
+      "name": "cat_skill_cutin",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_skill_cutin.png"
+    },
+    {
+      "name": "cat_chapter_standing",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_chapter_standing.png"
+    },
+    {
+      "name": "pink_skill_cutin",
+      "status": "blocked",
+      "detail": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 92ea4de8-3c67-4ee5-a5ac-d48ca9c428f8. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "pink_chapter_standing",
+      "status": "global_blocked_skip"
+    },
+    {
+      "name": "group_title_key_art",
+      "status": "blocked",
+      "detail": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 711480f5-4e8f-4bbe-8d38-e22afad670cf. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "group_episode_0_cover",
+      "status": "global_blocked_skip"
+    },
+    {
+      "name": "group_episode_0_01_bell",
+      "status": "blocked",
+      "detail": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID a9700fd0-2685-4a4b-8226-cbaf28fb5477. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "group_episode_0_02_anomaly",
+      "status": "blocked",
+      "detail": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 33b1f7ce-0faf-4b6d-aa7e-4678cdb4974c. safety_violations=[violence, sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\",\\n        \\\"violence\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "group_episode_0_04_sold_out",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/group_episode_0_04_sold_out.png"
+    },
+    {
+      "name": "group_episode_0_05_sunset",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/group_episode_0_05_sunset.png"
+    },
+    {
+      "name": "cat_fx_paw_charge",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_fx_paw_charge.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_forward",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_fx_palm_shockwave_forward.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_outward",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_fx_palm_shockwave_outward.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_forward",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_fx_muzzle_flash_forward.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_outward",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_fx_muzzle_flash_outward.png"
+    },
+    {
+      "name": "pink_fx_gatling_flash",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/pink_fx_gatling_flash.png"
+    },
+    {
+      "name": "cat_portrait_happy_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_happy_v2.png"
+    },
+    {
+      "name": "cat_portrait_startled_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_startled_v2.png"
+    },
+    {
+      "name": "cat_portrait_fired_up_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_fired_up_v2.png"
+    },
+    {
+      "name": "cat_portrait_hurt_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_portrait_hurt_v2.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_forward_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_fx_palm_shockwave_forward_v2.png"
+    },
+    {
+      "name": "cat_06_firing_outward_v2",
+      "status": "generated",
+      "path": "D:/etc/auto/output/five_full_sets/set_4/cat_06_firing_outward_v2.png"
+    }
+  ],
+  "global_skipped_initial": [
+    "cat_01_cover_idle",
+    "cat_02_cover_peek",
+    "cat_04_cover_taunt",
+    "cat_07_firing_recoil",
+    "cat_08_skill_forward",
+    "pink_01_cover_idle",
+    "pink_02_cover_peek",
+    "pink_03_cover_reload",
+    "pink_04_cover_taunt",
+    "pink_05_firing_forward",
+    "pink_06_firing_outward",
+    "pink_07_firing_recoil",
+    "pink_08_skill_forward",
+    "pink_09_skill_outward",
+    "pink_12_running_a",
+    "pink_13_running_b",
+    "pink_14_victory",
+    "group_episode_0_03_boss"
+  ],
+  "known_issues": [
+    "cat_06_firing_outward and its v2 still appear to use the character's left paw arm despite explicit right-arm requirements.",
+    "cat_09_skill_outward also appears to use the left paw arm; not repeated under parent instruction.",
+    "cat_12_running_a and cat_13_running_b have similar strides; opposite-stride pairing is not reliable.",
+    "cat_03_cover_reload is tall in its canvas; crouched-pose world scale is not reliably maintained.",
+    "Original cat portrait versions extend to waist; use v2 instead. Portrait framing/head scale is not pixel-identical.",
+    "cat_portrait_hurt_v2 and cat_skill_cutin have a partly cropped ear at the top edge.",
+    "Original cat_fx_palm_shockwave_forward includes fur/body-like elements; use v2 instead.",
+    "Effects include generated decorative motifs inherited from references; no such motifs were added to prompts."
+  ],
+  "deferred": [
+    "F limit-break entire second outfit set"
+  ],
+  "pending_actionable_assets": [],
+  "metadata": [
+    {
+      "Name": "cat_03_cover_reload.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 818,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 718
+    },
+    {
+      "Name": "cat_06_firing_outward_v2.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1020,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 516
+    },
+    {
+      "Name": "cat_06_firing_outward.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 955,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 581
+    },
+    {
+      "Name": "cat_09_skill_outward.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1048,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 488
+    },
+    {
+      "Name": "cat_10_hit.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 920,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 616
+    },
+    {
+      "Name": "cat_12_running_a.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1062,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 474
+    },
+    {
+      "Name": "cat_13_running_b.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1050,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 486
+    },
+    {
+      "Name": "cat_14_victory.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1033,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 503
+    },
+    {
+      "Name": "cat_chapter_standing.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 1023,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 513
+    },
+    {
+      "Name": "cat_fx_palm_shockwave_forward_v2.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 738,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 798
+    },
+    {
+      "Name": "cat_fx_palm_shockwave_forward.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 569,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 967
+    },
+    {
+      "Name": "cat_fx_palm_shockwave_outward.png",
+      "Width": 1330,
+      "Height": 1183,
+      "AlphaZeroSamples": 587,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 967
+    },
+    {
+      "Name": "cat_fx_paw_charge.png",
+      "Width": 1468,
+      "Height": 1071,
+      "AlphaZeroSamples": 571,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 993
+    },
+    {
+      "Name": "cat_portrait_fired_up_v2.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 364,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1172
+    },
+    {
+      "Name": "cat_portrait_fired_up.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 289,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1247
+    },
+    {
+      "Name": "cat_portrait_happy_v2.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 508,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1028
+    },
+    {
+      "Name": "cat_portrait_happy.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 356,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1180
+    },
+    {
+      "Name": "cat_portrait_hurt_v2.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 345,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1191
+    },
+    {
+      "Name": "cat_portrait_hurt.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 520,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1016
+    },
+    {
+      "Name": "cat_portrait_startled_v2.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 401,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1135
+    },
+    {
+      "Name": "cat_portrait_startled.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 356,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1180
+    },
+    {
+      "Name": "cat_skill_cutin.png",
+      "Width": 2172,
+      "Height": 724,
+      "AlphaZeroSamples": 721,
+      "AlphaOpaqueSamples": 2,
+      "AlphaPartialSamples": 841
+    },
+    {
+      "Name": "group_episode_0_04_sold_out.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 0,
+      "AlphaOpaqueSamples": 1536,
+      "AlphaPartialSamples": 0
+    },
+    {
+      "Name": "group_episode_0_05_sunset.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 0,
+      "AlphaOpaqueSamples": 1536,
+      "AlphaPartialSamples": 0
+    },
+    {
+      "Name": "pink_10_hit.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 786,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 750
+    },
+    {
+      "Name": "pink_11_knocked_down.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 790,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 746
+    },
+    {
+      "Name": "pink_fx_gatling_flash.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 754,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 782
+    },
+    {
+      "Name": "pink_fx_muzzle_flash_forward.png",
+      "Width": 1536,
+      "Height": 1024,
+      "AlphaZeroSamples": 772,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 764
+    },
+    {
+      "Name": "pink_fx_muzzle_flash_outward.png",
+      "Width": 1247,
+      "Height": 1261,
+      "AlphaZeroSamples": 765,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 795
+    },
+    {
+      "Name": "pink_portrait_fired_up.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 345,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1191
+    },
+    {
+      "Name": "pink_portrait_happy.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 262,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1274
+    },
+    {
+      "Name": "pink_portrait_hurt.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 261,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1275
+    },
+    {
+      "Name": "pink_portrait_startled.png",
+      "Width": 1024,
+      "Height": 1536,
+      "AlphaZeroSamples": 216,
+      "AlphaOpaqueSamples": 0,
+      "AlphaPartialSamples": 1320
+    }
+  ]
+}

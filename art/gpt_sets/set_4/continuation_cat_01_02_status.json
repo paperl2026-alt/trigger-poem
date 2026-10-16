@@ -1,0 +1,39 @@
+{
+  "tool": "built-in image_gen",
+  "generated": [
+    "cat_01_cover_idle.png",
+    "cat_02_cover_peek.png"
+  ],
+  "prompts": [
+    "cat_01_cover_idle.prompt.txt",
+    "cat_02_cover_peek.prompt.txt"
+  ],
+  "refused": [],
+  "remainingFromCompletion": [
+    "cat_04_cover_taunt.png",
+    "cat_05_firing_forward.png",
+    "cat_07_firing_recoil.png",
+    "cat_08_skill_forward.png",
+    "cat_11_knocked_down.png",
+    "pink_01_cover_idle.png",
+    "pink_02_cover_peek.png",
+    "pink_03_cover_reload.png",
+    "pink_04_cover_taunt.png",
+    "pink_05_firing_forward.png",
+    "pink_06_firing_outward.png",
+    "pink_07_firing_recoil.png",
+    "pink_08_skill_forward.png",
+    "pink_09_skill_outward.png",
+    "pink_12_running_a.png",
+    "pink_13_running_b.png",
+    "pink_14_victory.png",
+    "pink_skill_cutin.png",
+    "pink_team_standing.png",
+    "title_key_art.png",
+    "episode_00_cover.png",
+    "episode_00_01_bell.png",
+    "episode_00_02_anomaly.png",
+    "episode_00_03_boss.png"
+  ],
+  "deferred": "F"
+}

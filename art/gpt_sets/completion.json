@@ -1,0 +1,3358 @@
+{
+  "requestedIndependentSets": 5,
+  "expectedBaseCount": 235,
+  "generatedBaseCount": 181.0,
+  "totalImages": 228.0,
+  "deferred": "F limit-break forms",
+  "tool": "built-in image_gen",
+  "sets": [
+    {
+      "set": "set_1",
+      "expectedBaseCount": 47,
+      "generatedBaseCount": 37,
+      "missingBase": [
+        "pink_01_cover_idle.png",
+        "pink_02_cover_peek.png",
+        "pink_03_cover_reload.png",
+        "pink_04_cover_taunt.png",
+        "pink_05_firing_forward.png",
+        "pink_06_firing_outward.png",
+        "pink_08_skill_forward.png",
+        "pink_12_running_a.png",
+        "pink_skill_cutin.png",
+        "episode_00_cover.png"
+      ],
+      "otherImages": [
+        "cat_fx_charge.png",
+        "cat_fx_palm_shockwave_forward.png",
+        "cat_fx_palm_shockwave_outward.png",
+        "cover_school_bookcase.png",
+        "pink_fx_gatling_flash.png",
+        "pink_fx_muzzle_flash_forward.png",
+        "pink_fx_muzzle_flash_outward.png"
+      ],
+      "images": [
+        {
+          "name": "cat_01_cover_idle.png",
+          "canonicalAssetName": "cat_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_02_cover_peek.png",
+          "canonicalAssetName": "cat_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_03_cover_reload.png",
+          "canonicalAssetName": "cat_03_cover_reload.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_04_cover_taunt.png",
+          "canonicalAssetName": "cat_04_cover_taunt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_05_firing_forward.png",
+          "canonicalAssetName": "cat_05_firing_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward.png",
+          "canonicalAssetName": "cat_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_07_firing_recoil.png",
+          "canonicalAssetName": "cat_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_08_skill_forward.png",
+          "canonicalAssetName": "cat_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_09_skill_outward.png",
+          "canonicalAssetName": "cat_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_10_hit.png",
+          "canonicalAssetName": "cat_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_11_knocked_down.png",
+          "canonicalAssetName": "cat_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_12_running_a.png",
+          "canonicalAssetName": "cat_12_running_a.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_13_running_b.png",
+          "canonicalAssetName": "cat_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_14_victory.png",
+          "canonicalAssetName": "cat_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_charge.png",
+          "canonicalAssetName": "cat_fx_charge.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_outward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up.png",
+          "canonicalAssetName": "cat_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            241,
+            250
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy.png",
+          "canonicalAssetName": "cat_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            250,
+            247
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt.png",
+          "canonicalAssetName": "cat_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            245,
+            248
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled.png",
+          "canonicalAssetName": "cat_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            251,
+            249
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_skill_cutin.png",
+          "canonicalAssetName": "cat_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_team_standing.png",
+          "canonicalAssetName": "cat_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cover_school_bookcase.png",
+          "canonicalAssetName": "cover_school_bookcase.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_01_bell.png",
+          "canonicalAssetName": "episode_00_01_bell.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_02_anomaly.png",
+          "canonicalAssetName": "episode_00_02_anomaly.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_03_boss.png",
+          "canonicalAssetName": "episode_00_03_boss.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_04_sold_out.png",
+          "canonicalAssetName": "episode_00_04_sold_out.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_05_sunset.png",
+          "canonicalAssetName": "episode_00_05_sunset.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_07_firing_recoil.png",
+          "canonicalAssetName": "pink_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_09_skill_outward.png",
+          "canonicalAssetName": "pink_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_10_hit.png",
+          "canonicalAssetName": "pink_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_11_knocked_down.png",
+          "canonicalAssetName": "pink_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_13_running_b.png",
+          "canonicalAssetName": "pink_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_14_victory.png",
+          "canonicalAssetName": "pink_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_gatling_flash.png",
+          "canonicalAssetName": "pink_fx_gatling_flash.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_forward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_outward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_fired_up.png",
+          "canonicalAssetName": "pink_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy.png",
+          "canonicalAssetName": "pink_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            243,
+            179
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_hurt.png",
+          "canonicalAssetName": "pink_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled.png",
+          "canonicalAssetName": "pink_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            237,
+            246
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_team_standing.png",
+          "canonicalAssetName": "pink_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "title_key_art.png",
+          "canonicalAssetName": "title_key_art.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        }
+      ]
+    },
+    {
+      "set": "set_2",
+      "expectedBaseCount": 47,
+      "generatedBaseCount": 34,
+      "missingBase": [
+        "pink_02_cover_peek.png",
+        "pink_03_cover_reload.png",
+        "pink_04_cover_taunt.png",
+        "pink_05_firing_forward.png",
+        "pink_06_firing_outward.png",
+        "pink_07_firing_recoil.png",
+        "pink_08_skill_forward.png",
+        "pink_09_skill_outward.png",
+        "pink_11_knocked_down.png",
+        "pink_12_running_a.png",
+        "pink_13_running_b.png",
+        "pink_14_victory.png",
+        "episode_00_03_boss.png"
+      ],
+      "otherImages": [
+        "cat_fx_palm_shockwave_forward.png",
+        "cat_fx_palm_shockwave_outward.png",
+        "cat_fx_paw_charge.png",
+        "cover_school_bookcase.png",
+        "pink_fx_gatling_flash.png",
+        "pink_fx_muzzle_flash_forward.png",
+        "pink_fx_muzzle_flash_outward.png"
+      ],
+      "images": [
+        {
+          "name": "cat_01_cover_idle.png",
+          "canonicalAssetName": "cat_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_02_cover_peek.png",
+          "canonicalAssetName": "cat_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_03_cover_reload.png",
+          "canonicalAssetName": "cat_03_cover_reload.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_04_cover_taunt.png",
+          "canonicalAssetName": "cat_04_cover_taunt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_05_firing_forward.png",
+          "canonicalAssetName": "cat_05_firing_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward.png",
+          "canonicalAssetName": "cat_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_07_firing_recoil.png",
+          "canonicalAssetName": "cat_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_08_skill_forward.png",
+          "canonicalAssetName": "cat_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_09_skill_outward.png",
+          "canonicalAssetName": "cat_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_10_hit.png",
+          "canonicalAssetName": "cat_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_11_knocked_down.png",
+          "canonicalAssetName": "cat_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_12_running_a.png",
+          "canonicalAssetName": "cat_12_running_a.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_13_running_b.png",
+          "canonicalAssetName": "cat_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_14_victory.png",
+          "canonicalAssetName": "cat_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_outward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_paw_charge.png",
+          "canonicalAssetName": "cat_fx_paw_charge.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up.png",
+          "canonicalAssetName": "cat_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            236,
+            251
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy.png",
+          "canonicalAssetName": "cat_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            236,
+            250
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt.png",
+          "canonicalAssetName": "cat_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            246,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled.png",
+          "canonicalAssetName": "cat_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            2,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_skill_cutin.png",
+          "canonicalAssetName": "cat_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_team_standing.png",
+          "canonicalAssetName": "cat_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cover_school_bookcase.png",
+          "canonicalAssetName": "cover_school_bookcase.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_01_bell.png",
+          "canonicalAssetName": "episode_00_01_bell.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_02_anomaly.png",
+          "canonicalAssetName": "episode_00_02_anomaly.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_04_sold_out.png",
+          "canonicalAssetName": "episode_00_04_sold_out.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_05_sunset.png",
+          "canonicalAssetName": "episode_00_05_sunset.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_cover.png",
+          "canonicalAssetName": "episode_00_cover.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_01_cover_idle.png",
+          "canonicalAssetName": "pink_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_10_hit.png",
+          "canonicalAssetName": "pink_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_gatling_flash.png",
+          "canonicalAssetName": "pink_fx_gatling_flash.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_forward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_outward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_fired_up.png",
+          "canonicalAssetName": "pink_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            232,
+            233
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy.png",
+          "canonicalAssetName": "pink_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            2,
+            241
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_hurt.png",
+          "canonicalAssetName": "pink_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            248,
+            240
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled.png",
+          "canonicalAssetName": "pink_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            184,
+            249
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_skill_cutin.png",
+          "canonicalAssetName": "pink_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_team_standing.png",
+          "canonicalAssetName": "pink_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "title_key_art.png",
+          "canonicalAssetName": "title_key_art.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        }
+      ]
+    },
+    {
+      "set": "set_3",
+      "expectedBaseCount": 47,
+      "generatedBaseCount": 37,
+      "missingBase": [
+        "pink_01_cover_idle.png",
+        "pink_03_cover_reload.png",
+        "pink_04_cover_taunt.png",
+        "pink_05_firing_forward.png",
+        "pink_06_firing_outward.png",
+        "pink_07_firing_recoil.png",
+        "pink_08_skill_forward.png",
+        "pink_09_skill_outward.png",
+        "pink_12_running_a.png",
+        "pink_team_standing.png"
+      ],
+      "otherImages": [
+        "cat_fx_palm_shockwave_forward.png",
+        "cat_fx_palm_shockwave_outward.png",
+        "cat_fx_paw_charge.png",
+        "cover_school_bookcase.png",
+        "pink_fx_gatling_flash.png",
+        "pink_fx_muzzle_flash_forward.png",
+        "pink_fx_muzzle_flash_outward.png"
+      ],
+      "images": [
+        {
+          "name": "cat_01_cover_idle.png",
+          "canonicalAssetName": "cat_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_02_cover_peek.png",
+          "canonicalAssetName": "cat_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_03_cover_reload.png",
+          "canonicalAssetName": "cat_03_cover_reload.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_04_cover_taunt.png",
+          "canonicalAssetName": "cat_04_cover_taunt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_05_firing_forward.png",
+          "canonicalAssetName": "cat_05_firing_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward.png",
+          "canonicalAssetName": "cat_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_07_firing_recoil.png",
+          "canonicalAssetName": "cat_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_08_skill_forward.png",
+          "canonicalAssetName": "cat_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_09_skill_outward.png",
+          "canonicalAssetName": "cat_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_10_hit.png",
+          "canonicalAssetName": "cat_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_11_knocked_down.png",
+          "canonicalAssetName": "cat_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_12_running_a.png",
+          "canonicalAssetName": "cat_12_running_a.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_13_running_b.png",
+          "canonicalAssetName": "cat_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_14_victory.png",
+          "canonicalAssetName": "cat_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_outward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_paw_charge.png",
+          "canonicalAssetName": "cat_fx_paw_charge.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up.png",
+          "canonicalAssetName": "cat_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            232
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy.png",
+          "canonicalAssetName": "cat_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            247
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt.png",
+          "canonicalAssetName": "cat_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            246
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled.png",
+          "canonicalAssetName": "cat_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_skill_cutin.png",
+          "canonicalAssetName": "cat_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_team_standing.png",
+          "canonicalAssetName": "cat_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cover_school_bookcase.png",
+          "canonicalAssetName": "cover_school_bookcase.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_01_bell.png",
+          "canonicalAssetName": "episode_00_01_bell.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_02_anomaly.png",
+          "canonicalAssetName": "episode_00_02_anomaly.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_03_boss.png",
+          "canonicalAssetName": "episode_00_03_boss.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_04_sold_out.png",
+          "canonicalAssetName": "episode_00_04_sold_out.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_05_sunset.png",
+          "canonicalAssetName": "episode_00_05_sunset.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_cover.png",
+          "canonicalAssetName": "episode_00_cover.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_02_cover_peek.png",
+          "canonicalAssetName": "pink_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_10_hit.png",
+          "canonicalAssetName": "pink_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_11_knocked_down.png",
+          "canonicalAssetName": "pink_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_13_running_b.png",
+          "canonicalAssetName": "pink_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_14_victory.png",
+          "canonicalAssetName": "pink_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_gatling_flash.png",
+          "canonicalAssetName": "pink_fx_gatling_flash.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_forward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_outward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_fired_up.png",
+          "canonicalAssetName": "pink_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            248,
+            227
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy.png",
+          "canonicalAssetName": "pink_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            202,
+            249
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_hurt.png",
+          "canonicalAssetName": "pink_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            249,
+            26
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled.png",
+          "canonicalAssetName": "pink_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_skill_cutin.png",
+          "canonicalAssetName": "pink_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "title_key_art.png",
+          "canonicalAssetName": "title_key_art.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        }
+      ]
+    },
+    {
+      "set": "set_4",
+      "expectedBaseCount": 47,
+      "generatedBaseCount": 40,
+      "missingBase": [
+        "pink_01_cover_idle.png",
+        "pink_02_cover_peek.png",
+        "pink_03_cover_reload.png",
+        "pink_05_firing_forward.png",
+        "pink_07_firing_recoil.png",
+        "pink_08_skill_forward.png",
+        "pink_12_running_a.png"
+      ],
+      "otherImages": [
+        "cat_06_firing_outward_v2.png",
+        "cat_fx_palm_shockwave_forward_v2.png",
+        "cat_fx_palm_shockwave_forward.png",
+        "cat_fx_palm_shockwave_outward.png",
+        "cat_fx_paw_charge.png",
+        "cat_portrait_fired_up_v2.png",
+        "cat_portrait_happy_v2.png",
+        "cat_portrait_hurt_v2.png",
+        "cat_portrait_startled_v2.png",
+        "cover_school_bookcase.png",
+        "pink_fx_gatling_flash.png",
+        "pink_fx_muzzle_flash_forward.png",
+        "pink_fx_muzzle_flash_outward.png"
+      ],
+      "images": [
+        {
+          "name": "cat_01_cover_idle.png",
+          "canonicalAssetName": "cat_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_02_cover_peek.png",
+          "canonicalAssetName": "cat_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_03_cover_reload.png",
+          "canonicalAssetName": "cat_03_cover_reload.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_04_cover_taunt.png",
+          "canonicalAssetName": "cat_04_cover_taunt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_05_firing_forward.png",
+          "canonicalAssetName": "cat_05_firing_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward_v2.png",
+          "canonicalAssetName": "cat_06_firing_outward_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward.png",
+          "canonicalAssetName": "cat_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_07_firing_recoil.png",
+          "canonicalAssetName": "cat_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_08_skill_forward.png",
+          "canonicalAssetName": "cat_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_09_skill_outward.png",
+          "canonicalAssetName": "cat_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_10_hit.png",
+          "canonicalAssetName": "cat_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_11_knocked_down.png",
+          "canonicalAssetName": "cat_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_12_running_a.png",
+          "canonicalAssetName": "cat_12_running_a.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_13_running_b.png",
+          "canonicalAssetName": "cat_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_14_victory.png",
+          "canonicalAssetName": "cat_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_chapter_standing.png",
+          "canonicalAssetName": "cat_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward_v2.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward_v2.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_outward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_outward.png",
+          "width": 1330,
+          "height": 1183,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            0,
+            1
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_paw_charge.png",
+          "canonicalAssetName": "cat_fx_paw_charge.png",
+          "width": 1468,
+          "height": 1071,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up_v2.png",
+          "canonicalAssetName": "cat_portrait_fired_up_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up.png",
+          "canonicalAssetName": "cat_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            245,
+            249
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy_v2.png",
+          "canonicalAssetName": "cat_portrait_happy_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy.png",
+          "canonicalAssetName": "cat_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            250
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt_v2.png",
+          "canonicalAssetName": "cat_portrait_hurt_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            244,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt.png",
+          "canonicalAssetName": "cat_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled_v2.png",
+          "canonicalAssetName": "cat_portrait_startled_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled.png",
+          "canonicalAssetName": "cat_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            241,
+            252
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_skill_cutin.png",
+          "canonicalAssetName": "cat_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cover_school_bookcase.png",
+          "canonicalAssetName": "cover_school_bookcase.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_01_bell.png",
+          "canonicalAssetName": "episode_00_01_bell.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_02_anomaly.png",
+          "canonicalAssetName": "episode_00_02_anomaly.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_03_boss.png",
+          "canonicalAssetName": "episode_00_03_boss.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_cover.png",
+          "canonicalAssetName": "episode_00_cover.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "group_episode_0_04_sold_out.png",
+          "canonicalAssetName": "episode_00_04_sold_out.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "group_episode_0_05_sunset.png",
+          "canonicalAssetName": "episode_00_05_sunset.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_04_cover_taunt.png",
+          "canonicalAssetName": "pink_04_cover_taunt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_06_firing_outward.png",
+          "canonicalAssetName": "pink_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_09_skill_outward.png",
+          "canonicalAssetName": "pink_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_10_hit.png",
+          "canonicalAssetName": "pink_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_11_knocked_down.png",
+          "canonicalAssetName": "pink_11_knocked_down.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_13_running_b.png",
+          "canonicalAssetName": "pink_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_14_victory.png",
+          "canonicalAssetName": "pink_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            2,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_gatling_flash.png",
+          "canonicalAssetName": "pink_fx_gatling_flash.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            1,
+            1
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_forward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_forward.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_outward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_outward.png",
+          "width": 1247,
+          "height": 1261,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_fired_up.png",
+          "canonicalAssetName": "pink_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy.png",
+          "canonicalAssetName": "pink_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_hurt.png",
+          "canonicalAssetName": "pink_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled.png",
+          "canonicalAssetName": "pink_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            1
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_skill_cutin.png",
+          "canonicalAssetName": "pink_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_team_standing.png",
+          "canonicalAssetName": "pink_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "title_key_art.png",
+          "canonicalAssetName": "title_key_art.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        }
+      ]
+    },
+    {
+      "set": "set_5",
+      "expectedBaseCount": 47,
+      "generatedBaseCount": 33,
+      "missingBase": [
+        "cat_04_cover_taunt.png",
+        "cat_11_knocked_down.png",
+        "pink_01_cover_idle.png",
+        "pink_02_cover_peek.png",
+        "pink_03_cover_reload.png",
+        "pink_04_cover_taunt.png",
+        "pink_05_firing_forward.png",
+        "pink_06_firing_outward.png",
+        "pink_11_knocked_down.png",
+        "pink_12_running_a.png",
+        "pink_13_running_b.png",
+        "pink_14_victory.png",
+        "pink_team_standing.png",
+        "episode_00_01_bell.png"
+      ],
+      "otherImages": [
+        "cat_fx_charge.png",
+        "cat_fx_palm_shockwave_forward.png",
+        "cat_fx_palm_shockwave_outward.png",
+        "cat_portrait_fired_up_v2.png",
+        "cat_portrait_happy_v2.png",
+        "cat_portrait_hurt_v2.png",
+        "cat_portrait_startled_v2.png",
+        "cover_school_bookcase.png",
+        "pink_fx_gatling_flash.png",
+        "pink_fx_muzzle_flash_forward.png",
+        "pink_fx_muzzle_flash_outward.png",
+        "pink_portrait_happy_v2.png",
+        "pink_portrait_startled_v2.png"
+      ],
+      "images": [
+        {
+          "name": "cat_01_cover_idle.png",
+          "canonicalAssetName": "cat_01_cover_idle.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_02_cover_peek.png",
+          "canonicalAssetName": "cat_02_cover_peek.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_03_cover_reload.png",
+          "canonicalAssetName": "cat_03_cover_reload.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_05_firing_forward.png",
+          "canonicalAssetName": "cat_05_firing_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_06_firing_outward.png",
+          "canonicalAssetName": "cat_06_firing_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_07_firing_recoil.png",
+          "canonicalAssetName": "cat_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_08_skill_forward.png",
+          "canonicalAssetName": "cat_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_09_skill_outward.png",
+          "canonicalAssetName": "cat_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_10_hit.png",
+          "canonicalAssetName": "cat_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_12_running_a.png",
+          "canonicalAssetName": "cat_12_running_a.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_13_running_b.png",
+          "canonicalAssetName": "cat_13_running_b.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_14_victory.png",
+          "canonicalAssetName": "cat_14_victory.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_charge.png",
+          "canonicalAssetName": "cat_fx_charge.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_forward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_fx_palm_shockwave_outward.png",
+          "canonicalAssetName": "cat_fx_palm_shockwave_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up_v2.png",
+          "canonicalAssetName": "cat_portrait_fired_up_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_fired_up.png",
+          "canonicalAssetName": "cat_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy_v2.png",
+          "canonicalAssetName": "cat_portrait_happy_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            1,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_happy.png",
+          "canonicalAssetName": "cat_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            252,
+            250
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt_v2.png",
+          "canonicalAssetName": "cat_portrait_hurt_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_hurt.png",
+          "canonicalAssetName": "cat_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            248
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled_v2.png",
+          "canonicalAssetName": "cat_portrait_startled_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_portrait_startled.png",
+          "canonicalAssetName": "cat_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_skill_cutin.png",
+          "canonicalAssetName": "cat_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cat_team_standing.png",
+          "canonicalAssetName": "cat_team_standing.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "cover_school_bookcase.png",
+          "canonicalAssetName": "cover_school_bookcase.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_02_anomaly.png",
+          "canonicalAssetName": "episode_00_02_anomaly.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_03_boss.png",
+          "canonicalAssetName": "episode_00_03_boss.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_04_sold_out.png",
+          "canonicalAssetName": "episode_00_04_sold_out.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_05_sunset.png",
+          "canonicalAssetName": "episode_00_05_sunset.png",
+          "width": 1536,
+          "height": 1024,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "episode_00_cover.png",
+          "canonicalAssetName": "episode_00_cover.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_07_firing_recoil.png",
+          "canonicalAssetName": "pink_07_firing_recoil.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_08_skill_forward.png",
+          "canonicalAssetName": "pink_08_skill_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_09_skill_outward.png",
+          "canonicalAssetName": "pink_09_skill_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_10_hit.png",
+          "canonicalAssetName": "pink_10_hit.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_gatling_flash.png",
+          "canonicalAssetName": "pink_fx_gatling_flash.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_forward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_forward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_fx_muzzle_flash_outward.png",
+          "canonicalAssetName": "pink_fx_muzzle_flash_outward.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_fired_up.png",
+          "canonicalAssetName": "pink_portrait_fired_up.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            236,
+            58
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy_v2.png",
+          "canonicalAssetName": "pink_portrait_happy_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_happy.png",
+          "canonicalAssetName": "pink_portrait_happy.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_hurt.png",
+          "canonicalAssetName": "pink_portrait_hurt.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            1,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled_v2.png",
+          "canonicalAssetName": "pink_portrait_startled_v2.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_portrait_startled.png",
+          "canonicalAssetName": "pink_portrait_startled.png",
+          "width": 1024,
+          "height": 1536,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "pink_skill_cutin.png",
+          "canonicalAssetName": "pink_skill_cutin.png",
+          "width": 2172,
+          "height": 724,
+          "pixelFormat": "Format32bppArgb",
+          "cornerAlpha": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "status": "generated"
+        },
+        {
+          "name": "title_key_art.png",
+          "canonicalAssetName": "title_key_art.png",
+          "width": 1672,
+          "height": 941,
+          "pixelFormat": "Format24bppRgb",
+          "cornerAlpha": [
+            255,
+            255,
+            255,
+            255
+          ],
+          "status": "generated"
+        }
+      ]
+    }
+  ]
+}

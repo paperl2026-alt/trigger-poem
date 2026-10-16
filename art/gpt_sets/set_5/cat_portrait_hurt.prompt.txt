@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Generate a completely new image from scratch. Attached images are references only, not edit targets. Image 1 is the required illustration style; image 2 is the character design. Keep the reference illustration style and character design without aesthetic redesign. Do not use reference poses or perspective as the requested direction.
+Cat heroine from the reference: white hair and cat ears, red glasses, original clothing and accessories, white tail; her cat paw is always her RIGHT arm. No gun. The tail comes out from below the skirt, not through a hole in it.
+Single HUD portrait, one expression: hurt. Chest up, facing the viewer. Same size and framing for all four HUD expressions, 1024x1536 portrait transparent canvas. Crop at the chest, do not show waist, hips or full body. No effects, additional figures, text, grid, panels, backdrop or watermark.

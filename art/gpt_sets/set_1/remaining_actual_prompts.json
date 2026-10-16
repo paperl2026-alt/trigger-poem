@@ -1,0 +1,267 @@
+[
+  {
+    "file": "cat_07_firing_recoil.png",
+    "character": "cat",
+    "kind": "battle",
+    "pose": "Firing recoil: rear view, aiming into the picture slightly right, jolted by the kick of her right-arm paw attack. She never uses a gun. No impact, glow, shockwave, or effects in this character layer.",
+    "prompt": "Use case: stylized-concept\nAsset: cat_07_firing_recoil.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nFiring recoil: rear view, aiming into the picture slightly right, jolted by the kick of her right-arm paw attack. She never uses a gun. No impact, glow, shockwave, or effects in this character layer.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ]
+  },
+  {
+    "file": "cat_11_knocked_down.png",
+    "character": "cat",
+    "kind": "battle",
+    "pose": "Knocked down by a blow, full body including both shoes and tail, from the same rear gameplay direction. No attacker, impact, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: cat_11_knocked_down.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nKnocked down by a blow, full body including both shoes and tail, from the same rear gameplay direction. No attacker, impact, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ]
+  },
+  {
+    "file": "pink_01_cover_idle.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Cover idle: crouched or kneeling, back to camera, facing into the picture slightly right. Her weapon stays with her. Character only: the cover is a separate asset and is NOT drawn here.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_01_cover_idle.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nCover idle: crouched or kneeling, back to camera, facing into the picture slightly right. Her weapon stays with her. Character only: the cover is a separate asset and is NOT drawn here.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_02_cover_peek.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Cover peek: rising slightly from her crouch to look forward into the picture slightly right, back to camera. Her weapon stays with her. No side-wall leaning pose. Character only: the cover is NOT drawn here.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_02_cover_peek.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nCover peek: rising slightly from her crouch to look forward into the picture slightly right, back to camera. Her weapon stays with her. No side-wall leaning pose. Character only: the cover is NOT drawn here.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_03_cover_reload.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Cover reload: crouched or kneeling, back to camera and facing into the picture slightly right, reloading her black and pink bunny-decorated firearm. Character only, no cover.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_03_cover_reload.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nCover reload: crouched or kneeling, back to camera and facing into the picture slightly right, reloading her black and pink bunny-decorated firearm. Character only, no cover.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_04_cover_taunt.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Cover taunt: crouched or kneeling, turning back toward the camera and making a peace sign. Her weapon stays with her. Character only, no cover or floating heart effects.",
+    "faceException": true,
+    "prompt": "Use case: stylized-concept\nAsset: pink_04_cover_taunt.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nCover taunt: crouched or kneeling, turning back toward the camera and making a peace sign. Her weapon stays with her. Character only, no cover or floating heart effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_05_firing_forward.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Firing forward: rear view, aiming her black and pink bunny-decorated firearm into the picture slightly right. No muzzle flash, bullets, casings, smoke, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_05_firing_forward.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nFiring forward: rear view, aiming her black and pink bunny-decorated firearm into the picture slightly right. No muzzle flash, bullets, casings, smoke, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_06_firing_outward.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Firing outward: rear view, aiming her black and pink bunny-decorated firearm toward the upper left. No muzzle flash, bullets, casings, smoke, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_06_firing_outward.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nFiring outward: rear view, aiming her black and pink bunny-decorated firearm toward the upper left. No muzzle flash, bullets, casings, smoke, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_07_firing_recoil.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Firing recoil: like firing forward in rear view, firearm aiming into the picture slightly right, jolted by the kick. No muzzle flash, bullets, casings, smoke, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_07_firing_recoil.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nFiring recoil: like firing forward in rear view, firearm aiming into the picture slightly right, jolted by the kick. No muzzle flash, bullets, casings, smoke, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_08_skill_forward.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Skill forward: rear view, HIP-FIRED GATLING, aiming into the picture slightly right. The gatling is held at her hip, not at her shoulder. No muzzle flash, bullets, casings, smoke, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_08_skill_forward.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nSkill forward: rear view, HIP-FIRED GATLING, aiming into the picture slightly right. The gatling is held at her hip, not at her shoulder. No muzzle flash, bullets, casings, smoke, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_09_skill_outward.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Skill outward: rear view, HIP-FIRED GATLING, aiming toward the upper left. The gatling is held at her hip, not at her shoulder. No muzzle flash, bullets, casings, smoke, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_09_skill_outward.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nSkill outward: rear view, HIP-FIRED GATLING, aiming toward the upper left. The gatling is held at her hip, not at her shoulder. No muzzle flash, bullets, casings, smoke, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_10_hit.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Hit: knocked back by a blow, full body with her weapon, same rear gameplay direction. No attacker, impact marks, blood, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_10_hit.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nHit: knocked back by a blow, full body with her weapon, same rear gameplay direction. No attacker, impact marks, blood, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_11_knocked_down.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Knocked down by a blow, full body including both shoes, twin tails and weapon, same rear gameplay direction. No attacker, blood, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_11_knocked_down.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nKnocked down by a blow, full body including both shoes, twin tails and weapon, same rear gameplay direction. No attacker, blood, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_12_running_a.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Running A: seen from behind, running into the picture slightly right, carrying her weapon. One stride, one complete character.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_12_running_a.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nRunning A: seen from behind, running into the picture slightly right, carrying her weapon. One stride, one complete character.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_13_running_b.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Running B: seen from behind, running into the picture slightly right, carrying her weapon. The other stride from running A. One complete character.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_13_running_b.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nRunning B: seen from behind, running into the picture slightly right, carrying her weapon. The other stride from running A. One complete character.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nFor the LEFT-side player in a rear-view cover-shooter: character in the lower-left foreground, looking away from camera into the picture. Rear forward direction is slightly right; outward is upper left as specified in the pose. Do not turn to look at the viewer.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_14_victory.png",
+    "character": "pink",
+    "kind": "battle",
+    "pose": "Victory: front view, full body, cheerful victorious pose with her weapon. No effects.",
+    "faceException": true,
+    "prompt": "Use case: stylized-concept\nAsset: pink_14_victory.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nVictory: front view, full body, cheerful victorious pose with her weapon. No effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_skill_cutin.png",
+    "character": "pink",
+    "kind": "cutin",
+    "pose": "Skill cut-in: one horizontal 3:1 banner, waist up, facing the camera. No scene, text, graphic border, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_skill_cutin.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nSkill cut-in: one horizontal 3:1 banner, waist up, facing the camera. No scene, text, graphic border, or effects.\nGenuine transparent background, one character, horizontal 3:1 canvas, waist up facing camera. No multiple views or contact sheet.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "pink_team_standing.png",
+    "character": "pink",
+    "kind": "standing",
+    "pose": "Chapter select / team screen: front-view full-body standing art with her weapon. Preserve the supplied style and character design. No scene, text, or effects.",
+    "prompt": "Use case: stylized-concept\nAsset: pink_team_standing.png\nInput images: 1 drawing style, 2 character design. Use these original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nChapter select / team screen: front-view full-body standing art with her weapon. Preserve the supplied style and character design. No scene, text, or effects.\nOne complete character, one pose per PNG, genuine transparent background. Canvas 1024x1536 portrait. Full hair, twin tails / cat tail, legs, both shoes, all limbs and weapon uncropped. Consistent character scale: when standing, head to soles occupies approximately 90% of the canvas height; same sole baseline. Crouched, kneeling or knocked-down poses keep this scale, naturally shorter with more empty space above; do not enlarge them to fill the canvas.\nCharacter layer only: NO cover, wall, cabinet, crates, scenery, floor, other characters, shadows on a floor, text or effects. Do not lean against a high side wall. Do not put a hand on a knee or leg.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "title_key_art.png",
+    "character": "both",
+    "kind": "title",
+    "pose": "Title key art: the two heroines together, 16:9 landscape. The cat heroine uses her right-arm paw, never a gun; the pink heroine carries her black and pink bunny-decorated firearm. No lettering and no overlaid effects.",
+    "prompt": "Use case: stylized-concept\nAsset: title_key_art.png\nInput images: 1 cat drawing style, 2 pink drawing style, 3 cat character design, 4 pink character design. Use original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nTitle key art: the two heroines together, 16:9 landscape. The cat heroine uses her right-arm paw, never a gun; the pink heroine carries her black and pink bunny-decorated firearm. No lettering and no overlaid effects.\nBoth heroines appear in one coherent illustration, not a sprite sheet or multi-panel collage. This is a narrative scene, scenery is allowed. No effects overlaid onto characters.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "episode_00_cover.png",
+    "character": "both",
+    "kind": "chapter",
+    "pose": "Episode 0 chapter cover: both heroines together in the anomalous school setting, 2:3 portrait. The cat uses her right-arm paw, never a gun. No lettering and no overlaid effects.",
+    "prompt": "Use case: stylized-concept\nAsset: episode_00_cover.png\nInput images: 1 cat drawing style, 2 pink drawing style, 3 cat character design, 4 pink character design. Use original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nEpisode 0 chapter cover: both heroines together in the anomalous school setting, 2:3 portrait. The cat uses her right-arm paw, never a gun. No lettering and no overlaid effects.\nBoth heroines appear in one coherent illustration, not a sprite sheet or multi-panel collage. This is a narrative scene, scenery is allowed. No effects overlaid onto characters.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "episode_00_01_bell.png",
+    "character": "both",
+    "kind": "comic",
+    "pose": "Episode 0 comic panel 1: the bell rings; the two heroines each dash for the limited food / merch. One landscape image, one moment, no comic grid, no lettering and no overlaid effects.",
+    "prompt": "Use case: stylized-concept\nAsset: episode_00_01_bell.png\nInput images: 1 cat drawing style, 2 pink drawing style, 3 cat character design, 4 pink character design. Use original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nEpisode 0 comic panel 1: the bell rings; the two heroines each dash for the limited food / merch. One landscape image, one moment, no comic grid, no lettering and no overlaid effects.\nBoth heroines appear in one coherent illustration, not a sprite sheet or multi-panel collage. This is a narrative scene, scenery is allowed. No effects overlaid onto characters.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "episode_00_02_anomaly.png",
+    "character": "both",
+    "kind": "comic",
+    "pose": "Episode 0 comic panel 2: the school suddenly turns anomalous; both heroines get angry. One landscape image, one moment, no comic grid, no lettering and no overlaid effects.",
+    "prompt": "Use case: stylized-concept\nAsset: episode_00_02_anomaly.png\nInput images: 1 cat drawing style, 2 pink drawing style, 3 cat character design, 4 pink character design. Use original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nEpisode 0 comic panel 2: the school suddenly turns anomalous; both heroines get angry. One landscape image, one moment, no comic grid, no lettering and no overlaid effects.\nBoth heroines appear in one coherent illustration, not a sprite sheet or multi-panel collage. This is a narrative scene, scenery is allowed. No effects overlaid onto characters.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  },
+  {
+    "file": "episode_00_03_boss.png",
+    "character": "both",
+    "kind": "comic",
+    "pose": "Episode 0 comic panel 3: the two heroines face the boss in the schoolyard. The cat uses her right-arm paw, never a gun; the pink heroine carries her black and pink bunny-decorated firearm. One landscape image, no comic grid, no lettering and no overlaid effects.",
+    "prompt": "Use case: stylized-concept\nAsset: episode_00_03_boss.png\nInput images: 1 cat drawing style, 2 pink drawing style, 3 cat character design, 4 pink character design. Use original references only for these roles, not their poses, framing or perspective.\nAdult characters in a nonsexual game-art context. Keep the original character designs and outfits without increasing sexualization or focusing on intimate body parts. Match the supplied drawing style, do not replace it with another gacha game's rendering.\nEpisode 0 comic panel 3: the two heroines face the boss in the schoolyard. The cat uses her right-arm paw, never a gun; the pink heroine carries her black and pink bunny-decorated firearm. One landscape image, no comic grid, no lettering and no overlaid effects.\nBoth heroines appear in one coherent illustration, not a sprite sheet or multi-panel collage. This is a narrative scene, scenery is allowed. No effects overlaid onto characters.\nThe cat heroine's paw is always HER anatomical RIGHT arm; the left arm is a normal human arm. She NEVER carries or uses a gun. Tail emerges UNDER the skirt hem, never through a hole in the skirt or waist.\n",
+    "paths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ]
+  }
+]

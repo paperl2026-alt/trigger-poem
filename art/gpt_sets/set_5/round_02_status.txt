@@ -1,0 +1,8 @@
+Built-in image_gen used. Both requested outputs saved without filtering or variant retries.
+cat_01_cover_idle.png: generated and saved; actual prompt in cat_01_cover_idle.prompt.txt.
+cat_02_cover_peek.png: generated and saved; actual prompt in cat_02_cover_peek.prompt.txt.
+Both requests used original_references/01_style_cat.png and original_references/03_design_cat.png only.
+05_gameplay_context.png was viewed for direction but was not passed to image_gen.
+No pre-existing PNG at either destination; no historical replacement needed.
+Remaining missingBase files after these two outputs: 26.
+F deferred as requested.

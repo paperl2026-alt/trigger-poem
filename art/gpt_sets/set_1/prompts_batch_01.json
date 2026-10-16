@@ -1,0 +1,102 @@
+{
+  "mode": "built-in image_gen",
+  "references": [
+    "C:/Users/Administrator/AppData/Local/Temp/codex-clipboard-39be6dfd-6ae0-44e3-a2d5-c1c9cf553b6c.png",
+    "C:/Users/Administrator/AppData/Local/Temp/codex-clipboard-38302873-9e81-447c-8f4d-7724c6a8a437.png",
+    "C:/Users/Administrator/AppData/Local/Temp/codex-clipboard-430e7c92-c15b-49c8-8c9a-8fc8b58f5d02.png"
+  ],
+  "jobs": [
+    {
+      "id": "cat01",
+      "name": "cat_01_cover_idle.png",
+      "pose": "A01 cover_idle. Crouched/kneeling in a compact ready position intended for use behind cover. BACK TO VIEWER, her body and head facing into the scene slightly to picture RIGHT, focused away from viewer. She does not turn back and does not look at camera. Both arms held ready close to her torso, right cat paw visible as feasible. No visible cover object so the full body remains unobscured. No hand touching leg.",
+      "prompt": "Use case: stylized-concept. Game character sprite, exactly ONE full-body character and ONE pose, transparent background. References 1 and 2 define the exact finished drawing style: crisp expressive anime linework and shaded painted details. Reference 3 defines this cat-girl's identity, outfit and anatomy. Do not use any reference image's poses or perspective. Preserve white bob haircut, small braids, white cat ears, red glasses, red ribbons and gold bell ornament, cream kimono-style sailor top with mint lining and navy collar, navy pleated skirt with cream trim, red cord and tassels, black fitted shorts beneath, white ankle socks, navy and red platform sandals. Her RIGHT ARM is the white furry clawed cat paw with red markings, her LEFT arm is human. No gun. White cat tail emerges from BELOW the skirt hem, never through a hole in the skirt. Canvas 1024x1536 portrait. Maintain fixed character scale: a standing version would fill about 90 percent of height, shoe soles baseline near y=1459; crouching/kneeling remains naturally shorter at exactly that same scale, never enlarged to fill the canvas. Entire hair, ears, tail, arms, legs and shoes fully inside canvas. Sprite is for LEFT side of screen. Do not add visual effects, aura, sparks, shockwaves, energy, trails, text, watermarks, backgrounds or additional figures. Effects are separate assets, not layered onto character.\nA01 cover_idle. Crouched/kneeling in a compact ready position intended for use behind cover. BACK TO VIEWER, her body and head facing into the scene slightly to picture RIGHT, focused away from viewer. She does not turn back and does not look at camera. Both arms held ready close to her torso, right cat paw visible as feasible. No visible cover object so the full body remains unobscured. No hand touching leg.",
+      "status": "blocked",
+      "output": null,
+      "qa": "blocked: safety system sexual, output stage; request ID 23fab954-8908-4471-8a51-f1656d536d7a"
+    },
+    {
+      "id": "cat03",
+      "name": "cat_03_cover_reload.png",
+      "pose": "A03 cover_reload. Kneeling low, BACK TO VIEWER, body and head facing into the scene slightly to picture RIGHT, gaze away from camera. She shakes out and readies her RIGHT furry cat-paw arm, lifting that paw near her shoulder with a loose shaking-out gesture, like recharging her physical paw. Human left arm steadies her posture without touching legs. Show only the physical gesture, no energy effects, no gun, no cover object.",
+      "prompt": "Use case: stylized-concept. Game character sprite, exactly ONE full-body character and ONE pose, transparent background. References 1 and 2 define the exact finished drawing style: crisp expressive anime linework and shaded painted details. Reference 3 defines this cat-girl's identity, outfit and anatomy. Do not use any reference image's poses or perspective. Preserve white bob haircut, small braids, white cat ears, red glasses, red ribbons and gold bell ornament, cream kimono-style sailor top with mint lining and navy collar, navy pleated skirt with cream trim, red cord and tassels, black fitted shorts beneath, white ankle socks, navy and red platform sandals. Her RIGHT ARM is the white furry clawed cat paw with red markings, her LEFT arm is human. No gun. White cat tail emerges from BELOW the skirt hem, never through a hole in the skirt. Canvas 1024x1536 portrait. Maintain fixed character scale: a standing version would fill about 90 percent of height, shoe soles baseline near y=1459; crouching/kneeling remains naturally shorter at exactly that same scale, never enlarged to fill the canvas. Entire hair, ears, tail, arms, legs and shoes fully inside canvas. Sprite is for LEFT side of screen. Do not add visual effects, aura, sparks, shockwaves, energy, trails, text, watermarks, backgrounds or additional figures. Effects are separate assets, not layered onto character.\nA03 cover_reload. Kneeling low, BACK TO VIEWER, body and head facing into the scene slightly to picture RIGHT, gaze away from camera. She shakes out and readies her RIGHT furry cat-paw arm, lifting that paw near her shoulder with a loose shaking-out gesture, like recharging her physical paw. Human left arm steadies her posture without touching legs. Show only the physical gesture, no energy effects, no gun, no cover object.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_03_cover_reload.png",
+      "qa": "1024x1536 PNG with alpha, full body rear view; crouch enlarged to canvas, inconsistent with requested fixed standing scale"
+    },
+    {
+      "id": "cat05",
+      "name": "cat_05_firing_forward.png",
+      "pose": "A05 firing_forward. Standing battle action, REAR VIEW, aiming into the picture slightly toward picture RIGHT. She plants her feet and extends her RIGHT furry clawed cat-paw arm forward into the scene in a directed attack gesture, left human arm balances naturally. Her back and back of head face viewer; eyes focused along the attack direction, not at camera. No gun, no projectile or effect.",
+      "prompt": "Use case: stylized-concept. Game character sprite, exactly ONE full-body character and ONE pose, transparent background. References 1 and 2 define the exact finished drawing style: crisp expressive anime linework and shaded painted details. Reference 3 defines this cat-girl's identity, outfit and anatomy. Do not use any reference image's poses or perspective. Preserve white bob haircut, small braids, white cat ears, red glasses, red ribbons and gold bell ornament, cream kimono-style sailor top with mint lining and navy collar, navy pleated skirt with cream trim, red cord and tassels, black fitted shorts beneath, white ankle socks, navy and red platform sandals. Her RIGHT ARM is the white furry clawed cat paw with red markings, her LEFT arm is human. No gun. White cat tail emerges from BELOW the skirt hem, never through a hole in the skirt. Canvas 1024x1536 portrait. Maintain fixed character scale: a standing version would fill about 90 percent of height, shoe soles baseline near y=1459; crouching/kneeling remains naturally shorter at exactly that same scale, never enlarged to fill the canvas. Entire hair, ears, tail, arms, legs and shoes fully inside canvas. Sprite is for LEFT side of screen. Do not add visual effects, aura, sparks, shockwaves, energy, trails, text, watermarks, backgrounds or additional figures. Effects are separate assets, not layered onto character.\nA05 firing_forward. Standing battle action, REAR VIEW, aiming into the picture slightly toward picture RIGHT. She plants her feet and extends her RIGHT furry clawed cat-paw arm forward into the scene in a directed attack gesture, left human arm balances naturally. Her back and back of head face viewer; eyes focused along the attack direction, not at camera. No gun, no projectile or effect.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_05_firing_forward.png",
+      "qa": "1024x1536 PNG with alpha, full body rear view; generated scale slightly exceeds requested 90 percent"
+    },
+    {
+      "id": "cat06",
+      "name": "cat_06_firing_outward.png",
+      "pose": "A06 firing_outward. Standing battle action, REAR VIEW, attack direction explicitly UPPER LEFT of picture. Her body turns only as required to extend her RIGHT furry cat-paw arm to UPPER LEFT. Her back remains toward viewer and her head follows the attack direction, no glance back toward camera. Left human arm balances naturally. No gun, projectile or effect.",
+      "prompt": "Use case: stylized-concept. Game character sprite, exactly ONE full-body character and ONE pose, transparent background. References 1 and 2 define the exact finished drawing style: crisp expressive anime linework and shaded painted details. Reference 3 defines this cat-girl's identity, outfit and anatomy. Do not use any reference image's poses or perspective. Preserve white bob haircut, small braids, white cat ears, red glasses, red ribbons and gold bell ornament, cream kimono-style sailor top with mint lining and navy collar, navy pleated skirt with cream trim, red cord and tassels, black fitted shorts beneath, white ankle socks, navy and red platform sandals. Her RIGHT ARM is the white furry clawed cat paw with red markings, her LEFT arm is human. No gun. White cat tail emerges from BELOW the skirt hem, never through a hole in the skirt. Canvas 1024x1536 portrait. Maintain fixed character scale: a standing version would fill about 90 percent of height, shoe soles baseline near y=1459; crouching/kneeling remains naturally shorter at exactly that same scale, never enlarged to fill the canvas. Entire hair, ears, tail, arms, legs and shoes fully inside canvas. Sprite is for LEFT side of screen. Do not add visual effects, aura, sparks, shockwaves, energy, trails, text, watermarks, backgrounds or additional figures. Effects are separate assets, not layered onto character.\nA06 firing_outward. Standing battle action, REAR VIEW, attack direction explicitly UPPER LEFT of picture. Her body turns only as required to extend her RIGHT furry cat-paw arm to UPPER LEFT. Her back remains toward viewer and her head follows the attack direction, no glance back toward camera. Left human arm balances naturally. No gun, projectile or effect.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_06_firing_outward.png",
+      "qa": "1024x1536 PNG with alpha, full body rear view aiming upper left; paw appears on LEFT arm, violates RIGHT-arm requirement"
+    },
+    {
+      "id": "cat08",
+      "name": "cat_08_skill_forward.png",
+      "pose": "A08 skill_forward. Powerful standing paw/palm shockwave RELEASE POSE, rear view, attacking into scene slightly toward picture RIGHT. Her RIGHT furry clawed paw is thrust forward with palm open, body braced behind that arm, left human arm providing natural balance. Face and gaze follow the attack, not camera. Render the character release pose ONLY. The shockwave is a separate effect asset, so NO shockwave, glow or visual effect in this sprite. No gun.",
+      "prompt": "Use case: stylized-concept. Game character sprite, exactly ONE full-body character and ONE pose, transparent background. References 1 and 2 define the exact finished drawing style: crisp expressive anime linework and shaded painted details. Reference 3 defines this cat-girl's identity, outfit and anatomy. Do not use any reference image's poses or perspective. Preserve white bob haircut, small braids, white cat ears, red glasses, red ribbons and gold bell ornament, cream kimono-style sailor top with mint lining and navy collar, navy pleated skirt with cream trim, red cord and tassels, black fitted shorts beneath, white ankle socks, navy and red platform sandals. Her RIGHT ARM is the white furry clawed cat paw with red markings, her LEFT arm is human. No gun. White cat tail emerges from BELOW the skirt hem, never through a hole in the skirt. Canvas 1024x1536 portrait. Maintain fixed character scale: a standing version would fill about 90 percent of height, shoe soles baseline near y=1459; crouching/kneeling remains naturally shorter at exactly that same scale, never enlarged to fill the canvas. Entire hair, ears, tail, arms, legs and shoes fully inside canvas. Sprite is for LEFT side of screen. Do not add visual effects, aura, sparks, shockwaves, energy, trails, text, watermarks, backgrounds or additional figures. Effects are separate assets, not layered onto character.\nA08 skill_forward. Powerful standing paw/palm shockwave RELEASE POSE, rear view, attacking into scene slightly toward picture RIGHT. Her RIGHT furry clawed paw is thrust forward with palm open, body braced behind that arm, left human arm providing natural balance. Face and gaze follow the attack, not camera. Render the character release pose ONLY. The shockwave is a separate effect asset, so NO shockwave, glow or visual effect in this sprite. No gun.",
+      "status": "generated",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_08_skill_forward.png",
+      "qa": "1024x1536 PNG with alpha, full body rear view; generated scale slightly exceeds requested 90 percent"
+    }
+  ],
+  "blockedBeforeBatch": [
+    "cat02",
+    "cat07",
+    "pink01",
+    "pink02",
+    "pink04",
+    "pink06",
+    "pink07",
+    "pink08",
+    "pink09",
+    "pink12",
+    "episode00boss"
+  ],
+  "remaining": [
+    "cat04",
+    "cat09",
+    "cat10",
+    "cat11",
+    "cat12",
+    "cat13",
+    "cat14",
+    "cat_portrait_happy",
+    "cat_portrait_startled",
+    "cat_portrait_fired_up",
+    "cat_portrait_hurt",
+    "cat_skill_cutin",
+    "cat_team_standing",
+    "pink03",
+    "pink05",
+    "pink10",
+    "pink11",
+    "pink13",
+    "pink14",
+    "pink_portrait_happy",
+    "pink_portrait_startled",
+    "pink_portrait_fired_up",
+    "pink_portrait_hurt",
+    "pink_skill_cutin",
+    "pink_team_standing",
+    "title_key_art",
+    "episode_00_cover",
+    "episode_00_01_bell",
+    "episode_00_02_anomaly",
+    "episode_00_04_sold_out",
+    "episode_00_05_sunset"
+  ],
+  "notes": "No safety-blocked request was retried or paraphrased. Only original references were used. Standalone effects remain to generate separately."
+}

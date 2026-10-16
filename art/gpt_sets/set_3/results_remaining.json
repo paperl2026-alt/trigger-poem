@@ -1,0 +1,209 @@
+[
+  {
+    "name": "cat_03_cover_reload.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-b0cc40d1-e2e3-4c6b-ba20-63d9651c99b9.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_03_cover_reload.png",
+    "output": ""
+  },
+  {
+    "name": "cat_05_firing_forward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-c3b47e36-5cbd-4eae-bb46-26d6d6e9ac61.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_05_firing_forward.png",
+    "output": ""
+  },
+  {
+    "name": "cat_06_firing_outward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-ebf78d19-df98-40fe-bcee-fa25aca7293b.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_06_firing_outward.png",
+    "output": ""
+  },
+  {
+    "name": "cat_09_skill_outward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-7f62e37d-4857-443c-a519-e26e7d54c739.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_09_skill_outward.png",
+    "output": ""
+  },
+  {
+    "name": "cat_11_knocked_down.png",
+    "status": "failed",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 028dead4-23b3-424f-8317-d311dce247bb.\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"other\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "name": "pink_10_hit.png",
+    "status": "failed",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID b6cf5331-5fb2-48a5-a412-356c7ecebd9a. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "name": "pink_11_knocked_down.png",
+    "status": "failed",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 6b0fa94e-60c9-4186-9ed6-d0cb1c4036a9. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "name": "cat_portrait_happy.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-5455eb94-6cf3-4d26-84bd-5a2c3007993e.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_portrait_happy.png",
+    "output": ""
+  },
+  {
+    "name": "cat_portrait_startled.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-7bc58609-4db7-4bce-bab7-5cc6f8da2dcd.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_portrait_startled.png",
+    "output": ""
+  },
+  {
+    "name": "cat_portrait_fired_up.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-7fe99818-b3a3-463f-9c2a-659cd86e9472.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_portrait_fired_up.png",
+    "output": ""
+  },
+  {
+    "name": "cat_portrait_hurt.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-deddeb05-b8cd-4375-bb66-b8262d3a31e7.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_portrait_hurt.png",
+    "output": ""
+  },
+  {
+    "name": "cat_skill_cutin.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-e22a245a-2d80-4370-af8a-17eba2e41807.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_skill_cutin.png",
+    "output": ""
+  },
+  {
+    "name": "cat_team_standing.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-a56f4f47-b91e-4803-a6f2-23117cc303e2.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_team_standing.png",
+    "output": ""
+  },
+  {
+    "name": "pink_portrait_happy.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-64ae4b2f-d57d-4158-9db0-6cb86931ba7b.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_portrait_happy.png",
+    "output": ""
+  },
+  {
+    "name": "pink_portrait_startled.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-a78d2cba-f89b-47bf-892d-fc8d95d22f50.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_portrait_startled.png",
+    "output": ""
+  },
+  {
+    "name": "pink_portrait_fired_up.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-c6467291-9ef7-4e29-9512-b651001e8979.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_portrait_fired_up.png",
+    "output": ""
+  },
+  {
+    "name": "pink_portrait_hurt.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-c018334d-3b53-4ae5-af47-01f2c59b56a1.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_portrait_hurt.png",
+    "output": ""
+  },
+  {
+    "name": "pink_skill_cutin.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-c90ed030-25bd-48eb-be70-9e1ba7fbcf85.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_skill_cutin.png",
+    "output": ""
+  },
+  {
+    "name": "pink_team_standing.png",
+    "status": "failed",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 2747d16f-a4d5-43b9-992a-23b41901de52. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "name": "title_key_art.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-ec3461ce-e5fd-4e08-bf61-06e64a43a695.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/title_key_art.png",
+    "output": ""
+  },
+  {
+    "name": "episode_00_cover.png",
+    "status": "failed",
+    "message": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID fd77c004-6e60-427f-ab35-d104d9506342. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+  },
+  {
+    "name": "episode_00_01_bell.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-bda916e2-efb4-4910-a28d-afba7f6a30c6.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/episode_00_01_bell.png",
+    "output": ""
+  },
+  {
+    "name": "episode_00_02_anomaly.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-ba084d37-2ed2-457d-9121-48f96d964fca.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/episode_00_02_anomaly.png",
+    "output": ""
+  },
+  {
+    "name": "episode_00_04_sold_out.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-b69955e9-504c-468a-b1d8-107ed2f5a177.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/episode_00_04_sold_out.png",
+    "output": ""
+  },
+  {
+    "name": "episode_00_05_sunset.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-ba44e0b4-ae37-42ee-afe6-3b2214ce5d27.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/episode_00_05_sunset.png",
+    "output": ""
+  },
+  {
+    "name": "cat_fx_paw_charge.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-b7fee51a-fc30-41dc-9253-ca3430b117e3.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_fx_paw_charge.png",
+    "output": ""
+  },
+  {
+    "name": "cat_fx_palm_shockwave_forward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-20721c5b-77d1-4e41-9bc6-3b13711a35be.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_fx_palm_shockwave_forward.png",
+    "output": ""
+  },
+  {
+    "name": "cat_fx_palm_shockwave_outward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-eb159cda-ca52-4304-881f-850c26f48827.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/cat_fx_palm_shockwave_outward.png",
+    "output": ""
+  },
+  {
+    "name": "pink_fx_muzzle_flash_forward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-621f9c0b-4b07-4b53-8f3c-402fe85f9776.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_fx_muzzle_flash_forward.png",
+    "output": ""
+  },
+  {
+    "name": "pink_fx_muzzle_flash_outward.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-ed14dd49-8e71-4156-8b43-22ed11a180c0.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_fx_muzzle_flash_outward.png",
+    "output": ""
+  },
+  {
+    "name": "pink_fx_gatling_flash.png",
+    "status": "completed",
+    "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f40-0809-7341-b624-bdb513741886\\exec-adfbab6b-52c6-4c35-97f1-0405b0fdb73a.png",
+    "destination": "D:/etc/auto/output/five_full_sets/set_3/pink_fx_gatling_flash.png",
+    "output": ""
+  }
+]

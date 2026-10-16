@@ -1,0 +1,62 @@
+图1、2是正确的画风。图3、4是人设。你负责出游戏资产，不准是图1、2、3、4这样的一个画布复数资产。涉及到的特效单独出资产，不准叠加在已有的资产上。图1、2、3、4的透视不得作为参考透视方向和要求。
+
+Heroine asset list (both girls need all of it)
+
+Shared requirements:
+One pose per image (no grids of four), transparent background.
+Same canvas every time, e.g. 1024×1536 portrait.
+Same scale every time: standing, head to sole fills about 90% of the canvas height, and the soles sit on the same baseline. Crouched and kneeling poses keep the same scale (they're naturally shorter); don't enlarge them to fill the canvas.
+Full body every time: hair, twin tails / cat tail, legs, shoes and weapon all uncropped.
+Direction: draw everything for the left side of the screen. Rear views aim toward the right of the picture; the outward pose aims toward the upper left. I'll mirror the pink girl onto the right side.
+The cat girl's paw is always her right arm.
+
+A. Battle poses (on screen the whole time)
+1 Cover idle: crouched / kneeling behind cover, back to the camera
+2 Cover peek: rising slightly to look forward
+3 Cover reload (cat girl: shaking out / charging the paw)
+4 Cover taunt: turning back toward the camera, heart or peace sign
+5 Firing, forward: rear view, aiming into the picture, slightly right
+6 Firing, outward: rear view, aiming toward the upper left
+7 Firing recoil: like #5, jolted by the kick
+8 Skill, forward (pink: hip-fired gatling; cat: paw / palm shockwave)
+9 Skill, outward
+10 Hit: knocked back by a blow
+11 Knocked down
+12 Running A: seen from behind, running into the picture
+13 Running B: the other stride
+14 Victory: front view, full body
+
+B. Portraits (HUD)
+Four expressions: happy, startled, fired-up (skill), hurt.
+Chest up, facing the viewer, same size and framing for all four.
+
+C. Skill cut-in
+Horizontal 3:1 banner, waist up, facing the camera.
+
+D. Chapter select / team screen
+Front-view full-body standing art (the best-looking one).
+
+E. Group art (both girls together)
+Title key art: 16:9 landscape.
+Episode 0 chapter cover: 2:3 portrait.
+Episode 0 comic panels, 5 landscape images:
+The bell rings; the two of them each dash for the limited food / merch.
+The school suddenly turns anomalous; both get angry.
+Facing the boss in the schoolyard.
+Sold out, crying.
+Walking home at sunset.
+
+F. Limit-break form (at max mastery)
+A full second set of A, B and C in the new outfit. Can come later.
+
+Name files like pink_05_firing_forward.png / cat_01_cover_idle.png and I'll know where each one goes.
+
+用户补充：
+猫爪娘不用枪。
+尾巴在裙子下，不是裙子开洞漏出尾巴。
+别自作聪明，别替我优化，别搞什么高级审美。
+背面战斗动作不要一直看camera。
+五个agent给我出五倍资产，不是五个人瓜分一份，不等我逐张看。
+
+单人角色资产不能与掩体叠在同一张图里；角色、掩体和特效必须分开。
+游戏站位和入画方向看图5，不是人物身旁的一堵高墙。

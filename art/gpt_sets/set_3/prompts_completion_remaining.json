@@ -1,0 +1,216 @@
+[
+  {
+    "name": "cat_04_cover_taunt.png",
+    "kind": "cat",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The cat girl's transformed feline paw is her anatomical RIGHT arm, while the left hand is human. No gun. The white tail appears below the complete skirt hem, never through a skirt hole. A04 Cover taunt: crouched or kneeling low, body rear view directed into the picture slightly right, turning her head back toward the camera and making a peace sign with her human hand.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "cat_07_firing_recoil.png",
+    "kind": "cat",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The cat girl's transformed feline paw is her anatomical RIGHT arm, while the left hand is human. No gun. The white tail appears below the complete skirt hem, never through a skirt hole. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A07 Firing recoil: like forward firing, right cat paw aimed into the picture slightly right, body jolted by recoil. No shockwave or other effect.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "cat_08_skill_forward.png",
+    "kind": "cat",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The cat girl's transformed feline paw is her anatomical RIGHT arm, while the left hand is human. No gun. The white tail appears below the complete skirt hem, never through a skirt hole. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A08 Skill forward: right paw/palm shockwave attack gesture aimed into the picture slightly right, without the shockwave or any effects; effects are separate.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "cat_11_knocked_down.png",
+    "kind": "cat",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The cat girl's transformed feline paw is her anatomical RIGHT arm, while the left hand is human. No gun. The white tail appears below the complete skirt hem, never through a skirt hole. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A11 Knocked down: the character has been knocked down. Keep the same standing character scale, naturally shorter on the canvas.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_01_cover_idle.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A01 Cover idle: crouched or kneeling low, back to viewer. Only the character, no physical cover.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_02_cover_peek.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A02 Cover peek: rising slightly from a low crouch or kneel to look forward into the picture. Only the character, no cover object.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_03_cover_reload.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A03 Cover reload: crouched or kneeling low and reloading her gun. Only the character and gun, no cover object.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_04_cover_taunt.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. A04 Cover taunt: crouched or kneeling low, body rear view into the picture slightly right, turning back toward the camera and making a peace sign. Keep her gun present and entirely uncropped.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_05_firing_forward.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A05 Firing forward: rear view aiming the gun into the picture, slightly right. No muzzle flash or visual effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_06_firing_outward.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left role, rear view, aiming toward the UPPER LEFT of the picture. Head faces the action, not at the camera. A06 Firing outward: aiming her gun toward the upper left. No muzzle flash or visual effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_07_firing_recoil.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A07 Firing recoil: like firing forward, aiming the gun into the picture slightly right, jolted by the kick. No muzzle flash or visual effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_08_skill_forward.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A08 Skill forward: hip-fired gatling, directed into the picture slightly right. Preserve the reference weapon design. No muzzle flash or visual effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_09_skill_outward.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left role, rear view, aiming toward the UPPER LEFT of the picture. Head faces the action, not at the camera. A09 Skill outward: hip-fired gatling, directed toward the upper left. Preserve reference weapon design. No muzzle flash or visual effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_10_hit.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A10 Hit: knocked back by a blow. No damage effects or other effects.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_11_knocked_down.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A11 Knocked down: the character has been knocked down. Same character scale, naturally shorter on canvas.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_12_running_a.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A12 Running A: seen from behind, running into the picture, one running stride.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_13_running_b.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. Game direction: screen-left foreground role, back toward viewer, facing the action into the picture and slightly toward picture RIGHT. Head faces the action, not looking at the camera or back at the viewer. A13 Running B: seen from behind, running into the picture, the opposite running stride to Running A.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_14_victory.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. A14 Victory: front view, full body, victory pose facing the viewer.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "pink_team_standing.png",
+    "kind": "pink",
+    "prompt": "Use case: stylized-concept. Generate a NEW single game character asset from original references only. Input image 1 is the drawing style reference only; image 2 is the character design reference only. Preserve that character, exact outfit, accessories, hair, footwear and weapon design. Do not copy the reference poses or perspective. One character, one pose, no grid or multiple assets. Transparent PNG background, 1024x1536 portrait. Full body, all hair, tail or twin tails, limbs, shoes and weapon entirely uncropped. Same scale across all assets: standing head-to-sole fills about 90 percent of canvas height with soles on the same baseline; crouched, kneeling and down poses use this same character scale, remain naturally shorter, never enlarged to fill the canvas. Character-only PNG: NO cover object, wall, box, cabinet, scenery, background or visual effects. The implied cover is low and in front of the character, not a side wall. Do not lean sideways around a tall wall. Adult, nonsexual game battle artwork, no increased sexualization over original references, no breast, buttock or underwear focus, no costume redesign. The pink heroine has the same pink-and-black gun from the original style reference. D Chapter select/team screen: front-view full-body standing art, facing viewer.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": true
+  },
+  {
+    "name": "episode_00_cover.png",
+    "kind": "group",
+    "prompt": "Use case: illustration-story. Generate a NEW image from the four original reference images only. E Episode 0 chapter cover. 2:3 portrait. Both original adult heroines together. Use image1 for cat drawing style, image2 for pink drawing style, image3 for cat design, image4 for pink design. Preserve both original character designs and outfits without redesign; cat uses no gun, cat paw is her own RIGHT arm, tail below complete skirt hem, no skirt hole. Do not copy input poses or perspectives. One chapter cover image, not a sheet or grid. No overlaid visual effects; any effects are separate assets. Nonsexual game chapter artwork, no increased sexualization, no focus on breasts, buttocks or underwear. No text.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false
+  },
+  {
+    "name": "episode_00_03_boss.png",
+    "kind": "group",
+    "prompt": "Use case: illustration-story. Generate a NEW image from the four original reference images only. E Episode 0 comic panel 3. One landscape image of both original adult heroines facing the boss in the schoolyard. Use image1 for cat drawing style, image2 for pink drawing style, image3 for cat design, image4 for pink design. Preserve both original character designs, outfits, accessories and pink gun design without redesign. Cat uses no gun, cat paw is her own RIGHT arm, tail below complete skirt hem with no skirt hole. Do not copy input poses or perspectives. One landscape comic panel, not a grid. No overlaid visual effects; effects are separate assets. Nonsexual game narrative artwork, no increased sexualization and no focus on breasts, buttocks or underwear. No text.",
+    "referencePaths": [
+      "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+      "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+      "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+    ],
+    "transparent": false
+  }
+]

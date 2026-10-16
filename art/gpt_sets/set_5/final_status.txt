@@ -1,0 +1,48 @@
+Set 5 final inventory
+Directory: D:/etc/auto/output/five_full_sets/set_5/
+Generation mode: built-in image_gen; original user references only.
+31 PNG files total: 25 unique requested assets + 6 completed from-scratch portrait v2 files. No original PNG was overwritten.
+All 23 subsequently assigned items were attempted exactly once: 22 generated, 1 safety-blocked.
+The 6 completed v2 files are retained. No further v2, edits or generations were started after stop instruction. The last v2 exec cell had already completed before the stop instruction was processed; no running exec remains.
+
+Generated unique requested assets (25)
+Cat A: 03, 05, 06, 09, 10, 12, 13, 14.
+Cat B: portrait_happy, portrait_startled, portrait_fired_up, portrait_hurt.
+Cat C/D: skill_cutin, team_standing.
+Pink B: portrait_happy, portrait_startled, portrait_fired_up, portrait_hurt.
+E: episode_00_05_sunset.
+VFX: cat_fx_charge, cat_fx_palm_shockwave_forward, cat_fx_palm_shockwave_outward, pink_fx_muzzle_flash_forward, pink_fx_muzzle_flash_outward, pink_fx_gatling_flash.
+
+Completed additional v2 files (6)
+cat_portrait_happy_v2.png
+cat_portrait_startled_v2.png
+cat_portrait_fired_up_v2.png
+cat_portrait_hurt_v2.png
+pink_portrait_happy_v2.png
+pink_portrait_startled_v2.png
+
+Missing / skipped
+Cat A: 01, 02, 04, 07, 08, 11.
+Pink A: all 01-14; pink_skill_cutin; pink_team_standing.
+E: title_key_art, episode_00_cover, episode_00_01_bell, episode_00_02_anomaly, episode_00_03_boss, episode_00_04_sold_out.
+These are global safety-blocked items; none were retried after blocking. Existing cat_05 is retained despite later global refusal on that item elsewhere.
+F limit-break set deferred as authorized.
+
+New local safety block
+episode_00_04_sold_out: output-stage moderation_blocked, sexual, request ID b1e4ad7f-def2-4ee4-b3d2-ac98ca3dc1b8. Not retried.
+Earlier local blocks: cat_04_cover_taunt and cat_08_skill_forward, recorded in round_01_status.txt. Not retried.
+
+Known output problems, retained without editing
+cat_03_cover_reload: crouched figure enlarged nearly to canvas height rather than standing-scale crouch.
+cat_06_firing_outward and cat_09_skill_outward: paw appears on anatomical left arm rather than right. Cat09 also turns its face partly toward viewer.
+cat_12_running_a and cat_13_running_b: both show a similar left-leg-up stride, not a clear alternating pair.
+Initial 8 portraits: crop extends below chest into lower torso / belt region. v2 was generated from original references only for 6 portraits; these generally stop around the chest, but crop consistency and white-outline styling differ. Pink fired_up and hurt have only initial versions.
+episode_00_05_sunset: cat heroine has two paw arms, contrary to right-arm-only design.
+cat_skill_cutin: correct 3:1 ratio, 2172x724; ear tip touches/crosses top crop.
+VFX are separate transparent assets with no people or weapons; forward flashes/shockwave are mostly sideward and their forward-depth direction is not strongly established. Pink outward flash includes heart-like sparks despite no additional patterns being requested.
+
+File checks
+All character / portrait / VFX PNGs are 1024x1536 and contain alpha. Top-left sample alpha is 0 except cat_fx_palm_shockwave_forward, cat_portrait_happy_v2, cat_portrait_fired_up_v2 where it is 1.
+cat_skill_cutin.png is 2172x724 with alpha and top-left alpha 0.
+episode_00_05_sunset.png is 1536x1024 RGB landscape with scene background.
+Every executed image prompt is saved as matching .prompt.txt. Two prepared but NOT EXECUTED prompts remain: pink_portrait_fired_up_v2.prompt.txt and pink_portrait_hurt_v2.prompt.txt. Their PNG files do not exist.

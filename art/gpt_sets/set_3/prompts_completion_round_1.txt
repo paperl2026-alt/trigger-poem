@@ -1,0 +1,29 @@
+Built-in image_gen. Original references only: 01_style_cat.png and 03_design_cat.png.
+
+cat_01_cover_idle.png
+Use case: stylized-concept
+Asset type: single transparent game character asset, one pose only.
+Generate a new image from the two original reference images. Image 1 (01_style_cat.png) is the art style reference only. Image 2 (03_design_cat.png) is the character design reference only. Neither reference supplies the required pose or perspective. Match the original character, face, hair, cat ears, red glasses, clothing and accessories without changing the costume design.
+Subject: the adult cat heroine. Her cat paw is her own right arm. She uses no gun.
+Canvas: 1024 x 1536 portrait, genuinely transparent PNG background.
+Scale: a standing version's head to sole would occupy about 90% of canvas height, with soles on the shared baseline. Keep that same scale for this crouched or kneeling pose; do not enlarge it to fill the canvas.
+Full body, with all hair, cat tail, legs, shoes and right paw uncropped.
+The tail comes from below the complete skirt hem; no hole or split in the skirt for the tail.
+Draw for the left side of the screen. Rear view facing into the picture and slightly right, not looking at the camera.
+No visual effects on this asset; effects are separate assets. One character and one pose, no grid or extra asset.
+Nonsexual adult game battle artwork. Do not increase the reference's sexualization, do not focus the composition on breasts, buttocks or underwear, and do not alter the clothing design.
+Pose: A1 Cover idle. Crouched or kneeling behind cover, back to the camera. Produce the character sprite only, no cover prop or environment, transparent background.
+
+cat_02_cover_peek.png
+Use case: stylized-concept
+Asset type: single transparent game character asset, one pose only.
+Generate a new image from the two original reference images. Image 1 (01_style_cat.png) is the art style reference only. Image 2 (03_design_cat.png) is the character design reference only. Neither reference supplies the required pose or perspective. Match the original character, face, hair, cat ears, red glasses, clothing and accessories without changing the costume design.
+Subject: the adult cat heroine. Her cat paw is her own right arm. She uses no gun.
+Canvas: 1024 x 1536 portrait, genuinely transparent PNG background.
+Scale: a standing version's head to sole would occupy about 90% of canvas height, with soles on the shared baseline. Keep that same scale for this crouched or kneeling pose; do not enlarge it to fill the canvas.
+Full body, with all hair, cat tail, legs, shoes and right paw uncropped.
+The tail comes from below the complete skirt hem; no hole or split in the skirt for the tail.
+Draw for the left side of the screen. Rear view facing into the picture and slightly right, not looking at the camera.
+No visual effects on this asset; effects are separate assets. One character and one pose, no grid or extra asset.
+Nonsexual adult game battle artwork. Do not increase the reference's sexualization, do not focus the composition on breasts, buttocks or underwear, and do not alter the clothing design.
+Pose: A2 Cover peek. Rising slightly from crouched or kneeling cover to look forward into the picture, back to the camera. Produce the character sprite only, no cover prop or environment, transparent background.

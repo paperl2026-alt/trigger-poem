@@ -1,0 +1,304 @@
+{
+  "tool": "built-in image_gen",
+  "output_dir": "D:/etc/auto/output/five_full_sets/set_2",
+  "generation_complete_for_all_allowed_items": true,
+  "deferred": [
+    "F limit-break second A/B/C set"
+  ],
+  "existing_generated": [
+    "pink_10_hit"
+  ],
+  "round_02_results": [
+    {
+      "name": "cat_03_cover_reload",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-af466ac3-3039-40be-9a6f-8c7090b6b1ea.png"
+    },
+    {
+      "name": "cat_05_firing_forward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-d0ef9198-748c-4c6e-9dc2-a0048b86dbd9.png"
+    },
+    {
+      "name": "cat_06_firing_outward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-55b84c33-55d3-4433-b674-ce8980ef0592.png"
+    },
+    {
+      "name": "cat_09_skill_outward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-2e8130bf-508b-455a-af7d-8e0b2231dc01.png"
+    },
+    {
+      "name": "cat_10_hit",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-61c376f2-583a-4a11-8500-d14f6c2d82ca.png"
+    },
+    {
+      "name": "cat_11_knocked_down",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 0284c616-6908-49a7-8c75-921c6a0500cb. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "cat_12_running_a",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-6b14d661-a8af-4672-a5cd-a5e773d3fe9a.png"
+    },
+    {
+      "name": "cat_13_running_b",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-7b3f54b0-d4f9-48d1-b636-8f3301b270b5.png"
+    },
+    {
+      "name": "cat_14_victory",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-52c037c9-e971-4f61-86e4-f3c6c8d51b74.png"
+    },
+    {
+      "name": "pink_11_knocked_down",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID eecbb419-38e7-4ab3-8da5-454d0dee25b7. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "cat_portrait_happy",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-e74a45b9-8c5e-4f24-8ca2-c935ff193241.png"
+    },
+    {
+      "name": "cat_portrait_startled",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-a2893b34-ab37-4058-ae74-8b2e173cf2ff.png"
+    },
+    {
+      "name": "cat_portrait_fired_up",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-6a692de4-f0f5-4fa7-ad65-014a74db63ba.png"
+    },
+    {
+      "name": "cat_portrait_hurt",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-b45abc70-d32f-41af-a649-57757b0ca72e.png"
+    },
+    {
+      "name": "cat_skill_cutin",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-aba5323e-9f98-4402-9ab3-1dfbc6f43b68.png"
+    },
+    {
+      "name": "cat_team_standing",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-9cae9fa4-30d2-4301-9595-4230afd3f51b.png"
+    },
+    {
+      "name": "pink_portrait_happy",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-07f96516-aecd-49e5-b6b1-adb4afe48b18.png"
+    },
+    {
+      "name": "pink_portrait_startled",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-4548517d-da22-4836-b0db-f7ad93fe248a.png"
+    },
+    {
+      "name": "pink_portrait_fired_up",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-f3baf99a-e5d4-475e-aab8-272b7f014c8b.png"
+    },
+    {
+      "name": "pink_portrait_hurt",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-ade5c4c2-2d3b-4342-959c-987f8e2b702a.png"
+    },
+    {
+      "name": "pink_skill_cutin",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-51799c97-8ca2-4b1b-b3bd-f8f1a2ab7e45.png"
+    },
+    {
+      "name": "pink_team_standing",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-62bd2c60-6dc2-436a-b767-de6730302cf5.png"
+    },
+    {
+      "name": "title_key_art",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID f30cf40d-e753-4851-877d-7583b92c3fb4. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "episode_00_cover",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID e10fdb0d-b53c-4b5b-8b2c-9fdbd2ef1f2e. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "episode_00_01_bell",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID 33808a0e-d56c-47e7-af49-1b0d1d886703. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "episode_00_02_anomaly",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-78f357ee-0266-403e-838f-25f1daa4525c.png"
+    },
+    {
+      "name": "episode_00_04_sold_out",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-4a80fdda-1ddb-4056-b5b1-efbe91904294.png"
+    },
+    {
+      "name": "episode_00_05_sunset",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-08ed1658-11ed-4a71-9d8a-e9972341eb1e.png"
+    },
+    {
+      "name": "cat_fx_paw_charge",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-836b1c2f-4663-46bb-ae18-7ab02237f251.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_forward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-8e05153d-be97-41d7-b6a6-c735b4342364.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_outward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-620eb178-dd6e-4556-b17c-f84d44a4491a.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_forward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-2b2002d3-ce77-4919-89ff-5518d30ce0b4.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_outward",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-121c616c-d8a5-4593-98ff-f12b4191e71a.png"
+    },
+    {
+      "name": "pink_fx_gatling_flash",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3f-6e0c-7bd3-85eb-6de14cee57ad\\exec-bd4b564d-ad27-43b9-bc02-a91e7461f32d.png"
+    }
+  ],
+  "skipped_without_retry": {
+    "cat": [
+      "01_cover_idle",
+      "02_cover_peek",
+      "04_cover_taunt",
+      "07_firing_recoil",
+      "08_skill_forward"
+    ],
+    "pink": [
+      "01_cover_idle",
+      "02_cover_peek",
+      "03_cover_reload",
+      "04_cover_taunt",
+      "05_firing_forward",
+      "06_firing_outward",
+      "07_firing_recoil",
+      "08_skill_forward",
+      "09_skill_outward",
+      "12_running_a",
+      "13_running_b",
+      "14_victory"
+    ],
+    "group": [
+      "episode_00_03_boss"
+    ]
+  },
+  "generated_before_later_global_rejection": [
+    "cat_05_firing_forward",
+    "pink_10_hit",
+    "pink_skill_cutin",
+    "pink_team_standing",
+    "episode_00_02_anomaly"
+  ],
+  "visual_qa_flags": [
+    {
+      "assets": [
+        "cat_06_firing_outward",
+        "cat_09_skill_outward",
+        "cat_12_running_a"
+      ],
+      "issue": "The generated furry paw is on the anatomical left arm instead of the required right arm."
+    },
+    {
+      "assets": [
+        "cat_03_cover_reload"
+      ],
+      "issue": "Kneeling sprite appears larger in character scale than standing sprites; shared-scale requirement needs review."
+    },
+    {
+      "assets": [
+        "cat_skill_cutin"
+      ],
+      "issue": "Top ear/hair touches the canvas crop; human left hand also has red claws not present in the original design."
+    },
+    {
+      "assets": [
+        "pink_skill_cutin"
+      ],
+      "issue": "Top hair ornament is cut by upper canvas edge; some twin-tail ends are cropped at banner edges."
+    },
+    {
+      "assets": [
+        "cat_portrait_happy",
+        "cat_portrait_hurt"
+      ],
+      "issue": "Ear reaches the upper canvas edge and is partly cropped."
+    },
+    {
+      "assets": [
+        "cat_portrait_happy",
+        "cat_portrait_startled",
+        "cat_portrait_fired_up",
+        "cat_portrait_hurt",
+        "pink_portrait_happy",
+        "pink_portrait_startled",
+        "pink_portrait_fired_up",
+        "pink_portrait_hurt"
+      ],
+      "issue": "Generated HUD portraits extend to waist rather than strictly chest-up; face size and crop also vary."
+    },
+    {
+      "assets": [
+        "pink_10_hit"
+      ],
+      "issue": "Gun muzzle touches the right canvas edge."
+    },
+    {
+      "assets": [
+        "episode_00_05_sunset"
+      ],
+      "issue": "Cat character carries a black-and-pink gun-like case/object, despite the no-guns requirement."
+    },
+    {
+      "assets": [
+        "pink_portrait_hurt"
+      ],
+      "issue": "Top ribbon/hair ornament touches and is cropped by upper canvas edge."
+    }
+  ],
+  "no_post_generation_pixel_edits": true,
+  "notes": [
+    "No rejected asset was retried or reworded.",
+    "Every generated image was copied to the requested output directory.",
+    "Six effects are separate transparent files with no characters or weapons."
+  ],
+  "summary": {
+    "total_png": 30,
+    "characters": 21,
+    "effects": 6,
+    "group_scenes": 3,
+    "blocked_or_skipped": 23,
+    "all_unblocked_requested_items_attempted": true
+  },
+  "technical_qa": {
+    "report": "qa_dimensions_alpha.json",
+    "portrait_dimensions": "1024x1536",
+    "cutin_dimensions": "2172x724 (exact 3:1)",
+    "scene_dimensions": "1672x941 (approximately 16:9)",
+    "transparency": "All 27 character/VFX files have zero-alpha background pixels; the 3 scene illustrations are opaque as intended.",
+    "alpha_note": "Most character/VFX foregrounds peak at alpha 254/255 (99.6% opacity), not severe overall transparency. The earlier round_01 note about no fully opaque pixels should be interpreted in this context."
+  }
+}

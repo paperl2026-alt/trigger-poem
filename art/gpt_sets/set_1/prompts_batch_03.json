@@ -1,0 +1,280 @@
+{
+  "mode": "built-in image_gen",
+  "references": [
+    "D:/etc/auto/output/five_full_sets/original_references/01_style_cat.png",
+    "D:/etc/auto/output/five_full_sets/original_references/02_style_pink.png",
+    "D:/etc/auto/output/five_full_sets/original_references/03_design_cat.png",
+    "D:/etc/auto/output/five_full_sets/original_references/04_design_pink.png"
+  ],
+  "jobs": [
+    {
+      "id": "cat09",
+      "name": "cat_09_skill_outward.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "undefined\nA09 skill_outward. Rear-view powerful RIGHT paw/palm attack release pose aimed toward the UPPER LEFT of picture. The furry paw is anatomically her RIGHT arm; rotate her torso and reach that right arm across the direction of attack, never replace the left arm with a paw. Back of head faces viewer, head and gaze follow the attack direction UPPER LEFT, do not turn toward camera. Full body, planted feet and braced stance. Character only, no shockwave or aura, effects will be separate.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-ae5729f5-8fef-47f6-bf0d-0dcffdd2f840.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_09_skill_outward.png",
+      "qa": "Rear view and upper-left aim present; furry paw appears on LEFT arm instead of required RIGHT arm."
+    },
+    {
+      "id": "cat10",
+      "name": "cat_10_hit.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "undefined\nA10 hit. Full-body REAR VIEW reaction pose being knocked backward by an unseen blow, torso recoiling, arms reacting with the RIGHT furry paw and LEFT human arm anatomically correct, legs catching balance. Body and gaze oriented into scene slightly toward picture RIGHT, not looking back at camera. No visible attacker, no contact object, no impact effect, no injury detail. Entire character uncropped.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-fa05a94e-2785-4c44-bde8-a5642ec6235e.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_10_hit.png",
+      "qa": "Rear-view hit reaction, no camera glance, full body present. Fixed scale and baseline not exact."
+    },
+    {
+      "id": "cat12",
+      "name": "cat_12_running_a.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "undefined\nA12 running_a. Seen from BEHIND running INTO the picture slightly toward picture RIGHT. First running stride: RIGHT leg extends forward into the scene and LEFT leg kicks back, arms counter-swing, her RIGHT furry cat paw remains right arm. Back of head and back facing viewer. Her head follows the run direction, she does NOT turn or look back at camera. Full body including both shoes and complete tail, no speed trails or dust.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-e5c73db9-e775-4147-952c-73b550f6d60a.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_12_running_a.png",
+      "qa": "Rear-view running, no camera glance, full body present. Raised foot stride and lowest sole do not match standing baseline."
+    },
+    {
+      "id": "cat13",
+      "name": "cat_13_running_b.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "undefined\nA13 running_b. Seen from BEHIND running INTO the picture slightly toward picture RIGHT. Opposite running stride: LEFT leg extends forward into scene and RIGHT leg kicks back, arms counter-swing, RIGHT furry cat paw remains right arm. Back of head and back facing viewer. Her head follows the run direction, does NOT turn or look back at camera. Full body including both shoes and complete tail, no speed trails or dust.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-c90ca7a1-53df-4435-acc9-67fb4de3a027.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_13_running_b.png",
+      "qa": "Rear-view running, no camera glance, full body present; generated stride is too similar to running_a rather than opposite."
+    },
+    {
+      "id": "cat14",
+      "name": "cat_14_victory.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "undefined\nA14 victory. FRONT VIEW full body, facing viewer, happy triumphant victory stance. Upright standing with RIGHT furry cat-paw arm raised in victory and left human arm naturally balancing. Entire hair, ears, tail, legs and shoes uncropped. Preserve fixed standing scale and baseline. No text or confetti, no added effects.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-498af21c-2be6-4d3e-b579-40482dec09d2.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_14_victory.png",
+      "qa": "Front-view victory, full body and right paw present. Raised paw occupies top margin; fixed body scale not exact."
+    },
+    {
+      "id": "cat_skill_cutin",
+      "name": "cat_skill_cutin.png",
+      "refs": [
+        0,
+        1,
+        2
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Single cat-girl skill cut-in, horizontal 3:1 banner, exactly 1536x512. WAIST UP, facing camera directly. References 1 and 2 define exact finished illustration style. Reference3 defines unchanged white bob haircut, cat ears, small braids, red glasses, bell and ribbon ornaments, cream kimono sailor top with navy collar and mint lining, navy obi with red cords. Her RIGHT ARM is the furry white clawed paw with red markings; LEFT arm human. Determined skill expression looking at viewer, right paw held ready. Only ONE character. No gun, no aura, no shockwave or effects. Transparent background. Full head and ears and raised paw remain uncropped inside banner; lower edge crops at waist. No text, borders, grids or extra patterns.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-54d7fbff-d50d-40da-9a8b-b3f8e7e619bd.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_skill_cutin.png",
+      "qa": "Aspect ratio exactly 3:1, actual 2172x724 rather than requested 1536x512; top of one ear cropped."
+    },
+    {
+      "id": "pink_portrait_happy",
+      "name": "pink_portrait_happy.png",
+      "refs": [
+        0,
+        1,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Single HUD expression portrait of the pink girl from reference 4. References 1 and 2 define the exact finished drawing style. Reference 4 defines her identity and unchanged outfit, not pose or perspective. Preserve black long curled twin tails with pink accents, pink and mint bows, rabbit hair clip and heart ornaments, pink eyes, mint sailor collar and pink outfit. Exactly ONE figure facing viewer directly. Chest-up crop: bottom edge cuts at upper chest just below collar and bow; DO NOT include waist, hips, stomach or lower torso. Entire head, hair crown and bow tops visible, centered face. Fixed 1024x1536 portrait canvas, same face scale, same upright front-facing head angle and same upper-chest crop for all four expressions. Genuine transparent background. No gun or weapon, no glow, no special effects, no text, no multiple poses, no grid, no watermark. Do not introduce new objects, pattern or outfit changes.\nFacial expression: HAPPY: cheerful warm smile, relaxed eyebrows and bright happy eyes looking at the viewer.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-5bd9cee7-25fd-43b2-8883-1409fd765615.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_happy.png",
+      "qa": "Front-facing happy expression, no waist shown, but chest crop extends lower than requested and face scale varies across portrait set."
+    },
+    {
+      "id": "pink_portrait_startled",
+      "name": "pink_portrait_startled.png",
+      "refs": [
+        0,
+        1,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Single HUD expression portrait of the pink girl from reference 4. References 1 and 2 define the exact finished drawing style. Reference 4 defines her identity and unchanged outfit, not pose or perspective. Preserve black long curled twin tails with pink accents, pink and mint bows, rabbit hair clip and heart ornaments, pink eyes, mint sailor collar and pink outfit. Exactly ONE figure facing viewer directly. Chest-up crop: bottom edge cuts at upper chest just below collar and bow; DO NOT include waist, hips, stomach or lower torso. Entire head, hair crown and bow tops visible, centered face. Fixed 1024x1536 portrait canvas, same face scale, same upright front-facing head angle and same upper-chest crop for all four expressions. Genuine transparent background. No gun or weapon, no glow, no special effects, no text, no multiple poses, no grid, no watermark. Do not introduce new objects, pattern or outfit changes.\nFacial expression: STARTLED: surprised wide eyes, raised eyebrows and a slightly open mouth, looking at viewer.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-9c97ab64-a87f-4f1f-8adc-8a407986e9c1.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_startled.png",
+      "qa": "Front-facing startled expression, chest-up; face scale and chest crop not identical across four portraits."
+    },
+    {
+      "id": "pink_portrait_fired_up",
+      "name": "pink_portrait_fired_up.png",
+      "refs": [
+        0,
+        1,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Single HUD expression portrait of the pink girl from reference 4. References 1 and 2 define the exact finished drawing style. Reference 4 defines her identity and unchanged outfit, not pose or perspective. Preserve black long curled twin tails with pink accents, pink and mint bows, rabbit hair clip and heart ornaments, pink eyes, mint sailor collar and pink outfit. Exactly ONE figure facing viewer directly. Chest-up crop: bottom edge cuts at upper chest just below collar and bow; DO NOT include waist, hips, stomach or lower torso. Entire head, hair crown and bow tops visible, centered face. Fixed 1024x1536 portrait canvas, same face scale, same upright front-facing head angle and same upper-chest crop for all four expressions. Genuine transparent background. No gun or weapon, no glow, no special effects, no text, no multiple poses, no grid, no watermark. Do not introduce new objects, pattern or outfit changes.\nFacial expression: FIRED UP: fiercely determined focused eyes, lowered eyebrows and energetic confident mouth, looking at viewer. No effects.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-de798aed-f93a-4f20-8807-925da3a84447.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_fired_up.png",
+      "qa": "Front-facing fired-up expression, chest-up; face scale and chest crop not identical across four portraits."
+    },
+    {
+      "id": "pink_portrait_hurt",
+      "name": "pink_portrait_hurt.png",
+      "refs": [
+        0,
+        1,
+        3
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. Single HUD expression portrait of the pink girl from reference 4. References 1 and 2 define the exact finished drawing style. Reference 4 defines her identity and unchanged outfit, not pose or perspective. Preserve black long curled twin tails with pink accents, pink and mint bows, rabbit hair clip and heart ornaments, pink eyes, mint sailor collar and pink outfit. Exactly ONE figure facing viewer directly. Chest-up crop: bottom edge cuts at upper chest just below collar and bow; DO NOT include waist, hips, stomach or lower torso. Entire head, hair crown and bow tops visible, centered face. Fixed 1024x1536 portrait canvas, same face scale, same upright front-facing head angle and same upper-chest crop for all four expressions. Genuine transparent background. No gun or weapon, no glow, no special effects, no text, no multiple poses, no grid, no watermark. Do not introduce new objects, pattern or outfit changes.\nFacial expression: HURT: strained pained eyebrows and eyes, tense mouth in a wince, facing viewer. Expression only, no blood or injury detail.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-5b9b420f-6444-4d95-b9b2-2445f10ca584.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_portrait_hurt.png",
+      "qa": "Front-facing hurt expression, chest-up with lower fade; face scale and chest crop not identical across four portraits."
+    },
+    {
+      "id": "episode_00_04_sold_out",
+      "name": "episode_00_04_sold_out.png",
+      "refs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "transparent": false,
+      "prompt": "Use case: illustration-story. A single complete landscape comic scene with both girls together, never a grid or panels within image. References 1 and 2 are the exact required finished drawing style, references 3 and 4 are the unchanged character designs. Do not use the reference poses or perspectives. White-haired cat girl with red glasses, cream kimono sailor top, navy skirt, white tail emerging BELOW skirt hem, never through a skirt hole, RIGHT arm furry white cat paw with red claw tips, left arm human, no gun. Pink girl with long black curled twin tails and pink accents, mint and pink ribbons and rabbit hair clips, mint sailor collar, pink outfit and pink platform shoes as reference4. Preserve original details. Both characters entirely present within composition, no extra versions of either character, no collage, no text or watermarks. No extra attack effects or energy effects. Landscape 1536x864.\nEpisode 0 scene 04, SOLD OUT CRYING. The two girls arrive at the school limited-food/merch counter after it has sold out; the counter display is empty with an empty stock sign showing a simple crossed-out stock symbol, no lettering. Both girls stand together in front of the empty display, crying in disappointment, facing the empty display and one another. One landscape single-scene comic image. No boss or combat, no added effects.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-49c73e30-eaaa-48b8-a9ed-d853eab67d57.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/episode_00_04_sold_out.png",
+      "qa": "Single coherent landscape sold-out scene with both girls crying; generated lower legs and shoes cropped. Opaque environment. Actual 1672x941."
+    },
+    {
+      "id": "episode_00_05_sunset",
+      "name": "episode_00_05_sunset.png",
+      "refs": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "transparent": false,
+      "prompt": "Use case: illustration-story. A single complete landscape comic scene with both girls together, never a grid or panels within image. References 1 and 2 are the exact required finished drawing style, references 3 and 4 are the unchanged character designs. Do not use the reference poses or perspectives. White-haired cat girl with red glasses, cream kimono sailor top, navy skirt, white tail emerging BELOW skirt hem, never through a skirt hole, RIGHT arm furry white cat paw with red claw tips, left arm human, no gun. Pink girl with long black curled twin tails and pink accents, mint and pink ribbons and rabbit hair clips, mint sailor collar, pink outfit and pink platform shoes as reference4. Preserve original details. Both characters entirely present within composition, no extra versions of either character, no collage, no text or watermarks. No extra attack effects or energy effects. Landscape 1536x864.\nEpisode 0 scene 05, WALKING HOME AT SUNSET. Both girls together walking home along the street outside the school at sunset. A single coherent scene, relaxed side-by-side walking, gentle sunset sky and street surroundings. Show entire characters, intact shoes, hair and cat tail. Their gaze follows the walk, not posed toward camera. No fighting, no weapons being fired, no added effects.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-5bcb4e76-06dd-4b92-bb1a-9da9f2d9e924.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/episode_00_05_sunset.png",
+      "qa": "Single coherent landscape sunset walk with both full bodies; model added shoulder bags and figures glance toward viewer despite prompt. Opaque environment. Actual 1672x941."
+    },
+    {
+      "id": "cat_fx_charge",
+      "name": "cat_fx_charge.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: cat paw CHARGE, shown as a compact mint-green flame-like charging glow matching the mint flame energy in original reference1. Render that energy ONLY. No paw or emblem. No extra motifs or particles unrelated to this charge.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-c1eb79ff-52e6-4410-9416-1d4633a0701b.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_charge.png",
+      "qa": "Standalone mint flame charge only; no character, body part, weapon or emblem. PNG alpha present."
+    },
+    {
+      "id": "cat_fx_palm_shockwave_forward",
+      "name": "cat_fx_palm_shockwave_forward.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: cat palm SHOCKWAVE FORWARD, a mint-green flame-edged palm-release energy shockwave traveling into the picture slightly toward picture RIGHT for the LEFT-side character. Render only the single shockwave, matching original reference1's mint flame energy. No palm, paw, emblem or unrelated particles.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-d4b22085-a9a9-43a8-a561-2151991fd221.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_palm_shockwave_forward.png",
+      "qa": "Standalone mint shockwave aimed right; no character, body part, weapon or emblem. PNG alpha present."
+    },
+    {
+      "id": "cat_fx_palm_shockwave_outward",
+      "name": "cat_fx_palm_shockwave_outward.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: cat palm SHOCKWAVE OUTWARD, a mint-green flame-edged palm-release energy shockwave traveling toward UPPER LEFT of picture for the LEFT-side character. Render only the single shockwave, matching original reference1's mint flame energy. No palm, paw, emblem or unrelated particles.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-e3f3362f-c6e5-451d-a442-08bfa85bc5b5.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/cat_fx_palm_shockwave_outward.png",
+      "qa": "Standalone mint shockwave aimed upper left; no character, body part, weapon or emblem. PNG alpha present."
+    },
+    {
+      "id": "pink_fx_muzzle_flash_forward",
+      "name": "pink_fx_muzzle_flash_forward.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: pink MUZZLE FLASH FORWARD for the original reference2's firearm, firing into picture slightly toward picture RIGHT. Render only a single muzzle flash burst, no weapon or bullet, no symbols, no extra energy trails or patterns. It is a separate firing effect for the LEFT-side character.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-330782f5-7617-40dd-866d-bfac9061ccb6.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_muzzle_flash_forward.png",
+      "qa": "Standalone pink muzzle flash aimed right; no character, body part or weapon. PNG alpha present."
+    },
+    {
+      "id": "pink_fx_muzzle_flash_outward",
+      "name": "pink_fx_muzzle_flash_outward.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: pink MUZZLE FLASH OUTWARD for the original reference2's firearm, firing toward UPPER LEFT of picture. Render only a single muzzle flash burst, no weapon or bullet, no symbols, no extra energy trails or patterns. It is a separate firing effect for the LEFT-side character.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-3ace28d1-3c7a-4df2-be88-818543455382.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_muzzle_flash_outward.png",
+      "qa": "Standalone pink muzzle flash aimed upper left; no character, body part or weapon. PNG alpha present."
+    },
+    {
+      "id": "pink_fx_gatling_flash",
+      "name": "pink_fx_gatling_flash.png",
+      "refs": [
+        0,
+        1
+      ],
+      "transparent": true,
+      "prompt": "Use case: stylized-concept. A single standalone game special-effect sprite on genuinely transparent background, no scene. Match the anime game rendering and effect vocabulary of original references 1 and 2. Only the specifically named effect, no additional motifs, no text, no border, no grid. Absolutely no person, face, body part, paw, hand, arm, gun, weapon or other object. Uncropped complete effect with empty transparent margin. 1024x1536 portrait canvas. This effect will be layered separately over a character asset.\nNamed effect: pink GATLING FLASH, a single sustained gatling muzzle flash burst oriented into picture slightly toward picture RIGHT for the LEFT-side character. Render the named firing flash only, no gatling gun, no person, no bullets or cartridge casings, no symbols, no extra patterns or energy effects.",
+      "status": "generated",
+      "source": "C:\\Users\\Administrator\\.codex\\generated_images\\01a13f3e-d80f-74f1-b95a-0aadde3c21b9\\exec-56ebae77-aad1-4b82-928b-9bbd4f2e962a.png",
+      "output": "D:/etc/auto/output/five_full_sets/set_1/pink_fx_gatling_flash.png",
+      "qa": "Standalone pink sustained muzzle flash aimed right; no character, body part or weapon. PNG alpha present."
+    }
+  ],
+  "newBlocked": [],
+  "remainingAllowedUnattempted": [],
+  "deferred": "F limit-break set, as requested."
+}

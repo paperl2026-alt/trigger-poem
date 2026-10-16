@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: single transparent full-body game character asset.
+Generate a completely new image from scratch. Attached images are references, not edit targets. Reference 1 supplies the required illustration style, linework, coloring and rendering. Reference 2 supplies the cat heroine character design and clothing. Do not copy their poses or perspective.
+One character, one pose only, 1024x1536 portrait canvas with actual transparent background. Match the cat heroine's white hair, ears, glasses, clothing, right paw and tail from the character reference. Her cat paw is always her right arm. Cat heroine has no gun. Tail emerges from below the skirt, not through a hole in it.
+Full body: all hair, ears, tail, limbs and shoes uncropped. Consistent scale: standing head-to-sole fills about 90% of canvas height, soles on common baseline near bottom. Crouching and kneeling keep that same character scale, naturally shorter and not enlarged to fill the canvas. No scenery, background, cover prop, effects, extra characters, panels, grids, text or watermark. Effects must be produced separately, never overlaid on the character.
+Pose: cover taunt, crouched or kneeling, turning back toward the viewer, making a peace sign. Body is positioned for the left side of the screen, toward the right of the picture.

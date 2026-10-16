@@ -1,0 +1,4 @@
+Use case: stylized-concept
+Generate a completely new standalone game VFX image from scratch. Attached images are style and character references only, not edit targets. Match their illustration rendering style.
+The cat heroine's charging effect, following the pale mint-green energy visible around the paw in the reference. Only the charge effect.
+1024x1536 portrait transparent background. Exactly one named effect, no character, no body parts, no paw or hand, no weapon, no background, no additional symbols or patterns, no text, no watermark.

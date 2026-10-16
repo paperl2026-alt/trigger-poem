@@ -1,0 +1,161 @@
+{
+  "mode": "built-in image_gen",
+  "directory": "D:/etc/auto/output/five_full_sets/set_5",
+  "png_count": 31,
+  "unique_requested_png_count": 25,
+  "additional_completed_v2_png_count": 6,
+  "assigned_23_results": [
+    {
+      "name": "cat_09_skill_outward",
+      "status": "generated",
+      "file": "cat_09_skill_outward.png"
+    },
+    {
+      "name": "cat_10_hit",
+      "status": "generated",
+      "file": "cat_10_hit.png"
+    },
+    {
+      "name": "cat_12_running_a",
+      "status": "generated",
+      "file": "cat_12_running_a.png"
+    },
+    {
+      "name": "cat_13_running_b",
+      "status": "generated",
+      "file": "cat_13_running_b.png"
+    },
+    {
+      "name": "cat_14_victory",
+      "status": "generated",
+      "file": "cat_14_victory.png"
+    },
+    {
+      "name": "cat_skill_cutin",
+      "status": "generated",
+      "file": "cat_skill_cutin.png"
+    },
+    {
+      "name": "cat_team_standing",
+      "status": "generated",
+      "file": "cat_team_standing.png"
+    },
+    {
+      "name": "cat_portrait_happy",
+      "status": "generated",
+      "file": "cat_portrait_happy.png"
+    },
+    {
+      "name": "cat_portrait_startled",
+      "status": "generated",
+      "file": "cat_portrait_startled.png"
+    },
+    {
+      "name": "cat_portrait_fired_up",
+      "status": "generated",
+      "file": "cat_portrait_fired_up.png"
+    },
+    {
+      "name": "cat_portrait_hurt",
+      "status": "generated",
+      "file": "cat_portrait_hurt.png"
+    },
+    {
+      "name": "pink_portrait_happy",
+      "status": "generated",
+      "file": "pink_portrait_happy.png"
+    },
+    {
+      "name": "pink_portrait_startled",
+      "status": "generated",
+      "file": "pink_portrait_startled.png"
+    },
+    {
+      "name": "pink_portrait_fired_up",
+      "status": "generated",
+      "file": "pink_portrait_fired_up.png"
+    },
+    {
+      "name": "pink_portrait_hurt",
+      "status": "generated",
+      "file": "pink_portrait_hurt.png"
+    },
+    {
+      "name": "episode_00_04_sold_out",
+      "status": "blocked",
+      "error": "image generation failed: http 400 Bad Request: Some(\"{\\n  \\\"error\\\": {\\n    \\\"message\\\": \\\"Your request was rejected by the safety system. If you believe this is an error, contact us at help.openai.com and include the request ID b1e4ad7f-def2-4ee4-b3d2-ac98ca3dc1b8. safety_violations=[sexual].\\\",\\n    \\\"type\\\": \\\"image_generation_user_error\\\",\\n    \\\"param\\\": null,\\n    \\\"code\\\": \\\"moderation_blocked\\\",\\n    \\\"moderation_details\\\": {\\n      \\\"moderation_stage\\\": \\\"output\\\",\\n      \\\"categories\\\": [\\n        \\\"sexual\\\"\\n      ]\\n    }\\n  }\\n}\")"
+    },
+    {
+      "name": "episode_00_05_sunset",
+      "status": "generated",
+      "file": "episode_00_05_sunset.png"
+    },
+    {
+      "name": "cat_fx_charge",
+      "status": "generated",
+      "file": "cat_fx_charge.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_forward",
+      "status": "generated",
+      "file": "cat_fx_palm_shockwave_forward.png"
+    },
+    {
+      "name": "cat_fx_palm_shockwave_outward",
+      "status": "generated",
+      "file": "cat_fx_palm_shockwave_outward.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_forward",
+      "status": "generated",
+      "file": "pink_fx_muzzle_flash_forward.png"
+    },
+    {
+      "name": "pink_fx_muzzle_flash_outward",
+      "status": "generated",
+      "file": "pink_fx_muzzle_flash_outward.png"
+    },
+    {
+      "name": "pink_fx_gatling_flash",
+      "status": "generated",
+      "file": "pink_fx_gatling_flash.png"
+    }
+  ],
+  "completed_v2_results": [
+    {
+      "name": "cat_portrait_happy_v2",
+      "status": "generated",
+      "file": "cat_portrait_happy_v2.png"
+    },
+    {
+      "name": "cat_portrait_startled_v2",
+      "status": "generated",
+      "file": "cat_portrait_startled_v2.png"
+    },
+    {
+      "name": "cat_portrait_fired_up_v2",
+      "status": "generated",
+      "file": "cat_portrait_fired_up_v2.png"
+    },
+    {
+      "name": "cat_portrait_hurt_v2",
+      "status": "generated",
+      "file": "cat_portrait_hurt_v2.png"
+    },
+    {
+      "name": "pink_portrait_happy_v2",
+      "status": "generated",
+      "file": "pink_portrait_happy_v2.png"
+    },
+    {
+      "name": "pink_portrait_startled_v2",
+      "status": "generated",
+      "file": "pink_portrait_startled_v2.png"
+    }
+  ],
+  "unexecuted_v2_prompts": [
+    "pink_portrait_fired_up_v2.prompt.txt",
+    "pink_portrait_hurt_v2.prompt.txt"
+  ],
+  "state": "Stopped. No image generation is running and no further generation will be started."
+}

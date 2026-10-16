@@ -1,0 +1,8 @@
+Built-in image_gen used; each image generated from scratch using original reference 01_style_cat and 03_design_cat only.
+Generated: cat_09_skill_outward.png, cat_10_hit.png, cat_12_running_a.png, cat_13_running_b.png, cat_14_victory.png.
+All five: 1024x1536 PNG, alpha verified (corner alpha 0), matching .prompt.txt files saved.
+Blocked in this batch: none.
+QA warning: cat_09_skill_outward appears to place the paw on the character's left arm despite the prompt requiring her right arm.
+QA warning: cat_12_running_a and cat_13_running_b have similar leg strides; opposite-stride pairing is not reliable.
+No failed output was edited or used as a reference.
+Pending this batch: none. Overall remaining assets await next assignment. F is deferred.
