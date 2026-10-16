@@ -3,6 +3,7 @@
 // (a port, not a URL: on Windows an argument with ':' in it makes Electron quit before the script runs.
 //  For another address set SHOT_URL instead.)
 // The page is shown with transitions/animations frozen in their final state, so entrance effects do not blur the shot.
+// SHOT_SEQ (see below) instead records a sequence of frames of something animating, e.g. a screen change.
 const { app, BrowserWindow } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -32,6 +33,24 @@ app.whenReady().then(async () => {
       if (Date.now() - t0 > 20000) return ok(false);
       setTimeout(poll, 100); })(); })`;
   const ready = await win.webContents.executeJavaScript(js);
+  // sequence mode (SHOT_SEQ="<js to run>|<frames>|<ms between>"): animations run, frames go to <out>_00.png, _01.png ...
+  if (process.env.SHOT_SEQ) {
+    const [act, n = '12', gap = '80'] = process.env.SHOT_SEQ.split('|');
+    await win.webContents.executeJavaScript(`document.getElementById('cursor')?.style.setProperty('display', 'none', 'important'); document.querySelector(${JSON.stringify(wait)})?.classList.add('in')`);
+    await new Promise((r) => setTimeout(r, 1200));
+    await win.webContents.executeJavaScript(act);
+    fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });
+    const t0 = Date.now();
+    for (let i = 0; i < +n; i++) {
+      const wantAt = t0 + i * +gap;
+      await new Promise((r) => setTimeout(r, Math.max(0, wantAt - Date.now())));
+      const img = await win.webContents.capturePage();
+      fs.writeFileSync(out.replace(/\.png$/, `_${String(i).padStart(2, '0')}.png`), img.toPNG());
+      log('frame', i, Date.now() - t0, 'ms');
+    }
+    app.quit();
+    return;
+  }
   await win.webContents.executeJavaScript(`(() => { const s = document.createElement('style');
     s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important} #cursor{display:none!important}';
     document.head.appendChild(s); document.querySelector(${JSON.stringify(wait)})?.classList.add('in'); })()`);

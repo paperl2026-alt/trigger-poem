@@ -95,10 +95,6 @@
 .ttl:not(.in) .plx.pnl > *, .ttl:not(.in) .uil > * { opacity: 0; translate: -220px 0; }
 .ttl:not(.in) .chr { opacity: 0; translate: 240px 0; }
 .ttl:not(.in) .plx.back > * { scale: 1.12; }
-.ttl.leave .uil > *, .ttl.leave .plx.pnl > * { translate: -300px 0; opacity: 0; transition-delay: 0s; transition-duration: 0.35s; transition-timing-function: ease-in; }
-.ttl.leave .chr { translate: 300px 0; opacity: 0; }
-.ttl::after { content: ""; position: absolute; inset: 0; background: var(--red); clip-path: polygon(0 0, 0 0, -20% 100%, -20% 100%); pointer-events: none; transition: clip-path 0.45s 0.2s cubic-bezier(0.6, 0, 0.4, 1); }
-.ttl.leave::after { clip-path: polygon(0 0, 120% 0, 100% 100%, -20% 100%); }
 body:has(.screen.ttl) #dbg-btn { display: none; }
 
 /* custom cursor (src/ui/cursor.js) */

@@ -198,8 +198,7 @@ export function showTitle(act) {
     if (gone) return;
     gone = true; initAudio(); sfx.clear();
     const [x, y, w, h] = boxOf(startB); fx.click(x + w / 2, y + h / 2, true);
-    root.classList.add('leave');
-    setTimeout(() => act.start(), 700);
+    setTimeout(() => act.start(), 180);   // the click burst shows, then the page turns (main.js -> manga.js)
   }
   function refresh() {
     for (const s of segs) s.o.classList.toggle('on', s.group === 'language' ? s.opt === lang : (s.opt === 'fullscreen') === !!document.fullscreenElement);

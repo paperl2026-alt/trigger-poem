@@ -7,6 +7,7 @@ import { Post } from './core/post.js';
 import { initAudio, sfx } from './core/audio.js';
 import { Game } from './battle/game.js';
 import { showSelect, showResults, showGameOver } from './ui/screens.js';
+import { mangaTurn } from './ui/manga.js';
 import { showTitle } from './ui/title.js';
 import { initCursor, cursorScene } from './ui/cursor.js';
 import { SAVE, initSave } from './core/save.js';
@@ -127,7 +128,7 @@ function toTitle() {
   endRun();
   G.select = null;
   clearScreen();
-  const title = screenApi = showTitle({ start: () => toSelect() });
+  const title = screenApi = showTitle({ start: () => turnTo(toSelect) });
   G.titleStart = () => { initAudio(); title.start(); };
 }
 function toSelect() {
@@ -135,8 +136,10 @@ function toSelect() {
   G.titleStart = null;
   clearScreen();
   cursorScene('menu');
-  G.select = showSelect({ title: toTitle, settings: () => settings.open(), play: (id) => { initAudio(); startRun(id); } });
+  G.select = showSelect({ title: () => turnTo(toTitle), settings: () => settings.open(), play: (id) => { initAudio(); startRun(id); } });
 }
+// menu screens change like turning a manga page (src/ui/manga.js)
+const turnTo = (show) => mangaTurn(document.querySelector('#ui > .screen'), show);
 G.showResults = (st) => { G.game.hud.show(false); const done = () => toSelect(); endRun(); cursorScene('menu'); showResults(st, done); };
 G.showGameOver = (st) => {
   G.game.hud.show(false);
