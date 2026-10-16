@@ -373,7 +373,7 @@ export class Game {
     });
     return { n: hits.length, crit };
   }
-  // Kagura's beam tick: everything around the aim point along the line of sight takes damage (pierces all).
+  // Kaburu's beam tick: everything around the aim point along the line of sight takes damage (pierces all).
   beamHit(p, sx, sy, R, dmg) {
     let n = 0;
     for (const a of [...this.actors]) {

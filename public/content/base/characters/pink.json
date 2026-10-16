@@ -3,7 +3,7 @@
     "id": "pink",
     "color": "#ff5fa8",
     "edge": [60, 20, 40],
-    "name": { "zh": "椿", "en": "TSUBAKI", "ja": "ツバキ" },
+    "name": { "zh": "蔡蕾", "en": "Rando Mine", "ja": "蘭堂 美音" },
     "role": { "zh": "物理净化", "en": "Purge Rifle", "ja": "物理浄化" },
     "blurb": {
       "zh": "射速快、弹匣大、子弹穿透。一直打同一个敌人会不断叠硬直。",

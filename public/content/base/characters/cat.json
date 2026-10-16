@@ -3,7 +3,7 @@
     "id": "cat",
     "color": "#a66bff",
     "edge": [30, 12, 60],
-    "name": { "zh": "神乐", "en": "KAGURA", "ja": "カグラ" },
+    "name": { "zh": "庄乖", "en": "Neko O’Kaburu", "ja": "猫尾 果舞瑠" },
     "role": { "zh": "灵能猫爪", "en": "Spirit Paw", "ja": "霊能ネコの手" },
     "blurb": {
       "zh": "鬼手射出六字真言：单发重、杂鱼几发就倒；连续打同一目标伤害递增，硬直长。",
