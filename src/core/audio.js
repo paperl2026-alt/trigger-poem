@@ -2,6 +2,7 @@
 let ctx = null, master, sfxBus, musBus, verb, noiseBuf;
 let muted = false;
 let volume = 0.8;
+let musicVol = 1, sfxVol = 1; // BGM / SFX sliders (0..1), on top of the master volume
 let flameNode = null;
 
 export function initAudio() {
@@ -13,8 +14,8 @@ export function initAudio() {
   comp.threshold.value = -12; comp.ratio.value = 5; comp.attack.value = 0.003; comp.release.value = 0.15;
   master = ctx.createGain(); master.gain.value = muted ? 0 : 0.75 * volume;
   master.connect(comp); comp.connect(ctx.destination);
-  sfxBus = ctx.createGain(); sfxBus.gain.value = 0.9; sfxBus.connect(master);
-  musBus = ctx.createGain(); musBus.gain.value = 0.34; musBus.connect(master);
+  sfxBus = ctx.createGain(); sfxBus.gain.value = 0.9 * sfxVol; sfxBus.connect(master);
+  musBus = ctx.createGain(); musBus.gain.value = 0.34 * musicVol; musBus.connect(master);
   verb = ctx.createConvolver();
   const len = ctx.sampleRate * 2.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
@@ -30,6 +31,8 @@ export function initAudio() {
 export function setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : 0.75 * volume; }
 export function setVolume(v) { volume = v; if (master) master.gain.value = muted ? 0 : 0.75 * volume; }
 export function getVolume() { return volume; }
+export function setMusicVolume(v) { musicVol = v; if (musBus) musBus.gain.value = 0.34 * v; }
+export function setSfxVolume(v) { sfxVol = v; if (sfxBus) sfxBus.gain.value = 0.9 * v; }
 export function isMuted() { return muted; }
 const now = () => ctx.currentTime;
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);

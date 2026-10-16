@@ -355,4 +355,3 @@ body:has(.screen.select) #dbg-btn, body:has(.screen.title) #dbg-btn { display: n
 #set button { font: 16px var(--font); background: #1d1020; color: #fff; border: 2px solid #ffffff40; padding: 8px 14px; }
 #set button.on { border-color: var(--lime); color: var(--lime); }
 #set .sinfo { color: #fff8; font-size: 12px; line-height: 1.6; margin-top: 8px; max-width: 900px; font-family: system-ui, "Microsoft YaHei", sans-serif; }
-

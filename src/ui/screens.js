@@ -1,4 +1,4 @@
-// The out-of-run scenes (DOM): Title (+ settings), Chapter select (+ team / outfit / school bag), results, game over.
+// The out-of-run scenes (DOM): Chapter select (+ team / outfit / school bag), results, game over. (Title + settings: title.js)
 // Chapter select reads like flipping through a colour manga: each episode is a chapter cover + a facing page.
 import { url, meta } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
@@ -13,33 +13,6 @@ const has = (k) => !!meta[k];
 const img = (k) => (has(k) ? url(k) : '');
 const tap = (el, fn) => { el.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); sfx.ui(); fn(e); }; };
 const fmtT = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-
-// ------------------------------------------------------------------ Title (+ settings, same scene)
-export function showTitle(onStart, act) {
-  const el = ui();
-  el.innerHTML = '';
-  const art = has('ui/keyart') ? 'ui/keyart' : 'bg/fest_yard';
-  const s = h(`<div class="screen title">
-    <div class="tbg" style="background-image:url(${img(art)})"></div>
-    <div class="tshade"></div>
-    <div class="tlogo txt"></div>
-    <div class="tstart"></div>
-    <div class="topts"><button class="set"></button>${/Electron/.test(navigator.userAgent) ? '<button class="quit"></button>' : ''}</div>
-    <div class="tver">build ${typeof __BUILD__ !== 'undefined' ? __BUILD__ : 'dev'}</div>
-  </div>`);
-  el.appendChild(s);
-  const start = s.querySelector('.tstart'), set = s.querySelector('.set'), quit = s.querySelector('.quit');
-  const logo = s.querySelector('.tlogo');
-  const refresh = () => {
-    const T = tr(C.text.gameTitle);
-    logo.innerHTML = `<small>${T.small}</small><b>${T.big}</b>${T.ruby ? `<i>${T.ruby}</i>` : ''}`;
-    start.textContent = t('start'); set.textContent = `⚙ ${t('settings')}`; if (quit) quit.textContent = t('quit'); };
-  refresh();
-  s.refresh = refresh;
-  tap(set, () => act.settings());
-  if (quit) tap(quit, () => window.close());
-  s.onpointerdown = (e) => { if (e.button !== 0) return; sfx.ui(); el.innerHTML = ''; onStart(); };
-}
 
 // ------------------------------------------------------------------ Chapter select / team / bag
 export function showSelect(act) {

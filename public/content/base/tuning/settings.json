@@ -1,4 +1,4 @@
 {
-  "_doc": "玩家设置的默认值（第一次打开游戏时用）。scale 渲染清晰度倍率，hud HUD 框比例（16:9 / 21:9 / full），p2 二号位（ai / pad / keys / off），volume 音量 0~1。",
-  "defaultSettings": { "scale": 1, "hud": "21:9", "p2": "ai", "volume": 0.8 }
+  "_doc": "玩家设置的默认值（第一次打开游戏时用）。scale 渲染清晰度倍率，hud HUD 框比例（16:9 / 21:9 / full），p2 二号位（ai / pad / keys / off），volume 总音量、bgm 音乐、sfx 音效（都是 0~1）。",
+  "defaultSettings": { "scale": 1, "hud": "21:9", "p2": "ai", "volume": 0.8, "bgm": 0.7, "sfx": 0.8 }
 }

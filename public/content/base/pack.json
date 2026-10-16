@@ -16,7 +16,8 @@
     "comics": ["comics.json"],
     "sets": ["sets/school.json"],
     "text": ["text/ui.json"],
-    "theme": ["theme.json"]
+    "theme": ["theme.json"],
+    "ui": ["ui/title.json", "ui/cursors.json"]
   },
   "assets": "assets/manifest.json"
 }

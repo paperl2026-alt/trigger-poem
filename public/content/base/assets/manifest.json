@@ -911,5 +911,612 @@
   "sheet": "tsubaki_misc",
   "src": "assets/tsubaki/victory.webp",
   "w": 605
+ },
+ "ui/bell": {
+  "dom": true,
+  "h": 244,
+  "src": "assets/ui/bell.webp",
+  "w": 308
+ },
+ "ui/bullet_off": {
+  "dom": true,
+  "h": 294,
+  "src": "assets/ui/bullet_off.webp",
+  "w": 106
+ },
+ "ui/bullet_on": {
+  "dom": true,
+  "h": 279,
+  "src": "assets/ui/bullet_on.webp",
+  "w": 84
+ },
+ "ui/cat_sticker": {
+  "dom": true,
+  "h": 191,
+  "src": "assets/ui/cat_sticker.webp",
+  "w": 238
+ },
+ "ui/cord_off": {
+  "dom": true,
+  "h": 62,
+  "src": "assets/ui/cord_off.webp",
+  "w": 1400
+ },
+ "ui/cord_on": {
+  "dom": true,
+  "h": 58,
+  "src": "assets/ui/cord_on.webp",
+  "w": 1400
+ },
+ "ui/corkboard": {
+  "dom": true,
+  "h": 1322,
+  "src": "assets/ui/corkboard.webp",
+  "w": 1085
+ },
+ "ui/cur_grab": {
+  "dom": true,
+  "h": 400,
+  "seal": "canonical",
+  "src": "assets/ui/cur_grab.webp",
+  "w": 300
+ },
+ "ui/cur_hover": {
+  "dom": true,
+  "h": 400,
+  "seal": "canonical",
+  "src": "assets/ui/cur_hover.webp",
+  "w": 369
+ },
+ "ui/cur_normal": {
+  "dom": true,
+  "h": 400,
+  "seal": "canonical",
+  "src": "assets/ui/cur_normal.webp",
+  "w": 350
+ },
+ "ui/cur_press": {
+  "dom": true,
+  "h": 317,
+  "seal": "canonical",
+  "src": "assets/ui/cur_press.webp",
+  "w": 400
+ },
+ "ui/d0": {
+  "dom": true,
+  "h": 240,
+  "src": "assets/ui/d0.webp",
+  "w": 195
+ },
+ "ui/d1": {
+  "dom": true,
+  "h": 248,
+  "src": "assets/ui/d1.webp",
+  "w": 170
+ },
+ "ui/d2": {
+  "dom": true,
+  "h": 245,
+  "src": "assets/ui/d2.webp",
+  "w": 196
+ },
+ "ui/d3": {
+  "dom": true,
+  "h": 246,
+  "src": "assets/ui/d3.webp",
+  "w": 184
+ },
+ "ui/d4": {
+  "dom": true,
+  "h": 244,
+  "src": "assets/ui/d4.webp",
+  "w": 206
+ },
+ "ui/d5": {
+  "dom": true,
+  "h": 249,
+  "src": "assets/ui/d5.webp",
+  "w": 186
+ },
+ "ui/d6": {
+  "dom": true,
+  "h": 250,
+  "src": "assets/ui/d6.webp",
+  "w": 195
+ },
+ "ui/d7": {
+  "dom": true,
+  "h": 249,
+  "src": "assets/ui/d7.webp",
+  "w": 185
+ },
+ "ui/d8": {
+  "dom": true,
+  "h": 248,
+  "src": "assets/ui/d8.webp",
+  "w": 196
+ },
+ "ui/d9": {
+  "dom": true,
+  "h": 249,
+  "src": "assets/ui/d9.webp",
+  "w": 180
+ },
+ "ui/dpct": {
+  "dom": true,
+  "h": 236,
+  "src": "assets/ui/dpct.webp",
+  "w": 226
+ },
+ "ui/en_bgm": {
+  "dom": true,
+  "h": 173,
+  "src": "assets/ui/en_bgm.webp",
+  "w": 473
+ },
+ "ui/en_display": {
+  "dom": true,
+  "h": 162,
+  "src": "assets/ui/en_display.webp",
+  "w": 568
+ },
+ "ui/en_english": {
+  "dom": true,
+  "h": 193,
+  "src": "assets/ui/en_english.webp",
+  "w": 535
+ },
+ "ui/en_fullscreen": {
+  "dom": true,
+  "h": 155,
+  "src": "assets/ui/en_fullscreen.webp",
+  "w": 614
+ },
+ "ui/en_language": {
+  "dom": true,
+  "h": 159,
+  "src": "assets/ui/en_language.webp",
+  "w": 611
+ },
+ "ui/en_quit": {
+  "dom": true,
+  "h": 201,
+  "src": "assets/ui/en_quit.webp",
+  "w": 480
+ },
+ "ui/en_settings": {
+  "dom": true,
+  "h": 171,
+  "src": "assets/ui/en_settings.webp",
+  "w": 660
+ },
+ "ui/en_sfx": {
+  "dom": true,
+  "h": 170,
+  "src": "assets/ui/en_sfx.webp",
+  "w": 407
+ },
+ "ui/en_start": {
+  "dom": true,
+  "h": 300,
+  "src": "assets/ui/en_start.webp",
+  "w": 712
+ },
+ "ui/en_window": {
+  "dom": true,
+  "h": 162,
+  "src": "assets/ui/en_window.webp",
+  "w": 602
+ },
+ "ui/fx_dust": {
+  "dom": true,
+  "h": 106,
+  "src": "assets/ui/fx_dust.webp",
+  "w": 104
+ },
+ "ui/fx_heart": {
+  "dom": true,
+  "h": 256,
+  "src": "assets/ui/fx_heart.webp",
+  "w": 279
+ },
+ "ui/fx_heart_s": {
+  "dom": true,
+  "h": 185,
+  "src": "assets/ui/fx_heart_s.webp",
+  "w": 201
+ },
+ "ui/fx_ink1": {
+  "dom": true,
+  "h": 361,
+  "src": "assets/ui/fx_ink1.webp",
+  "w": 355
+ },
+ "ui/fx_ink2": {
+  "dom": true,
+  "h": 339,
+  "src": "assets/ui/fx_ink2.webp",
+  "w": 330
+ },
+ "ui/fx_orb": {
+  "dom": true,
+  "h": 279,
+  "src": "assets/ui/fx_orb.webp",
+  "w": 285
+ },
+ "ui/fx_paw": {
+  "dom": true,
+  "h": 235,
+  "src": "assets/ui/fx_paw.webp",
+  "w": 238
+ },
+ "ui/fx_paw_s": {
+  "dom": true,
+  "h": 204,
+  "src": "assets/ui/fx_paw_s.webp",
+  "w": 199
+ },
+ "ui/fx_ring": {
+  "dom": true,
+  "h": 412,
+  "src": "assets/ui/fx_ring.webp",
+  "w": 416
+ },
+ "ui/fx_shaft": {
+  "dom": true,
+  "h": 359,
+  "src": "assets/ui/fx_shaft.webp",
+  "w": 546
+ },
+ "ui/fx_star_gold": {
+  "dom": true,
+  "h": 301,
+  "src": "assets/ui/fx_star_gold.webp",
+  "w": 288
+ },
+ "ui/fx_star_mint": {
+  "dom": true,
+  "h": 297,
+  "src": "assets/ui/fx_star_mint.webp",
+  "w": 276
+ },
+ "ui/fx_star_pink": {
+  "dom": true,
+  "h": 304,
+  "src": "assets/ui/fx_star_pink.webp",
+  "w": 280
+ },
+ "ui/heart": {
+  "dom": true,
+  "h": 161,
+  "src": "assets/ui/heart.webp",
+  "w": 154
+ },
+ "ui/icon_globe": {
+  "dom": true,
+  "h": 278,
+  "src": "assets/ui/icon_globe.webp",
+  "w": 276
+ },
+ "ui/icon_monitor": {
+  "dom": true,
+  "h": 253,
+  "src": "assets/ui/icon_monitor.webp",
+  "w": 302
+ },
+ "ui/icon_music": {
+  "dom": true,
+  "h": 238,
+  "src": "assets/ui/icon_music.webp",
+  "w": 222
+ },
+ "ui/icon_speaker": {
+  "dom": true,
+  "h": 266,
+  "src": "assets/ui/icon_speaker.webp",
+  "w": 296
+ },
+ "ui/ja_display": {
+  "dom": true,
+  "h": 213,
+  "src": "assets/ui/ja_display.webp",
+  "w": 580
+ },
+ "ui/ja_fullscreen": {
+  "dom": true,
+  "h": 198,
+  "src": "assets/ui/ja_fullscreen.webp",
+  "w": 579
+ },
+ "ui/ja_japanese": {
+  "dom": true,
+  "h": 218,
+  "src": "assets/ui/ja_japanese.webp",
+  "w": 537
+ },
+ "ui/ja_language": {
+  "dom": true,
+  "h": 239,
+  "src": "assets/ui/ja_language.webp",
+  "w": 450
+ },
+ "ui/ja_quit": {
+  "dom": true,
+  "h": 201,
+  "src": "assets/ui/ja_quit.webp",
+  "w": 550
+ },
+ "ui/ja_settings": {
+  "dom": true,
+  "h": 238,
+  "src": "assets/ui/ja_settings.webp",
+  "w": 475
+ },
+ "ui/ja_start": {
+  "dom": true,
+  "h": 343,
+  "src": "assets/ui/ja_start.webp",
+  "w": 640
+ },
+ "ui/ja_window": {
+  "dom": true,
+  "h": 213,
+  "src": "assets/ui/ja_window.webp",
+  "w": 567
+ },
+ "ui/knob_bunny": {
+  "dom": true,
+  "h": 246,
+  "src": "assets/ui/knob_bunny.webp",
+  "w": 233
+ },
+ "ui/knot_l": {
+  "dom": true,
+  "h": 355,
+  "src": "assets/ui/knot_l.webp",
+  "w": 281
+ },
+ "ui/knot_r": {
+  "dom": true,
+  "h": 354,
+  "src": "assets/ui/knot_r.webp",
+  "w": 284
+ },
+ "ui/logo_en": {
+  "dom": true,
+  "h": 432,
+  "src": "assets/ui/logo_en.webp",
+  "w": 1400
+ },
+ "ui/logo_ja": {
+  "dom": true,
+  "h": 838,
+  "src": "assets/ui/logo_ja.webp",
+  "w": 1400
+ },
+ "ui/logo_zh": {
+  "dom": true,
+  "h": 766,
+  "src": "assets/ui/logo_zh.webp",
+  "w": 1400
+ },
+ "ui/paw_stamp": {
+  "dom": true,
+  "h": 247,
+  "src": "assets/ui/paw_stamp.webp",
+  "w": 261
+ },
+ "ui/petal1": {
+  "dom": true,
+  "h": 157,
+  "src": "assets/ui/petal1.webp",
+  "w": 196
+ },
+ "ui/petal2": {
+  "dom": true,
+  "h": 103,
+  "src": "assets/ui/petal2.webp",
+  "w": 145
+ },
+ "ui/petal3": {
+  "dom": true,
+  "h": 142,
+  "src": "assets/ui/petal3.webp",
+  "w": 204
+ },
+ "ui/petal4": {
+  "dom": true,
+  "h": 136,
+  "src": "assets/ui/petal4.webp",
+  "w": 166
+ },
+ "ui/petal5": {
+  "dom": true,
+  "h": 128,
+  "src": "assets/ui/petal5.webp",
+  "w": 225
+ },
+ "ui/pin1": {
+  "dom": true,
+  "h": 226,
+  "src": "assets/ui/pin1.webp",
+  "w": 170
+ },
+ "ui/pin2": {
+  "dom": true,
+  "h": 208,
+  "src": "assets/ui/pin2.webp",
+  "w": 200
+ },
+ "ui/pin3": {
+  "dom": true,
+  "h": 188,
+  "src": "assets/ui/pin3.webp",
+  "w": 200
+ },
+ "ui/sheet_h": {
+  "dom": true,
+  "h": 308,
+  "src": "assets/ui/sheet_h.webp",
+  "w": 515
+ },
+ "ui/sheet_n": {
+  "dom": true,
+  "h": 274,
+  "src": "assets/ui/sheet_n.webp",
+  "w": 498
+ },
+ "ui/sheet_p": {
+  "dom": true,
+  "h": 269,
+  "src": "assets/ui/sheet_p.webp",
+  "w": 494
+ },
+ "ui/tab_h": {
+  "dom": true,
+  "h": 209,
+  "src": "assets/ui/tab_h.webp",
+  "w": 377
+ },
+ "ui/tab_n": {
+  "dom": true,
+  "h": 173,
+  "src": "assets/ui/tab_n.webp",
+  "w": 326
+ },
+ "ui/tab_p": {
+  "dom": true,
+  "h": 158,
+  "src": "assets/ui/tab_p.webp",
+  "w": 325
+ },
+ "ui/tag_h": {
+  "dom": true,
+  "h": 331,
+  "src": "assets/ui/tag_h.webp",
+  "w": 310
+ },
+ "ui/tag_n": {
+  "dom": true,
+  "h": 297,
+  "src": "assets/ui/tag_n.webp",
+  "w": 311
+ },
+ "ui/tag_p": {
+  "dom": true,
+  "h": 294,
+  "src": "assets/ui/tag_p.webp",
+  "w": 277
+ },
+ "ui/tape_cream": {
+  "dom": true,
+  "h": 195,
+  "src": "assets/ui/tape_cream.webp",
+  "w": 475
+ },
+ "ui/tape_mint": {
+  "dom": true,
+  "h": 186,
+  "src": "assets/ui/tape_mint.webp",
+  "w": 440
+ },
+ "ui/tape_pink": {
+  "dom": true,
+  "h": 205,
+  "src": "assets/ui/tape_pink.webp",
+  "w": 496
+ },
+ "ui/title_bg": {
+  "dom": true,
+  "h": 1081,
+  "src": "assets/ui/title_bg.webp",
+  "w": 1920
+ },
+ "ui/title_cat": {
+  "dom": true,
+  "from": "art/gpt_sets/set_3/cat_team_standing.png",
+  "h": 1536,
+  "seal": "canonical",
+  "src": "assets/ui/title_cat.webp",
+  "w": 943
+ },
+ "ui/title_front_branch": {
+  "dom": true,
+  "h": 772,
+  "src": "assets/ui/title_front_branch.webp",
+  "w": 1400
+ },
+ "ui/title_front_desk": {
+  "dom": true,
+  "h": 808,
+  "src": "assets/ui/title_front_desk.webp",
+  "w": 1063
+ },
+ "ui/title_pink": {
+  "dom": true,
+  "from": "art/gpt_sets/set_2/pink_team_standing.png",
+  "h": 1536,
+  "src": "assets/ui/title_pink.webp",
+  "w": 973
+ },
+ "ui/title_room": {
+  "dom": true,
+  "h": 1081,
+  "src": "assets/ui/title_room.webp",
+  "w": 1920
+ },
+ "ui/title_sky": {
+  "dom": true,
+  "h": 1081,
+  "src": "assets/ui/title_sky.webp",
+  "w": 1920
+ },
+ "ui/zh_chinese": {
+  "dom": true,
+  "h": 200,
+  "src": "assets/ui/zh_chinese.webp",
+  "w": 369
+ },
+ "ui/zh_display": {
+  "dom": true,
+  "h": 186,
+  "src": "assets/ui/zh_display.webp",
+  "w": 500
+ },
+ "ui/zh_fullscreen": {
+  "dom": true,
+  "h": 185,
+  "src": "assets/ui/zh_fullscreen.webp",
+  "w": 541
+ },
+ "ui/zh_language": {
+  "dom": true,
+  "h": 231,
+  "src": "assets/ui/zh_language.webp",
+  "w": 437
+ },
+ "ui/zh_quit": {
+  "dom": true,
+  "h": 210,
+  "src": "assets/ui/zh_quit.webp",
+  "w": 559
+ },
+ "ui/zh_settings": {
+  "dom": true,
+  "h": 210,
+  "src": "assets/ui/zh_settings.webp",
+  "w": 394
+ },
+ "ui/zh_start": {
+  "dom": true,
+  "h": 367,
+  "src": "assets/ui/zh_start.webp",
+  "w": 981
+ },
+ "ui/zh_window": {
+  "dom": true,
+  "h": 195,
+  "src": "assets/ui/zh_window.webp",
+  "w": 472
  }
 }

@@ -7,7 +7,7 @@
 //   collections  characters enemies projectiles bosses items episodes comics sets
 //                every file is a map  id -> entry.  A later pack's entry with an id that already exists is deep-merged
 //                over it (a mod can change a single number); a new id adds a new entry.
-//   objects      tuning text theme — plain objects, deep-merged the same way.
+//   objects      tuning text theme ui — plain objects, deep-merged the same way (ui = screen layouts).
 //   Arrays are always replaced, never merged.
 // Assets: each pack's manifest maps keys ("enemy/zomb_w0") to files relative to the pack; a later pack with the same key
 // replaces the image (re-skin mods).
@@ -16,7 +16,7 @@
 // Broken or missing files never stop the game: problems are collected in C.errors (shown in the debug menu).
 
 export const COLLECTIONS = ['characters', 'enemies', 'projectiles', 'bosses', 'items', 'episodes', 'comics', 'sets'];
-export const OBJECTS = ['tuning', 'text', 'theme'];
+export const OBJECTS = ['tuning', 'text', 'theme', 'ui'];
 
 export const C = { packs: [], assets: {}, errors: [] };
 for (const k of [...COLLECTIONS, ...OBJECTS]) C[k] = {};

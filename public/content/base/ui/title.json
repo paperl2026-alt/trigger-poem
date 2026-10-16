@@ -1,0 +1,65 @@
+{
+  "_doc": "标题+设置屏（同一个画面）的布局。坐标是 1920x1080 设计画布上的像素，游戏按窗口大小等比缩放。x y = 左上角，w / h = 显示宽或高（只给一个就按图片比例），rot = 旋转角度。depth = 视差深度：鼠标移动时这一层平移 parallax.max x depth 像素（0 不动，越大越近、动得越多；>1 是镜头前的前景）。layers 从远到近排列；characters 的 x 是人物中线、y 是图片顶边。board 整组（软木板+所有设置项）会随鼠标轻微倾斜 tilt 度。letters：每个文字素材在三种语言下用哪张图（all = 共用）。图片键名见 assets/manifest.json 里 ui/ 开头的条目。",
+  "title": {
+    "design": [1920, 1080],
+    "parallax": { "max": 46, "ease": 5 },
+    "layers": [
+      { "img": "ui/title_sky", "cover": true, "depth": 0.1 },
+      { "shafts": [{ "x": 980, "y": -160, "w": 900, "rot": 8 }, { "x": 1320, "y": -120, "w": 760, "rot": 2 }], "depth": 0.2 },
+      { "img": "ui/title_room", "cover": true, "depth": 0.24 }
+    ],
+    "dust": { "box": [1000, 120, 1900, 760], "count": 26, "depth": 0.3 },
+    "petals": { "far": 10, "near": 4 },
+    "characters": [
+      { "img": "ui/title_pink", "x": 1800, "y": 40, "h": 1640, "breath": 0.22, "depth": 0.48 },
+      { "img": "ui/title_cat", "x": 1462, "y": 70, "h": 1640, "breath": 0.27, "depth": 0.58 }
+    ],
+    "front": [
+      { "img": "ui/title_front_desk", "x": 1470, "y": 760, "w": 560, "depth": 1.05 },
+      { "img": "ui/title_front_branch", "x": -170, "y": -170, "w": 480, "depth": 1.35, "blur": 3 }
+    ],
+    "logo": { "x": 786, "y": 24, "w": 470, "rot": -4, "depth": 0.35 },
+    "board": { "img": "ui/corkboard", "x": 26, "y": 18, "w": 770, "rot": -1.2, "depth": 0.12, "tilt": 5 },
+    "pins": [{ "img": "ui/pin3", "x": 50, "y": 34, "w": 46 }, { "img": "ui/pin3", "x": 728, "y": 40, "w": 46 }],
+    "bgm": { "icon": "ui/icon_music", "label": "bgm", "y": 140, "track": [352, 580], "value": 668 },
+    "sfx": { "icon": "ui/icon_speaker", "label": "sfx", "y": 262, "track": [352, 580], "bullets": 10, "value": 668 },
+    "language": {
+      "icon": "ui/icon_globe",
+      "label": "language",
+      "y": 372,
+      "tabs": { "y": 452, "x": [96, 316, 536], "w": 200, "options": ["zh", "ja", "en"] }
+    },
+    "display": {
+      "icon": "ui/icon_monitor",
+      "label": "display",
+      "y": 556,
+      "tabs": { "y": 636, "x": [96, 416], "w": 290, "options": ["fullscreen", "window"] }
+    },
+    "rowIcon": { "x": 70, "w": 72 },
+    "rowLabel": { "x": 156, "h": 58 },
+    "start": { "x": 104, "y": 704, "w": 600, "letterH": 150 },
+    "quit": { "x": 706, "y": 892, "w": 150, "rot": 8, "letterH": 46 },
+    "letters": {
+      "start": { "zh": "ui/zh_start", "ja": "ui/ja_start", "en": "ui/en_start" },
+      "quit": { "zh": "ui/zh_quit", "ja": "ui/ja_quit", "en": "ui/en_quit" },
+      "language": { "zh": "ui/zh_language", "ja": "ui/ja_language", "en": "ui/en_language" },
+      "display": { "zh": "ui/zh_display", "ja": "ui/ja_display", "en": "ui/en_display" },
+      "fullscreen": { "zh": "ui/zh_fullscreen", "ja": "ui/ja_fullscreen", "en": "ui/en_fullscreen" },
+      "window": { "zh": "ui/zh_window", "ja": "ui/ja_window", "en": "ui/en_window" },
+      "bgm": { "all": "ui/en_bgm" },
+      "sfx": { "all": "ui/en_sfx" },
+      "zh": { "all": "ui/zh_chinese" },
+      "ja": { "all": "ui/ja_japanese" },
+      "en": { "all": "ui/en_english" }
+    },
+    "logos": { "zh": "ui/logo_zh", "ja": "ui/logo_ja", "en": "ui/logo_en" },
+    "digits": ["ui/d0", "ui/d1", "ui/d2", "ui/d3", "ui/d4", "ui/d5", "ui/d6", "ui/d7", "ui/d8", "ui/d9"],
+    "percent": "ui/dpct",
+    "decor": [
+      { "img": "ui/tape_pink", "x": 560, "y": 8, "w": 190, "rot": 22 },
+      { "img": "ui/tape_mint", "x": 10, "y": 640, "w": 150, "rot": -64 },
+      { "img": "ui/cat_sticker", "x": 22, "y": 962, "w": 96, "rot": 10 },
+      { "img": "ui/heart", "x": 700, "y": 600, "w": 44, "rot": -12 }
+    ]
+  }
+}

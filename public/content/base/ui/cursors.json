@@ -1,0 +1,13 @@
+{
+  "_doc": "光标。每个场景一套：normal 平时，hover 指到可以点的东西上，press 按下，grab 拖动滑条。img 是图片，hot 是'点击点'在图片里的位置（0~1，左上角是 0,0），size 是光标宽度（像素）。写 false 表示这个场景不显示光标（战斗里由 HUD 画准星）。",
+  "cursors": {
+    "menu": {
+      "size": 58,
+      "normal": { "img": "ui/cur_normal", "hot": [0.14, 0.03] },
+      "hover": { "img": "ui/cur_hover", "hot": [0.5, 0.36] },
+      "press": { "img": "ui/cur_press", "hot": [0.5, 0.52] },
+      "grab": { "img": "ui/cur_grab", "hot": [0.5, 0.42] }
+    },
+    "battle": false
+  }
+}

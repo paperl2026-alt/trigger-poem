@@ -1,0 +1,44 @@
+{
+  "_doc": "猫爪咒印统一：每张画到猫爪的图在这里登记一次。src 原图，erase 要抹掉的原咒印范围 [x0,y0,x1,y1]（原图像素），center 标准咒印圆环中心，ring 圆环直径（像素），rot 旋转角度（逆时针为正，吊坠往右摆），squash 纵向压扁（透视），out 输出到内容包的 ui/<out>。工具：python -I tools/seal_fix.py",
+  "title_cat": {
+    "src": "art/gpt_sets/set_3/cat_team_standing.png",
+    "erase": [242, 288, 322, 418],
+    "center": [278, 329],
+    "ring": 56,
+    "rot": 6.7,
+    "out": "title_cat"
+  },
+  "cur_normal": {
+    "src": "art/raw/cursor_src/cur_normal.png",
+    "erase": [150, 145, 285, 345],
+    "center": [213, 215],
+    "ring": 88,
+    "rot": 32,
+    "out": "cur_normal"
+  },
+  "cur_hover": {
+    "src": "art/raw/cursor_src/cur_hover.png",
+    "erase": [140, 218, 250, 372],
+    "center": [194, 268],
+    "ring": 72,
+    "rot": 0,
+    "out": "cur_hover"
+  },
+  "cur_press": {
+    "src": "art/raw/cursor_src/cur_press.png",
+    "erase": [158, 108, 305, 272],
+    "center": [209, 160],
+    "ring": 66,
+    "rot": 26,
+    "squash": 0.75,
+    "out": "cur_press"
+  },
+  "cur_grab": {
+    "src": "art/raw/cursor_src/cur_grab.png",
+    "erase": [125, 195, 225, 345],
+    "center": [173, 250],
+    "ring": 62,
+    "rot": 22,
+    "out": "cur_grab"
+  }
+}

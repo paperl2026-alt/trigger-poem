@@ -6,7 +6,9 @@ import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
 import { initAudio, sfx } from './core/audio.js';
 import { Game } from './battle/game.js';
-import { showTitle, showSelect, showResults, showGameOver } from './ui/screens.js';
+import { showSelect, showResults, showGameOver } from './ui/screens.js';
+import { showTitle } from './ui/title.js';
+import { initCursor, cursorScene } from './ui/cursor.js';
 import { SAVE, initSave } from './core/save.js';
 import { initLang } from './core/i18n.js';
 import { initTheme } from './battle/fx.js';
@@ -87,6 +89,7 @@ const GAME_KEYS = ['Space', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', '
 window.addEventListener('keydown', (e) => {
   G.keys[e.code] = true;
   if (G.game && GAME_KEYS.includes(e.code)) e.preventDefault();
+  if (!G.game && G.titleStart && !e.repeat && (e.code === 'Enter' || e.code === 'Space')) G.titleStart(); // title: Enter / Space starts
   if (!G.game && G.select && !e.repeat) { // chapter select: arrows flip pages, Enter departs
     if (e.code === 'ArrowLeft') G.select.flip(-1);
     if (e.code === 'ArrowRight') G.select.flip(1);
@@ -104,7 +107,12 @@ function resetFx() {
   G.post.u.warn.value = 0;
   G.post.u.dim.value = 0;
 }
+// the menu screen currently shown (title has a frame loop of its own to stop)
+let screenApi = null;
+function clearScreen() { if (screenApi && screenApi.dispose) screenApi.dispose(); screenApi = null; }
 function startRun(epId = 'ep0', step = 0) {
+  clearScreen();
+  cursorScene('battle'); // the HUD draws each heroine's reticle
   G.skipComics = DBG.skip;
   G.titleStart = null; G.select = null;
   document.getElementById('ui').innerHTML = '';
@@ -118,18 +126,22 @@ function endRun() { if (G.game) { G.game.dispose(); G.game = null; } resetFx(); 
 function toTitle() {
   endRun();
   G.select = null;
-  G.titleStart = () => { initAudio(); toSelect(); };
-  showTitle(G.titleStart, { settings: () => settings.open() });
+  clearScreen();
+  const title = screenApi = showTitle({ start: () => toSelect() });
+  G.titleStart = () => { initAudio(); title.start(); };
 }
 function toSelect() {
   endRun();
   G.titleStart = null;
+  clearScreen();
+  cursorScene('menu');
   G.select = showSelect({ title: toTitle, settings: () => settings.open(), play: (id) => { initAudio(); startRun(id); } });
 }
-G.showResults = (st) => { G.game.hud.show(false); const done = () => toSelect(); endRun(); showResults(st, done); };
+G.showResults = (st) => { G.game.hud.show(false); const done = () => toSelect(); endRun(); cursorScene('menu'); showResults(st, done); };
 G.showGameOver = (st) => {
   G.game.hud.show(false);
   const ep = G.game.ep.id;
+  cursorScene('menu');
   showGameOver(st, () => startRun(ep, st.checkpoint), toSelect);
 };
 
@@ -197,6 +209,7 @@ async function boot() {
   await loadContent(import.meta.env.BASE_URL || './');
   initSettings(); initSave(); initLang(); initTheme();
   G.content = C; // debug handle
+  initCursor();
   G.ready = true;
   resize();
   await loadAll((p) => { bar.style.width = `${Math.round(p * 100)}%`; });
