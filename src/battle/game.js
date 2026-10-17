@@ -22,6 +22,7 @@ import { C, T } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const EDGE_C = new THREE.Color();
 
 export class Game {
   // run: { ep, team: [id1P, id2P], bag: [...] }
@@ -67,7 +68,7 @@ export class Game {
     const p2 = this.players[1];
     const on = this.p2on();
     this.hud.panels[1].el.classList.toggle('hidden', !on);
-    if (!on) { p2.state = 'away'; p2.poses[p2.pose] && (p2.poses[p2.pose].visible = false); }
+    if (!on) { p2.state = 'away'; p2.poses[p2.pose] && (p2.poses[p2.pose].visible = false); if (p2.hero) p2.hero.g.visible = false; }
     else if (p2.state === 'away' && this.combat) { p2.state = 'cover'; p2.y0 = 0; }
   }
 
@@ -497,6 +498,11 @@ export class Game {
     const hid = ['cover', 'reload'].includes(this.players[0].state);
     this.post.u.dim.value += ((hid ? 0.5 : 0) - this.post.u.dim.value) * Math.min(1, dt * 8);
     this.post.u.warn.value = Math.max(0, this.post.u.warn.value - dt * 1.5);
+    for (const p of this.players) {
+      const E = (p.slot ? this.post.u.edgeB : this.post.u.edgeA).value, col = EDGE_C.set(p.c.color);
+      const on = (p.slot === 0 || this.p2on()) && this.combat;
+      E.set(col.r, col.g, col.b, on ? Math.min(1.2, (p.edge || 0) + (p.edgePulse || 0) * 0.6) : 0);
+    }
     if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp);
     setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.12 + (active ? 0.4 : 0)) : 0.2);
     this.hud.update(dt);

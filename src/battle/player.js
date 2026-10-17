@@ -13,6 +13,9 @@ import { bagFx } from './items.js';
 import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 import { Soft } from './soft.js';
+import { Heroine } from './heroine.js';
+import { FEVER_KEYS } from './fever.js';
+const AURA = new THREE.Color();
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
@@ -34,7 +37,9 @@ export class Player {
     this.group = new THREE.Group();
     game.world.camera.add(this.group);
     this.poses = {};
-    for (const [role, key] of Object.entries(this.c.poses)) {
+    // the jiggle heroine (two stills + procedural motion) when the character has a rig; the old pose-sprite pack otherwise
+    this.hero = this.c.rig ? new Heroine(game, this) : null;
+    for (const [role, key] of Object.entries(this.hero ? {} : this.c.poses)) {
       if (!tex[key]) continue;
       const m = paperMesh(tex[key], 1, { pivot: 'bottom', segs: [18, 30] });
       m.visible = false;
@@ -46,7 +51,7 @@ export class Player {
       this.poses[role] = m;
       this.group.add(m);
     }
-    this.soft = new Soft(this);
+    this.soft = this.hero || new Soft(this);
     this.pose = 'cover';
     this.flashes = { rifle: tex['hud/flash_rifle'], gatling: tex['hud/flash_gatling'], mantra: tex['hud/flash_mantra'] };
     this.flashMesh = paperMesh(this.flashes[this.w.kind] || this.flashes.rifle, 1, { pivot: 'center' });
@@ -78,6 +83,7 @@ export class Player {
     this.baseX = frame.x + frame.w * Lo.bodyX[this.slot ? 1 : 0];
     this.bottom = H * Lo.bottom;
     const standH = H * Lo.standHeight;
+    if (this.hero) this.hero.layout(W, H);
     // every pose of a pack shares one scale: the tallest standing pose maps to standH
     // the crouching poses set the scale (standing / running ones come out taller, sitting ones shorter)
     const ref = Math.max(...['aim', 'cover'].map((r) => this.poses[r]?.userData.rawH || 0)) || 1000;
@@ -90,6 +96,7 @@ export class Player {
   }
 
   setPose(p) {
+    if (this.hero) { this.pose = p; return; }   // the heroine shows cover / fire herself (heroine.js)
     const FALLBACK = { runB: 'run', down: 'hurt', peek: 'cover', taunt: 'cover', recoil: 'aim', aimOut: 'aim', active: 'aim', activeOut: 'aimOut' };
     while (!this.poses[p] && FALLBACK[p]) p = FALLBACK[p];
     if (!this.poses[p]) p = 'cover';
@@ -100,6 +107,7 @@ export class Player {
     this.soft.kick(0.6);
   }
   muzzlePos() {
+    if (this.hero) return this.hero.muzzle();
     const m = this.poses[this.pose];
     if (!m) return { x: this.baseX, y: this.H * 0.3 };
     const mz = this.c.muzzle[this.pose] || this.c.muzzle.aim;
@@ -121,7 +129,7 @@ export class Player {
     this.exposed = false;
     this.fever.hurt();
     if (this.beaming) this.endActive(false);
-    this.soft.kick(1.4);
+    if (this.hero) this.hero.hurt(n >= 25); else this.soft.kick(1.4);
     if (this.hp <= 0) { this.state = 'down'; this.downT = PL().downTime; return true; }
     this.state = 'hurt';
     this.hurtT = PL().hurtTime;
@@ -138,9 +146,10 @@ export class Player {
     if (this.state === 'reload' || this.state === 'cover') this.state = 'out';
     this.ammo = this.w.mag;
     sfx.madness();
-    g.fx.cutIn(this.c.cutin, this.side, this.c.hex);
-    g.G.stop(0.85);
-    g.post.flash(0.6, this.c.hex);
+    // no cut-in band and no full-screen flash (DESIGN: never break the rhythm): her aura flares and her side of the screen glows
+    g.G.stop(0.06);
+    if (this.hero) this.hero.pulse(new THREE.Color(this.c.hex));
+    this.edgePulse = 1.4;
     g.hud.setFace(this.slot, 'hype', this.a.dur);
     if (this.a.kind === 'beam') { this.beamGrace = T.combat.beam.grace; this.beam = g.fx.beam(this.c.hex); this.beamTick = 0; }
   }
@@ -216,6 +225,28 @@ export class Player {
     this.setPose(pose);
     this.kick = Math.max(0, this.kick - dt * 10);
     this.pop += (1 - this.pop) * Math.min(1, dt * 18);
+    if (this.hero) {
+      // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze
+      const lv = FEVER_KEYS.reduce((s, k) => s + this.fever.level(k), 0), maxSum = FEVER_KEYS.length * T.fever.maxLevel;
+      while (this.fever.ups.length) { const k = this.fever.ups.shift(); this.hero.pulse(new THREE.Color(C.theme.feverColor[k])); this.edgePulse = 1; sfx.ui && sfx.ui(); }
+      AURA.set(this.c.color);
+      const act = this.activeOn, full = this.fever.full;
+      this.hero.setAura(act ? AURA.offsetHSL(Math.sin(t * 2) * 0.06, 0.1, 0.05) : AURA, act ? 0.95 : lv ? 0.12 + 0.5 * lv / maxSum : 0, act ? 1 : full ? 0.7 : 0.15 * lv / maxSum, act ? 1 : full ? 0.6 : 0);
+      this.edgePulse = Math.max(0, (this.edgePulse || 0) - dt * 1.4);
+      this.edge = act ? 0.85 + 0.15 * Math.sin(t * 9) : full ? 0.45 + 0.1 * Math.sin(t * 4) : lv ? 0.08 + 0.2 * lv / maxSum : 0;
+      const run = this.state === 'run' ? Math.abs(Math.sin(t * 10 + this.slot)) * this.H * 0.022 : 0;
+      const hop = this.state === 'victory' ? Math.abs(Math.sin(t * 5 + this.slot)) * this.H * 0.03 : 0;
+      const shake = this.state === 'hurt' ? Math.sin(t * 60) * this.H * 0.006 : 0;
+      this.hero.update(dt, t, {
+        state: this.state, x: this.baseX + shake, y: this.bottom + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0),
+        lean: this.state === 'run' ? 0.07 : this.state === 'reload' ? 0.03 : 0,
+        dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
+        opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,
+        flash: this.activeOn ? 0.08 + 0.06 * Math.sin(t * 12) : 0,
+      });
+      if (this.flashMesh.visible) { this.flashT -= dt; if (this.flashT <= 0) this.flashMesh.visible = false; }
+      return;
+    }
     const m = this.poses[this.pose];
     if (!m) return;
     m.visible = this.state !== 'away';
@@ -248,6 +279,7 @@ export class Player {
     if (this.state === 'reload') return;
     this.state = 'reload';
     this.reloadT = this.reloadT0 = this.w.reload * k * this.fever.reloadMul;
+    if (this.hero) this.hero.kick(0.7);   // ducking down to reload
     sfx.reload();
   }
 
@@ -276,7 +308,8 @@ export class Player {
     this.flashMesh.visible = true; this.flashT = 0.045;
     g.fx.sparks(mz.x, mz.y, 3, w.kind === 'mantra' ? COL.gold : COL.fire, 0.6);
     this.kick = 1;
-    this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces
+    if (this.hero) this.hero.shoot(this.gatling);
+    else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces
     const pan = (this.aimX / g.W - 0.5) * 0.6;
     if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan);
     if (w.kind === 'rifle' && Math.random() < 0.5) sfx.shell();

@@ -42,3 +42,8 @@
   5. 掩体不要比人大；
   6. Fever 不要横幅、不要全屏盖，改成角色立绘 shader + 全屏边缘遮罩。
   - 这 6 点进了 PLAN。文档整理成 PLAN / DESIGN / ART / TECH / LOG。
+- 6 点里的 4 / 5 / 6 做完：
+  - 战斗主角换成晃动技术（每人 cover / fire 两张图 + 程序动作，`heroine.js`），R27 关键帧不再用于战斗；
+  - 掩体按画面比例定大小，比主角矮；
+  - Fever / 必杀改成立绘光效 + 屏幕边缘泛光，去掉横幅、cut-in、全屏闪白。
+- 开始 HUD 重新设计：截了一张不带 HUD 的走廊实机画面（`art/ref/hud/battle_clean.png`）做效果图底图。

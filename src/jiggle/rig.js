@@ -72,6 +72,8 @@ void main() {
 }`;
 const FRAG = `
 uniform sampler2D map; uniform sampler2D W0; uniform float flash; uniform float opacity; uniform float showW;
+uniform vec3 tint; uniform float tintAmt; uniform float dark;
+uniform vec4 aura; uniform float auraFlow; uniform float auraPulse; uniform float auraOnly; uniform vec2 texel;
 uniform float wet; uniform float flush; uniform float time; uniform float aspect; uniform sampler2D FL;
 uniform vec4 DR[${MAXD}]; uniform vec4 DV[${MAXD}]; uniform sampler2D SW; uniform vec2 SWpx; uniform float mir;
 const ivec2 NL = ivec2(${LATTICE.NX}, ${LATTICE.NY});
@@ -116,9 +118,19 @@ float sparkle(vec2 uv, float cs) {
   s = max(s, smoothstep(0.22, 0.0, length(q)));
   return s * k;
 }
+// Fever / skill aura (battle): light running up the figure in stripes; the halo copy draws only this, larger, behind her
+float auraLight() {
+  float flow = 0.5 + 0.5 * sin(vUv.y * 26.0 - time * (3.0 + auraFlow * 9.0) + vUv.x * 6.0);
+  return mix(0.55, 1.0, flow * min(1.0, auraFlow + 0.3)) + auraPulse * 1.5 * smoothstep(0.25, 0.0, abs(vUv.y - fract(time * 1.6)));
+}
 void main() {
   vec4 t = texture2D(map, vUv);
   if (t.a < 0.02) discard;
+  if (auraOnly > 0.5) {
+    float k = aura.a * auraLight();
+    gl_FragColor = vec4(aura.rgb * k, t.a * min(1.0, k) * opacity);
+    return;
+  }
   vec3 col = t.rgb;
   // ---- sweat
   vec3 sg = texture2D(W0, vUv).rgb;
@@ -140,6 +152,13 @@ void main() {
     col = mix(col, beads(col, uvA), sk);
     col += vec3(1.0, 0.98, 0.95) * sparkle(uvA, 0.05) * wet * smoothstep(0.2, 0.6, gloss) * 1.1;
   }
+  col = mix(col, tint, tintAmt);          // hit / status tints (battle)
+  if (aura.a > 0.001) {   // rim light just inside the outline
+    float e = 1.0 - min(min(texture2D(map, vUv + vec2(texel.x * 6.0, 0.0)).a, texture2D(map, vUv - vec2(texel.x * 6.0, 0.0)).a),
+                        min(texture2D(map, vUv + vec2(0.0, texel.y * 6.0)).a, texture2D(map, vUv - vec2(0.0, texel.y * 6.0)).a));
+    col += aura.rgb * aura.a * (0.25 + 1.1 * smoothstep(0.1, 0.9, e)) * auraLight();
+  }
+  col *= 1.0 - dark;
   col = mix(col, vec3(1.0), flash);
   if (showW > 0.5 && showW < 1.5) { // part weights
     vec3 k = vA.b * vec3(0.15, 0.45, 1.0) + vB.r * vec3(0.0, 0.9, 0.45) + (vB.g + vB.b) * vec3(0.75, 0.25, 1.0)
@@ -164,7 +183,8 @@ export function rigMesh(tex, weights, rig, fleshDef, segs = [96, 144]) {
       size: { value: new THREE.Vector2(1, ar) }, C: { value: C }, D: { value: CH.map(() => new THREE.Vector4()) },
       BODY: { value: new THREE.Vector4() }, LINES: { value: new THREE.Vector4(rig.lines.ground, rig.lines.hip, rig.lines.waist, rig.lines.chest) },
       PIV: { value: new THREE.Vector4(rig.waistPivot[0], rig.waistPivot[1], rig.neckPivot[0], rig.neckPivot[1]) },
-      flash: { value: 0 }, opacity: { value: 1 }, showW: { value: 0 },
+      flash: { value: 0 }, opacity: { value: 1 }, showW: { value: 0 }, tint: { value: new THREE.Color(1, 0.1, 0.3) }, tintAmt: { value: 0 }, dark: { value: 0 },
+      aura: { value: new THREE.Vector4(1, 1, 1, 0) }, auraFlow: { value: 0 }, auraPulse: { value: 0 }, auraOnly: { value: 0 }, texel: { value: new THREE.Vector2(1 / tex.image.width, 1 / tex.image.height) },
       wet: { value: 0 }, flush: { value: 0 }, time: { value: 0 }, aspect: { value: ar },
       DR: { value: Array.from({ length: MAXD }, () => new THREE.Vector4()) }, DV: { value: Array.from({ length: MAXD }, () => new THREE.Vector4()) },
       SW: { value: null }, SWpx: { value: new THREE.Vector2() }, mir: { value: 1 },

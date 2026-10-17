@@ -1217,6 +1217,122 @@
   "src": "assets/item/loader.webp",
   "w": 232
  },
+ "jig/cat_cover": {
+  "h": 1161,
+  "src": "assets/jig/cat_cover.png",
+  "w": 973
+ },
+ "jig/cat_cover_w0": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/jig/cat_cover_w0.png",
+  "w": 973
+ },
+ "jig/cat_cover_w1": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/jig/cat_cover_w1.png",
+  "w": 973
+ },
+ "jig/cat_cover_w2": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/jig/cat_cover_w2.png",
+  "w": 973
+ },
+ "jig/cat_cover_w3": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/jig/cat_cover_w3.png",
+  "w": 973
+ },
+ "jig/cat_fire": {
+  "h": 1494,
+  "src": "assets/jig/cat_fire.png",
+  "w": 954
+ },
+ "jig/cat_fire_w0": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/jig/cat_fire_w0.png",
+  "w": 954
+ },
+ "jig/cat_fire_w1": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/jig/cat_fire_w1.png",
+  "w": 954
+ },
+ "jig/cat_fire_w2": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/jig/cat_fire_w2.png",
+  "w": 954
+ },
+ "jig/cat_fire_w3": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/jig/cat_fire_w3.png",
+  "w": 954
+ },
+ "jig/pink_cover": {
+  "h": 1317,
+  "src": "assets/jig/pink_cover.png",
+  "w": 991
+ },
+ "jig/pink_cover_w0": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/jig/pink_cover_w0.png",
+  "w": 991
+ },
+ "jig/pink_cover_w1": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/jig/pink_cover_w1.png",
+  "w": 991
+ },
+ "jig/pink_cover_w2": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/jig/pink_cover_w2.png",
+  "w": 991
+ },
+ "jig/pink_cover_w3": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/jig/pink_cover_w3.png",
+  "w": 991
+ },
+ "jig/pink_fire": {
+  "h": 1476,
+  "src": "assets/jig/pink_fire.png",
+  "w": 968
+ },
+ "jig/pink_fire_w0": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/jig/pink_fire_w0.png",
+  "w": 968
+ },
+ "jig/pink_fire_w1": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/jig/pink_fire_w1.png",
+  "w": 968
+ },
+ "jig/pink_fire_w2": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/jig/pink_fire_w2.png",
+  "w": 968
+ },
+ "jig/pink_fire_w3": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/jig/pink_fire_w3.png",
+  "w": 968
+ },
  "kagura/active": {
   "h": 1014,
   "rawH": 992,

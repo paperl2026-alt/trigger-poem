@@ -7,6 +7,7 @@ const FRAG = `
 uniform sampler2D tDiffuse; uniform float time; uniform float aspect;
 uniform float flash; uniform vec3 flashColor; uniform float chroma; uniform float blur; uniform vec2 center;
 uniform float madness; uniform float hurt; uniform float dim; uniform float grain; uniform float wipe; uniform float warn; uniform vec3 warnColor;
+uniform vec4 edgeA; uniform vec4 edgeB;
 varying vec2 vUv;
 ${NOISE_GLSL}
 vec3 hueShift(vec3 c, float a){ const vec3 k = vec3(0.57735); float ca = cos(a); return c * ca + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - ca); }
@@ -50,6 +51,17 @@ void main(){
   c *= 1.0 - dim * 0.12;
   c = mix(c, vec3(0.75, 0.0, 0.12), clamp(hurt * (v * 1.4 + 0.05), 0.0, 1.0));
   c = mix(c, warnColor, clamp(warn * smoothstep(0.3, 1.0, r) * 1.4, 0.0, 0.85)); // edge pulse for unstoppable attacks
+  // the heroines' Fever / skill glow: licking in from her side of the screen (1P left, 2P right), stronger low down
+  for (int s = 0; s < 2; s++) {
+    vec4 E = s == 0 ? edgeA : edgeB;
+    if (E.a < 0.001) continue;
+    float x = s == 0 ? vUv.x : 1.0 - vUv.x;
+    float fl = fbm(vec2(vUv.y * 5.0 - time * 1.2, time * 0.7 + float(s) * 3.0));
+    float band = smoothstep(0.08 + 0.2 * E.a + fl * 0.09, 0.0, x) * (0.55 + 0.45 * smoothstep(1.0, 0.2, vUv.y));
+    float stripes = 0.75 + 0.25 * sin(vUv.y * 40.0 - time * 8.0);
+    c += E.rgb * band * stripes * min(1.0, E.a) * 0.9;
+    c = mix(c, E.rgb, band * 0.18 * E.a);
+  }
   // stream grain + faint scanlines
   float gn = hash12(vUv * vec2(1920.0, 1080.0) + fract(time * 7.0) * 100.0);
   c += (gn - 0.5) * grain;
@@ -74,7 +86,7 @@ export class Post {
     this.u = {
       tDiffuse: { value: this.rt.texture }, time: { value: 0 }, aspect: { value: 1 },
       flash: { value: 0 }, flashColor: { value: new THREE.Color(1, 1, 1) }, chroma: { value: 0 }, blur: { value: 0 }, center: { value: new THREE.Vector2(0.5, 0.5) },
-      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) },
+      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
     };
     this.scene = new THREE.Scene();
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);

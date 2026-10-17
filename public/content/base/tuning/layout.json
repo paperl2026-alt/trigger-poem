@@ -1,11 +1,12 @@
 {
-  "_doc": "主角在屏幕上的站位。standHeight：站姿占屏幕高度的比例（全身入镜）。bodyX：1P / 2P 身体中线在 HUD 框里的横向位置。bottom：脚离屏幕底边的距离，margin：离屏幕边缘的最小距离（都是屏幕高度比例）。heroineDist：主角贴在镜头前的距离（米，一般不用动）。hudFrame：超宽屏时 HUD 和主角限制在哪个比例的框里（设置里的 16:9 / 21:9 / 全宽）。",
+  "_doc": "主角在屏幕上的站位。standHeight：站姿占屏幕高度的比例（全身入镜）。bodyX：1P / 2P 身体中线在 HUD 框里的横向位置。bottom：脚离屏幕底边的距离，margin：离屏幕边缘的最小距离（都是屏幕高度比例）。heroineDist：主角贴在镜头前的距离（米，一般不用动）。hudFrame：超宽屏时 HUD 和主角限制在哪个比例的框里（设置里的 16:9 / 21:9 / 全宽）。 canvas：晃动立绘的画布高度占屏幕高度的比例（射击站姿约等于 standHeight）。",
   "layout": {
     "standHeight": 0.52,
     "bodyX": [0.2, 0.8],
     "bottom": 0.025,
     "margin": 0.012,
     "heroineDist": 1.4,
-    "hudFrame": { "16:9": 1.7778, "21:9": 2.3333, "full": 99 }
+    "hudFrame": { "16:9": 1.7778, "21:9": 2.3333, "full": 99 },
+    "canvas": 0.56
   }
 }

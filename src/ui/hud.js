@@ -238,17 +238,12 @@ export class Hud {
         this.comboN.textContent = c;
         this.comboEl.style.setProperty('--s', Math.min(1.6, 1 + c / 60));
         this.comboEl.dataset.tier = c >= 50 ? 3 : c >= 25 ? 2 : c >= 10 ? 1 : 0;
-        if (c === 10 || c === 25 || c === 50 || c === 100) this.shout(c >= 50 ? L3('无双!!', 'UNSTOPPABLE!!', '無双!!') : c >= 25 ? L3('超神!', 'GODLIKE!', '神!') : L3('好耶!', 'NICE!', 'ナイス!'), '#ff4fd8', 46);
+        if (false) this.shout(c >= 50 ? L3('无双!!', 'UNSTOPPABLE!!', '無双!!') : c >= 25 ? L3('超神!', 'GODLIKE!', '神!') : L3('好耶!', 'NICE!', 'ナイス!'), '#ff4fd8', 46);
       } else if (c === 0) this.comboEl.classList.add('hidden');
       this.lastCombo = c;
     }
     // Fever level-up shouts + P1's damage rank badge
-    for (const p of g.players) {
-      while (p.fever.ups.length) {
-        const k = p.fever.ups.shift(), lv = p.fever.level(k);
-        this.shout(`${tr(C.text.feverName[k])} FEVER ${lv >= T.fever.maxLevel ? 'MAX' : `Lv${lv}`}!!`, C.theme.feverColor[k], p.slot ? 26 : 20);
-      }
-    }
+    // Fever level-ups show on the heroine and the screen edge (player.js), not as text across the screen
     const p1 = g.players[0], lvSum = FEVER_KEYS.reduce((a, k) => a + p1.fever.level(k), 0);
     const r = T.fever.rankBadge[lvSum];
     if (r !== this.lastRank) { this.lastRank = r; this.rankC.textContent = r; this.rank.dataset.r = r; this.rank.classList.remove('pop'); void this.rank.offsetWidth; this.rank.classList.add('pop'); }

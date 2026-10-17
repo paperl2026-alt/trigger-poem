@@ -386,5 +386,37 @@
     "ring": 52,
     "rot": -40,
     "png": "art/raw/r26s/e5.png"
+  },
+  "jig_cat_cover": {
+    "src": "art/raw/jig_src/cat_cover.png",
+    "erase": [
+      839,
+      398,
+      901,
+      507
+    ],
+    "center": [
+      870,
+      429
+    ],
+    "ring": 52,
+    "rot": -4,
+    "png": "public/jiggle/cat_cover.png"
+  },
+  "jig_cat_fire": {
+    "src": "art/raw/jig_src/cat_fire.png",
+    "erase": [
+      792,
+      250,
+      870,
+      372
+    ],
+    "center": [
+      837,
+      283
+    ],
+    "ring": 51,
+    "rot": -24,
+    "png": "public/jiggle/cat_fire.png"
   }
 }

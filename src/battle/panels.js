@@ -163,7 +163,10 @@ export class PanelWorld {
     const cam = new THREE.Vector3(...st.cam), look = new THREE.Vector3(...st.look);
     const f = look.clone().sub(cam).setY(0).normalize(), r = new THREE.Vector3(-f.z, 0, f.x);
     const p = cam.clone().addScaledVector(f, c.dist).addScaledVector(r, c.side * c.off);
-    const { m, w, h } = this.relief(c.k, c.h, p.x, p.z, cam, 0.34);
+    // size on screen, not metres: "screen" = the share of the screen height it takes at its distance (game readability: always
+    // smaller than the heroines, however near or far it stands)
+    const hh = c.screen ? c.screen * 2 * c.dist * Math.tan(THREE.MathUtils.degToRad(this.baseFov / 2)) : c.h;
+    const { m, w, h } = this.relief(c.k, hh, p.x, p.z, cam, 0.34);
     if (c.flip) m.scale.x = -1;
     const dm = new DamageMap(1 / (w / h), 384); attachDamage(m, dm);
     return { m, dm, def: { x: p.x, z: p.z, h, k: c.k }, w, h, slot: c.side < 0 ? 0 : 1, hp: 0, max: 0, broken: false };

@@ -21,5 +21,5 @@
 - `src/ui/`：画面（标题、选关、HUD、漫画、结算）。
 - `src/jiggle/`：立绘晃动和汗液（`晃动技术验证.bat`）。
 - `art/`：原图、参考图、GPT 资产（`art/gpt_sets`）。`tools/`：出图和处理脚本。
-- `docs/进度.md`：做到哪、定了什么；`docs/DESIGN.md`：设计定稿。
+- 文档见 `CLAUDE.md` 的表格：`docs/PLAN.md`（要做的事）、`docs/DESIGN.md`（设计）、`docs/ART.md`（美术生产）、`docs/TECH.md`（技术）、`docs/LOG.md`（日志）。
 - 存档：双击 `存档.bat`（同步到 GitHub 私有仓库）；备份：双击 `备份到D盘.bat`。

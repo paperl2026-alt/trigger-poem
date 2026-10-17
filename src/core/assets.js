@@ -51,8 +51,9 @@ export async function loadAll(onProgress) {
     }
     loader.load(url(k), (t) => {
       t.colorSpace = THREE.NoColorSpace;
-      t.generateMipmaps = true;
-      t.minFilter = THREE.LinearMipmapLinearFilter;
+      // data maps (jiggle part weights): exact values, no mipmaps
+      t.generateMipmaps = !manifest[k].data;
+      t.minFilter = manifest[k].data ? THREE.LinearFilter : THREE.LinearMipmapLinearFilter;
       t.magFilter = THREE.LinearFilter;
       t.anisotropy = renderer ? Math.min(4, renderer.capabilities.getMaxAnisotropy()) : 1;
       tex[k] = t;

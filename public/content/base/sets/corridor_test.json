@@ -1,5 +1,5 @@
 {
-  "_doc": "走廊技术验证（docs/DESIGN.md「场景的技术路线」）：用平板拼出来的真 3D 走廊。hall 是走廊尺寸（米）和每块板的贴图：left/right 是两侧墙一段一段（bay 米宽）的立面画，floor/ceil 是平铺贴图（tile 米一张），地板切成 tilesX × tileL 的小块（可以折起来）。foldZ 之后的部分挂在铰链上，fold 时往上弯 bend 度，ridgeFrom 到 foldZ 之间约 ridgeShare 比例的地板块翘起成棱。decals 贴在板上的东西（on: left/right/floor/hang）。stations：每个停留点的镜头 cam、看向 look、来的路 via；covers 是按玩法摆的掩体（side -1 = 1P 左边、1 = 2P 右边，dist 离镜头多远，off 偏到旁边多远，h 高度，米），waves 怪物（x/z 是走廊里的位置，米）。fold: true = 到这个点时先折叠再开打。",
+  "_doc": "走廊技术验证（docs/DESIGN.md「场景的技术路线」）：用平板拼出来的真 3D 走廊。hall 是走廊尺寸（米）和每块板的贴图：left/right 是两侧墙一段一段（bay 米宽）的立面画，floor/ceil 是平铺贴图（tile 米一张），地板切成 tilesX × tileL 的小块（可以折起来）。foldZ 之后的部分挂在铰链上，fold 时往上弯 bend 度，ridgeFrom 到 foldZ 之间约 ridgeShare 比例的地板块翘起成棱。decals 贴在板上的东西（on: left/right/floor/hang）。stations：每个停留点的镜头 cam、看向 look、来的路 via；covers 是按玩法摆的掩体（side -1 = 1P 左边、1 = 2P 右边，dist 离镜头多远，off 偏到旁边多远，screen 在画面上占多高（画面高度的比例；掩体要比主角矮小，按游戏好读来定，不按现实尺寸）），waves 怪物（x/z 是走廊里的位置，米）。fold: true = 到这个点时先折叠再开打。",
   "corridor_test": {
     "panels": true,
     "sky": "#2a1430",
@@ -49,8 +49,8 @@
         "look": [0, 0.95, -20],
         "tutorial": true,
         "covers": [
-          { "k": "cover/c_cart", "side": -1, "dist": 1.7, "off": 0.82, "h": 1.05 },
-          { "k": "cover/c_bench", "side": 1, "dist": 1.6, "off": 0.85, "h": 0.7 }
+          { "k": "cover/c_cart", "side": -1, "dist": 1.7, "off": 0.82, "screen": 0.26 },
+          { "k": "cover/c_bench", "side": 1, "dist": 1.6, "off": 0.85, "screen": 0.2 }
         ],
         "waves": [
           [{ "t": 0.5, "type": "shoe", "from": "pop", "x": -0.5, "z": -8 }, { "t": 2, "type": "shoe", "from": "pop", "x": 0.6, "z": -12 }],
@@ -71,8 +71,8 @@
         "look": [0, 0.95, -26],
         "fold": true,
         "covers": [
-          { "k": "cover/c_vend", "side": -1, "dist": 1.7, "off": 0.85, "h": 1.1 },
-          { "k": "cover/c_board", "side": 1, "dist": 1.6, "off": 0.85, "h": 1.2 }
+          { "k": "cover/c_vend", "side": -1, "dist": 1.7, "off": 0.85, "screen": 0.25 },
+          { "k": "cover/c_board", "side": 1, "dist": 1.6, "off": 0.85, "screen": 0.28 }
         ],
         "waves": [
           [

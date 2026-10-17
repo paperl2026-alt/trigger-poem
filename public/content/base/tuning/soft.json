@@ -1,5 +1,5 @@
 {
-  "_doc": "游戏里目前用的旧版立绘晃动（每种部位一个弹簧：频率 f、阻尼 z、幅度 amp、上限 max、鼓起 swell、受冲击时纵/横向的反应 impY/impX）。之后会换成技术验证里的新晃动系统（src/jiggle），那套参数在每个角色的数据里。",
+  "_doc": "游戏里目前用的旧版立绘晃动（每种部位一个弹簧：频率 f、阻尼 z、幅度 amp、上限 max、鼓起 swell、受冲击时纵/横向的反应 impY/impX）。之后会换成技术验证里的新晃动系统（src/jiggle），那套参数在每个角色的数据里。 jiggle：战斗主角用的晃动技术（src/jiggle，技术验证定下的值）：amp 强度（用户说 0.3～0.4）、ring 回弹的持续（越大越久）、rhythm 站立射击的节奏弹动（Hz）、sweat 出汗量。",
   "softKinds": {
     "butt": { "f": 2.9, "z": 0.085, "amp": 0.024, "max": 0.05, "swell": 7, "impY": 1, "impX": 0.35, "idle": "hips" },
     "chest": { "f": 3.3, "z": 0.095, "amp": 0.02, "max": 0.042, "swell": 6, "impY": 1, "impX": 0.25, "idle": "breath" },
@@ -8,5 +8,6 @@
     "tail": { "f": 1.7, "z": 0.2, "amp": 0.022, "max": 0.07, "swell": 0, "impY": 0.45, "impX": 0.8, "idle": "wag", "wag": [0.02, 0.006], "lag": 0 },
     "tailtip": { "f": 1.4, "z": 0.18, "amp": 0.034, "max": 0.1, "swell": 0, "impY": 0.6, "impX": 1, "idle": "wag", "wag": [0.05, 0.014], "lag": 1 },
     "ear": { "f": 7, "z": 0.22, "amp": 0, "max": 0.03, "swell": 0, "impY": 0, "impX": 0, "idle": "twitch" }
-  }
+  },
+  "jiggle": { "amp": 0.35, "ring": 0.6, "rhythm": 1.6, "sweat": 0.8 }
 }
