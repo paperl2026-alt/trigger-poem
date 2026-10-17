@@ -42,7 +42,8 @@ if __name__ == "__main__":
             print(f.stem)
     if "comics" in what:
         for f in sorted(RAW.glob("c_*.png")):
-            save(man, f"comic/ep0_{f.stem[2:]}", Image.open(f).convert("RGB"), maxs=1536, q=86)
+            src = RAW / "fixed" / f.name   # the canonical paw seal put on (art/seal_placements.json comic_<panel>)
+            save(man, f"comic/ep0_{f.stem[2:]}", Image.open(src if src.exists() else f).convert("RGB"), maxs=1536, q=86)
         print("comics", len(list(RAW.glob("c_*.png"))))
     if "boss" in what:
         for f in sorted(RAW.glob("b_*.png")):

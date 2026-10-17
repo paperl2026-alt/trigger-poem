@@ -1,4 +1,5 @@
-// Manga-page transitions: panels slam in one by one, baked katakana SFX stamp on top. Tap = show all / next.
+// Manga-page transitions (docs/DESIGN.md「漫画转场的规矩」): one page, one camera. The panels come in one by one while the camera pushes in
+// on each as it appears and glides on to the next; at the end it pulls back to the whole page. Tap = show all / next.
 import { url, meta } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
 import { t } from '../core/i18n.js';
@@ -40,6 +41,17 @@ export class Comic {
       stage.innerHTML = '';
       shown = false;
       const panels = pages[i];
+      // the camera: a page-sized layer moved and scaled so that one panel (with a margin) fills the view
+      const pageEl = document.createElement('div');
+      pageEl.className = 'cpage';
+      stage.appendChild(pageEl);
+      const look = (r, dur = 0.6, k = 0.86) => {
+        const s = Math.min(2.4, k * Math.min(100 / r[2], 100 / r[3]));
+        const cx = r[0] + r[2] / 2, cy = r[1] + r[3] / 2;
+        pageEl.style.transition = `transform ${dur}s cubic-bezier(.45, 0, .2, 1)`;
+        pageEl.style.transform = `translate(${(50 - cx * s)}%, ${(50 - cy * s)}%) scale(${s})`;
+      };
+      const whole = (dur = 0.9) => { pageEl.style.transition = `transform ${dur}s cubic-bezier(.45, 0, .2, 1)`; pageEl.style.transform = 'translate(0, 0) scale(1)'; };
       let last = 0;
       for (const p of panels) {
         const wrap = document.createElement('div');
@@ -54,7 +66,8 @@ export class Comic {
         img.style.backgroundPosition = p.pos;
         panel.appendChild(img);
         wrap.appendChild(panel);
-        stage.appendChild(wrap);
+        pageEl.appendChild(wrap);
+        this.later(Math.max(0, p.at - 0.25), () => look(p.cam || p.rect, p.at < 0.2 ? 0.01 : 0.55));
         this.later(p.at, () => { wrap.classList.add('in', p.in); sfx.panel(); });
         last = Math.max(last, p.at);
         for (const s of p.sfx || []) {
@@ -62,17 +75,20 @@ export class Comic {
           im.className = 'csfx';
           im.src = url(s.k);
           Object.assign(im.style, { left: `${s.x}%`, top: `${s.y}%`, width: `${s.w}%`, '--r': `${s.r}deg` });
-          stage.appendChild(im);
+          pageEl.appendChild(im);
           this.later(s.at, () => { im.classList.add('in'); sfx.stamp(); if (s.shake) { stage.classList.remove('shake'); void stage.offsetWidth; stage.classList.add('shake'); } });
           last = Math.max(last, s.at);
         }
       }
-      this.later(last + 0.3, () => { shown = true; });
-      this.later(last + 3.4, next);
+      const out = last + (panels.hold ?? 1.1);
+      this.later(out, () => whole());
+      this.later(out + 0.6, () => { shown = true; });
+      this.later(out + 2.4, next);
     };
     const showAll = () => {
       this.clear();
       stage.querySelectorAll('.pwrap').forEach((w) => w.classList.add('in', 'instant'));
+      const pg = stage.querySelector('.cpage'); if (pg) { pg.style.transition = 'transform .5s'; pg.style.transform = 'translate(0, 0) scale(1)'; }
       stage.querySelectorAll('.csfx').forEach((s) => s.classList.add('in', 'instant'));
       shown = true;
       this.later(3, next);

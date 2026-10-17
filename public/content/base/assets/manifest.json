@@ -231,11 +231,31 @@
   "src": "assets/comic/ep0_e1.webp",
   "w": 1600
  },
+ "comic/ep0_e1_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e1_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_e1_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e1_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_e1_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e1_c.webp",
+  "w": 1536
+ },
  "comic/ep0_e2": {
   "dom": true,
   "h": 900,
   "src": "assets/comic/ep0_e2.webp",
   "w": 1600
+ },
+ "comic/ep0_e2_a": {
+  "h": 1254,
+  "src": "assets/comic/ep0_e2_a.webp",
+  "w": 1254
  },
  "comic/ep0_e3": {
   "dom": true,
@@ -243,11 +263,36 @@
   "src": "assets/comic/ep0_e3.webp",
   "w": 1254
  },
+ "comic/ep0_e3_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e3_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_e3_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e3_b.webp",
+  "w": 1536
+ },
  "comic/ep0_e4": {
   "dom": true,
   "h": 1254,
   "src": "assets/comic/ep0_e4.webp",
   "w": 1254
+ },
+ "comic/ep0_e4_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e4_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_e4_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e4_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_e4_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_e4_c.webp",
+  "w": 1536
  },
  "comic/ep0_e5": {
   "dom": true,
@@ -261,10 +306,40 @@
   "src": "assets/comic/ep0_i1.webp",
   "w": 1600
  },
+ "comic/ep0_i1_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i1_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_i1_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i1_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_i1_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i1_c.webp",
+  "w": 1536
+ },
  "comic/ep0_i2": {
   "dom": true,
   "h": 1254,
   "src": "assets/comic/ep0_i2.webp",
+  "w": 1254
+ },
+ "comic/ep0_i2_a": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i2_a.webp",
+  "w": 1254
+ },
+ "comic/ep0_i2_b": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i2_b.webp",
+  "w": 1254
+ },
+ "comic/ep0_i2_c": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i2_c.webp",
   "w": 1254
  },
  "comic/ep0_i3": {
@@ -273,17 +348,62 @@
   "src": "assets/comic/ep0_i3.webp",
   "w": 1254
  },
+ "comic/ep0_i3_a": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i3_a.webp",
+  "w": 1254
+ },
+ "comic/ep0_i3_b": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i3_b.webp",
+  "w": 1254
+ },
+ "comic/ep0_i3_c": {
+  "h": 1254,
+  "src": "assets/comic/ep0_i3_c.webp",
+  "w": 1254
+ },
  "comic/ep0_i4": {
   "dom": true,
   "h": 686,
   "src": "assets/comic/ep0_i4.webp",
   "w": 1600
  },
+ "comic/ep0_i4_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i4_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_i4_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i4_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_i4_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i4_c.webp",
+  "w": 1536
+ },
  "comic/ep0_i5": {
   "dom": true,
   "h": 900,
   "src": "assets/comic/ep0_i5.webp",
   "w": 1600
+ },
+ "comic/ep0_i5_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i5_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_i5_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i5_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_i5_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_i5_c.webp",
+  "w": 1536
  },
  "comic/ep0_i6": {
   "dom": true,
@@ -303,11 +423,81 @@
   "src": "assets/comic/ep0_i8.webp",
   "w": 1254
  },
+ "comic/ep0_j1_a": {
+  "h": 1254,
+  "src": "assets/comic/ep0_j1_a.webp",
+  "w": 1254
+ },
+ "comic/ep0_j1_b": {
+  "h": 1254,
+  "src": "assets/comic/ep0_j1_b.webp",
+  "w": 1254
+ },
+ "comic/ep0_j1_c": {
+  "h": 1254,
+  "src": "assets/comic/ep0_j1_c.webp",
+  "w": 1254
+ },
+ "comic/ep0_j2_a": {
+  "h": 1536,
+  "src": "assets/comic/ep0_j2_a.webp",
+  "w": 1024
+ },
+ "comic/ep0_j2_b": {
+  "h": 1536,
+  "src": "assets/comic/ep0_j2_b.webp",
+  "w": 1024
+ },
+ "comic/ep0_j2_c": {
+  "h": 1536,
+  "src": "assets/comic/ep0_j2_c.webp",
+  "w": 1024
+ },
+ "comic/ep0_j3_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_j3_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_j3_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_j3_c.webp",
+  "w": 1536
+ },
+ "comic/ep0_j4_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_j4_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_j4_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_j4_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_j4_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_j4_c.webp",
+  "w": 1536
+ },
  "comic/ep0_m1": {
   "dom": true,
   "h": 900,
   "src": "assets/comic/ep0_m1.webp",
   "w": 1600
+ },
+ "comic/ep0_m1_a": {
+  "h": 1254,
+  "src": "assets/comic/ep0_m1_a.webp",
+  "w": 1254
+ },
+ "comic/ep0_m1_b": {
+  "h": 1254,
+  "src": "assets/comic/ep0_m1_b.webp",
+  "w": 1254
+ },
+ "comic/ep0_m1_c": {
+  "h": 1254,
+  "src": "assets/comic/ep0_m1_c.webp",
+  "w": 1254
  },
  "comic/ep0_m2": {
   "dom": true,
@@ -315,11 +505,56 @@
   "src": "assets/comic/ep0_m2.webp",
   "w": 900
  },
+ "comic/ep0_m2_a": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m2_a.webp",
+  "w": 1024
+ },
+ "comic/ep0_m2_b": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m2_b.webp",
+  "w": 1024
+ },
+ "comic/ep0_m2_c": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m2_c.webp",
+  "w": 1024
+ },
  "comic/ep0_m3": {
   "dom": true,
   "h": 686,
   "src": "assets/comic/ep0_m3.webp",
   "w": 1600
+ },
+ "comic/ep0_m3_a": {
+  "h": 1024,
+  "src": "assets/comic/ep0_m3_a.webp",
+  "w": 1536
+ },
+ "comic/ep0_m3_b": {
+  "h": 1024,
+  "src": "assets/comic/ep0_m3_b.webp",
+  "w": 1536
+ },
+ "comic/ep0_m3_c": {
+  "h": 1024,
+  "src": "assets/comic/ep0_m3_c.webp",
+  "w": 1536
+ },
+ "comic/ep0_m4_a": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m4_a.webp",
+  "w": 1024
+ },
+ "comic/ep0_m4_b": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m4_b.webp",
+  "w": 1024
+ },
+ "comic/ep0_m4_c": {
+  "h": 1536,
+  "src": "assets/comic/ep0_m4_c.webp",
+  "w": 1024
  },
  "cover/bookcase": {
   "h": 617,

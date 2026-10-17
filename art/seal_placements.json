@@ -554,5 +554,56 @@
       311
     ],
     "png": "art/raw/r36/rl_cat_b_cells/fixed_9.png"
+  },
+  "comic_i2_b": {
+    "src": "art/raw/r36/c_i2_b.png",
+    "center": [
+      500,
+      569
+    ],
+    "ring": 118,
+    "squash": 0.82,
+    "rot": -24,
+    "erase": [
+      440,
+      515,
+      588,
+      712
+    ],
+    "png": "art/raw/r36/fixed/c_i2_b.png"
+  },
+  "comic_m1_c": {
+    "src": "art/raw/r36/c_m1_c.png",
+    "center": [
+      460,
+      446
+    ],
+    "ring": 160,
+    "squash": 0.75,
+    "rot": -32,
+    "erase": [
+      370,
+      380,
+      580,
+      598
+    ],
+    "png": "art/raw/r36/fixed/c_m1_c.png"
+  },
+  "comic_m4_b": {
+    "src": "art/raw/r36/c_m4_b.png",
+    "center": [
+      160,
+      600
+    ],
+    "ring": 112,
+    "squash": 0.95,
+    "rot": -16,
+    "erase": [
+      110,
+      545,
+      220,
+      728
+    ],
+    "png": "art/raw/r36/fixed/c_m4_b.png"
   }
 }

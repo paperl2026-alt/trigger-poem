@@ -152,6 +152,7 @@ button { font-family: var(--font); cursor: pointer; }
   background-image: radial-gradient(#0002 1px, transparent 1.4px); background-size: 7px 7px; overflow: hidden; }
 .cstage.shake { animation: cshake .35s steps(4); }
 @keyframes cshake { 25% { transform: translate(-9px, 6px); } 50% { transform: translate(8px, -5px); } 75% { transform: translate(-4px, -4px); } }
+.cpage { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; }
 .pwrap { position: absolute; opacity: 0; filter: drop-shadow(4px 0 0 #000) drop-shadow(-4px 0 0 #000) drop-shadow(0 4px 0 #000) drop-shadow(0 -4px 0 #000); }
 .panel { position: absolute; inset: 0; overflow: hidden; background: #000; }
 .pimg { position: absolute; inset: -4%; background-size: cover; animation: kb 6s ease-out forwards; }
