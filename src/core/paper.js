@@ -45,11 +45,28 @@ uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float 
 uniform float seed; uniform float time; uniform vec3 edgeColor;
 uniform vec3 lit; uniform vec3 fogColor; uniform float fogDensity; uniform float useFog;
 uniform sampler2D relief; uniform float reliefOn; uniform float reliefAmt; uniform vec2 reliefTexel; uniform vec2 softSize; uniform vec3 lightL;
+uniform float outlineOn; uniform vec2 mapTexel; uniform vec3 outlineCol;
 varying vec2 vUv; varying float vFogDepth;
 ${NOISE_GLSL}
 void main(){
   vec4 tx = texture2D(map, vUv);
-  if (tx.a < (reliefOn > 0.5 ? 0.45 : 0.03)) discard;
+  float thr = reliefOn > 0.5 ? 0.45 : 0.03;
+  if (tx.a < thr) {
+    // what can be shot gets a white outline and a soft white glow around it (docs/DESIGN.md「战斗画面布局」)
+    if (outlineOn < 0.5) discard;
+    float o = 0.0, g = 0.0;
+    for (int i = 0; i < 12; i++) {
+      float an = float(i) * 0.5236;
+      vec2 d = vec2(cos(an), sin(an)) * mapTexel;
+      o = max(o, texture2D(map, vUv + d * 5.0).a);
+      g = max(g, texture2D(map, vUv + d * 12.0).a);
+    }
+    float line = smoothstep(0.35, 0.6, o), glow = smoothstep(0.35, 0.6, g) * 0.4;
+    float a = max(line, glow) * opacity * outlineOn;
+    if (a < 0.02) discard;
+    gl_FragColor = vec4(mix(outlineCol, vec3(1.0), flash), a);
+    return;
+  }
   vec3 col = tx.rgb;
   if (reliefOn > 0.5) {
     // light it like a solid: normals from the relief, two soft toon bands (an anime cel look, not plastic)
@@ -127,6 +144,7 @@ export function paperMaterial(map, aspect = 1) {
   return new THREE.ShaderMaterial({
     uniforms: {
       map: { value: map }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
+      outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
       dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },
       slice: { value: new THREE.Vector3() }, sliceOn: { value: 0 }, aspect: { value: aspect },

@@ -118,12 +118,14 @@ export class Post {
     const s = this.shakeAmt * this.shakeAmt;
     this.shakeX = (Math.random() - 0.5) * s; this.shakeY = (Math.random() - 0.5) * s;
   }
-  render(drawScenes) {
+  // drawScenes: the world (shaken, warped, graded by the pass); drawAfter: things drawn straight on top, untouched (the HUD)
+  render(drawScenes, drawAfter) {
     const r = this.renderer;
     r.setRenderTarget(this.rt);
     r.clear();
     drawScenes();
     r.setRenderTarget(null);
     r.render(this.scene, this.cam);
+    if (drawAfter) drawAfter();
   }
 }

@@ -16,7 +16,7 @@ import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
-import { SAVE, persist, levelOf } from '../core/save.js';
+import { SAVE, persist, levelOf, openStage } from '../core/save.js';
 import { bagFx } from './items.js';
 import { C, T } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
@@ -34,6 +34,7 @@ export class Game {
     this.post = G.post;
     this.pointer = G.pointer;
     this.overlay = new THREE.Scene();
+    this.hudScene = new THREE.Scene();   // the HUD: drawn after the post pass, so shakes and warps never move it (DESIGN「战斗画面布局」)
     this.ortho = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100);
     // painted 2.5D sets (one painting per battle station) or the older modelled rooms
     const setDef = C.sets[this.ep.set];
@@ -211,6 +212,7 @@ export class Game {
       this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
     } else {
       this.hud.gl.hold('stageClear');
+      this.openNextStage();
       const heal = bagFx(this.run.bag).stageHeal;
       if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });
       this.tweens.wait(1.7, () => this.nextStep());
@@ -227,7 +229,13 @@ export class Game {
     sfx.roar();
     this.post.shake(1);
   }
+  // this stage is cleared: the next one opens on the select screen (stages = the episode's non-comic steps, in order)
+  openNextStage() {
+    const stages = this.ep.steps.filter((st) => !st.comic), i = stages.indexOf(this.ep.steps[this.stepIdx]);
+    if (i >= 0) openStage(this.ep.id, i + 2);
+  }
   onBossDead() {
+    this.openNextStage();
     this.combat = false;
     this.hud.boss(null);
     this.clearProjectiles();
@@ -417,7 +425,7 @@ export class Game {
     const targets = slot === -1 ? this.players : [this.players[slot] || this.players[0]];
     let hurt = false;
     for (const p of targets) {
-      if (!this.combat || ['run', 'away', 'down', 'victory'].includes(p.state)) continue;
+      if (!this.combat || ['run', 'away', 'down', 'victory'].includes(p.state) || p.activeOn) continue;   // her special: untouchable
       const cov = this.world.covers[p.slot], shielded = kind !== 'melee' && !p.exposed && !(cov && cov.broken);
       if (shielded) {
         this.coverHit(p, from, heavy);
@@ -478,7 +486,10 @@ export class Game {
     if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
     this.combo++; this.comboT = T.combat.comboTime; this.comboF = this.combo;
     this.maxCombo = Math.max(this.maxCombo, this.combo);
-    if (crit && !(by && by.activeOn)) { const s = this.world.project(target.center()); this.fx.stamp('don', s.x, this.H - s.y + this.H * 0.06, 0.15, 0.8); this.G.stop(0.05); }
+    // every kill: a sound-effect sticker where it was (stickers.js), and now and then a line from the girl who got it
+    { const s = this.world.project(target.center()); this.hud.gl.stickers.onoma(s.x, this.H - s.y, crit); }
+    if (by) this.hud.gl.stickers.kill(by);
+    if (crit && !(by && by.activeOn)) this.G.stop(0.05);
     if (this.combo >= T.combat.tauntCombo && by && by.state === 'cover') by.tauntT = 0.7;
     sfx.viewer();
   }
@@ -529,4 +540,6 @@ export class Game {
     sc.background = bg; r.autoClear = ac;
     r.render(this.overlay, this.ortho);
   }
+  renderHUD(r) { r.render(this.hudScene, this.ortho); }
+
 }

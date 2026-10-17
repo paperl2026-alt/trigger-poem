@@ -660,7 +660,7 @@ class Damage {
 export class HudGL {
   constructor(game) {
     this.game = game; this.B = C.ui.battle; this.L = new Layout();
-    this.g = new THREE.Group(); game.overlay.add(this.g);
+    this.g = new THREE.Group(); game.hudScene.add(this.g);   // after the post pass: fixed on screen
     this.panels = game.players.map((p) => new Panel(this, p));
     this.top = new Top(this);
     this.reticles = game.players.map((p) => new Reticle(this, p));

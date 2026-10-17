@@ -121,13 +121,12 @@ export class Player {
   get alive() { return this.state !== 'down' && this.state !== 'away'; }
 
   damage(n) {
-    if (this.invuln > 0 || this.game.G.god || this.state === 'down') return false;
+    if (this.invuln > 0 || this.game.G.god || this.state === 'down' || this.activeOn) return false;   // her special: untouchable (DESIGN)
     this.hp = Math.max(0, this.hp - n);
     this.taken += n;
     this.invuln = PL().invuln;
     this.exposed = false;
     this.fever.hurt();
-    if (this.beaming) this.endActive(false);
     if (this.hero) this.hero.hurt(n >= 25); else this.soft.kick(1.4);
     if (this.hp <= 0) { this.state = 'down'; this.downT = PL().downTime; return true; }
     this.state = 'hurt';
@@ -189,11 +188,10 @@ export class Player {
         if (this.reloadT <= 0) { this.ammo = this.w.mag; this.state = 'cover'; }
       } else {
         const wantOut = (c.fire || c.wantsOut) && !c.hide;
-        if (this.beaming) {
-          // the beam holds her out; letting go (mouse) or ducking (pad) ends it early and turns the time left into health
-          this.beamGrace -= dt;
+        if (this.activeOn) {
+          // her special (DESIGN「角色性能」): she stays out the whole time, untouchable; letting go or ducking does not end it
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); }
-          if (this.beamGrace <= 0 && !wantOut) { this.endActive(true); this.state = 'cover'; this.coverTime = 0; }
+          this.linger = PL().outLinger;
         } else if (wantOut) {
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); this.soft.kick(0.8); }
           this.linger = PL().outLinger;

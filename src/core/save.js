@@ -42,4 +42,11 @@ export function levelProgress(xp) {
 }
 
 // ---- backpack capacity upgrades
+// stage unlocks (docs/DESIGN.md 局外「小关解锁」): SAVE.eps[ep].stages = how many of its stages are open (1 = only the first)
+export function stagesOpen(epId) { return Math.max(1, SAVE.eps[epId]?.stages || 1); }
+export function openStage(epId, n) {
+  const r = SAVE.eps[epId] || (SAVE.eps[epId] = { open: true, cleared: false, best: null });
+  if ((r.stages || 1) < n) { r.stages = n; persist(); return true; }
+  return false;
+}
 export function nextCap() { return T.economy.bagCapSteps.find(([c]) => c > SAVE.cap) || null; }

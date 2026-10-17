@@ -137,7 +137,7 @@ function toSelect() {
   G.titleStart = null;
   clearScreen();
   cursorScene('menu');
-  G.select = showSelect({ title: () => turnTo(toTitle), settings: () => settings.open(), play: (id) => { initAudio(); startRun(id); } });
+  G.select = showSelect({ title: () => turnTo(toTitle), settings: () => settings.open(), play: (id, step = 0) => { initAudio(); startRun(id, step); } });
 }
 // menu screens change like turning a manga page (src/ui/manga.js)
 const turnTo = (show) => mangaTurn(document.querySelector('#ui > .screen'), show);
@@ -195,13 +195,13 @@ function step(dt, raw) {
   G.tweens.update(dt);
   if (G.game) G.game.update(dt, G.time, pads);
   G.post.update(raw);
-  G.post.render(() => { if (G.game) G.game.render(renderer); });
+  G.post.render(() => { if (G.game) G.game.render(renderer); }, () => { if (G.game) G.game.renderHUD(renderer); });
 }
 // fallback driver when rAF is throttled (background / embedded previews)
 setInterval(() => { if (performance.now() - lastRaf > 100) tick(); }, 16);
 G.step = (n = 1, dt = 1 / 60) => { for (let i = 0; i < n; i++) step(dt, dt); };
 G.shot = async (name = 'shot') => {
-  G.post.render(() => { if (G.game) G.game.render(renderer); });
+  G.post.render(() => { if (G.game) G.game.render(renderer); }, () => { if (G.game) G.game.renderHUD(renderer); });
   const data = canvas.toDataURL('image/png');
   await fetch(`/__shot?name=${encodeURIComponent(name)}`, { method: 'POST', body: data });
   return name;

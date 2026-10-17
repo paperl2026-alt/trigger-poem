@@ -6,7 +6,7 @@ import { url, meta } from '../core/assets.js';
 import { sfx, initAudio } from '../core/audio.js';
 import { C, list } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
-import { SAVE, persist, levelProgress, maxLv } from '../core/save.js';
+import { SAVE, persist, levelProgress, maxLv, stagesOpen } from '../core/save.js';
 import { UiFx } from './uifx.js';
 import { cursorScene } from './cursor.js';
 import './select.css';
@@ -131,17 +131,23 @@ export function showSelect(act) {
   const goTx = text(goG, L.go.text, 'wh gtx', () => (open(eps[idx]) ? t('go') : eps[idx].teaser ? t('soon') : t('locked')));
   void goFace;
 
+  let pick = 99;   // the picked stage of this chapter (99 = the last open one)
   function renderRows() {
     rowsG.innerHTML = ''; rowTexts = [];
     const e = eps[idx], R = L.rows;
     if (!open(e)) { rowsG.classList.add('s-none'); return; }
     rowsG.classList.remove('s-none');
-    const steps = (e.steps || []).filter((s) => !s.comic).slice(0, R.slots.length);
+    const steps = (e.steps || []).filter((s) => !s.comic).slice(0, R.slots.length), nOpen = stagesOpen(e.id);
+    if (pick >= nOpen) pick = nOpen - 1;
     steps.forEach((s, i) => {
       const pc = s.boss ? P.row_boss : P.row_n, y0 = R.slots[i];
       // the piece's own top sits on its mockup slot (row_n came from slot 2, row_boss from slot 3)
       const dy = y0 - (s.boss ? R.slots[2] : R.slots[1]);
       const g = group('row', rowsG); g.style.setProperty('--i', i); g.style.translate = `0 ${dy * RS}px`;
+      const locked = i >= nOpen;
+      g.classList.toggle('s-row-lock', locked); g.classList.toggle('s-row-pick', i === pick);
+      g.dataset.cur = 'hover';
+      tap(g, (ev) => { if (locked) { shake(g); sfx.ui(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
       img(g, pc.img, pc.box);
       if (has(s.thumb)) { const th = img(g, s.thumb, [R.thumb.x0, R.slots[s.boss ? 2 : 1] + R.thumb.dy0, R.thumb.x1, R.slots[s.boss ? 2 : 1] + R.thumb.dy1], 'thumb'); th.style.objectFit = 'cover'; }
       const ys = R.slots[s.boss ? 2 : 1];
@@ -154,6 +160,7 @@ export function showSelect(act) {
         text(g, { ...R.no, y: ys + R.no.dy }, 'wh rno', () => String(i + 1), rowTexts);
         text(g, { ...R.text, y: ys + R.text.dy, align: 'left' }, 'ink', () => tr(s.name), rowTexts);
       }
+      if (locked && has('ui/sel_icon_lock_big')) img(g, 'ui/sel_icon_lock_big', [R.chev.box[0] - 30, ys + R.chev.dy0 - 22, R.chev.box[2] + 6, ys + R.chev.dy1 + 22], 'rlock', true);
     });
   }
 
@@ -185,7 +192,7 @@ export function showSelect(act) {
     if (ni < 0 || ni >= eps.length) { sfx.ui(); return; }
     sfx.panel();
     chap.classList.remove('s-in-l', 's-in-r'); void chap.offsetWidth;
-    idx = ni; renderChapter();
+    idx = ni; pick = 99; renderChapter();
     chap.classList.add(dir > 0 ? 's-in-r' : 's-in-l');
   }
 
@@ -256,7 +263,10 @@ export function showSelect(act) {
     if (!open(ep)) { shake(goG); sfx.ui(); return; }
     going = true; initAudio(); sfx.clear(); const [x, y, w, h] = boxOf(goG); fx.click(x + w / 2, y + h / 2, true); goG.classList.add('s-down');
     SAVE.lastEp = ep.id; persist();
-    setTimeout(() => act.play(ep.id), 220);
+    // from the picked stage: its step, or the comic just before it
+    const stages = ep.steps.filter((s) => !s.comic), si = ep.steps.indexOf(stages[Math.min(pick, stages.length - 1)]);
+    const from = si > 0 && ep.steps[si - 1].comic ? si - 1 : Math.max(0, si);
+    setTimeout(() => act.play(ep.id, from), 220);
   }
   tap(goG, () => go());
   tap(swapG, (e) => { sfx.ui(); pop(swapG, e); SAVE.team.reverse(); persist(); renderTeam(true); for (const l of lows) pop(l.g); });

@@ -31,7 +31,13 @@
 .sel .s-tab:hover .s-tico { scale: 1.12; }
 
 /* chapter: rows slide in one after another; switching chapters slides the panel content */
-.sel .s-row { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.sel .s-row { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); cursor: pointer; }
+/* stage unlocks: the picked row stands out (red shadow, nudged out); locked rows are grey with a padlock */
+.sel .s-row.s-row-pick .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(6px 6px 0 #d8141e); }
+.sel .s-row.s-row-pick { translate: 14px 0 !important; }
+.sel .s-row.s-row-lock .s-si:not(.s-rlock), .sel .s-row.s-row-lock .s-tx { filter: grayscale(1) brightness(0.72); }
+.sel .s-row .s-rlock { filter: drop-shadow(2px 2px 0 #000); }
+.sel .s-row.s-row-lock .s-chev { opacity: 0; }
 .sel .s-row .s-si:first-child { transition: filter 0.15s; }
 .sel .s-row:hover .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(4px 4px 0 #d8141e); }
 .sel .s-row .s-chev { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }

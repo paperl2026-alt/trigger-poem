@@ -43,6 +43,8 @@ export class Actor {
     this.flash = 0;
     this.seed = Math.random() * 100;
     this.u = this.mesh.material.uniforms;
+    // shootable: a white outline and glow (the frames have a transparent margin for it, tools/pad_frames.py)
+    this.u.outlineOn.value = 1; this.u.mapTexel.value.set(1 / t.image.width, 1 / t.image.height);
     this.burnT = 0;
     this.lastStep = -1;
     this.billboard = true;
@@ -55,6 +57,7 @@ export class Actor {
     if (this.mesh.userData.texKey === key || !tex[key]) return;
     this.mesh.userData.texKey = key;
     this.u.map.value = tex[key];
+    this.u.mapTexel.value.set(1 / tex[key].image.width, 1 / tex[key].image.height);
     if (this.relief) { const r = tex[meta[key]?.relief]; if (r) { this.u.relief.value = r; this.u.reliefTexel.value.set(1 / r.image.width, 1 / r.image.height); } }
   }
   play(name, fps = 8, loop = true) {
