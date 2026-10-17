@@ -15,6 +15,126 @@
   "src": "assets/bg/yard_calm.webp",
   "w": 1672
  },
+ "boss/dc2_f1_hand_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_hand_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f1_hand_b": {
+  "h": 1008,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_hand_b.webp",
+  "w": 1536
+ },
+ "boss/dc2_f1_hand_up_a": {
+  "h": 1175,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_hand_up_a.webp",
+  "w": 1324
+ },
+ "boss/dc2_f1_hand_up_b": {
+  "h": 890,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_hand_up_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f1_head_a": {
+  "h": 732,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_head_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f1_head_b": {
+  "h": 743,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_head_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f1_head_eye_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_head_eye_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f1_head_eye_b": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f1_head_eye_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f2_guard_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_guard_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f2_guard_b": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_guard_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f2_idle_a": {
+  "h": 899,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_idle_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f2_idle_b": {
+  "h": 1024,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_idle_b.webp",
+  "w": 1536
+ },
+ "boss/dc2_f2_raise_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_raise_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f2_raise_b": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f2_raise_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_face_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_face_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_face_b": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_face_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_hand_a": {
+  "h": 901,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_hand_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_hand_b": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_hand_b.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_scream_a": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_scream_a.webp",
+  "w": 1600
+ },
+ "boss/dc2_f3_scream_b": {
+  "h": 901,
+  "hit": true,
+  "src": "assets/boss/dc2_f3_scream_b.webp",
+  "w": 1600
+ },
  "boss/dc_grip": {
   "h": 1254,
   "hit": true,
