@@ -9,6 +9,7 @@
 // One shader does all of it from a glyph texture with three channels (R fill, G outline, B soft glow). Overlay pixel space (y up).
 import * as THREE from 'three';
 import { C } from '../core/content.js';
+import { tex } from '../core/assets.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 const FRAG = `
@@ -80,6 +81,24 @@ function glyphTexture(ch) {
   return t;
 }
 
+// a talisman picture (black brush strokes on transparency, art R37) as a glyph: its ink is the fill, a thickened copy the outline,
+// a blurred copy the glow
+function pictureGlyph(img) {
+  const S = 256, k = Math.min(S * 0.86 / img.width, S * 0.86 / img.height), w = img.width * k, h = img.height * k, x = (S - w) / 2, y = (S - h) / 2;
+  const layer = (draw) => { const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d'); draw(g); return g.getImageData(0, 0, S, S).data; };
+  const fill = layer((g) => g.drawImage(img, x, y, w, h));
+  const line = layer((g) => { for (let a = 0; a < 12; a++) g.drawImage(img, x + Math.cos(a / 12 * 6.283) * 7, y + Math.sin(a / 12 * 6.283) * 7, w, h); });
+  const glow = layer((g) => { g.filter = 'blur(12px)'; g.drawImage(img, x, y, w, h); g.drawImage(img, x, y, w, h); });
+  const out = new Uint8Array(S * S * 4);
+  for (let yy = 0; yy < S; yy++) for (let xx = 0; xx < S; xx++) {
+    const i = (yy * S + xx) * 4, j = ((S - 1 - yy) * S + xx) * 4;
+    out[j] = fill[i + 3]; out[j + 1] = line[i + 3]; out[j + 2] = glow[i + 3]; out[j + 3] = 255;
+  }
+  const t = new THREE.DataTexture(out, S, S, THREE.RGBAFormat);
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+  return t;
+}
+
 export class Mantra {
   constructor(game) {
     this.game = game;
@@ -90,10 +109,51 @@ export class Mantra {
     this.geo = new THREE.PlaneGeometry(1, 1);
   }
   texOf(ch) { if (!this.cache.has(ch)) this.cache.set(ch, glyphTexture(ch)); return this.cache.get(ch); }
+  // a picture glyph (fx/fu_<name>), or the font when the art is missing
+  picOf(key, ch) {
+    if (!this.cache.has(key)) this.cache.set(key, tex[key]?.image ? pictureGlyph(tex[key].image) : glyphTexture(ch || '令'));
+    return this.cache.get(key);
+  }
+  // one character of the spell riding out along the beam (B: its ends, updated by the beam every frame), then fading at the target
+  ride(ch, i, B) {
+    const n = STYLE.length, s = ((i % n) + n) % n, g = this.mesh(), H = this.game.H;
+    g.on = true; g.t = 0; g.s = s; g.rot = rnd(-0.25, 0.25); g.size = H * rnd(0.07, 0.1); g.crit = false; g.speed = 1.6;
+    g.ride = { B, u: 0, side: Math.random() < 0.5 ? -1 : 1, amp: rnd(0.4, 1.2), ph: Math.random() * 6 };
+    g.u.map.value = this.texOf(ch); g.u.seed.value = Math.random() * 100;
+    along(i * 0.35, g.u.c0.value); along(i * 0.35 + 1.4, g.u.c1.value);
+    g.u.dmode.value = STYLE[s][1] === 'burn' ? 1 : STYLE[s][1] === 'shatter' ? 2 : 0;
+    g.m.renderOrder = 42;
+    g.x = B.x0; g.y = B.y0;
+    return g;
+  }
+  // a seal stamped beside the beam: 'phrase' = one of the talisman seals; 'last' = 急急如律令, then 敕令 / 㗊
+  seal(kind, B, i) {
+    const H = this.game.H;
+    const put = (key, ch, u, off, size, style, delay = 0) => {
+      const g = this.mesh();
+      const x = B.x0 + (B.x1 - B.x0) * u, y = B.y0 + (B.y1 - B.y0) * u, L = Math.hypot(B.x1 - B.x0, B.y1 - B.y0) || 1;
+      const nx = -(B.y1 - B.y0) / L, ny = (B.x1 - B.x0) / L;
+      g.on = true; g.t = -delay; g.s = style; g.x = x + nx * off * H; g.y = y + ny * off * H; g.rot = rnd(-0.3, 0.3); g.size = size * H; g.crit = true;
+      g.speed = 1.1; g.ride = null; g.m.renderOrder = 43;
+      g.u.map.value = this.picOf(key, ch); g.u.seed.value = Math.random() * 100;
+      along(i * 0.35 + 2, g.u.c0.value); along(i * 0.35 + 3.5, g.u.c1.value);
+      g.u.dmode.value = STYLE[style][1] === 'burn' ? 1 : STYLE[style][1] === 'shatter' ? 2 : 0;
+    };
+    const side = Math.random() < 0.5 ? -1 : 1;
+    if (kind === 'phrase') {
+      // a talisman sigil, a round seal, or one of the big single characters (敕 令 雷 鬼 罡 斬)
+      const n = Math.floor(Math.random() * 24), key = n < 9 ? `fx/fu_a_${n}` : n < 18 ? `fx/fu_b_${n - 9}` : `fx/fu_w_${n - 15}`;
+      put(key, '符', rnd(0.3, 0.8), side * rnd(0.1, 0.16), rnd(0.16, 0.22), [0, 3, 2][Math.floor(Math.random() * 3)]);
+    } else {
+      put('fx/fu_w_1', '令', 0.55, side * 0.15, 0.34, 3);          // 急急如律令
+      put('fx/fu_w_0', '令', 0.85, -side * 0.12, 0.26, 0, 0.18);   // 敕令
+      put('fx/fu_w_2', '㗊', 0.25, -side * 0.1, 0.2, 5, 0.3);      // 㗊
+    }
+  }
   // any character with the i-th style and colour (the cat girl's nine seals while she reloads): shorter, no streak
   flash(ch, i, x, y, size) {
     const n = STYLE.length, s = ((i % n) + n) % n, g = this.mesh();
-    g.on = true; g.t = 0; g.s = s; g.x = x; g.y = y; g.rot = rnd(-0.12, 0.12); g.size = size; g.crit = false; g.speed = 1.7;
+    g.on = true; g.t = 0; g.s = s; g.x = x; g.y = y; g.rot = rnd(-0.12, 0.12); g.size = size; g.crit = false; g.speed = 1.7; g.ride = null;
     g.m.renderOrder = 60;   // over the reload close-ups
     g.u.map.value = this.texOf(ch); g.u.seed.value = Math.random() * 100;
     along(i * 0.75, g.u.c0.value); along(i * 0.75 + 1.2, g.u.c1.value);
@@ -118,7 +178,7 @@ export class Mantra {
   cast(x0, y0, x, y, i, crit = false) {
     const n = this.syll.length, s = ((i % n) + n) % n, g = this.mesh(), H = this.game.H;
     g.on = true; g.t = 0; g.s = s; g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.rot = rnd(-0.18, 0.18);
-    g.size = H * (crit ? 0.19 : 0.135); g.crit = crit; g.speed = 1;
+    g.size = H * (crit ? 0.19 : 0.135); g.crit = crit; g.speed = 1; g.ride = null;
     g.m.renderOrder = 41;
     g.u.map.value = this.tex[s]; g.u.seed.value = Math.random() * 100;
     along(s, g.u.c0.value); along(s + 1.5, g.u.c1.value);
@@ -131,6 +191,14 @@ export class Mantra {
     for (const g of this.pool) {
       if (!g.on) continue;
       g.t += dt * (g.speed || 1);
+      if (g.t < 0) { g.m.visible = false; continue; }   // waiting for its turn
+      if (g.ride) {   // riding the beam: out along it, weaving around it; at the target it holds and goes
+        const r = g.ride, B = r.B; r.u = Math.min(1, r.u + dt / 0.42);
+        const L = Math.hypot(B.x1 - B.x0, B.y1 - B.y0) || 1, nx = -(B.y1 - B.y0) / L, ny = (B.x1 - B.x0) / L;
+        const w = Math.sin(r.u * 9 + r.ph) * B.w * r.amp * r.side * Math.sin(r.u * Math.PI);
+        g.x = B.x0 + (B.x1 - B.x0) * r.u + nx * w; g.y = B.y0 + (B.y1 - B.y0) * r.u + ny * w;
+        if (r.u < 1 && g.t > T_IN + T_HOLD * 0.5) g.t = T_IN + T_HOLD * 0.5;   // hold until it arrives
+      }
       const t = g.t, u = g.u, [ein, eout] = STYLE[g.s], m = g.m;
       if (t > T_IN + T_HOLD + T_OUT) { g.on = false; m.visible = false; continue; }
       m.visible = true;

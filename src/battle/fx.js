@@ -94,15 +94,34 @@ const glyphTex = (ch, pal = 'gold') => canvasTex(256, 256, (g) => {
   g.fillStyle = fill; g.fillText(ch, 128, 136);
   g.shadowBlur = 0; g.fillStyle = '#fffbe6'; g.font = '900 150px "SimSun", "Songti SC", "Noto Serif SC", "Microsoft YaHei", serif'; g.globalAlpha = 0.55; g.fillText(ch, 128, 136);
 });
-const BEAM_FRAG = `uniform float t; uniform float a; uniform vec3 col; varying vec2 vUv;
-void main(){ float y = abs(vUv.y - 0.5) * 2.0;
-  float wob = 0.08 * sin(vUv.x * 40.0 - t * 50.0) + 0.05 * sin(vUv.x * 13.0 + t * 23.0);
-  float core = smoothstep(0.42 + wob, 0.0, y);
-  float glow = smoothstep(1.0, 0.25 + wob, y);
-  float rings = step(0.82, fract(vUv.x * 6.0 - t * 9.0)) * smoothstep(1.0, 0.5, y) * 0.5;
-  vec3 c = mix(col, vec3(1.0, 0.98, 0.9), core) + rings * col;
-  float fade = smoothstep(0.0, 0.06, vUv.x);
-  gl_FragColor = vec4(c, a * fade * max(core, glow * 0.75 + rings)); }`;
+// the cat girl's beam (docs/DESIGN.md「猫娘的必杀镭射」): alive. It writhes (travelling waves + noise, pinned at both ends), twitches
+// (a kink jolting along when "twitch" is kicked), throbs in thickness, its colour flows along the spectrum toward the target, gloss bands
+// sweep along it, a sheen line runs down one side, thin crackling filaments and rings rush along around it. vUv.x: 0 = the paw, 1 = the
+// target; vUv.y across (the core in the middle; the plane is three times as wide as the beam so it has room to writhe).
+const BEAM_FRAG = `uniform float t; uniform float a; uniform float L; uniform float twitch; uniform float seed; varying vec2 vUv;
+float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233)) + seed) * 43758.5453); }
+float noise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(h(i), h(i + vec2(1.0, 0.0)), f.x), mix(h(i + vec2(0.0, 1.0)), h(i + 1.0), f.x), f.y); }
+vec3 hsv(float hh, float s, float v){ vec3 p = abs(fract(hh + vec3(1.0, 2.0 / 3.0, 1.0 / 3.0)) * 6.0 - 3.0); return v * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), s); }
+void main(){
+  float x = vUv.x, k = x * L / 120.0;
+  float pin = smoothstep(0.0, 0.1, x) * smoothstep(1.0, 0.88, x);
+  float off = (sin(k * 2.1 - t * 14.0) * 0.07 + sin(k * 5.3 + t * 9.0) * 0.035 + (noise(vec2(k * 1.7, t * 6.0)) - 0.5) * 0.08) * pin * (1.0 + twitch * 2.2);
+  off += twitch * (noise(vec2(k * 7.0, t * 45.0)) - 0.5) * 0.2 * pin;
+  float d = (vUv.y - 0.5 - off) * 2.0, y = abs(d);
+  float th = 0.3 * (0.82 + 0.22 * sin(k * 3.0 - t * 20.0) + 0.18 * twitch) * (0.75 + 0.25 * smoothstep(0.0, 0.15, x));
+  float core = smoothstep(th * 0.42, 0.0, y);
+  float body = smoothstep(th, th * 0.3, y);
+  float glow = smoothstep(1.0, th * 0.5, y) * 0.5;
+  vec3 colr = hsv(fract(x * 0.55 - t * 0.7 + seed * 0.1), 0.7, 1.0);
+  float gloss = pow(0.5 + 0.5 * sin(k * 1.3 - t * 24.0), 14.0);
+  float sheen = smoothstep(0.05, 0.0, abs(d - th * 0.45)) * (0.35 + 0.65 * gloss);
+  float fil = smoothstep(0.03, 0.0, abs(noise(vec2(k * 2.5, t * 18.0 + vUv.y * 4.0)) - 0.5)) * smoothstep(0.95, th, y) * step(th * 0.9, y);
+  float rings = step(0.88, fract(k * 0.9 - t * 8.0)) * body * 0.6;
+  vec3 c = colr * (body * 1.1 + glow + fil * 1.4 + rings) + vec3(1.0, 0.97, 0.92) * (core + sheen * 0.9 + gloss * body * 0.7);
+  float al = clamp(max(max(core, body), max(glow, fil)), 0.0, 1.0);
+  gl_FragColor = vec4(c, a * al * smoothstep(0.0, 0.03, x));
+}`;
 
 // the cat paw's rune: a red pentagram seal (always the same shape, drawn by the engine)
 const runeTex = () => canvasTex(256, 256, (g) => {
@@ -416,23 +435,47 @@ export class FX {
     });
   }
   // the palm beam: a glowing band from the hand to the aim point, alive while the skill lasts
+  // the cat girl's special: the living beam, and the spell riding out along it (glyphs.js: one character after another in the mantra
+  // style, a talisman seal at the end of every phrase, 急急如律令 and 敕令 at the end of the spell)
   beam(hex) {
-    const mat = new THREE.ShaderMaterial({ uniforms: { t: { value: 0 }, a: { value: 1 }, col: { value: new THREE.Color(hex) } }, vertexShader: BASIC_VERT, fragmentShader: BEAM_FRAG, transparent: true, depthTest: false, blending: THREE.AdditiveBlending });
+    const U = { t: { value: 0 }, a: { value: 1 }, L: { value: 100 }, twitch: { value: 0 }, seed: { value: Math.random() * 10 } };
+    const mat = new THREE.ShaderMaterial({ uniforms: U, vertexShader: BASIC_VERT, fragmentShader: BEAM_FRAG, transparent: true, depthTest: false,
+      depthWrite: false, blending: THREE.AdditiveBlending });
     const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), mat);
     m.renderOrder = 39; m.frustumCulled = false;
     this.game.overlay.add(m);
-    const fx = this;
-    return {
+    const fx = this, game = this.game, spell = C.theme.spell || [], flat = spell.join('');
+    let tw = 0, nextTw = 0.3, nextCh = 0, ci = 0, last = 0;
+    const B = {
+      x0: 0, y0: 0, x1: 0, y1: 0, w: 10,
       set(x0, y0, x1, y1, width, t) {
-        const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy);
+        const dt = Math.min(0.05, last ? t - last : 0.016); last = t;
+        Object.assign(B, { x0, y0, x1, y1, w: width });
+        const dx = x1 - x0, dy = y1 - y0, L = Math.max(1, Math.hypot(dx, dy));
         m.position.set((x0 + x1) / 2, (y0 + y1) / 2, 0);
         m.rotation.z = Math.atan2(dy, dx);
-        m.scale.set(L, width * (1 + 0.08 * Math.sin(t * 40)), 1);
-        mat.uniforms.t.value = t;
+        m.scale.set(L, width * 3, 1);
+        // twitches: now and then the whole beam jolts
+        nextTw -= dt; if (nextTw <= 0) { tw = 1; nextTw = rnd(0.12, 0.5); if (Math.random() < 0.4) game.post.shake(0.25); }
+        tw = Math.max(0, tw - dt * 7);
+        U.t.value = t; U.L.value = L; U.twitch.value = tw;
+        // the spell: a character every beat, riding out along the beam
+        nextCh -= dt;
+        if (nextCh <= 0 && flat.length) {
+          nextCh = 0.075;
+          const ch = flat[ci % flat.length];
+          fx.chant.ride(ch, ci, B);
+          // the end of a phrase: a talisman seal stamped beside the beam; the end of the spell: 急急如律令 and 敕令
+          let n = 0, end = -1;
+          for (const ph of spell) { n += ph.length; if ((ci % flat.length) === n - 1) { end = ph; break; } }
+          if (end !== -1) fx.chant.seal(end === spell[spell.length - 1] ? 'last' : 'phrase', B, ci);
+          ci++;
+        }
         if (Math.random() < 0.6) fx.oAdd.emit({ x: x1 + rnd(-width, width) * 0.3, y: y1 + rnd(-width, width) * 0.3, vx: rnd(-1, 1) * width * 4, vy: rnd(-1, 1) * width * 4, life: rnd(0.15, 0.3), size: width * 0.5, size1: width * 1.2, color: COL.gold, frame: FR.GLOW, drag: 4 });
       },
       remove() { fx.game.overlay.remove(m); m.geometry.dispose(); mat.dispose(); },
     };
+    return B;
   }
   // slot: which player it will hit (0 / 1), -1 = everyone. The small notch points at that player in their colour.
   // the attack warning over a winding-up monster (docs/DESIGN.md: some attacks are stopped by staggering it, some must be hidden from):

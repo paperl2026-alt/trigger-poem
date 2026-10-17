@@ -2309,6 +2309,141 @@
   "src": "assets/fx/cat_fever_5.webp",
   "w": 408
  },
+ "fx/fu_a_0": {
+  "h": 322,
+  "src": "assets/fx/fu_a_0.webp",
+  "w": 223
+ },
+ "fx/fu_a_1": {
+  "h": 337,
+  "src": "assets/fx/fu_a_1.webp",
+  "w": 182
+ },
+ "fx/fu_a_2": {
+  "h": 335,
+  "src": "assets/fx/fu_a_2.webp",
+  "w": 253
+ },
+ "fx/fu_a_3": {
+  "h": 325,
+  "src": "assets/fx/fu_a_3.webp",
+  "w": 208
+ },
+ "fx/fu_a_4": {
+  "h": 328,
+  "src": "assets/fx/fu_a_4.webp",
+  "w": 184
+ },
+ "fx/fu_a_5": {
+  "h": 326,
+  "src": "assets/fx/fu_a_5.webp",
+  "w": 202
+ },
+ "fx/fu_a_6": {
+  "h": 333,
+  "src": "assets/fx/fu_a_6.webp",
+  "w": 224
+ },
+ "fx/fu_a_7": {
+  "h": 331,
+  "src": "assets/fx/fu_a_7.webp",
+  "w": 236
+ },
+ "fx/fu_a_8": {
+  "h": 334,
+  "src": "assets/fx/fu_a_8.webp",
+  "w": 189
+ },
+ "fx/fu_b_0": {
+  "h": 310,
+  "src": "assets/fx/fu_b_0.webp",
+  "w": 318
+ },
+ "fx/fu_b_1": {
+  "h": 344,
+  "src": "assets/fx/fu_b_1.webp",
+  "w": 283
+ },
+ "fx/fu_b_2": {
+  "h": 332,
+  "src": "assets/fx/fu_b_2.webp",
+  "w": 332
+ },
+ "fx/fu_b_3": {
+  "h": 303,
+  "src": "assets/fx/fu_b_3.webp",
+  "w": 321
+ },
+ "fx/fu_b_4": {
+  "h": 299,
+  "src": "assets/fx/fu_b_4.webp",
+  "w": 321
+ },
+ "fx/fu_b_5": {
+  "h": 300,
+  "src": "assets/fx/fu_b_5.webp",
+  "w": 384
+ },
+ "fx/fu_b_6": {
+  "h": 311,
+  "src": "assets/fx/fu_b_6.webp",
+  "w": 383
+ },
+ "fx/fu_b_7": {
+  "h": 316,
+  "src": "assets/fx/fu_b_7.webp",
+  "w": 310
+ },
+ "fx/fu_b_8": {
+  "h": 318,
+  "src": "assets/fx/fu_b_8.webp",
+  "w": 384
+ },
+ "fx/fu_w_0": {
+  "h": 384,
+  "src": "assets/fx/fu_w_0.webp",
+  "w": 278
+ },
+ "fx/fu_w_1": {
+  "h": 384,
+  "src": "assets/fx/fu_w_1.webp",
+  "w": 135
+ },
+ "fx/fu_w_2": {
+  "h": 364,
+  "src": "assets/fx/fu_w_2.webp",
+  "w": 356
+ },
+ "fx/fu_w_3": {
+  "h": 310,
+  "src": "assets/fx/fu_w_3.webp",
+  "w": 372
+ },
+ "fx/fu_w_4": {
+  "h": 292,
+  "src": "assets/fx/fu_w_4.webp",
+  "w": 384
+ },
+ "fx/fu_w_5": {
+  "h": 307,
+  "src": "assets/fx/fu_w_5.webp",
+  "w": 300
+ },
+ "fx/fu_w_6": {
+  "h": 307,
+  "src": "assets/fx/fu_w_6.webp",
+  "w": 334
+ },
+ "fx/fu_w_7": {
+  "h": 294,
+  "src": "assets/fx/fu_w_7.webp",
+  "w": 323
+ },
+ "fx/fu_w_8": {
+  "h": 341,
+  "src": "assets/fx/fu_w_8.webp",
+  "w": 309
+ },
  "fx/hit_0": {
   "h": 407,
   "src": "assets/fx/hit_0.webp",
