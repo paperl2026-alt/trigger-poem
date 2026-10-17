@@ -634,10 +634,10 @@ class Damage {
     return d;
   }
   // x, y: screen px from the top-left (the game's box of the monster)
-  add(target, x, y, value, crit, color) {
+  add(target, x, y, value, crit, color, sign = '') {
     let d = this.live.get(target);
     if (!d || !d.on) { d = this.get(); d.on = true; d.sum = 0; d.crit = false; d.age = 0; this.live.set(target, d); }
-    d.sum += value; d.t = 0.8; d.x = x; d.y = y; d.crit = d.crit || crit; d.color = color; d.pop = 1;
+    d.sum += value; d.t = sign ? 1.1 : 0.8; d.x = x; d.y = y; d.crit = d.crit || crit; d.color = color; d.pop = 1; d.sign = sign;
   }
   update(dt) {
     const H = this.hud.L.H;
@@ -647,7 +647,7 @@ class Damage {
       if (d.t <= -0.3) { d.on = false; this.live.forEach((v, k) => { if (v === d) this.live.delete(k); }); continue; }
       const a = d.t > 0 ? 1 : 1 + d.t / 0.3, rise = (0.8 - Math.max(0, d.t)) * H * 0.05 + (d.t < 0 ? -d.t * H * 0.1 : 0);
       const h = H * Math.min(0.09, 0.034 + Math.log10(1 + d.sum) * 0.012) * (d.crit ? 1.25 : 1);
-      d.n.st.shadow = d.color; d.n.set(`${Math.round(d.sum)}`, h, d.crit ? '#fff36a' : '#ffffff');
+      d.n.st.shadow = d.color; d.n.set(`${d.sign || ''}${Math.round(d.sum)}`, h, d.sign ? '#c9ffe0' : d.crit ? '#fff36a' : '#ffffff');
       d.n.at(d.x, H - d.y + rise + h * 0.6, -6, 1 + d.pop * 0.35);
       d.n.m.visible = true; d.n.m.material.uniforms.a.value = a;
       d.c.m.visible = d.crit;
@@ -677,6 +677,12 @@ export class HudGL {
   react(slot, kind, hold) { this.panels[slot]?.react(kind, hold); }
   boss(name, frac, phase, phases) { this.bossBar.set(name, frac, phase, phases); }
   dmg(target, x, y, value, crit, color) { this.damage.add(target, x, y, value, crit, color); }
+  // a heal (Fever level-up, the special, items): a green +N rising from her HP bar
+  heal(slot, n) {
+    const P = this.panels[slot]; if (!P) return;
+    const b = P.D.hp.box, L = this.L, x = L.x((b[0] + b[2]) / 2, P.an), y = this.L.H - L.y((b[1] + b[3]) / 2, P.an);
+    this.damage.add({ heal: slot, t: performance.now() }, x, y, n, false, '#1aa86a', '+');
+  }
   hold(kind, opt) { this.holdUI.show(kind, opt); }
   update(dt, t) {
     const g = this.game;

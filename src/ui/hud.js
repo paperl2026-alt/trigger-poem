@@ -61,7 +61,7 @@ export class Hud {
     clearTimeout(this.tipT);
     this.tipT = setTimeout(() => tip.classList.add('hidden'), kind === 'fire' ? 7000 : 5000);
   }
-  healPop() {}
+  healPop(slot, n) { this.gl?.heal(slot, n); }
   boss(name, frac, phase, phases) { this.gl.boss(name, frac, phase, phases); }
   // every hit: one counter per enemy that keeps adding up (screen px, top-left origin), drawn by the GL HUD
   dmg(target, x, y, value, crit, color) { this.gl.dmg(target, x, y, value, crit, color); }

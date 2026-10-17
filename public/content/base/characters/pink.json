@@ -264,7 +264,9 @@
       "stagger": 2.2,
       "heal": 0.4,
       "charge": {
-        "hit": 0.008
+        "sec": 0.015,
+        "hit": 0.011,
+        "kill": 0.05
       }
     },
     "order": 0,

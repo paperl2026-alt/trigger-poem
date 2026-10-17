@@ -28,7 +28,7 @@ class BossBase extends Actor {
   pose(name, hold) { this.setFrame(this.prefix + name); this.poseT = hold; }
   eyes() { return meta[this.mesh.userData.texKey]?.eyes || []; }
   // an attack step scheduled with later() is dropped if the boss gets staggered in between
-  later(s, fn) { const q = this.seq; this.game.tweens.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
+  later(s, fn) { const q = this.seq; this.game.etw.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
   hit(info) {
     if (!this.alive) return;
     const { u, v } = info.uv;
@@ -88,13 +88,13 @@ class BossBase extends Actor {
     g.post.flash(1, 0xffffff);
     g.post.shake(1.4);
     for (let i = 0; i < 8; i++) {
-      g.tweens.wait(i * 0.22, () => {
+      g.etw.wait(i * 0.22, () => {
         const p = this.uvToWorld(rnd(0.25, 0.75), rnd(0.3, 0.9));
         g.fx.confetti(p, 34, 3); g.fx.ink(p, 14, 3); g.fx.star(p, 3, COL.pink);
         sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.7);
       });
     }
-    g.tweens.wait(1.3, () => { this.dieBurn({ u: 0.5, v: 0.8 }); sfx.burnOut(0); });
+    g.etw.wait(1.3, () => { this.dieBurn({ u: 0.5, v: 0.8 }); sfx.burnOut(0); });
     g.onBossDead(this);
   }
 }
@@ -125,7 +125,7 @@ export class MascotFloat extends BossBase {
   run(x, z, dur, done) {
     const P = this.root.position, x0 = P.x, z0 = P.z;
     let hop = 0;
-    this.game.tweens.run(dur, (e, k) => {
+    this.game.etw.run(dur, (e, k) => {
       P.x = x0 + (x - x0) * e; P.z = z0 + (z - z0) * e;
       P.y = Math.abs(Math.sin(k * dur * 9)) * 0.5;
       const s = Math.floor(k * dur * 9 / Math.PI);
@@ -138,7 +138,7 @@ export class MascotFloat extends BossBase {
     this.armor = false;
     this.game.post.u.warn.value = 0;
     const P = this.root.position;
-    if (P.y > 0.01) this.game.tweens.to(P, { y: 0 }, 0.25, { ease: Ease.inQuad });
+    if (P.y > 0.01) this.game.etw.to(P, { y: 0 }, 0.25, { ease: Ease.inQuad });
   }
   update(dt, t) {
     this.baseUpdate(dt, t);
@@ -188,11 +188,11 @@ export class MascotFloat extends BossBase {
     this.stompLock = this.lock = g.fx.lock('heavy', -1);
     sfx.warn(); setTimeout(() => sfx.warn(), 300);
     g.warnSlam();
-    g.tweens.to(P, { y: S.height }, this.stompDur * 0.85, { ease: Ease.outCubic });
+    g.etw.to(P, { y: S.height }, this.stompDur * 0.85, { ease: Ease.outCubic });
     this.later(this.stompDur, () => {
       if (this.stompLock) { this.stompLock.remove(); this.stompLock = null; this.lock = null; }
       g.post.u.warn.value = 0;
-      g.tweens.to(P, { y: 0 }, 0.14, {
+      g.etw.to(P, { y: 0 }, 0.14, {
         ease: Ease.inQuad,
         onDone: () => {
           if (!this.alive) return;
@@ -228,13 +228,13 @@ export class MascotFloat extends BossBase {
     this.pose('stagger', 2);
     sfx.roar();
     g.post.shake(1);
-    g.tweens.wait(0.9, () => {
+    g.etw.wait(0.9, () => {
       if (!this.alive) return;
       this.pose('stomp', 1);
       this.flash = 1; g.post.flash(0.8, 0xff3a2a); sfx.slam(); sfx.madness();
       g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.75, 0.3, 0);
       this.inner.scale.setScalar(1.12);
-      g.tweens.to(this.inner.scale, { x: 1, y: 1, z: 1 }, 0.6, { ease: Ease.outBack });
+      g.etw.to(this.inner.scale, { x: 1, y: 1, z: 1 }, 0.6, { ease: Ease.outBack });
       this.busy = false;
       this.timer = 0.8;
     });

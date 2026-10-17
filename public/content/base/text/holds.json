@@ -1,5 +1,5 @@
 {
- "_doc": "不能射击的阶段（赶路、清场、地形异变、异变发生、Boss 出现 / 变身……）盖在画面上的若隐若现提示（src/ui/hold.js，docs/DESIGN.md「UI」）。每种：color 颜色，tape 两条警示胶带上滚动的英文，sub 大字下面的小字，lines 大字（随机挑一句，{name} = 关卡名 / Boss 名）。随便加句子。",
+ "_doc": "不能射击的阶段（赶路、清场、地形异变、异变发生、Boss 出现 / 变身……）的提示（src/ui/hold.js，docs/DESIGN.md「不能射击的阶段的提示」）：banner: true 的（只给 Boss）是两条警示胶带 + 大字，其他都是画面上方正中半透明的小标签。每种：color 颜色，tape 两条警示胶带上滚动的英文，sub 大字下面的小字，lines 大字（随机挑一句，{name} = 关卡名 / Boss 名）。随便加句子。",
  "holds": {
   "stage": { "color": "#ff2a3a", "tape": "STAGE START", "sub": "READY?", "lines": [{ "zh": "{name}", "en": "{name}", "ja": "{name}" }] },
   "move": { "color": "#ff5fa8", "tape": "MOVE ON ▶▶", "sub": "MOVING", "lines": [
@@ -13,9 +13,9 @@
    { "zh": "空间扭曲!", "en": "SPACE IS BENDING!", "ja": "空間が歪む!" }, { "zh": "地面在弯!", "en": "THE FLOOR FOLDS!", "ja": "床が折れる!" }, { "zh": "抓紧了!", "en": "HOLD ON!", "ja": "つかまって!" }] },
   "invade": { "color": "#ff2a8a", "tape": "WARNING ⚠ ANOMALY DETECTED", "sub": "WARNING", "lines": [
    { "zh": "异变发生!", "en": "ANOMALY!", "ja": "異変発生!" }, { "zh": "学校被侵蚀了!", "en": "THE SCHOOL IS CORRUPTED!", "ja": "学校が侵食された!" }] },
-  "boss": { "color": "#ff1a2a", "tape": "WARNING ⚠ HUGE REACTION", "sub": "WARNING", "lines": [
+  "boss": { "banner": true, "color": "#ff1a2a", "tape": "WARNING ⚠ HUGE REACTION", "sub": "WARNING", "lines": [
    { "zh": "巨大反应接近!", "en": "SOMETHING HUGE APPROACHES!", "ja": "巨大反応接近!" }, { "zh": "{name} 出现!", "en": "{name} APPEARS!", "ja": "{name} 出現!" }] },
-  "phase": { "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
+  "phase": { "banner": true, "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
   "info": { "color": "#ff2a3a", "tape": "NOTICE", "sub": "", "lines": [{ "zh": "", "en": "", "ja": "" }] }
  }
 }

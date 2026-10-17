@@ -127,6 +127,7 @@ export class Player {
     this.invuln = PL().invuln;
     this.exposed = false;
     this.fever.hurt();
+    this.addCharge(T.fever.hurtCharge ?? 0);   // hurt = a chunk of Fever and of the special (DESIGN「Fever 大方」)
     if (this.hero) this.hero.hurt(n >= 25); else this.soft.kick(1.4);
     if (this.hp <= 0) { this.state = 'down'; this.downT = PL().downTime; return true; }
     this.state = 'hurt';
@@ -134,6 +135,12 @@ export class Player {
     return true;
   }
   heal(n) { if (this.state !== 'down') this.hp = Math.min(this.maxHp, this.hp + n); }
+  // heal and show it (Fever level-ups, the special: DESIGN「Fever 大方」)
+  healPop(n) {
+    if (!n || this.state === 'down' || this.hp >= this.maxHp) return;
+    const h = Math.min(n, this.maxHp - this.hp); this.heal(h);
+    if (h >= 1) this.game.hud.healPop(this.slot, Math.round(h));
+  }
   addCharge(v) { if (!this.activeOn) this.charge = Math.min(1, this.charge + v); }
 
   // ---- active skill
@@ -141,6 +148,7 @@ export class Player {
     const g = this.game;
     this.charge = 0;
     this.activeT = this.a.dur;
+    this.healPop(T.fever.skillHeal);
     if (this.state === 'reload' || this.state === 'cover') this.state = 'out';
     this.ammo = this.w.mag;
     sfx.madness();
@@ -228,7 +236,7 @@ export class Player {
     if (this.hero) {
       // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze
       const lv = FEVER_KEYS.reduce((s, k) => s + this.fever.level(k), 0), maxSum = FEVER_KEYS.length * T.fever.maxLevel;
-      while (this.fever.ups.length) { const k = this.fever.ups.shift(); this.hero.pulse(new THREE.Color(C.theme.feverColor[k])); this.edgePulse = 1; sfx.ui && sfx.ui(); }
+      while (this.fever.ups.length) { const k = this.fever.ups.shift(); this.hero.pulse(new THREE.Color(C.theme.feverColor[k])); this.edgePulse = 1; sfx.ui && sfx.ui(); this.healPop(T.fever.levelHeal); }
       AURA.set(this.c.color);
       const act = this.activeOn, full = this.fever.full;
       this.hero.setAura(act ? AURA.offsetHSL(Math.sin(t * 2) * 0.06, 0.1, 0.05) : AURA, act ? 0.95 : lv ? 0.12 + 0.5 * lv / maxSum : 0, act ? 1 : full ? 0.7 : 0.15 * lv / maxSum, act ? 1 : full ? 0.6 : 0);

@@ -4,7 +4,7 @@
 import * as THREE from 'three';
 import { alphaAt } from '../core/assets.js';
 import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
-import { Ease } from '../core/tween.js';
+import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
 import { PanelWorld } from './panels.js';
@@ -31,6 +31,8 @@ export class Game {
     this.run = run;
     this.ep = run.ep;
     this.tweens = G.tweens;
+    // the enemies' clock (DESIGN「节奏要慢下来」): monsters, the boss, their shots and the waves run at tuning combat.pace of real time
+    this.etw = new Tweens();
     this.post = G.post;
     this.pointer = G.pointer;
     this.overlay = new THREE.Scene();
@@ -65,7 +67,7 @@ export class Game {
     this.setId = id;
     this.world = this.makeWorld(id);
     if (!old) return;
-    this.clearActors(); this.boss = null;
+    this.clearActors(); this.boss = null; this.etw.clear();
     this.fx.clear();
     for (const p of this.players) { old.camera.remove(p.group); this.world.camera.add(p.group); }
     this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
@@ -152,9 +154,19 @@ export class Game {
       this.world.enter(id, first, () => this.arrive(S, boss));
       return;
     }
-    let pts;
-    if (!this.camPlaced || this.afterComic) { this.world.place(S.via[0], S.look); pts = [...S.via, S.cam]; } else pts = [this.world.camPos.toArray(), ...S.via, S.cam];
-    this.camPlaced = true; this.afterComic = false;
+    // the first stop of a stage (the run's start, or after a comic): the camera is already there and the girls already crouch in their
+    // cover (DESIGN「进小关的第一个点直接蹲好」: no running in, no looking at the floor)
+    if (!this.camPlaced || this.afterComic) {
+      this.camPlaced = true; this.afterComic = false;
+      this.post.u.wipe.value = 0;
+      if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+      playMusic(boss ? 'boss' : 'stage');
+      this.world.place(S.cam, S.look);
+      this.setAll('cover'); this.settled = true;
+      this.arrive(S, boss);
+      return;
+    }
+    const pts = [this.world.camPos.toArray(), ...S.via, S.cam];
     this.post.u.wipe.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
     if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
@@ -209,9 +221,11 @@ export class Game {
   }
   // calm: take places but keep combat off (the world hasn't been invaded yet)
   enterCover(then, calm = false) {
+    const settled = this.settled; this.settled = false;   // (already crouching there: no drop-in)
     this.players.forEach((p, i) => {
       if (i && !this.p2on()) return;
       p.state = 'cover';
+      if (settled) { p.y0 = 0; return; }
       p.y0 = -this.H * 0.5;
       p.soft.kick(1.2);
       this.tweens.to(p, { y0: 0 }, 0.4, { ease: Ease.outBack, delay: 0.1 + i * 0.08 });
@@ -227,14 +241,14 @@ export class Game {
     const wave = this.S.waves[this.waveIndex];
     this.pendingSpawns = wave.length;
     this.waveLive = true;
-    for (const s of wave) this.tweens.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+    for (const s of wave) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
     if (this.actors.some((a) => a.alive && !(a instanceof Projectile))) return;
     this.waveLive = false;
     this.waveIndex++;
-    if (this.waveIndex < this.S.waves.length) { this.tweens.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
+    if (this.waveIndex < this.S.waves.length) { this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();
     sfx.clear();
@@ -539,7 +553,10 @@ export class Game {
       if (p.ctrl) p.ctrl.update(dt, this, pads);
       p.update(dt, now);
     }
-    for (const a of this.actors) a.update(dt, now);
+    const edt = dt * (T.combat.pace ?? 1);
+    this.rdt = dt;
+    this.etw.update(edt);
+    for (const a of this.actors) a.update(edt, now);
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) this.checkWave();
     this.fx.update(dt, now);

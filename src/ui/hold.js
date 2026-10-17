@@ -1,7 +1,8 @@
-// "You can't shoot now" (docs/DESIGN.md「UI」): while the game holds the fight — moving on, a station cleared, the terrain folding, an anomaly,
-// the boss arriving or transforming — two hazard tapes scroll across the screen and a big caption flickers in and out over the picture,
-// see-through, like the boss / threat warnings of many games. What it says and its colour depend on the moment (content text/holds.json,
-// several lines each, picked at random). It goes away by itself when the fight is on again (or after its time).
+// "You can't shoot now" (docs/DESIGN.md「不能射击的阶段的提示」): while the game holds the fight (moving on, a station cleared, the terrain
+// folding, an anomaly, the boss arriving or transforming). Only the boss gets the big show ("banner": true in text/holds.json): two hazard
+// tapes scroll across the screen and a big caption flickers over the picture. Everything else is a small see-through tag at the top
+// centre, flickering gently, out of the way (user: WARNING only for the boss, the rest low-key). What it says depends on the moment
+// (several lines each, picked at random). It goes away by itself when the fight is on again (or after its time).
 import * as THREE from 'three';
 import { C } from '../core/content.js';
 import { tr, lang } from '../core/i18n.js';
@@ -46,7 +47,7 @@ export class Hold {
     const D = C.text.holds?.[kind] || C.text.holds?.info; if (!D) return;
     const line = opt.text || (D.lines ? (() => { const l = D.lines[Math.floor(Math.random() * D.lines.length)]; return (l[lang] || l.en).replace('{name}', opt.name || ''); })() : '');
     this.kind = kind; this.on = true; this.t = 0; this.dur = opt.dur ?? null; this.combat0 = this.hud.game.combat;
-    this.text = line; this.subText = D.sub || ''; this.col = new THREE.Color(D.color || '#ff2a3a');
+    this.text = line; this.subText = D.sub || ''; this.col = new THREE.Color(D.color || '#ff2a3a'); this.banner = !!D.banner;
     this.drawWords(`${D.tape || 'WARNING'}  ◆  ${line}  ◆  `);
     for (const tp of this.tapes) tp.material.uniforms.col.value.copy(this.col);
   }
@@ -62,6 +63,19 @@ export class Hold {
     for (const tp of this.tapes) { tp.material.uniforms.words.value = this.wt; tp.material.uniforms.rep.value = 1; tp.userData.ww = c.width / c.height; }
   }
   end() { this.on = false; }
+  // the low-key version: a small tilted tag at the top centre with the line and its little sub-word, see-through
+  soft(k, time) {
+    const L = this.hud.L, H = L.H, W = L.W;
+    this.tapes.forEach((m) => { m.visible = false; });
+    const fl = 0.7 + 0.3 * Math.abs(Math.sin(time * 2.4)), bh = H * 0.065, y = H * 0.86;
+    this.big.set(this.text, bh * 0.56, '#ffffff', W * 0.4);
+    const bw = Math.max(bh * 3, this.big.c.width * 1.25);
+    this.slab.position.set(W / 2, y, 0); this.slab.scale.set(bw * (0.85 + 0.15 * k), bh * 1.2, 1); this.slab.rotation.z = -0.03;
+    const SU = this.slab.material.uniforms; SU.a.value = k * fl * 0.55; SU.time.value = time; SU.shine.value = 0.4; SU.recol.value = 0;
+    this.big.at(W / 2, y + bh * 0.02, -1.7, 1); this.big.m.material.uniforms.a.value = k * fl * 0.85;
+    this.sub.set(this.subText, bh * 0.3, '#121012', W * 0.3);
+    this.sub.at(W / 2 - bw * 0.3, y + bh * 0.62, -1.7); this.sub.m.material.uniforms.a.value = k * 0.6;
+  }
   update(dt, time) {
     const g = this.hud.game, L = this.hud.L, H = L.H, W = L.W;
     this.t += dt;
@@ -71,6 +85,8 @@ export class Hold {
     this.g.visible = this.k > 0.01;
     if (!this.g.visible) return;
     const k = this.k, slide = (1 - k) * W * 0.6;
+    if (!this.banner) { this.soft(k, time); return; }
+    this.tapes.forEach((m) => { m.visible = true; });
     // the tapes: across the upper and lower part of the screen, tilted, sliding in from opposite sides
     this.tapes.forEach((m, i) => {
       const th = H * 0.1, len = Math.hypot(W, H) * 1.1, U = m.material.uniforms;

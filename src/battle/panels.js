@@ -270,7 +270,9 @@ export class PanelWorld {
     let step = 0;
     this.game.tweens.run(dur, (e, k) => {
       curve.getPointAt(e, this.camPos);
-      const ahead = curve.getPointAt(Math.min(1, e + 0.12)).add(new THREE.Vector3(0, -0.1, -0.01));
+      // look the way she runs, level (a point far ahead at eye height), never down at the floor
+      const dir = curve.getTangentAt(Math.min(0.999, e)); dir.y = 0; if (dir.lengthSq() < 1e-6) dir.set(0, 0, -1); dir.normalize();
+      const ahead = this.camPos.clone().addScaledVector(dir, 12); ahead.y = this.camPos.y - 0.15;
       const w = Ease.inOutQuad(Math.max(0, (k - 0.55) / 0.45));
       this.lookAt.copy(ahead).lerp(toLook, w);
       if (k < 0.15) this.lookAt.lerp(fromLook, 1 - k / 0.15);

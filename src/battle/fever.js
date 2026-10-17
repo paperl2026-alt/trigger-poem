@@ -37,7 +37,7 @@ export class Fever {
   }
   miss() { this.add('acc', -this.w.rate * F().accMissPerShot); }
   kill() { this.idle = 0; this.add('combo', F().comboPerKill); }
-  hurt() { for (const k of FEVER_KEYS) this.add(k, -F().hurtLoss); }
+  hurt() { this.idle = 0; for (const k of FEVER_KEYS) this.add(k, F().hurtGain ?? 0); }   // a hit taken gives a chunk (DESIGN「Fever 大方」)
 
   update(dt) {
     this.idle += dt;

@@ -88,10 +88,11 @@ export class Actor {
   stepped(t) { const s = Math.floor((t + this.seed) / STEP); const changed = s !== this.lastStep; this.lastStep = s; return changed; }
   distToCam() { const c = this.game.world.camPos; return Math.hypot(this.root.position.x - c.x, this.root.position.z - c.z); }
   baseUpdate(dt, t) {
-    this.flash = Math.max(0, this.flash - dt * 6);
+    const rdt = this.game.rdt ?? dt;   // (dt is the enemies' slower time, Game.update; the drawing itself lives in real time)
+    this.flash = Math.max(0, this.flash - rdt * 6);
     this.u.flash.value = this.flash;
-    this.dm.update(dt);
-    this.tickAnim(dt);
+    this.dm.update(rdt);
+    this.tickAnim(rdt);
     if (this.billboard) {
       const c = this.game.world.camera.position, p = this.root.position;
       this.root.rotation.y = Math.atan2(c.x - p.x, c.z - p.z);
@@ -266,7 +267,7 @@ export class Enemy extends Actor {
       }
       this.shadowM = world.makeShadow(this.w * 0.35); world.scene.add(this.shadowM);
       this.play('fly', 14);
-      game.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.enterTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'enter') { this.state = 'hover'; this.timer = rr(bp.hoverFirst); } } });
+      game.etw.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.enterTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'enter') { this.state = 'hover'; this.timer = rr(bp.hoverFirst); } } });
       sfx.whoosh(0);
     } else if (this.beh === 'crawler') {
       const roomH = s.y ?? lv.ceilAt(s.z);
@@ -283,7 +284,7 @@ export class Enemy extends Actor {
   }
 
   enter(s, lv) {
-    const tw = this.game.tweens, P = this.root.position, walker = this.beh === 'walker', bp = this.bp;
+    const tw = this.game.etw, P = this.root.position, walker = this.beh === 'walker', bp = this.bp;
     const ready = () => {
       if (!this.alive || this.state !== 'enter') return;
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
@@ -363,7 +364,7 @@ export class Enemy extends Actor {
     sfx.thud(0);
     const P = this.root.position, c = g.world.camPos, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
     const bp = this.bp;
-    if (this.beh === 'walker') { P.x += dx / d * bp.staggerPush; P.z += dz / d * bp.staggerPush; } else if (this.beh === 'flyer') { g.tweens.kill(P); P.z -= bp.staggerKnock[0]; P.y += bp.staggerKnock[1]; }
+    if (this.beh === 'walker') { P.x += dx / d * bp.staggerPush; P.z += dz / d * bp.staggerPush; } else if (this.beh === 'flyer') { g.etw.kill(P); P.z -= bp.staggerKnock[0]; P.y += bp.staggerKnock[1]; }
   }
   recover() {
     this.inner.position.x = 0;
@@ -372,7 +373,7 @@ export class Enemy extends Actor {
   }
 
   updateWalker(dt, t) {
-    const g = this.game, P = this.root.position, tw = g.tweens, bp = this.bp;
+    const g = this.game, P = this.root.position, tw = g.etw, bp = this.bp;
     if (this.state === 'walk') {
       const dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz);
       const sp = this.def.speed * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
@@ -433,14 +434,14 @@ export class Enemy extends Actor {
         this.play('dive');
         sfx.whoosh(0);
         const c = g.world.camPos;
-        g.tweens.to(P, { x: c.x + (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter), y: c.y - bp.diveDrop, z: c.z - bp.diveStop }, bp.diveTime, {
+        g.etw.to(P, { x: c.x + (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter), y: c.y - bp.diveDrop, z: c.z - bp.diveStop }, bp.diveTime, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
             g.playerAttacked({ kind: 'ranged', dmg: enemyHit(), from: this, slot: this.targetSlot });
             this.state = 'recoil';
             this.play('fly', 14);
-            g.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.returnTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rr(bp.hoverAgain); } } });
+            g.etw.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.returnTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rr(bp.hoverAgain); } } });
           },
         });
       }
@@ -452,7 +453,7 @@ export class Enemy extends Actor {
     this.timer -= dt;
     if (this.state === 'hide') {
       this.inner.position.y = 0;
-      if (this.timer <= 0) { this.state = 'rise'; this.play('rise'); this.timer = bp.riseTime; sfx.popup(); this.inner.scale.set(1.1, 0.85, 1); this.game.tweens.to(this.inner.scale, { x: 1, y: 1 }, 0.25, { ease: Ease.outBack }); }
+      if (this.timer <= 0) { this.state = 'rise'; this.play('rise'); this.timer = bp.riseTime; sfx.popup(); this.inner.scale.set(1.1, 0.85, 1); this.game.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.25, { ease: Ease.outBack }); }
     } else if (this.state === 'rise') {
       if (this.timer <= 0) { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterRise); }
     } else if (this.state === 'stand') {
@@ -468,7 +469,7 @@ export class Enemy extends Actor {
           // a burst: several shots fanned out, a beat apart (each can be shot down)
           const n = this.def.burst || 1;
           for (let i = 0; i < n; i++) {
-            this.game.tweens.wait(i * 0.16, () => {
+            this.game.etw.wait(i * 0.16, () => {
               if (!this.alive) return;
               this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0 });
               sfx.throwIt(0);
@@ -512,7 +513,7 @@ export class Enemy extends Actor {
         this.string = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xeee2c8, transparent: true, opacity: 0.8 }));
         this.inner.add(this.string);
         sfx.whoosh(0);
-        g.tweens.to(P, { y: bp.dropY }, bp.dropTime, { ease: Ease.outBack, onDone: () => { if (this.alive) { this.startWindup(bp.firstWindup); this.play('atk'); } } });
+        g.etw.to(P, { y: bp.dropY }, bp.dropTime, { ease: Ease.outBack, onDone: () => { if (this.alive) { this.startWindup(bp.firstWindup); this.play('atk'); } } });
       }
     } else if (this.state === 'windup') {
       this.timer -= dt;
@@ -522,7 +523,7 @@ export class Enemy extends Actor {
         this.state = 'pounce';
         const z0 = P.z, y0 = P.y;
         const x0 = P.x, tx = c.x + (this.targetSlot ? bp.pounceSide : -bp.pounceSide);
-        g.tweens.run(bp.pounceTime, (e) => { P.z = z0 + (c.z - bp.pounceStop - z0) * e; P.y = y0 + (c.y - bp.pounceDrop - y0) * e; P.x = x0 + (tx - x0) * e; }, {
+        g.etw.run(bp.pounceTime, (e) => { P.z = z0 + (c.z - bp.pounceStop - z0) * e; P.y = y0 + (c.y - bp.pounceDrop - y0) * e; P.x = x0 + (tx - x0) * e; }, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
@@ -530,7 +531,7 @@ export class Enemy extends Actor {
             this.inner.scale.setScalar(1);
             this.state = 'retreat';
             this.play('drop');
-            g.tweens.to(P, { z: c.z - bp.retreatDist, y: bp.retreatY }, bp.retreatTime, { ease: Ease.outCubic, onDone: () => { if (this.alive) { this.startWindup(bp.nextWindup); this.play('atk'); } } });
+            g.etw.to(P, { z: c.z - bp.retreatDist, y: bp.retreatY }, bp.retreatTime, { ease: Ease.outCubic, onDone: () => { if (this.alive) { this.startWindup(bp.nextWindup); this.play('atk'); } } });
           },
         });
       }
@@ -573,7 +574,7 @@ export class Enemy extends Actor {
   die(kind, info) {
     this.alive = false;
     this.endWindup();
-    this.game.tweens.kill(this.root.position);
+    this.game.tweens.kill(this.root.position); this.game.etw.kill(this.root.position);
     if (this.string) this.game.tweens.to(this.string.position, { y: 20 }, 0.6);
     if (this.shadowM && this.pivot === 'center') this.shadowM.visible = false;
     const uv = info?.uv || { u: 0.5, v: 0.55 };

@@ -187,7 +187,7 @@ export class DisciplineGiant extends Actor {
 
   // form 1 comes up over the school
   enter1() {
-    const g = this.game, tw = g.tweens;
+    const g = this.game, tw = g.etw;
     sfx.roar(); g.post.shake(1.2);
     this.head.g.position.y = this.headHome.y - this.head.h * 0.95;
     tw.to(this.head.g.position, { y: this.headHome.y }, 2.2, { ease: Ease.outCubic });
@@ -279,7 +279,7 @@ export class DisciplineGiant extends Actor {
   openEye(t) { if (this.phase === 1) { this.eyeT = t; this.head.show('b1_head_eye'); } }
   shake(a) {
     const o = this.F[this.phase], x0 = o.position.x;
-    this.game.tweens.run(0.5, (e) => { o.position.x = x0 + Math.sin(e * 40) * a * (1 - e); });
+    this.game.etw.run(0.5, (e) => { o.position.x = x0 + Math.sin(e * 40) * a * (1 - e); });
   }
 
   // ---------------------------------------------------------------- locks (warnings that follow a part)
@@ -294,7 +294,7 @@ export class DisciplineGiant extends Actor {
   }
   // everything back to rest (a stagger, a broken move, a new form)
   endAll() {
-    const tw = this.game.tweens;
+    const tw = this.game.etw;
     this.armor = false; this.raising = false; this.guard = false;
     for (const h of [...this.hands, ...this.claws]) if (h.busy) {
       h.busy = false; tw.kill(h.g.position); tw.kill(h.g.rotation);
@@ -365,14 +365,14 @@ export class DisciplineGiant extends Actor {
     this.hurtSum = Math.max(0, this.hurtSum - dt * this.maxHp * 0.02);
     if (this.hurtSum > this.maxHp * 0.04 && !this.moodNow && !this.armor && !this.raising && !this.busy) { this.hurtSum = 0; this.mood('angry', 1.4); }
   }
-  later(s, fn) { const q = this.seq; this.game.tweens.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
+  later(s, fn) { const q = this.seq; this.game.etw.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
 
   // ---------------------------------------------------------------- form 1
   throwStuff() {
     const g = this.game, D = this.def.throw, h = this.hands[this.pi % 2];
     h.busy = true; h.show('b1_hand_throw');
     const up = h.home.clone().add(new THREE.Vector3(0, this.def.layout.f1.throwUp, 0.4));
-    g.tweens.to(h.g.position, { y: up.y, z: up.z }, 0.45, { ease: Ease.outBack });
+    g.etw.to(h.g.position, { y: up.y, z: up.z }, 0.45, { ease: Ease.outBack });
     const n = Math.round(rr(D.shots[0]));
     for (let i = 0; i < n; i++) this.later(0.55 + i * D.gap, () => {
       const kind = D.projectiles[i % D.projectiles.length];
@@ -380,7 +380,7 @@ export class DisciplineGiant extends Actor {
       g.spawnProjectile(kind, h.at(0.3, 0.8), { slot: g.pickTarget(h.side), time: D.flight, curve: (i % 2 ? 1 : -1) * D.curve, dmg: D.dmg });
       sfx.throwIt(0);
     });
-    this.later(0.7 + n * D.gap, () => { h.busy = false; h.g.rotation.z = 0; h.show(h.grip); g.tweens.to(h.g.position, { y: h.home.y, z: h.home.z }, 0.5, { ease: Ease.outCubic }); });
+    this.later(0.7 + n * D.gap, () => { h.busy = false; h.g.rotation.z = 0; h.show(h.grip); g.etw.to(h.g.position, { y: h.home.y, z: h.home.z }, 0.5, { ease: Ease.outCubic }); });
     this.timer = 0.9 + n * D.gap + D.rest;
   }
   slam() {
@@ -390,8 +390,8 @@ export class DisciplineGiant extends Actor {
     sfx.warn(); g.warnSlam();
     // the hand rises high over the roof and hangs there (the wind-up: shoot it to stop it)
     const high = h.home.clone().add(new THREE.Vector3(-h.side * 1.5, this.def.layout.f1.slamUp, 1));
-    g.tweens.to(h.g.position, { x: high.x, y: high.y, z: high.z }, D.windup * 0.6, { ease: Ease.outCubic });
-    g.tweens.to(h.g.rotation, { z: h.side * 0.25 }, D.windup * 0.6, { ease: Ease.outCubic });
+    g.etw.to(h.g.position, { x: high.x, y: high.y, z: high.z }, D.windup * 0.6, { ease: Ease.outCubic });
+    g.etw.to(h.g.rotation, { z: h.side * 0.25 }, D.windup * 0.6, { ease: Ease.outCubic });
     h.lock = this.addLock('melee', slot, h, 0.5, 0.55, D.windup, 0.16);
     this.later(D.windup, () => this.handDown(h, slot, D, () => { h.show(h.grip); }));
     this.timer = D.windup + D.fall + D.rest;
@@ -402,8 +402,8 @@ export class DisciplineGiant extends Actor {
     this.dropLock(h.lock); h.lock = null;
     const cov = g.world.covers[slot], c = g.world.camPos;
     const to = new THREE.Vector3(cov ? cov.def.x : c.x + (slot ? 1 : -1), 0.6, cov ? cov.def.z - 0.6 : c.z - 2);
-    g.tweens.to(h.g.rotation, { z: 0 }, D.fall);
-    g.tweens.to(h.g.position, { x: to.x, y: to.y, z: to.z }, D.fall, {
+    g.etw.to(h.g.rotation, { z: 0 }, D.fall);
+    g.etw.to(h.g.position, { x: to.x, y: to.y, z: to.z }, D.fall, {
       ease: Ease.inQuad,
       onDone: () => {
         if (!this.alive) return;
@@ -412,7 +412,7 @@ export class DisciplineGiant extends Actor {
         g.fx.stamp('don', g.W * (slot ? 0.7 : 0.3), g.H * 0.4, 0.3, 0);
         if (cov && g.world.breakCover) g.world.breakCover(cov);
         g.playerAttacked({ kind: 'melee', dmg: D.dmg, from: this, slot });
-        this.later(0.7, () => { h.busy = false; back && back(); g.tweens.to(h.g.position, { x: h.home.x, y: h.home.y, z: h.home.z }, 0.9, { ease: Ease.inOutQuad }); });
+        this.later(0.7, () => { h.busy = false; back && back(); g.etw.to(h.g.position, { x: h.home.x, y: h.home.y, z: h.home.z }, 0.9, { ease: Ease.inOutQuad }); });
       },
     });
   }
@@ -421,9 +421,9 @@ export class DisciplineGiant extends Actor {
     const g = this.game;
     this.seq++;
     this.dropLock(h.lock); h.lock = null; h.poise = 0; h.busy = false;
-    g.tweens.kill(h.g.position); g.tweens.kill(h.g.rotation); h.g.rotation.set(0, 0, 0);
+    g.etw.kill(h.g.position); g.etw.kill(h.g.rotation); h.g.rotation.set(0, 0, 0);
     if (h.grip) h.show(h.grip);
-    g.tweens.to(h.g.position, { x: h.home.x, y: h.home.y, z: h.home.z }, 0.7, { ease: Ease.outBack });
+    g.etw.to(h.g.position, { x: h.home.x, y: h.home.y, z: h.home.z }, 0.7, { ease: Ease.outBack });
     g.fx.stamp('don', g.W * 0.5, g.H * 0.72, 0.28, 0);
     g.post.shake(1); sfx.roar(); g.G.stop(0.12);
     g.hud.gl.stickers.say(g.players.find((p) => p.state === 'out') || g.players[0], 'stagger');
@@ -459,7 +459,7 @@ export class DisciplineGiant extends Actor {
 
   // ---------------------------------------------------------------- form changes: she sinks away, the transformation page, the new form
   toPhase(n) {
-    const g = this.game, tw = g.tweens;
+    const g = this.game, tw = g.etw;
     this.phase = n; this.seq++; this.clearLocks();
     this.busy = true; this.pi = 0; this.armor = false; this.raising = false; this.guard = false;
     sfx.roar(); sfx.madness();
@@ -474,7 +474,7 @@ export class DisciplineGiant extends Actor {
     this.timer = 99;
   }
   reveal(n) {
-    const g = this.game, tw = g.tweens, L = this.def.layout;
+    const g = this.game, tw = g.etw, L = this.def.layout;
     // the camera tilts up to her (the covers move with the view so they still stand before the girls)
     const look = this.def.look[n - 1], S = g.S;
     if (S) { S.look = look; g.world.placeCovers && g.world.placeCovers(g.players); }
@@ -501,7 +501,7 @@ export class DisciplineGiant extends Actor {
     const g = this.game, D = this.def.lash, n = Math.round(rr(D.shots)), a = this.armMove('b2_arm_lash', 1);
     this.mood('angry', 0.6 + n * D.gap);
     sfx.roar();
-    g.tweens.run(0.4 + n * D.gap, (e) => { a.g.rotation.z = Math.sin(e * Math.PI * 3) * 0.12; });
+    g.etw.run(0.4 + n * D.gap, (e) => { a.g.rotation.z = Math.sin(e * Math.PI * 3) * 0.12; });
     for (let i = 0; i < n; i++) this.later(0.3 + i * D.gap, () => {
       const from = (i % 2 ? this.tapes[i % 4 < 2 ? 0 : 1] : a).at(rnd(0.15, 0.85), rnd(0.2, 0.8));
       g.spawnProjectile(D.projectiles[i % D.projectiles.length], from, { slot: g.pickTarget(from.x - g.world.camPos.x), time: D.flight, curve: rnd(-2, 2), dmg: D.dmg });
@@ -514,7 +514,7 @@ export class DisciplineGiant extends Actor {
     const g = this.game, D = this.def.raise;
     this.raising = true; this.raisePoise = 0;
     const a = this.armMove('b2_arm_ruler', -1);
-    a.g.rotation.z = 0.25; g.tweens.to(a.g.rotation, { z: 0 }, 0.5, { ease: Ease.outBack });
+    a.g.rotation.z = 0.25; g.etw.to(a.g.rotation, { z: 0 }, 0.5, { ease: Ease.outBack });
     this.mood('angry', D.windup);
     sfx.warn(); setTimeout(() => sfx.warn(), 300); g.warnSlam();
     const short = a.m.userData.texKey.replace('boss/dc3_', ''), w = this.def.weak[short] || [0.3, 0.18];
@@ -522,7 +522,7 @@ export class DisciplineGiant extends Actor {
     this.later(D.windup, () => {
       this.dropLock(this.raiseLock); this.raiseLock = null; this.raising = false;
       // the ruler comes down across the yard
-      g.tweens.to(a.g.rotation, { z: -0.9 }, 0.18, { ease: Ease.inQuad, onDone: () => {
+      g.etw.to(a.g.rotation, { z: -0.9 }, 0.18, { ease: Ease.inQuad, onDone: () => {
         this.blast(D.dmg, a, 0.7, 0.8);
         for (const c of g.world.covers) if (c && c.hp !== undefined) { c.hp -= D.coverDmg; if (c.hp <= 0 && g.world.breakCover) g.world.breakCover(c); }
         this.later(0.6, () => this.armsRest());
@@ -545,7 +545,7 @@ export class DisciplineGiant extends Actor {
   // she points at one girl: a heavy strike at her alone after the wind-up (that girl hides)
   point() {
     const g = this.game, D = this.def.point, slot = g.pickTarget(this.pi % 2 ? 0.6 : -0.6), a = this.armMove('b2_arm_point', 1);
-    a.g.scale.setScalar(0.6); g.tweens.to(a.g.scale, { x: 1, y: 1, z: 1 }, 0.4, { ease: Ease.outBack });
+    a.g.scale.setScalar(0.6); g.etw.to(a.g.scale, { x: 1, y: 1, z: 1 }, 0.4, { ease: Ease.outBack });
     this.mood('angry', D.windup);
     sfx.warn();
     const o = this.addLock('heavy', slot, a, 0.35, 0.45, D.windup, 0.2);
@@ -563,7 +563,7 @@ export class DisciplineGiant extends Actor {
     this.guard = true;
     for (const a of this.arms) a.g.visible = false;
     this.guardArms.g.visible = true; this.guardArms.show('b2_arms_guard');
-    this.guardArms.g.scale.setScalar(0.7); this.game.tweens.to(this.guardArms.g.scale, { x: 1, y: 1, z: 1 }, 0.35, { ease: Ease.outBack });
+    this.guardArms.g.scale.setScalar(0.7); this.game.etw.to(this.guardArms.g.scale, { x: 1, y: 1, z: 1 }, 0.35, { ease: Ease.outBack });
     sfx.roar();
     this.summonWave(D.spawns);
     this.later(D.time, () => { this.guard = false; this.armsRest(); });
@@ -582,7 +582,7 @@ export class DisciplineGiant extends Actor {
     sfx.warn(); setTimeout(() => sfx.warn(), 250);
     const m = this.def.layout.f3.screamAt;
     const o = this.addLock('heavy', -1, this.face, m[0], m[1], D.windup, 0.3);
-    g.tweens.run(D.windup, (e) => { this.face.g.scale.setScalar(1 + e * 0.05); });
+    g.etw.run(D.windup, (e) => { this.face.g.scale.setScalar(1 + e * 0.05); });
     this.later(D.windup, () => { this.dropLock(o); this.face.g.scale.setScalar(1); this.blast(D.dmg, this.face, m[0], m[1]); this.armor = false; });
     this.timer = D.windup + D.rest;
   }
@@ -603,7 +603,7 @@ export class DisciplineGiant extends Actor {
     this.mood('rage', D.windup);
     sfx.warn(); g.warnSlam();
     const high = h.home.clone().add(new THREE.Vector3(-h.side * 0.8, this.def.layout.f3.grabUp, 0.5));
-    g.tweens.to(h.g.position, { x: high.x, y: high.y, z: high.z }, D.windup * 0.6, { ease: Ease.outCubic });
+    g.etw.to(h.g.position, { x: high.x, y: high.y, z: high.z }, D.windup * 0.6, { ease: Ease.outCubic });
     h.lock = this.addLock('melee', slot, h, 0.5, 0.4, D.windup, 0.16);
     this.later(D.windup, () => this.handDown(h, slot, D));
     this.timer = D.windup + D.fall + D.rest;
@@ -617,13 +617,13 @@ export class DisciplineGiant extends Actor {
     const g = this.game, p = this.main();
     if (this.phase === 3) this.face.show('b3_face_hurt');
     sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6);
-    for (let i = 0; i < 10; i++) g.tweens.wait(i * 0.22, () => { const q = p.at(rnd(0.2, 0.8), rnd(0.2, 0.9)); g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
+    for (let i = 0; i < 10; i++) g.etw.wait(i * 0.22, () => { const q = p.at(rnd(0.2, 0.8), rnd(0.2, 0.9)); g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
     // she dissolves into petals and paper
-    g.tweens.wait(1.2, () => {
+    g.etw.wait(1.2, () => {
       sfx.burnOut(0);
       const ms = this.parts.flatMap((q) => Object.values(q.meshes));
       for (const m of ms) m.material.uniforms.dOrigin.value.set(0.5, 0.7);
-      g.tweens.run(2.4, (e) => { for (const m of ms) m.material.uniforms.dissolve.value = e; }, { onDone: () => this.dispose() });
+      g.etw.run(2.4, (e) => { for (const m of ms) m.material.uniforms.dissolve.value = e; }, { onDone: () => this.dispose() });
     });
     g.onBossDead(this);
   }
