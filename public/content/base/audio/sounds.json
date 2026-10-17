@@ -219,7 +219,7 @@
   },
   "voices": {
     "_doc": "角色语音的设定：每个角色用哪种声线、说哪种语言。lang ja = 日语，zh-TW = 台湾腔普通话；ref = 语音合成（Fish Audio）的声线编号。台词在 text/stickers.json，说日语那一句（lang 是 zh-TW 就说中文那一句）；lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",
-    "pink": { "lang": "ja", "ref": "", "tone": "甜腻、黏人、有点病娇的地雷系，撒娇时拖长音，偶尔压低声音说狠话", "lines": {} },
-    "cat": { "lang": "ja", "ref": "", "tone": "慵懒、傲娇、有点困的猫，句尾带「にゃ」，偶尔突然很凶", "lines": {} }
+    "pink": { "lang": "ja", "ref": "", "tone": "甜腻、黏人、有点病娇的地雷系，撒娇时拖长音，偶尔压低声音说狠话", "tone_en": "a sweet, clingy jirai-kei anime girl, breathy and coquettish, drawing out her words, a little yandere", "lines": {} },
+    "cat": { "lang": "ja", "ref": "", "tone": "慵懒、傲娇、有点困的猫，句尾带「にゃ」，偶尔突然很凶", "tone_en": "a lazy, sleepy, teasing tsundere cat girl, low and breathy, purring, sometimes suddenly sharp", "lines": {} }
   }
 }

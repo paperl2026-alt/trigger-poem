@@ -38,7 +38,7 @@
   - sounds.json 每种声音可选 `len`（只放前几秒，结尾 60ms 内淡出）、`rate`（变调）；怪物叫声按种类有 `rate` / `vol`。便携版声音也从内嵌表取（window.__NOA_CONTENT）。
   - 解码时 `level()` 量一次：峰值拉到 0.7、从第一声（裁掉开头静音）开始放；不同音效库的响度差别不用手调。
   - 挑素材的工具：`tools/node/sfx_scan.cjs`（ART「声音」）。
-- 语音生成（待用户开账号）：Fish Audio API，用户自己把 API 密钥设成本机环境变量，Claude 写脚本按 text/stickers.json 的日语台词批量生成到 `public/content/base/voice/<角色>/`，再登记进 sounds.json。
+- 语音生成：`tools/voice_fish.py`（Fish Audio API；密钥只从环境变量 FISH_API_KEY 读，不进任何文件）。`search` 搜公开声线，`say` 生成一句，`lines <角色>` 把 text/stickers.json 里她的所有台词按 sounds.json voices.<角色>（ref 声线、lang、tone_en 表演指示）生成到 `public/content/base/voice/<角色>/<场合>_<第几句>.mp3` 并登记。模型默认 drama-3（台词前加 [表演指示]），`FISH_MODEL=s2.1-pro-free` 是免费档（只用来试听，不读指示）。**API 余额和网站点数是分开的**，drama-3 / s2.1-pro 要先在 fish.audio/app/developers 充 API 余额。声线试听在 `art/raw/voice_test/`。
 - BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
 
 ## 存档文件（游戏进度，不是下面的 git 存档）
