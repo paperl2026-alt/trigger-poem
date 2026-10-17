@@ -5,7 +5,6 @@
     "set": "ep0_classroom",
     "cover": "ui/cover_ep0",
     "par": 300,
-    "ease": { "dmg": 0.7, "windup": 1.2 },
     "unlocks": ["ep1"],
     "title": { "zh": "第0话　放学后的限定蜜瓜包", "en": "Ep.0  The Limited Melon Bread", "ja": "第0話　放課後の限定メロンパン" },
     "sub": { "zh": "序章 · 教学关", "en": "Prologue · Tutorial", "ja": "序章・チュートリアル" },
