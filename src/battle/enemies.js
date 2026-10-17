@@ -8,7 +8,7 @@ import { tex, alphaAt, meta } from '../core/assets.js';
 import { paperMesh, DamageMap, attachDamage, setRelief } from '../core/paper.js';
 import { makeShatter } from '../core/particles.js';
 import { Ease } from '../core/tween.js';
-import { sfx } from '../core/audio.js';
+import { sfx, cry } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 
@@ -348,6 +348,7 @@ export class Enemy extends Actor {
   // their own marker): no marker
   markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' ? 'kill' : null; }
   startWindup(time) {
+    cry(this.type, 'windup');   // its cry, when recorded (content audio/sounds.json monsters)
     this.state = 'windup';
     this.timer = this.timer0 = time;
     if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
@@ -590,6 +591,7 @@ export class Enemy extends Actor {
   }
   die(kind, info) {
     this.alive = false;
+    cry(this.type, 'die');
     this.u.outlineOn.value = 0;   // (the "can be shot" outline goes at once: DESIGN「怪物挨打的样子」)
     this.endWindup();
     this.game.tweens.kill(this.root.position); this.game.etw.kill(this.root.position);

@@ -25,6 +25,7 @@
     "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json", "sets/ep0.json"],
     "text": ["text/ui.json", "text/stickers.json", "text/holds.json", "text/lessons.json"],
     "theme": ["theme.json"],
+    "sounds": ["audio/sounds.json"],
     "ui": ["ui/title.json", "ui/cursors.json", "ui/manga.json", "ui/select.json", "ui/battle.json"]
   },
   "assets": "assets/manifest.json"

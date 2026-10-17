@@ -4,7 +4,7 @@
 // here from the layout measured on the mockup (content ui/title.json), so they line up exactly. Text: bundled bold font,
 // strings from text/ui.json (zh / ja / en).
 import { url, meta } from '../core/assets.js';
-import { sfx, initAudio, setMusicVolume, setSfxVolume } from '../core/audio.js';
+import { sfx, initAudio, setMusicVolume, setSfxVolume, voice } from '../core/audio.js';
 import { C } from '../core/content.js';
 import { t, tr, lang, setLang } from '../core/i18n.js';
 import { SET, saveSettings, toggleFullscreen } from '../core/settings.js';
@@ -213,7 +213,8 @@ export function showTitle(act) {
   let bubT = 0;
   function bubble(who, kind) {
     const set = C.text.stickers?.heroines?.[who]?.[kind]; if (!set) return;
-    const line = set.lines[Math.floor(Math.random() * set.lines.length)], at = L.speech[who];
+    const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], at = L.speech[who];
+    voice(who, kind, li, who === 'pink' ? 1 : 0);
     bubJa.textContent = line.ja; bubTr.textContent = lang === 'ja' ? '' : (line[lang] || line.en);
     bub.dataset.who = who; Object.assign(bub.style, { left: px(at[0]), top: px(at[1]) });
     bub.classList.remove('on'); void bub.offsetWidth; bub.classList.add('on');

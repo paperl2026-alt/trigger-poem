@@ -4,6 +4,7 @@
 // head, on the outer side (between her and the screen edge), above her HUD panel; never at the reticle or the middle of the screen,
 // never over the HUD or the girls (user, round 7). One fan per girl; a more important line replaces the showing one.
 // Every kill pops a sound-effect sticker where the monster was (fx/ono_*, art R42). Lines: content text/stickers.json.
+import { voice } from '../core/audio.js';
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { C } from '../core/content.js';
@@ -98,9 +99,10 @@ export class Stickers {
     if (!H || !set) return;
     const pr = PRIO[kind] || 1, cur = H.f.on ? PRIO[H.f.kind] || 1 : -1;
     if (pr < cur || (H.cd > 0 && pr <= cur)) return;
-    const line = pick(set.lines), text = line[lang] || line.en;
+    const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], text = line[lang] || line.en;
     if (text === H.lastText && set.lines.length > 1) return this.say(p, kind, 1);
     H.lastText = text; this.quiet = 0;
+    voice(p.id, kind, li, p.slot);   // her voice for this line, when it has been recorded (core/audio.js)
     // from her head, on her OUTER side (toward her screen edge: her safe area), above her HUD panel; if that side is too narrow, above her head
     const L = this.hud.L, Hh = L.H, f0 = L.f, left = p.slot === 0 || !this.game.p2on(), dir = left ? -1 : 1, fig = this.hud.space.girl(p.slot);
     const h = Hh * 0.046, head = fig ? fig.y1 - (fig.y1 - fig.y0) * 0.1 : Hh * 0.5, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + dir * Hh * 0.12;

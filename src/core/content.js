@@ -16,7 +16,7 @@
 // Broken or missing files never stop the game: problems are collected in C.errors (shown in the debug menu).
 
 export const COLLECTIONS = ['characters', 'enemies', 'projectiles', 'bosses', 'items', 'episodes', 'comics', 'sets'];
-export const OBJECTS = ['tuning', 'text', 'theme', 'ui'];
+export const OBJECTS = ['tuning', 'text', 'theme', 'ui', 'sounds'];
 
 export const C = { packs: [], assets: {}, errors: [] };
 for (const k of [...COLLECTIONS, ...OBJECTS]) C[k] = {};
@@ -60,6 +60,17 @@ async function getJson(url) {
   return r.json();
 }
 const note = (msg) => { C.errors.push(msg); console.warn('[content]', msg); };
+// audio/sounds.json: every file named in "files" lists, "lines" maps and the monsters' action lists -> a url from the pack folder
+function soundPaths(o, base, key = '') {
+  const fix = (f) => (typeof f === 'string' && f && !/^(data:|https?:|\/)/.test(f) ? base + f : f);
+  if (Array.isArray(o)) { if (key !== 'when') for (let i = 0; i < o.length; i++) o[i] = typeof o[i] === 'string' ? fix(o[i]) : (soundPaths(o[i], base, key), o[i]); return; }
+  if (!o || typeof o !== 'object') return;
+  for (const [k, v] of Object.entries(o)) {
+    if (k === 'lines' && v && typeof v === 'object') { for (const n of Object.keys(v)) v[n] = fix(v[n]); continue; }
+    if (Array.isArray(v) && (k === 'files' || ['windup', 'attack', 'hurt', 'die'].includes(k))) { for (let i = 0; i < v.length; i++) v[i] = fix(v[i]); continue; }
+    if (typeof v === 'object') soundPaths(v, base, k);
+  }
+}
 
 async function loadPack(base) {
   const pack = await getJson(`${base}pack.json`);
@@ -70,6 +81,7 @@ async function loadPack(base) {
     for (const f of files) {
       let d;
       try { d = await getJson(base + f); } catch (e) { note(`${pack.id}/${f}: ${e.message}`); continue; }
+      if (cat === 'sounds') soundPaths(d, base);   // sound files are relative to their pack
       for (const [id, v] of Object.entries(d)) {
         if (id.startsWith('_')) continue; // "_doc" etc.: comments for people editing the file
         C[cat][id] = C[cat][id] === undefined ? structuredClone(v) : merge(C[cat][id], v);

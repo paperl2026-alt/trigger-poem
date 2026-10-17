@@ -1,4 +1,6 @@
-// Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops.
+// Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops; a sound with recorded files in content
+// audio/sounds.json plays those instead (at the end of this file).
+import { C } from './content.js';
 let ctx = null, master, sfxBus, musBus, verb, noiseBuf;
 let muted = false;
 let volume = 0.8;
@@ -24,6 +26,7 @@ export function initAudio() {
   }
   verb.buffer = ir;
   const vg = ctx.createGain(); vg.gain.value = 0.3; verb.connect(vg); vg.connect(master);
+  setTimeout(() => preloadSounds(), 0);   // (recorded sounds: below)
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const nd = noiseBuf.getChannelData(0);
   for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
@@ -198,4 +201,63 @@ function playStep(s, t) {
   tone({ f: mtof(arp), type: 'square', t: dt, d: 0.08, v: 0.03, bus: B, filter: { f: 1500 + intensity * 2500 }, verbAmt: 0.25 });
   if (k === 0) ch.forEach((m) => tone({ f: mtof(m + 12), type: 'sawtooth', t: dt, a: 0.2, d: 1.6, v: 0.022, bus: B, filter: { f: 1200 }, vib: 3, verbAmt: 0.4 }));
   if (lead > 0 && intensity > 0.3) tone({ f: mtof(lead), type: 'square', t: dt, d: 0.18, v: 0.045, bus: B, filter: { f: 3200 }, vib: 5, verbAmt: 0.3 });
+}
+
+// ---- recorded sounds (content audio/sounds.json, docs/DESIGN.md「声音」): a sound that has files plays one of them, with a slight change
+// of pitch each time, instead of its synthesized stand-in; the girls' voices and the monsters' cries the same way. Nothing is fetched
+// unless the list names it. Files decode the first time they are wanted (and on preloadSounds()).
+const BUF = new Map();   // url -> AudioBuffer | Promise | null (failed)
+function load(url) {
+  if (!ctx || !url) return null;
+  if (BUF.has(url)) return BUF.get(url);
+  const p = fetch(url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status)))).then((a) => ctx.decodeAudioData(a))
+    .then((b) => { BUF.set(url, b); return b; }, (e) => { console.warn('[audio]', url, e.message); BUF.set(url, null); return null; });
+  BUF.set(url, p);
+  return p;
+}
+function playBuf(b, { pan = 0, vol = 1, rate = 1, bus = sfxBus } = {}) {
+  const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
+  const g = ctx.createGain(); g.gain.value = vol;
+  const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+  s.connect(g); if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
+  s.start(); return s;
+}
+// one of these files, now if it is ready (true), else loading it for next time (false: the caller uses its stand-in)
+function playOne(files, opt) {
+  if (!ctx || !files?.length) return false;
+  const f = files[Math.floor(Math.random() * files.length)], b = BUF.get(f);
+  if (b && !(b instanceof Promise)) { playBuf(b, opt); return true; }
+  if (b === undefined) load(f);
+  return false;
+}
+export function preloadSounds() {
+  const S = C.sounds || {};
+  for (const e of Object.values(S.sfx || {})) for (const f of e.files || []) load(f);
+  for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) for (const f of m[a] || []) load(f);
+  for (const v of Object.values(S.voices || {})) for (const f of Object.values(v?.lines || {})) load(f);
+}
+// every synthesized effect first looks for its recorded version
+for (const k of Object.keys(sfx)) {
+  const synth = sfx[k];
+  sfx[k] = (...a) => {
+    const e = C.sounds?.sfx?.[k];
+    if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: 0.94 + Math.random() * 0.12 })) return;
+    return synth(...a);
+  };
+}
+// a girl says the i-th line of a sticker kind (text/stickers.json), if that line has a voice file
+let voiceNow = [null, null];
+export function voice(who, kind, i, slot = 0) {
+  const f = C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`];
+  if (!ctx || !f) return;
+  const b = BUF.get(f);
+  if (!b || b instanceof Promise) { if (b === undefined) load(f); return; }
+  try { voiceNow[slot]?.stop(); } catch (e) { /* already over */ }
+  voiceNow[slot] = playBuf(b, { vol: 1, pan: slot ? 0.25 : -0.25 });
+}
+// a monster's cry (windup / attack / hurt / die), its own or the default one
+export function cry(type, act, pan = 0) {
+  const M = C.sounds?.monsters || {};
+  const files = M[type]?.[act]?.length ? M[type][act] : M.default?.[act];
+  playOne(files, { pan, vol: 0.9, rate: 0.9 + Math.random() * 0.2 });
 }

@@ -29,6 +29,15 @@
     - 参数不能带冒号，换网址用环境变量 `SHOT_URL`；
     - 其他环境变量：`SHOT_PRE`（先执行的 JS）、`SHOT_WAIT`、`SHOT_SEQ="js|帧数|间隔"`、`SHOT_EVAL`（取页面数据）。
 
+## 声音
+- `src/core/audio.js`：所有音效先用 WebAudio 合成（临时）；content `audio/sounds.json`（内容类别 sounds）里填了文件的，就放文件（随机挑一个、每次略微变调），没有的照旧合成。不在清单里的文件一律不去加载。
+  - `sfx`：每种音效（when 什么时候响、want 想要的感觉、src 打算从哪来：lib 音效库 / tts 语音合成后期 / synth、files、vol）；
+  - `monsters`：怪物叫声（按怪的种类 × windup / attack / hurt / die），`cry(type, act)`，现在挂在蓄力和死亡上；
+  - `voices`：角色语音设定（lang、Fish Audio 声线 ref、tone），`lines` 登记有文件的台词（键 `<场合>_<第几句>`，对应 text/stickers.json 的同一句）；`voice(who, kind, i)` 在气泡出现时说（stickers.js、标题页气泡）。
+  - 文件路径相对内容包（`soundPaths` 在 content.js 里转成网址），所以模组也能换声音。
+- 语音生成（待用户开账号）：Fish Audio API，用户自己把 API 密钥设成本机环境变量，Claude 写脚本按 text/stickers.json 的日语台词批量生成到 `public/content/base/voice/<角色>/`，再登记进 sounds.json。
+- BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
+
 ## 存档文件（游戏进度，不是下面的 git 存档）
 - 桌面版（Electron）：`electron/store.cjs` 把每份存档（`save` 进度、`settings` 设置）写两处：
   - 绝对位置 `%APPDATA%\Trigger Poem\saves\`（一定能写；以后 Steam 云存档同步这个文件夹，Steamworks 后台 Auto-Cloud 根目录选 WinAppDataRoaming、子目录 `Trigger Poem/saves`）；
