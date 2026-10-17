@@ -605,5 +605,70 @@
       728
     ],
     "png": "art/raw/r36/fixed/c_m4_b.png"
+  },
+  "comicpage_intro": {
+    "src": "art/raw/r41/page_intro_b.png",
+    "center": [
+      1271,
+      221
+    ],
+    "ring": 40,
+    "rot": -30,
+    "erase": [
+      1236,
+      186,
+      1304,
+      294
+    ],
+    "png": "art/raw/r41/fixed/page_intro_b.png"
+  },
+  "comicpage_mid": {
+    "src": "art/raw/r41/page_mid_b.png",
+    "center": [
+      212,
+      395
+    ],
+    "ring": 70,
+    "squash": 0.7,
+    "rot": 30,
+    "erase": [
+      148,
+      350,
+      282,
+      450
+    ],
+    "png": "art/raw/r41/fixed/page_mid_b.png"
+  },
+  "comicpage_mid_2": {
+    "src": "art/raw/r41/fixed/page_mid_b.png",
+    "center": [
+      1401,
+      705
+    ],
+    "ring": 50,
+    "rot": 0,
+    "erase": [
+      1357,
+      662,
+      1442,
+      749
+    ],
+    "png": "art/raw/r41/fixed/page_mid_b.png"
+  },
+  "comicpage_end": {
+    "src": "art/raw/r41/page_end_c.png",
+    "center": [
+      1130,
+      311
+    ],
+    "ring": 26,
+    "rot": 25,
+    "erase": [
+      1112,
+      290,
+      1156,
+      347
+    ],
+    "png": "art/raw/r41/fixed/page_end_c.png"
   }
 }

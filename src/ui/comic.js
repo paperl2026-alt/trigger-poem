@@ -15,7 +15,7 @@ export class Comic {
     this.timers = [];
   }
   // true when every panel image of the comic exists (new episodes may not have their pages drawn yet)
-  static ready(name) { return !!COMICS[name] && COMICS[name].every((pg) => pg.every((p) => !!meta[p.img])); }
+  static ready(name) { return !!COMICS[name] && COMICS[name].every((pg) => (pg.page ? !!meta[pg.page] : pg.every((p) => !!meta[p.img]))); }
   play(name, onDone) {
     const pages = COMICS[name];
     const el = this.el;
@@ -41,11 +41,36 @@ export class Comic {
       this.clear();
       stage.innerHTML = '';
       shown = false;
-      const panels = pages[i];
       const pageEl = document.createElement('div');
       pageEl.className = 'cpage';
       stage.appendChild(pageEl);
       let last = 0;
+      // a whole drawn page (lettering in it): each panel = the page clipped to its polygon, appearing in turn, its own small move inside
+      if (pages[i].page) {
+        const pg = pages[i];
+        for (const p of pg.panels) {
+          const wrap = document.createElement('div');
+          wrap.className = 'pwrap ppage';
+          const panel = document.createElement('div');
+          panel.className = 'panel';
+          panel.style.clipPath = `polygon(${p.poly.map(([x, y]) => `${x}% ${y}%`).join(',')})`;
+          const img = document.createElement('div');
+          img.className = `pimg full kb-${p.kb || 'in'}`;
+          img.style.backgroundImage = `url(${url(pg.page)})`;
+          const cx = p.poly.reduce((s, q) => s + q[0], 0) / p.poly.length, cy = p.poly.reduce((s, q) => s + q[1], 0) / p.poly.length;
+          img.style.transformOrigin = `${cx}% ${cy}%`;
+          panel.appendChild(img);
+          wrap.appendChild(panel);
+          wrap.style.transformOrigin = `${cx}% ${cy}%`;
+          pageEl.appendChild(wrap);
+          this.later(p.at, () => { wrap.classList.add('in', p.in); sfx.panel(); });
+          last = Math.max(last, p.at);
+        }
+        this.later(last + 0.6, () => { shown = true; });
+        this.later(last + 3.4, next);
+        return;
+      }
+      const panels = pages[i];
       for (const p of panels) {
         const wrap = document.createElement('div');
         wrap.className = 'pwrap';
