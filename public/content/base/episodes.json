@@ -25,7 +25,7 @@
       { "comic": "ep0_mid" },
       { "stage": "corridor", "set": "ep0_corridor", "stations": ["cor1", "cor2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" }, "thumb": "ui/sel_thumb2" },
       { "comic": "ep0_boss" },
-      { "boss": "dc", "set": "ep0_yard", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
+      { "boss": "qq", "set": "ep0_yard", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
       { "comic": "ep0_end" }
     ]
   },

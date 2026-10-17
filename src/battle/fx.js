@@ -136,6 +136,7 @@ const runeTex = () => canvasTex(256, 256, (g) => {
   for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; g.beginPath(); g.moveTo(Math.cos(a) * 112, Math.sin(a) * 112); g.lineTo(Math.cos(a) * 126, Math.sin(a) * 126); g.stroke(); }
 });
 
+const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
 const notchTex = () => canvasTex(64, 64, (g) => { g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = 6; g.beginPath(); g.moveTo(32, 58); g.lineTo(6, 10); g.lineTo(58, 10); g.closePath(); g.stroke(); g.fill(); });
 
 const TRACER_FRAG = `uniform float a; uniform vec3 col; varying vec2 vUv;
@@ -478,27 +479,27 @@ export class FX {
     };
     return B;
   }
-  // Attack warnings on the monster itself (docs/DESIGN.md「提示是设计过的美术」「危险提示在屏幕边缘」): the art of R44 (ui/wi_* interrupt in
-  // cyan, ui/wh_* hide in red, ui/ws_* shoot-down in amber), moved by shaders (stop-motion boil, a shine sweeping over it, breathing,
-  // blinking faster as the hit gets close, a countdown filling the dial). They stand AROUND the thing, never over it, small; the big signal
-  // for hide / shoot-down is at the screen edges (src/ui/alerts.js reads fx.live). slot: who it will hit (0 / 1), -1 = everyone.
-  //   'melee' / 'ranged' (can be interrupted): four corner pieces close round the monster, the lettering 打断! beside it (toward the middle
-  //                       of the screen) with its countdown dial, a pointer above it
-  //   'heavy' (must hide): a hazard triangle above it and its countdown dial
+  // Attack warnings on the threats themselves (docs/DESIGN.md「提示是设计过的美术」「要击落的东西自带准星，要躲的攻击带另一种准星」),
+  // all R44 / R46 art moved by shaders (stop-motion boil, a shine sweeping over it, layers turning against each other, closing in, blinking
+  // faster as the hit gets close, a countdown filling the dial). They stand on / around the thing, never over the girls or the HUD.
+  // slot: who it will hit (0 / 1), -1 = everyone.
+  //   'melee' / 'ranged' (can be interrupted): four cyan corner pieces close round the monster, the lettering 打断! / 打它! beside it
+  //                       (toward the middle of the screen) with its countdown dial, a pointer above it
+  //   'heavy' (must hide): the red DANGER SIGHT locks onto the monster (angular frame, jagged ring, spikes, the ! mark, R46 ui/sh_*), the
+  //                       chibi ducking behind a wall beside it with the seconds left
+  //   'shot' (shoot it down): the gold TARGET SIGHT rides on the flying thing (R46 ui/ss_*); its circle is also where a shot counts
   lock(type = 'ranged', slot = 0) {
     if (type === 'shot') return this.shotLock(slot);
-    const game = this.game, hide = type === 'heavy', g = new THREE.Group(), pre = hide ? 'ui/wh_' : 'ui/wi_';
+    if (type === 'heavy') return this.dangerSight(slot);
+    const game = this.game, g = new THREE.Group(), pre = 'ui/wi_';
     const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
-    const corners = hide ? [] : [0, 1, 2, 3].map((i) => pic('ui/wi_corner', 42, i * 0.27));
+    const corners = [0, 1, 2, 3].map((i) => pic('ui/wi_corner', 42, i * 0.27));
     const lk = (lang === 'zh' || lang === 'ja' ? lang : 'en') + (Math.random() < 0.5 ? '' : '2');
-    const word = hide ? null : pic(`${pre}${lk}`, 43, 0.4);
-    const top = pic(hide ? 'ui/wh_tri' : 'ui/wi_ptr', 42.5, 0.7);
-    const dial = pic(`${pre}dial`, 42.6, 0.9);
-    const AU = { p: { value: 0 }, col: { value: new THREE.Color(hide ? 0xff1f4a : 0x38d8ff) }, a: { value: 1 } };
+    const word = pic(`${pre}${lk}`, 43, 0.4), top = pic('ui/wi_ptr', 42.5, 0.7), dial = pic(`${pre}dial`, 42.6, 0.9);
+    const AU = { p: { value: 0 }, col: { value: new THREE.Color(0x38d8ff) }, a: { value: 1 } };
     const arc = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: AU, vertexShader: FXVERT, fragmentShader: ARC_FRAG, transparent: true, depthTest: false, depthWrite: false }));
     arc.renderOrder = 42.55; arc.frustumCulled = false; g.add(arc);
     this.overlay().add(g);
-    const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
     let born = 0;
     const live = this.live;
     const L = {
@@ -508,7 +509,6 @@ export class FX {
         const H = game.H, fast = 3 + p * 12, blink = Math.abs(Math.sin(t * fast)), urgent = p > 0.7;
         g.position.set(x, y, 0);
         const half = Math.max(H * 0.045, size * 1.05), snap = (1 - born) * half * 0.8, breathe = 1 + 0.05 * Math.sin(t * fast);
-        // the corners close in round it
         const cs = Math.max(H * 0.03, half * 0.42) * breathe;
         corners.forEach((m, i) => {
           const sx = i === 0 || i === 3 ? -1 : 1, sy = i < 2 ? 1 : -1;
@@ -517,49 +517,110 @@ export class FX {
           m.scale.set(cs, cs * ar(m), 1);
           const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.6; u.a.value = born * (urgent ? 0.6 + 0.4 * blink : 0.95); u.flash.value = urgent && blink > 0.8 ? 0.35 : 0;
         });
-        // the word: beside it, toward the middle of the screen, at its upper corner
-        const side = x > game.W / 2 ? -1 : 1, wh = H * 0.05, ww = wh / (word ? ar(word) : 1);
-        if (word) {
-          word.scale.set(ww * (0.6 + 0.4 * born), wh * (0.6 + 0.4 * born), 1);
-          word.position.set(side * (half + ww * 0.55 + H * 0.01), half * 0.75 + Math.sin(t * 4) * H * 0.004, 0); word.rotation.z = side * -0.06;
-          const u = word.material.uniforms; u.time.value = t; u.shine.value = 1.2; u.boil.value = 0.8; u.a.value = born; u.flash.value = urgent && blink > 0.75 ? 0.3 : 0;
-        }
-        // the countdown dial (with its fill), at the word's end, or beside the thing for a hide
-        const ds = H * (hide ? 0.05 : 0.04);
-        const dx = word ? side * (half + ww * 1.1 + ds * 0.7 + H * 0.01) : side * (half + ds * 0.7), dy = word ? half * 0.75 : half * 0.4;
+        const side = x > game.W / 2 ? -1 : 1, wh = H * 0.05, ww = wh / ar(word);
+        word.scale.set(ww * (0.6 + 0.4 * born), wh * (0.6 + 0.4 * born), 1);
+        word.position.set(side * (half + ww * 0.55 + H * 0.01), half * 0.75 + Math.sin(t * 4) * H * 0.004, 0); word.rotation.z = side * -0.06;
+        const wu = word.material.uniforms; wu.time.value = t; wu.shine.value = 1.2; wu.boil.value = 0.8; wu.a.value = born; wu.flash.value = urgent && blink > 0.75 ? 0.3 : 0;
+        const ds = H * 0.04, dx = side * (half + ww * 1.1 + ds * 0.7 + H * 0.01), dy = half * 0.75;
         dial.position.set(dx, dy, 0); dial.scale.set(ds, ds * ar(dial), 1); dial.rotation.z = -t * 0.8;
         const du = dial.material.uniforms; du.time.value = t; du.boil.value = 0.4; du.a.value = born;
         arc.position.set(dx, dy, 0); arc.scale.setScalar(ds * 0.95);
-        AU.p.value = 1 - p; AU.col.value.setHex(urgent && blink > 0.5 ? 0xffffff : hide ? 0xff1f4a : 0x38d8ff); AU.a.value = born;
-        // the pointer / hazard triangle above it, bobbing
-        const ts = H * (hide ? 0.05 : 0.035);
+        AU.p.value = 1 - p; AU.col.value.setHex(urgent && blink > 0.5 ? 0xffffff : 0x38d8ff); AU.a.value = born;
+        const ts = H * 0.035;
         top.position.set(0, half * 1.05 + ts * 0.8 + Math.abs(Math.sin(t * 5)) * H * 0.012, 0); top.scale.set(ts / ar(top), ts, 1);
-        const tu = top.material.uniforms; tu.time.value = t; tu.shine.value = 1; tu.a.value = born * (hide && urgent ? 0.6 + 0.4 * blink : 1);
+        const tu = top.material.uniforms; tu.time.value = t; tu.shine.value = 1; tu.a.value = born;
       },
       remove() { live.delete(L); g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); }); arc.geometry.dispose(); },
     };
     live.add(L);
     return L;
   }
-  overlay() { return this.game.overlay; }
-  // something flying at her (shoot it down): a small spinning amber crosshair on it (R44 ui/ws_ring); many at once, so no words here
-  shotLock(slot) {
-    const game = this.game, g = new THREE.Group(), ring = picture('ui/ws_ring', 42, Math.random());
-    ring.visible = !!tex['ui/ws_ring']; g.add(ring);
+  // the red danger sight locked onto a monster about to unleash something that cannot be shot down: hide (R46 ui/sh_*): the frame and the
+  // jagged ring turn against each other and close in on it, the spikes pulse outward, the ! blinks faster and faster; beside it the chibi
+  // ducking behind a wall and the seconds left
+  dangerSight(slot) {
+    const game = this.game, g = new THREE.Group();
+    const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
+    const outer = pic('ui/sh_outer', 42, 0.1), inner = pic('ui/sh_inner', 42.1, 0.3), spikes = pic('ui/sh_spikes', 41.9, 0.5), mark = pic('ui/sh_mark', 42.2, 0.7);
+    const duck = pic('ui/sh_duck', 42.3, 0.9);
+    const sec = new Text(42.4, { color: '#ffffff', shadow: '#d8141e', sw: 0.14 }); g.add(sec.m);
     this.overlay().add(g);
-    const live = this.live, ar = ring.material.uniforms.map.value ? ring.material.uniforms.map.value.image.height / ring.material.uniforms.map.value.image.width : 1;
+    let born = 0;
+    const live = this.live;
     const L = {
-      type: 'shot', slot, p: 0,
-      set(x, y, size, p, t) {
-        L.p = p; g.position.set(x, y, 0);
-        const s = Math.max(game.H * 0.035, size * (1.3 - 0.5 * p)), blink = Math.abs(Math.sin(t * (6 + p * 22)));
-        ring.scale.set(s / ar, s, 1); ring.rotation.z = t * 3;
-        const u = ring.material.uniforms; u.time.value = t; u.shine.value = 1; u.a.value = 0.75 + 0.25 * blink; u.flash.value = p > 0.85 && blink > 0.5 ? 0.5 : 0;
+      type: 'heavy', slot, p: 0, left: 9,
+      set(x, y, size, p, t, left) {
+        L.p = p; L.left = left ?? (1 - p) * 2; born = Math.min(1, born + 0.06);
+        const H = game.H, fast = 3 + p * 14, blink = Math.abs(Math.sin(t * fast)), urgent = p > 0.7;
+        g.position.set(x, y, 0);
+        const r = Math.max(H * 0.055, size * 0.95) * (1 + (1 - born) * 1.2);   // it slams in from big and locks on
+        const close = 1 + (1 - p) * 0.15;                                     // and keeps closing in until it fires
+        const lay = (m, k, rot, a) => { m.scale.set(r * k * close, r * k * close * ar(m), 1); m.rotation.z = rot; const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.5; u.a.value = born * a; u.flash.value = urgent && blink > 0.8 ? 0.45 : 0; };
+        lay(outer, 2.1, t * 0.6, 0.9);
+        lay(inner, 1.5, -t * 1.3, 0.85);
+        lay(spikes, 2.4 * (1 + 0.08 * Math.sin(t * fast)), 0, 0.8);
+        lay(mark, 0.55 * (1 + 0.1 * blink), 0, urgent ? 0.5 + 0.5 * blink : 1);
+        // the chibi ducking + the seconds, beside it toward the middle of the screen
+        const side = x > game.W / 2 ? -1 : 1, dh = H * 0.07, dw = dh / ar(duck);
+        duck.scale.set(dw, dh, 1); duck.position.set(side * (r * 1.15 + dw * 0.55), -r * 0.4 + Math.abs(Math.sin(t * 6)) * H * 0.006, 0); duck.rotation.z = 0;
+        const du = duck.material.uniforms; du.time.value = t; du.boil.value = 0.6; du.a.value = born;
+        sec.set(`${Math.max(1, Math.ceil(L.left))}`, H * 0.055, '#ffffff', H);
+        sec.at(side * (r * 1.15 + dw * 1.1 + H * 0.03), -r * 0.4, side * -8, 1 + (urgent ? 0.12 * blink : 0)); sec.m.material.uniforms.a.value = born;
       },
-      remove() { live.delete(L); g.parent && g.parent.remove(g); ring.material.dispose(); },
+      remove() { live.delete(L); g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); }); },
     };
     live.add(L);
     return L;
+  }
+  overlay() { return this.game.overlay; }
+  // the gold target sight riding on something flying at the girls (R46 ui/ss_*): the outer ring turns, the segmented ring turns the other
+  // way, the four arrows close in as it comes nearer, the dot blinks; its circle is the hit zone (Game.targetsAt: no precise aim needed).
+  // Shot down: the break burst flashes where it was.
+  shotLock(slot) {
+    const game = this.game, g = new THREE.Group(), fx = this;
+    const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
+    const outer = pic('ui/ss_outer', 42, Math.random()), inner = pic('ui/ss_inner', 42.1, Math.random()), arrows = pic('ui/ss_arrows', 42.2, 0.4), dot = pic('ui/ss_dot', 42.3, 0.6);
+    this.overlay().add(g);
+    let born = 0;
+    const live = this.live;
+    const L = {
+      type: 'shot', slot, p: 0, x: 0, y: 0, r: 0,
+      set(x, y, r, p, t) {   // r: the sight's radius = its hit zone (screen px)
+        L.p = p; L.x = x; L.y = y; L.r = r; born = Math.min(1, born + 0.12);
+        const blink = Math.abs(Math.sin(t * (6 + p * 22)));
+        g.position.set(x, y, 0);
+        const d = r * 2 * (1 + (1 - born) * 0.6);
+        const lay = (m, k, rot, a) => { m.scale.set(d * k, d * k * ar(m), 1); m.rotation.z = rot; const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.4; u.a.value = born * a; u.flash.value = p > 0.85 && blink > 0.6 ? 0.5 : 0; };
+        lay(outer, 1, t * 1.2, 0.9);
+        lay(inner, 0.78, -t * 2, 0.85);
+        lay(arrows, 0.75 + (1 - p) * 0.45, Math.PI / 4 * Math.floor(t * 2) * 0, 0.95);
+        lay(dot, 0.16, 0, 0.6 + 0.4 * blink);
+      },
+      remove(broken) {
+        live.delete(L);
+        if (broken && tex['ui/ss_break']) fx.sightBreak(L.x, L.y, L.r);
+        g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); });
+      },
+    };
+    live.add(L);
+    return L;
+  }
+  // a target sight's break burst where something was shot down: slaps in big, spins, fades
+  sightBreak(x, y, r) {
+    const m = picture('ui/ss_break', 43, Math.random()), a = ar(m);
+    this.overlay().add(m);
+    let t = 0;
+    this.add({
+      update: (dt) => {
+        t += dt; const k = t / 0.32;
+        if (k >= 1) { this.overlay().remove(m); m.material.dispose(); return false; }
+        const s = r * 2.6 * (0.7 + 0.5 * Math.min(1, k * 4));
+        m.position.set(x, y, 0); m.scale.set(s, s * a, 1); m.rotation.z = k * 0.6;
+        const u = m.material.uniforms; u.a.value = 1 - k * k; u.flash.value = k < 0.2 ? 0.6 : 0; u.time.value = t;
+        return true;
+      },
+      dispose: () => { this.overlay().remove(m); m.material.dispose(); },
+    });
   }
   // NIKKE-style skill cut-in: a slanted stripe band slams in, the heroine lunges across it. Runs on real time (the world is in hit-stop).
   cutIn(key, side = -1, hex = 0xff2e93) {

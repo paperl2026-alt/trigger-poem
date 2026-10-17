@@ -29,6 +29,7 @@
 /* the little pictures: what it looks like in the game */
 #hud .lic { flex: none; width: calc(7 * var(--u)); height: calc(5.4 * var(--u)); display: flex; align-items: center; justify-content: center; position: relative; }
 #hud .lic .mouse { transform: scale(0.85); }
+#hud .lic .limg { max-width: 100%; max-height: 100%; object-fit: contain; animation: hudPulse 0.6s ease-in-out infinite alternate; }
 #hud .lic.release .mouse { opacity: 0.7; }
 #hud .lic.release::after { content: '▼'; position: absolute; right: 0; bottom: 0; font-size: calc(2.2 * var(--u)); color: #38d8ff; }
 #hud .lic.fever { background: linear-gradient(90deg, #ff4a6a 0 30%, transparent 30% 35%, #ffd23a 35% 65%, transparent 65% 70%, #38d8ff 70%); height: calc(1.6 * var(--u)); transform: skewX(-20deg); }

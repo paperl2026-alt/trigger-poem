@@ -1,5 +1,5 @@
 {
- "_doc": "Boss。beh 选代码里的 Boss 行为（目前只有 float：教学关旧版的暴走花车，占位）。sprite 是图的前缀，h 高度（米），hp 血量，poise 硬直值，eyeMul / bodyMul 打眼睛 / 打身体的伤害倍率，phase2At 血量比例低于它进入二阶段。各招式的数值成对写的是 [一阶段, 二阶段]。 dc：序章 Boss 巨大化风纪委员（beh giant，代码 src/battle/giant.js，操场 sets/ep0.json ep0_yard）。三个形态各用自己的一套图（art 图名 boss/dc3_<形态>_<部件>_<版本>，同一个样子有几个版本时每次出现随机挑一个）：一形态头从教学楼屋顶后面探出来（屋顶挡住眼睛以下）、双手扒着屋檐、头发垂在楼前；二形态在楼后站起来（屋顶被压坏，教学楼换成 schoolAfter 那张），镜头上仰；三形态俯身压到操场上空，脸占满天空，头发帘垂在两边，双手从上面伸下来。形态之间放 comics 里的变身漫画页。look：三个形态时镜头看向哪里。layout：各部件在操场里的位置（米；roof 是屋檐在教学楼图里从下往上的高度比例，head / body 的 z 是相对教学楼正面，hideV 是屋檐挡住它多少（从下往上比例）；f2.moves 是各招式那只手臂相对肩膀的位置）。parts：每个样子的图画出来多宽（米，w）和锚点（a：图上哪一点（从左、从下的比例）放在部件的位置上，旋转和摆动绕着它）。weak：哪张图的哪里是弱点（从左、从下的比例和半径，按图高算）。eyeAt：三形态每张脸额头上第三只眼的位置（眼睛单独一张图盖在上面，一直是弱点）。skip：不用的图。weakMul 打弱点（睁开的第三只眼 / 举尺时的臂章 / 三形态的眼）伤害倍率，handMul 打手，guardMul 二阶段交叉手臂防御时的减伤。phase2At / phase3At 血量比例。patterns 每个形态的出招顺序。slam.poise / grab.poise：抬起的手被打这么多硬直值就被打断。raise.poise：举尺时打臂章打断所需的值。point：指着一个人，蓄力后单打她（她要躲）。",
+ "_doc": "Boss。beh 选代码里的 Boss 行为（目前只有 float：教学关旧版的暴走花车，占位）。sprite 是图的前缀，h 高度（米），hp 血量，poise 硬直值，eyeMul / bodyMul 打眼睛 / 打身体的伤害倍率，phase2At 血量比例低于它进入二阶段。各招式的数值成对写的是 [一阶段, 二阶段]。 qq：序章 Boss「？？？」（beh thing，代码 src/battle/thing.js，DESIGN 序章 / Boss）：开场破空打中学校的不定形的东西附在风纪委员身上，五个阶段（stages）从局部变异到核心。每个阶段一整张图按动作分帧（art R43 boss/qq_s<n>_<idle0|idle1|move|windup|attack|hurt>），h 身高（米），float 浮空（y 离地米数），core 一直是弱点，at 血量比例到这里变成这一阶段，pattern 出招顺序（drift 换位置 = 喘口气、volley 吐一串飞行物（击落）、lunge 蓄力扑向一个人的掩体（打它能打断，poise）、burst 长蓄力大招（必须躲）、summon 召几只同一种的杂鱼），一次只出一招。蓄力和出招时弱点张开（weakMul，描边变粉），平时 bodyMul。zone 它在操场里走动的范围（米），speed 走多快，rest 每招后的空当（秒）。wreckAt 第几阶段（从 0 数）把教学楼压坏（换成 schoolAfter）。texts 每次变异时的提示。",
  "float": {
   "beh": "float",
   "sprite": "boss/f_",
@@ -122,490 +122,194 @@
    ]
   }
  },
- "dc": {
-  "beh": "giant",
+ "qq": {
+  "beh": "thing",
   "name": {
-   "zh": "巨大化风纪委员",
-   "en": "THE GIANT DISCIPLINE CHIEF",
-   "ja": "巨大化風紀委員"
+   "zh": "？？？",
+   "en": "???",
+   "ja": "？？？"
   },
-  "hp": 16000,
-  "poise": 1100,
-  "poiseDrain": 0.1,
-  "poiseCooldown": 5,
-  "staggerTime": 1.8,
-  "weakMul": 3,
+  "hp": 9000,
+  "weakMul": 2.5,
   "bodyMul": 1,
-  "handMul": 0.8,
-  "guardMul": 0.35,
-  "eyeOpen": 3.5,
-  "phase2At": 0.66,
-  "phase3At": 0.33,
-  "firstDelay": 1.5,
-  "comics": {
-   "2": "ep0_tf12",
-   "3": "ep0_tf23"
-  },
-  "look": [
-   [
-    0,
-    6.5,
-    -22
+  "stunTime": 1.6,
+  "firstDelay": 1.6,
+  "speed": 1.6,
+  "rest": [
+   1.0,
+   1.8
+  ],
+  "summonRest": 2.5,
+  "zone": {
+   "x": [
+    -3.5,
+    3.5
    ],
-   [
-    0,
-    10,
-    -22
-   ],
-   [
-    0,
-    5.6,
-    -10
+   "z": [
+    -6,
+    -3.5
    ]
-  ],
-  "skip": [
-   "b3_face_cruel_b",
-   "b2_body_idle_b"
-  ],
-  "layout": {
-   "roof": 0.883,
-   "f1": {
-    "head": {
-     "z": -2.6,
-     "hideV": 0.2
-    },
-    "hair": {
-     "x": 10.5,
-     "y": 1.4,
-     "z": 0.3
-    },
-    "hands": {
-     "x": 8.2,
-     "y": 0,
-     "z": 0.5
-    },
-    "throwUp": 0.8,
-    "slamUp": 6.5,
-    "whistleAt": [
-     0.47,
-     0.2
+  },
+  "stages": [
+   {
+    "at": 1,
+    "h": 2.6,
+    "pattern": [
+     "drift",
+     "volley",
+     "drift",
+     "lunge",
+     "drift",
+     "volley"
     ]
    },
-   "f2": {
-    "body": {
-     "z": -4.5,
-     "hideV": 0.1
-    },
-    "shoulder": [
-     10.5,
-     11,
-     1.5
+   {
+    "at": 0.8,
+    "h": 3.0,
+    "pattern": [
+     "drift",
+     "volley",
+     "drift",
+     "lunge",
+     "drift",
+     "burst"
+    ]
+   },
+   {
+    "at": 0.6,
+    "h": 3.4,
+    "pattern": [
+     "drift",
+     "lunge",
+     "drift",
+     "volley",
+     "drift",
+     "burst",
+     "summon"
     ],
-    "armZ": 3.5,
-    "guard": [
-     0,
-     12.5,
-     2.6
-    ],
-    "tape": [
-     9.5,
-     4,
-     0.8
-    ],
-    "schoolAfter": "st4/front2",
-    "moves": {
-     "b2_arm_ruler": {
-      "at": [
-       -3,
-       -1,
-       -1.5
-      ]
+    "summon": [
+     {
+      "type": "chair",
+      "from": "pop",
+      "x": -2,
+      "z": -1
      },
-     "b2_arm_lash": {
-      "at": [
-       0,
-       -6.5,
-       1.2
-      ]
-     },
-     "b2_arm_point": {
-      "at": [
-       -0.5,
-       -7,
-       6
-      ]
+     {
+      "type": "chair",
+      "from": "pop",
+      "x": 2,
+      "z": -1.5
      }
-    }
+    ]
    },
-   "f3": {
-    "face": [
-     0,
-     5.4,
-     -8
+   {
+    "at": 0.4,
+    "h": 3.2,
+    "float": true,
+    "y": 1.6,
+    "pattern": [
+     "volley",
+     "drift",
+     "burst",
+     "drift",
+     "lunge",
+     "drift"
+    ]
+   },
+   {
+    "at": 0.2,
+    "h": 2.8,
+    "float": true,
+    "y": 1.9,
+    "core": true,
+    "pattern": [
+     "volley",
+     "drift",
+     "burst",
+     "drift",
+     "summon",
+     "drift",
+     "lunge"
     ],
-    "eyeZ": 0.35,
-    "curtain": [
-     8.2,
-     11.5,
-     -4
-    ],
-    "claw": [
-     6.6,
-     8.6,
-     -5.5
-    ],
-    "grabUp": 2.4,
-    "screamAt": [
-     0.47,
-     0.35
+    "summon": [
+     {
+      "type": "book",
+      "x": -2,
+      "y": 2.4,
+      "z": -2
+     },
+     {
+      "type": "paper",
+      "x": 2,
+      "y": 2.2,
+      "z": -2.5
+     }
     ]
    }
-  },
-  "parts": {
-   "b1_head": {
-    "w": 26,
-    "a": [
-     0.5,
-     1
-    ]
-   },
-   "b1_hair": {
-    "w": 5,
-    "a": [
-     0.5,
-     1
-    ]
-   },
-   "b1_hand_grip": {
-    "w": 7.5,
-    "a": [
-     0.5,
-     0.55
-    ]
-   },
-   "b1_hand_raise": {
-    "w": 6.6,
-    "a": [
-     0.55,
-     0.1
-    ]
-   },
-   "b1_hand_throw": {
-    "w": 6.0,
-    "a": [
-     0.6,
-     0.06
-    ]
-   },
-   "b2_body": {
-    "w": 30,
-    "a": [
-     0.5,
-     1
-    ]
-   },
-   "b2_arm_down": {
-    "w": 6.5,
-    "a": [
-     0.5,
-     0.96
-    ]
-   },
-   "b2_arm_ruler": {
-    "w": 12,
-    "a": [
-     0.1,
-     0.05
-    ]
-   },
-   "b2_arm_lash": {
-    "w": 17,
-    "a": [
-     0.95,
-     0.55
-    ]
-   },
-   "b2_arm_point": {
-    "w": 13,
-    "a": [
-     0.85,
-     0.85
-    ]
-   },
-   "b2_arms_guard": {
-    "w": 21,
-    "a": [
-     0.5,
-     0.5
-    ]
-   },
-   "b2_tape": {
-    "w": 15,
-    "a": [
-     0.5,
-     0.9
-    ]
-   },
-   "b3_face": {
-    "w": 13,
-    "a": [
-     0.5,
-     0.5
-    ]
-   },
-   "b3_eye": {
-    "w": 1.5,
-    "a": [
-     0.5,
-     0.5
-    ],
-    "relief": 0.15
-   },
-   "b3_curtain": {
-    "w": 11,
-    "a": [
-     0.5,
-     1
-    ]
-   },
-   "b3_hand_down": {
-    "w": 5.4,
-    "a": [
-     0.5,
-     0.95
-    ]
-   }
-  },
-  "weak": {
-   "b1_head_eye_a": [
-    0.45,
-    0.66,
-    0.15
-   ],
-   "b1_head_eye_b": [
-    0.49,
-    0.56,
-    0.15
-   ],
-   "b2_arm_ruler_a": [
-    0.32,
-    0.16,
-    0.1
-   ],
-   "b2_arm_ruler_b": [
-    0.29,
-    0.2,
-    0.1
-   ]
-  },
-  "eyeAt": {
-   "b3_face_rage_a": [
-    0.47,
-    0.91
-   ],
-   "b3_face_rage_b": [
-    0.5,
-    0.92
-   ],
-   "b3_face_scream_a": [
-    0.45,
-    0.91
-   ],
-   "b3_face_scream_b": [
-    0.47,
-    0.88
-   ],
-   "b3_face_hurt_a": [
-    0.47,
-    0.88
-   ],
-   "b3_face_hurt_b": [
-    0.47,
-    0.86
-   ],
-   "b3_face_cruel_c": [
-    0.5,
-    0.91
-   ],
-   "b3_face_cruel_d": [
-    0.47,
-    0.9
-   ]
-  },
-  "patterns": [
-   [
-    "throwStuff",
-    "slam",
-    "whistle",
-    "throwStuff",
-    "slam",
-    "throwStuff",
-    "whistle"
-   ],
-   [
-    "lash",
-    "raise",
-    "point",
-    "guardUp",
-    "lash",
-    "raise",
-    "point"
-   ],
-   [
-    "scream",
-    "volley",
-    "grab",
-    "summon",
-    "scream",
-    "grab",
-    "volley"
-   ]
   ],
-  "throw": {
-   "shots": [
-    [
-     3,
-     4
-    ]
-   ],
-   "gap": 0.32,
-   "flight": 1.6,
-   "curve": 2.2,
-   "dmg": 18,
-   "rest": 1.6,
-   "projectiles": [
-    "phone",
-    "manga",
-    "phone"
-   ]
-  },
-  "slam": {
-   "windup": 2,
-   "fall": 0.38,
-   "dmg": 28,
-   "poise": 140,
-   "rest": 1.4
-  },
-  "whistle": {
-   "windup": 2.2,
-   "dmg": 30,
-   "rest": 1.2
-  },
-  "lash": {
-   "shots": [
-    5,
-    7
-   ],
-   "gap": 0.22,
-   "flight": 1.4,
-   "dmg": 16,
-   "rest": 1.6,
-   "projectiles": [
-    "shard",
-    "plane",
-    "shard"
-   ]
-  },
-  "raise": {
-   "windup": 2.6,
-   "dmg": 34,
-   "poise": 220,
-   "coverDmg": 60,
-   "rest": 1.8
-  },
-  "point": {
-   "windup": 1.9,
-   "dmg": 30,
-   "rest": 1.4
-  },
-  "guard": {
-   "time": 7,
-   "spawns": [
-    {
-     "type": "paper",
-     "x": -2.5,
-     "y": 2.4,
-     "z": -2
-    },
-    {
-     "type": "paper",
-     "x": 2.5,
-     "y": 2.6,
-     "z": -2.5
-    },
-    {
-     "type": "horn",
-     "from": "pop",
-     "x": 0,
-     "z": -1
-    }
-   ]
-  },
-  "scream": {
-   "windup": 1.8,
-   "dmg": 34,
-   "rest": 1.4
-  },
   "volley": {
    "shots": [
-    6,
-    8
+    3,
+    5
    ],
-   "gap": 0.2,
-   "flight": 1.3,
-   "dmg": 16,
-   "rest": 1.2,
+   "gap": 0.5,
+   "flight": 1.9,
+   "dmg": 14,
    "projectiles": [
-    "manga",
-    "phone",
-    "plane"
+    "eye",
+    "ooze",
+    "hair",
+    "tooth",
+    "lips",
+    "eyes"
    ]
   },
-  "grab": {
-   "windup": 2.1,
-   "fall": 0.36,
-   "dmg": 30,
-   "poise": 160,
-   "rest": 1.4
+  "lunge": {
+   "windup": 1.8,
+   "time": 0.45,
+   "dmg": 22,
+   "coverDmg": 50,
+   "poise": 120
   },
-  "summon": {
-   "rest": 3.5,
-   "spawns": [
-    {
-     "type": "paper",
-     "x": -2.5,
-     "y": 2.3,
-     "z": -2
-    },
-    {
-     "type": "frame",
-     "from": "pop",
-     "x": 0,
-     "z": -1
-    },
-    {
-     "type": "paper",
-     "x": 2.5,
-     "y": 2.6,
-     "z": -2
-    }
-   ]
+  "burst": {
+   "windup": 2.6,
+   "dmg": 26
   },
+  "summon": [
+   {
+    "type": "paper",
+    "x": -2,
+    "y": 2.2,
+    "z": -2
+   }
+  ],
+  "wreckAt": 2,
+  "schoolAfter": "st4/front2",
   "texts": {
-   "phase2": {
-    "zh": "风纪委员 · 变身！",
-    "en": "SHE TRANSFORMS!",
-    "ja": "風紀委員・変身！"
+   "mutate": {
+    "zh": "它在变异!",
+    "en": "IT'S MUTATING!",
+    "ja": "変異している!"
    },
-   "phase3": {
-    "zh": "最终形态！",
-    "en": "FINAL FORM!",
-    "ja": "最終形態！"
+   "s2": {
+    "zh": "变异扩散!",
+    "en": "IT SPREADS!",
+    "ja": "変異拡大!"
    },
-   "interrupt": {
-    "zh": "打断！",
-    "en": "INTERRUPTED!",
-    "ja": "中断！"
+   "s3": {
+    "zh": "完全变异!",
+    "en": "FULL MUTATION!",
+    "ja": "完全変異!"
+   },
+   "s4": {
+    "zh": "失控!",
+    "en": "OUT OF CONTROL!",
+    "ja": "暴走!"
+   },
+   "s5": {
+    "zh": "核心暴露!",
+    "en": "THE CORE!",
+    "ja": "核心露出!"
    }
   }
  }

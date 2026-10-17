@@ -1,54 +1,197 @@
 {
- "_doc": "教学卡（docs/DESIGN.md 序章「这是教学关，要真的教」，代码 src/ui/hud.js lesson）：停留点写了 \"lesson\" 的，开打前先弹这张卡，点一下再开打；每张只在第一次出现（存档 SAVE.lessons）。title 标题，who 哪个主角出来讲（cat / pink，她的 Q 版表情 face 号），rows 每行一个图标 icon（mouseL 左键 / mouseR 右键 / release 松开躲 / fever / edgeAmber 黄边 / edgeRed 红边 / bracket 蓝框 / ring 必杀环 / eye 弱点 / cover 掩体）和一句话，note 卡片底下的小字。skill 这张开打时两人的必杀直接充满。",
+ "_doc": "教学卡（docs/DESIGN.md 序章「这是教学关，要真的教」，代码 src/ui/hud.js lesson）：停留点写了 \"lesson\" 的，开打前先弹这张卡，点一下再开打；每张只在第一次出现（存档 SAVE.lessons）。title 标题，who 哪个主角出来讲（cat / pink，她的 Q 版表情 face 号），rows 每行一个图标：img 用游戏里的图（准星、提示字），或 icon（mouseL 左键 / mouseR 右键 / release 松开躲 / fever / edgeAmber 黄边 / edgeRed 红边 / bracket 蓝框 / ring 必杀环 / eye 弱点 / cover 掩体）和一句话，note 卡片底下的小字。skill 这张开打时两人的必杀直接充满。",
  "lessons": {
   "shoot": {
-   "who": "pink", "face": 17,
-   "title": { "zh": "教学 1 · 射击和躲避", "en": "LESSON 1 · SHOOT & HIDE", "ja": "レッスン1・撃つ＆隠れる" },
+   "who": "pink",
+   "face": 17,
+   "title": {
+    "zh": "教学 1 · 射击和躲避",
+    "en": "LESSON 1 · SHOOT & HIDE",
+    "ja": "レッスン1・撃つ＆隠れる"
+   },
    "rows": [
-    { "icon": "mouseL", "text": { "zh": "按住左键：探身射击，准星跟着鼠标走", "en": "Hold LEFT CLICK: lean out and shoot where your cursor is", "ja": "左クリック長押し：身を乗り出して、カーソルの所を撃つ" } },
-    { "icon": "release", "text": { "zh": "松开左键：躲回掩体，顺便自动装填", "en": "Let go: duck behind cover and reload", "ja": "離す：遮蔽物に隠れて、自動でリロード" } },
-    { "icon": "fever", "text": { "zh": "一直打中会升 Fever：更痛、装得更快，每升一级还回血", "en": "Keep hitting to raise FEVER: more damage, faster reloads, and every level heals you", "ja": "当て続けるとフィーバー：火力もリロードもアップ、レベルが上がるたび回復" } }
+    {
+     "icon": "mouseL",
+     "text": {
+      "zh": "按住左键：探身射击，准星跟着鼠标走",
+      "en": "Hold LEFT CLICK: lean out and shoot where your cursor is",
+      "ja": "左クリック長押し：身を乗り出して、カーソルの所を撃つ"
+     }
+    },
+    {
+     "icon": "release",
+     "text": {
+      "zh": "松开左键：躲回掩体，顺便自动装填",
+      "en": "Let go: duck behind cover and reload",
+      "ja": "離す：遮蔽物に隠れて、自動でリロード"
+     }
+    },
+    {
+     "icon": "fever",
+     "text": {
+      "zh": "一直打中会升 Fever：更痛、装得更快，每升一级还回血",
+      "en": "Keep hitting to raise FEVER: more damage, faster reloads, and every level heals you",
+      "ja": "当て続けるとフィーバー：火力もリロードもアップ、レベルが上がるたび回復"
+     }
+    }
    ],
-   "note": { "zh": "怪物从课桌堆里冒出来了，先打打看！", "en": "Monsters are crawling out of the desks. Give it a try!", "ja": "机の山からモンスターが！まずは撃ってみよう！" }
+   "note": {
+    "zh": "怪物从课桌堆里冒出来了，先打打看！",
+    "en": "Monsters are crawling out of the desks. Give it a try!",
+    "ja": "机の山からモンスターが！まずは撃ってみよう！"
+   }
   },
   "shootdown": {
-   "who": "cat", "face": 24,
-   "title": { "zh": "教学 2 · 击落和躲避", "en": "LESSON 2 · SHOOT DOWN & HIDE", "ja": "レッスン2・撃ち落とす＆隠れる" },
+   "who": "cat",
+   "face": 24,
+   "title": {
+    "zh": "教学 2 · 击落和躲避",
+    "en": "LESSON 2 · SHOOT DOWN & HIDE",
+    "ja": "レッスン2・撃ち落とす＆隠れる"
+   },
    "rows": [
-    { "icon": "edgeAmber", "text": { "zh": "屏幕边缘发黄、写着「击落!」：有东西朝你飞过来，把它打下来", "en": "Screen edge glows AMBER, \"SHOOT DOWN!\": something is flying at you. Shoot it out of the air", "ja": "画面の端が黄色く光って「撃ち落とせ!」：何かが飛んでくる。撃ち落とそう" } },
-    { "icon": "edgeRed", "text": { "zh": "屏幕边缘发红、写着「躲!」和秒数：大招要来了，到时候松开左键躲好", "en": "Screen edge glows RED, \"HIDE!\" and a countdown: a big attack is coming. Let go and stay in cover", "ja": "画面の端が赤く光って「隠れて!」とカウント：大技が来る。指を離して隠れよう" } },
-    { "icon": "cover", "text": { "zh": "掩体会被打坏，打坏了就躲不住了", "en": "Cover can be broken. Once it's gone, it won't protect you", "ja": "遮蔽物は壊れる。壊れたらもう守ってくれない" } }
+    {
+     "img": "ui/ss_full",
+     "text": {
+      "zh": "套着金色准星的东西正朝你飞来：朝准星里打一枪就能打下来，不用瞄得很准",
+      "en": "Anything wearing a GOLD SIGHT is flying at you: shoot anywhere inside the sight to knock it down, no need to aim precisely",
+      "ja": "金色の照準がついた物が飛んでくる：照準の中を撃てば撃ち落とせる。細かく狙わなくていい"
+     }
+    },
+    {
+     "img": "ui/sh_full",
+     "text": {
+      "zh": "被红色危险准星锁住的怪要放大招，打不掉：看着旁边的秒数，到之前松开左键躲好",
+      "en": "A monster locked in a RED DANGER SIGHT is about to unleash something you can't shoot down: watch the countdown and let go to hide",
+      "ja": "赤い危険照準に捕まったモンスターは撃ち落とせない大技を出す：カウントを見て、指を離して隠れよう"
+     }
+    },
+    {
+     "icon": "cover",
+     "text": {
+      "zh": "掩体会被打坏，打坏了就躲不住了",
+      "en": "Cover can be broken. Once it's gone, it won't protect you",
+      "ja": "遮蔽物は壊れる。壊れたらもう守ってくれない"
+     }
+    }
    ],
-   "note": { "zh": "被打中也不亏：Fever 和必杀都会涨一截。", "en": "Getting hit isn't all bad: it fills your FEVER and your special a bit.", "ja": "被弾しても損ばかりじゃない：フィーバーと必殺がちょっと溜まる。" }
+   "note": {
+    "zh": "被打中也不亏：Fever 和必杀都会涨一截。",
+    "en": "Getting hit isn't all bad: it fills your FEVER and your special a bit.",
+    "ja": "被弾しても損ばかりじゃない：フィーバーと必殺がちょっと溜まる。"
+   }
   },
   "interrupt": {
-   "who": "pink", "face": 18,
-   "title": { "zh": "教学 3 · 打断", "en": "LESSON 3 · INTERRUPT", "ja": "レッスン3・中断" },
+   "who": "pink",
+   "face": 18,
+   "title": {
+    "zh": "教学 3 · 打断",
+    "en": "LESSON 3 · INTERRUPT",
+    "ja": "レッスン3・中断"
+   },
    "rows": [
-    { "icon": "bracket", "text": { "zh": "怪物身上出现蓝框和「打断! 射它」：它在蓄力，出手之前一直打它就能打断", "en": "BLUE brackets and \"SHOOT IT!\" on a monster: it's charging up. Keep shooting it before it strikes to interrupt it", "ja": "モンスターに青い枠と「撃って止めろ!」：力をためている。出す前に撃ち続ければ止められる" } },
-    { "icon": "mouseL", "text": { "zh": "打断以后它会晕一会儿，趁机多打几下", "en": "An interrupted monster is stunned for a moment. Pile on", "ja": "止めた相手はしばらく動けない。今のうちに" } }
+    {
+     "text": {
+      "zh": "怪物身上出现青色框和「打断!」：它在蓄力，出手之前一直打它就能打断",
+      "en": "CYAN brackets and \"BREAK IT!\" on a monster: it's charging up. Keep shooting it before it strikes to interrupt it",
+      "ja": "モンスターに青い枠と「止めろ!」：力をためている。出す前に撃ち続ければ止められる"
+     },
+     "img": "ui/wi_zh"
+    },
+    {
+     "icon": "mouseL",
+     "text": {
+      "zh": "打断以后它会晕一会儿，趁机多打几下",
+      "en": "An interrupted monster is stunned for a moment. Pile on",
+      "ja": "止めた相手はしばらく動けない。今のうちに"
+     }
+    }
    ],
-   "note": { "zh": "蓝的打、红的躲、黄的击落。", "en": "Blue: shoot it. Red: hide. Amber: shoot it down.", "ja": "青は撃つ、赤は隠れる、黄色は撃ち落とす。" }
+   "note": {
+    "zh": "青框：打断它　金准星：打下来　红准星：躲。",
+    "en": "Cyan brackets: interrupt. Gold sight: shoot it down. Red sight: hide.",
+    "ja": "青い枠は止める、金の照準は撃ち落とす、赤い照準は隠れる。"
+   }
   },
   "skill": {
-   "who": "cat", "face": 8,
-   "title": { "zh": "教学 4 · 必杀", "en": "LESSON 4 · SPECIALS", "ja": "レッスン4・必殺技" },
+   "who": "cat",
+   "face": 8,
+   "title": {
+    "zh": "教学 4 · 必杀",
+    "en": "LESSON 4 · SPECIALS",
+    "ja": "レッスン4・必殺技"
+   },
    "rows": [
-    { "icon": "ring", "text": { "zh": "头像旁边的环满了：按右键放必杀", "en": "When the ring around your portrait is full: RIGHT CLICK for your special", "ja": "顔アイコンの輪がいっぱいになったら：右クリックで必殺技" } },
-    { "icon": "mouseL", "text": { "zh": "必杀期间无敌，按住左键尽情射", "en": "Nothing can hurt you during it. Hold left click and let loose", "ja": "必殺中は無敵。左クリックで撃ちまくれ" } },
-    { "icon": "fever", "text": { "zh": "被打中、Fever 升级都会给充能，放必杀还会回血", "en": "Getting hit and Fever level-ups fill the ring, and a special heals you", "ja": "被弾やフィーバーで輪が溜まり、必殺を撃つと回復する" } }
+    {
+     "icon": "ring",
+     "text": {
+      "zh": "头像旁边的环满了：按右键放必杀",
+      "en": "When the ring around your portrait is full: RIGHT CLICK for your special",
+      "ja": "顔アイコンの輪がいっぱいになったら：右クリックで必殺技"
+     }
+    },
+    {
+     "icon": "mouseL",
+     "text": {
+      "zh": "必杀期间无敌，按住左键尽情射",
+      "en": "Nothing can hurt you during it. Hold left click and let loose",
+      "ja": "必殺中は無敵。左クリックで撃ちまくれ"
+     }
+    },
+    {
+     "icon": "fever",
+     "text": {
+      "zh": "被打中、Fever 升级都会给充能，放必杀还会回血",
+      "en": "Getting hit and Fever level-ups fill the ring, and a special heals you",
+      "ja": "被弾やフィーバーで輪が溜まり、必殺を撃つと回復する"
+     }
+    }
    ],
-   "note": { "zh": "这次先帮你充满了，放一个试试！", "en": "It's full this time. Try one!", "ja": "今回は満タンにしておいた。撃ってみよう！" }
+   "note": {
+    "zh": "这次先帮你充满了，放一个试试！",
+    "en": "It's full this time. Try one!",
+    "ja": "今回は満タンにしておいた。撃ってみよう！"
+   }
   },
   "boss": {
-   "who": "pink", "face": 24,
-   "title": { "zh": "BOSS · ？？？", "en": "BOSS · ???", "ja": "BOSS・？？？" },
+   "who": "pink",
+   "face": 24,
+   "title": {
+    "zh": "BOSS · ？？？",
+    "en": "BOSS · ???",
+    "ja": "BOSS・？？？"
+   },
    "rows": [
-    { "icon": "eye", "text": { "zh": "发光的弱点伤害高很多，瞄准它", "en": "Glowing weak spots take far more damage. Aim for them", "ja": "光る弱点は大ダメージ。そこを狙おう" } },
-    { "icon": "bracket", "text": { "zh": "蓝框打断、红边躲、黄边击落，照学过的来", "en": "Blue: interrupt. Red: hide. Amber: shoot down. Just like you learned", "ja": "青は止める、赤は隠れる、黄色は撃ち落とす。習った通りに" } },
-    { "icon": "ring", "text": { "zh": "环满了就放必杀，别攒着", "en": "Use your special whenever the ring is full. Don't save it", "ja": "輪が溜まったらすぐ必殺。ためこまない" } }
+    {
+     "icon": "eye",
+     "text": {
+      "zh": "它蓄力和出招的时候张开嘴和眼睛（描边变粉），这时打它伤害高很多",
+      "en": "When it winds up or attacks, its mouths and eyes open (pink outline): that's when it takes far more damage",
+      "ja": "ためや攻撃の時に口と目が開く（ピンクの縁取り）。その時が大ダメージのチャンス"
+     }
+    },
+    {
+     "img": "ui/sh_full",
+     "text": {
+      "zh": "青框打断、金准星打下来、红准星躲，照学过的来",
+      "en": "Cyan: interrupt. Gold: shoot down. Red: hide. Just like you learned",
+      "ja": "青は止める、金は撃ち落とす、赤は隠れる。習った通りに"
+     }
+    },
+    {
+     "icon": "ring",
+     "text": {
+      "zh": "环满了就放必杀，别攒着",
+      "en": "Use your special whenever the ring is full. Don't save it",
+      "ja": "輪が溜まったらすぐ必殺。ためこまない"
+     }
+    }
    ],
-   "note": { "zh": "那东西附在风纪委员身上……把她救回来！", "en": "That thing has taken over the discipline officer... Get her back!", "ja": "あれが風紀委員に取り憑いてる……取り戻そう！" }
+   "note": {
+    "zh": "那东西附在风纪委员身上……把她救回来！",
+    "en": "That thing has taken over the discipline officer... Get her back!",
+    "ja": "あれが風紀委員に取り憑いてる……取り戻そう！"
+   }
   }
  }
 }

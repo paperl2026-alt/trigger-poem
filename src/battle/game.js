@@ -418,6 +418,13 @@ export class Game {
     const w = this.world;
     w.ray.setFromCamera(w.ndc(sx, sy), w.camera);
     const out = [], seen = new Set();
+    // things flying at the girls bring their own sight: a shot anywhere inside it shoots them down (DESIGN「要击落的东西自带准星」)
+    for (const a of this.actors) {
+      if (!(a instanceof Projectile) || !a.alive || !a.sightR) continue;
+      if (Math.hypot(sx - a.sightX, sy - a.sightY) > a.sightR) continue;
+      seen.add(a); out.push({ a, uv: { u: 0.5, v: 0.5 } });
+      if (out.length >= max) return out;
+    }
     const wall = w.occluders?.length ? w.ray.intersectObjects(w.occluders, false).find((h) => h.uv && alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) > 110) : null;
     for (const h of w.ray.intersectObjects(this.hitMeshes(), false)) {
       if (!h.uv) continue;
@@ -585,7 +592,7 @@ export class Game {
       const on = (p.slot === 0 || this.p2on()) && this.combat;
       E.set(col.r, col.g, col.b, on ? Math.min(1.2, (p.edge || 0) + (p.edgePulse || 0) * 0.6) : 0);
     }
-    if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp);
+    if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp, this.boss.stage, this.boss.phases?.());
     setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.12 + (active ? 0.4 : 0)) : 0.2);
     this.hud.update(dt);
   }

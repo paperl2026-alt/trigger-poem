@@ -72,7 +72,8 @@ export class Hud {
     $('div', 'ltitle', card).textContent = tr(D.title);
     const rows = $('div', 'lrows', card);
     for (const r of D.rows) {
-      const row = $('div', 'lrow', rows), ic = $('div', `lic ${r.icon}`, row);
+      const row = $('div', 'lrow', rows), ic = $('div', `lic ${r.icon || ''}`, row);
+      if (r.img && url(r.img)) { const im = $('img', 'limg', ic); im.src = url(r.img); }
       if (r.icon === 'mouseL' || r.icon === 'mouseR' || r.icon === 'release') { const m = $('div', `mouse ${r.icon === 'mouseR' ? 'r' : r.icon === 'mouseL' ? 'l' : ''}`, ic); $('i', '', m); $('i', '', m); }
       $('div', 'ltext', row).textContent = tr(r.text);
     }

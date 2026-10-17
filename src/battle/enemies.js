@@ -622,7 +622,9 @@ export class Projectile extends Actor {
     if (this.kind === 'orb') this.inner.scale.setScalar(1 + Math.sin(tt * 20) * 0.06);
     const s = this.game.world.project(this.root.position);
     const box = this.screenBox();
-    this.lock.set(s.x, this.game.H - s.y, Math.max(36, (box.y1 - box.y0) * 0.7), k, tt);
+    // its sight: drawn on it and its hit zone (screen px, y down like the pointer): generous, it grows as it comes closer
+    this.sightX = s.x; this.sightY = s.y; this.sightR = Math.max(this.game.H * T.combat.sightMin, (box.y1 - box.y0) * T.combat.sightK);
+    this.lock.set(s.x, this.game.H - s.y, this.sightR, k, tt);
     if (k >= 1) {
       this.alive = false;
       this.lock.remove(); this.lock = null;
@@ -635,7 +637,7 @@ export class Projectile extends Actor {
     if (!this.alive) return;
     this.alive = false;
     this.lastHitBy = info.by;
-    this.lock.remove(); this.lock = null;
+    this.lock.remove(true); this.lock = null;
     info.dealt = 0;
     this.game.onHit(this, info.kind, info);
     if (this.kind === 'takoyaki') sfx.thud(0); else sfx.shatter(0);

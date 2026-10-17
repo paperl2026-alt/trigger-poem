@@ -35,7 +35,7 @@ class Girl {
     // reload stickers
     const set = (A.hud.B.reloadQ || {})[this.who] || 'a';
     this.rl = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `ui/rlq_${this.who}_${set}_${i}`).filter((k) => tex[k]);
-    this.st = [0, 1, 2, 3].map((i) => { const m = picture(null, 60 + i * 0.01, i * 0.2); g.add(m); m.userData.t = 9; return m; });
+    this.st = [0, 1, 2, 3, 4, 5].map((i) => { const m = picture(null, 60 + i * 0.01, i * 0.2); g.add(m); m.userData.t = 9; return m; });
     this.si = 0; this.step = -1; this.last = {}; this.washK = 0;
   }
   // her corner zone (screen px, y up): between the screen edge and her figure, above her HUD panel
@@ -43,6 +43,11 @@ class Girl {
     const L = this.A.hud.L, f = L.f, H = L.H, p = this.p, left = p.slot === 0, fig = this.A.hud.space.girl(p.slot);
     const edge = left ? f.x : f.x + f.w, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + (left ? -1 : 1) * H * 0.15;
     return { x0: Math.min(edge, outer), x1: Math.max(edge, outer), y0: H * 0.4, y1: H * 0.8, left };
+  }
+  // where RELOAD! goes, and so where its stickers stack (one layer under the word, close to it: user, round 7)
+  reloadSpot() {
+    const L = this.A.hud.L, H = L.H, z = this.zone(), w = Math.min(H * 0.34, Math.max(H * 0.22, (z.x1 - z.x0) * 1.2)), cx = (z.x0 + z.x1) / 2;
+    return { x: z.left ? Math.max(L.f.x + w * 0.5, cx) : Math.min(L.f.x + L.f.w - w * 0.5, cx), y: H * 0.3, w, left: z.left };
   }
   half() { const L = this.A.hud.L, f = L.f; return this.p.slot === 0 || !this.A.game.p2on() ? (this.A.game.p2on() ? [f.x, f.x + f.w / 2] : [f.x, f.x + f.w]) : [f.x + f.w / 2, f.x + f.w]; }
   update(dt, t) {
@@ -56,10 +61,10 @@ class Girl {
     this.word.visible = !!key && !!tex[key] && blink;
     if (this.word.visible) {
       this.word.material.uniforms.map.value = tex[key];
-      // in her corner above her HUD panel, toward the screen edge (the reload stickers' zone), not over the monsters
-      const z = this.zone(), w = Math.min(H * 0.34, Math.max(H * 0.22, (z.x1 - z.x0) * 1.2)), cx = (z.x0 + z.x1) / 2;
-      size(this.word, key, w * (1 + 0.04 * Math.sin(t * 20)));
-      this.word.position.set(z.left ? Math.max(L.f.x + w * 0.5, cx) : Math.min(L.f.x + L.f.w - w * 0.5, cx), H * 0.3, 0); this.word.rotation.z = z.left ? 0.08 : -0.08;
+      // in her corner above her HUD panel, toward the screen edge, not over the monsters; the reload stickers stack right under it
+      const R = this.reloadSpot();
+      size(this.word, key, R.w * (1 + 0.04 * Math.sin(t * 20)));
+      this.word.position.set(R.x, R.y, 0); this.word.rotation.z = R.left ? 0.08 : -0.08;
       const U = this.word.material.uniforms; U.a.value = 0.8; U.time.value = t; U.shine.value = 1;
     }
     // ---- hit: a crack where it came from, a quick word, a red wash over her half
@@ -107,26 +112,39 @@ class Girl {
       const k = 1 - p.reloadT / (p.reloadT0 || 1), n = this.rl.length, step = Math.min(n - 1, Math.floor(k * n));
       if (step !== this.step) {
         this.step = step;
-        const z = this.zone(), m = this.st[this.si++ % this.st.length], s = H * rnd(0.15, 0.2);
+        const R = this.reloadSpot(), m = this.st[this.si++ % this.st.length], s = H * rnd(0.14, 0.18);
         m.material.uniforms.map.value = tex[this.rl[step]]; m.userData.t = 0; m.userData.s = s;
-        m.position.set(rnd(z.x0 + s * 0.45, Math.max(z.x0 + s * 0.45, z.x1 - s * 0.45)), rnd(z.y0 + s * 0.5, z.y1 - s * 0.5), 0);
+        m.userData.from = [rnd(-1, 1) * H * 0.08, rnd(-1, 1) * H * 0.08];   // it whips in from a little off its spot
+        // right behind the word: a little above it and around its middle, overlapping it (the word stays on top)
+        m.position.set(R.x + rnd(-0.3, 0.3) * R.w, R.y + s * rnd(0.25, 0.55), 0);
+        m.userData.home = [m.position.x, m.position.y];
         m.rotation.z = rnd(-0.45, 0.45); m.userData.rot = m.rotation.z;
-        m.renderOrder = 60 + this.si * 0.001;
         if (this.who === 'cat') {   // the seal's character by her paw (at the top of her figure, toward the middle)
           const fig = this.A.hud.space.girl(p.slot), ch = C.theme.kuji[step % C.theme.kuji.length];
           if (fig) g.fx.chant.flash(ch, step, p.slot ? fig.x0 + H * 0.02 : fig.x1 - H * 0.02, fig.y1 - (fig.y1 - fig.y0) * 0.3, H * 0.12);
         }
       }
     } else this.step = -1;
+    // like a comic flip-book intro: each new one whips in on top, the ones under it fade the older they are (user, round 7)
     for (const m of this.st) {
-      m.userData.t += dt; const k = m.userData.t, life = reload ? 9 : 0.25;
-      m.visible = !!m.material.uniforms.map.value && (reload ? k < 9 : k < life);
+      m.userData.t += dt;
       if (!reload && m.userData.t < 9) m.userData.t = Math.max(m.userData.t, 9 - 0.2);   // reload over: they peel away
+      m.visible = !!m.material.uniforms.map.value && m.userData.t < 9.2;
+    }
+    const stack = this.st.filter((m) => m.visible).sort((x, y) => x.userData.t - y.userData.t);   // newest first
+    for (const m of this.st) {
       if (!m.visible) continue;
-      const img = m.material.uniforms.map.value.image, ar = img.height / img.width, slap = k < 0.07 ? 1.45 - k * 6.4 : 1;
-      m.scale.set(m.userData.s * slap, m.userData.s * ar * slap, 1);
+      const k = m.userData.t, rank = stack.indexOf(m), U = m.material.uniforms;
+      const img = U.map.value.image, ar = img.height / img.width, slap = k < 0.07 ? 1.45 - k * 6.4 : 1, sink = 1 - Math.min(0.2, rank * 0.05);
+      m.scale.set(m.userData.s * slap * sink, m.userData.s * ar * slap * sink, 1);
       m.rotation.z = m.userData.rot + (k < 0.07 ? (0.07 - k) * 3 : 0);
-      m.material.uniforms.a.value = reload ? 1 : Math.max(0, (9.2 - m.userData.t) / 0.2); m.material.uniforms.time.value = t;
+      if (k < 0.07 && m.userData.from && m.userData.home) { const e = 1 - k / 0.07; m.position.set(m.userData.home[0] + m.userData.from[0] * e, m.userData.home[1] + m.userData.from[1] * e, 0); }
+      else if (m.userData.home) m.position.set(m.userData.home[0], m.userData.home[1], 0);
+      const fade = reload ? Math.max(0, 1 - rank * 0.3) : Math.max(0, (9.2 - k) / 0.2) * Math.max(0, 1 - rank * 0.3);
+      U.a.value = fade; U.time.value = t;
+      U.tint.value.setRGB(0.25, 0.08, 0.18); U.tintK.value = Math.min(0.6, rank * 0.18);   // the ones underneath sink into shadow
+      U.flash.value = k < 0.05 ? 0.6 * (1 - k / 0.05) : 0;                                 // the newest one flashes in
+      m.renderOrder = 60 + (stack.length - rank) * 0.01;
       if (m.visible) this.A.hud.space.claim({ x0: m.position.x - m.userData.s / 2, x1: m.position.x + m.userData.s / 2, y0: m.position.y - m.userData.s / 2, y1: m.position.y + m.userData.s / 2 });
     }
   }
@@ -193,7 +211,7 @@ export class Alerts {
     const L = this.hud.L, H = L.H, g = this.game, both = !g.p2on();
     // what threatens each side now
     const want = [{ hide: 0, shot: 0, low: 0, left: 9 }, { hide: 0, shot: 0, low: 0, left: 9 }];
-    for (const lk of g.fx.live || []) {
+    for (const lk of T.layout.edgeWarn ? g.fx.live || [] : []) {   // (shoot-down / hide: told by the sights on the things themselves)
       const kind = lk.type === 'heavy' ? 'hide' : lk.type === 'shot' ? 'shot' : null;
       if (!kind || !g.combat) continue;
       const sides = lk.slot < 0 || both ? [0, 1] : [lk.slot];
