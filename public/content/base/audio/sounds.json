@@ -1,50 +1,221 @@
 {
   "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），署名：用到魔王魂的素材要写「効果音：魔王魂」，OtoLogic 的写「OtoLogic」（都是 CC BY 4.0，docs/ART.md「声音」）。files 声音文件（相对内容包，放在 sfx/<站名>/ 下，保留原文件名，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
   "sfx": {
-    "ui": { "when": "菜单按钮按下、悬停", "want": "清脆短促的「ポン」，像 P5 菜单那种干净的电子音", "src": "lib", "files": [], "vol": 1 },
-    "panel": { "when": "选关翻页、切章节", "want": "纸张翻动 + 一点点「シャッ」", "src": "lib", "files": [], "vol": 1 },
-    "stamp": { "when": "盖章、结算条目、书包装备", "want": "「ドン」的盖章声，有点闷有点重", "src": "lib", "files": [], "vol": 1 },
-    "popup": { "when": "她从掩体探身", "want": "很短的衣服摩擦「ササッ」", "src": "lib", "files": [], "vol": 1 },
-    "clear": { "when": "清场、升级、买东西成功", "want": "闪亮的上行琶音「キラーン」", "src": "lib", "files": [], "vol": 1 },
-    "victory": { "when": "通关", "want": "短小的胜利号角 jingle（2～3 秒）", "src": "lib", "files": [], "vol": 1 },
-    "defeat": { "when": "失败", "want": "可爱又丧的下行 jingle", "src": "lib", "files": [], "vol": 1 },
-    "gun": { "when": "地雷妹的加特林 / 冲锋枪每一发", "want": "轻快的小口径「パパパ」，不吵，连发 13 发 / 秒也不刺耳", "src": "lib", "files": [], "vol": 1 },
+    "ui": { "when": "菜单按钮按下、悬停", "want": "清脆短促的「ポン」，像 P5 菜单那种干净的电子音", "src": "lib", "files": ["sfx/maou/maou_se_system45.mp3"], "vol": 0.6 },
+    "panel": {
+      "when": "选关翻页、切章节",
+      "want": "纸张翻动 + 一点点「シャッ」",
+      "src": "lib",
+      "files": ["sfx/otologic/Book02-1_Flip.mp3", "sfx/otologic/Book02-4_Flick_Through.mp3"],
+      "vol": 1
+    },
+    "stamp": { "when": "盖章、结算条目、书包装备", "want": "「ドン」的盖章声，有点闷有点重", "src": "lib", "files": ["sfx/maou/maou_se_battle07.mp3"], "vol": 0.8 },
+    "popup": {
+      "when": "她从掩体探身",
+      "want": "很短的衣服摩擦「ササッ」",
+      "src": "lib",
+      "files": [
+        "sfx/otologic/Motion-Swish01-01.mp3",
+        "sfx/otologic/Motion-Swish01-02.mp3",
+        "sfx/otologic/Motion-Swish01-03.mp3",
+        "sfx/otologic/Motion-Swish01-04.mp3",
+        "sfx/otologic/Motion-Swish01-05.mp3",
+        "sfx/otologic/Motion-Swish01-06.mp3"
+      ],
+      "vol": 0.4
+    },
+    "clear": {
+      "when": "清场、升级、买东西成功",
+      "want": "闪亮的上行琶音「キラーン」",
+      "src": "lib",
+      "files": ["sfx/otologic/Onoma-Sparkle04-1_Timbre1-Short.mp3", "sfx/otologic/Onoma-Sparkle04-3_Timbre2-Short.mp3"],
+      "vol": 0.8,
+      "len": 1.8
+    },
+    "victory": { "when": "通关", "want": "短小的胜利号角 jingle（2～3 秒）", "src": "lib", "files": ["sfx/maou/maou_se_jingle05.mp3"], "vol": 0.9 },
+    "defeat": { "when": "失败", "want": "可爱又丧的下行 jingle", "src": "lib", "files": ["sfx/maou/maou_se_onepoint06.mp3"], "vol": 0.9 },
+    "gun": {
+      "when": "地雷妹的加特林 / 冲锋枪每一发",
+      "want": "轻快的小口径「パパパ」，不吵，连发 13 发 / 秒也不刺耳",
+      "src": "lib",
+      "files": ["sfx/maou/maou_se_battle_gun02.mp3", "sfx/maou/maou_se_battle_gun03.mp3"],
+      "vol": 0.45,
+      "len": 0.16
+    },
     "cannon": { "when": "猫娘每一发真言", "want": "法术弹「ボン」+ 铃声余韵（她头上有铃铛）", "src": "lib", "files": [], "vol": 1 },
     "shell": { "when": "弹壳落地", "want": "细小的「チャリン」", "src": "lib", "files": [], "vol": 0.6 },
-    "empty": { "when": "没子弹了", "want": "空扳机「カチッ」", "src": "lib", "files": [], "vol": 1 },
-    "reload": { "when": "装填", "want": "上弹匣「ガシャッ」；猫娘是抽符纸「シュッ」（以后分开）", "src": "lib", "files": [], "vol": 1 },
-    "hit": { "when": "子弹打中怪", "want": "软软的「ポスッ」命中声，不要血腥", "src": "lib", "files": [], "vol": 1 },
-    "thud": { "when": "重物落地、怪摔倒", "want": "「ドスン」", "src": "lib", "files": [], "vol": 1 },
-    "shatter": { "when": "飞行道具被打下来、玻璃碎", "want": "清脆的碎裂「パリーン」", "src": "lib", "files": [], "vol": 1 },
+    "empty": { "when": "没子弹了", "want": "空扳机「カチッ」", "src": "lib", "files": ["sfx/maou/maou_se_sound_switch01.mp3"], "vol": 0.8 },
+    "reload": {
+      "when": "装填",
+      "want": "上弹匣「ガシャッ」；猫娘是抽符纸「シュッ」（以后分开）",
+      "src": "lib",
+      "files": ["sfx/maou/maou_se_sound19.mp3", "sfx/maou/maou_se_sound20.mp3"],
+      "vol": 0.8
+    },
+    "hit": {
+      "when": "子弹打中怪",
+      "want": "软软的「ポスッ」命中声，不要血腥",
+      "src": "lib",
+      "files": [
+        "sfx/otologic/Hit-Punch02-1_Dry.mp3",
+        "sfx/otologic/Hit-Punch02-2_Dry.mp3",
+        "sfx/otologic/Hit-Punch02-3_Dry.mp3",
+        "sfx/otologic/Hit-Punch02-4_Dry.mp3"
+      ],
+      "vol": 0.5
+    },
+    "thud": { "when": "重物落地、怪摔倒", "want": "「ドスン」", "src": "lib", "files": ["sfx/maou/maou_se_battle12.mp3"], "vol": 0.9 },
+    "shatter": { "when": "飞行道具被打下来、玻璃碎", "want": "清脆的碎裂「パリーン」", "src": "lib", "files": ["sfx/maou/maou_se_magic_ice05.mp3"], "vol": 0.7, "len": 0.8 },
     "paperRip": { "when": "纸怪被撕开", "want": "撕纸「ビリッ」", "src": "lib", "files": [], "vol": 1 },
     "tear": { "when": "布 / 皮被撕开", "want": "撕布「ビリビリ」", "src": "lib", "files": [], "vol": 1 },
-    "slash": { "when": "猫爪挥击", "want": "风切「シュバッ」", "src": "lib", "files": [], "vol": 1 },
-    "clang": { "when": "打在金属 / 盔甲上", "want": "「カキン」", "src": "lib", "files": [], "vol": 1 },
-    "coverHit": { "when": "掩体被打中", "want": "木头 / 铁皮被砸「ゴン」", "src": "lib", "files": [], "vol": 1 },
+    "slash": {
+      "when": "猫爪挥击",
+      "want": "风切「シュバッ」",
+      "src": "lib",
+      "files": ["sfx/otologic/Cut02-1.mp3", "sfx/otologic/Cut02-2.mp3", "sfx/otologic/Cut02-3.mp3", "sfx/otologic/Cut02-4.mp3"],
+      "vol": 0.8
+    },
+    "clang": {
+      "when": "打在金属 / 盔甲上",
+      "want": "「カキン」",
+      "src": "lib",
+      "files": ["sfx/maou/maou_se_battle10.mp3", "sfx/maou/maou_se_battle04.mp3"],
+      "vol": 0.7,
+      "len": 0.5
+    },
+    "coverHit": {
+      "when": "掩体被打中",
+      "want": "木头 / 铁皮被砸「ゴン」",
+      "src": "lib",
+      "files": ["sfx/otologic/Hit-Punch09-1_Low.mp3", "sfx/otologic/Hit-Punch09-3_Low.mp3"],
+      "vol": 0.8
+    },
     "crackle": { "when": "猫娘的必杀镭射持续", "want": "电流 + 念经的嗡嗡声，可以循环", "src": "lib", "files": [], "vol": 0.8 },
-    "burnOut": { "when": "怪物净化消散", "want": "「シュワァ」的消散声 + 一点亮晶晶", "src": "lib", "files": [], "vol": 1 },
-    "whoosh": { "when": "东西飞过、镜头甩", "want": "「ヒュン」", "src": "lib", "files": [], "vol": 1 },
-    "throwIt": { "when": "怪物扔东西", "want": "投掷「ブンッ」", "src": "lib", "files": [], "vol": 1 },
-    "warn": { "when": "要快躲 / 快打的攻击开始蓄力", "want": "短促的警报「ピピッ」，一听就紧张", "src": "lib", "files": [], "vol": 1 },
-    "miss": { "when": "钱不够、装不下、操作无效", "want": "「ブブッ」的否定音，可爱一点", "src": "lib", "files": [], "vol": 1 },
-    "slam": { "when": "Boss 落地、大冲击", "want": "低沉的「ズドン」", "src": "lib", "files": [], "vol": 1 },
-    "run": { "when": "两人跑去下一个点", "want": "小碎步「タタタ」", "src": "lib", "files": [], "vol": 0.8 },
-    "hurt": { "when": "她被打中（语音之外的打击声）", "want": "「バシッ」", "src": "lib", "files": [], "vol": 1 },
-    "madness": { "when": "放必杀、Boss 变身", "want": "上升的能量蓄积「キュイーン」", "src": "lib", "files": [], "vol": 1 },
-    "viewer": { "when": "漫画翻页", "want": "翻书「パラッ」", "src": "lib", "files": [], "vol": 1 },
-    "roar": { "when": "Boss 吼叫、变身", "want": "不可名状的怪叫：女声尖叫 + 低音 + 倒放 + 扭曲（TTS 念「キィィアアア」后期处理）", "src": "tts", "files": [], "vol": 1 },
-    "dollScreech": { "when": "人偶类怪尖叫", "want": "小女孩笑声变调成尖叫（TTS + 变调 + 失真）", "src": "tts", "files": [], "vol": 1 },
-    "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": [], "vol": 1 }
+    "burnOut": { "when": "怪物净化消散", "want": "「シュワァ」的消散声 + 一点亮晶晶", "src": "lib", "files": ["sfx/maou/maou_se_magical25.mp3"], "vol": 0.6, "len": 1.6 },
+    "whoosh": {
+      "when": "东西飞过、镜头甩",
+      "want": "「ヒュン」",
+      "src": "lib",
+      "files": [
+        "sfx/otologic/Motion-Swish01-07.mp3",
+        "sfx/otologic/Motion-Swish01-08.mp3",
+        "sfx/otologic/Motion-Swish01-09.mp3",
+        "sfx/otologic/Motion-Swish01-10.mp3"
+      ],
+      "vol": 0.6
+    },
+    "throwIt": {
+      "when": "怪物扔东西",
+      "want": "投掷「ブンッ」",
+      "src": "lib",
+      "files": ["sfx/otologic/Motion-Swish01-07.mp3", "sfx/otologic/Motion-Swish01-08.mp3"],
+      "vol": 0.7,
+      "rate": 0.8
+    },
+    "warn": { "when": "要快躲 / 快打的攻击开始蓄力", "want": "短促的警报「ピピッ」，一听就紧张", "src": "lib", "files": ["sfx/maou/maou_se_8bit02.mp3"], "vol": 0.5 },
+    "miss": {
+      "when": "钱不够、装不下、操作无效",
+      "want": "「ブブッ」的否定音，可爱一点",
+      "src": "lib",
+      "files": ["sfx/otologic/Onoma-Negative16-4_High.mp3", "sfx/otologic/Onoma-Negative16-3_Low.mp3"],
+      "vol": 0.8
+    },
+    "slam": { "when": "Boss 落地、大冲击", "want": "低沉的「ズドン」", "src": "lib", "files": ["sfx/maou/maou_se_battle_explosion07.mp3"], "vol": 0.9, "len": 1.2 },
+    "run": {
+      "when": "两人跑去下一个点",
+      "want": "小碎步「タタタ」",
+      "src": "lib",
+      "files": ["sfx/maou/maou_se_sound_footstep01.mp3", "sfx/maou/maou_se_sound_footstep02.mp3"],
+      "vol": 0.6
+    },
+    "hurt": {
+      "when": "她被打中（语音之外的打击声）",
+      "want": "「バシッ」",
+      "src": "lib",
+      "files": ["sfx/otologic/Hit-Punch09-2_High.mp3", "sfx/otologic/Hit-Punch09-4_High.mp3"],
+      "vol": 0.8
+    },
+    "madness": {
+      "when": "放必杀、Boss 变身",
+      "want": "上升的能量蓄积「キュイーン」",
+      "src": "lib",
+      "files": ["sfx/otologic/Onoma-Syakiin05-1_Heavy.mp3", "sfx/otologic/Onoma-Syakiin05-2_Light.mp3"],
+      "vol": 0.8
+    },
+    "viewer": { "when": "漫画翻页", "want": "翻书「パラッ」", "src": "lib", "files": ["sfx/otologic/Book02-1_Flip.mp3"], "vol": 1 },
+    "roar": {
+      "when": "Boss 吼叫、变身",
+      "want": "不可名状的怪叫：女声尖叫 + 低音 + 倒放 + 扭曲（TTS 念「キィィアアア」后期处理）",
+      "src": "lib",
+      "files": ["sfx/otologic/Monster02-10.mp3", "sfx/otologic/Monster02-11.mp3"],
+      "vol": 1,
+      "rate": 0.8,
+      "len": 2.2
+    },
+    "dollScreech": {
+      "when": "人偶类怪尖叫",
+      "want": "小女孩笑声变调成尖叫（TTS + 变调 + 失真）",
+      "src": "lib",
+      "files": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3", "sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
+      "vol": 0.8
+    },
+    "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": ["sfx/maou/maou_se_sound17.mp3"], "vol": 0.7 }
   },
   "monsters": {
     "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。",
-    "default": { "windup": [], "attack": [], "hurt": [], "die": [] },
-    "desk": { "want": "课桌：木头吱嘎 + 老师的咳嗽声扭曲", "windup": [], "attack": [], "hurt": [], "die": [] },
-    "shoe": { "want": "鞋柜：门板咔哒 + 闷闷的「くさい…」", "windup": [], "attack": [], "hurt": [], "die": [] },
-    "board": { "want": "黑板：粉笔刮擦 + 低语「せいれつ…」", "windup": [], "attack": [], "hurt": [], "die": [] },
-    "paper": { "want": "试卷：纸片沙沙 + 小声尖笑", "windup": [], "attack": [], "hurt": [], "die": [] },
-    "frame": { "want": "画框：玻璃嗡鸣 + 「みてる…」", "windup": [], "attack": [], "hurt": [], "die": [] },
-    "horn": { "want": "喇叭：广播的啸叫 + 失真的校园广播", "windup": [], "attack": [], "hurt": [], "die": [] }
+    "default": {
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"]
+    },
+    "desk": {
+      "want": "课桌：木头吱嘎 + 老师的咳嗽声扭曲",
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.75
+    },
+    "shoe": {
+      "want": "鞋柜：门板咔哒 + 闷闷的「くさい…」",
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.9
+    },
+    "board": {
+      "want": "黑板：粉笔刮擦 + 低语「せいれつ…」",
+      "windup": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-8_Low-Dry.mp3"],
+      "rate": 0.7
+    },
+    "paper": {
+      "want": "试卷：纸片沙沙 + 小声尖笑",
+      "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3", "sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
+      "rate": 1.3
+    },
+    "frame": {
+      "want": "画框：玻璃嗡鸣 + 「みてる…」",
+      "windup": ["sfx/otologic/Horror-Scream03-6_High-Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream03-8_Low-Dry.mp3"]
+    },
+    "horn": {
+      "want": "喇叭：广播的啸叫 + 失真的校园广播",
+      "windup": ["sfx/otologic/Monster02-08.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.9
+    }
   },
   "voices": {
     "_doc": "角色语音的设定：每个角色用哪种声线、说哪种语言。lang ja = 日语，zh-TW = 台湾腔普通话；ref = 语音合成（Fish Audio）的声线编号。台词在 text/stickers.json，说日语那一句（lang 是 zh-TW 就说中文那一句）；lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",

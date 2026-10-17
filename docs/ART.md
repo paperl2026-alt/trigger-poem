@@ -161,4 +161,7 @@ Codex 只出静态底子；好看、会动的部分由程序做，几种手段�
   - 两站都挡程序下载（OtoLogic 是 Cloudflare 人机验证，魔王魂防盗链），不绕：由用户在浏览器里下载，放进 `art/raw/sfx_dl/<站名>/`（不进 git）。
 - 挑选：`electron tools/node/sfx_scan.cjs <文件夹> <输出>` 把每个文件解码、量出时长 / 起音 / 余音 / 亮度 / 响度，画成声纹总览图（按亮度着色），Claude 照 content `audio/sounds.json` 每种声音写的 want 挑；挑中的复制进内容包 `sfx/<站名>/`，文件名保留原名（方便署名、查出处）。
 - 音量和开头静音不用手调：游戏加载时自动量峰值、拉到同一峰值、从第一声开始放（audio.js level），sounds.json 的 vol 是唯一的响度选择。
-- 怪物叫声：从人声 / 怪物素材变调、倒放、失真、混响做成（处理工具做到时补在这里）。
+- 用户下载的原始包在 `art/raw/sfx_dl/`（魔王魂效果音整包、9 个魔王魂 BGM 整包、OtoLogic 17 组），`python -I tools/sfx_unpack.py <输出> <zip...>` 解到 `art/raw/sfx_dl/se/<包名>/`（只取音频、防止解到外面），`sfx_scan` 的结果在 `art/raw/sfx_dl/scan/`。
+- 挑中的写在 `tools/rounds/sfx_import.py`（每种声音：文件、vol，需要时 len 只放前几秒、rate 变调），运行后复制进 `public/content/base/sfx/<maou|otologic>/` 并写进 sounds.json；要换哪个就改这里再跑一次。
+- 怪物叫声：现在是按怪的种类给不同素材 + 不同 rate（课桌低沉、试卷尖细……）；以后要更怪再做变调 / 倒放 / 失真 / 混响的离线处理。
+- 还在用程序合成的：猫娘的真言弹（两站没有合适的短魔法弹）、弹壳、撕纸、撕布、镭射持续音、火焰。

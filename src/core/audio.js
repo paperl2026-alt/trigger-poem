@@ -210,7 +210,8 @@ const BUF = new Map();   // url -> AudioBuffer | Promise | null (failed)
 function load(url) {
   if (!ctx || !url) return null;
   if (BUF.has(url)) return BUF.get(url);
-  const p = fetch(url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status)))).then((a) => ctx.decodeAudioData(a))
+  const EMB = window.__NOA_CONTENT;   // (the portable build carries every file inside, as data URIs)
+  const p = fetch(EMB && typeof EMB[url] === 'string' ? EMB[url] : url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status)))).then((a) => ctx.decodeAudioData(a))
     .then((b) => { level(b); BUF.set(url, b); return b; }, (e) => { console.warn('[audio]', url, e.message); BUF.set(url, null); return null; });
   BUF.set(url, p);
   return p;
@@ -226,12 +227,17 @@ function level(b) {
   }
   b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.004)) / b.sampleRate;
 }
-function playBuf(b, { pan = 0, vol = 1, rate = 1, bus = sfxBus } = {}) {
+function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = sfxBus } = {}) {
   const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
   const g = ctx.createGain(); g.gain.value = vol * (b.gainK || 1);
   const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
   s.connect(g); if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
-  s.start(0, b.startAt || 0); return s;
+  s.start(0, b.startAt || 0);
+  if (len > 0) {   // only the first len seconds (of the sound as played), then a short fade
+    const t = ctx.currentTime, end = t + len / rate, f = Math.min(0.06, len / rate * 0.4);
+    g.gain.setValueAtTime(g.gain.value, end - f); g.gain.linearRampToValueAtTime(0.0001, end); s.stop(end + 0.01);
+  }
+  return s;
 }
 // one of these files, now if it is ready (true), else loading it for next time (false: the caller uses its stand-in)
 function playOne(files, opt) {
@@ -252,7 +258,7 @@ for (const k of Object.keys(sfx)) {
   const synth = sfx[k];
   sfx[k] = (...a) => {
     const e = C.sounds?.sfx?.[k];
-    if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: 0.94 + Math.random() * 0.12 })) return;
+    if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: (e.rate || 1) * (0.94 + Math.random() * 0.12), len: e.len || 0 })) return;
     return synth(...a);
   };
 }
@@ -268,7 +274,7 @@ export function voice(who, kind, i, slot = 0) {
 }
 // a monster's cry (windup / attack / hurt / die), its own or the default one
 export function cry(type, act, pan = 0) {
-  const M = C.sounds?.monsters || {};
-  const files = M[type]?.[act]?.length ? M[type][act] : M.default?.[act];
-  playOne(files, { pan, vol: 0.9, rate: 0.9 + Math.random() * 0.2 });
+  const M = C.sounds?.monsters || {}, own = M[type]?.[act]?.length;
+  const files = own ? M[type][act] : M.default?.[act], rate = (M[type]?.rate || 1) * (0.92 + Math.random() * 0.16);
+  playOne(files, { pan, vol: M[type]?.vol ?? 0.9, rate });
 }

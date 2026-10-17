@@ -35,6 +35,7 @@
   - `monsters`：怪物叫声（按怪的种类 × windup / attack / hurt / die），`cry(type, act)`，现在挂在蓄力和死亡上；
   - `voices`：角色语音设定（lang、Fish Audio 声线 ref、tone），`lines` 登记有文件的台词（键 `<场合>_<第几句>`，对应 text/stickers.json 的同一句）；`voice(who, kind, i)` 在气泡出现时说（stickers.js、标题页气泡）。
   - 文件路径相对内容包（`soundPaths` 在 content.js 里转成网址），所以模组也能换声音。
+  - sounds.json 每种声音可选 `len`（只放前几秒，结尾 60ms 内淡出）、`rate`（变调）；怪物叫声按种类有 `rate` / `vol`。便携版声音也从内嵌表取（window.__NOA_CONTENT）。
   - 解码时 `level()` 量一次：峰值拉到 0.7、从第一声（裁掉开头静音）开始放；不同音效库的响度差别不用手调。
   - 挑素材的工具：`tools/node/sfx_scan.cjs`（ART「声音」）。
 - 语音生成（待用户开账号）：Fish Audio API，用户自己把 API 密钥设成本机环境变量，Claude 写脚本按 text/stickers.json 的日语台词批量生成到 `public/content/base/voice/<角色>/`，再登记进 sounds.json。

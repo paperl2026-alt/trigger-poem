@@ -12,7 +12,7 @@ protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: t
 const DIST = path.join(__dirname, '..', 'dist');
 // content-pack mods (DLC / Workshop share the format): <folder of the exe>/mods/<id>/pack.json; in development <project>/mods
 const MODS = app.isPackaged ? path.join(path.dirname(process.execPath), 'mods') : path.join(__dirname, '..', 'mods');
-const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml' };
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav' };
 const selfTest = process.env.NOA_SELFTEST;
 // save files in two places (electron/store.cjs): the user-data folder and a "saves" folder next to the game; a self-test keeps its own
 const store = new Store(selfTest ? [path.join(app.getPath('temp'), 'trigger-poem-selftest', 'saves')]

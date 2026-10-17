@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const out = path.join(root, 'dist-portable');
 // the whole base content pack rides along: JSON as objects, images as data URIs, keyed by the URL the game asks for
-const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const MIME = { '.webp': 'image/webp', '.png': 'image/png', '.jpg': 'image/jpeg', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav' };
 const packDir = path.join(root, 'public/content/base');
 const files = {};
 let bytes = 0, images = 0;
