@@ -19,7 +19,7 @@ const [outDir] = await packager({
   asar: true,
   icon: path.join(root, 'electron', 'icon.ico'),
   ignore: (p) => p !== '' && !keep.test(p),
-  win32metadata: { ProductName: 'Trigger Poem', FileDescription: '相对希望少女们的扣击诗', CompanyName: 'Trigger Poem' },
+  win32metadata: { ProductName: 'Trigger Poem', FileDescription: '相对希望的少女扣击诗', CompanyName: 'Trigger Poem' },
 });
 const zip = path.join(root, 'release', 'TriggerPoem-win64.zip');
 fs.rmSync(zip, { force: true });

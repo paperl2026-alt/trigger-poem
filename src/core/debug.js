@@ -1,7 +1,8 @@
 // Debug / test menu: the ` key or Settings → Debug. Jump to any stage, auto-play, god mode, FPS, skip comics,
 // cheats. Toggles persist per browser. Opening the menu pauses the game.
 import { sfx } from './audio.js';
-import { SAVE, persist, resetSave } from './save.js';
+import { SAVE, persist, resetSave, SAVE_VERSION } from './save.js';
+import { storeStatus, hasFiles } from './store.js';
 
 const KEY = 'noa.debug';
 const DEF = { auto: false, god: false, fps: false, skip: false };
@@ -57,6 +58,10 @@ export function mountDebug(G, act) {
       if (p2 && p2.ctrl && p2.ctrl.kind === 'ai') row('2P AI', [0.2, 0.5, 0.8].map((s) => [`skill ${s}`, () => { p2.ctrl.skill = s; }, p2.ctrl.skill === s]));
     }
     row('存档 Save', [[`刀盾 ${SAVE.dd}`, () => {}], ['+1000 刀盾', () => { SAVE.dd += 1000; persist(); }], ['熟练度 +500xp', () => { for (const c of Object.values(SAVE.chars)) c.xp += 500; persist(); }], ['重置存档 Reset', () => { resetSave(); }]]);
+    // the save files (electron/store.cjs): each place, written or not, and the folder to open
+    const st = storeStatus();
+    row(`存档文件 v${SAVE_VERSION}`, [...st.map((x) => [`${x.ok === false ? '✗ ' : x.ok ? '✓ ' : '· '}${x.dir}`, () => {}, x.ok === true]),
+      ...(hasFiles ? [['打开存档文件夹', () => window.native.open()]] : [])]);
     const info = document.createElement('div'); info.className = 'dinfo';
     info.textContent = '` 打开/关闭本菜单 · Esc 设置 · URL 参数: ?play&skip / ?ep=ep0&step=4 / ?select / &auto';
     panel.appendChild(info);

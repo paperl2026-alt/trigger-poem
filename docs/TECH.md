@@ -29,6 +29,17 @@
     - 参数不能带冒号，换网址用环境变量 `SHOT_URL`；
     - 其他环境变量：`SHOT_PRE`（先执行的 JS）、`SHOT_WAIT`、`SHOT_SEQ="js|帧数|间隔"`、`SHOT_EVAL`（取页面数据）。
 
+## 存档文件（游戏进度，不是下面的 git 存档）
+- 桌面版（Electron）：`electron/store.cjs` 把每份存档（`save` 进度、`settings` 设置）写两处：
+  - 绝对位置 `%APPDATA%\Trigger Poem\saves\`（一定能写；以后 Steam 云存档同步这个文件夹，Steamworks 后台 Auto-Cloud 根目录选 WinAppDataRoaming、子目录 `Trigger Poem/saves`）；
+  - 相对位置 `<游戏 exe 所在文件夹>\saves\`（开发时是项目下的 `saves/`，不进 git）；装在没权限的地方会写失败，跳过不影响。
+  - 每次写：先写 `.tmp` 再改名（写到一半崩了也不会留下半个文件）；文件里有递增序号和校验码；每处保留最近 3 份旧版本（`save.bak1..3.json`）。
+  - 读：两处的所有份（含旧版本）都读，解析失败或校验不对的丢掉，取序号最大的；都没有就退到 localStorage（以前版本的存档从这里自动搬过来）。localStorage 每次也写一份，作为最后的备份。
+  - 页面通过 `electron/preload.cjs` 的 `window.native`（read / write / status / open）调用；游戏这边统一走 `src/core/store.js`；浏览器里只有 localStorage。
+  - 自检用自己的临时文件夹（`%TEMP%\trigger-poem-selftest\saves`），报告里 `store: "ok"` = 存档写入再读回成功。
+  - 调试菜单（`` ` `` 键）"存档文件"一行：两处各自写成功没有，"打开存档文件夹"。
+- 存档格式版本 `SAVE_VERSION`（`src/core/save.js`）：要改存档结构时加 1，在 `MIGRATE` 里写旧版怎么转；读到旧版本的存档时先原样另存一份 `save.v<旧版本>`，再转换。开发阶段就靠这个，不按阶段分存档。
+
 ## 存档
 - git 存档，同步到用户 GitHub 私有仓库 `paperl2026-alt/trigger-poem`。登录走 Git Credential Manager，Claude 不碰密码。
 - 用户在 `开始游戏.bat` 菜单里：4 存一次并同步，列出最近的存档编号；5 把全部历史打包到 `D:\trigger-poem-backup\`。

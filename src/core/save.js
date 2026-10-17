@@ -4,8 +4,15 @@
 //
 // initSave() runs once the content packs are loaded.
 import { C, T } from './content.js';
+import { readStored, writeStored } from './store.js';
 
-const KEY = 'noa.save.v1';
+const KEY = 'noa.save.v1';   // (the localStorage copy; the desktop build's files: core/store.js)
+// the save's format version. When a change needs old saves converted: raise it and add the step to MIGRATE; before converting, the
+// old save is kept as it was (a file "save.v<old>", docs/TECH.md「存档文件」), so a development step can always be gone back to.
+export const SAVE_VERSION = 2;
+const MIGRATE = {
+  1: (s) => s,   // 1 -> 2: the bag became files + versions; nothing in the save itself changed
+};
 // ids renamed when the heroines' data moved to content packs (old saves keep their progress)
 const RENAMED = { tsubaki: 'pink', kagura: 'cat' };
 
@@ -15,7 +22,12 @@ const fresh = () => structuredClone(T.economy.newSave);
 export function initSave() {
   const def = fresh();
   let s = null;
-  try { s = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { /* storage blocked */ }
+  const got = readStored('save', KEY);
+  try { s = got ? JSON.parse(got.data) : null; } catch (e) { s = null; }
+  if (s && (s.v || 1) < SAVE_VERSION) {
+    writeStored(`save.v${s.v || 1}`, `${KEY}.v${s.v || 1}`, got.data);   // the save as it was, before converting
+    for (let v = s.v || 1; v < SAVE_VERSION; v++) s = (MIGRATE[v] || ((x) => x))(s);
+  }
   if (s) {
     for (const [o, n] of Object.entries(RENAMED)) if (s.chars?.[o] && !s.chars[n]) { s.chars[n] = s.chars[o]; delete s.chars[o]; }
     if (s.team) s.team = s.team.map((id) => RENAMED[id] || id);
@@ -27,10 +39,11 @@ export function initSave() {
   }
   Object.assign(SAVE, def, s || {}, s ? { eps: { ...def.eps, ...s.eps }, chars: { ...def.chars, ...s.chars } } : {});
   SAVE.cap = Math.max(SAVE.cap || 0, T.economy.bag.start);   // (the bag's capacity: battle/items.js)
+  SAVE.v = SAVE_VERSION;
   // characters added by packs get a slot
   for (const id of Object.keys(C.characters)) if (!SAVE.chars[id]) SAVE.chars[id] = { open: true, xp: 0, outfit: 'base' };
 }
-export function persist() { try { localStorage.setItem(KEY, JSON.stringify(SAVE)); } catch (e) { /* storage blocked */ } }
+export function persist() { writeStored('save', KEY, JSON.stringify(SAVE)); }
 export function resetSave() { for (const k of Object.keys(SAVE)) delete SAVE[k]; Object.assign(SAVE, fresh()); persist(); }
 
 // ---- mastery: playing a character levels her up; every level adds a little gun stat, Lv MAX unlocks the limit-break form

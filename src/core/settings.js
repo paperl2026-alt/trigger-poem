@@ -5,17 +5,18 @@
 import { sfx, isMuted, setMuted, setVolume, getVolume, setMusicVolume, setSfxVolume } from './audio.js';
 import { lang, setLang, LANGS } from './i18n.js';
 import { T } from './content.js';
+import { readStored, writeStored } from './store.js';
 
 const KEY = 'noa.settings';
 // defaults: content tuning/settings.json; initSettings() runs once the packs are loaded
 export const SET = {};
 export function initSettings() {
   let saved = {};
-  try { saved = JSON.parse(localStorage.getItem(KEY) || '{}'); } catch (e) { /* storage blocked */ }
+  try { saved = JSON.parse(readStored('settings', KEY)?.data || '{}'); } catch (e) { saved = {}; }
   Object.assign(SET, T.defaultSettings, saved);
   setVolume(SET.volume); setMusicVolume(SET.bgmOn === false ? 0 : SET.bgm); setSfxVolume(SET.sfxOn === false ? 0 : SET.sfx);
 }
-export const saveSettings = () => { try { localStorage.setItem(KEY, JSON.stringify(SET)); } catch (e) { /* storage blocked */ } };
+export const saveSettings = () => writeStored('settings', KEY, JSON.stringify(SET));
 
 const L = (zh, en, ja) => ({ zh, en, ja }[lang] || en);
 

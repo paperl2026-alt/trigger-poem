@@ -11,3 +11,5 @@ dist-portable/
 trigger-poem-portable.zip
 # Codex job files: generated from tools/rounds/job_specsNN.py by tools/make_jobs.py
 art/jobs/
+# the dev build's save files next to the project (electron/store.cjs)
+saves/
