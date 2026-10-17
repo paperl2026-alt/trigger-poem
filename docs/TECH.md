@@ -165,7 +165,8 @@
   - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；
   - **机关**（set `gimmicks`，`src/battle/gimmick.js`）：挂在墙上 / 站在地上 / 尽头墙上能打的画、铠甲、封印、棺材盖；带白描边，只在自己的站点能打，打够 `hp` 下就按顺序执行 `do`（`flash` 闪光、`flip` 翻成 `kx`、`turn` 翻地方、`spawn` 刷怪、`say` 台词、`sfx`、`gone` 消失）。`prop: true`：波次不等它，AI 队友不打它（`input.js`）；
   - **鬼魂抓走**（站点 `grab`，`Game.grabbed`）：赶到这个站点的路上，一双鬼手扑满屏幕（`#ui .grab`），镜头被拖着晃过去；
-  - **木板桥**（站点 `bridge`）：赶路走到一半咔嚓一声，震屏、两人吓到、冒 `bridge` 台词。
+  - **木板桥**（站点 `bridge`）：赶路走到一半咔嚓一声，震屏、两人吓到、冒 `bridge` 台词；
+  - **从别处进来**（小关第一个站点的 `enter: { from, dur, shake, overlay, sfx }`，`Game.enterFrom`）：镜头从偏移 `from` 的地方移到站点（掉进坑：从上面落下来、震屏；被拽出坑：从下面升上来，`overlay` 的图（猫爪）同时从屏幕上方伸下来再拉走，`#ui .haul`）。
 - 怪物 `rush: true`（走路怪）：扑上来是冲撞（穿过掩体），带快打环、蓄力能被打断（半截丧尸）。
 
 ## Boss：「？？？」（`src/battle/thing.js`，数据 `bosses.json` qq）

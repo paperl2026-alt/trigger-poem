@@ -321,7 +321,8 @@
         "bridge": { "style": "Negative", "speed": 1.15 },
         "rot": { "style": "Negative" },
         "rot_3": { "style": "Negative", "speed": 1.1, "intonation": 1.4 },
-        "real": { "style": "ノーマル" }
+        "real": { "style": "ノーマル" },
+        "armor": { "style": "Positive" }
       },
       "say": {},
       "lines": {
@@ -386,7 +387,9 @@
         "rot_2": "voice/pink/rot_2.ogg",
         "rot_3": "voice/pink/rot_3.ogg",
         "real_1": "voice/pink/real_1.ogg",
-        "real_2": "voice/pink/real_2.ogg"
+        "real_2": "voice/pink/real_2.ogg",
+        "armor_1": "voice/pink/armor_1.ogg",
+        "armor_2": "voice/pink/armor_2.ogg"
       }
     },
     "cat": {
@@ -419,7 +422,8 @@
         "photo": { "style": "ねむたい" },
         "bridge": { "style": "ノーマル", "speed": 1.15 },
         "rot": { "style": "ねむたい" },
-        "real": { "style": "ノーマル" }
+        "real": { "style": "ノーマル" },
+        "armor": { "style": "ノーマル" }
       },
       "say": {
         "crit_1": "きゅうきゅうにょりつりょう、にゃ!",
@@ -487,7 +491,9 @@
         "rot_2": "voice/cat/rot_2.ogg",
         "rot_3": "voice/cat/rot_3.ogg",
         "real_1": "voice/cat/real_1.ogg",
-        "real_2": "voice/cat/real_2.ogg"
+        "real_2": "voice/cat/real_2.ogg",
+        "armor_1": "voice/cat/armor_1.ogg",
+        "armor_2": "voice/cat/armor_2.ogg"
       }
     }
   }

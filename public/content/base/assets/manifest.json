@@ -11234,11 +11234,46 @@
   "src": "assets/ep1/oven_wallR6_x.webp",
   "w": 1536
  },
+ "ep1/paw": {
+  "h": 1200,
+  "src": "assets/ep1/paw.webp",
+  "w": 762
+ },
  "ep1/photo": {
   "h": 520,
   "hit": true,
   "src": "assets/ep1/photo.webp",
   "w": 361
+ },
+ "ep1/pit_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/pit_floor1.webp",
+  "w": 1024
+ },
+ "ep1/pit_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/pit_floor2.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall1": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall1.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall2": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall2.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall3": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall3.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall4": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall4.webp",
+  "w": 1024
  },
  "ep1/seal1": {
   "figH": 0.9298,
@@ -13783,6 +13818,11 @@
   "h": 494,
   "src": "assets/prop/deskcloth_rd.png",
   "w": 546
+ },
+ "prop/ep1_armor_lance": {
+  "h": 900,
+  "src": "assets/prop/ep1_armor_lance.webp",
+  "w": 295
  },
  "prop/ep1_cold1": {
   "h": 528,

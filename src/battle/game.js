@@ -176,6 +176,7 @@ export class Game {
       playMusic(boss ? 'boss' : 'stage');
       this.world.place(S.cam, S.look);
       this.setAll('cover'); this.settled = true;
+      if (S.enter) { this.enterFrom(S.enter, () => this.arrive(S, boss)); return; }
       this.arrive(S, boss);
       return;
     }
@@ -235,6 +236,23 @@ export class Game {
         this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.4); p.soft.kick(1.4); });
       } else { playMusic('stage'); this.combat = true; then && then(); }
     }));
+  }
+  // a stage that starts with the view arriving from somewhere (station "enter": { from: [dx, dy, dz] offset the camera starts at, dur,
+  // shake, overlay: a picture over the screen meanwhile, e.g. a paw hauling the view up out of a pit; docs/DESIGN.md 第 1 话 ⑦)
+  enterFrom(E, then) {
+    const w = this.world, to = w.camPos.clone(), d = E.from || [0, 4, 0], dur = E.dur ?? 0.8;
+    w.camPos.set(to.x + d[0], to.y + d[1], to.z + d[2]);
+    let el = null;
+    if (E.overlay) {
+      el = document.createElement('img'); el.className = d[1] < 0 ? 'haul' : 'grab'; el.src = url(E.overlay);
+      el.style.animationDuration = dur + 0.6 + 's'; document.getElementById('ui').appendChild(el);
+    }
+    if (E.sfx && sfx[E.sfx]) sfx[E.sfx](0); else sfx.whoosh(0);
+    this.tweens.wait(E.overlay ? 0.6 : 0, () => this.tweens.to(w.camPos, { x: to.x, y: to.y, z: to.z }, dur, { ease: d[1] > 0 ? Ease.inQuad : Ease.outCubic, onDone: () => {
+      if (E.shake) { this.post.shake(E.shake); sfx.thud(0); this.players.forEach((p) => p.soft.kick(1.4)); }
+      if (el) el.remove();
+      then();
+    } }));
   }
   // the ghost's hands: over the screen while the view is dragged away (grab = the hands picture, or true for the default one)
   grabbed(dur, pic) {

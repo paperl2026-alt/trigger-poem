@@ -181,6 +181,9 @@
             { "zh": "咦？变回来了？", "en": "Huh? It's back?", "ja": "あれ? 戻った?" },
             { "zh": "刚才是做梦吗…", "en": "Was that a dream…?", "ja": "夢だったの…?" }
           ]
+        },
+        "armor": {
+          "lines": [{ "zh": "它…收下了？", "en": "It… took it?", "ja": "受け取った…?" }, { "zh": "乖孩子~", "en": "Good boy~", "ja": "いい子~" }]
         }
       },
       "cat": {
@@ -356,6 +359,12 @@
           "lines": [
             { "zh": "……别放松", "en": "...Don't relax.", "ja": "…油断しないで" },
             { "zh": "只是表面", "en": "It's only the surface.", "ja": "見た目だけ" }
+          ]
+        },
+        "armor": {
+          "lines": [
+            { "zh": "它让路了", "en": "It is letting us pass.", "ja": "通してくれるって" },
+            { "zh": "……绅士", "en": "...What a gentleman.", "ja": "…紳士" }
           ]
         }
       }

@@ -61,7 +61,9 @@
         "door": { "frame": "ep1/door3_frame", "leaf": "ep1/door3_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_fountain" },
-      { "stage": "garden", "set": "ep1_garden", "stations": ["gd1", "gd2"], "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" } },
+      { "stage": "garden", "set": "ep1_garden", "stations": ["gd1"], "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" } },
+      { "stage": "pit", "set": "ep1_pit", "stations": ["pt1"], "name": { "zh": "坑底", "en": "THE PIT", "ja": "穴の底" } },
+      { "stage": "garden2", "set": "ep1_garden", "stations": ["gd2"], "name": { "zh": "骑士厅", "en": "KNIGHTS' HALL", "ja": "騎士の間" } },
       {
         "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
       },
