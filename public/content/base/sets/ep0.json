@@ -84,13 +84,18 @@
             { "t": 0, "type": "desk", "x": -1.75, "z": 1.0, "from": "pop" },
             { "t": 2.6, "type": "chair", "x": 1.75, "z": 0.4, "from": "pop" }
           ],
-          [{ "t": 0, "type": "paper", "x": 0, "z": -1.5, "y": 2.2 }],
+          [
+            { "t": 0, "type": "chair", "x": 0, "z": 0.2, "from": "pop" }
+          ],
           [
             { "t": 0, "type": "chair", "x": 1.75, "z": 0.6, "from": "pop" },
             { "t": 1.6, "type": "desk", "x": -1.75, "z": 0.8, "from": "pop" },
-            { "t": 3.4, "type": "paper", "x": 1.2, "z": -1.8, "y": 2.2 }
+            { "t": 3.4, "type": "desk", "x": 1.2, "z": 0.2, "from": "pop" }
           ],
-          [{ "t": 0, "type": "book", "x": 0, "z": -1.6, "y": 2.2 }]
+          [
+            { "t": 0, "type": "desk", "x": 0, "z": 0.4, "from": "pop" },
+            { "t": 1.2, "type": "chair", "x": -1.2, "z": 0.2, "from": "pop" }
+          ]
         ]
       },
       "cls2": {
@@ -111,12 +116,12 @@
           [{ "t": 0, "type": "horn", "x": 0, "z": 2.6, "from": "pop" }],
           [
             { "t": 0, "type": "board", "x": 1.75, "z": 2.8, "from": "pop" },
-            { "t": 2.0, "type": "book", "x": -1.2, "z": 2.2, "y": 2.2 }
+            { "t": 2.0, "type": "desk", "x": -1.2, "z": 1.4, "from": "pop" }
           ],
           [
             { "t": 0, "type": "chair", "x": -1.75, "z": 1.0, "from": "pop" },
             { "t": 1.4, "type": "board", "x": 0, "z": 3.0, "from": "pop" },
-            { "t": 3.2, "type": "paper", "x": 1.2, "z": 2.2, "y": 2.2 }
+            { "t": 3.2, "type": "desk", "x": 1.2, "z": 1.4, "from": "pop" }
           ]
         ]
       }
@@ -184,22 +189,23 @@
           [
             { "t": 0.4, "type": "shoe", "x": 0, "z": -9, "from": "pop" }
           ],
-          [
-            { "t": 0, "type": "frame", "x": -0.6, "z": -11, "from": "pop" }
-          ],
+          [{ "t": 0, "type": "book", "x": 0.5, "z": -10, "y": 2.2 }],
           [
             { "t": 0, "type": "shoe", "x": -0.6, "z": -9, "from": "pop" },
             { "t": 2.6, "type": "chair", "x": 0.6, "z": -10, "from": "pop" }
           ],
-          [{ "t": 0, "type": "book", "x": 0.5, "z": -10, "y": 2.2 }],
+          [
+            { "t": 0, "type": "frame", "x": -0.6, "z": -11, "from": "pop" }
+          ],
+          [{ "t": 0, "type": "paper", "x": 0, "z": -10, "y": 2.2 }],
+          [{ "t": 0, "type": "horn", "x": 0, "z": -10, "from": "pop" }],
           [
             { "t": 0, "type": "clock", "x": 0, "z": -11, "from": "pop" }
           ],
-          [{ "t": 0, "type": "horn", "x": 0, "z": -10, "from": "pop" }],
           [
             { "t": 0, "type": "shoe", "x": 0.6, "z": -9, "from": "pop" },
             { "t": 1.6, "type": "frame", "x": -0.6, "z": -12, "from": "pop" },
-            { "t": 3.4, "type": "clock", "x": 0, "z": -11, "from": "pop" }
+            { "t": 3.4, "type": "book", "x": 0.5, "z": -10.5, "y": 2.2 }
           ]
         ],
         "lesson": "interrupt"

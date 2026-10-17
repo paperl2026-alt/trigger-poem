@@ -772,5 +772,22 @@
     "rot": 0.0,
     "keep_frame": true,
     "png": "art/raw/r47/fixed/page_mid_a.png"
+  },
+  "r47_intro_c2": {
+    "src": "art/raw/r47/page_intro_c2.png",
+    "erase": [
+      288,
+      275,
+      358,
+      357
+    ],
+    "center": [
+      326,
+      311
+    ],
+    "ring": 52,
+    "rot": -40.0,
+    "keep_frame": true,
+    "png": "art/raw/r47/fixed/page_intro_c2.png"
   }
 }

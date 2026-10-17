@@ -148,7 +148,7 @@ export class Game {
       const first = !this.camPlaced || this.afterComic;
       this.camPlaced = true; this.afterComic = false;
       this.post.u.wipe.value = 0;
-      if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+      this.settleAnomaly(S);
       playMusic(boss ? 'boss' : 'stage');
       this.setAll('run');
       this.world.enter(id, first, () => this.arrive(S, boss));
@@ -159,7 +159,7 @@ export class Game {
     if (!this.camPlaced || this.afterComic) {
       this.camPlaced = true; this.afterComic = false;
       this.post.u.wipe.value = 0;
-      if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+      this.settleAnomaly(S);
       playMusic(boss ? 'boss' : 'stage');
       this.world.place(S.cam, S.look);
       this.setAll('cover'); this.settled = true;
@@ -169,13 +169,29 @@ export class Game {
     const pts = [this.world.camPos.toArray(), ...S.via, S.cam];
     this.post.u.wipe.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
-    if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+    this.settleAnomaly(S);
     playMusic('stage');
     this.setAll('run');
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
     const go = () => this.arrive(S, boss);
     if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, Math.max(1.6, len / 6.5), go);
+  }
+  // the prologue: the calm after-school world until the invasion station, invaded from then on. A set that turns between real and rotten
+  // ("turns", docs/DESIGN.md 第 1 话) keeps whatever it is; its stations and waves turn it (turn)
+  settleAnomaly(S) {
+    if (this.world.set?.turns) return;
+    if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+  }
+  // the place turns: to 1 = the rotten version of every board that has one, 0 = back to the real place; a page-flip wave running out from
+  // spec.from (world point, default where the set's anomaly starts), over spec.dur seconds; spec.hit = it strikes (flash, shake, slam)
+  turn(spec, then) {
+    const w = this.world, to = spec.to ?? 1;
+    if (!w.turnFrom) { w.anomaly = to; then && then(); return; }
+    w.turnFrom(spec.from || w.set.anomalyFrom, to < (w.anomaly ?? 1) ? -1 : 1);
+    if (spec.hit) { sfx.slam(); this.post.flash(0.7, to > 0.5 ? 0xffa040 : 0xfff2d0); this.post.shake(1); }
+    sfx.tear(0);
+    this.tweens.to(w, { anomaly: to }, spec.dur ?? 1.6, { ease: Ease.inOutCubic, onDone: () => then && then() });
   }
   // everyone runs to the next stop; a downed 2P gets back up for it
   setAll(state) {
@@ -194,6 +210,7 @@ export class Game {
     // the boss: a warning while she shows herself, then the fight
     if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => this.teach(S.lesson, () => { this.combat = true; })); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
+    if (S.turn) { this.enterCover(null, true); this.tweens.wait(S.turn.wait ?? 0.6, () => this.turn(S.turn, () => this.enterCover(() => this.beginStation()))); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
   }
   // the evil god breaks into the calm after-school world: a hit, the paper world tears, the light turns wrong, desks float up
@@ -248,9 +265,12 @@ export class Game {
   }
   startWave() {
     const wave = this.S.waves[this.waveIndex];
-    this.pendingSpawns = wave.length;
+    // a wave lists monsters, and may list things that happen to the place at a time ({ t, turn: {...} }: the place turns real / rotten)
+    const spawns = wave.filter((s) => s.type);
+    this.pendingSpawns = spawns.length;
     this.waveLive = true;
-    for (const s of wave) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+    for (const s of spawns) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+    for (const e of wave) if (e.turn) this.etw.wait(e.t || 0, () => this.combat && this.turn(e.turn));
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;

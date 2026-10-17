@@ -66,7 +66,8 @@ export class PanelWorld {
     this.scene.background = new THREE.Color(set.sky || '#2a1830');
     this.scene.fog = new THREE.Fog(set.fog || '#8a6070', set.fogNear ?? 8, set.fogFar ?? 34);
     FOG.color.value.set(set.fog || '#8a6070'); FOG.density.value = set.fogDensity ?? 0.03;
-    this.anomaly = 1;
+    this.anomaly = set.turns ? (set.start ?? 0) : 1;   // a set that turns between real and rotten starts as "start" (docs/DESIGN.md 第 1 话)
+    this.turnDir = 1;
     this.root = new THREE.Group(); this.scene.add(this.root);
     const world = this;
     this.level = {
@@ -331,17 +332,27 @@ export class PanelWorld {
     return s;
   }
   applyAnomaly() {}
+  // the next turn starts at this point (world coordinates) and runs outward from it; dir 1 = toward the anomaly, -1 = back to the real
+  // place (Game.turn)
+  turnFrom(from, dir) {
+    this.turnDir = dir;
+    if (!from) return;
+    const o = tmpV.set(...from).clone();
+    for (const f of this.flips) f.d = f.m.getWorldPosition(tmpV).distanceTo(o);
+  }
   // the evil energy hits (game.invade tweens anomaly 0 -> 1): every board with an anomaly version flips over to it like a page, a wave from
   // the far end toward the camera, popping off its surface on the way; the light, fog and sky shift with it (set "anomalyLit" / "anomalyFog"
-  // / "anomalySky"). Going straight to 1 (a later station) shows the anomaly versions at once.
+  // / "anomalySky"). Going straight to 1 (a later station) shows the anomaly versions at once. Turning back (turnDir -1) runs the same
+  // wave outward from its start, the boards nearest to it flipping back first.
   updateAnomaly() {
     const k = this.anomaly ?? 1;
     if (k === this._ak) return;
     const jump = this._ak === undefined || Math.abs(k - this._ak) > 0.5;
     this._ak = k;
-    const S = this.set, maxD = Math.max(1, ...this.flips.map((f) => f.d));
+    const S = this.set, maxD = Math.max(1, ...this.flips.map((f) => f.d)), clamp = (x) => Math.min(1, Math.max(0, x));
     for (const f of this.flips) {
-      const start = f.d / maxD * 0.55, p = jump ? (k >= 0.5 ? 1 : 0) : Math.min(1, Math.max(0, (k - start) / 0.4));
+      const start = f.d / maxD * 0.55;
+      const p = jump ? (k >= 0.5 ? 1 : 0) : this.turnDir < 0 ? 1 - clamp((1 - k - start) / 0.4) : clamp((k - start) / 0.4);
       f.p = p;
       const want = p >= 0.5 ? f.alt : f.key;
       if (f.m.userData.texKey !== want && tex[want]) {

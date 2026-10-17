@@ -23,6 +23,7 @@
   - `?select`：直接进选关。
 - 自检：
   - `NOA_SELFTEST=<png>` + `electron . --page=...` 会离屏跑几秒，写出截图和 `<png>.json`（报错和报错位置、是否进入战斗、主角状态）；这是**交付前必须过的检查**：用的是和用户一样的构建产物（`dist/`），两种队伍顺序都要跑；
+  - 整关通关测试：`electron tools/node/playthrough.cjs <out.json> [大关] [第几步]`，用构建产物离屏自动打（1P 自动、无敌、`PT_SLOW` 倍速，默认 3），每秒记一次走到哪一步 / 哪个停留点 / 第几波 / Boss 血量，打到结算或超时（`PT_TIME` 秒）为止，写出时间线和报错；`PT_TEAM=cat,pink` 换队，`PT_SHOTS=1` 每到新停留点截一张图。改了关卡数据或流程后跑一遍（序章约 2 分钟）。
   - 开发服务器：`.claude/launch.json` 的 trigger-poem-rec，端口 5310。
   - `tools/node/shot.cjs`（只给自己检查用）：
     - 用 Electron 截全尺寸图：`electron.exe tools/node/shot.cjs <端口> out.png 宽 高 [等待的选择器]`；
@@ -144,6 +145,10 @@
 - `hall` 里天花板、尽头墙、窗外远景都可以不写（操场露天）；墙图在 manifest 标了 `keyed`（抠空）就透明；`outsideAt` 摆窗外远景板，`outsideX` 是异变后的远景。
 - `boards`：自由摆放的板（教学楼正面、天空、教室后墙），`name` 给代码用（`world.named`，Boss 找教学楼），`occlude` 挡子弹，`sky` 不受雾影响。
 - 异变（`updateAnomaly`，Game 的 `invade` 把 `world.anomaly` 从 0 补间到 1）：每块有 `<图>_x` 版本的板从 `anomalyFrom` 那一点开始按距离一块接一块翻过去（压扁到一条线、离开表面、换图、再展开）；灯光 / 雾 / 天空跟着过渡到 `anomalyLit` / `anomalyFog` / `anomalySky`；`anomaly: true` 的贴花异变后才长出来。
+- 现实 ↔ 腐化来回翻（第 1 话，DESIGN「第 1 话」）：set 写 `turns: true`（`start` = 开场是 0 现实还是 1 腐化），Game 就不再按序章的规矩强制异变（`settleAnomaly`）；
+  - 站点写 `turn: { to, from, dur, hit, wait }`：到站、蹲好后先翻再开打；
+  - 波次里可以夹事件 `{ t, turn: {...} }`（没有 `type` 的条目不算怪）；
+  - `Game.turn(spec)` → `PanelWorld.turnFrom(from, dir)`：按新的起点重算每块板的远近，翻回现实时从起点往外一块块翻回去（`turnDir` -1）；`hit` 带闪光、震屏、重击声。
 - 道具（`props`）站在某个停留点的掩体位置上时不画（`clearProps`，掩体按主角站位算，事先不知道在哪）。
 - 和旧 World 接口相同（`place`、`travel`、`setCovers`、`covers`、`project`、`lightAt`……），Game 不用分支。多了：
   - `fold()`：走廊弯起、地板翘成棱；

@@ -160,3 +160,40 @@ FORMS = {
 for n, d in FORMS.items():
     JOBS[f"R53_boss_f{n}"] = [(f"art/raw/r53/boss_f{n}_{v}.png", MON, BOSS + d + f" Variation {v}: its own design details, a clearly "
                                "different take from the other variations.") for v in "abcde"]
+
+# ---------------------------------------------------------------- a fix found while checking the prologue comics
+# The intro page (R47 c), panel 4 (both girls dashing out of the classroom): the cat girl has two ordinary hands, but her right arm is
+# the cat-paw demon hand (DESIGN 主角; panel 1 of the same page shows it). Only that panel is cropped (fix_intro4_src.png = the page from
+# 64% of its height down, left half) and repainted; tools/rounds/r53_fix_intro.py pastes it back as art/raw/r47/page_intro_c2.png.
+JOBS["R53_fix_intro"] = [(f"art/raw/r53/fix_intro4_{v}.png", ["art/raw/r53/fix_intro4_src.png", "art/ref/cat_sheet.png"],
+    "Reference image 1 is one panel of this game's comic page. Repaint it EXACTLY as it is (same composition, same framing, same aspect "
+    "ratio, same characters, same poses, same classroom, the same 'ダッ' lettering, same line work and colours) with ONE change only: the "
+    "white-haired cat girl's RIGHT arm, the one gripping the school bag's handle on the left side of the picture, must be her demon "
+    "cat-paw arm exactly as designed in reference image 2: a big white fluffy cat-paw forearm and hand with long red claws coming out of "
+    "her wide sleeve, gripping the bag's handle. Show the paw from the side or from the palm side so that the BACK of the paw is not "
+    "visible (no symbol, no circle, no seal on it). Her other hand stays a normal hand. Change nothing else: no new objects, no new text, "
+    f"no effects, no glow. Variation {v}.", "OPAQUE") for v in "ab"]
+
+# ---------------------------------------------------------------- reruns after the first look (Claude's review)
+# chandelier a-e: all of them are a pretty girl wearing a chandelier (a full human face and body) - exactly what docs/DESIGN.md「怪物」
+# forbids. doll a-e: a cute little girl sitting in a sundae glass, not creepy at all. Stricter descriptions, three more each.
+NEW2 = {
+    "chandelier": ("floating poltergeist that throws furniture, like the photo-frame creature",
+                   "CHANDELIER POLTERGEIST. THE CHANDELIER ITSELF IS THE WHOLE BODY: a big antique brass-and-crystal chandelier floating in "
+                   "the air. ABSOLUTELY NO human head, NO human face, NO human torso, NO girl inside or under it. Its eyes are a ring of glossy "
+                   "eyeballs with long lashes set into the brass frame between the candles; its mouth is a round opening with glossy red lips "
+                   "and crystal teeth in the bottom of the frame; its brass candle arms bend like long thin limbs and end in small lace-gloved "
+                   "hands; its hanging crystal drops are tangled with long honey-blonde hair and red ribbons; a frilly lace skirt of sticky "
+                   "sugar threads hangs from the bottom ring, and two thin legs in white stockings and red Mary-Jane shoes dangle out of it; "
+                   "melted candle wax and rotten honey drip everywhere. It hugs cafe chairs and teacups with its arms."),
+    "doll": ("hides behind counters, pops up and throws things, like the clock lady in reference image 3",
+             "COUPE DOLL, a broken antique bisque porcelain doll that has rotted into a giant gelato coupe glass, CREEPY, NOT cute: half of "
+             "her porcelain face has broken away and the hollow inside of her head is full of melted gelato oozing out of the hole; two glass "
+             "eyes of different sizes, one rolled up; a painted smile that has cracked open far too wide, showing a row of tiny wafer teeth; "
+             "ball-jointed doll limbs with visible joints, one arm on backwards; matted ringlet curls, a stained bonnet, a frilly dress "
+             "soaked with syrup; her lower body is melted into the rotten gelato in the glass; she holds wafer sticks and cherries to throw."),
+}
+POSES2 = {"chandelier": NEW["chandelier"][2], "doll": NEW["doll"][2]}
+for k, (beh, d) in NEW2.items():
+    JOBS[f"R53_m2_{k}"] = [(f"art/raw/r53/m2_{k}_{v}.png", MON, BASE + f"The monster ({beh}): " + d + " " + POSES2[k] +
+                            f" Variation {v}: its own design details, a clearly different take from the other variations.") for v in "abc"]

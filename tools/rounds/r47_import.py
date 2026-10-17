@@ -1,6 +1,6 @@
 """Round 47 (tools/rounds/job_specs47.py, art/raw/r47): the prologue's four comic pages redrawn on plain rectangular grids, with the
 camera rules (a thought bubble, or over the shoulder onto the phone) -> comic/ep0p_<page> + comics.json ep0_<page>.
-The cat girl's paw seals are replaced first (tools/seal_fix.py r47_intro_c r47_mid_a r47_mid_a2 r47_boss_b -> art/raw/r47/fixed).
+The cat girl's paw seals are replaced first (tools/seal_fix.py r47_intro_c2 r47_mid_a r47_mid_a2 r47_boss_b -> art/raw/r47/fixed).
 Panels are found by tools/comic_panels.py (the grids are clean) and played in reading order: rows top to bottom, left to right.
 usage: python -I tools/rounds/r47_import.py"""
 import sys, json, pathlib
@@ -12,7 +12,7 @@ A = ROOT / "public" / "content" / "base" / "assets"
 sys.path[:0] = [str(ROOT / "tools")]
 from comic_panels import panels
 
-PAGES = {"intro": ("c", 5), "mid": ("a", 4), "boss": ("b", 4), "end": ("c", 4)}   # picked version, panel count
+PAGES = {"intro": ("c2", 5), "mid": ("a", 4), "boss": ("b", 4), "end": ("c", 4)}   # picked version, panel count
 INS, KBS = ["punch", "slideL", "drop", "slideR"], ["in", "up", "out", "left"]
 
 

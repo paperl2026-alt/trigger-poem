@@ -1,0 +1,70 @@
+// Plays a whole episode of the BUILT game (dist/, served the way the desktop build serves it) offscreen and reports how far it got:
+// auto-play for 1P (and the AI 2P), god mode, sped up. A test that the steps, stations and waves of an episode all run through to the
+// results without errors (the self-test only shows the first few seconds). Build first (npm run build).
+// usage: electron tools/node/playthrough.cjs <out.json> [episode id] [step]
+//   env PT_SLOW (game speed, default 3), PT_TIME (seconds before giving up, default 900), PT_TEAM (e.g. cat,pink), PT_SHOTS=1 (a
+//   screenshot <out>_<n>.png at every new station)
+// <out.json>: { done, results, timeline: [{ t, step, station, wave, ... }], errs }; also <tmp>/playthrough.log while it runs.
+const { app, BrowserWindow, protocol } = require('electron');
+const fs = require('node:fs');
+const path = require('node:path');
+const os = require('node:os');
+
+protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
+app.setPath('userData', path.join(os.tmpdir(), 'trigger-poem-playthrough'));   // its own saves, never the player's
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
+const DIST = path.join(__dirname, '..', '..', 'dist');
+const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav' };
+const LOG = path.join(os.tmpdir(), 'playthrough.log');
+const log = (...a) => fs.appendFileSync(LOG, a.join(' ') + '\n');
+fs.writeFileSync(LOG, '');
+const [out, ep = 'ep0', step = '0'] = process.argv.slice(2).filter((a) => !a.startsWith('--') && !a.endsWith('playthrough.cjs') && a !== '.');
+const SLOW = +(process.env.PT_SLOW || 3), TIME = +(process.env.PT_TIME || 900), TEAM = process.env.PT_TEAM, SHOTS = !!process.env.PT_SHOTS;
+process.on('uncaughtException', (e) => { log('error', e.stack); app.exit(1); });
+
+const STATE = `(() => { const g = window.__G && __G.game;
+  if (!g) return { done: true, results: !!document.querySelector('.res8') };
+  const b = g.boss;
+  return { step: g.stepIdx, station: g.stationId || null, wave: g.waveIndex ?? null, combat: !!g.combat,
+    live: g.actors.filter((a) => a.alive).length, boss: b ? Math.round(100 * (b.hp / (b.maxHp || b.hp0 || 1))) : null,
+    anomaly: g.world && g.world.anomaly !== undefined ? +g.world.anomaly.toFixed(2) : null,
+    players: g.players.map((p) => p.state), errs: (window.__errs || []).length }; })()`;
+
+app.whenReady().then(async () => {
+  protocol.handle('app', async (req) => {
+    let p = decodeURIComponent(new URL(req.url).pathname);
+    if (p === '/' || p === '') p = '/index.html';
+    if (p === '/__mods.json') return new Response('[]', { headers: { 'content-type': 'application/json' } });
+    const file = path.normalize(path.join(DIST, p));
+    if (!file.startsWith(DIST)) return new Response('forbidden', { status: 403 });
+    try { return new Response(await fs.promises.readFile(file), { headers: { 'content-type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' } }); }
+    catch (e) { return new Response('not found', { status: 404 }); }
+  });
+  const win = new BrowserWindow({ width: 1480, height: 833, show: false, webPreferences: { backgroundThrottling: false, offscreen: true } });
+  win.webContents.setFrameRate(60);
+  win.webContents.on('console-message', (e, level, message, line, src) => { if (level >= 2) log('console', level, message, `${src}:${line}`); });
+  const q = `play&auto&skip&ep=${ep}&step=${step}${TEAM ? `&team=${TEAM}` : ''}`;
+  log('load', q, 'slow', SLOW);
+  await win.loadURL(`app://game/index.html?${q}`);
+  await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if (window.__G && __G.game) return ok(); setTimeout(poll, 100); })(); })`);
+  await win.webContents.executeJavaScript(`__G.god = true; __G.slow = ${SLOW}; true`);
+  const timeline = [], t0 = Date.now();
+  let last = '', shots = 0, lastStation = null, st;
+  for (;;) {
+    await new Promise((r) => setTimeout(r, 1000));
+    st = await win.webContents.executeJavaScript(STATE);
+    const t = Math.round((Date.now() - t0) / 1000);
+    const key = JSON.stringify([st.done, st.step, st.station, st.wave, st.boss !== null && Math.round(st.boss / 25)]);
+    if (key !== last) { last = key; timeline.push({ t, ...st }); log(t, JSON.stringify(st)); }
+    if (SHOTS && st.station && st.station !== lastStation) {
+      lastStation = st.station;
+      await new Promise((r) => setTimeout(r, 2500));
+      fs.writeFileSync(out.replace(/\.json$/, `_${String(shots++).padStart(2, '0')}.png`), (await win.webContents.capturePage()).toPNG());
+    }
+    if (st.done || t > TIME) break;
+  }
+  const errs = await win.webContents.executeJavaScript('window.__errs || []');
+  fs.writeFileSync(out, JSON.stringify({ done: !!st.done, results: !!st.results, seconds: Math.round((Date.now() - t0) / 1000), slow: SLOW, timeline, errs }, null, 1));
+  log('end', st.done ? 'done' : 'timeout');
+  app.quit();
+});
