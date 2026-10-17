@@ -55,6 +55,8 @@ export class Game {
   get H() { return this.G.H; }
   get player() { return this.players[0]; }
   p2on() { return SET.p2 !== 'off'; }
+  // DESIGN「阵亡」: a girl who goes down gets back up at half HP after the countdown while her partner is still standing; both down = lost
+  allDown() { return this.players.every((p) => p.state === 'down' || (p.slot && !this.p2on())); }
 
   assignControllers() {
     const [p1, p2] = this.players, G = this.G;
@@ -76,6 +78,7 @@ export class Game {
     this.ortho.right = W; this.ortho.top = H; this.ortho.updateProjectionMatrix();
     this.world.setSize(W, H);
     this.players.forEach((p) => p.layout(W, H, this.G.frame));
+    if (this.world.placeCovers) this.world.placeCovers(this.players);   // covers stand where the heroines will kneel
   }
 
   // ------------------------------------------------------------------ episode flow
@@ -113,7 +116,9 @@ export class Game {
     this.S = S;
     this.stationId = id;
     this.combat = false;
-    this.world.dropCovers();
+    // the covers fold away first; only then do the girls get up and move on (DESIGN: nobody runs through a cover)
+    const fold = this.world.dropCovers();
+    if (fold) { this.tweens.wait(fold + 0.05, () => this.goStation(id, boss)); return; }
     if (this.world.plates) {
       // painted stations: push forward into the painting, the next one glides in
       const first = !this.camPlaced || this.afterComic;
@@ -424,7 +429,7 @@ export class Game {
       this.hud.setFace(p.slot, 'scared', 1.2);
       this.combo = 0;
     }
-    if (this.players[0].state === 'down' && this.combat) this.gameOver();
+    if (this.combat && this.allDown()) this.gameOver();
     return !hurt;
   }
   coverHit(p, from, heavy) {

@@ -1,8 +1,8 @@
 // A battle heroine drawn with the jiggle tech (docs/DESIGN.md "主角动起来靠晃动技术", src/jiggle): two NIKKE-style stills per
 // heroine (cover / fire), each a deforming mesh with the body layer (weight shift, sway, breathing), the part layer (skirt, sleeves,
 // hair, tail, ears), the soft-body flesh lattice, sweat, and breath vapour from the nose. Every other state is motion on these two
-// pictures, not more drawings: reload = a dip in cover, hurt = a jolt + red flash, down = slumped and darkened, run = cover pose
-// leaning and bobbing, victory = the fire pose hopping.
+// pictures, not more drawings, each on the right picture (DESIGN「画面」): standing (fire) = shooting, walking on to the next stop and
+// cheering; crouching (cover) = hiding, reloading in cover (a dip), down (slumped, darkened). Hurt = a jolt + red flash on either.
 // Lives in the Player's pixel-space group (camera child, 1 unit = 1 screen px, origin bottom-left). Data: characters/<id>.json "rig"
 // (tools/jig_import.py), numbers: tuning/soft.json "jiggle", tuning/layout.json "canvas".
 import * as THREE from 'three';
@@ -84,7 +84,7 @@ export class Heroine {
   // st: { state, x (body centre line px), y (feet px), lean, dark, opacity, flash }
   update(dt, t, st) {
     const J = this.J, b = this.body, sign = this.p.mirror ? -1 : 1;
-    this.setOut(st.state === 'out' || st.state === 'victory');
+    this.setOut(st.state === 'out' || st.state === 'victory' || st.state === 'run');
     // exertion builds while she is out fighting, cools off in cover
     this.exert = Math.max(0, Math.min(1, this.exert + (this.out ? 0.16 : -0.04) * dt));
     const wet = J.sweat * (0.45 + 0.55 * this.exert), flush = J.sweat * (0.15 + 0.85 * this.exert);
@@ -93,7 +93,7 @@ export class Heroine {
     let tt = t - n * SUBSTEP;
     for (let k = 0; k < n; k++) {
       tt += SUBSTEP;
-      b.update(SUBSTEP, tt, J.amp, J.ring, this.out && st.state !== 'victory', J.rhythm, this.exert);
+      b.update(SUBSTEP, tt, J.amp, J.ring, st.state === 'out', J.rhythm, this.exert);
       const kick = b.kick * 0.55; b.kick = 0;
       for (const p of Object.values(this.poses)) {
         const { B, X } = b.pose(sign, p.userData.ar);

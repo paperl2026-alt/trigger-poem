@@ -140,7 +140,7 @@ export class PanelWorld {
     }
     // props standing in the corridor (relief drawings), and every station's covers: placed in the level, there from the start
     this.coverSets = {};
-    for (const [sid, st] of Object.entries(S.stations)) this.coverSets[sid] = (st.covers || []).map((c, i) => this.makeCover(c, st, i));
+    for (const [sid, st] of Object.entries(S.stations)) this.coverSets[sid] = (st.covers || []).map((c) => this.makeCover(c, st, sid));
     for (const p of S.props || []) this.makeProp(p);
   }
   // a relief drawing standing on the floor at (x, z), facing a point
@@ -156,20 +156,50 @@ export class PanelWorld {
     m.renderOrder = 4;
     const sh = this.makeShadow(w * 0.9); sh.position.set(x, 0.02, z); this.root.add(sh);
     this.root.add(m);
-    return { m, w, h };
+    return { m, w, h, sh };
   }
-  // covers: designed relative to the station's camera (side -1 = 1P's, left; +1 = 2P's), facing it
-  makeCover(c, st, slot) {
-    const cam = new THREE.Vector3(...st.cam), look = new THREE.Vector3(...st.look);
-    const f = look.clone().sub(cam).setY(0).normalize(), r = new THREE.Vector3(-f.z, 0, f.x);
-    const p = cam.clone().addScaledVector(f, c.dist).addScaledVector(r, c.side * c.off);
-    // size on screen, not metres: "screen" = the share of the screen height it takes at its distance (game readability: always
-    // smaller than the heroines, however near or far it stands)
-    const hh = c.screen ? c.screen * 2 * c.dist * Math.tan(THREE.MathUtils.degToRad(this.baseFov / 2)) : c.h;
-    const { m, w, h } = this.relief(c.k, hh, p.x, p.z, cam, 0.34);
-    if (c.flip) m.scale.x = -1;
-    const dm = new DamageMap(1 / (w / h), 384); attachDamage(m, dm);
-    return { m, dm, def: { x: p.x, z: p.z, h, k: c.k }, w, h, slot: c.side < 0 ? 0 : 1, hp: 0, max: 0, broken: false };
+  // covers (DESIGN「掩体」): things standing in the corridor from the start, seen from afar; the girls arrive and take cover behind them.
+  // One per heroine per station (side -1 = 1P, 1 = 2P). Where each stands and how big it is comes from where her heroine stands on
+  // screen at that station (placeCovers): when the camera stops there, it is right in front of her, a moderate size (she is sheltered
+  // kneeling, and out shooting she is clearly above it). Built at unit height, placed and scaled later.
+  makeCover(c, st, sid) {
+    const { m, w, h, sh } = this.relief(c.k, 1, 0, 0, new THREE.Vector3(0, 0, 1), 0.34);
+    const dm = new DamageMap(h / w, 384); attachDamage(m, dm);
+    return { m, sh, dm, c, st, sid, ar: w / h, amt: m.material.uniforms.reliefAmt.value, def: { x: 0, z: 0, h: 1, k: c.k }, w, h,
+      slot: c.side < 0 ? 0 : 1, hp: 0, max: 0, broken: false };
+  }
+  // put every station's covers in front of where the heroines stand on screen there (after a resize / layout too)
+  placeCovers(players) {
+    if (!this.coverSets) return;
+    const L = T.layout.cover, cam = this.stCam || (this.stCam = new THREE.PerspectiveCamera());
+    cam.fov = this.baseFov; cam.aspect = this.camera.aspect; cam.near = this.camera.near; cam.far = this.camera.far; cam.updateProjectionMatrix();
+    const fw = new THREE.Vector3(), ray = new THREE.Ray(), hit = new THREE.Vector3(), floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+    for (const list of Object.values(this.coverSets)) for (const cv of list) {
+      const p = players[cv.slot]; if (!p || !p.H) continue;
+      const st = cv.st, H = p.H, W = p.W;
+      cam.position.set(...st.cam); cam.lookAt(new THREE.Vector3(...st.look)); cam.updateMatrixWorld();
+      // her figure on screen: standing height (sets the cover height), kneeling width and where she kneels (sets the width and the middle)
+      const stand = p.hero ? p.hero.dims('fire').h : p.H * T.layout.standHeight;
+      let kw = stand * 0.6, cx = p.baseX;
+      if (p.hero) { const d = p.hero.dims('cover'), au = p.hero.R.cover.anchor; kw = d.w; cx = p.baseX - ((p.mirror ? 1 - au : au) - 0.5) * d.w; }
+      let hPx = stand * L.h;
+      hPx = Math.min(stand * L.maxH, Math.max(hPx, kw * L.w / cv.ar));
+      // the bottom middle of the cover on screen -> a point on the floor; its depth turns the screen height into metres
+      const sx = cx + p.side * kw * L.x, sy = p.bottom + H * L.y;
+      ray.origin.copy(cam.position);
+      ray.direction.set(sx / W * 2 - 1, sy / H * 2 - 1, 0.5).unproject(cam).sub(cam.position).normalize();
+      if (!ray.intersectPlane(floor, hit)) continue;
+      cam.getWorldDirection(fw);
+      const depth = hit.clone().sub(cam.position).dot(fw);
+      const hh = hPx / H * 2 * depth * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      const m = cv.m;
+      m.position.set(hit.x, 0, hit.z);
+      m.rotation.y = Math.atan2(cam.position.x - hit.x, cam.position.z - hit.z);
+      m.scale.set((cv.c.flip ? -1 : 1) * hh, hh, hh);
+      cv.sh.position.set(hit.x, 0.02, hit.z); cv.sh.scale.setScalar(hh);
+      cv.w = hh * cv.ar; cv.h = hh;
+      cv.def.x = hit.x; cv.def.z = hit.z; cv.def.h = hh;
+    }
   }
   makeProp(p) { this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3); }
 
@@ -213,12 +243,28 @@ export class PanelWorld {
   }
 
   // ---------------------------------------------------------------- covers: the current station's, out of the level
+  // arriving: this station's covers are the ones that count, and they are drawn over the heroines (who kneel behind them)
   setCovers() {
     const sid = this.game.stationId;
     this.covers = [];
-    for (const c of this.coverSets[sid] || []) { c.hp = c.max = T.combat.cover.hp; c.broken = false; this.covers[c.slot] = c; }
+    for (const c of this.coverSets[sid] || []) {
+      c.hp = c.max = T.combat.cover.hp; c.broken = false; this.covers[c.slot] = c;
+      c.m.renderOrder = 11.6; c.m.material.depthTest = false;
+    }
   }
-  dropCovers() { this.covers = []; }
+  // leaving: they fold over backwards flat onto the floor like pop-up book pages (the relief flattens too), and the girls walk over
+  // them; returns how long that takes (the game waits for it before anyone gets up)
+  dropCovers() {
+    const live = this.covers.filter(Boolean), tw = this.game.tweens, t = T.layout.cover.foldTime;
+    this.covers = [];
+    live.forEach((c, i) => {
+      const u = c.m.material.uniforms;
+      tw.to(c.m.rotation, { x: -Math.PI / 2 }, t, { delay: i * 0.06, ease: Ease.inQuad, onDone: () => { c.m.renderOrder = 4; c.m.material.depthTest = true; } });
+      tw.to(u.reliefAmt, { value: 0 }, t, { delay: i * 0.06 });
+    });
+    if (live.length) sfx.thud(1);
+    return live.length ? t + 0.06 * live.length : 0;
+  }
   breakCover(c) {
     if (c.broken) return;
     c.broken = true;

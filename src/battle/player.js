@@ -239,7 +239,7 @@ export class Player {
       const shake = this.state === 'hurt' ? Math.sin(t * 60) * this.H * 0.006 : 0;
       this.hero.update(dt, t, {
         state: this.state, x: this.baseX + shake, y: this.bottom + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0),
-        lean: this.state === 'run' ? 0.07 : this.state === 'reload' ? 0.03 : 0,
+        lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
         dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,
         flash: this.activeOn ? 0.08 + 0.06 * Math.sin(t * 12) : 0,
