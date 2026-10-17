@@ -5,6 +5,7 @@ import { tex } from '../core/assets.js';
 import { Particles, buildAtlas, FR } from '../core/particles.js';
 import { paperMaterial } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
+import { VERT as FXVERT, GLOW_FRAG, RING_FRAG } from './muzzle.js';
 
 // colours / threat rings / mantra glyphs: content theme.json (filled by initTheme() once the packs are loaded)
 export const COL = {};
@@ -320,6 +321,62 @@ export class FX {
       },
       dispose: () => { this.game.overlay.remove(m); },
     });
+  }
+  // a monster gathering itself for an attack (the art has no effects drawn in, docs/ART.md): a glow at the point it attacks from that
+  // swells with the wind-up, star rays turning, sparks pulled into it. Ends by itself when the wind-up ends (attack, stagger, death).
+  charge(enemy, color = 0xff5ac8) {
+    const g = this.game, uv = enemy.bp.throwFrom || [0.5, 0.5], col = new THREE.Color(color);
+    const U = { col: { value: col }, a: { value: 0 }, rays: { value: 8 }, rot: { value: 0 }, time: { value: 0 } };
+    const m = new THREE.Mesh(this.quad || (this.quad = new THREE.PlaneGeometry(1, 1)), new THREE.ShaderMaterial({ uniforms: U, vertexShader: FXVERT,
+      fragmentShader: GLOW_FRAG, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+    m.renderOrder = 36; m.frustumCulled = false;
+    g.overlay.add(m);
+    let t = 0, emitT = 0;
+    const end = () => { g.overlay.remove(m); m.material.dispose(); };
+    this.add({
+      update: (dt) => {
+        if (!enemy.alive || enemy.state !== 'windup') { end(); return false; }
+        t += dt;
+        const k = Math.min(1, enemy.timer0 > 0 ? 1 - enemy.timer / enemy.timer0 : 1);
+        const s = g.world.project(enemy.uvToWorld(uv[0], uv[1])), b = g.box(enemy), hb = Math.max(g.H * 0.04, b.y1 - b.y0);
+        const x = s.x, y = g.H - s.y, r = hb * (0.25 + 0.5 * k);
+        m.position.set(x, y, 0); m.scale.setScalar(r * 2 * (1 + 0.08 * Math.sin(t * 31)));
+        U.a.value = 0.8 + 1.6 * k; U.rot.value = t * 2.5; U.time.value = t;   // additive over a bright scene: strong
+        emitT -= dt;
+        if (emitT <= 0) {
+          emitT = 0.035 - 0.02 * k;
+          const a = Math.random() * 6.283, d = r * 1.6;
+          this.oAdd.emit({ x: x + Math.cos(a) * d, y: y + Math.sin(a) * d, vx: -Math.cos(a) * d * 5, vy: -Math.sin(a) * d * 5, rot: a, life: 0.18,
+            size: hb * 0.18, size1: hb * 0.04, color: [col.r, col.g, col.b], a: 0.9, a1: 0, frame: FR.STREAK });
+        }
+        return true;
+      },
+      dispose: end,
+    });
+  }
+  // a sound wave hitting the whole screen (the PA-system siren's blast): rings racing out from the horn past the screen edges
+  soundWave(x, y, color = 0xff5ac8) {
+    const g = this.game, R = Math.hypot(g.W, g.H) * 1.2;
+    for (let i = 0; i < 4; i++) {
+      const U = { col: { value: new THREE.Color(color) }, a: { value: 0 }, k: { value: 0 }, kind: { value: 0 }, spin: { value: 0 } };
+      const m = new THREE.Mesh(this.quad || (this.quad = new THREE.PlaneGeometry(1, 1)), new THREE.ShaderMaterial({ uniforms: U, vertexShader: FXVERT,
+        fragmentShader: RING_FRAG, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending }));
+      m.renderOrder = 36; m.frustumCulled = false; m.position.set(x, y, 0); m.visible = false;
+      g.overlay.add(m);
+      let t = -i * 0.11;
+      const end = () => { g.overlay.remove(m); m.material.dispose(); };
+      this.add({
+        update: (dt) => {
+          t += dt;
+          if (t < 0) return true;
+          const k = Math.min(1, t / 0.75);
+          m.visible = true; m.scale.setScalar(R * (0.1 + 1.9 * k)); U.k.value = 0.35 + 0.4 * k; U.a.value = 1.2 * (1 - k);
+          if (k >= 1) { end(); return false; }
+          return true;
+        },
+        dispose: end,
+      });
+    }
   }
   // the rune seal flashing in front of the paw on every strike
   rune(x, y, size) {

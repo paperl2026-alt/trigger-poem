@@ -7,7 +7,7 @@ import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { FR } from '../core/particles.js';
 
-const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
+export const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 const HUE = `vec3 hueRot(vec3 c, float h){ const vec3 k = vec3(0.57735); float co = cos(h); return c * co + cross(k, c) * sin(h) + k * dot(k, c) * (1.0 - co); }`;
 // the painted flash: smeared outward along its rays, split into colours, its hue running (Fever)
 const FLASH_FRAG = `
@@ -25,7 +25,7 @@ void main(){
   gl_FragColor = vec4(c * a, clamp(al * a, 0.0, 1.0));
 }`;
 // soft glow + star rays, flickering
-const GLOW_FRAG = `
+export const GLOW_FRAG = `
 uniform vec3 col; uniform float a; uniform float rays; uniform float rot; uniform float time;
 varying vec2 vUv;
 void main(){
@@ -37,7 +37,7 @@ void main(){
   gl_FragColor = vec4(col * v, clamp(v, 0.0, 1.0));
 }`;
 // kind 0: a shock ring racing out; kind 1: a talisman ring (double circle, ticks, dashes) spinning while it opens
-const RING_FRAG = `
+export const RING_FRAG = `
 uniform vec3 col; uniform float a; uniform float k; uniform float kind; uniform float spin;
 varying vec2 vUv;
 void main(){

@@ -700,86 +700,86 @@
  "enemy/board_hide": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_hide_rd",
   "src": "assets/enemy/board_hide.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_hide_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_hide_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/board_hurt": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_hurt_rd",
   "src": "assets/enemy/board_hurt.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_hurt_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_hurt_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/board_idle": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_idle_rd",
   "src": "assets/enemy/board_idle.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_idle_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_idle_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/board_rise": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_rise_rd",
   "src": "assets/enemy/board_rise.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_rise_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_rise_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/board_throw": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_throw_rd",
   "src": "assets/enemy/board_throw.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_throw_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_throw_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/board_windup": {
   "anchor": "bottom",
   "figH": 0.9842,
-  "h": 506,
+  "h": 505,
   "hit": true,
   "relief": "enemy/board_windup_rd",
   "src": "assets/enemy/board_windup.webp",
-  "w": 547
+  "w": 507
  },
  "enemy/board_windup_rd": {
-  "h": 474,
+  "h": 505,
   "src": "assets/enemy/board_windup_rd.png",
-  "w": 512
+  "w": 507
  },
  "enemy/desk_b_bite": {
   "anchor": "bottom",
@@ -1203,85 +1203,85 @@
  },
  "enemy/frame_fire": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_fire_rd",
   "src": "assets/enemy/frame_fire.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_fire_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_fire_rd.png",
   "w": 512
  },
  "enemy/frame_fly0": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_fly0_rd",
   "src": "assets/enemy/frame_fly0.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_fly0_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_fly0_rd.png",
   "w": 512
  },
  "enemy/frame_fly1": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_fly1_rd",
   "src": "assets/enemy/frame_fly1.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_fly1_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_fly1_rd.png",
   "w": 512
  },
  "enemy/frame_hurt": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_hurt_rd",
   "src": "assets/enemy/frame_hurt.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_hurt_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_hurt_rd.png",
   "w": 512
  },
  "enemy/frame_idle": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_idle_rd",
   "src": "assets/enemy/frame_idle.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_idle_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_idle_rd.png",
   "w": 512
  },
  "enemy/frame_windup": {
   "anchor": "center",
-  "figH": 0.976,
-  "h": 499,
+  "figH": 0.9779,
+  "h": 498,
   "hit": true,
   "relief": "enemy/frame_windup_rd",
   "src": "assets/enemy/frame_windup.webp",
-  "w": 525
+  "w": 513
  },
  "enemy/frame_windup_rd": {
-  "h": 487,
+  "h": 497,
   "src": "assets/enemy/frame_windup_rd.png",
   "w": 512
  },
@@ -1371,17 +1371,17 @@
  },
  "enemy/horn_blast": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_blast_rd",
   "src": "assets/enemy/horn_blast.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_blast_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_blast_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/horn_c_blast": {
   "anchor": "center",
@@ -1469,73 +1469,73 @@
  },
  "enemy/horn_hover0": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_hover0_rd",
   "src": "assets/enemy/horn_hover0.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_hover0_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_hover0_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/horn_hover1": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_hover1_rd",
   "src": "assets/enemy/horn_hover1.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_hover1_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_hover1_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/horn_hurt": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_hurt_rd",
   "src": "assets/enemy/horn_hurt.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_hurt_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_hurt_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/horn_idle": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_idle_rd",
   "src": "assets/enemy/horn_idle.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_idle_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_idle_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/horn_windup": {
   "anchor": "center",
-  "figH": 0.965,
-  "h": 515,
+  "figH": 0.9688,
+  "h": 513,
   "hit": true,
   "relief": "enemy/horn_windup_rd",
   "src": "assets/enemy/horn_windup.webp",
-  "w": 537
+  "w": 512
  },
  "enemy/horn_windup_rd": {
-  "h": 491,
+  "h": 512,
   "src": "assets/enemy/horn_windup_rd.png",
-  "w": 512
+  "w": 511
  },
  "enemy/lantern_p0": {
   "anchor": "bottom",

@@ -332,6 +332,7 @@ export class Enemy extends Actor {
     if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
     if (this.lock) this.lock.remove();
     this.lock = this.game.fx.lock(this.threat, this.targetSlot);
+    if (this.beh !== 'walker') this.game.fx.charge(this, this.def.blast ? 0xff4fc8 : 0xffb04a);   // the glow it gathers (art has no effects drawn in)
     sfx.warn();
   }
   endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
@@ -481,7 +482,8 @@ export class Enemy extends Actor {
     sfx.slam(); sfx.madness();
     g.post.flash(0.55, 0xff5ac8);
     g.post.shake(1.2);
-    const p = this.uvToWorld(0.5, 0.5);
+    const p = this.uvToWorld(0.5, 0.5), s = g.world.project(p);
+    g.fx.soundWave(s.x, g.H - s.y, 0xff4fc8);   // the wave itself is the program's (the art has none drawn in)
     g.fx.confetti(p, 30, 2.4, [COL.pink, COL.white, COL.hot]);
     g.fx.star(p, 3, COL.pink);
     g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.62, 0.26, 0);
