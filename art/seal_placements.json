@@ -130,5 +130,261 @@
     "rot": -8,
     "out": "sel_card_cat",
     "keep_frame": true
+  },
+  "bt_aim_out": {
+    "src": "art/raw/bt_src/neko_aim_out.png",
+    "erase": [
+      154,
+      260,
+      234,
+      390
+    ],
+    "center": [
+      194,
+      300
+    ],
+    "ring": 70,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/aim_out.png"
+  },
+  "bt_recoil": {
+    "src": "art/raw/bt_src/neko_recoil.png",
+    "erase": [
+      833,
+      225,
+      911,
+      351
+    ],
+    "center": [
+      872,
+      264
+    ],
+    "ring": 68,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/recoil.png"
+  },
+  "bt_down": {
+    "src": "art/raw/bt_src/neko_down.png",
+    "erase": [
+      979,
+      832,
+      1049,
+      944
+    ],
+    "center": [
+      1014,
+      867
+    ],
+    "ring": 60,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/down.png"
+  },
+  "bt_run_b": {
+    "src": "art/raw/bt_src/neko_run_b.png",
+    "erase": [
+      126,
+      361,
+      180,
+      443
+    ],
+    "center": [
+      153,
+      388
+    ],
+    "ring": 43,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/run_b.png"
+  },
+  "bt_victory": {
+    "src": "art/raw/bt_src/neko_victory.png",
+    "erase": [
+      483,
+      391,
+      537,
+      474
+    ],
+    "center": [
+      510,
+      418
+    ],
+    "ring": 44,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/victory.png"
+  },
+  "bt_active": {
+    "src": "art/raw/bt_src/neko_active.png",
+    "erase": [
+      816,
+      330,
+      890,
+      448
+    ],
+    "center": [
+      853,
+      367
+    ],
+    "ring": 63,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/active.png"
+  },
+  "bt_peek": {
+    "src": "art/raw/bt_src/neko_peek.png",
+    "erase": [
+      890,
+      386,
+      966,
+      508
+    ],
+    "center": [
+      928,
+      424
+    ],
+    "ring": 66,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/peek.png"
+  },
+  "bt_aim": {
+    "src": "art/raw/bt_src/neko_aim.png",
+    "erase": [
+      888,
+      266,
+      958,
+      378
+    ],
+    "center": [
+      923,
+      301
+    ],
+    "ring": 60,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/aim.png"
+  },
+  "bt_cover": {
+    "src": "art/raw/bt_src/neko_cover.png",
+    "erase": [
+      749,
+      829,
+      815,
+      932
+    ],
+    "center": [
+      782,
+      862
+    ],
+    "ring": 55,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/cover.png"
+  },
+  "bt_reload": {
+    "src": "art/raw/bt_src/neko_reload.png",
+    "erase": [
+      730,
+      342,
+      818,
+      485
+    ],
+    "center": [
+      774,
+      386
+    ],
+    "ring": 78,
+    "rot": 0,
+    "png": "public/content/base/assets/neko/reload.png"
+  },
+  "cm_i4": {
+    "src": "art/raw/r26/i4.png",
+    "erase": [
+      145,
+      420,
+      297,
+      695
+    ],
+    "center": [
+      221,
+      496
+    ],
+    "ring": 137,
+    "rot": -12,
+    "png": "art/raw/r26s/i4.png"
+  },
+  "cm_i2": {
+    "src": "art/raw/r26/i2.png",
+    "erase": [
+      593,
+      399,
+      669,
+      512
+    ],
+    "center": [
+      631,
+      437
+    ],
+    "ring": 71,
+    "rot": -5,
+    "png": "art/raw/r26s/i2.png"
+  },
+  "cm_e3": {
+    "src": "art/raw/r26/e3.png",
+    "erase": [
+      380,
+      926,
+      468,
+      1074
+    ],
+    "center": [
+      424,
+      970
+    ],
+    "ring": 72,
+    "rot": 0,
+    "png": "art/raw/r26s/e3.png"
+  },
+  "cm_i8": {
+    "src": "art/raw/r26/i8.png",
+    "erase": [
+      96,
+      323,
+      228,
+      522
+    ],
+    "center": [
+      162,
+      389
+    ],
+    "ring": 127,
+    "rot": 0,
+    "png": "art/raw/r26s/i8.png"
+  },
+  "cm_m1": {
+    "src": "art/raw/r26/m1.png",
+    "erase": [
+      366,
+      210,
+      442,
+      335
+    ],
+    "center": [
+      404,
+      248
+    ],
+    "ring": 60,
+    "rot": -10,
+    "png": "art/raw/r26s/m1.png"
+  },
+  "cm_e5": {
+    "src": "art/raw/r26/e5.png",
+    "erase": [
+      531,
+      383,
+      599,
+      492
+    ],
+    "center": [
+      565,
+      417
+    ],
+    "ring": 52,
+    "rot": -40,
+    "png": "art/raw/r26s/e5.png"
   }
 }

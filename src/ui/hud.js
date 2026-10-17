@@ -9,6 +9,7 @@ import { url, meta } from '../core/assets.js';
 import { t, tr, lang } from '../core/i18n.js';
 import { C, T } from '../core/content.js';
 import { FEVER_KEYS } from '../battle/fever.js';
+import './hud.css';
 
 const $ = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
 const L3 = (zh, en, ja) => ({ zh, en, ja }[lang] || en);

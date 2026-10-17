@@ -1,5 +1,5 @@
 {
-  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），sprite 图的前缀，hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。",
+  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），sprite 图的前缀，hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。 序章（2026-10-17）的六种怪：desk 课桌蜘蛛、shoe 鞋柜拟态（近战扑咬：攻击前蹲下蓄力，趁这时把它打出硬直才能打断，扑上来的咬会无视掩体）；board 黑板女教师（冒头扔粉笔，粉笔能打掉，掩体挡得住）；paper 考卷幽灵（飘着，俯冲撞人，掩体挡得住）；frame 相框群（连发镜片）；horn 广播喇叭（长时间蓄力后全屏声波，蓄力时霸体打不断，必须躲进掩体）。",
   "zomb": {
     "beh": "walker",
     "sprite": "zomb",
@@ -43,5 +43,105 @@
     "first": "c0",
     "drawnUpsideDown": true,
     "frames": { "crawl": ["c0", "c1"], "drop": ["d"], "atk": ["a"], "hurt": ["d"] }
+  },
+  "desk": {
+    "beh": "walker",
+    "sprite": "desk",
+    "hp": 110,
+    "h": 1.15,
+    "speed": 1.5,
+    "windup": 1,
+    "poise": 45,
+    "first": "walk0",
+    "frames": {
+      "idle": ["walk0"],
+      "walk": ["walk0", "walk1"],
+      "crouch": ["crouch"],
+      "leap": ["leap"],
+      "bite": ["bite"],
+      "recoil": ["hurt"],
+      "hurt": ["hurt"]
+    }
+  },
+  "shoe": {
+    "beh": "walker",
+    "sprite": "shoe",
+    "hp": 130,
+    "h": 1.5,
+    "speed": 1.3,
+    "windup": 1.1,
+    "poise": 55,
+    "first": "walk0",
+    "frames": {
+      "idle": ["walk0"],
+      "walk": ["walk0", "walk1"],
+      "crouch": ["crouch"],
+      "leap": ["leap"],
+      "bite": ["bite"],
+      "recoil": ["hurt"],
+      "hurt": ["hurt"]
+    }
+  },
+  "board": {
+    "beh": "thrower",
+    "sprite": "board",
+    "hp": 120,
+    "h": 1.75,
+    "windup": 1,
+    "poise": 50,
+    "first": "idle",
+    "hides": true,
+    "proj": "chalk",
+    "frames": { "hide": ["hide"], "rise": ["rise"], "idle": ["idle"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+  },
+  "paper": {
+    "beh": "flyer",
+    "sprite": "paper",
+    "hp": 45,
+    "h": 1,
+    "windup": 0.9,
+    "poise": 16,
+    "first": "fly0",
+    "frames": { "fly": ["fly0", "fly1", "idle", "fly1"], "windup": ["windup"], "dive": ["dive"], "hurt": ["hurt"] }
+  },
+  "frame": {
+    "beh": "thrower",
+    "sprite": "frame",
+    "hp": 140,
+    "h": 1.3,
+    "windup": 1,
+    "poise": 60,
+    "first": "fly0",
+    "hides": false,
+    "proj": "shard",
+    "burst": 3,
+    "frames": {
+      "hide": ["fly0"],
+      "rise": ["fly0"],
+      "idle": ["fly0", "fly1", "idle", "fly1"],
+      "windup": ["windup"],
+      "throw": ["fire"],
+      "hurt": ["hurt"]
+    }
+  },
+  "horn": {
+    "beh": "thrower",
+    "sprite": "horn",
+    "hp": 170,
+    "h": 1.25,
+    "windup": 2.2,
+    "poise": 70,
+    "first": "hover0",
+    "hides": false,
+    "blast": { "dmg": 30 },
+    "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterThrow": [2.6, 3.6], "standAfterRise": [1.2, 1.8] },
+    "frames": {
+      "hide": ["hover0"],
+      "rise": ["hover0"],
+      "idle": ["hover0", "hover1", "idle", "hover1"],
+      "windup": ["windup"],
+      "throw": ["blast"],
+      "hurt": ["hurt"]
+    }
   }
 }

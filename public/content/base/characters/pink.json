@@ -2,9 +2,21 @@
   "pink": {
     "id": "pink",
     "color": "#ff5fa8",
-    "edge": [60, 20, 40],
-    "name": { "zh": "蔡蕾", "en": "Rando Mine", "ja": "蘭堂 美音" },
-    "role": { "zh": "物理净化", "en": "Purge Rifle", "ja": "物理浄化" },
+    "edge": [
+      60,
+      20,
+      40
+    ],
+    "name": {
+      "zh": "蔡蕾",
+      "en": "Rando Mine",
+      "ja": "蘭堂 美音"
+    },
+    "role": {
+      "zh": "物理净化",
+      "en": "Purge Rifle",
+      "ja": "物理浄化"
+    },
     "blurb": {
       "zh": "射速快、弹匣大、子弹穿透。一直打同一个敌人会不断叠硬直。",
       "en": "Fast, huge magazine, piercing rounds. Keep firing on one foe to stack stagger.",
@@ -31,47 +43,202 @@
       "active": "pink/active",
       "activeOut": "pink/active_out"
     },
-    "cam": { "happy": "pink/cam_happy", "scared": "pink/cam_scared", "hype": "pink/cam_hype", "hurt": "pink/cam_hurt" },
+    "cam": {
+      "happy": "pink/cam_happy",
+      "scared": "pink/cam_scared",
+      "hype": "pink/cam_hype",
+      "hurt": "pink/cam_hurt"
+    },
     "cutin": "pink/cutin",
     "front": "pink/front",
     "back": "pink/back",
-    "size": { "pose": "aim", "h": 1.65 },
-    "anchor": { "aim": 0.45, "peek": 0.45, "cover": 0.45, "victory": 0.5 },
+    "size": {
+      "pose": "aim",
+      "h": 1.65
+    },
+    "anchor": {
+      "aim": 0.45,
+      "peek": 0.45,
+      "cover": 0.45,
+      "victory": 0.5,
+      "taunt": 0.505,
+      "aimOut": 0.563,
+      "recoil": 0.446,
+      "hurt": 0.514,
+      "down": 0.51,
+      "reload": 0.52,
+      "run": 0.5,
+      "runB": 0.503,
+      "active": 0.442,
+      "activeOut": 0.546
+    },
     "muzzle": {
-      "aim": [0.92, 0.79],
-      "peek": [0.96, 0.77],
-      "recoil": [0.92, 0.79],
-      "aimOut": [0.92, 0.79],
-      "active": [0.92, 0.79],
-      "activeOut": [0.92, 0.79]
+      "aim": [
+        0.92,
+        0.79
+      ],
+      "peek": [
+        0.96,
+        0.77
+      ],
+      "recoil": [
+        0.92,
+        0.79
+      ],
+      "aimOut": [
+        0.92,
+        0.79
+      ],
+      "active": [
+        0.92,
+        0.79
+      ],
+      "activeOut": [
+        0.92,
+        0.79
+      ]
     },
     "soft": {
       "aim": [
-        [0.34, 0.52, 0.07, 0.05, "butt"],
-        [0.45, 0.51, 0.07, 0.05, "butt"],
-        [0.22, 0.47, 0.15, 0.05, "skirt"],
-        [0.15, 0.68, 0.15, 0.15, "hair"],
-        [0.75, 0.6, 0.1, 0.12, "hair"]
+        [
+          0.34,
+          0.52,
+          0.07,
+          0.05,
+          "butt"
+        ],
+        [
+          0.45,
+          0.51,
+          0.07,
+          0.05,
+          "butt"
+        ],
+        [
+          0.22,
+          0.47,
+          0.15,
+          0.05,
+          "skirt"
+        ],
+        [
+          0.15,
+          0.68,
+          0.15,
+          0.15,
+          "hair"
+        ],
+        [
+          0.75,
+          0.6,
+          0.1,
+          0.12,
+          "hair"
+        ]
       ],
       "cover": [
-        [0.14, 0.33, 0.09, 0.07, "butt"],
-        [0.24, 0.37, 0.09, 0.06, "butt"],
-        [0.15, 0.27, 0.15, 0.05, "skirt"],
-        [0.12, 0.6, 0.12, 0.2, "hair"],
-        [0.85, 0.5, 0.12, 0.2, "hair"]
+        [
+          0.14,
+          0.33,
+          0.09,
+          0.07,
+          "butt"
+        ],
+        [
+          0.24,
+          0.37,
+          0.09,
+          0.06,
+          "butt"
+        ],
+        [
+          0.15,
+          0.27,
+          0.15,
+          0.05,
+          "skirt"
+        ],
+        [
+          0.12,
+          0.6,
+          0.12,
+          0.2,
+          "hair"
+        ],
+        [
+          0.85,
+          0.5,
+          0.12,
+          0.2,
+          "hair"
+        ]
       ],
       "peek": [
-        [0.33, 0.33, 0.08, 0.055, "butt"],
-        [0.44, 0.35, 0.08, 0.055, "butt"],
-        [0.22, 0.38, 0.12, 0.06, "skirt"],
-        [0.18, 0.55, 0.15, 0.2, "hair"]
+        [
+          0.33,
+          0.33,
+          0.08,
+          0.055,
+          "butt"
+        ],
+        [
+          0.44,
+          0.35,
+          0.08,
+          0.055,
+          "butt"
+        ],
+        [
+          0.22,
+          0.38,
+          0.12,
+          0.06,
+          "skirt"
+        ],
+        [
+          0.18,
+          0.55,
+          0.15,
+          0.2,
+          "hair"
+        ]
       ],
       "victory": [
-        [0.43, 0.7, 0.07, 0.045, "chest"],
-        [0.56, 0.7, 0.07, 0.045, "chest"],
-        [0.5, 0.45, 0.3, 0.05, "skirt"],
-        [0.12, 0.62, 0.12, 0.2, "hair"],
-        [0.86, 0.62, 0.1, 0.2, "hair"]
+        [
+          0.43,
+          0.7,
+          0.07,
+          0.045,
+          "chest"
+        ],
+        [
+          0.56,
+          0.7,
+          0.07,
+          0.045,
+          "chest"
+        ],
+        [
+          0.5,
+          0.45,
+          0.3,
+          0.05,
+          "skirt"
+        ],
+        [
+          0.12,
+          0.62,
+          0.12,
+          0.2,
+          "hair"
+        ],
+        [
+          0.86,
+          0.62,
+          0.1,
+          0.2,
+          "hair"
+        ]
       ]
     },
     "weapon": {
@@ -89,7 +256,17 @@
       "kick": 0.8,
       "tracer": "#ff7ac0"
     },
-    "active": { "kind": "gatling", "dur": 6, "rate": 0.042, "dmg": 1.5, "stagger": 2.2, "heal": 0.4, "charge": { "hit": 0.008 } },
+    "active": {
+      "kind": "gatling",
+      "dur": 6,
+      "rate": 0.042,
+      "dmg": 1.5,
+      "stagger": 2.2,
+      "heal": 0.4,
+      "charge": {
+        "hit": 0.008
+      }
+    },
     "order": 0
   }
 }

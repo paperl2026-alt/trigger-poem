@@ -62,7 +62,8 @@
     "fullscreen": { "zh": "无边框全屏", "en": "FULLSCREEN", "ja": "フルスクリーン" },
     "window": { "zh": "窗口模式", "en": "WINDOW", "ja": "ウィンドウ" },
     "startGame": { "zh": "开始游戏", "en": "START", "ja": "スタート" },
-    "quitGame": { "zh": "离开游戏", "en": "QUIT", "ja": "ゲーム終了" }
+    "quitGame": { "zh": "离开游戏", "en": "QUIT", "ja": "ゲーム終了" },
+    "coverBroken": { "zh": "掩体被打烂了！", "en": "COVER DESTROYED!", "ja": "遮蔽物が壊れた！" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望少女们的", "big": "扣击诗" },

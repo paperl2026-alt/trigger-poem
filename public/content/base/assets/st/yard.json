@@ -1,0 +1,57 @@
+{
+ "size": [
+  1672,
+  941
+ ],
+ "grid": 4,
+ "near": 1.4,
+ "far": 15.0,
+ "fov": 52.0,
+ "camH": 0.701,
+ "pitch": 0.37,
+ "roll": -0.39,
+ "floorFit": 0.988,
+ "lit": [
+  1.157,
+  0.848,
+  0.844
+ ],
+ "plate": {
+  "img": "st/yard_plate",
+  "depth": "st/yard_plate_d",
+  "dims": [
+   418,
+   236
+  ]
+ },
+ "covers": [
+  {
+   "img": "st/yard_coverL",
+   "depth": "st/yard_coverL_d",
+   "box": [
+    0,
+    292,
+    530,
+    941
+   ],
+   "dims": [
+    133,
+    163
+   ]
+  },
+  {
+   "img": "st/yard_coverR",
+   "depth": "st/yard_coverR_d",
+   "box": [
+    1300,
+    296,
+    1672,
+    941
+   ],
+   "dims": [
+    93,
+    162
+   ]
+  }
+ ]
+}

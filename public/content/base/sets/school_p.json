@@ -1,0 +1,678 @@
+{
+ "_doc": "序章的手绘 2.5D 场景（每个战斗点一张画，tools/build_station.py 生成 scene，tools/ep0_set.py 生成本文件，不要手改 scene）。waves 里 at 是这张画上的地板像素位置（1672 宽），y 是浮空怪离地高度（米），from 出场方式，t 出场时间（秒）。maxZ 怪最远站多远（米，按地板自动量）。",
+ "school_p": {
+  "plates": true,
+  "sky": "#2a1438",
+  "fog": "#7a4a6a",
+  "fogDensity": 0.02,
+  "ceiling": 2.6,
+  "stations": {
+   "cls1": {
+    "scene": {
+     "size": [
+      1672,
+      941
+     ],
+     "grid": 4,
+     "near": 1.4,
+     "far": 15.0,
+     "fov": 52.0,
+     "camH": 0.799,
+     "pitch": 4.56,
+     "roll": 0.2,
+     "floorFit": 0.924,
+     "lit": [
+      1.175,
+      0.741,
+      0.934
+     ],
+     "plate": {
+      "img": "st/cls1_plate",
+      "depth": "st/cls1_plate_d",
+      "dims": [
+       418,
+       236
+      ]
+     },
+     "alt": "st/cls1_alt",
+     "covers": [
+      {
+       "img": "st/cls1_coverL",
+       "depth": "st/cls1_coverL_d",
+       "box": [
+        0,
+        272,
+        530,
+        941
+       ],
+       "dims": [
+        133,
+        168
+       ],
+       "alt": "st/cls1_coverL_alt"
+      },
+      {
+       "img": "st/cls1_coverR",
+       "depth": "st/cls1_coverR_d",
+       "box": [
+        1292,
+        328,
+        1672,
+        941
+       ],
+       "dims": [
+        95,
+        154
+       ],
+       "alt": "st/cls1_coverR_alt"
+      }
+     ]
+    },
+    "maxZ": 7.11,
+    "invade": true,
+    "tutorial": true,
+    "waves": [
+     [
+      {
+       "t": 0.6,
+       "type": "desk",
+       "at": [
+        480,
+        560
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.4,
+       "type": "desk",
+       "at": [
+        1250,
+        560
+       ],
+       "from": "pop"
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "paper",
+       "at": [
+        300,
+        520
+       ],
+       "y": 1.5
+      },
+      {
+       "t": 0.8,
+       "type": "paper",
+       "at": [
+        1340,
+        520
+       ],
+       "y": 1.7
+      },
+      {
+       "t": 1.6,
+       "type": "desk",
+       "at": [
+        770,
+        600
+       ],
+       "from": "pop"
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "board",
+       "at": [
+        770,
+        520
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.2,
+       "type": "desk",
+       "at": [
+        384,
+        600
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.6,
+       "type": "paper",
+       "at": [
+        1150,
+        520
+       ],
+       "y": 1.6
+      }
+     ]
+    ]
+   },
+   "cls2": {
+    "scene": {
+     "size": [
+      1672,
+      941
+     ],
+     "grid": 4,
+     "near": 1.4,
+     "far": 15.0,
+     "fov": 52.0,
+     "camH": 0.846,
+     "pitch": 4.96,
+     "roll": -0.64,
+     "floorFit": 0.931,
+     "lit": [
+      1.118,
+      0.859,
+      0.874
+     ],
+     "plate": {
+      "img": "st/cls2_plate",
+      "depth": "st/cls2_plate_d",
+      "dims": [
+       418,
+       236
+      ]
+     },
+     "covers": [
+      {
+       "img": "st/cls2_coverL",
+       "depth": "st/cls2_coverL_d",
+       "box": [
+        0,
+        216,
+        440,
+        933
+       ],
+       "dims": [
+        110,
+        180
+       ]
+      },
+      {
+       "img": "st/cls2_coverR",
+       "depth": "st/cls2_coverR_d",
+       "box": [
+        1216,
+        236,
+        1672,
+        941
+       ],
+       "dims": [
+        114,
+        177
+       ]
+      }
+     ]
+    },
+    "maxZ": 5.69,
+    "waves": [
+     [
+      {
+       "t": 0.3,
+       "type": "board",
+       "at": [
+        480,
+        600
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.4,
+       "type": "board",
+       "at": [
+        1150,
+        600
+       ],
+       "from": "pop"
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "desk",
+       "at": [
+        672,
+        580
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 0.7,
+       "type": "desk",
+       "at": [
+        960,
+        580
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.5,
+       "type": "paper",
+       "at": [
+        288,
+        560
+       ],
+       "y": 1.4
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "horn",
+       "at": [
+        768,
+        540
+       ],
+       "y": 1.0,
+       "from": "pop"
+      },
+      {
+       "t": 1.2,
+       "type": "desk",
+       "at": [
+        480,
+        620
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.2,
+       "type": "desk",
+       "at": [
+        1150,
+        620
+       ],
+       "from": "pop"
+      }
+     ]
+    ]
+   },
+   "cor1": {
+    "scene": {
+     "size": [
+      1672,
+      941
+     ],
+     "grid": 4,
+     "near": 1.4,
+     "fov": 52.0,
+     "camH": 0.99,
+     "pitch": 12.89,
+     "roll": -0.15,
+     "floorFit": 0.999,
+     "lit": [
+      1.095,
+      0.912,
+      0.843
+     ],
+     "plate": {
+      "img": "st/cor1_plate",
+      "depth": "st/cor1_plate_d",
+      "dims": [
+       418,
+       236
+      ]
+     },
+     "covers": [
+      {
+       "img": "st/cor1_coverL",
+       "depth": "st/cor1_coverL_d",
+       "box": [
+        20,
+        364,
+        697,
+        913
+       ],
+       "dims": [
+        170,
+        138
+       ]
+      },
+      {
+       "img": "st/cor1_coverR",
+       "depth": "st/cor1_coverR_d",
+       "box": [
+        1152,
+        644,
+        1672,
+        941
+       ],
+       "dims": [
+        130,
+        75
+       ]
+      }
+     ],
+     "farImg": "st/cor1_far",
+     "far": 15.0
+    },
+    "maxZ": 3.47,
+    "waves": [
+     [
+      {
+       "t": 0.4,
+       "type": "shoe",
+       "at": [
+        480,
+        520
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.8,
+       "type": "shoe",
+       "at": [
+        1150,
+        520
+       ],
+       "from": "pop"
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "frame",
+       "at": [
+        768,
+        540
+       ],
+       "y": 0.9,
+       "from": "pop"
+      },
+      {
+       "t": 0.8,
+       "type": "paper",
+       "at": [
+        300,
+        560
+       ],
+       "y": 1.2
+      },
+      {
+       "t": 1.5,
+       "type": "paper",
+       "at": [
+        1250,
+        560
+       ],
+       "y": 1.3
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "horn",
+       "at": [
+        672,
+        540
+       ],
+       "y": 0.9,
+       "from": "pop"
+      },
+      {
+       "t": 0.9,
+       "type": "shoe",
+       "at": [
+        384,
+        600
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.0,
+       "type": "shoe",
+       "at": [
+        1150,
+        600
+       ],
+       "from": "pop"
+      }
+     ]
+    ]
+   },
+   "cor2": {
+    "scene": {
+     "size": [
+      1672,
+      941
+     ],
+     "grid": 4,
+     "near": 1.4,
+     "far": 15.0,
+     "fov": 52.0,
+     "camH": 0.851,
+     "pitch": 6.47,
+     "roll": 0.18,
+     "floorFit": 0.987,
+     "lit": [
+      1.146,
+      0.845,
+      0.859
+     ],
+     "plate": {
+      "img": "st/cor2_plate",
+      "depth": "st/cor2_plate_d",
+      "dims": [
+       418,
+       236
+      ]
+     },
+     "covers": [
+      {
+       "img": "st/cor2_coverL",
+       "depth": "st/cor2_coverL_d",
+       "box": [
+        0,
+        244,
+        537,
+        842
+       ],
+       "dims": [
+        135,
+        150
+       ]
+      },
+      {
+       "img": "st/cor2_coverR",
+       "depth": "st/cor2_coverR_d",
+       "box": [
+        1072,
+        132,
+        1672,
+        916
+       ],
+       "dims": [
+        150,
+        196
+       ]
+      }
+     ]
+    },
+    "maxZ": 7.09,
+    "waves": [
+     [
+      {
+       "t": 0.3,
+       "type": "shoe",
+       "at": [
+        960,
+        450
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.0,
+       "type": "shoe",
+       "at": [
+        1056,
+        470
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.0,
+       "type": "frame",
+       "at": [
+        480,
+        600
+       ],
+       "y": 1.0,
+       "from": "pop"
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "board",
+       "at": [
+        288,
+        600
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 0.6,
+       "type": "board",
+       "at": [
+        1440,
+        600
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.4,
+       "type": "paper",
+       "at": [
+        768,
+        520
+       ],
+       "y": 1.6
+      },
+      {
+       "t": 2.2,
+       "type": "paper",
+       "at": [
+        1152,
+        520
+       ],
+       "y": 1.5
+      }
+     ],
+     [
+      {
+       "t": 0,
+       "type": "horn",
+       "at": [
+        768,
+        520
+       ],
+       "y": 1.2,
+       "from": "pop"
+      },
+      {
+       "t": 0.8,
+       "type": "desk",
+       "at": [
+        480,
+        620
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 1.6,
+       "type": "shoe",
+       "at": [
+        1152,
+        560
+       ],
+       "from": "pop"
+      },
+      {
+       "t": 2.6,
+       "type": "frame",
+       "at": [
+        1344,
+        600
+       ],
+       "y": 1.0,
+       "from": "pop"
+      }
+     ]
+    ]
+   },
+   "yard": {
+    "scene": {
+     "size": [
+      1672,
+      941
+     ],
+     "grid": 4,
+     "near": 1.4,
+     "far": 15.0,
+     "fov": 52.0,
+     "camH": 0.701,
+     "pitch": 0.37,
+     "roll": -0.39,
+     "floorFit": 0.988,
+     "lit": [
+      1.157,
+      0.848,
+      0.844
+     ],
+     "plate": {
+      "img": "st/yard_plate",
+      "depth": "st/yard_plate_d",
+      "dims": [
+       418,
+       236
+      ]
+     },
+     "covers": [
+      {
+       "img": "st/yard_coverL",
+       "depth": "st/yard_coverL_d",
+       "box": [
+        0,
+        292,
+        530,
+        941
+       ],
+       "dims": [
+        133,
+        163
+       ]
+      },
+      {
+       "img": "st/yard_coverR",
+       "depth": "st/yard_coverR_d",
+       "box": [
+        1300,
+        296,
+        1672,
+        941
+       ],
+       "dims": [
+        93,
+        162
+       ]
+      }
+     ]
+    },
+    "maxZ": 7.89,
+    "boss": true,
+    "roof": [
+     330,
+     1372,
+     300
+    ],
+    "waves": []
+   }
+  }
+ }
+}

@@ -2,7 +2,7 @@
   "ep0": {
     "id": "ep0",
     "no": 0,
-    "set": "school",
+    "set": "school_p",
     "cover": "ui/cover_ep0",
     "par": 300,
     "unlocks": ["ep1"],
@@ -15,16 +15,16 @@
     },
     "steps": [
       { "comic": "ep0_intro" },
-      { "stage": "classroom", "stations": ["class1"], "name": { "zh": "教室", "en": "CLASSROOM", "ja": "教室" }, "thumb": "ui/sel_thumb1" },
-      { "comic": "ep0_mid" },
       {
-        "stage": "corridor",
-        "stations": ["hall1", "hall2"],
-        "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" },
-        "thumb": "ui/sel_thumb2"
+        "stage": "classroom",
+        "stations": ["cls1", "cls2"],
+        "name": { "zh": "教室", "en": "CLASSROOM", "ja": "教室" },
+        "thumb": "ui/sel_thumb1"
       },
+      { "comic": "ep0_mid" },
+      { "stage": "corridor", "stations": ["cor1", "cor2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" }, "thumb": "ui/sel_thumb2" },
       { "comic": "ep0_boss" },
-      { "boss": "float", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
+      { "boss": "dc", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
       { "comic": "ep0_end" }
     ]
   },

@@ -207,6 +207,8 @@ const enemyHit = () => T.combat.enemyHit;
 export class Enemy extends Actor {
   constructor(game, s) {
     const def = C.enemies[s.type];
+    // painted stations: "at" is a floor pixel of the painting -> world x / z on that floor
+    if (s.at && game.world.at) { const w = game.world.at(s.at[0], s.at[1]); s = { ...s, x: w.x, z: w.z }; }
     const pivot = def.beh === 'flyer' || def.beh === 'crawler' ? 'center' : 'bottom';
     super(game, `enemy/${def.sprite}_${def.first}`, def.h, pivot);
     this.type = s.type;
@@ -236,6 +238,13 @@ export class Enemy extends Actor {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
+      // a painted station: stay in front of the painted walls and inside the picture
+      if (world.plates) {
+        const d = Math.min(c.z - this.home.z, world.maxZ() * rnd(0.6, 0.9));
+        this.home.z = c.z - d;
+        this.home.x = c.x + Math.max(-0.45 * d, Math.min(0.45 * d, this.home.x - c.x));
+        this.home.y = Math.max(0.6, Math.min(this.home.y, c.y + 0.3 * d));
+      }
       this.shadowM = world.makeShadow(this.w * 0.35); world.scene.add(this.shadowM);
       this.play('fly', 14);
       game.tweens.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.enterTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'enter') { this.state = 'hover'; this.timer = rr(bp.hoverFirst); } } });
@@ -310,7 +319,7 @@ export class Enemy extends Actor {
   startWindup(time) {
     this.state = 'windup';
     this.timer = this.timer0 = time;
-    if (this.beh !== 'walker') this.targetSlot = this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
+    if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
     if (this.lock) this.lock.remove();
     this.lock = this.game.fx.lock(this.threat, this.targetSlot);
     sfx.warn();
@@ -434,16 +443,39 @@ export class Enemy extends Actor {
       if (this.timer <= 0) {
         this.endWindup();
         this.play('throw');
-        this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot });
-        sfx.throwIt(0);
+        if (this.def.blast) this.blast();
+        else {
+          // a burst: several shots fanned out, a beat apart (each can be shot down)
+          const n = this.def.burst || 1;
+          for (let i = 0; i < n; i++) {
+            this.game.tweens.wait(i * 0.16, () => {
+              if (!this.alive) return;
+              this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0 });
+              sfx.throwIt(0);
+            });
+          }
+        }
         this.state = 'thrown';
-        this.timer = bp.throwRecover;
+        this.timer = bp.throwRecover + (this.def.burst ? this.def.burst * 0.16 : 0);
       }
     } else if (this.state === 'thrown') {
       if (this.timer <= 0) {
         if (this.def.hides) { this.state = 'hide'; this.play('hide'); this.timer = rr(bp.hideAfterThrow); } else { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterThrow); }
       }
     }
+  }
+
+  // a must-hide attack: everyone not behind cover is hit (cover takes it, and a little gets through)
+  blast() {
+    const g = this.game, B = this.def.blast;
+    sfx.slam(); sfx.madness();
+    g.post.flash(0.55, 0xff5ac8);
+    g.post.shake(1.2);
+    const p = this.uvToWorld(0.5, 0.5);
+    g.fx.confetti(p, 30, 2.4, [COL.pink, COL.white, COL.hot]);
+    g.fx.star(p, 3, COL.pink);
+    g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.62, 0.26, 0);
+    g.playerAttacked({ kind: 'ranged', dmg: B.dmg, from: this, heavy: true, slot: -1 });
   }
 
   updateCrawler(dt, t) {

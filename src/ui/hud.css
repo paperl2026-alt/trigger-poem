@@ -1,0 +1,115 @@
+/* Battle HUD in the game's red / black / white comic style (the title and chapter-select screens): slanted black plates with a
+   white edge and a red drop shadow, heavy italic numbers, everything compact in the top corners so the heroines and the
+   painted stage stay clear. Units: --u = 1% of the 16:9 frame height. */
+#hud { --red: #d8141e; --ink: #121012; --paper: #f3f1ee; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-weight: 900; }
+#hud.hidden { display: none; }
+
+/* ---- a heroine's panel: 1P top-left, 2P top-right (mirrored) ---- */
+.deck { position: absolute; top: calc(1.6 * var(--u)); left: calc(1.6 * var(--u)); display: flex; align-items: flex-start; gap: calc(0.8 * var(--u)); --pc: var(--red); }
+.deck.p2 { left: auto; right: calc(1.6 * var(--u)); flex-direction: row-reverse; }
+.deck.hidden { display: none; }
+.deck.down { filter: grayscale(0.8) brightness(0.8); }
+
+/* portrait = the skill button, with the charge ring around it */
+.deck .skbtn { position: relative; width: calc(10.5 * var(--u)); height: calc(10.5 * var(--u)); flex: none; }
+.deck .ring { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(var(--pc) calc(var(--m, 0) * 360deg), #2a2224 0); box-shadow: 0 0 0 calc(0.45 * var(--u)) #fff, 0 0 0 calc(0.85 * var(--u)) var(--ink), calc(0.7 * var(--u)) calc(0.7 * var(--u)) 0 calc(0.8 * var(--u)) var(--red); }
+.deck .face { position: absolute; inset: calc(0.75 * var(--u)); border-radius: 50%; overflow: hidden; background: var(--paper); }
+.deck .face img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 18%; }
+.deck .face.jolt { animation: hudJolt 0.3s cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes hudJolt { 0% { transform: scale(0.88) rotate(-6deg); } 100% { transform: none; } }
+.deck .skbtn.full .ring { animation: hudReady 0.6s ease-in-out infinite alternate; }
+@keyframes hudReady { from { filter: brightness(1); } to { filter: brightness(1.6) drop-shadow(0 0 calc(1.2 * var(--u)) var(--pc)); } }
+.deck .skbtn.on .ring { background: conic-gradient(#fff calc(var(--m, 0) * 360deg), var(--pc) 0); animation: spinHud 1s linear infinite; }
+@keyframes spinHud { to { filter: hue-rotate(20deg); } }
+.deck .who { position: absolute; left: calc(-0.6 * var(--u)); top: calc(-0.6 * var(--u)); background: var(--red); color: #fff; font-style: italic; font-size: calc(1.9 * var(--u)); line-height: 1; padding: calc(0.25 * var(--u)) calc(0.6 * var(--u)); transform: skewX(-12deg); box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); }
+.deck.p2 .who { left: auto; right: calc(-0.6 * var(--u)); }
+.deck .key { position: absolute; left: 50%; bottom: calc(-1.4 * var(--u)); transform: translateX(-50%) skewX(-12deg); background: var(--ink); color: #fff; font-size: calc(1.25 * var(--u)); line-height: 1; padding: calc(0.25 * var(--u)) calc(0.6 * var(--u)); white-space: nowrap; box-shadow: 0 0 0 2px #fff; }
+.deck .ready { position: absolute; left: 50%; top: 44%; transform: translate(-50%, -50%) rotate(-10deg); display: none; color: #fff; font-style: italic; font-size: calc(2.1 * var(--u)); white-space: nowrap; -webkit-text-stroke: 1.5px var(--ink); text-shadow: 3px 3px 0 var(--red); animation: hudPulse 0.5s ease-in-out infinite alternate; }
+.deck .skbtn.full .ready { display: block; }
+@keyframes hudPulse { from { scale: 1; } to { scale: 1.12; } }
+
+/* name, HP, ammo, Fever */
+.deck .col { display: flex; flex-direction: column; gap: calc(0.5 * var(--u)); padding-top: calc(0.4 * var(--u)); width: calc(30 * var(--u)); }
+.deck.p2 .col { align-items: flex-end; }
+.deck .name { display: flex; align-items: baseline; gap: calc(0.6 * var(--u)); background: var(--ink); color: #fff; padding: calc(0.25 * var(--u)) calc(1 * var(--u)); transform: skewX(-14deg); box-shadow: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 var(--red); align-self: flex-start; }
+.deck.p2 .name { align-self: flex-end; }
+.deck .name b { font-size: calc(1.9 * var(--u)); font-weight: 900; white-space: nowrap; }
+.deck .name i { font-size: calc(1.4 * var(--u)); color: #ffd23a; }
+.deck .hp { position: relative; display: flex; align-items: center; gap: calc(0.6 * var(--u)); width: 100%; }
+.deck.p2 .hp { flex-direction: row-reverse; }
+.deck .hp .heart { display: none; }
+.deck .hp .bar { position: relative; flex: 1; height: calc(1.9 * var(--u)); background: #2a2224; transform: skewX(-20deg); box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); overflow: hidden; }
+.deck .hp .bar i { position: absolute; inset: 0; transform-origin: left; }
+.deck.p2 .hp .bar i { transform-origin: right; }
+.deck .hp .lag { background: #fff; }
+.deck .hp .fill { background: linear-gradient(180deg, #ff5a64, var(--red) 55%, #8a0a12); }
+.deck .hp.low .fill { animation: hudLow 0.35s steps(2) infinite; }
+@keyframes hudLow { 50% { filter: brightness(1.8); } }
+.deck .hp.hit .bar { animation: hudShake 0.25s; }
+@keyframes hudShake { 25% { translate: -3px 0; } 75% { translate: 3px 0; } }
+.deck .hp .n { font-size: calc(1.9 * var(--u)); font-style: italic; color: #fff; -webkit-text-stroke: 1.2px var(--ink); min-width: calc(4 * var(--u)); text-align: center; }
+.deck .row2 { display: flex; align-items: center; gap: calc(1 * var(--u)); width: 100%; }
+.deck.p2 .row2 { flex-direction: row-reverse; }
+.deck .ammo { position: relative; display: flex; align-items: baseline; color: #fff; font-style: italic; }
+.deck .ammo b { font-size: calc(3.6 * var(--u)); line-height: 0.9; -webkit-text-stroke: 1.6px var(--ink); text-shadow: 3px 3px 0 var(--red); min-width: calc(4.6 * var(--u)); text-align: right; }
+.deck .ammo span { font-size: calc(1.5 * var(--u)); -webkit-text-stroke: 1px var(--ink); }
+.deck .ammo.pop b { animation: hudPop 0.12s; }
+@keyframes hudPop { 0% { scale: 1.18; } 100% { scale: 1; } }
+.deck .ammo.low b { color: #ff5a64; }
+.deck .ammo.inf b { color: #ffd23a; }
+.deck .ammo .reload { position: absolute; left: 0; top: 100%; display: none; font-size: calc(1.3 * var(--u)); color: #fff; background: var(--red); padding: 0 calc(0.4 * var(--u)); white-space: nowrap; transform: skewX(-12deg); animation: hudLow 0.3s steps(2) infinite; }
+.deck .ammo.reloading .reload { display: block; }
+.deck .fever { display: flex; gap: calc(0.5 * var(--u)); flex: 1; }
+.deck .fb { position: relative; display: flex; align-items: center; gap: calc(0.25 * var(--u)); flex: 1; }
+.deck .fb .kj { font-size: calc(1.3 * var(--u)); color: #fff; background: var(--ink); width: calc(1.9 * var(--u)); height: calc(1.9 * var(--u)); display: grid; place-items: center; transform: skewX(-10deg); flex: none; }
+.deck .fb .tr { flex: 1; height: calc(0.9 * var(--u)); background: #2a2224; box-shadow: 0 0 0 1.5px #fff; transform: skewX(-20deg); overflow: hidden; }
+.deck .fb .tr i { display: block; height: 100%; transform-origin: left; background: #ffd23a; }
+.deck .fb.k-dmg .tr i { background: #ff5a64; }
+.deck .fb.k-acc .tr i { background: #5ad8ff; }
+.deck .fb.k-combo .tr i { background: #b6ff5a; }
+.deck .fb em { position: absolute; right: 0; top: calc(-1.3 * var(--u)); font-size: calc(1.05 * var(--u)); font-style: italic; color: #fff; -webkit-text-stroke: 0.8px var(--ink); }
+.deck .fb.max .tr { box-shadow: 0 0 0 1.5px #ffd23a, 0 0 calc(0.8 * var(--u)) #ffd23a; }
+.deck .fb.up { animation: hudPop 0.3s; }
+.deck .join { position: absolute; top: calc(12 * var(--u)); left: 0; background: var(--red); color: #fff; font-size: calc(1.6 * var(--u)); padding: calc(0.3 * var(--u)) calc(0.8 * var(--u)); transform: skewX(-12deg); animation: hudLow 0.6s steps(2) infinite; }
+.deck .join.hidden { display: none; }
+
+/* ---- boss bar: top centre, a long slanted black plate ---- */
+#hud .bossbar { top: calc(1.6 * var(--u)); width: calc(70 * var(--u)); }
+#hud .bossbar .name { display: inline-block; font-size: calc(2.1 * var(--u)); font-style: italic; color: #fff; background: var(--red); padding: calc(0.2 * var(--u)) calc(1.2 * var(--u)); transform: skewX(-14deg); -webkit-text-stroke: 0; text-shadow: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--ink); margin-bottom: calc(0.7 * var(--u)); }
+#hud .bossbar .bar { position: relative; height: calc(2.3 * var(--u)); background: #2a2224; border: 0; box-shadow: 0 0 0 3px #fff, 0 0 0 6px var(--ink), calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 6px var(--red); transform: skewX(-20deg); overflow: hidden; }
+#hud .bossbar .bar i { position: absolute; inset: 0; transform-origin: left; }
+#hud .bossbar .lag { background: #fff; }
+#hud .bossbar .fill { background: linear-gradient(180deg, #ff5a64, var(--red) 55%, #8a0a12); }
+#hud .bossbar.hit .bar { animation: hudShake 0.2s; }
+#hud .bossbar .pct { position: absolute; right: calc(-6 * var(--u)); top: calc(2.8 * var(--u)); font-size: calc(2.2 * var(--u)); font-style: italic; color: #fff; -webkit-text-stroke: 1.2px var(--ink); }
+
+/* ---- banners (stage name, clear, warnings) ---- */
+#hud .banner { font-family: inherit; font-weight: 900; font-style: italic; color: #fff; -webkit-text-stroke: 0; text-shadow: none; background: var(--ink); padding: calc(0.4 * var(--u)) calc(4 * var(--u)); box-shadow: 0 0 0 calc(0.5 * var(--u)) #fff, calc(1.2 * var(--u)) calc(1.2 * var(--u)) 0 calc(0.5 * var(--u)) var(--red); font-size: calc(6 * var(--u)); transform: translate(-50%, -50%) rotate(-5deg) skewX(-10deg); }
+#hud .banner.hidden { display: none; }
+#hud .banner.stage { top: 20%; font-size: calc(4.2 * var(--u)); border: 0; }
+#hud .banner.clear { background: var(--red); box-shadow: 0 0 0 calc(0.5 * var(--u)) #fff, calc(1.2 * var(--u)) calc(1.2 * var(--u)) 0 calc(0.5 * var(--u)) var(--ink); }
+#hud .banner.big { font-size: calc(7.5 * var(--u)); background: var(--red); }
+#hud .banner.warn { background: var(--red); font-size: calc(6.5 * var(--u)); text-shadow: 4px 0 0 #5ad8ff, -4px 0 0 #ff5aa0; }
+
+/* ---- combo + rank (right side, under 2P's panel) ---- */
+#hud .combo { position: absolute; right: calc(3 * var(--u)); top: 34%; text-align: right; color: #fff; font-style: italic; transform: rotate(-6deg) scale(var(--s, 1)); }
+#hud .combo.hidden { display: none; }
+#hud .combo b { display: block; font-size: calc(7 * var(--u)); line-height: 0.9; -webkit-text-stroke: 2px var(--ink); text-shadow: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 var(--red); }
+#hud .combo span { display: inline-block; font-size: calc(2 * var(--u)); background: var(--ink); padding: 0 calc(0.8 * var(--u)); transform: skewX(-12deg); }
+#hud .combo.pop b { animation: hudPop 0.18s; }
+#hud .combo[data-tier="2"] b, #hud .combo[data-tier="3"] b { color: #ffd23a; }
+#hud .rank { position: absolute; right: calc(3 * var(--u)); top: 56%; display: flex; flex-direction: column; align-items: flex-end; color: #fff; font-style: italic; }
+#hud .rank.hidden { display: none; }
+#hud .rank b { font-size: calc(4.5 * var(--u)); line-height: 1; -webkit-text-stroke: 1.6px var(--ink); text-shadow: 3px 3px 0 var(--red); }
+#hud .rank span { font-size: calc(1.5 * var(--u)); background: var(--ink); padding: 0 calc(0.6 * var(--u)); }
+#hud .rank.pop b { animation: hudPop 0.3s; }
+#hud .shouts .shout { font-family: inherit; font-weight: 900; font-style: italic; }
+
+/* ---- tutorial tip ---- */
+#hud .tip { background: var(--ink); color: #fff; border: 0; box-shadow: 0 0 0 3px #fff, calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 3px var(--red); padding: calc(1 * var(--u)) calc(2 * var(--u)); transform: translateX(-50%) skewX(-8deg); }
+#hud .tip.hidden { display: none; }
+
+/* ---- reticle: red / white ---- */
+.reticle::before { border-color: #fff !important; box-shadow: 0 0 0 2px var(--ink), inset 0 0 0 2px var(--ink) !important; }
+.reticle.hot::before { border-color: var(--pc) !important; }
+.dn { font-family: "Noto Sans SC", sans-serif !important; font-weight: 900 !important; font-style: italic; }

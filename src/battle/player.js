@@ -79,7 +79,8 @@ export class Player {
     this.bottom = H * Lo.bottom;
     const standH = H * Lo.standHeight;
     // every pose of a pack shares one scale: the tallest standing pose maps to standH
-    const ref = Math.max(...['aim', 'cover', 'run'].map((r) => this.poses[r]?.userData.rawH || 0)) || 1000;
+    // the crouching poses set the scale (standing / running ones come out taller, sitting ones shorter)
+    const ref = Math.max(...['aim', 'cover'].map((r) => this.poses[r]?.userData.rawH || 0)) || 1000;
     for (const role in this.poses) {
       const m = this.poses[role];
       const h = standH * m.userData.rawH / ref;
@@ -231,7 +232,7 @@ export class Player {
     const s = this.pop * (1 + breathe);
     m.scale.set(m.userData.w * s * (this.mirror ? -1 : 1), m.userData.w * s * (1 + breathe), 1);
     m.rotation.z = this.side * -this.kick * 0.012 + (this.state === 'run' ? Math.sin(t * 10) * 0.025 : 0);
-    this.soft.update(dt, t, m);
+    this.soft.update(dt, t, m, m.position.x / this.H, m.position.y / this.H);   // its own motion, in sprite heights, for the springs' inertia
     const mu = m.material.uniforms;
     mu.flash.value = this.state === 'hurt' ? 0.15 + 0.35 * Math.abs(Math.sin(t * 30)) : this.activeOn ? 0.08 + 0.06 * Math.sin(t * 12) : 0;
     mu.tint.value.setRGB(1, 0.1, 0.3);

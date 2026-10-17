@@ -15,6 +15,112 @@
   "src": "assets/bg/yard_calm.webp",
   "w": 1672
  },
+ "boss/dc_grip": {
+  "h": 1254,
+  "hit": true,
+  "src": "assets/boss/dc_grip.webp",
+  "w": 1254,
+  "weak": []
+ },
+ "boss/dc_head": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_head.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.448,
+    0.843,
+    0.08
+   ]
+  ]
+ },
+ "boss/dc_head_blow": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_head_blow.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.458,
+    0.844,
+    0.08
+   ]
+  ]
+ },
+ "boss/dc_head_eye": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_head_eye.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.469,
+    0.835,
+    0.1
+   ]
+  ]
+ },
+ "boss/dc_head_hurt": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_head_hurt.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.44,
+    0.85,
+    0.07
+   ]
+  ]
+ },
+ "boss/dc_p2": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_p2.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.8125,
+    0.41,
+    0.075
+   ]
+  ]
+ },
+ "boss/dc_p2_low": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_p2_low.webp",
+  "w": 1672,
+  "weak": []
+ },
+ "boss/dc_p3": {
+  "h": 941,
+  "hit": true,
+  "src": "assets/boss/dc_p3.webp",
+  "w": 1672,
+  "weak": [
+   [
+    0.443,
+    0.892,
+    0.1
+   ]
+  ]
+ },
+ "boss/dc_slam": {
+  "h": 1254,
+  "hit": true,
+  "src": "assets/boss/dc_slam.webp",
+  "w": 1254,
+  "weak": []
+ },
+ "boss/dc_throw": {
+  "h": 1254,
+  "hit": true,
+  "src": "assets/boss/dc_throw.webp",
+  "w": 1254,
+  "weak": []
+ },
  "boss/f_idle": {
   "anchor": "bottom",
   "eyes": [
@@ -95,6 +201,126 @@
   "src": "assets/boss/f_throw.webp",
   "w": 587
  },
+ "comic/ep0_b1": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_b1.webp",
+  "w": 1600
+ },
+ "comic/ep0_b2": {
+  "dom": true,
+  "h": 1600,
+  "src": "assets/comic/ep0_b2.webp",
+  "w": 900
+ },
+ "comic/ep0_b3": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_b3.webp",
+  "w": 1600
+ },
+ "comic/ep0_b4": {
+  "dom": true,
+  "h": 686,
+  "src": "assets/comic/ep0_b4.webp",
+  "w": 1600
+ },
+ "comic/ep0_e1": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_e1.webp",
+  "w": 1600
+ },
+ "comic/ep0_e2": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_e2.webp",
+  "w": 1600
+ },
+ "comic/ep0_e3": {
+  "dom": true,
+  "h": 1254,
+  "src": "assets/comic/ep0_e3.webp",
+  "w": 1254
+ },
+ "comic/ep0_e4": {
+  "dom": true,
+  "h": 1254,
+  "src": "assets/comic/ep0_e4.webp",
+  "w": 1254
+ },
+ "comic/ep0_e5": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_e5.webp",
+  "w": 1600
+ },
+ "comic/ep0_i1": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_i1.webp",
+  "w": 1600
+ },
+ "comic/ep0_i2": {
+  "dom": true,
+  "h": 1254,
+  "src": "assets/comic/ep0_i2.webp",
+  "w": 1254
+ },
+ "comic/ep0_i3": {
+  "dom": true,
+  "h": 1254,
+  "src": "assets/comic/ep0_i3.webp",
+  "w": 1254
+ },
+ "comic/ep0_i4": {
+  "dom": true,
+  "h": 686,
+  "src": "assets/comic/ep0_i4.webp",
+  "w": 1600
+ },
+ "comic/ep0_i5": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_i5.webp",
+  "w": 1600
+ },
+ "comic/ep0_i6": {
+  "dom": true,
+  "h": 1600,
+  "src": "assets/comic/ep0_i6.webp",
+  "w": 900
+ },
+ "comic/ep0_i7": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_i7.webp",
+  "w": 1600
+ },
+ "comic/ep0_i8": {
+  "dom": true,
+  "h": 1254,
+  "src": "assets/comic/ep0_i8.webp",
+  "w": 1254
+ },
+ "comic/ep0_m1": {
+  "dom": true,
+  "h": 900,
+  "src": "assets/comic/ep0_m1.webp",
+  "w": 1600
+ },
+ "comic/ep0_m2": {
+  "dom": true,
+  "h": 1600,
+  "src": "assets/comic/ep0_m2.webp",
+  "w": 900
+ },
+ "comic/ep0_m3": {
+  "dom": true,
+  "h": 686,
+  "src": "assets/comic/ep0_m3.webp",
+  "w": 1600
+ },
  "cover/desks": {
   "h": 647,
   "src": "assets/cover/desks.webp",
@@ -120,6 +346,198 @@
   "hit": true,
   "src": "assets/enemy/balloon.webp",
   "w": 336
+ },
+ "enemy/board_hide": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_hide.webp",
+  "w": 547
+ },
+ "enemy/board_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_hurt.webp",
+  "w": 547
+ },
+ "enemy/board_idle": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_idle.webp",
+  "w": 547
+ },
+ "enemy/board_rise": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_rise.webp",
+  "w": 547
+ },
+ "enemy/board_throw": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_throw.webp",
+  "w": 547
+ },
+ "enemy/board_windup": {
+  "anchor": "bottom",
+  "figH": 0.9842,
+  "h": 506,
+  "hit": true,
+  "src": "assets/enemy/board_windup.webp",
+  "w": 547
+ },
+ "enemy/desk_bite": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_bite.webp",
+  "w": 515
+ },
+ "enemy/desk_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_crouch.webp",
+  "w": 515
+ },
+ "enemy/desk_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_hurt.webp",
+  "w": 515
+ },
+ "enemy/desk_leap": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_leap.webp",
+  "w": 515
+ },
+ "enemy/desk_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_walk0.webp",
+  "w": 515
+ },
+ "enemy/desk_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9598,
+  "h": 497,
+  "hit": true,
+  "src": "assets/enemy/desk_walk1.webp",
+  "w": 515
+ },
+ "enemy/frame_fire": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_fire.webp",
+  "w": 525
+ },
+ "enemy/frame_fly0": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_fly0.webp",
+  "w": 525
+ },
+ "enemy/frame_fly1": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_fly1.webp",
+  "w": 525
+ },
+ "enemy/frame_hurt": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_hurt.webp",
+  "w": 525
+ },
+ "enemy/frame_idle": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_idle.webp",
+  "w": 525
+ },
+ "enemy/frame_windup": {
+  "anchor": "center",
+  "figH": 0.976,
+  "h": 499,
+  "hit": true,
+  "src": "assets/enemy/frame_windup.webp",
+  "w": 525
+ },
+ "enemy/horn_blast": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_blast.webp",
+  "w": 537
+ },
+ "enemy/horn_hover0": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_hover0.webp",
+  "w": 537
+ },
+ "enemy/horn_hover1": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_hover1.webp",
+  "w": 537
+ },
+ "enemy/horn_hurt": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_hurt.webp",
+  "w": 537
+ },
+ "enemy/horn_idle": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_idle.webp",
+  "w": 537
+ },
+ "enemy/horn_windup": {
+  "anchor": "center",
+  "figH": 0.965,
+  "h": 515,
+  "hit": true,
+  "src": "assets/enemy/horn_windup.webp",
+  "w": 537
  },
  "enemy/lantern_p0": {
   "anchor": "bottom",
@@ -153,6 +571,90 @@
   "src": "assets/enemy/lantern_p3.webp",
   "w": 610
  },
+ "enemy/p_chalk": {
+  "h": 337,
+  "hit": true,
+  "src": "assets/enemy/p_chalk.webp",
+  "w": 329
+ },
+ "enemy/p_manga": {
+  "h": 360,
+  "hit": true,
+  "src": "assets/enemy/p_manga.webp",
+  "w": 277
+ },
+ "enemy/p_phone": {
+  "h": 360,
+  "hit": true,
+  "src": "assets/enemy/p_phone.webp",
+  "w": 279
+ },
+ "enemy/p_plane": {
+  "h": 286,
+  "hit": true,
+  "src": "assets/enemy/p_plane.webp",
+  "w": 360
+ },
+ "enemy/p_ring": {
+  "h": 296,
+  "hit": true,
+  "src": "assets/enemy/p_ring.webp",
+  "w": 360
+ },
+ "enemy/p_shard": {
+  "h": 360,
+  "hit": true,
+  "src": "assets/enemy/p_shard.webp",
+  "w": 304
+ },
+ "enemy/paper_dive": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_dive.webp",
+  "w": 542
+ },
+ "enemy/paper_fly0": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_fly0.webp",
+  "w": 542
+ },
+ "enemy/paper_fly1": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_fly1.webp",
+  "w": 542
+ },
+ "enemy/paper_hurt": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_hurt.webp",
+  "w": 542
+ },
+ "enemy/paper_idle": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_idle.webp",
+  "w": 542
+ },
+ "enemy/paper_windup": {
+  "anchor": "center",
+  "figH": 0.8779,
+  "h": 524,
+  "hit": true,
+  "src": "assets/enemy/paper_windup.webp",
+  "w": 542
+ },
  "enemy/sheet_f0": {
   "anchor": "center",
   "figH": 1.2052,
@@ -184,6 +686,54 @@
   "hit": true,
   "src": "assets/enemy/sheet_f3.webp",
   "w": 769
+ },
+ "enemy/shoe_bite": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_bite.webp",
+  "w": 522
+ },
+ "enemy/shoe_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_crouch.webp",
+  "w": 522
+ },
+ "enemy/shoe_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_hurt.webp",
+  "w": 522
+ },
+ "enemy/shoe_leap": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_leap.webp",
+  "w": 522
+ },
+ "enemy/shoe_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_walk0.webp",
+  "w": 522
+ },
+ "enemy/shoe_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9066,
+  "h": 514,
+  "hit": true,
+  "src": "assets/enemy/shoe_walk1.webp",
+  "w": 522
  },
  "enemy/takoyaki": {
   "h": 360,
@@ -544,12 +1094,33 @@
   "src": "assets/kagura/victory.webp",
   "w": 511
  },
+ "neko/active": {
+  "h": 1150,
+  "rawH": 1198,
+  "sheet": "art/raw/r27/neko_active.png",
+  "src": "assets/neko/active.webp",
+  "w": 1131
+ },
+ "neko/active_out": {
+  "h": 1150,
+  "rawH": 1198,
+  "sheet": "art/raw/r27/neko_active_out.png",
+  "src": "assets/neko/active_out.webp",
+  "w": 1132
+ },
  "neko/aim": {
   "h": 1198,
   "rawH": 1198,
   "sheet": "cat_pose5",
   "src": "assets/neko/aim.webp",
   "w": 1168
+ },
+ "neko/aim_out": {
+  "h": 1150,
+  "rawH": 1198,
+  "sheet": "art/raw/r27/neko_aim_out.png",
+  "src": "assets/neko/aim_out.webp",
+  "w": 1123
  },
  "neko/cam_happy": {
   "dom": true,
@@ -564,11 +1135,25 @@
   "src": "assets/neko/cover.webp",
   "w": 831
  },
+ "neko/down": {
+  "h": 1150,
+  "rawH": 898,
+  "sheet": "art/raw/r27/neko_down.png",
+  "src": "assets/neko/down.webp",
+  "w": 1121
+ },
  "neko/front": {
   "dom": true,
   "h": 1000,
   "src": "assets/neko/front.webp",
   "w": 527
+ },
+ "neko/hurt": {
+  "h": 1150,
+  "rawH": 1653,
+  "sheet": "art/gpt_sets/set_1/cat_10_hit.png",
+  "src": "assets/neko/hurt.webp",
+  "w": 793
  },
  "neko/peek": {
   "h": 1200,
@@ -577,12 +1162,33 @@
   "src": "assets/neko/peek.webp",
   "w": 1000
  },
+ "neko/recoil": {
+  "h": 1150,
+  "rawH": 1198,
+  "sheet": "art/raw/r27/neko_recoil.png",
+  "src": "assets/neko/recoil.webp",
+  "w": 1139
+ },
  "neko/reload": {
   "h": 1200,
   "rawH": 1214,
   "sheet": "cat_pose3",
   "src": "assets/neko/reload.webp",
   "w": 861
+ },
+ "neko/run": {
+  "h": 1150,
+  "rawH": 1653,
+  "sheet": "art/raw/r27/neko_run.png",
+  "src": "assets/neko/run.webp",
+  "w": 785
+ },
+ "neko/run_b": {
+  "h": 1150,
+  "rawH": 1653,
+  "sheet": "art/raw/r27/neko_run_b.png",
+  "src": "assets/neko/run_b.webp",
+  "w": 791
  },
  "neko/taunt": {
   "h": 1200,
@@ -591,12 +1197,40 @@
   "src": "assets/neko/taunt.webp",
   "w": 848
  },
+ "neko/victory": {
+  "h": 1150,
+  "rawH": 1653,
+  "sheet": "art/raw/r27/neko_victory.png",
+  "src": "assets/neko/victory.webp",
+  "w": 686
+ },
+ "pink/active": {
+  "h": 1150,
+  "rawH": 1147,
+  "sheet": "art/gpt_sets/set_5/pink_08_skill_forward.png",
+  "src": "assets/pink/active.webp",
+  "w": 772
+ },
+ "pink/active_out": {
+  "h": 1150,
+  "rawH": 1147,
+  "sheet": "art/gpt_sets/set_4/pink_09_skill_outward.png",
+  "src": "assets/pink/active_out.webp",
+  "w": 763
+ },
  "pink/aim": {
   "h": 853,
   "rawH": 831,
   "sheet": "pink_poses",
   "src": "assets/pink/aim.webp",
   "w": 520
+ },
+ "pink/aim_out": {
+  "h": 1150,
+  "rawH": 831,
+  "sheet": "art/raw/r27/pink_aim_out.png",
+  "src": "assets/pink/aim_out.webp",
+  "w": 932
  },
  "pink/cam_happy": {
   "dom": true,
@@ -611,11 +1245,25 @@
   "src": "assets/pink/cover.webp",
   "w": 480
  },
+ "pink/down": {
+  "h": 1150,
+  "rawH": 623,
+  "sheet": "art/gpt_sets/set_4/pink_11_knocked_down.png",
+  "src": "assets/pink/down.webp",
+  "w": 856
+ },
  "pink/front": {
   "dom": true,
   "h": 1000,
   "src": "assets/pink/front.webp",
   "w": 459
+ },
+ "pink/hurt": {
+  "h": 1150,
+  "rawH": 831,
+  "sheet": "art/raw/r27/pink_hurt.png",
+  "src": "assets/pink/hurt.webp",
+  "w": 891
  },
  "pink/peek": {
   "h": 672,
@@ -623,6 +1271,41 @@
   "sheet": "pink_poses",
   "src": "assets/pink/peek.webp",
   "w": 577
+ },
+ "pink/recoil": {
+  "h": 1150,
+  "rawH": 831,
+  "sheet": "art/raw/r27/pink_recoil.png",
+  "src": "assets/pink/recoil.webp",
+  "w": 985
+ },
+ "pink/reload": {
+  "h": 1150,
+  "rawH": 831,
+  "sheet": "art/raw/r27/pink_reload.png",
+  "src": "assets/pink/reload.webp",
+  "w": 997
+ },
+ "pink/run": {
+  "h": 1150,
+  "rawH": 1147,
+  "sheet": "art/gpt_sets/set_1/pink_13_running_b.png",
+  "src": "assets/pink/run.webp",
+  "w": 765
+ },
+ "pink/run_b": {
+  "h": 1150,
+  "rawH": 1147,
+  "sheet": "art/raw/r27/pink_run_b.png",
+  "src": "assets/pink/run_b.webp",
+  "w": 720
+ },
+ "pink/taunt": {
+  "h": 1150,
+  "rawH": 831,
+  "sheet": "art/gpt_sets/set_4/pink_04_cover_taunt.png",
+  "src": "assets/pink/taunt.webp",
+  "w": 804
  },
  "pink/victory": {
   "h": 875,
@@ -720,6 +1403,186 @@
   "h": 395,
   "src": "assets/sfx2/zuba.webp",
   "w": 486
+ },
+ "st/cls1_alt": {
+  "h": 941,
+  "src": "assets/st/cls1_alt.webp",
+  "w": 1672
+ },
+ "st/cls1_coverL": {
+  "h": 669,
+  "hit": true,
+  "src": "assets/st/cls1_coverL.webp",
+  "w": 530
+ },
+ "st/cls1_coverL_alt": {
+  "h": 669,
+  "src": "assets/st/cls1_coverL_alt.webp",
+  "w": 530
+ },
+ "st/cls1_coverL_d": {
+  "h": 168,
+  "src": "assets/st/cls1_coverL_d.png",
+  "w": 133
+ },
+ "st/cls1_coverR": {
+  "h": 613,
+  "hit": true,
+  "src": "assets/st/cls1_coverR.webp",
+  "w": 380
+ },
+ "st/cls1_coverR_alt": {
+  "h": 613,
+  "src": "assets/st/cls1_coverR_alt.webp",
+  "w": 380
+ },
+ "st/cls1_coverR_d": {
+  "h": 154,
+  "src": "assets/st/cls1_coverR_d.png",
+  "w": 95
+ },
+ "st/cls1_plate": {
+  "h": 941,
+  "src": "assets/st/cls1_plate.webp",
+  "w": 1672
+ },
+ "st/cls1_plate_d": {
+  "h": 236,
+  "src": "assets/st/cls1_plate_d.png",
+  "w": 418
+ },
+ "st/cls2_coverL": {
+  "h": 717,
+  "hit": true,
+  "src": "assets/st/cls2_coverL.webp",
+  "w": 440
+ },
+ "st/cls2_coverL_d": {
+  "h": 180,
+  "src": "assets/st/cls2_coverL_d.png",
+  "w": 110
+ },
+ "st/cls2_coverR": {
+  "h": 705,
+  "hit": true,
+  "src": "assets/st/cls2_coverR.webp",
+  "w": 456
+ },
+ "st/cls2_coverR_d": {
+  "h": 177,
+  "src": "assets/st/cls2_coverR_d.png",
+  "w": 114
+ },
+ "st/cls2_plate": {
+  "h": 941,
+  "src": "assets/st/cls2_plate.webp",
+  "w": 1672
+ },
+ "st/cls2_plate_d": {
+  "h": 236,
+  "src": "assets/st/cls2_plate_d.png",
+  "w": 418
+ },
+ "st/cor1_coverL": {
+  "h": 549,
+  "hit": true,
+  "src": "assets/st/cor1_coverL.webp",
+  "w": 677
+ },
+ "st/cor1_coverL_d": {
+  "h": 138,
+  "src": "assets/st/cor1_coverL_d.png",
+  "w": 170
+ },
+ "st/cor1_coverR": {
+  "h": 297,
+  "hit": true,
+  "src": "assets/st/cor1_coverR.webp",
+  "w": 520
+ },
+ "st/cor1_coverR_d": {
+  "h": 75,
+  "src": "assets/st/cor1_coverR_d.png",
+  "w": 130
+ },
+ "st/cor1_far": {
+  "h": 941,
+  "src": "assets/st/cor1_far.webp",
+  "w": 1672
+ },
+ "st/cor1_plate": {
+  "h": 941,
+  "src": "assets/st/cor1_plate.webp",
+  "w": 1672
+ },
+ "st/cor1_plate_d": {
+  "h": 236,
+  "src": "assets/st/cor1_plate_d.png",
+  "w": 418
+ },
+ "st/cor2_coverL": {
+  "h": 598,
+  "hit": true,
+  "src": "assets/st/cor2_coverL.webp",
+  "w": 537
+ },
+ "st/cor2_coverL_d": {
+  "h": 150,
+  "src": "assets/st/cor2_coverL_d.png",
+  "w": 135
+ },
+ "st/cor2_coverR": {
+  "h": 784,
+  "hit": true,
+  "src": "assets/st/cor2_coverR.webp",
+  "w": 600
+ },
+ "st/cor2_coverR_d": {
+  "h": 196,
+  "src": "assets/st/cor2_coverR_d.png",
+  "w": 150
+ },
+ "st/cor2_plate": {
+  "h": 941,
+  "src": "assets/st/cor2_plate.webp",
+  "w": 1672
+ },
+ "st/cor2_plate_d": {
+  "h": 236,
+  "src": "assets/st/cor2_plate_d.png",
+  "w": 418
+ },
+ "st/yard_coverL": {
+  "h": 649,
+  "hit": true,
+  "src": "assets/st/yard_coverL.webp",
+  "w": 530
+ },
+ "st/yard_coverL_d": {
+  "h": 163,
+  "src": "assets/st/yard_coverL_d.png",
+  "w": 133
+ },
+ "st/yard_coverR": {
+  "h": 645,
+  "hit": true,
+  "src": "assets/st/yard_coverR.webp",
+  "w": 372
+ },
+ "st/yard_coverR_d": {
+  "h": 162,
+  "src": "assets/st/yard_coverR_d.png",
+  "w": 93
+ },
+ "st/yard_plate": {
+  "h": 941,
+  "src": "assets/st/yard_plate.webp",
+  "w": 1672
+ },
+ "st/yard_plate_d": {
+  "h": 236,
+  "src": "assets/st/yard_plate_d.png",
+  "w": 418
  },
  "tex/class_floor": {
   "h": 1024,

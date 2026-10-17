@@ -1,0 +1,58 @@
+{
+ "size": [
+  1672,
+  941
+ ],
+ "grid": 4,
+ "near": 1.4,
+ "fov": 52.0,
+ "camH": 0.99,
+ "pitch": 12.89,
+ "roll": -0.15,
+ "floorFit": 0.999,
+ "lit": [
+  1.095,
+  0.912,
+  0.843
+ ],
+ "plate": {
+  "img": "st/cor1_plate",
+  "depth": "st/cor1_plate_d",
+  "dims": [
+   418,
+   236
+  ]
+ },
+ "covers": [
+  {
+   "img": "st/cor1_coverL",
+   "depth": "st/cor1_coverL_d",
+   "box": [
+    20,
+    364,
+    697,
+    913
+   ],
+   "dims": [
+    170,
+    138
+   ]
+  },
+  {
+   "img": "st/cor1_coverR",
+   "depth": "st/cor1_coverR_d",
+   "box": [
+    1152,
+    644,
+    1672,
+    941
+   ],
+   "dims": [
+    130,
+    75
+   ]
+  }
+ ],
+ "farImg": "st/cor1_far",
+ "far": 15.0
+}

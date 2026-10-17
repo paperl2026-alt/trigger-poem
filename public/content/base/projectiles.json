@@ -2,5 +2,10 @@
   "_doc": "飞行物。keys 随机用哪张图，size 大小（米），spin 旋转速度。",
   "wisp": { "keys": ["wisp"], "size": 0.7, "spin": 3 },
   "takoyaki": { "keys": ["takoyaki"], "size": 0.9, "spin": -7 },
-  "balloon": { "keys": ["balloon"], "size": 1, "spin": 1.5 }
+  "balloon": { "keys": ["balloon"], "size": 1, "spin": 1.5 },
+  "chalk": { "keys": ["p_chalk"], "size": 0.45, "spin": 9 },
+  "shard": { "keys": ["p_shard"], "size": 0.45, "spin": 4 },
+  "plane": { "keys": ["p_plane"], "size": 0.55, "spin": 1.5 },
+  "phone": { "keys": ["p_phone"], "size": 0.9, "spin": 6 },
+  "manga": { "keys": ["p_manga"], "size": 1, "spin": -5 }
 }

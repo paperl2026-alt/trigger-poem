@@ -6,6 +6,7 @@ import { alphaAt } from '../core/assets.js';
 import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
 import { Ease } from '../core/tween.js';
 import { World } from './world.js';
+import { PlateWorld } from './plates.js';
 import { FX, COL } from './fx.js';
 import { Player } from './player.js';
 import { Enemy, Projectile } from './enemies.js';
@@ -32,7 +33,8 @@ export class Game {
     this.pointer = G.pointer;
     this.overlay = new THREE.Scene();
     this.ortho = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100);
-    this.world = new World(this, this.ep.set);
+    // painted 2.5D sets (one painting per battle station) or the older modelled rooms
+    this.world = C.sets[this.ep.set]?.plates ? new PlateWorld(this, this.ep.set) : new World(this, this.ep.set);
     this.fx = new FX(this);
     this.players = run.team.map((id, i) => new Player(this, id, i, { xp: SAVE.chars[id]?.xp || 0, bag: run.bag }));
     this.hud = new Hud(this);
@@ -108,6 +110,17 @@ export class Game {
     this.S = S;
     this.combat = false;
     this.world.dropCovers();
+    if (this.world.plates) {
+      // painted stations: push forward into the painting, the next one glides in
+      const first = !this.camPlaced || this.afterComic;
+      this.camPlaced = true; this.afterComic = false;
+      this.post.u.wipe.value = 0;
+      if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
+      playMusic(boss ? 'boss' : 'stage');
+      this.setAll('run');
+      this.world.enter(id, first, () => this.arrive(S, boss));
+      return;
+    }
     let pts;
     if (!this.camPlaced || this.afterComic) { this.world.place(S.via[0], S.look); pts = [...S.via, S.cam]; } else pts = [this.world.camPos.toArray(), ...S.via, S.cam];
     this.camPlaced = true; this.afterComic = false;
@@ -337,7 +350,7 @@ export class Game {
       const a = h.object.userData.owner;
       if (seen.has(a) || alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) <= 110) continue;
       seen.add(a);
-      out.push({ a, uv: { u: h.uv.x, v: h.uv.y } });
+      out.push({ a, uv: { u: h.uv.x, v: h.uv.y }, part: h.object });
       if (out.length >= max) break;
     }
     if (!out.length) { const as = this.assist(sx, sy, radius); if (as) out.push(as); }
@@ -369,7 +382,7 @@ export class Game {
       const c = Math.random() < p.fever.critRate;
       if (c) { dmg *= p.fever.critMul; crit = true; }
       const stagger = w.stagger * (w.kind === 'rifle' ? 1 + K.rifleStaggerRamp * Math.min(n, K.rifleStaggerRampMax) : 1) * (p.gatling ? p.a.stagger : 1);
-      tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, by: p, crit: c, stagger, stun: w.stun });
+      tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, part: tg.part, by: p, crit: c, stagger, stun: w.stun });
     });
     return { n: hits.length, crit };
   }
@@ -393,8 +406,11 @@ export class Game {
     let hurt = false;
     for (const p of targets) {
       if (!this.combat || ['run', 'away', 'down', 'victory'].includes(p.state)) continue;
-      if (kind !== 'melee' && !p.exposed) { this.coverHit(p, from, heavy); continue; }
-      if (!p.damage(dmg)) continue;
+      const cov = this.world.covers[p.slot], shielded = kind !== 'melee' && !p.exposed && !(cov && cov.broken);
+      if (shielded) {
+        this.coverHit(p, from, heavy);
+        if (!heavy || !p.damage(dmg * T.combat.cover.chip)) continue;
+      } else if (!p.damage(dmg)) continue;
       hurt = true;
       sfx.hurt();
       if (p.slot === 0) { this.post.u.hurt.value = 1; this.post.kick(2); this.fx.screenInk(heavy ? 12 : 7); } else this.post.u.hurt.value = Math.max(this.post.u.hurt.value, 0.35);
@@ -408,12 +424,17 @@ export class Game {
   coverHit(p, from, heavy) {
     const cov = this.world.covers[p.slot];
     if (!cov) return;
+    const mesh = cov.mesh || cov.m, CV = T.combat.cover;
+    if (cov.hp !== undefined && !cov.broken) {
+      cov.hp -= heavy ? CV.heavy : CV.hit;
+      if (cov.hp <= 0 && this.world.breakCover) { this.world.breakCover(cov); this.hud.showBanner(t('coverBroken'), 'warn', 1.2); }
+    }
     const s = from && from.center ? this.world.project(from.center()) : { x: this.W * (p.slot ? 0.7 : 0.3) };
     const l = this.world.project(cov.m.localToWorld(new THREE.Vector3(-cov.w / 2, cov.h * 0.6, 0)));
     const r = this.world.project(cov.m.localToWorld(new THREE.Vector3(cov.w / 2, cov.h * 0.6, 0)));
     const u = clamp((s.x - l.x) / Math.max(1, r.x - l.x), 0.08, 0.92), v = 0.45 + Math.random() * 0.4;
     if (from instanceof Projectile && from.kind === 'takoyaki') { cov.dm.cut([[u - 0.12, v + 0.1], [u + 0.12, v - 0.08]], 0.012); sfx.clang(); } else if (heavy) { cov.dm.cut([[0.15, 0.85], [0.85, 0.45]], 0.02); cov.dm.hole(0.5, 0.65, 0.09); } else cov.dm.hole(u, v, 0.05);
-    cov.m.material.uniforms.flash.value = 0.6;
+    if (mesh.material?.uniforms) mesh.material.uniforms.flash.value = 0.6;
     sfx.coverHit();
     this.post.shake(heavy ? 1.1 : 0.4);
     this.fx.sparks(l.x + u * (r.x - l.x), this.H - l.y, 6, COL.bone, 0.8);

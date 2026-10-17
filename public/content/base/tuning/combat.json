@@ -1,5 +1,5 @@
 {
-  "_doc": "战斗手感。playerHp 主角血量，heartHp 一颗心是多少血，enemyHit 杂鱼一下打主角多少血。pierceDmgMul 穿透到第二个目标后的伤害倍率。focusTime 秒内连续打同一目标算'集中'（猫爪伤害递增、枪的硬直递增）。rifleStaggerRamp：枪每次集中命中硬直多加多少，最多 rifleStaggerRampMax 次。aimRadius*：准星吸附半径（屏幕高度的比例）。beam：猫爪必杀光束（每 tick 秒结算一次，宽度/判定半径是屏幕高度比例）。comboTime 秒内不击杀连击就断。waveGap 两波怪之间的间隔，spawnDelay 每只怪出场前的延迟。player：受伤无敌时间、受伤硬直、倒地时间、复活血量比例、松开左键后还在外面停留的时间、躲进掩体多久自动装填、自动装填时间倍率、加特林散布倍率、后坐姿势持续、掩体里偷看的间隔和时长。",
+  "_doc": "战斗手感。playerHp 主角血量，heartHp 一颗心是多少血，enemyHit 杂鱼一下打主角多少血。pierceDmgMul 穿透到第二个目标后的伤害倍率。focusTime 秒内连续打同一目标算'集中'（猫爪伤害递增、枪的硬直递增）。rifleStaggerRamp：枪每次集中命中硬直多加多少，最多 rifleStaggerRampMax 次。aimRadius*：准星吸附半径（屏幕高度的比例）。beam：猫爪必杀光束（每 tick 秒结算一次，宽度/判定半径是屏幕高度比例）。comboTime 秒内不击杀连击就断。waveGap 两波怪之间的间隔，spawnDelay 每只怪出场前的延迟。player：受伤无敌时间、受伤硬直、倒地时间、复活血量比例、松开左键后还在外面停留的时间、躲进掩体多久自动装填、自动装填时间倍率、加特林散布倍率、后坐姿势持续、掩体里偷看的间隔和时长。 cover：掩体不是无敌的。hp 掩体耐久，每挡一下普通攻击扣 hit，重攻击扣 heavy，打烂后后面的人就没有掩护了（到下一个战斗点恢复）；chip：重攻击打在完好的掩体上，仍有这个比例的伤害穿透。",
   "combat": {
     "playerHp": 100,
     "heartHp": 20,
@@ -28,6 +28,7 @@
       "recoilPose": 0.06,
       "peekEvery": [2.2, 4.5],
       "peekHold": 0.7
-    }
+    },
+    "cover": { "hp": 160, "hit": 12, "heavy": 55, "chip": 0.25 }
   }
 }

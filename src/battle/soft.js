@@ -63,6 +63,7 @@ export class Soft {
       sp.vx += (w * w * (tx - sp.x) - 2 * K.z * w * sp.vx) * dt;
       sp.vy += (w * w * (ty - sp.y) - 2 * K.z * w * sp.vy) * dt;
       sp.x += sp.vx * dt; sp.y += sp.vy * dt;
+      if (!Number.isFinite(sp.x + sp.y + sp.vx + sp.vy)) { sp.x = sp.y = sp.vx = sp.vy = 0; }   // never let a bad frame collapse the sprite
       const L = Math.hypot(sp.x, sp.y);
       if (L > K.max) { sp.x *= K.max / L; sp.y *= K.max / L; sp.vx *= 0.6; sp.vy *= 0.6; }
       // pushed down -> spreads wider; springing up -> tightens
