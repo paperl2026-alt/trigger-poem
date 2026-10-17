@@ -321,6 +321,30 @@
   "src": "assets/comic/ep0_m3.webp",
   "w": 1600
  },
+ "cover/bookcase": {
+  "h": 617,
+  "relief": "cover/bookcase_rd",
+  "solidTop": 0.081,
+  "src": "assets/cover/bookcase.webp",
+  "w": 1400
+ },
+ "cover/bookcase_rd": {
+  "h": 226,
+  "src": "assets/cover/bookcase_rd.png",
+  "w": 512
+ },
+ "cover/boxes": {
+  "h": 591,
+  "relief": "cover/boxes_rd",
+  "solidTop": 0.005,
+  "src": "assets/cover/boxes.webp",
+  "w": 1400
+ },
+ "cover/boxes_rd": {
+  "h": 216,
+  "src": "assets/cover/boxes_rd.png",
+  "w": 512
+ },
  "cover/c_bench": {
   "h": 294,
   "hit": true,
@@ -369,105 +393,112 @@
   "src": "assets/cover/c_vend_rd.png",
   "w": 461
  },
+ "cover/cart": {
+  "h": 879,
+  "relief": "cover/cart_rd",
+  "solidTop": 0.29,
+  "src": "assets/cover/cart.webp",
+  "w": 1400
+ },
+ "cover/cart_rd": {
+  "h": 321,
+  "src": "assets/cover/cart_rd.png",
+  "w": 512
+ },
  "cover/desks": {
-  "h": 647,
+  "h": 413,
+  "relief": "cover/desks_rd",
+  "solidTop": 0.044,
   "src": "assets/cover/desks.webp",
-  "w": 1223
- },
- "cover/r30_bookcase": {
-  "h": 726,
-  "relief": "cover/r30_bookcase_rd",
-  "solidTop": 0.094,
-  "src": "assets/cover/r30_bookcase.webp",
   "w": 1400
  },
- "cover/r30_bookcase_rd": {
-  "h": 266,
-  "src": "assets/cover/r30_bookcase_rd.png",
+ "cover/desks_rd": {
+  "h": 151,
+  "src": "assets/cover/desks_rd.png",
   "w": 512
  },
- "cover/r30_cart": {
-  "h": 932,
-  "relief": "cover/r30_cart_rd",
-  "solidTop": 0.339,
-  "src": "assets/cover/r30_cart.webp",
+ "cover/lectern": {
+  "h": 567,
+  "relief": "cover/lectern_rd",
+  "solidTop": 0.002,
+  "src": "assets/cover/lectern.webp",
   "w": 1400
  },
- "cover/r30_cart_rd": {
-  "h": 341,
-  "src": "assets/cover/r30_cart_rd.png",
+ "cover/lectern_rd": {
+  "h": 207,
+  "src": "assets/cover/lectern_rd.png",
   "w": 512
  },
- "cover/r30_desks": {
-  "h": 474,
-  "relief": "cover/r30_desks_rd",
-  "solidTop": 0.03,
-  "src": "assets/cover/r30_desks.webp",
+ "cover/lockers": {
+  "h": 533,
+  "relief": "cover/lockers_rd",
+  "solidTop": 0.006,
+  "src": "assets/cover/lockers.webp",
   "w": 1400
  },
- "cover/r30_desks_rd": {
-  "h": 173,
-  "src": "assets/cover/r30_desks_rd.png",
+ "cover/lockers_rd": {
+  "h": 195,
+  "src": "assets/cover/lockers_rd.png",
   "w": 512
  },
- "cover/r30_lectern": {
-  "h": 731,
-  "relief": "cover/r30_lectern_rd",
-  "solidTop": 0.07,
-  "src": "assets/cover/r30_lectern.webp",
+ "cover/mats": {
+  "h": 572,
+  "relief": "cover/mats_rd",
+  "solidTop": 0.005,
+  "src": "assets/cover/mats.webp",
   "w": 1400
  },
- "cover/r30_lectern_rd": {
-  "h": 267,
-  "src": "assets/cover/r30_lectern_rd.png",
+ "cover/mats_rd": {
+  "h": 209,
+  "src": "assets/cover/mats_rd.png",
   "w": 512
  },
- "cover/r30_lockers": {
-  "h": 610,
-  "relief": "cover/r30_lockers_rd",
-  "solidTop": 0.011,
-  "src": "assets/cover/r30_lockers.webp",
+ "cover/piano": {
+  "h": 753,
+  "relief": "cover/piano_rd",
+  "solidTop": 0.001,
+  "src": "assets/cover/piano.webp",
   "w": 1400
  },
- "cover/r30_lockers_rd": {
-  "h": 223,
-  "src": "assets/cover/r30_lockers_rd.png",
+ "cover/piano_rd": {
+  "h": 275,
+  "src": "assets/cover/piano_rd.png",
   "w": 512
  },
- "cover/r30_mats": {
-  "h": 621,
-  "relief": "cover/r30_mats_rd",
-  "solidTop": 0.013,
-  "src": "assets/cover/r30_mats.webp",
+ "cover/planter": {
+  "h": 458,
+  "relief": "cover/planter_rd",
+  "solidTop": 0.028,
+  "src": "assets/cover/planter.webp",
   "w": 1400
  },
- "cover/r30_mats_rd": {
-  "h": 227,
-  "src": "assets/cover/r30_mats_rd.png",
+ "cover/planter_rd": {
+  "h": 167,
+  "src": "assets/cover/planter_rd.png",
   "w": 512
  },
- "cover/r30_shoebox": {
-  "h": 575,
-  "relief": "cover/r30_shoebox_rd",
-  "solidTop": 0.014,
-  "src": "assets/cover/r30_shoebox.webp",
+ "cover/shoebox": {
+  "h": 499,
+  "relief": "cover/shoebox_rd",
+  "solidTop": 0.002,
+  "src": "assets/cover/shoebox.webp",
   "w": 1400
  },
- "cover/r30_shoebox_rd": {
-  "h": 210,
-  "src": "assets/cover/r30_shoebox_rd.png",
+ "cover/shoebox_rd": {
+  "h": 182,
+  "src": "assets/cover/shoebox_rd.png",
   "w": 512
  },
- "cover/r30_vault": {
-  "h": 704,
-  "relief": "cover/r30_vault_rd",
-  "solidTop": 0.003,
-  "src": "assets/cover/r30_vault.webp",
+ "cover/sofa": {
+  "h": 538,
+  "relief": "cover/sofa_rd",
+  "solidTop": 0.007,
+  "src": "assets/cover/sofa.webp",
   "w": 1400
  },
- "cover/r30_vault_rd": {
-  "h": 257,
-  "src": "assets/cover/r30_vault_rd.png",
+ "cover/sofa_rd": {
+  "h": 197,
+  "src": "assets/cover/sofa_rd.png",
   "w": 512
  },
  "cover/stall": {
@@ -481,15 +512,190 @@
   "w": 925
  },
  "cover/vault": {
-  "h": 536,
+  "h": 672,
+  "relief": "cover/vault_rd",
+  "solidTop": 0.0,
   "src": "assets/cover/vault.webp",
-  "w": 845
+  "w": 1400
+ },
+ "cover/vault_rd": {
+  "h": 246,
+  "src": "assets/cover/vault_rd.png",
+  "w": 512
  },
  "enemy/balloon": {
   "h": 360,
   "hit": true,
   "src": "assets/enemy/balloon.webp",
   "w": 336
+ },
+ "enemy/board_b_hide": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_hide_rd",
+  "src": "assets/enemy/board_b_hide.webp",
+  "w": 553
+ },
+ "enemy/board_b_hide_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_hide_rd.png",
+  "w": 512
+ },
+ "enemy/board_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_hurt_rd",
+  "src": "assets/enemy/board_b_hurt.webp",
+  "w": 553
+ },
+ "enemy/board_b_hurt_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/board_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_idle_rd",
+  "src": "assets/enemy/board_b_idle.webp",
+  "w": 553
+ },
+ "enemy/board_b_idle_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/board_b_rise": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_rise_rd",
+  "src": "assets/enemy/board_b_rise.webp",
+  "w": 553
+ },
+ "enemy/board_b_rise_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_rise_rd.png",
+  "w": 512
+ },
+ "enemy/board_b_throw": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_throw_rd",
+  "src": "assets/enemy/board_b_throw.webp",
+  "w": 553
+ },
+ "enemy/board_b_throw_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_throw_rd.png",
+  "w": 512
+ },
+ "enemy/board_b_windup": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 521,
+  "hit": true,
+  "relief": "enemy/board_b_windup_rd",
+  "src": "assets/enemy/board_b_windup.webp",
+  "w": 553
+ },
+ "enemy/board_b_windup_rd": {
+  "h": 482,
+  "src": "assets/enemy/board_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_hide": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_hide_rd",
+  "src": "assets/enemy/board_c_hide.webp",
+  "w": 587
+ },
+ "enemy/board_c_hide_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_hide_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_hurt_rd",
+  "src": "assets/enemy/board_c_hurt.webp",
+  "w": 587
+ },
+ "enemy/board_c_hurt_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_idle_rd",
+  "src": "assets/enemy/board_c_idle.webp",
+  "w": 587
+ },
+ "enemy/board_c_idle_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_rise": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_rise_rd",
+  "src": "assets/enemy/board_c_rise.webp",
+  "w": 587
+ },
+ "enemy/board_c_rise_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_rise_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_throw": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_throw_rd",
+  "src": "assets/enemy/board_c_throw.webp",
+  "w": 587
+ },
+ "enemy/board_c_throw_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_throw_rd.png",
+  "w": 512
+ },
+ "enemy/board_c_windup": {
+  "anchor": "bottom",
+  "figH": 0.9844,
+  "h": 513,
+  "hit": true,
+  "relief": "enemy/board_c_windup_rd",
+  "src": "assets/enemy/board_c_windup.webp",
+  "w": 587
+ },
+ "enemy/board_c_windup_rd": {
+  "h": 447,
+  "src": "assets/enemy/board_c_windup_rd.png",
+  "w": 512
  },
  "enemy/board_hide": {
   "anchor": "bottom",
@@ -575,6 +781,90 @@
   "src": "assets/enemy/board_windup_rd.png",
   "w": 512
  },
+ "enemy/desk_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_bite_rd",
+  "src": "assets/enemy/desk_b_bite.webp",
+  "w": 506
+ },
+ "enemy/desk_b_bite_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_bite_rd.png",
+  "w": 506
+ },
+ "enemy/desk_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_crouch_rd",
+  "src": "assets/enemy/desk_b_crouch.webp",
+  "w": 506
+ },
+ "enemy/desk_b_crouch_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_crouch_rd.png",
+  "w": 506
+ },
+ "enemy/desk_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_hurt_rd",
+  "src": "assets/enemy/desk_b_hurt.webp",
+  "w": 506
+ },
+ "enemy/desk_b_hurt_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_hurt_rd.png",
+  "w": 506
+ },
+ "enemy/desk_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_leap_rd",
+  "src": "assets/enemy/desk_b_leap.webp",
+  "w": 506
+ },
+ "enemy/desk_b_leap_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_leap_rd.png",
+  "w": 506
+ },
+ "enemy/desk_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_walk0_rd",
+  "src": "assets/enemy/desk_b_walk0.webp",
+  "w": 506
+ },
+ "enemy/desk_b_walk0_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_walk0_rd.png",
+  "w": 506
+ },
+ "enemy/desk_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.8941,
+  "h": 510,
+  "hit": true,
+  "relief": "enemy/desk_b_walk1_rd",
+  "src": "assets/enemy/desk_b_walk1.webp",
+  "w": 506
+ },
+ "enemy/desk_b_walk1_rd": {
+  "h": 510,
+  "src": "assets/enemy/desk_b_walk1_rd.png",
+  "w": 506
+ },
  "enemy/desk_bite": {
   "anchor": "bottom",
   "figH": 0.9598,
@@ -587,6 +877,90 @@
  "enemy/desk_bite_rd": {
   "h": 494,
   "src": "assets/enemy/desk_bite_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_bite_rd",
+  "src": "assets/enemy/desk_c_bite.webp",
+  "w": 520
+ },
+ "enemy/desk_c_bite_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_crouch_rd",
+  "src": "assets/enemy/desk_c_crouch.webp",
+  "w": 520
+ },
+ "enemy/desk_c_crouch_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_hurt_rd",
+  "src": "assets/enemy/desk_c_hurt.webp",
+  "w": 520
+ },
+ "enemy/desk_c_hurt_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_leap_rd",
+  "src": "assets/enemy/desk_c_leap.webp",
+  "w": 520
+ },
+ "enemy/desk_c_leap_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_walk0_rd",
+  "src": "assets/enemy/desk_c_walk0.webp",
+  "w": 520
+ },
+ "enemy/desk_c_walk0_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/desk_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9075,
+  "h": 508,
+  "hit": true,
+  "relief": "enemy/desk_c_walk1_rd",
+  "src": "assets/enemy/desk_c_walk1.webp",
+  "w": 520
+ },
+ "enemy/desk_c_walk1_rd": {
+  "h": 500,
+  "src": "assets/enemy/desk_c_walk1_rd.png",
   "w": 512
  },
  "enemy/desk_crouch": {
@@ -657,6 +1031,174 @@
  "enemy/desk_walk1_rd": {
   "h": 494,
   "src": "assets/enemy/desk_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_fire": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_fire_rd",
+  "src": "assets/enemy/frame_b_fire.webp",
+  "w": 512
+ },
+ "enemy/frame_b_fire_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_fire_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_fly0": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_fly0_rd",
+  "src": "assets/enemy/frame_b_fly0.webp",
+  "w": 512
+ },
+ "enemy/frame_b_fly0_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_fly1": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_fly1_rd",
+  "src": "assets/enemy/frame_b_fly1.webp",
+  "w": 512
+ },
+ "enemy/frame_b_fly1_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_hurt_rd",
+  "src": "assets/enemy/frame_b_hurt.webp",
+  "w": 512
+ },
+ "enemy/frame_b_hurt_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_idle": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_idle_rd",
+  "src": "assets/enemy/frame_b_idle.webp",
+  "w": 512
+ },
+ "enemy/frame_b_idle_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/frame_b_windup": {
+  "anchor": "center",
+  "figH": 0.9625,
+  "h": 507,
+  "hit": true,
+  "relief": "enemy/frame_b_windup_rd",
+  "src": "assets/enemy/frame_b_windup.webp",
+  "w": 512
+ },
+ "enemy/frame_b_windup_rd": {
+  "h": 507,
+  "src": "assets/enemy/frame_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_fire": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_fire_rd",
+  "src": "assets/enemy/frame_c_fire.webp",
+  "w": 513
+ },
+ "enemy/frame_c_fire_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_fire_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_fly0": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_fly0_rd",
+  "src": "assets/enemy/frame_c_fly0.webp",
+  "w": 513
+ },
+ "enemy/frame_c_fly0_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_fly1": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_fly1_rd",
+  "src": "assets/enemy/frame_c_fly1.webp",
+  "w": 513
+ },
+ "enemy/frame_c_fly1_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_hurt_rd",
+  "src": "assets/enemy/frame_c_hurt.webp",
+  "w": 513
+ },
+ "enemy/frame_c_hurt_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_idle": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_idle_rd",
+  "src": "assets/enemy/frame_c_idle.webp",
+  "w": 513
+ },
+ "enemy/frame_c_idle_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/frame_c_windup": {
+  "anchor": "center",
+  "figH": 0.9776,
+  "h": 490,
+  "hit": true,
+  "relief": "enemy/frame_c_windup_rd",
+  "src": "assets/enemy/frame_c_windup.webp",
+  "w": 513
+ },
+ "enemy/frame_c_windup_rd": {
+  "h": 489,
+  "src": "assets/enemy/frame_c_windup_rd.png",
   "w": 512
  },
  "enemy/frame_fire": {
@@ -743,6 +1285,90 @@
   "src": "assets/enemy/frame_windup_rd.png",
   "w": 512
  },
+ "enemy/horn_b_blast": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_blast_rd",
+  "src": "assets/enemy/horn_b_blast.webp",
+  "w": 506
+ },
+ "enemy/horn_b_blast_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_blast_rd.png",
+  "w": 506
+ },
+ "enemy/horn_b_hover0": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_hover0_rd",
+  "src": "assets/enemy/horn_b_hover0.webp",
+  "w": 506
+ },
+ "enemy/horn_b_hover0_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_hover0_rd.png",
+  "w": 506
+ },
+ "enemy/horn_b_hover1": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_hover1_rd",
+  "src": "assets/enemy/horn_b_hover1.webp",
+  "w": 506
+ },
+ "enemy/horn_b_hover1_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_hover1_rd.png",
+  "w": 506
+ },
+ "enemy/horn_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_hurt_rd",
+  "src": "assets/enemy/horn_b_hurt.webp",
+  "w": 506
+ },
+ "enemy/horn_b_hurt_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_hurt_rd.png",
+  "w": 506
+ },
+ "enemy/horn_b_idle": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_idle_rd",
+  "src": "assets/enemy/horn_b_idle.webp",
+  "w": 506
+ },
+ "enemy/horn_b_idle_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_idle_rd.png",
+  "w": 506
+ },
+ "enemy/horn_b_windup": {
+  "anchor": "center",
+  "figH": 0.9737,
+  "h": 494,
+  "hit": true,
+  "relief": "enemy/horn_b_windup_rd",
+  "src": "assets/enemy/horn_b_windup.webp",
+  "w": 506
+ },
+ "enemy/horn_b_windup_rd": {
+  "h": 494,
+  "src": "assets/enemy/horn_b_windup_rd.png",
+  "w": 506
+ },
  "enemy/horn_blast": {
   "anchor": "center",
   "figH": 0.965,
@@ -756,6 +1382,90 @@
   "h": 491,
   "src": "assets/enemy/horn_blast_rd.png",
   "w": 512
+ },
+ "enemy/horn_c_blast": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_blast_rd",
+  "src": "assets/enemy/horn_c_blast.webp",
+  "w": 505
+ },
+ "enemy/horn_c_blast_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_blast_rd.png",
+  "w": 500
+ },
+ "enemy/horn_c_hover0": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_hover0_rd",
+  "src": "assets/enemy/horn_c_hover0.webp",
+  "w": 505
+ },
+ "enemy/horn_c_hover0_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_hover0_rd.png",
+  "w": 500
+ },
+ "enemy/horn_c_hover1": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_hover1_rd",
+  "src": "assets/enemy/horn_c_hover1.webp",
+  "w": 505
+ },
+ "enemy/horn_c_hover1_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_hover1_rd.png",
+  "w": 500
+ },
+ "enemy/horn_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_hurt_rd",
+  "src": "assets/enemy/horn_c_hurt.webp",
+  "w": 505
+ },
+ "enemy/horn_c_hurt_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_hurt_rd.png",
+  "w": 500
+ },
+ "enemy/horn_c_idle": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_idle_rd",
+  "src": "assets/enemy/horn_c_idle.webp",
+  "w": 505
+ },
+ "enemy/horn_c_idle_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_idle_rd.png",
+  "w": 500
+ },
+ "enemy/horn_c_windup": {
+  "anchor": "center",
+  "figH": 0.9845,
+  "h": 517,
+  "hit": true,
+  "relief": "enemy/horn_c_windup_rd",
+  "src": "assets/enemy/horn_c_windup.webp",
+  "w": 505
+ },
+ "enemy/horn_c_windup_rd": {
+  "h": 512,
+  "src": "assets/enemy/horn_c_windup_rd.png",
+  "w": 500
  },
  "enemy/horn_hover0": {
   "anchor": "center",
@@ -895,6 +1605,174 @@
   "src": "assets/enemy/p_shard.webp",
   "w": 304
  },
+ "enemy/paper_b_dive": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_dive_rd",
+  "src": "assets/enemy/paper_b_dive.webp",
+  "w": 499
+ },
+ "enemy/paper_b_dive_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_dive_rd.png",
+  "w": 485
+ },
+ "enemy/paper_b_fly0": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_fly0_rd",
+  "src": "assets/enemy/paper_b_fly0.webp",
+  "w": 499
+ },
+ "enemy/paper_b_fly0_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_fly0_rd.png",
+  "w": 485
+ },
+ "enemy/paper_b_fly1": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_fly1_rd",
+  "src": "assets/enemy/paper_b_fly1.webp",
+  "w": 499
+ },
+ "enemy/paper_b_fly1_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_fly1_rd.png",
+  "w": 485
+ },
+ "enemy/paper_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_hurt_rd",
+  "src": "assets/enemy/paper_b_hurt.webp",
+  "w": 499
+ },
+ "enemy/paper_b_hurt_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_hurt_rd.png",
+  "w": 485
+ },
+ "enemy/paper_b_idle": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_idle_rd",
+  "src": "assets/enemy/paper_b_idle.webp",
+  "w": 499
+ },
+ "enemy/paper_b_idle_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_idle_rd.png",
+  "w": 485
+ },
+ "enemy/paper_b_windup": {
+  "anchor": "center",
+  "figH": 0.9089,
+  "h": 527,
+  "hit": true,
+  "relief": "enemy/paper_b_windup_rd",
+  "src": "assets/enemy/paper_b_windup.webp",
+  "w": 499
+ },
+ "enemy/paper_b_windup_rd": {
+  "h": 512,
+  "src": "assets/enemy/paper_b_windup_rd.png",
+  "w": 485
+ },
+ "enemy/paper_c_dive": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_dive_rd",
+  "src": "assets/enemy/paper_c_dive.webp",
+  "w": 540
+ },
+ "enemy/paper_c_dive_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/paper_c_fly0": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_fly0_rd",
+  "src": "assets/enemy/paper_c_fly0.webp",
+  "w": 540
+ },
+ "enemy/paper_c_fly0_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/paper_c_fly1": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_fly1_rd",
+  "src": "assets/enemy/paper_c_fly1.webp",
+  "w": 540
+ },
+ "enemy/paper_c_fly1_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/paper_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_hurt_rd",
+  "src": "assets/enemy/paper_c_hurt.webp",
+  "w": 540
+ },
+ "enemy/paper_c_hurt_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/paper_c_idle": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_idle_rd",
+  "src": "assets/enemy/paper_c_idle.webp",
+  "w": 540
+ },
+ "enemy/paper_c_idle_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/paper_c_windup": {
+  "anchor": "center",
+  "figH": 0.9019,
+  "h": 520,
+  "hit": true,
+  "relief": "enemy/paper_c_windup_rd",
+  "src": "assets/enemy/paper_c_windup.webp",
+  "w": 540
+ },
+ "enemy/paper_c_windup_rd": {
+  "h": 493,
+  "src": "assets/enemy/paper_c_windup_rd.png",
+  "w": 512
+ },
  "enemy/paper_dive": {
   "anchor": "center",
   "figH": 0.8779,
@@ -1011,6 +1889,90 @@
   "src": "assets/enemy/sheet_f3.webp",
   "w": 769
  },
+ "enemy/shoe_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_bite_rd",
+  "src": "assets/enemy/shoe_b_bite.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_bite_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_crouch_rd",
+  "src": "assets/enemy/shoe_b_crouch.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_crouch_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_hurt_rd",
+  "src": "assets/enemy/shoe_b_hurt.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_hurt_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_leap_rd",
+  "src": "assets/enemy/shoe_b_leap.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_leap_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_walk0_rd",
+  "src": "assets/enemy/shoe_b_walk0.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_walk0_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 500,
+  "hit": true,
+  "relief": "enemy/shoe_b_walk1_rd",
+  "src": "assets/enemy/shoe_b_walk1.webp",
+  "w": 539
+ },
+ "enemy/shoe_b_walk1_rd": {
+  "h": 475,
+  "src": "assets/enemy/shoe_b_walk1_rd.png",
+  "w": 512
+ },
  "enemy/shoe_bite": {
   "anchor": "bottom",
   "figH": 0.9066,
@@ -1023,6 +1985,90 @@
  "enemy/shoe_bite_rd": {
   "h": 504,
   "src": "assets/enemy/shoe_bite_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_bite_rd",
+  "src": "assets/enemy/shoe_c_bite.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_bite_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_crouch_rd",
+  "src": "assets/enemy/shoe_c_crouch.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_crouch_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_hurt_rd",
+  "src": "assets/enemy/shoe_c_hurt.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_hurt_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_leap_rd",
+  "src": "assets/enemy/shoe_c_leap.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_leap_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_walk0_rd",
+  "src": "assets/enemy/shoe_c_walk0.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_walk0_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/shoe_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9114,
+  "h": 519,
+  "hit": true,
+  "relief": "enemy/shoe_c_walk1_rd",
+  "src": "assets/enemy/shoe_c_walk1.webp",
+  "w": 536
+ },
+ "enemy/shoe_c_walk1_rd": {
+  "h": 496,
+  "src": "assets/enemy/shoe_c_walk1_rd.png",
   "w": 512
  },
  "enemy/shoe_crouch": {
@@ -2085,30 +3131,150 @@
   "src": "assets/st3/d_bag.webp",
   "w": 488
  },
+ "st3/d_bag2": {
+  "h": 433,
+  "src": "assets/st3/d_bag2.webp",
+  "w": 530
+ },
  "st3/d_banner": {
   "h": 525,
   "src": "assets/st3/d_banner.webp",
   "w": 290
+ },
+ "st3/d_banner1": {
+  "h": 494,
+  "src": "assets/st3/d_banner1.webp",
+  "w": 306
+ },
+ "st3/d_banner2": {
+  "h": 495,
+  "src": "assets/st3/d_banner2.webp",
+  "w": 221
+ },
+ "st3/d_banner3": {
+  "h": 484,
+  "src": "assets/st3/d_banner3.webp",
+  "w": 304
+ },
+ "st3/d_banner4": {
+  "h": 476,
+  "src": "assets/st3/d_banner4.webp",
+  "w": 308
+ },
+ "st3/d_banner5": {
+  "h": 444,
+  "src": "assets/st3/d_banner5.webp",
+  "w": 290
+ },
+ "st3/d_banner6": {
+  "h": 455,
+  "src": "assets/st3/d_banner6.webp",
+  "w": 270
+ },
+ "st3/d_claws": {
+  "h": 451,
+  "src": "assets/st3/d_claws.webp",
+  "w": 350
  },
  "st3/d_cracks": {
   "h": 469,
   "src": "assets/st3/d_cracks.webp",
   "w": 430
  },
+ "st3/d_cracks2": {
+  "h": 487,
+  "src": "assets/st3/d_cracks2.webp",
+  "w": 399
+ },
+ "st3/d_drip": {
+  "h": 451,
+  "src": "assets/st3/d_drip.webp",
+  "w": 322
+ },
+ "st3/d_glasses": {
+  "h": 324,
+  "src": "assets/st3/d_glasses.webp",
+  "w": 414
+ },
  "st3/d_goo": {
   "h": 352,
   "src": "assets/st3/d_goo.webp",
   "w": 434
+ },
+ "st3/d_goo2": {
+  "h": 330,
+  "src": "assets/st3/d_goo2.webp",
+  "w": 452
  },
  "st3/d_papers": {
   "h": 448,
   "src": "assets/st3/d_papers.webp",
   "w": 445
  },
+ "st3/d_papers2": {
+  "h": 369,
+  "src": "assets/st3/d_papers2.webp",
+  "w": 438
+ },
+ "st3/d_poster": {
+  "h": 436,
+  "src": "assets/st3/d_poster.webp",
+  "w": 280
+ },
+ "st3/d_rash": {
+  "h": 411,
+  "src": "assets/st3/d_rash.webp",
+  "w": 376
+ },
+ "st3/d_shoe": {
+  "h": 340,
+  "src": "assets/st3/d_shoe.webp",
+  "w": 229
+ },
  "st3/d_sigil": {
   "h": 480,
   "src": "assets/st3/d_sigil.webp",
   "w": 379
+ },
+ "st3/d_sigil1": {
+  "h": 490,
+  "src": "assets/st3/d_sigil1.webp",
+  "w": 404
+ },
+ "st3/d_sigil2": {
+  "h": 440,
+  "src": "assets/st3/d_sigil2.webp",
+  "w": 440
+ },
+ "st3/d_sigil3": {
+  "h": 498,
+  "src": "assets/st3/d_sigil3.webp",
+  "w": 474
+ },
+ "st3/d_sigil4": {
+  "h": 446,
+  "src": "assets/st3/d_sigil4.webp",
+  "w": 390
+ },
+ "st3/d_sigil5": {
+  "h": 454,
+  "src": "assets/st3/d_sigil5.webp",
+  "w": 377
+ },
+ "st3/d_sigil6": {
+  "h": 476,
+  "src": "assets/st3/d_sigil6.webp",
+  "w": 443
+ },
+ "st3/d_splash": {
+  "h": 414,
+  "src": "assets/st3/d_splash.webp",
+  "w": 427
+ },
+ "st3/d_steps": {
+  "h": 426,
+  "src": "assets/st3/d_steps.webp",
+  "w": 377
  },
  "st3/end": {
   "h": 1214,

@@ -96,6 +96,27 @@ def cells(path, cols=3, rows=2):
     return pieces
 
 
+def frames(path, poses, anchor, ref=0):
+    """one sheet -> [(pose, canvas, manifest extras)]: all poses on one shared canvas, scaled to a common size (a pose much bigger than
+    the reference pose is kept a little bigger, capped), bottom-aligned or centred"""
+    ims = cells(path)
+    h0 = ims[ref].height
+    scaled = []
+    for im in ims:
+        k = min(1, CAP * h0 / im.height)
+        scaled.append(im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS))
+    CW, CH = max(i.width for i in scaled), max(i.height for i in scaled)
+    s = min(1, MAXH / CH); CW, CH = round(CW * s) + 8, round(CH * s) + 8
+    out = []
+    for name, im in zip(poses, scaled):
+        im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
+        can = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
+        x = (CW - im.width) // 2; y = CH - im.height - 2 if anchor == "bottom" else (CH - im.height) // 2
+        can.alpha_composite(im, (x, y))
+        out.append((name, can, {"anchor": anchor, "figH": round(scaled[ref].height * s / CH, 4)}))
+    return out
+
+
 def save(key, im, **extra):
     mp = OUT / "manifest.json"; man = json.loads(mp.read_text())
     (OUT / key).parent.mkdir(parents=True, exist_ok=True)
@@ -114,19 +135,6 @@ if __name__ == "__main__":
                 save(f"enemy/p_{name}", im); print("enemy/p_" + name, im.size)
             continue
         eid, poses, anchor = SHEETS[sheet]
-        ims = cells(RAW / f"{sheet}.png")
-        ref = REF.get(eid, 0); h0 = ims[ref].height
-        scaled = []
-        for im in ims:
-            k = min(1, CAP * h0 / im.height)
-            scaled.append(im.resize((round(im.width * k), round(im.height * k)), Image.LANCZOS))
-        CW, CH = max(i.width for i in scaled), max(i.height for i in scaled)
-        s = min(1, MAXH / CH); CW, CH = round(CW * s) + 8, round(CH * s) + 8
-        for name, im in zip(poses, scaled):
-            im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
-            can = Image.new("RGBA", (CW, CH), (0, 0, 0, 0))
-            x = (CW - im.width) // 2; y = CH - im.height - 2 if anchor == "bottom" else (CH - im.height) // 2
-            can.alpha_composite(im, (x, y))
-            figH = round(scaled[ref].height * s / CH, 4)
-            save(f"enemy/{eid}_{name}", can, anchor=anchor, figH=figH)
-        print(eid, (CW, CH), "figH", figH)
+        for name, can, extra in frames(RAW / f"{sheet}.png", poses, anchor, REF.get(eid, 0)):
+            save(f"enemy/{eid}_{name}", can, **extra)
+        print(eid, can.size, extra)

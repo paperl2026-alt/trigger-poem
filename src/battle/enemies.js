@@ -215,7 +215,12 @@ export class Enemy extends Actor {
     // painted stations: "at" is a floor pixel of the painting -> world x / z on that floor
     if (s.at && game.world.at) { const w = game.world.at(s.at[0], s.at[1]); s = { ...s, x: w.x, z: w.z }; }
     const pivot = def.beh === 'flyer' || def.beh === 'crawler' ? 'center' : 'bottom';
-    super(game, `enemy/${def.sprite}_${def.first}`, def.h, pivot);
+    // one of its versions (docs/ART.md 多版本): the one least seen among its kind on the field right now, so a group never looks cloned
+    const vs = def.variants || [def.sprite];
+    const live = game.actors.filter((a) => a.alive && a.type === s.type).map((a) => a.sprite);
+    const sprite = vs.map((v) => [v, live.filter((x) => x === v).length + Math.random() * 0.5]).sort((x, y) => x[1] - y[1])[0][0];
+    super(game, `enemy/${sprite}_${def.first}`, def.h, pivot);
+    this.sprite = sprite;
     this.type = s.type;
     this.def = def;
     this.beh = def.beh;
