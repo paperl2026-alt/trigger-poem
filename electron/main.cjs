@@ -27,7 +27,7 @@ function createWindow() {
   });
   Menu.setApplicationMenu(null);
   win.once('ready-to-show', () => { if (!selfTest) win.show(); });
-  win.loadURL(`app://game/${page}${selfTest ? '?play&skip' : ''}`);
+  win.loadURL(`app://game/${page}${selfTest ? (page.includes('?') ? '&' : '?') + 'play&skip' : ''}`);
   if (selfTest) {
     win.webContents.once('did-finish-load', () => setTimeout(async () => {
       const info = await win.webContents.executeJavaScript('JSON.stringify({ errs: window.__errs, combat: !!(window.__G && __G.game && __G.game.combat), size: [innerWidth, innerHeight], build: window.__G && __G.build, players: window.__G && __G.game && __G.game.players.map((p) => p.state) })');
