@@ -9,5 +9,5 @@
     "tailtip": { "f": 1.4, "z": 0.18, "amp": 0.034, "max": 0.1, "swell": 0, "impY": 0.6, "impX": 1, "idle": "wag", "wag": [0.05, 0.014], "lag": 1 },
     "ear": { "f": 7, "z": 0.22, "amp": 0, "max": 0.03, "swell": 0, "impY": 0, "impX": 0, "idle": "twitch" }
   },
-  "jiggle": { "amp": 0.35, "ring": 0.6, "rhythm": 1.6, "sweat": 0.8 }
+  "jiggle": { "amp": 0.35, "ring": 0.6, "rhythm": 1.6, "sweat": 0.8, "echo": { "beat": 0.85, "grow": 0.3, "a": 0.85 } }
 }

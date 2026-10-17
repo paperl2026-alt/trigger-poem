@@ -311,9 +311,10 @@ class Panel {
     // skill ring
     const RU = this.ring.material.uniforms;
     RU.fill.value = p.activeOn ? p.activeT / p.a.dur : p.charge; RU.time.value = t; RU.full.value = p.charge >= 1 && !p.activeOn ? 1 : 0; RU.on.value = p.activeOn ? 1 : 0;
-    // the ready badge (a player's girl only: the AI fires hers by herself): stamped in with a sound, then it keeps bouncing
+    // the ready badge on her own side (a player's girl only: the AI fires hers by herself): stamped in with a sound, then it keeps
+    // bouncing; her figure shows it too (afterimages, heroine.js setReady). No prompt in the middle: with two players it says nobody's
     const kind = p.ctrl?.kind, ready = p.charge >= 1 && !p.activeOn && g.combat && !!kind && kind !== 'ai' && p.state !== 'down';
-    if (ready && !this.wasReady) { this.rdyT = 0; sfx.stamp(); if (p.slot === 0 && kind === 'mouse') g.hud.tutorial('skill'); }
+    if (ready && !this.wasReady) { this.rdyT = 0; sfx.stamp(); }
     this.wasReady = ready;
     this.rdy.m.visible = this.rdyK.m.visible = ready;
     if (ready) {

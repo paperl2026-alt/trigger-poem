@@ -251,6 +251,7 @@ export class Player {
       this.walkK = (this.walkK || 0) + ((this.state === 'run' ? 1 : 0) - (this.walkK || 0)) * Math.min(1, dt * Wk.ease);
       const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = 1 + (Wk.zoom - 1) * wk;
       const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom);
+      this.hero.setReady(this.charge >= 1 && !this.activeOn && g.combat && this.state !== 'down' && this.state !== 'away');
       this.hero.update(dt, t, {
         state: this.state, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0),
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,

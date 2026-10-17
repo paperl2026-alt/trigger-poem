@@ -126,6 +126,11 @@ float auraLight() {
 void main() {
   vec4 t = texture2D(map, vUv);
   if (t.a < 0.02) discard;
+  if (auraOnly > 1.5) {   // an afterimage (battle: her special is ready): her silhouette in her colour, a little of the picture showing through
+    float lum = dot(t.rgb, vec3(0.3, 0.59, 0.11));
+    gl_FragColor = vec4(mix(aura.rgb * 1.2, vec3(1.0), 0.45 + 0.25 * lum), t.a * aura.a * opacity);
+    return;
+  }
   if (auraOnly > 0.5) {
     float k = aura.a * auraLight();
     gl_FragColor = vec4(aura.rgb * k, t.a * min(1.0, k) * opacity);

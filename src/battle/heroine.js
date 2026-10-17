@@ -37,6 +37,14 @@ export class Heroine {
       halo.renderOrder = m.renderOrder - 0.5; halo.frustumCulled = false; halo.visible = false;
       m.userData.halo = halo;
       this.g.add(halo);
+      // afterimages for "her special is ready": the same mesh drawn as a flat silhouette in her colour, behind her (DESIGN「必杀好了」)
+      m.userData.echoes = [0, 1, 2].map((k) => {
+        const eu = { ...m.material.uniforms, auraOnly: { value: 2 }, aura: { value: new THREE.Vector4() }, opacity: { value: 1 } };
+        const e = new THREE.Mesh(m.geometry, new THREE.ShaderMaterial({ uniforms: eu, vertexShader: m.material.vertexShader, fragmentShader: m.material.fragmentShader,
+          transparent: true, depthTest: false, depthWrite: false }));
+        e.renderOrder = m.renderOrder - 0.7 - k * 0.01; e.frustumCulled = false; e.visible = false;
+        this.g.add(e); return e;
+      });
       this.g.add(m);
       this.poses[name] = m;
     }
@@ -48,6 +56,12 @@ export class Heroine {
     this.exert = 0.3; this.acc = 0; this.lastBreath = 0; this.hitT = 0;
     this.canvasPx = 600;
     this.aura = { col: new THREE.Color(1, 1, 1), a: 0, flow: 0, pulse: 0, halo: 0 };
+    this.ready = false; this.readyFlash = 0; this.readyK = 0; this.readyCol = new THREE.Color(player.c.color);
+  }
+  // her special is ready (player.js): she flashes once, then afterimages keep swelling out of her body and fading, until she uses it
+  setReady(on) {
+    if (on && !this.ready) this.readyFlash = 1;
+    this.ready = on;
   }
   // the Fever / skill look (player.js decides): colour, strength 0..1, flow 0..1 (how fast the light runs), pulse (decays), halo size
   setAura(col, a, flow, halo) { this.aura.col.copy(col); this.aura.a = a; this.aura.flow = flow; this.aura.halo = halo; }
@@ -110,7 +124,7 @@ export class Heroine {
       b.apply(p, sign);
       const U = p.material.uniforms;
       U.wet.value = wet; U.flush.value = flush; U.time.value = t; U.mir.value = sign;
-      U.flash.value = st.flash || 0;
+      U.flash.value = Math.max(st.flash || 0, this.readyFlash * 0.85);
       U.tintAmt.value = this.hitT > 0 ? this.hitT * 1.2 : 0;
       U.dark.value = st.dark || 0;
       U.opacity.value = st.opacity ?? 1;
@@ -121,10 +135,24 @@ export class Heroine {
       halo.visible = p.visible && U.aura.value.w > 0.02;
       halo.position.copy(p.position); halo.rotation.copy(p.rotation);
       halo.scale.set(p.scale.x * hs, p.scale.y * hs, 1);
+      // the afterimages: three copies a third of a beat apart, each swelling about her body's middle and fading out
+      const E = this.J.echo || { beat: 0.85, grow: 0.3, a: 0.85 };
+      p.userData.echoes.forEach((e, k) => {
+        e.visible = p.visible && this.readyK > 0.01 && st.visible !== false;
+        if (!e.visible) return;
+        const ph = (t / E.beat + k / 3) % 1, s = 1 + E.grow * ph, figH = Math.abs(p.scale.y) * p.userData.ar;
+        e.position.set(p.position.x, p.position.y - (s - 1) * figH * 0.45, 0); e.rotation.copy(p.rotation);
+        e.scale.set(p.scale.x * s, p.scale.y * s, 1);
+        const c = this.readyCol;
+        e.material.uniforms.aura.value.set(c.r, c.g, c.b, E.a * this.readyK * Math.pow(1 - ph, 1.6));
+        e.material.uniforms.opacity.value = st.opacity ?? 1;
+      });
       if (p.visible) { p.userData.sweat.step(dt, wet, 0); p.userData.sweat.render(dt); }
       p.userData.sweat.apply(U);
     }
     this.hitT = Math.max(0, this.hitT - dt);
+    this.readyFlash = Math.max(0, this.readyFlash - dt * 4);
+    this.readyK += ((this.ready ? 1 : 0) - this.readyK) * Math.min(1, dt * (this.ready ? 3 : 10));
     this.aura.pulse = Math.max(0, this.aura.pulse - dt * 1.6);
     this.g.position.set(st.x, st.y, 0);
     this.g.scale.setScalar(st.zoom || 1);   // walking: the shot moves in on her (player.js)
