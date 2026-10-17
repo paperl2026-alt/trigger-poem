@@ -4,7 +4,7 @@ dist/
 release/
 art/_shots/
 art/jiggle_test/
-tools/__pycache__/
+__pycache__/
 *.log
 tools/models/
 dist-portable/
