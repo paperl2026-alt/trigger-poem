@@ -24,12 +24,10 @@ export class Hud {
     this.banner = $('div', 'banner hidden', root);
     this.tip = $('div', 'tip hidden', root);
     this.shouts = $('div', 'shouts', root);
-    this.nums = $('div', 'nums', document.body);
-    this.dmgs = new Map();
     this.tut = null;
   }
   show(v) { this.root.classList.toggle('hidden', !v); this.gl.show(v); }
-  dispose() { this.gl.dispose(); this.nums.remove(); clearTimeout(this.bT); clearTimeout(this.tipT); }
+  dispose() { this.gl.dispose(); clearTimeout(this.bT); clearTimeout(this.tipT); }
   // the old face moods -> the chibi portrait's reactions
   setFace(slot, f, hold) { this.gl.react(slot, { scared: 'hurt', hurt: 'cry', hype: 'fever', happy: 'idle' }[f] || f, hold || 1.2); }
   showBanner(text, cls = '', dur = 1.4) {
@@ -63,33 +61,12 @@ export class Hud {
   }
   healPop() {}
   boss(name, frac, phase, phases) { this.gl.boss(name, frac, phase, phases); }
-  // every hit: one counter per enemy that keeps adding up while you keep hitting it (screen px, top-left origin)
-  dmg(target, x, y, value, crit, color) {
-    let d = this.dmgs.get(target);
-    if (!d || d.dead) {
-      if (this.nums.childElementCount > 30) { const old = this.nums.firstChild; this.dmgs.forEach((v, k) => { if (v.el === old) this.dmgs.delete(k); }); old.remove(); }
-      const el = $('div', 'dn', this.nums);
-      d = { el, sum: 0, t: 0, x, y, dead: false };
-      this.dmgs.set(target, d);
-    }
-    d.sum += value; d.t = 0.75; d.x = x; d.y = y;
-    d.el.textContent = Math.round(d.sum);
-    d.el.style.setProperty('--c', color);
-    d.el.classList.toggle('crit', crit || d.el.classList.contains('crit'));
-    d.el.style.fontSize = `calc(${Math.min(9, 3.6 + Math.log10(1 + d.sum) * 1.4)} * min(1vh, 0.5625vw))`;
-    d.el.classList.remove('pop'); void d.el.offsetWidth; d.el.classList.add('pop');
-    if (crit) { const c = $('i', 'ct', d.el); c.textContent = L3('暴击!', 'CRIT!', 'クリティカル!'); }
-  }
+  // every hit: one counter per enemy that keeps adding up (screen px, top-left origin), drawn by the GL HUD
+  dmg(target, x, y, value, crit, color) { this.gl.dmg(target, x, y, value, crit, color); }
   update(dt) {
     const g = this.game;
     this.time += dt;
     this.gl.update(dt, this.time);
     if (this.tut && !this.tut.skill && g.combat && g.players[0].charge >= 1) this.tutorial('skill');
-    // damage counters drift up and fade after the last hit
-    this.dmgs.forEach((d, k) => {
-      d.t -= dt;
-      d.el.style.transform = `translate(${d.x}px, ${d.y - (0.75 - Math.max(0, d.t)) * 30}px) translate(-50%, -100%)`;
-      if (d.t <= 0 && !d.dead) { d.dead = true; d.el.classList.add('out'); setTimeout(() => d.el.remove(), 350); this.dmgs.delete(k); }
-    });
   }
 }

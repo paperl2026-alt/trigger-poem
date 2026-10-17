@@ -21,7 +21,7 @@ import { HybridCtrl, PadBook, PAD } from './core/input.js';
 THREE.ColorManagement.enabled = false;
 window.__errs = [];
 const noteErr = (m) => { if (window.__errs.length < 20) { window.__errs.push(String(m)); document.documentElement.dataset.errs = window.__errs.join(' | '); } };
-window.addEventListener('error', (e) => noteErr(e.message));
+window.addEventListener('error', (e) => noteErr(e.error && e.error.stack ? `${e.message} @ ${e.error.stack.split(String.fromCharCode(10)).slice(1, 4).join(' / ')}` : e.message));   // where it broke, for the self-test
 window.addEventListener('unhandledrejection', (e) => noteErr(e.reason && (e.reason.stack || e.reason.message) || e.reason));
 
 const canvas = document.getElementById('game');
@@ -237,6 +237,7 @@ async function boot() {
   document.body.appendChild(gear);
   if (q.has('auto')) G.auto = true;
   if (q.has('skip')) G.forceSkip = true;
+  if (q.has('team')) SAVE.team = q.get('team').split(',');   // test runs: ?team=cat,pink (1P, 2P)
   if (q.has('play') || q.has('ep') || q.has('step')) {
     if (q.has('skip')) DBG.skip = true;
     startRun(q.get('ep') || 'ep0', +(q.get('step') || 0));

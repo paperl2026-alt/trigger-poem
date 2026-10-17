@@ -14,9 +14,13 @@ const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionM
 // outlines, tint, flash, a circle mask (portraits), a clip rect (fills)
 const FRAG = `
 uniform sampler2D map; uniform float a; uniform float time; uniform float boil; uniform float shine; uniform vec3 tint; uniform float tintK;
-uniform float flash; uniform float circle; uniform float seed;
+uniform float flash; uniform float circle; uniform float seed; uniform float recol; uniform float hueTo;
 varying vec2 vUv;
 float h1(float n){ return fract(sin(n) * 43758.5453); }
+vec3 rgb2hsv(vec3 c){ vec4 K = vec4(0.0, -1.0/3.0, 2.0/3.0, -1.0); vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
+  vec4 q = mix(vec4(p.xyw, c.r), vec4(c.r, p.yzx), step(p.x, c.r)); float d = q.x - min(q.w, q.y); float e = 1.0e-10;
+  return vec3(abs(q.z + (q.w - q.y) / (6.0 * d + e)), d / (q.x + e), q.x); }
+vec3 hsv2rgb(vec3 c){ vec3 p = abs(fract(c.xxx + vec3(1.0, 2.0/3.0, 1.0/3.0)) * 6.0 - 3.0); return c.z * mix(vec3(1.0), clamp(p - 1.0, 0.0, 1.0), c.y); }
 void main(){
   vec2 uv = vUv;
   float st = floor(time * 8.0) + seed * 13.0;
@@ -24,6 +28,11 @@ void main(){
   uv.x += sin(uv.y * 40.0 + st) * boil * 0.0012;
   if (circle > 0.0) { if (length(uv - 0.5) > circle) discard; }
   vec4 t = texture2D(map, uv);
+  if (recol > 0.5) {   // the panel's own pink / violet (not the red of the P5 style) becomes the girl's colour
+    vec3 h = rgb2hsv(t.rgb);
+    float k = smoothstep(0.66, 0.70, h.x) * smoothstep(0.955, 0.935, h.x) * smoothstep(0.2, 0.35, h.y);
+    t.rgb = mix(t.rgb, hsv2rgb(vec3(hueTo, h.y, h.z)), k);
+  }
   vec3 c = mix(t.rgb, tint * (0.35 + 0.9 * dot(t.rgb, vec3(0.333))), tintK);
   float lum = min(min(t.r, t.g), t.b);
   float band = smoothstep(0.07, 0.0, abs(fract(uv.x * 0.9 + uv.y * 0.4 - time * 0.45 + seed) - 0.5));
@@ -93,10 +102,12 @@ function mat(frag, u, opts = {}) {
 }
 function picture(key, order, seed = 0) {
   const u = { map: { value: tex[key] || null }, a: { value: 1 }, time: { value: 0 }, boil: { value: 1 }, shine: { value: 0 },
-    tint: { value: new THREE.Color(1, 1, 1) }, tintK: { value: 0 }, flash: { value: 0 }, circle: { value: 0 }, seed: { value: seed } };
+    tint: { value: new THREE.Color(1, 1, 1) }, tintK: { value: 0 }, flash: { value: 0 }, circle: { value: 0 }, seed: { value: seed },
+    recol: { value: 0 }, hueTo: { value: 0 } };
   const m = new THREE.Mesh(quad, mat(FRAG, u)); m.renderOrder = order; m.frustumCulled = false; m.visible = !!tex[key];
   return m;
 }
+function recolor(m, col) { const h = {}; col.getHSL(h); m.material.uniforms.recol.value = 1; m.material.uniforms.hueTo.value = h.h; }
 
 // ---- text drawn into a canvas (P5 lettering: heavy italic, black outline, offset shadow), redrawn only when it changes
 const FONT = '"Noto Sans SC", "Microsoft YaHei", sans-serif';
@@ -106,7 +117,7 @@ export class Text {
     this.c = document.createElement('canvas'); this.g = this.c.getContext('2d');
     this.t = new THREE.CanvasTexture(this.c); this.t.colorSpace = THREE.SRGBColorSpace;
     const u = { map: { value: this.t }, a: { value: 1 }, time: { value: 0 }, boil: { value: 0 }, shine: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) },
-      tintK: { value: 0 }, flash: { value: 0 }, circle: { value: 0 }, seed: { value: 0 } };
+      tintK: { value: 0 }, flash: { value: 0 }, circle: { value: 0 }, seed: { value: 0 }, recol: { value: 0 }, hueTo: { value: 0 } };
     this.m = new THREE.Mesh(quad, mat(FRAG, u)); this.m.renderOrder = order; this.m.frustumCulled = false;
     this.str = null; this.px = 0; this.pop = 0;
   }
@@ -114,6 +125,7 @@ export class Text {
   set(str, h, color, maxW = 0) {
     str = String(str); h = Math.max(6, Math.round(h)); maxW = Math.round(maxW);
     if (color && color !== this.st.color) { this.st.color = color; this.str = null; }
+    if (this.st.shadow !== this.drawnShadow) { this.drawnShadow = this.st.shadow; this.str = null; }
     if (str === this.str && h === this.px && maxW === this.mw) return false;
     this.str = str; this.px = h; this.mw = maxW;
     const S = this.st, g = this.g;
@@ -176,9 +188,14 @@ const FACES = {
 class Panel {
   constructor(hud, p) {
     this.hud = hud; this.p = p; this.slot = p.slot;
-    const B = hud.B, D = this.D = B[p.slot ? 'p2' : 'p1'], an = this.an = D.anchor, g = hud.g, col = this.col = new THREE.Color(p.c.color);
+    // each side keeps the mockup's own panel; its pink / violet is turned into the colour of the girl standing there (the team can be
+    // swapped on the select screen), and her own ammo is drawn on it (magazine ticks for the gun, talismans for the cat girl)
     this.cat = p.w.kind === 'mantra';
+    const side = p.slot ? 'p2' : 'p1';
+    const B = hud.B, D = this.D = B[side], an = this.an = D.anchor, g = hud.g, col = this.col = new THREE.Color(p.c.color);
+    this.lay = B.layers[p.slot ? 'right' : 'left'];
     this.layer = picture(`ui/hud_${p.slot ? 'right' : 'left'}`, 61, p.slot * 0.37);
+    recolor(this.layer, col);
     this.face = picture(`ui/chibi_${this.who()}_1`, 62, 0.2); this.face.material.uniforms.circle.value = 0.5; this.face.material.uniforms.boil.value = 0;
     this.ring = new THREE.Mesh(quad, mat(RING_FRAG, { fill: { value: 0 }, r0: { value: 0 }, r1: { value: 1 }, segs: { value: D.ring.segs },
       a0: { value: D.ring.from * Math.PI / 180 }, a1: { value: D.ring.to * Math.PI / 180 }, col: { value: col.clone() }, a: { value: 1 }, time: { value: 0 },
@@ -187,7 +204,7 @@ class Panel {
     this.hp = new THREE.Mesh(quad, mat(BAR_FRAG, { fill: { value: 1 }, lag: { value: 1 }, col: { value: col.clone() }, col2: { value: new THREE.Color(1, 0.92, 0.95) },
       a: { value: 1 }, time: { value: 0 }, flash: { value: 0 }, px: { value: new THREE.Vector2(100, 10) } }));
     this.hp.renderOrder = 62; this.hp.frustumCulled = false;
-    this.heart = picture(p.slot ? 'ui/hud_ic_heart2' : 'ui/hud_ic_heart', 64, 0.5);
+    this.heart = picture(this.cat ? 'ui/hud_ic_heart2' : 'ui/hud_ic_heart', 64, 0.5);
     this.t = {
       tag: new Text(65), name: new Text(65), lv: new Text(65), hp: new Text(65, { sw: 0.12 }),
       key: new Text(65, { color: '#121012', stroke: null, italic: false }), ammo: new Text(65, { shadow: '#d8141e', sw: 0.14 }), ammoMax: new Text(65, { sw: 0.14 }),
@@ -228,8 +245,7 @@ class Panel {
   }
   layout() {
     const L = this.hud.L, D = this.D, an = this.an, s = L.s;
-    const lay = this.hud.B.layers[this.slot ? 'right' : 'left'];
-    L.box(this.layer, lay.box, lay.anchor);
+    L.box(this.layer, this.lay.box, this.lay.anchor);
     const pc = D.portrait.c, pr = D.portrait.r * 1.32;   // the chibi's own round frame lies outside the white disc: masked off
     const disc = D.portrait.r * 1.1;
     L.box(this.face, [pc[0] - pr, pc[1] - pr, pc[0] + pr, pc[1] + pr], an);
@@ -393,7 +409,7 @@ const STATES = ['idle', 'lock', 'fire', 'reload', 'cover', 'empty', 'fever', 'sp
 class Reticle {
   constructor(hud, p) {
     this.hud = hud; this.p = p;
-    this.set = hud.B.reticle[p.slot ? 'p2' : 'p1'];
+    this.set = hud.B.reticle[p.w.kind === 'mantra' ? 'cat' : 'pink'];   // by who she is, not by which side she stands on
     this.mk = () => { const u = { map: { value: null }, a: { value: 1 }, rin: { value: 0 }, rout: { value: 0 }, split: { value: 0.22 }, flash: { value: 0 }, time: { value: 0 } };
       const m = new THREE.Mesh(quad, mat(RET_FRAG, u)); m.renderOrder = 70 + p.slot; m.frustumCulled = false; hud.g.add(m); return m; };
     this.cur = this.mk(); this.old = this.mk(); this.old.visible = false;
@@ -404,36 +420,43 @@ class Reticle {
     this.lineB = new THREE.Mesh(quad, new THREE.MeshBasicMaterial({ color: 0x121012, transparent: true, depthTest: false, depthWrite: false }));
     this.lineB.renderOrder = 68.5; this.lineB.frustumCulled = false; hud.g.add(this.lineB);
     this.tag = picture(hud.B.warn.tag, 69, p.slot * 0.4); hud.g.add(this.tag);
+    this.ghost = new THREE.Mesh(new THREE.RingGeometry(0.35, 0.5, 24), new THREE.MeshBasicMaterial({ color: p.c.color, transparent: true, depthTest: false, depthWrite: false }));
+    this.ghost.renderOrder = 71; this.ghost.frustumCulled = false; hud.g.add(this.ghost);
     this.name = new Text(69.5, { sw: 0.1 }); hud.g.add(this.name.m);
     this.lockK = 0; this.lastShots = p.shots || 0;
   }
   update(dt, t) {
     const g = this.hud.game, p = this.p, H = this.hud.L.H, ct = p.ctrl;
-    const vis = g.combat && ct && ct.active && p.state !== 'down' && p.state !== 'away';
-    for (const m of [this.cur, this.old, this.line, this.lineB, this.tag, this.name.m]) m.visible = false;
+    // a player's own reticle never leaves her pointer while the battle is on screen (between waves, walking, down: shown calm); the AI's only
+    // in a fight
+    const human = ct && ct.kind !== 'ai';
+    const vis = ct && ct.active && p.state !== 'away' && (g.combat || human);
+    for (const m of [this.cur, this.old, this.line, this.lineB, this.tag, this.name.m, this.ghost]) m.visible = false;
     if (!vis) return;
     // the monster under her aim, if any
     const over = g.actors.find((a) => { if (!a.alive || !a.hitMeshes || !a.hitMeshes().length || !a.def) return false; const b = g.box(a); return p.aimX > b.x0 && p.aimX < b.x1 && p.aimY > b.y0 && p.aimY < b.y1; });
     const inf = p.gatling || p.beaming;
-    const st = p.activeOn ? 'special' : p.state === 'reload' ? 'reload' : (p.ammo <= 0 && !inf) ? 'empty'
+    const st = !g.combat || p.state === 'down' || p.state === 'run' ? 'cover' : p.activeOn ? 'special' : p.state === 'reload' ? 'reload' : (p.ammo <= 0 && !inf) ? 'empty'
       : p.state === 'cover' || p.state === 'hurt' ? 'cover' : p.fever.full ? 'fever' : over ? 'lock' : 'idle';
     if (st !== this.state) {   // the old form flies apart, the new one snaps in turning
       const tmp = this.old; this.old = this.cur; this.cur = tmp;
-      this.oldK = 1; this.k = 0; this.state = st;
+      this.oldK = 1; this.k = 0.55; this.state = st;   // the new form is there at once (it only finishes popping in)
       const key = `ui/ret_${this.set}_${st}`;
       this.cur.material.uniforms.map.value = tex[key] || tex[`ui/ret_${this.set}_idle`];
     }
     if ((p.shots || 0) !== this.lastShots) { this.kick = 1; this.lastShots = p.shots || 0; }
     this.kick = Math.max(0, this.kick - dt * 9);
-    this.k = Math.min(1, this.k + dt * 7); this.oldK = Math.max(0, (this.oldK || 0) - dt * 5);
+    this.k = Math.min(1, this.k + dt * 9); this.oldK = Math.max(0, (this.oldK || 0) - dt * 7);
     const size = H * this.hud.B.reticle.size * (st === 'special' ? 1.5 : st === 'fever' ? 1.25 : st === 'cover' ? 0.7 : 1);
     // motion per state: slow drift, locked = tight fast counter-spin, firing = kicks out, reload = a steady turn, special = a whirl
     const sp = { idle: [0.3, -0.5], lock: [2.2, -3.4], fire: [0.6, -0.6], reload: [3.5, 0], cover: [0.15, -0.15], empty: [0, 0], fever: [1.4, -2.4], special: [5, -7] }[st];
     this.spin += dt;
+    // where it is: her aim this very frame (the slow beam aim of the cat girl's special is drawn there, and her pointer gets a dot)
     const x = p.aimX, y = H - p.aimY, pop = 1 + (1 - this.k) * 0.6 * (1 - this.k);
+    if (p.beaming && human) { this.ghost.visible = true; this.ghost.position.set(ct.x, H - ct.y, 0); this.ghost.scale.setScalar(H * 0.018); }
     const U = this.cur.material.uniforms;
     U.rin.value = this.spin * sp[1]; U.rout.value = this.spin * sp[0] + (1 - this.k) * 1.2; U.time.value = t;
-    U.a.value = this.k * (st === 'cover' ? 0.75 : 1); U.flash.value = this.kick * 0.35;
+    U.a.value = Math.min(1, 0.4 + this.k) * (st === 'cover' ? 0.75 : 1); U.flash.value = this.kick * 0.35;
     this.cur.visible = !!U.map.value;
     const shake = st === 'empty' ? Math.sin(t * 50) * H * 0.004 : 0;
     this.cur.position.set(x + shake, y, 0); this.cur.scale.setScalar(size * pop * (1 + this.kick * 0.12));
@@ -462,7 +485,7 @@ class Reticle {
 class Veil {
   constructor(hud, p) {
     this.hud = hud; this.p = p;
-    this.m = picture(`ui/load_${hud.B.load[p.slot ? 'p2' : 'p1']}`, 58, p.slot * 0.5); hud.g.add(this.m);
+    this.m = picture(`ui/load_${hud.B.load[p.w.kind === 'mantra' ? 'cat' : 'pink']}`, 58, p.slot * 0.5); hud.g.add(this.m);
     this.k = 0;
   }
   update(dt, t) {
@@ -472,11 +495,11 @@ class Veil {
     this.m.visible = this.k > 0.02 && !!this.m.material.uniforms.map.value;
     if (!this.m.visible) return;
     const rk = p.state === 'reload' ? 1 - p.reloadT / (p.reloadT0 || 1) : 0;
-    const size = H * this.hud.B.load.size * (0.85 + 0.15 * this.k);
+    const size = H * this.hud.B.load.size * (0.85 + 0.15 * this.k);   // sits above her head, see-through: she stays visible
     const U = this.m.material.uniforms;
     U.a.value = this.k * this.hud.B.load.alpha * (0.8 + 0.2 * Math.sin(t * 7));   // see-through but clearly readable, pulsing (若隐若现)
     U.time.value = t; U.shine.value = 1;
-    this.m.position.set(p.baseX, H * 0.52, 0);
+    this.m.position.set(p.baseX, H * this.hud.B.load.y, 0);
     this.m.rotation.z = Math.sin(t * 3) * 0.06 + rk * 0.5;
     this.m.scale.set(size * (p.mirror ? -1 : 1), size, 1);
   }
@@ -544,6 +567,40 @@ class BossBar {
   }
 }
 
+// ---------------------------------------------------------------- damage counters: one per monster, adding up while you keep hitting it
+class Damage {
+  constructor(hud) { this.hud = hud; this.pool = []; this.live = new Map(); }
+  get() {
+    let d = this.pool.find((x) => !x.on);
+    if (!d) {
+      if (this.pool.length >= 24) { d = this.pool[0]; this.live.forEach((v, k) => { if (v === d) this.live.delete(k); }); }
+      else { d = { n: new Text(66, { sw: 0.12 }), c: new Text(66.5, { color: '#fff36a', shadow: '#d8141e', sw: 0.14 }) }; this.hud.g.add(d.n.m, d.c.m); this.pool.push(d); }
+    }
+    return d;
+  }
+  // x, y: screen px from the top-left (the game's box of the monster)
+  add(target, x, y, value, crit, color) {
+    let d = this.live.get(target);
+    if (!d || !d.on) { d = this.get(); d.on = true; d.sum = 0; d.crit = false; d.age = 0; this.live.set(target, d); }
+    d.sum += value; d.t = 0.8; d.x = x; d.y = y; d.crit = d.crit || crit; d.color = color; d.pop = 1;
+  }
+  update(dt) {
+    const H = this.hud.L.H;
+    for (const d of this.pool) {
+      if (!d.on) { d.n.m.visible = d.c.m.visible = false; continue; }
+      d.t -= dt; d.age += dt; d.pop = Math.max(0, d.pop - dt * 7);
+      if (d.t <= -0.3) { d.on = false; this.live.forEach((v, k) => { if (v === d) this.live.delete(k); }); continue; }
+      const a = d.t > 0 ? 1 : 1 + d.t / 0.3, rise = (0.8 - Math.max(0, d.t)) * H * 0.05 + (d.t < 0 ? -d.t * H * 0.1 : 0);
+      const h = H * Math.min(0.09, 0.034 + Math.log10(1 + d.sum) * 0.012) * (d.crit ? 1.25 : 1);
+      d.n.st.shadow = d.color; d.n.set(`${Math.round(d.sum)}`, h, d.crit ? '#fff36a' : '#ffffff');
+      d.n.at(d.x, H - d.y + rise + h * 0.6, -6, 1 + d.pop * 0.35);
+      d.n.m.visible = true; d.n.m.material.uniforms.a.value = a;
+      d.c.m.visible = d.crit;
+      if (d.crit) { d.c.set({ zh: '暴击!', ja: 'クリティカル!', en: 'CRIT!' }[lang] || 'CRIT!', h * 0.42); d.c.at(d.x + h * 0.9, H - d.y + rise + h * 1.35, 8, 1 + d.pop * 0.3); d.c.m.material.uniforms.a.value = a; }
+    }
+  }
+}
+
 // ---------------------------------------------------------------- the whole HUD
 export class HudGL {
   constructor(game) {
@@ -555,11 +612,13 @@ export class HudGL {
     this.veils = game.players.map((p) => new Veil(this, p));
     this.downs = game.players.map((p) => new Down(this, p));
     this.bossBar = new BossBar(this);
+    this.damage = new Damage(this);
     this.visible = true;
   }
   show(v) { this.visible = v; this.g.visible = v; }
   react(slot, kind, hold) { this.panels[slot]?.react(kind, hold); }
   boss(name, frac, phase, phases) { this.bossBar.set(name, frac, phase, phases); }
+  dmg(target, x, y, value, crit, color) { this.damage.add(target, x, y, value, crit, color); }
   update(dt, t) {
     const g = this.game;
     this.L.set(g.W, g.H, g.G.frame);
@@ -570,6 +629,7 @@ export class HudGL {
     for (const v of this.veils) v.update(dt, t);
     for (const d of this.downs) d.update(dt, t);
     this.bossBar.update(dt, t);
+    this.damage.update(dt);
   }
   dispose() { this.game.overlay.remove(this.g); }
 }
