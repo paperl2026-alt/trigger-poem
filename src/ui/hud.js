@@ -62,6 +62,35 @@ export class Hud {
     this.tipT = setTimeout(() => tip.classList.add('hidden'), kind === 'fire' ? 7000 : 5000);
   }
   healPop(slot, n) { this.gl?.heal(slot, n); }
+  // a lesson card before the fight (content text/lessons.json, docs/DESIGN.md 序章「这是教学关」): the game waits until it is clicked away
+  lesson(id, done) {
+    const D = C.text.lessons?.[id];
+    if (!D) { done(false); return; }
+    const back = $('div', 'lesson', this.root), card = $('div', 'lcard', back);
+    const face = url(`ui/chibi_${D.who}_${D.face}`);
+    if (face) { const im = $('img', 'lface', card); im.src = face; }
+    $('div', 'ltitle', card).textContent = tr(D.title);
+    const rows = $('div', 'lrows', card);
+    for (const r of D.rows) {
+      const row = $('div', 'lrow', rows), ic = $('div', `lic ${r.icon}`, row);
+      if (r.icon === 'mouseL' || r.icon === 'mouseR' || r.icon === 'release') { const m = $('div', `mouse ${r.icon === 'mouseR' ? 'r' : r.icon === 'mouseL' ? 'l' : ''}`, ic); $('i', '', m); $('i', '', m); }
+      $('div', 'ltext', row).textContent = tr(r.text);
+    }
+    if (D.note) $('div', 'lnote', card).textContent = tr(D.note);
+    $('div', 'lgo', card).textContent = L3('点击继续 ▶', 'CLICK TO START ▶', 'クリックで開始 ▶');
+    let shown = 0;
+    const close = (e) => {
+      if (performance.now() - shown < 450) return;   // (no accidental skip with the click that was already held)
+      e?.preventDefault?.(); e?.stopPropagation?.();
+      window.removeEventListener('keydown', key, true);
+      back.classList.add('out'); setTimeout(() => back.remove(), 260);
+      done();
+    };
+    const key = (e) => { if (['Space', 'Enter', 'KeyZ', 'KeyX'].includes(e.code)) close(e); };
+    shown = performance.now();
+    back.addEventListener('pointerdown', close);
+    window.addEventListener('keydown', key, true);
+  }
   boss(name, frac, phase, phases) { this.gl.boss(name, frac, phase, phases); }
   // every hit: one counter per enemy that keeps adding up (screen px, top-left origin), drawn by the GL HUD
   dmg(target, x, y, value, crit, color) { this.gl.dmg(target, x, y, value, crit, color); }
@@ -69,6 +98,5 @@ export class Hud {
     const g = this.game;
     this.time += dt;
     this.gl.update(dt, this.time);
-    if (this.tut && !this.tut.skill && g.combat && g.players[0].charge >= 1) this.tutorial('skill');
   }
 }

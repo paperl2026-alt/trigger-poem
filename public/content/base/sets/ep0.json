@@ -269,7 +269,7 @@
      -5
     ],
     "invade": true,
-    "tutorial": true,
+    "lesson": "shoot",
     "covers": [
      {
       "k": "cover/lockers",
@@ -369,6 +369,7 @@
      1.0,
      7
     ],
+    "lesson": "shootdown",
     "covers": [
      {
       "k": "cover/lectern",
@@ -769,7 +770,8 @@
        "z": -8
       }
      ]
-    ]
+    ],
+    "lesson": "interrupt"
    },
    "cor2": {
     "via": [
@@ -885,7 +887,8 @@
       }
      ]
     ],
-    "monsterFar": 4.8
+    "monsterFar": 4.8,
+    "lesson": "skill"
    }
   }
  },
@@ -1007,6 +1010,7 @@
      6.5,
      -22
     ],
+    "lesson": "boss",
     "covers": [
      {
       "k": "cover/c_bench",

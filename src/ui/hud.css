@@ -4,6 +4,46 @@
 #hud { --red: #d8141e; --ink: #121012; --paper: #f3f1ee; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-weight: 900; }
 #hud.hidden { display: none; }
 
+/* ---- a lesson card before a fight (hud.js lesson): a slanted black P5 plate with a red shadow, her chibi face, one row per thing to learn */
+#hud .lesson { position: absolute; inset: 0; pointer-events: auto; display: flex; align-items: center; justify-content: center; background: rgba(18, 8, 20, 0.35);
+  animation: lessonIn 0.25s ease-out; cursor: pointer; }
+#hud .lesson.out { animation: lessonOut 0.25s ease-in forwards; }
+@keyframes lessonIn { from { opacity: 0; } }
+@keyframes lessonOut { to { opacity: 0; } }
+#hud .lcard { position: relative; width: calc(92 * var(--u)); padding: calc(3 * var(--u)) calc(4 * var(--u)) calc(3 * var(--u)) calc(17 * var(--u)); background: var(--ink); color: #fff;
+  transform: rotate(-2deg) skewX(-4deg); box-shadow: 0 0 0 calc(0.5 * var(--u)) #fff, calc(1.4 * var(--u)) calc(1.4 * var(--u)) 0 calc(0.5 * var(--u)) var(--red);
+  animation: lcardIn 0.35s cubic-bezier(0.2, 1.5, 0.4, 1); }
+@keyframes lcardIn { from { transform: rotate(-9deg) skewX(-4deg) translateX(-30%) scale(0.6); opacity: 0; } }
+#hud .lface { position: absolute; left: calc(-3 * var(--u)); top: 50%; width: calc(19 * var(--u)); transform: translateY(-50%) rotate(-6deg); filter: drop-shadow(0 0 calc(0.4 * var(--u)) #fff) drop-shadow(calc(0.6 * var(--u)) calc(0.6 * var(--u)) 0 var(--red));
+  animation: lfaceBob 1.2s ease-in-out infinite; }
+@keyframes lfaceBob { 50% { translate: 0 calc(-0.8 * var(--u)); } }
+#hud .ltitle { font-style: italic; font-size: calc(4.2 * var(--u)); line-height: 1; margin-bottom: calc(2 * var(--u)); padding: calc(0.6 * var(--u)) calc(1.6 * var(--u)); display: inline-block;
+  background: var(--red); transform: skewX(-12deg); box-shadow: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 #fff; }
+#hud .lrows { display: flex; flex-direction: column; gap: calc(1.6 * var(--u)); }
+#hud .lrow { display: flex; align-items: center; gap: calc(2 * var(--u)); }
+#hud .ltext { font-size: calc(2.5 * var(--u)); font-weight: 700; line-height: 1.3; }
+#hud .lnote { margin-top: calc(2 * var(--u)); font-size: calc(2 * var(--u)); color: #ffd23a; font-style: italic; }
+#hud .lgo { position: absolute; right: calc(2.4 * var(--u)); bottom: calc(-2.6 * var(--u)); background: #fff; color: var(--ink); font-style: italic; font-size: calc(2.2 * var(--u));
+  padding: calc(0.5 * var(--u)) calc(1.6 * var(--u)); transform: skewX(-12deg); box-shadow: calc(0.5 * var(--u)) calc(0.5 * var(--u)) 0 var(--red); animation: lgoBlink 0.9s steps(2) infinite; }
+@keyframes lgoBlink { 50% { opacity: 0.55; } }
+/* the little pictures: what it looks like in the game */
+#hud .lic { flex: none; width: calc(7 * var(--u)); height: calc(5.4 * var(--u)); display: flex; align-items: center; justify-content: center; position: relative; }
+#hud .lic .mouse { transform: scale(0.85); }
+#hud .lic.release .mouse { opacity: 0.7; }
+#hud .lic.release::after { content: '▼'; position: absolute; right: 0; bottom: 0; font-size: calc(2.2 * var(--u)); color: #38d8ff; }
+#hud .lic.fever { background: linear-gradient(90deg, #ff4a6a 0 30%, transparent 30% 35%, #ffd23a 35% 65%, transparent 65% 70%, #38d8ff 70%); height: calc(1.6 * var(--u)); transform: skewX(-20deg); }
+#hud .lic.edgeAmber, #hud .lic.edgeRed { border: 2px solid #fff; background: #2a1830; }
+#hud .lic.edgeAmber { box-shadow: inset calc(1.4 * var(--u)) 0 calc(1.2 * var(--u)) #ffb21f, inset calc(-1.4 * var(--u)) 0 calc(1.2 * var(--u)) #ffb21f; }
+#hud .lic.edgeRed { box-shadow: inset calc(1.4 * var(--u)) 0 calc(1.2 * var(--u)) #ff1f4a, inset calc(-1.4 * var(--u)) 0 calc(1.2 * var(--u)) #ff1f4a; animation: hudPulse 0.4s ease-in-out infinite alternate; }
+#hud .lic.bracket::before { content: ''; position: absolute; inset: calc(0.4 * var(--u)) calc(1.2 * var(--u)); border: calc(0.5 * var(--u)) solid #38d8ff;
+  clip-path: polygon(0 0, 35% 0, 35% 12%, 12% 12%, 12% 35%, 0 35%, 0 65%, 12% 65%, 12% 88%, 35% 88%, 35% 100%, 0 100%, 0 0, 100% 0, 100% 35%, 88% 35%, 88% 12%, 65% 12%, 65% 0, 100% 0, 100% 100%, 65% 100%, 65% 88%, 88% 88%, 88% 65%, 100% 65%, 100% 100%, 0 100%); }
+#hud .lic.ring::before { content: ''; width: calc(4.6 * var(--u)); height: calc(4.6 * var(--u)); border-radius: 50%; background: conic-gradient(#ff5fa8 360deg, #2a2224 0);
+  box-shadow: 0 0 0 calc(0.3 * var(--u)) #fff, 0 0 calc(1.2 * var(--u)) #ff5fa8; animation: hudPulse 0.5s ease-in-out infinite alternate; }
+#hud .lic.eye::before { content: ''; width: calc(4.4 * var(--u)); height: calc(2.6 * var(--u)); border-radius: 50%; background: radial-gradient(circle, #fff 0 18%, #ff2e93 20% 45%, #3a0a2a 47%);
+  box-shadow: 0 0 calc(1.4 * var(--u)) #ff2e93; animation: hudPulse 0.5s ease-in-out infinite alternate; }
+#hud .lic.cover::before { content: ''; width: calc(6 * var(--u)); height: calc(3 * var(--u)); background: repeating-linear-gradient(-30deg, #c88a4a 0 calc(0.8 * var(--u)), #9a6230 0 calc(1.6 * var(--u)));
+  border: 2px solid #fff; clip-path: polygon(0 20%, 30% 0, 55% 30%, 75% 5%, 100% 25%, 100% 100%, 0 100%); }
+
 /* ---- a heroine's panel: 1P top-left, 2P top-right (mirrored) ---- */
 .deck { position: absolute; top: calc(1.6 * var(--u)); left: calc(1.6 * var(--u)); display: flex; align-items: flex-start; gap: calc(0.8 * var(--u)); --pc: var(--red); }
 .deck.p2 { left: auto; right: calc(1.6 * var(--u)); flex-direction: row-reverse; }

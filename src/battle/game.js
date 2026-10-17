@@ -192,7 +192,7 @@ export class Game {
     // the place itself changes (panel stages): the corridor bends up, the floor folds into ridges, then the fight starts
     if (S.fold && this.world.fold) { this.hud.gl.hold('fold'); this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
     // the boss: a warning while she shows herself, then the fight
-    if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => { this.combat = true; }); return; }
+    if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => this.teach(S.lesson, () => { this.combat = true; })); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
   }
@@ -232,10 +232,19 @@ export class Game {
     });
     this.tweens.wait(0.55, () => { if (calm) return; this.combat = true; then && then(); });
   }
+  // the fight at a stop starts; a stop with a lesson (the prologue teaches: docs/DESIGN.md 序章) first shows its card, once
   beginStation() {
     this.waveIndex = 0;
-    this.startWave();
-    if (this.S.tutorial) this.hud.tutorial('fire');
+    this.teach(this.S.lesson, () => this.startWave());
+  }
+  teach(id, then) {
+    if (!id || SAVE.lessons?.[id] || this.G.auto) { then(); return; }
+    const was = this.combat; this.combat = false;
+    if (id === 'skill') this.players.forEach((p) => { p.charge = 1; });   // (that lesson: try one right away)
+    this.hud.lesson(id, (shown = true) => {
+      if (shown) { (SAVE.lessons || (SAVE.lessons = {}))[id] = true; persist(); }
+      this.combat = was || this.combat; then();
+    });
   }
   startWave() {
     const wave = this.S.waves[this.waveIndex];
