@@ -1,0 +1,153 @@
+{
+  "_doc": "署名、许可证和出处的总清单（唯一的一份；制作名单画面、打包时附的许可证全文都从这里取）。每一项：name 是什么，credit 制作名单里照写的那一行（空 = 不要求署名），required 是否必须署名，license 许可证，licenseUrl 许可证原文，copyright 版权行（许可证要求随附的那行），source 从哪来，use 用在哪，changes 我们改过什么（CC BY 要求注明），ship 打包时必须附上许可证全文（MIT / OFL）。新加任何外来的素材、字体、代码、声音，先登记在这里。不用登记的：Codex（OpenAI）出的图归我们所有；只当参考、没进游戏的东西（Fish Audio 免费档试听、art/ref 参考图、下载了还没用的魔王魂 BGM 包）。",
+  "credits": {
+    "sections": [
+      {
+        "id": "sfx",
+        "title": { "zh": "音效", "en": "Sound Effects", "ja": "効果音" },
+        "items": [
+          {
+            "name": "魔王魂",
+            "credit": "効果音：魔王魂",
+            "required": true,
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+            "source": "https://maou.audio/",
+            "use": "音效 19 个文件（sfx/maou/）",
+            "changes": "截取片段、变调、统一音量"
+          },
+          {
+            "name": "OtoLogic",
+            "credit": "OtoLogic",
+            "required": true,
+            "license": "CC BY 4.0",
+            "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+            "source": "https://otologic.jp/",
+            "use": "音效、怪物叫声 48 个文件（sfx/otologic/）",
+            "changes": "截取片段、变调、统一音量"
+          }
+        ]
+      },
+      {
+        "id": "voice",
+        "title": { "zh": "语音", "en": "Voice", "ja": "ボイス" },
+        "items": [
+          {
+            "name": "火山夢_T2モデル（AivisSpeech）",
+            "credit": "Tαkoe:AivisSpeech:火山夢",
+            "required": true,
+            "license": "Tαkoe プロジェクト利用規約",
+            "licenseUrl": "http://wedst.pj.ymhk.jp/tos.html",
+            "copyright": "Tαkoe プロジェクト（Yumehaki Project V / VSMB Project）",
+            "source": "https://hub.aivis-project.com/aivm-models/e4ee047d-3af4-4936-90eb-29a3c9104709",
+            "use": "地雷妹（蔡蕾）的全部语音（voice/pink/）",
+            "changes": "AivisSpeech 合成，裁静音、统一音量"
+          },
+          {
+            "name": "コハク（AivisSpeech）",
+            "credit": "AivisSpeech: コハク",
+            "required": false,
+            "license": "ACML 1.0",
+            "licenseUrl": "https://github.com/Aivis-Project/ACML/blob/master/ACML-1.0.md",
+            "copyright": "猫音コハク ©Oz Chat / Trippy（CV: ねゆたろ）",
+            "source": "https://hub.aivis-project.com/aivm-models/22e8ed77-94fe-4ef2-871f-a86f94e9a579",
+            "use": "猫娘（庄乖）的全部语音（voice/cat/）",
+            "changes": "AivisSpeech 合成，裁静音、统一音量"
+          }
+        ]
+      },
+      {
+        "id": "fonts",
+        "title": { "zh": "字体", "en": "Fonts", "ja": "フォント" },
+        "items": [
+          {
+            "name": "Dela Gothic One",
+            "credit": "Dela Gothic One",
+            "required": false,
+            "ship": true,
+            "license": "SIL Open Font License 1.1",
+            "licenseUrl": "https://openfontlicense.org",
+            "copyright": "Copyright 2020 The Dela Gothic Project Authors (https://github.com/syakuzen/DelaGothic)",
+            "source": "npm @fontsource/dela-gothic-one（Google Fonts）",
+            "use": "界面标题字"
+          },
+          {
+            "name": "Noto Sans SC",
+            "credit": "Noto Sans SC",
+            "required": false,
+            "ship": true,
+            "license": "SIL Open Font License 1.1",
+            "licenseUrl": "https://openfontlicense.org",
+            "copyright": "Google Inc.",
+            "source": "npm @fontsource/noto-sans-sc（Google Fonts）",
+            "use": "界面正文字"
+          },
+          {
+            "name": "ZCOOL QingKe HuangYou（站酷庆科黄油体）",
+            "credit": "ZCOOL QingKe HuangYou",
+            "required": false,
+            "ship": true,
+            "license": "SIL Open Font License 1.1",
+            "licenseUrl": "https://openfontlicense.org",
+            "copyright": "Copyright 2018 The ZCOOL QingKe HuangYou Project Authors (https://www.github.com/googlefonts/zcool-qingke-huangyou)",
+            "source": "npm @fontsource/zcool-qingke-huangyou（Google Fonts）",
+            "use": "界面装饰字"
+          }
+        ]
+      },
+      {
+        "id": "code",
+        "title": { "zh": "程序库", "en": "Libraries", "ja": "ライブラリ" },
+        "items": [
+          {
+            "name": "three.js r169",
+            "credit": "three.js",
+            "required": false,
+            "ship": true,
+            "license": "MIT",
+            "licenseUrl": "https://github.com/mrdoob/three.js/blob/dev/LICENSE",
+            "copyright": "Copyright © 2010-2024 three.js authors",
+            "source": "npm three 0.169.0",
+            "use": "3D 渲染（打进 game.js）"
+          },
+          {
+            "name": "Electron 33",
+            "credit": "Electron",
+            "required": false,
+            "ship": true,
+            "license": "MIT（内含 Chromium 等，各自许可见 LICENSES.chromium.html）",
+            "licenseUrl": "https://github.com/electron/electron/blob/main/LICENSE",
+            "copyright": "Copyright (c) Electron contributors; Copyright (c) 2013-2020 GitHub Inc.",
+            "source": "npm electron 33.4.11",
+            "use": "桌面版外壳（打包时 LICENSE、LICENSES.chromium.html 已自动放在 exe 旁边）"
+          },
+          {
+            "name": "Vite 5",
+            "credit": "Vite",
+            "required": false,
+            "ship": true,
+            "license": "MIT",
+            "licenseUrl": "https://github.com/vitejs/vite/blob/main/LICENSE",
+            "copyright": "Copyright (c) 2019-present, VoidZero Inc. and Vite contributors",
+            "source": "npm vite 5.4",
+            "use": "构建工具（打包时带进 game.js 的几行加载代码）"
+          }
+        ]
+      },
+      {
+        "id": "homage",
+        "title": { "zh": "致敬作品", "en": "Homage", "ja": "オマージュ" },
+        "items": [
+          {
+            "name": "スウィートホーム（1989，Famicom）",
+            "credit": "",
+            "required": false,
+            "copyright": "© CAPCOM（制作 伊丹プロダクション）",
+            "source": "docs/episodes/sweet_home.md",
+            "use": "第 1 话「腐蜜之家」的桥段和氛围（不用原作的角色名、造型、台词）"
+          }
+        ]
+      }
+    ]
+  }
+}

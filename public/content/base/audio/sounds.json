@@ -1,5 +1,5 @@
 {
-  "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），署名：用到魔王魂的素材要写「効果音：魔王魂」，OtoLogic 的写「OtoLogic」（都是 CC BY 4.0，docs/ART.md「声音」）。files 声音文件（相对内容包，放在 sfx/<站名>/ 下，保留原文件名，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
+  "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），署名和许可在 text/credits.json（新加素材先登记在那里）。files 声音文件（相对内容包，放在 sfx/<站名>/ 下，保留原文件名，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
   "sfx": {
     "ui": { "when": "菜单按钮按下、悬停", "want": "清脆短促的「ポン」，像 P5 菜单那种干净的电子音", "src": "lib", "files": ["sfx/maou/maou_se_system45.mp3"], "vol": 0.6 },
     "panel": {
@@ -218,11 +218,10 @@
     }
   },
   "voices": {
-    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名，credit = 署名（制作名单里必须照写，许可见 docs/ART.md「声音」），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",
+    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",
     "pink": {
       "model": "e4ee047d-3af4-4936-90eb-29a3c9104709",
       "voice": "火山夢_T2モデル",
-      "credit": "Tαkoe:AivisSpeech:火山夢",
       "tone": "甜腻、黏人、有点病娇的地雷系，撒娇时拖长音，偶尔压低声音说狠话",
       "read": {
         "default": { "style": "ノーマル" },
@@ -305,7 +304,6 @@
     "cat": {
       "model": "22e8ed77-94fe-4ef2-871f-a86f94e9a579",
       "voice": "コハク",
-      "credit": "AivisSpeech: コハク",
       "tone": "慵懒、傲娇、有点困的猫，句尾带「にゃ」，偶尔突然很凶",
       "read": {
         "default": { "style": "ノーマル" },

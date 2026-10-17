@@ -146,3 +146,4 @@
 - 用户：VOICEVOX 的声线都听过，对不上。推荐 AivisSpeech（免费、本机跑、AivisHub 上的模型多是 ACML 可商用）。
 - 用户提议地雷妹用 AivisHub 的「火山夢」。读了它的条款（Tαkoe プロジェクト利用規約）：可商用，必须署名「Tαkoe:AivisSpeech:火山夢」这种格式，擦边可以但青少年不宜的要分区，不得损害这个角色的形象；只有 ノーマル / Negative / Positive 三种风格。
 - 用户：可以下载，地雷妹只用火山夢，猫娘用コハク（ACML 1.0，可商用）。做了：装了 AivisSpeech 引擎（官方 GitHub zip）和 ffmpeg（BtbN 构建），都不进 git；新工具 tools/voice_aivis.py；两人 102 句台词全部生成语音并登记（按场合配风格，读错的汉字改读音，转 Ogg Opus 共约 740 KB）；Chromium 全部能解码，游戏里预加载全是 200；打包版自检两种队伍顺序都没报错。Fish Audio 工具删掉。
+- 用户：需要署名、MIT 和出处的都帮忙记下。做了：content text/credits.json 一份总清单（音效、语音、字体、程序库、致敬作品 11 项，署名原文、许可证、版权行、出处、用在哪、改过什么）；语音的署名从 sounds.json 挪过去，只留一处。打包附许可证全文记进 PLAN。

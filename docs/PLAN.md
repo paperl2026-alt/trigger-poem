@@ -84,7 +84,9 @@
   - [x] 语音：地雷妹 = 火山夢、猫娘 = コハク（用户定，AivisSpeech 免费可商用，条款见 ART「声音」）。
     - 结果：`tools/voice_aivis.py` 在本机生成，两人全部 102 句台词（地雷妹 53、猫娘 49）都有了语音（Ogg Opus，共约 740 KB），按场合配风格（火山夢 Positive / Negative / ノーマル，コハク あまあま / せつなめ / ねむたい / ノーマル），读错的汉字（急急如律令、臨兵闘者、お札、定、印）改了读音；游戏启动音频时全部预加载，气泡出现就说。
     - Fish Audio 用不上了（免费档不能商用，用户没预算），工具删掉；之前的试听只留在 art/raw/voice_test。
-  - [ ] **制作名单**（先出效果图给用户挑）：署名必须照写——「効果音：魔王魂」「OtoLogic」「Tαkoe:AivisSpeech:火山夢」「AivisSpeech: コハク」（sounds.json `voices.<角色>.credit`）。
+  - [x] **署名清单**（用户：需要署名、MIT 和出处的都记下）：content `text/credits.json`，11 项——音效（魔王魂、OtoLogic，CC BY 4.0 必须署名）、语音（火山夢必须署名、コハク）、字体（三种 OFL）、程序库（three.js、Electron、Vite，MIT）、致敬作品（スウィートホーム）；每项写了署名原文、许可证、版权行、出处、用在哪、改过什么。
+  - [ ] **制作名单**（先出效果图给用户挑）：照 `text/credits.json` 写。
+  - [ ] **打包附许可证全文**：credits.json 里 `ship` 的（MIT、OFL）要把许可证原文随游戏发（构建时从 node_modules 生成一份 THIRD_PARTY_LICENSES，桌面版和便携版都放）；Electron 的 LICENSE / LICENSES.chromium.html 打包工具已自动放了。
   - [ ] 上架时：火山夢的条款要求青少年不宜的表现做分区 → Steam 勾选成人内容描述 / 年龄提示。
   - [x] 音效：29 种音效 + 7 组怪物叫声换成了魔王魂 / OtoLogic 的素材（67 个文件 1.5 MB，tools/rounds/sfx_import.py）；真言弹等 6 种还用合成的。
   - 过程：用户同意了（第十二批「先弄音效吧」）。读了条款（ART「声音」）：用魔王魂 + OtoLogic（都允许擦边内容），効果音ラボ不用。两站都挡程序下载，Claude 不绕 → **等用户在浏览器里下载**：魔王魂效果音整包（必需）+ OtoLogic 十几组（可选，提升质量）。挑选工具 sfx_scan、加载时自动拉齐音量已做好。
