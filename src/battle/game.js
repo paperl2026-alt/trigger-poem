@@ -514,7 +514,13 @@ export class Game {
   }
 
   render(r) {
-    if (this.world.render) this.world.render(r); else r.render(this.world.scene, this.world.camera);
+    // the heroines (layer 1) are drawn over the finished world, so covers, scenery and ink lines never cross them (DESIGN「掩体」)
+    const cam = this.world.camera;
+    if (this.world.render) this.world.render(r); else { cam.layers.set(0); r.render(this.world.scene, cam); }
+    const sc = this.world.scene, bg = sc.background, ac = r.autoClear;
+    sc.background = null; r.autoClear = false;   // a background colour would clear the world away
+    cam.layers.set(1); r.render(sc, cam); cam.layers.set(0);
+    sc.background = bg; r.autoClear = ac;
     r.render(this.overlay, this.ortho);
   }
 }

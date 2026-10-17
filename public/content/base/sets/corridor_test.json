@@ -1,5 +1,5 @@
 {
-  "_doc": "走廊技术验证（docs/DESIGN.md「场景的技术路线」）：用平板拼出来的真 3D 走廊。hall 是走廊尺寸（米）和每块板的贴图：left/right 是两侧墙一段一段（bay 米宽）的立面画，floor/ceil 是平铺贴图（tile 米一张），地板切成 tilesX × tileL 的小块（可以折起来）。foldZ 之后的部分挂在铰链上，fold 时往上弯 bend 度，ridgeFrom 到 foldZ 之间约 ridgeShare 比例的地板块翘起成棱。decals 贴在板上的东西（on: left/right/floor/hang）。stations：每个停留点的镜头 cam、看向 look、来的路 via；covers 是这个点两位主角各自的掩体用哪张图（k；side -1 = 1P、1 = 2P；flip 左右翻）：它们一开始就立在走廊里，位置和大小按主角在这个点的站位自动算（tuning/layout.json cover），镜头停下时正好在她身前，waves 怪物（x/z 是走廊里的位置，米）。fold: true = 到这个点时先折叠再开打。",
+  "_doc": "走廊技术验证（docs/DESIGN.md「场景的技术路线」）：用平板拼出来的真 3D 走廊。hall 是走廊尺寸（米）和每块板的贴图：left/right 是两侧墙一段一段（bay 米宽）的立面画，floor/ceil 是平铺贴图（tile 米一张），每种都可以写一组图：按 seed 打乱轮换、相邻不重复（docs/ART.md 多版本），地板切成 tilesX × tileL 的小块（可以折起来）。foldZ 之后的部分挂在铰链上，fold 时往上弯 bend 度，ridgeFrom 到 foldZ 之间约 ridgeShare 比例的地板块翘起成棱。decals 贴在板上的东西（on: left/right/floor/hang）。stations：每个停留点的镜头 cam、看向 look、来的路 via；covers 是这个点两位主角各自的掩体用哪张图（k；side -1 = 1P、1 = 2P；flip 左右翻）：它们一开始就立在走廊里，位置和大小按主角在这个点的站位自动算（tuning/layout.json cover），镜头停下时正好在她身前，waves 怪物（x/z 是走廊里的位置，米）。fold: true = 到这个点时先折叠再开打。",
   "corridor_test": {
     "panels": true,
     "sky": "#2a1430",
@@ -21,11 +21,11 @@
       "tile": 3,
       "tilesX": 4,
       "tileL": 1,
-      "left": ["st3/wallA", "st3/wallB"],
-      "right": ["st3/wallW"],
-      "floor": "st3/floor",
-      "ceil": "st3/ceil",
-      "end": "st3/end",
+      "left": ["st3/wallA", "st3/wallB", "st3/wallL1", "st3/wallL2", "st3/wallL3", "st3/wallL4", "st3/wallL5", "st3/wallL6", "st3/wallL7", "st3/wallL8"],
+      "right": ["st3/wallW", "st3/wallR1", "st3/wallR2", "st3/wallR3", "st3/wallR4", "st3/wallR5", "st3/wallR6", "st3/wallR7", "st3/wallR8"],
+      "floor": ["st3/floor", "st3/floor2", "st3/floor3", "st3/floor4"],
+      "ceil": ["st3/ceil", "st3/ceil2", "st3/ceil3", "st3/ceil4"],
+      "end": ["st3/end", "st3/end2"],
       "outside": "st3/outside",
       "foldZ": -17,
       "fold": { "bend": 26, "time": 1.6, "ridgeFrom": -11.5, "ridgeShare": 0.5 }
@@ -49,8 +49,8 @@
         "look": [0, 0.95, -20],
         "tutorial": true,
         "covers": [
-          { "k": "cover/c_cart", "side": -1 },
-          { "k": "cover/c_bench", "side": 1 }
+          { "k": "cover/r30_lockers", "side": -1 },
+          { "k": "cover/r30_desks", "side": 1 }
         ],
         "waves": [
           [{ "t": 0.5, "type": "shoe", "from": "pop", "x": -0.5, "z": -8 }, { "t": 2, "type": "shoe", "from": "pop", "x": 0.6, "z": -12 }],
@@ -71,8 +71,8 @@
         "look": [0, 0.95, -26],
         "fold": true,
         "covers": [
-          { "k": "cover/c_vend", "side": -1 },
-          { "k": "cover/c_board", "side": 1 }
+          { "k": "cover/r30_cart", "side": -1 },
+          { "k": "cover/r30_lectern", "side": 1 }
         ],
         "waves": [
           [

@@ -97,18 +97,20 @@ export class PanelWorld {
     // the far part of the corridor hangs on a hinge so it can bend up (fold); everything past foldZ goes in it
     this.hinge = new THREE.Group(); this.hinge.position.set(0, 0, Hd.foldZ ?? z1); R.add(this.hinge);
     const put = (m, z) => { if (Hd.foldZ !== undefined && z < Hd.foldZ) { m.position.z -= Hd.foldZ; this.hinge.add(m); } else R.add(m); return m; };
-    // walls: one painted bay after another (left = classroom side, right = windows)
-    const bays = Math.ceil(L / bay);
+    // walls: one painted bay after another (left = classroom side, right = windows). Every surface kind has several pictures
+    // (docs/ART.md 多版本): a fixed shuffled order per set, never the same picture twice in a row
+    const bays = Math.ceil(L / bay), seed = S.seed ?? 7;
+    const KL = order(Hd.left, bays, seed), KR = order(Hd.right, bays, seed + 1), KC = order(Hd.ceil, bays, seed + 2);
     for (let i = 0; i < bays; i++) {
       const zc = z0 - (i + 0.5) * bay;
-      const kl = Hd.left[i % Hd.left.length], kr = Hd.right[i % Hd.right.length];
+      const kl = KL[i], kr = KR[i];
       const l = board(kl, bay, h); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc);
-      const r = board(kr, bay, h, { alpha: meta[kr] && /W$/.test(kr) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc);
+      const r = board(kr, bay, h, { alpha: !!(meta[kr]?.keyed || /W$/.test(kr)) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc);
       // ceiling, one bay at a time (so it folds with the rest)
-      const c = board(Hd.ceil, W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc);
+      const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc);
     }
     // the end wall, the void behind it, the outside seen through the windows
-    const e = board(Hd.end, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1);
+    const e = board(order(Hd.end, 1, seed + 3)[0], W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1);
     for (const o of [{ x: x1 + 11, z: (z0 + z1) / 2, ry: -Math.PI / 2, w: 66 }, { x: 0, z: z1 - 14, ry: 0, w: 40 }]) {
       const m = board(Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * 0.3, o.z); m.rotation.y = o.ry; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
     }
@@ -117,7 +119,9 @@ export class PanelWorld {
     const tw = W / Hd.tilesX, tl = Hd.tileL;
     for (let j = 0; j * tl < L; j++) for (let i = 0; i < Hd.tilesX; i++) {
       const xa = x0 + i * tw, za = z0 - j * tl;
-      const t = board(Hd.floor, tw, tl, { uv: [tw / Hd.tile, tl / Hd.tile], uv0: [xa / Hd.tile, (za - tl) / Hd.tile] });
+      // which floor picture: one per tile-sized block (all versions share their edges, so any mix meets without a seam)
+      const FL = [].concat(Hd.floor), bk = FL[hash(Math.floor(xa / Hd.tile + 1e-6), Math.floor((za - tl) / Hd.tile + 1e-6), seed) % FL.length];
+      const t = board(bk, tw, tl, { uv: [tw / Hd.tile, tl / Hd.tile], uv0: [xa / Hd.tile, (za - tl) / Hd.tile] });
       // pivot on its far edge, lying toward the camera: lifting its near edge makes a ridge facing the camera
       t.geometry.translate(0, tl / 2, 0);
       t.rotation.x = Math.PI / 2;
@@ -160,12 +164,14 @@ export class PanelWorld {
   }
   // covers (DESIGN「掩体」): things standing in the corridor from the start, seen from afar; the girls arrive and take cover behind them.
   // One per heroine per station (side -1 = 1P, 1 = 2P). Where each stands and how big it is comes from where her heroine stands on
-  // screen at that station (placeCovers): when the camera stops there, it is right in front of her, a moderate size (she is sheltered
-  // kneeling, and out shooting she is clearly above it). Built at unit height, placed and scaled later.
+  // screen at that station (placeCovers): when the camera stops there it stands just beyond her, between her and the monsters, like in
+  // NIKKE: she is always drawn whole over it (covers and scenery never hide the heroines), and it shows around her, about as big as she
+  // is kneeling and wider, so it clearly shields her; out shooting she rises above it. Built at unit height, placed and scaled later.
   makeCover(c, st, sid) {
     const { m, w, h, sh } = this.relief(c.k, 1, 0, 0, new THREE.Vector3(0, 0, 1), 0.34);
     const dm = new DamageMap(h / w, 384); attachDamage(m, dm);
-    return { m, sh, dm, c, st, sid, ar: w / h, amt: m.material.uniforms.reliefAmt.value, def: { x: 0, z: 0, h: 1, k: c.k }, w, h,
+    // solidTop: where the solid body starts (a broom sticking up does not count as the top)
+    return { m, sh, dm, c, st, sid, ar: w / h, solid: 1 - (meta[c.k]?.solidTop || 0), amt: m.material.uniforms.reliefAmt.value, def: { x: 0, z: 0, h: 1, k: c.k }, w, h,
       slot: c.side < 0 ? 0 : 1, hp: 0, max: 0, broken: false };
   }
   // put every station's covers in front of where the heroines stand on screen there (after a resize / layout too)
@@ -178,20 +184,20 @@ export class PanelWorld {
       const p = players[cv.slot]; if (!p || !p.H) continue;
       const st = cv.st, H = p.H, W = p.W;
       cam.position.set(...st.cam); cam.lookAt(new THREE.Vector3(...st.look)); cam.updateMatrixWorld();
-      // her figure on screen: standing height (sets the cover height), kneeling width and where she kneels (sets the width and the middle)
-      const stand = p.hero ? p.hero.dims('fire').h : p.H * T.layout.standHeight;
-      let kw = stand * 0.6, cx = p.baseX;
-      if (p.hero) { const d = p.hero.dims('cover'), au = p.hero.R.cover.anchor; kw = d.w; cx = p.baseX - ((p.mirror ? 1 - au : au) - 0.5) * d.w; }
-      let hPx = stand * L.h;
-      hPx = Math.min(stand * L.maxH, Math.max(hPx, kw * L.w / cv.ar));
-      // the bottom middle of the cover on screen -> a point on the floor; its depth turns the screen height into metres
-      const sx = cx + p.side * kw * L.x, sy = p.bottom + H * L.y;
+      // her kneeling figure on screen: its height sets the cover's top, its width and middle the cover's width and middle
+      let kh = p.H * 0.4, kw = kh * 0.75, cx = p.baseX;
+      if (p.hero) { const d = p.hero.dims('cover'), au = p.hero.R.cover.anchor; kh = d.h; kw = d.w; cx = p.baseX - ((p.mirror ? 1 - au : au) - 0.5) * d.w; }
+      // its foot on the floor a little above her feet on screen (= just beyond her), its top at a share of her kneeling height;
+      // wider than her (a narrow drawing gets a higher top, up to maxTop)
+      const sx = cx + p.side * kw * L.x, base = p.bottom + H * L.lift;
+      let top = p.bottom + kh * L.top;
+      top = Math.min(p.bottom + kh * L.maxTop, Math.max(top, base + kw * L.w / cv.ar * cv.solid));
       ray.origin.copy(cam.position);
-      ray.direction.set(sx / W * 2 - 1, sy / H * 2 - 1, 0.5).unproject(cam).sub(cam.position).normalize();
+      ray.direction.set(sx / W * 2 - 1, base / H * 2 - 1, 0.5).unproject(cam).sub(cam.position).normalize();
       if (!ray.intersectPlane(floor, hit)) continue;
       cam.getWorldDirection(fw);
       const depth = hit.clone().sub(cam.position).dot(fw);
-      const hh = hPx / H * 2 * depth * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+      const hh = (top - base) / cv.solid / H * 2 * depth * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
       const m = cv.m;
       m.position.set(hit.x, 0, hit.z);
       m.rotation.y = Math.atan2(cam.position.x - hit.x, cam.position.z - hit.z);
@@ -249,17 +255,16 @@ export class PanelWorld {
     this.covers = [];
     for (const c of this.coverSets[sid] || []) {
       c.hp = c.max = T.combat.cover.hp; c.broken = false; this.covers[c.slot] = c;
-      c.m.renderOrder = 11.6; c.m.material.depthTest = false;
     }
   }
-  // leaving: they fold over backwards flat onto the floor like pop-up book pages (the relief flattens too), and the girls walk over
-  // them; returns how long that takes (the game waits for it before anyone gets up)
+  // leaving: they fold over backwards, away from the girls, flat onto the floor like pop-up book pages (the relief flattens too), and
+  // the girls walk on over them; returns how long that takes (the game waits for it before anyone gets up)
   dropCovers() {
     const live = this.covers.filter(Boolean), tw = this.game.tweens, t = T.layout.cover.foldTime;
     this.covers = [];
     live.forEach((c, i) => {
       const u = c.m.material.uniforms;
-      tw.to(c.m.rotation, { x: -Math.PI / 2 }, t, { delay: i * 0.06, ease: Ease.inQuad, onDone: () => { c.m.renderOrder = 4; c.m.material.depthTest = true; } });
+      tw.to(c.m.rotation, { x: -Math.PI / 2 }, t, { delay: i * 0.06, ease: Ease.inQuad });
       tw.to(u.reliefAmt, { value: 0 }, t, { delay: i * 0.06 });
     });
     if (live.length) sfx.thud(1);
@@ -272,7 +277,7 @@ export class PanelWorld {
     c.dm.cut([[0.1, 0.9], [0.9, 0.2]], 0.03); c.dm.cut([[0.15, 0.2], [0.85, 0.85]], 0.03);
     m.material.uniforms.flash.value = 1;
     g.fx.confetti(m.position.clone().add(new THREE.Vector3(0, c.h * 0.5, 0)), 30, 1.8);
-    // it topples over backwards, flat onto the floor
+    // it topples over backwards (away from the girl crouching at it), flat onto the floor
     g.tweens.to(m.rotation, { x: -Math.PI / 2 * 0.92 }, 0.45, { ease: Ease.inQuad, onDone: () => { sfx.thud(0); g.post.shake(0.6); } });
   }
 
@@ -311,7 +316,7 @@ export class PanelWorld {
     const w = target ? target.width : size.x, h = target ? target.height : size.y;
     if (this.rt.width !== w || this.rt.height !== h) { this.rt.setSize(w, h); this.rt.depthTexture.image.width = w; this.rt.depthTexture.image.height = h; this.inkU.texel.value.set(1 / w, 1 / h); }
     this.inkU.near.value = this.camera.near; this.inkU.far.value = this.camera.far;
-    r.setRenderTarget(this.rt); r.clear(); r.render(this.scene, this.camera);
+    r.setRenderTarget(this.rt); r.clear(); this.camera.layers.set(0); r.render(this.scene, this.camera);   // the heroines (layer 1) come after, see Game.render
     r.setRenderTarget(target); r.render(this.inkScene, this.inkCam);
   }
 
@@ -327,3 +332,18 @@ export class PanelWorld {
   }
 }
 const tmpV2 = new THREE.Vector2();
+// a list of picture keys in a fixed shuffled order, n long, never the same one twice in a row (a single key works too)
+function order(list, n, seed) {
+  list = [].concat(list);
+  let s = (seed * 9301 + 49297) % 233280 || 1;
+  const rnd = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  const out = [];
+  while (out.length < n) {
+    const deck = [...list];
+    for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+    if (deck.length > 1 && deck[0] === out[out.length - 1]) deck.push(deck.shift());
+    out.push(...deck);
+  }
+  return out.slice(0, n);
+}
+function hash(x, y, seed) { let h = (x * 374761393 + y * 668265263 + seed * 2147483647) | 0; h = (h ^ (h >>> 13)) * 1274126177 | 0; return (h ^ (h >>> 16)) >>> 0; }

@@ -52,6 +52,8 @@ export class Player {
       this.group.add(m);
     }
     this.soft = this.hero || new Soft(this);
+    // her own layer: drawn after the world and its ink lines (Game.render), so nothing in the scene ever crosses her
+    this.group.traverse((o) => o.layers.set(1));
     this.pose = 'cover';
     this.flashes = { rifle: tex['hud/flash_rifle'], gatling: tex['hud/flash_gatling'], mantra: tex['hud/flash_mantra'] };
     this.flashMesh = paperMesh(this.flashes[this.w.kind] || this.flashes.rifle, 1, { pivot: 'center' });
