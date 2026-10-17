@@ -329,8 +329,10 @@ export class Game {
     return st;
   }
   // 伍德刀盾 + 历战值 (mastery XP); no rating (DESIGN 局外「不做评级」): a clear pays a fixed amount and the kills, the best full-clear time
-  // is kept; a girl already at the top level turns her XP into extra 伍德刀盾 (满破追加); the first clear can give an item (episode
-  // "reward") and unlocks the next episodes. Applied to the save right away; st carries every number for the results screen.
+  // is kept; a girl already at the top level turns her XP into extra 伍德刀盾 (满破追加); only the FIRST clear gives the episode's
+  // reward items (ones she does not have yet: st.newItems) and opens the next episodes (ones not open yet: st.unlocked), so a replay
+  // shows neither. Each 伍德刀盾 multiplier is kept with the item it comes from (st.mulBy: the results page names it). Applied to the
+  // save right away; st carries every number for the results screen.
   applyRewards(st) {
     const E = T.economy;
     const rec = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null });
@@ -345,11 +347,14 @@ export class Game {
       st.xp[id] = { gain, before, after: levelOf(c.xp + gain), xp0: c.xp, xp: c.xp + gain, top, bonus: top ? Math.round(gain * E.maxXpDd) : 0 };
       if (top) st.bonus += st.xp[id].bonus; else c.xp += gain;
     }
-    if (st.firstClear && this.ep.reward?.item && !SAVE.items.includes(this.ep.reward.item)) {   // (given before the multiplier: it counts at once)
-      giveItem(this.ep.reward.item); st.gotItem = this.ep.reward.item;
-      if (!SAVE.bag.includes(st.gotItem)) { SAVE.bag.push(st.gotItem); this.run.bag = [...this.run.bag, st.gotItem]; }
+    st.newItems = [];
+    if (st.firstClear) for (const id of [].concat(this.ep.reward?.items || this.ep.reward?.item || [])) {   // (given before the multiplier: it counts at once)
+      if (!C.items[id] || SAVE.items.includes(id)) continue;
+      giveItem(id); st.newItems.push(id);
+      if (!SAVE.bag.includes(id)) { SAVE.bag.push(id); this.run.bag = [...this.run.bag, id]; }
     }
     st.mul = bagFx(this.run.bag).dd;
+    st.mulBy = this.run.bag.map((id) => ({ id, dd: bagFx([id]).dd })).filter((m) => m.dd !== 1);
     st.dd = Math.round((st.base + st.first + st.bonus) * st.mul);
     SAVE.dd += st.dd;
     if (st.win) {

@@ -670,5 +670,39 @@
       347
     ],
     "png": "art/raw/r41/fixed/page_end_c.png"
+  },
+  "res_cover_a": {
+    "src": "art/raw/r51/cover_a.png",
+    "erase": [
+      40,
+      326,
+      210,
+      590
+    ],
+    "center": [
+      124,
+      405
+    ],
+    "ring": 106,
+    "rot": 0.0,
+    "keep_frame": true,
+    "png": "art/raw/r51/fixed/cover_a.png"
+  },
+  "res_cover_b": {
+    "src": "art/raw/r51/cover_b.png",
+    "erase": [
+      52,
+      285,
+      232,
+      570
+    ],
+    "center": [
+      132,
+      356
+    ],
+    "ring": 116,
+    "rot": 0.0,
+    "keep_frame": true,
+    "png": "art/raw/r51/fixed/cover_b.png"
   }
 }

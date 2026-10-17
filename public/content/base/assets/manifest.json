@@ -7831,6 +7831,26 @@
   "src": "assets/prop/tomb_rd.png",
   "w": 422
  },
+ "res/cover": {
+  "h": 1100,
+  "src": "assets/res/cover.webp",
+  "w": 733
+ },
+ "res/face_cat": {
+  "h": 384,
+  "src": "assets/res/face_cat.webp",
+  "w": 384
+ },
+ "res/face_pink": {
+  "h": 384,
+  "src": "assets/res/face_pink.webp",
+  "w": 384
+ },
+ "res/item_pig": {
+  "h": 384,
+  "src": "assets/res/item_pig.webp",
+  "w": 384
+ },
  "sfx2/ba": {
   "h": 348,
   "src": "assets/sfx2/ba.webp",

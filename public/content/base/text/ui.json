@@ -25,6 +25,12 @@
     "title": { "zh": "回到标题", "en": "TITLE", "ja": "タイトルへ" },
     "result": { "zh": "本话分镜", "en": "EPISODE STORYBOARD", "ja": "今回の絵コンテ" },
     "kills": { "zh": "击破", "en": "KILLS", "ja": "撃破" },
+    "dealt": { "zh": "伤害", "en": "DAMAGE", "ja": "ダメージ" },
+    "firstReward": { "zh": "第一次通关的奖励", "en": "First clear reward", "ja": "初クリア報酬" },
+    "clearReward": { "zh": "通关奖励", "en": "CLEAR REWARD", "ja": "クリア報酬" },
+    "feature": { "zh": "特集", "en": "FEATURE", "ja": "特集" },
+    "itemsHead": { "zh": "新获得的道具", "en": "NEW ITEMS", "ja": "新しいアイテム" },
+    "colophon": { "zh": "编集＝伍德刀盾编辑部　表纸＝两位主角　©2026 相对希望少女们的扣击诗", "en": "Edited by the What Da Dog Doin' desk · Cover: our two heroines · ©2026", "ja": "編集＝ワッダドッグ編集部　表紙＝ふたりの主人公　©2026" },
     "acc": { "zh": "命中率", "en": "ACCURACY", "ja": "命中率" },
     "combo": { "zh": "最大连击", "en": "MAX COMBO", "ja": "最大コンボ" },
     "time": { "zh": "用时", "en": "TIME", "ja": "タイム" },
@@ -71,8 +77,7 @@
     "gotItem": { "zh": "获得道具!", "en": "NEW ITEM!", "ja": "アイテム入手!" },
     "upgrade": { "zh": "升级", "en": "UPGRADE", "ja": "強化" },
     "itemLv": { "zh": "Lv", "en": "Lv", "ja": "Lv" },
-    "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" },
-    "bagBonus": { "zh": "书包加成", "en": "BAG BONUS", "ja": "カバンボーナス" }
+    "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望少女们的", "big": "扣击诗" },
