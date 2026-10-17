@@ -16,10 +16,13 @@ float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 4; i++) { v += a 
 // Used for the heroines' procedural jiggle / sway (see game/soft.js).
 const VERT = `
 uniform float softOn; uniform vec4 softA[6]; uniform vec3 softD[6]; uniform vec2 softSize;
+uniform sampler2D relief; uniform float reliefOn; uniform float reliefAmt;
 varying vec2 vUv; varying float vFogDepth;
 void main(){
   vUv = uv;
   vec3 p = position;
+  // depth relief (tools/relief.py): the drawing pushed out toward the viewer by how near each part of it is
+  if (reliefOn > 0.5) p.z += (texture2D(relief, uv).r - 0.35) * reliefAmt;
   if (softOn > 0.5) {
     for (int i = 0; i < 6; i++) {
       vec2 d = uv - softA[i].xy;
@@ -41,12 +44,24 @@ uniform float flash; uniform vec3 tint; uniform float tintAmt; uniform float opa
 uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float sliceOn; uniform float aspect;
 uniform float seed; uniform float time; uniform vec3 edgeColor;
 uniform vec3 lit; uniform vec3 fogColor; uniform float fogDensity; uniform float useFog;
+uniform sampler2D relief; uniform float reliefOn; uniform float reliefAmt; uniform vec2 reliefTexel; uniform vec2 softSize; uniform vec3 lightL;
 varying vec2 vUv; varying float vFogDepth;
 ${NOISE_GLSL}
 void main(){
   vec4 tx = texture2D(map, vUv);
-  if (tx.a < 0.03) discard;
+  if (tx.a < (reliefOn > 0.5 ? 0.45 : 0.03)) discard;
   vec3 col = tx.rgb;
+  if (reliefOn > 0.5) {
+    // light it like a solid: normals from the relief, two soft toon bands (an anime cel look, not plastic)
+    float rx = texture2D(relief, vUv + vec2(reliefTexel.x, 0.0)).r - texture2D(relief, vUv - vec2(reliefTexel.x, 0.0)).r;
+    float ry = texture2D(relief, vUv + vec2(0.0, reliefTexel.y)).r - texture2D(relief, vUv - vec2(0.0, reliefTexel.y)).r;
+    vec2 sl = vec2(rx, ry) * reliefAmt / (2.0 * reliefTexel * softSize);
+    vec3 nrm = normalize(vec3(-sl, 1.0));
+    float dl = dot(nrm, normalize(lightL));
+    float shade = mix(0.74, 0.92, smoothstep(0.05, 0.2, dl));
+    shade = mix(shade, 1.08, smoothstep(0.55, 0.7, dl));
+    col *= shade;
+  }
   vec2 q = vec2(vUv.x * aspect, vUv.y);
   float n = fbm(q * 14.0 + seed);
   float n2 = vnoise(q * 60.0 + seed * 3.0);
@@ -104,9 +119,20 @@ export function paperMaterial(map, aspect = 1) {
       lit: { value: new THREE.Color(1, 1, 1) }, fogColor: FOG.color, fogDensity: FOG.density, useFog: { value: 1 },
       softOn: { value: 0 }, softA: { value: Array.from({ length: 6 }, () => new THREE.Vector4(0, 0, 1e-3, 1e-3)) },
       softD: { value: Array.from({ length: 6 }, () => new THREE.Vector3()) }, softSize: { value: new THREE.Vector2(1, 1) },
+      relief: { value: blankTex() }, reliefOn: { value: 0 }, reliefAmt: { value: 0 }, reliefTexel: { value: new THREE.Vector2(1 / 256, 1 / 256) },
+      lightL: { value: new THREE.Vector3(-0.45, 0.55, 0.75) },
     },
     vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });
+}
+
+// A relief map on a mesh made with segs (enough vertices to carry it): amt = how deep the nearest part comes out (world units)
+export function setRelief(mesh, reliefTex, amt) {
+  const u = mesh.material.uniforms;
+  if (!reliefTex) { u.reliefOn.value = 0; return; }
+  u.relief.value = reliefTex; u.reliefOn.value = 1; u.reliefAmt.value = amt;
+  u.reliefTexel.value.set(1 / reliefTex.image.width, 1 / reliefTex.image.height);
+  mesh.material.depthWrite = true;   // a solid: it hides what is behind it and itself
 }
 
 // Plane with its pivot at bottom-centre (standing paper) or centre.

@@ -5,7 +5,7 @@
 // Hits paint holes / cuts / scorch; deaths: knock (falls flat), shatter, slice, burn.
 import * as THREE from 'three';
 import { tex, alphaAt, meta } from '../core/assets.js';
-import { paperMesh, DamageMap, attachDamage } from '../core/paper.js';
+import { paperMesh, DamageMap, attachDamage, setRelief } from '../core/paper.js';
 import { makeShatter } from '../core/particles.js';
 import { Ease } from '../core/tween.js';
 import { sfx } from '../core/audio.js';
@@ -26,7 +26,10 @@ export class Actor {
     const figH = meta[key]?.figH || 1;
     this.h = h / figH; this.w = this.h * this.ar;
     this.pivot = pivot;
-    this.mesh = paperMesh(t, this.w, { pivot });
+    // drawings with a relief map (tools/relief.py) get a dense mesh and real volume
+    this.relief = !!meta[key]?.relief;
+    this.mesh = paperMesh(t, this.w, { pivot, segs: this.relief ? [64, Math.max(8, Math.round(64 / this.ar))] : null });
+    if (this.relief) setRelief(this.mesh, tex[meta[key].relief], this.reliefAmt());
     this.mesh.userData.owner = this;
     this.mesh.userData.texKey = key;
     this.dm = new DamageMap(1 / this.ar, this.w > 4 ? 512 : 256);
@@ -47,10 +50,12 @@ export class Actor {
     this.prefix = key.replace(/_[^_/]+$/, '_');
     this.litC = new THREE.Color(1, 1, 1);
   }
+  reliefAmt() { return Math.min(this.w, this.h) * 0.32; }
   setFrame(key) {
     if (this.mesh.userData.texKey === key || !tex[key]) return;
     this.mesh.userData.texKey = key;
     this.u.map.value = tex[key];
+    if (this.relief) { const r = tex[meta[key]?.relief]; if (r) { this.u.relief.value = r; this.u.reliefTexel.value.set(1 / r.image.width, 1 / r.image.height); } }
   }
   play(name, fps = 8, loop = true) {
     const frames = (this.frames && this.frames[name]) || [name];

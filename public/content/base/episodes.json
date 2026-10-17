@@ -41,5 +41,16 @@
     },
     "steps": [],
     "cover": "ui/sel_next_ep1"
+  },
+  "corridor_test": {
+    "id": "corridor_test",
+    "no": 99,
+    "hidden": true,
+    "debug": true,
+    "set": "corridor_test",
+    "par": 120,
+    "title": { "zh": "走廊技术验证", "en": "Corridor tech test", "ja": "廊下 技術検証" },
+    "sub": { "zh": "平板拼搭场景 + 深度浮雕", "en": "Panel stage + relief", "ja": "パネル舞台＋レリーフ" },
+    "steps": [{ "stage": "corridor", "stations": ["s1", "s2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" } }]
   }
 }

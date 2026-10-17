@@ -7,6 +7,7 @@ import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
 import { Ease } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
+import { PanelWorld } from './panels.js';
 import { FX, COL } from './fx.js';
 import { Player } from './player.js';
 import { Enemy, Projectile } from './enemies.js';
@@ -34,7 +35,8 @@ export class Game {
     this.overlay = new THREE.Scene();
     this.ortho = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100);
     // painted 2.5D sets (one painting per battle station) or the older modelled rooms
-    this.world = C.sets[this.ep.set]?.plates ? new PlateWorld(this, this.ep.set) : new World(this, this.ep.set);
+    const setDef = C.sets[this.ep.set];
+    this.world = setDef?.panels ? new PanelWorld(this, this.ep.set) : setDef?.plates ? new PlateWorld(this, this.ep.set) : new World(this, this.ep.set);
     this.fx = new FX(this);
     this.players = run.team.map((id, i) => new Player(this, id, i, { xp: SAVE.chars[id]?.xp || 0, bag: run.bag }));
     this.hud = new Hud(this);
@@ -108,6 +110,7 @@ export class Game {
   goStation(id, boss) {
     const S = this.station(id);
     this.S = S;
+    this.stationId = id;
     this.combat = false;
     this.world.dropCovers();
     if (this.world.plates) {
@@ -146,6 +149,8 @@ export class Game {
   arrive(S, boss) {
     this.world.setCovers(S.covers);
     if (boss) this.spawnBoss(this.stage.boss);
+    // the place itself changes (panel stages): the corridor bends up, the floor folds into ridges, then the fight starts
+    if (S.fold && this.world.fold) { this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
   }
@@ -498,7 +503,7 @@ export class Game {
   }
 
   render(r) {
-    r.render(this.world.scene, this.world.camera);
+    if (this.world.render) this.world.render(r); else r.render(this.world.scene, this.world.camera);
     r.render(this.overlay, this.ortho);
   }
 }

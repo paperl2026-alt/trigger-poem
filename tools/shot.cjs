@@ -15,6 +15,7 @@ const LOG = path.join(require('node:os').tmpdir(), 'shot.log');
 const log = (...a) => fs.appendFileSync(LOG, a.join(' ') + '\n');
 fs.writeFileSync(LOG, '');
 process.on('uncaughtException', (e) => { log('error', e.stack); app.exit(1); });
+process.on('unhandledRejection', (e) => { log('error', e && (e.stack || e.message || e)); app.exit(1); });
 const [port, out, w = '1672', h = '941', wait = '.screen.ttl'] = process.argv.slice(2).filter((a) => !a.startsWith('--') && !a.endsWith('shot.cjs') && a !== '.');
 const url = process.env.SHOT_URL || `http://localhost:${port}/`;
 
@@ -29,7 +30,7 @@ app.whenReady().then(async () => {
   log('loaded');
   // SHOT_PRE="<js>": run once the first screen is up (e.g. "__G.titleStart()" to go to the chapter select), then wait for <selector>
   if (process.env.SHOT_PRE) {
-    await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if (document.querySelector('.screen') && window.__G?.ready) return ok(); setTimeout(poll, 100); })(); })`);
+    await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if ((document.querySelector('.screen') || window.__G?.game) && window.__G?.ready) return ok(); setTimeout(poll, 100); })(); })`);
     await new Promise((r) => setTimeout(r, 800));
     await win.webContents.executeJavaScript(process.env.SHOT_PRE);
     await new Promise((r) => setTimeout(r, +(process.env.SHOT_WAIT || 2600)));
@@ -56,6 +57,7 @@ app.whenReady().then(async () => {
       fs.writeFileSync(out.replace(/\.png$/, `_${String(i).padStart(2, '0')}.png`), img.toPNG());
       log('frame', i, Date.now() - t0, 'ms');
     }
+    if (process.env.SHOT_EVAL) log('eval', JSON.stringify(await win.webContents.executeJavaScript(`(() => { try { return (${process.env.SHOT_EVAL.trim()}); } catch (e) { return 'eval error: ' + e.message; } })()`)));
     app.quit();
     return;
   }
@@ -63,7 +65,7 @@ app.whenReady().then(async () => {
     s.textContent = '*,*::before,*::after{transition:none!important;animation:none!important} #cursor{display:none!important}';
     document.head.appendChild(s); document.querySelector(${JSON.stringify(wait)})?.classList.add('in'); })()`);
   await new Promise((r) => setTimeout(r, 600));
-  if (process.env.SHOT_EVAL) log('eval', JSON.stringify(await win.webContents.executeJavaScript(process.env.SHOT_EVAL)));   // SHOT_EVAL: inspect the page
+  if (process.env.SHOT_EVAL) log('eval', JSON.stringify(await win.webContents.executeJavaScript(`(() => { try { return (${process.env.SHOT_EVAL.trim()}); } catch (e) { return 'eval error: ' + e.message; } })()`)));   // SHOT_EVAL: inspect the page
   win.webContents.invalidate(); await new Promise((r) => setTimeout(r, 400));   // offscreen windows can sit on an old frame: repaint first
   const img = await win.webContents.capturePage();
   fs.mkdirSync(path.dirname(path.resolve(out)), { recursive: true });

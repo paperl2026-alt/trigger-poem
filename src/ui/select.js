@@ -107,7 +107,7 @@ export function showSelect(act) {
   }
 
   // ---- the chapter: header, stage rows, best, GO, next chapter card, arrows
-  const eps = list('episodes');
+  const eps = list('episodes').filter((e) => !e.hidden);   // hidden = tech validations, opened by their own launcher
   let idx = Math.max(0, eps.findIndex((e) => e.id === (SAVE.lastEp || 'ep0')));
   const open = (e) => !e.teaser && !!SAVE.eps[e.id]?.open;
   const chap = group('chap');
