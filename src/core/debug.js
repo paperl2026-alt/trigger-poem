@@ -3,6 +3,8 @@
 import { sfx } from './audio.js';
 import { SAVE, persist, resetSave, SAVE_VERSION } from './save.js';
 import { storeStatus, hasFiles } from './store.js';
+import { list, isStage } from './content.js';
+import { tr } from './i18n.js';
 
 const KEY = 'noa.debug';
 const DEF = { auto: false, god: false, fps: false, skip: false };
@@ -41,7 +43,18 @@ export function mountDebug(G, act) {
     const x = document.createElement('button'); x.textContent = '✕ 继续 Resume'; x.onpointerdown = (e) => { e.stopPropagation(); close(); };
     head.appendChild(x);
     panel.appendChild(head);
-    row('第0话 Ep0', [['开场 Intro', go('ep0', 0)], ['教室 Class', go('ep0', 1)], ['走廊 Hall', go('ep0', 2)], ['BOSS', go('ep0', 4)], ['结尾 End', go('ep0', 5)]]);
+    // every chapter (also the ones still "coming soon" on the select screen): its opening, each stage from the comic / door right before it,
+    // its ending
+    for (const e of list('episodes').filter((x) => !x.hidden)) {
+      const S = e.steps || [], btns = [['开场 Intro', go(e.id, 0)]];
+      S.forEach((st, i) => {
+        if (!isStage(st)) return;
+        let from = i; while (from > 0 && !isStage(S[from - 1])) from--;
+        btns.push([st.boss ? 'BOSS' : tr(st.name || {}) || `#${i}`, go(e.id, from)]);
+      });
+      if (S.length && !isStage(S[S.length - 1])) btns.push(['结尾 End', go(e.id, S.length - 1)]);
+      row(`第${e.no}话 Ep${e.no}`, btns);
+    }
     row('场景 Scene', [['选关 Select', () => { close(); act.select(); }], ['标题 Title', () => { close(); act.title(); }]]);
     row('开关 Toggle', [['1P自动打 Auto', toggle('auto'), DBG.auto], ['无敌 God', toggle('god'), DBG.god], ['帧率 FPS', toggle('fps'), DBG.fps], ['跳过漫画 Skip comics', toggle('skip'), DBG.skip]]);
     const g = G.game;
