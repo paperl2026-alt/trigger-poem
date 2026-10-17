@@ -224,6 +224,69 @@
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
       "rate": 0.9
+    },
+    "ghoul": {
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.85
+    },
+    "bat": {
+      "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3", "sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
+      "rate": 1.6
+    },
+    "chandelier": {
+      "windup": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3", "sfx/otologic/Horror-Laugh02-5_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream03-6_High-Dry.mp3"],
+      "rate": 1.1
+    },
+    "armor": {
+      "windup": ["sfx/otologic/Monster02-08.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.55
+    },
+    "doll": {
+      "windup": ["sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
+      "rate": 1.15
+    },
+    "crawler": {
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 0.95
+    },
+    "shadow": {
+      "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
+      "rate": 0.8
+    },
+    "double_pink": {
+      "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
+      "rate": 1.2
+    },
+    "double_cat": {
+      "windup": ["sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-8_Low-Dry.mp3"],
+      "rate": 1.1
     }
   },
   "voices": {

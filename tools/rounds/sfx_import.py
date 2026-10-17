@@ -59,6 +59,16 @@ MON = {
     "paper": {"rate": 1.3, "windup": oto("Horror-Laugh01", "Horror-Laugh01-3(Dry).mp3", "Horror-Laugh01-4(Dry).mp3"), "die": oto("Horror-Scream02", "Horror-Scream02-6(High-Dry).mp3")},
     "frame": {"windup": oto("Horror-Scream03", "Horror-Scream03-6(High-Dry).mp3"), "die": oto("Horror-Scream03", "Horror-Scream03-8(Low-Dry).mp3")},
     "horn":  {"rate": 0.9, "windup": oto("Monster02", "Monster02-08.mp3"), "die": DIE},
+    # episode 1 (docs/DESIGN.md 第 1 话)
+    "ghoul": {"rate": 0.85, "windup": SHORT, "die": DIE},
+    "bat":   {"rate": 1.6, "windup": oto("Horror-Laugh01", "Horror-Laugh01-3(Dry).mp3", "Horror-Laugh01-4(Dry).mp3"), "die": oto("Horror-Scream02", "Horror-Scream02-6(High-Dry).mp3")},
+    "chandelier": {"rate": 1.1, "windup": oto("Horror-Laugh02", "Horror-Laugh02-4(Dry).mp3", "Horror-Laugh02-5(Dry).mp3"), "die": oto("Horror-Scream03", "Horror-Scream03-6(High-Dry).mp3")},
+    "armor": {"rate": 0.55, "windup": oto("Monster02", "Monster02-08.mp3"), "die": DIE},
+    "doll":  {"rate": 1.15, "windup": oto("Horror-Laugh02", "Horror-Laugh02-5(Dry).mp3", "Horror-Laugh02-6(Dry).mp3"), "die": oto("Horror-Scream01", "Horror-Scream01-3(Dry).mp3")},
+    "crawler": {"rate": 0.95, "windup": SHORT, "die": DIE},
+    "shadow": {"rate": 0.8, "windup": oto("Horror-Laugh02", "Horror-Laugh02-1(Reverb).mp3"), "die": oto("Horror-Scream01", "Horror-Scream01-1(Reverb).mp3")},
+    "double_pink": {"rate": 1.2, "windup": oto("Horror-Laugh01", "Horror-Laugh01-3(Dry).mp3"), "die": oto("Horror-Scream02", "Horror-Scream02-6(High-Dry).mp3")},
+    "double_cat": {"rate": 1.1, "windup": oto("Horror-Laugh01", "Horror-Laugh01-4(Dry).mp3"), "die": oto("Horror-Scream02", "Horror-Scream02-8(Low-Dry).mp3")},
 }
 
 

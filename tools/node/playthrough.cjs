@@ -4,7 +4,8 @@
 // usage: electron tools/node/playthrough.cjs <out.json> [episode id] [step]
 //   env PT_SLOW (game speed, default 3), PT_TIME (seconds before giving up, default 900), PT_TEAM (e.g. cat,pink), PT_SHOTS=1 (a
 //   screenshot <out>_<n>.png at every new station), PT_EVERY=<ms> (a screenshot that often instead, for watching a scene),
-//   PT_NOSKIP=1 (comic pages and door close-ups are played, not skipped)
+//   PT_NOSKIP=1 (comic pages and door close-ups are played, not skipped), PT_JS=<js> (run in the page every tick, e.g. to shoot the
+//   place's mechanisms, which the auto-player leaves alone: see docs/TECH.md 自检)
 // <out.json>: { done, results, timeline: [{ t, step, station, wave, ... }], errs }; also <tmp>/playthrough.log while it runs.
 const { app, BrowserWindow, protocol } = require('electron');
 const fs = require('node:fs');
@@ -21,7 +22,7 @@ const log = (...a) => fs.appendFileSync(LOG, a.join(' ') + '\n');
 fs.writeFileSync(LOG, '');
 const [out, ep = 'ep0', step = '0'] = process.argv.slice(2).filter((a) => !a.startsWith('--') && !a.endsWith('playthrough.cjs') && a !== '.');
 const SLOW = +(process.env.PT_SLOW || 3), TIME = +(process.env.PT_TIME || 900), TEAM = process.env.PT_TEAM, SHOTS = !!process.env.PT_SHOTS;
-const EVERY = +(process.env.PT_EVERY || 0), NOSKIP = !!process.env.PT_NOSKIP;
+const EVERY = +(process.env.PT_EVERY || 0), NOSKIP = !!process.env.PT_NOSKIP, JS = process.env.PT_JS;
 process.on('uncaughtException', (e) => { log('error', e.stack); app.exit(1); });
 
 const STATE = `(() => { const g = window.__G && __G.game;
@@ -55,6 +56,7 @@ app.whenReady().then(async () => {
   for (;;) {
     await new Promise((r) => setTimeout(r, EVERY ? Math.min(1000, EVERY) : 1000));
     if (EVERY) fs.writeFileSync(out.replace(/\.json$/, `_${String(shots++).padStart(3, '0')}.png`), (await win.webContents.capturePage()).toPNG());
+    if (JS) await win.webContents.executeJavaScript(`try { ${JS} } catch (e) { (window.__errs || (window.__errs = [])).push('PT_JS: ' + e.message) }`);
     st = await win.webContents.executeJavaScript(STATE);
     const t = Math.round((Date.now() - t0) / 1000);
     const key = JSON.stringify([st.done, st.step, st.station, st.wave, st.boss !== null && Math.round(st.boss / 25)]);

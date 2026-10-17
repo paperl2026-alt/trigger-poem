@@ -13,7 +13,7 @@
             "license": "CC BY 4.0",
             "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
             "source": "https://maou.audio/",
-            "use": "音效 19 个文件（sfx/maou/）",
+            "use": "音效 21 个文件（sfx/maou/）",
             "changes": "截取片段、变调、统一音量"
           },
           {
@@ -23,7 +23,7 @@
             "license": "CC BY 4.0",
             "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
             "source": "https://otologic.jp/",
-            "use": "音效、怪物叫声 48 个文件（sfx/otologic/）",
+            "use": "音效、怪物叫声 51 个文件（sfx/otologic/）",
             "changes": "截取片段、变调、统一音量"
           }
         ]

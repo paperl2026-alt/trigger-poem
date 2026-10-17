@@ -24,7 +24,7 @@
 - 调试菜单（`` ` `` 键，`src/core/debug.js`）：每个大关一行（开场、每个小关连同它前面的漫画 / 开门特写、结尾），按 episodes.json 自动生成，选关里还是"制作中"的大关也能进。
 - 自检：
   - `NOA_SELFTEST=<png>` + `electron . --page=...` 会离屏跑几秒，写出截图和 `<png>.json`（报错和报错位置、是否进入战斗、主角状态）；这是**交付前必须过的检查**：用的是和用户一样的构建产物（`dist/`），两种队伍顺序都要跑；
-  - 整关通关测试：`electron tools/node/playthrough.cjs <out.json> [大关] [第几步]`，用构建产物离屏自动打（1P 自动、无敌、`PT_SLOW` 倍速，默认 3），每秒记一次走到哪一步 / 哪个停留点 / 第几波 / Boss 血量，打到结算或超时（`PT_TIME` 秒）为止，写出时间线和报错；`PT_TEAM=cat,pink` 换队，`PT_SHOTS=1` 每到新停留点截一张图。改了关卡数据或流程后跑一遍（序章约 2 分钟）。
+  - 整关通关测试：`electron tools/node/playthrough.cjs <out.json> [大关] [第几步]`，用构建产物离屏自动打（1P 自动、无敌、`PT_SLOW` 倍速，默认 3），每秒记一次走到哪一步 / 哪个停留点 / 第几波 / Boss 血量，打到结算或超时（`PT_TIME` 秒）为止，写出时间线和报错；`PT_TEAM=cat,pink` 换队，`PT_SHOTS=1` 每到新停留点截一张图，`PT_EVERY=<毫秒>` 每隔这么久截一张（看演出），`PT_NOSKIP=1` 漫画和开门特写照常播，`PT_JS=<js>` 每次在页面里执行（自动打不碰机关：要测机关就用它打，例如每次打一个还能打的 `prop`）。改了关卡数据或流程后跑一遍（序章约 2 分钟）。
   - 开发服务器：`.claude/launch.json` 的 trigger-poem-rec，端口 5310。
   - `tools/node/shot.cjs`（只给自己检查用）：
     - 用 Electron 截全尺寸图：`electron.exe tools/node/shot.cjs <端口> out.png 宽 高 [等待的选择器]`；
