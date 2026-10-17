@@ -1,5 +1,5 @@
 {
-  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），sprite 图的前缀，variants 同一种怪的几个造型（图的前缀，刷怪时挑场上最少的那个，docs/ART.md 多版本），hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。 序章（2026-10-17）的六种怪：desk 课桌蜘蛛、shoe 鞋柜拟态（近战扑咬：攻击前蹲下蓄力，趁这时把它打出硬直才能打断，扑上来的咬会无视掩体）；board 黑板女教师（冒头扔粉笔，粉笔能打掉，掩体挡得住）；paper 考卷幽灵（飘着，俯冲撞人，掩体挡得住）；frame 相框群（连发镜片）；horn 广播喇叭（长时间蓄力后全屏声波，蓄力时霸体打不断，必须躲进掩体）。",
+  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），name 名字（准星锁定时标出来），sprite 图的前缀，variants 同一种怪的几个造型（图的前缀，刷怪时挑场上最少的那个，docs/ART.md 多版本），hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。 序章（2026-10-17）的六种怪：desk 课桌蜘蛛、shoe 鞋柜拟态（近战扑咬：攻击前蹲下蓄力，趁这时把它打出硬直才能打断，扑上来的咬会无视掩体）；board 黑板女教师（冒头扔粉笔，粉笔能打掉，掩体挡得住）；paper 考卷幽灵（飘着，俯冲撞人，掩体挡得住）；frame 相框群（连发镜片）；horn 广播喇叭（长时间蓄力后全屏声波，蓄力时霸体打不断，必须躲进掩体）。",
   "zomb": {
     "beh": "walker",
     "sprite": "zomb",
@@ -46,6 +46,7 @@
   },
   "desk": {
     "beh": "walker",
+    "name": { "zh": "课桌蜘蛛", "en": "Desk Spider", "ja": "机グモ" },
     "sprite": "desk",
     "variants": ["desk", "desk_b", "desk_c"],
     "hp": 110,
@@ -66,6 +67,7 @@
   },
   "shoe": {
     "beh": "walker",
+    "name": { "zh": "鞋柜拟态", "en": "Shoe-Locker Mimic", "ja": "下駄箱ミミック" },
     "sprite": "shoe",
     "variants": ["shoe", "shoe_b", "shoe_c"],
     "hp": 130,
@@ -86,6 +88,7 @@
   },
   "board": {
     "beh": "thrower",
+    "name": { "zh": "黑板女教师", "en": "Blackboard Teacher", "ja": "黒板せんせい" },
     "sprite": "board",
     "variants": ["board", "board_b", "board_c"],
     "hp": 120,
@@ -99,6 +102,7 @@
   },
   "paper": {
     "beh": "flyer",
+    "name": { "zh": "考卷幽灵", "en": "Test-Paper Ghost", "ja": "答案用紙ゴースト" },
     "sprite": "paper",
     "variants": ["paper", "paper_b", "paper_c"],
     "hp": 45,
@@ -110,6 +114,7 @@
   },
   "frame": {
     "beh": "thrower",
+    "name": { "zh": "相框群", "en": "Portrait Swarm", "ja": "額縁の群れ" },
     "sprite": "frame",
     "variants": ["frame", "frame_b", "frame_c"],
     "hp": 140,
@@ -131,6 +136,7 @@
   },
   "horn": {
     "beh": "thrower",
+    "name": { "zh": "广播喇叭", "en": "PA Siren", "ja": "放送スピーカー" },
     "sprite": "horn",
     "variants": ["horn", "horn_b", "horn_c"],
     "hp": 170,
