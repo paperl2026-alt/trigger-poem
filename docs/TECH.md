@@ -75,7 +75,8 @@
 - `src/ui/`：
   - `title`（标题+设置）、`select`（选关，类名一律加 `s-` 前缀）；
   - `manga`（翻页转场）、`comic`（漫画播放）；
-  - `hud` + `hud.css`（战斗 HUD，待按设计稿重做）、`screens`（旧结算等）、`uifx`（菜单粒子）、`cursor`。
+  - `hud`（战斗 HUD 外壳：教程提示、开场横幅、伤害数字仍是 DOM）+ **`glhud`（战斗 HUD 本体，WebGL）**：效果图拆出的图层 + 程序画的文字（画布文字贴图）、条、环、格、弹药、Q 版头像、准星、装填图、倒计时、Boss 条；位置数据在 `ui/battle.json`（效果图像素，按屏幕高度换算，四角锚定）；
+  - `screens`（旧结算等）、`uifx`（菜单粒子）、`cursor`。
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
 
 ## 场景：PanelWorld（`src/battle/panels.js`）
