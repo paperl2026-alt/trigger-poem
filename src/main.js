@@ -1,7 +1,8 @@
 import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
-import { loadAll, setRenderer } from './core/assets.js';
+import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex } from './core/assets.js';
+import { coreKeys, stageKeys, stageFrom } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
 import { initAudio, sfx } from './core/audio.js';
@@ -47,6 +48,7 @@ const G = {
 };
 G.p1ctrl = new HybridCtrl(G);
 window.__G = G; // debug handle for automated checks
+G.renderer = renderer; G.vramMB = vramMB; G.texCount = () => Object.keys(tex).length;   // (tools/node/playthrough.cjs: memory checks)
 
 // Any window size / aspect: the 3D view widens (panorama), the HUD + characters stay inside the HUD frame.
 function resize() {
@@ -96,6 +98,8 @@ window.addEventListener('keydown', (e) => {
     if (e.code === 'ArrowLeft') G.select.flip(-1);
     if (e.code === 'ArrowRight') G.select.flip(1);
     if (e.code === 'Enter') G.select.go();
+    if (e.code === 'ArrowUp') G.select.step?.(-1);
+    if (e.code === 'ArrowDown') G.select.step?.(1);
   }
 });
 window.addEventListener('keyup', (e) => { G.keys[e.code] = false; });
@@ -112,7 +116,23 @@ function resetFx() {
 // the menu screen currently shown (title has a frame loop of its own to stop)
 let screenApi = null;
 function clearScreen() { if (screenApi && screenApi.dispose) screenApi.dispose(); screenApi = null; }
+// a stage's pictures (src/core/groups.js): what is not loaded yet is loaded behind the loading bar, then everything else is released
+// (only the core + this stage stay: memory does not grow with the number of chapters)
+function needPics(keys, then) {
+  const go = () => { releaseExcept(keys); then(); };
+  if (isLoaded(keys)) { go(); return; }
+  const box = document.createElement('div'); box.id = 'loading'; box.innerHTML = '<div class="track"><div id="loadbar"></div></div>';
+  document.body.appendChild(box);
+  const bar = box.querySelector('#loadbar');
+  loadKeys(keys, (p) => { bar.style.width = `${Math.round(p * 100)}%`; }).then(() => { box.remove(); go(); });
+}
+G.needPics = needPics;
+const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : [])]);
 function startRun(epId = 'ep0', step = 0) {
+  const ep0 = C.episodes[epId] || C.episodes.ep0;
+  needPics(picsFor(ep0, stageFrom(ep0, step)), () => beginRun(ep0, step));
+}
+function beginRun(ep, step) {
   clearScreen();
   cursorScene('battle'); // the HUD draws each heroine's reticle
   G.skipComics = DBG.skip;
@@ -120,7 +140,6 @@ function startRun(epId = 'ep0', step = 0) {
   document.getElementById('ui').innerHTML = '';
   if (G.game) G.game.dispose();
   resetFx();
-  const ep = C.episodes[epId] || C.episodes.ep0;
   G.game = new Game(G, { ep, step, team: [...SAVE.team], bag: [...SAVE.bag] });
   G.game.start(step);
 }
@@ -216,7 +235,8 @@ async function boot() {
   initCursor();
   G.ready = true;
   resize();
-  await loadAll((p) => { bar.style.width = `${Math.round(p * 100)}%`; });
+  setManifest();
+  await loadKeys(coreKeys(), (p) => { bar.style.width = `${Math.round(p * 100)}%`; });   // only the core: each stage loads its own (src/core/groups.js)
   await document.fonts?.ready;
   document.getElementById('loading').remove();
   const q = new URLSearchParams(location.search);

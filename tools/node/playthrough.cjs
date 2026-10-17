@@ -6,7 +6,10 @@
 //   screenshot <out>_<n>.png at every new station), PT_EVERY=<ms> (a screenshot that often instead, for watching a scene),
 //   PT_NOSKIP=1 (comic pages and door close-ups are played, not skipped), PT_JS=<js> (run in the page every tick, e.g. to shoot the
 //   place's mechanisms, which the auto-player leaves alone: see docs/TECH.md 自检)
-// <out.json>: { done, results, timeline: [{ t, step, station, wave, ... }], errs }; also <tmp>/playthrough.log while it runs.
+// <out.json>: { done, results, timeline: [{ t, step, station, wave, ..., mem }], peak, errs }; also <tmp>/playthrough.log while it runs.
+// mem = MB of the game's processes (Electron app.getAppMetrics working sets): gpu (textures live there), tab (the page: decoded images,
+// JS), all; plus tex = textures on the graphics card (three.js renderer.info.memory.textures), vram = their size in MB (estimated,
+// src/core/assets.js vramMB), loaded = pictures loaded (src/core/groups.js decides which).
 const { app, BrowserWindow, protocol } = require('electron');
 const fs = require('node:fs');
 const path = require('node:path');
@@ -53,12 +56,17 @@ app.whenReady().then(async () => {
   await win.webContents.executeJavaScript(`__G.god = true; __G.slow = ${SLOW}; true`);
   const timeline = [], t0 = Date.now();
   let last = '', shots = 0, lastStation = null, st;
+  const peak = {};
   for (;;) {
     await new Promise((r) => setTimeout(r, EVERY ? Math.min(1000, EVERY) : 1000));
     if (EVERY) fs.writeFileSync(out.replace(/\.json$/, `_${String(shots++).padStart(3, '0')}.png`), (await win.webContents.capturePage()).toPNG());
     if (JS) await win.webContents.executeJavaScript(`try { ${JS} } catch (e) { (window.__errs || (window.__errs = [])).push('PT_JS: ' + e.message) }`);
     st = await win.webContents.executeJavaScript(STATE);
     const t = Math.round((Date.now() - t0) / 1000);
+    const M = { gpu: 0, tab: 0, all: 0 };
+    for (const m of app.getAppMetrics()) { const mb = Math.round(m.memory.workingSetSize / 1024); M.all += mb; if (m.type === 'GPU') M.gpu += mb; if (m.type === 'Tab' || m.type === 'Renderer') M.tab += mb; }
+    Object.assign(M, await win.webContents.executeJavaScript('window.__G && __G.renderer ? { tex: __G.renderer.info.memory.textures, vram: __G.vramMB ? __G.vramMB() : null, loaded: __G.texCount ? __G.texCount() : null } : {}').catch(() => ({})));
+    st.mem = M; for (const k of ['gpu', 'tab', 'all', 'vram', 'tex']) peak[k] = Math.max(peak[k] || 0, M[k]);
     const key = JSON.stringify([st.done, st.step, st.station, st.wave, st.boss !== null && Math.round(st.boss / 25)]);
     if (key !== last) { last = key; timeline.push({ t, ...st }); log(t, JSON.stringify(st)); }
     if (SHOTS && st.station && st.station !== lastStation) {
@@ -69,7 +77,7 @@ app.whenReady().then(async () => {
     if (st.done || t > TIME) break;
   }
   const errs = await win.webContents.executeJavaScript('window.__errs || []');
-  fs.writeFileSync(out, JSON.stringify({ done: !!st.done, results: !!st.results, seconds: Math.round((Date.now() - t0) / 1000), slow: SLOW, timeline, errs }, null, 1));
+  fs.writeFileSync(out, JSON.stringify({ done: !!st.done, results: !!st.results, seconds: Math.round((Date.now() - t0) / 1000), slow: SLOW, peak, timeline, errs }, null, 1));
   log('end', st.done ? 'done' : 'timeout');
   app.quit();
 });

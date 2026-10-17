@@ -9,7 +9,7 @@
   comics    page_<name>_<v> (the picked one; art/raw/r53b/fixed/ when its paw seals were replaced: tools/seal_fix.py r53_*) -> comic/ep1p_<name>
             + comics.json ep1_<name> (panels found by tools/comic_panels.py, played in reading order)
 Then: python -I tools/pad_frames.py "enemy/ghoul*" ... and python -I tools/relief.py (printed at the end)
-usage: python -I tools/rounds/r53_import.py [monsters] [shots] [doors] [pictures] [props] [comics] [boss]"""
+usage: python -I tools/rounds/r53_import.py [monsters] [shots] [doors] [pictures] [props] [comics] [boss] [thumbs]"""
 import sys, json, pathlib
 import numpy as np
 from PIL import Image
@@ -174,6 +174,25 @@ def boss(man):
             put(man, f"boss/md_s{n}_{name}", can, hit=True, **extra)
         print("boss form", n, src.name, can.size)
 
+
+# the select screen's stage thumbnails: a band across the middle of each place's concept painting (like ui/sel_thumb1: 1200 x 363, the
+# boss one 1200 x 491), the netherworld and the pit from their own pictures
+THUMBS = {"shop": R53 / "sc_shop_a.png", "gallery": R53 / "sc_gallery_a_x.png", "garden": R53 / "sc_fountain_a_x.png",
+          "pit": ROOT / "art" / "raw" / "r55" / "pit_wall2.png", "garden2": R53 / "sc_fountain_a_x.png", "cold": R53 / "sc_cold_a_x.png",
+          "oven": R53 / "sc_oven_a_x.png", "nether": R53B / "nether_a.png", "boss": R53 / "sc_hall_a_x.png"}
+
+
+def thumbs(man):
+    import json as _j
+    ep = _j.loads((ROOT / "public" / "content" / "base" / "episodes.json").read_text(encoding="utf-8"))
+    for k, src in THUMBS.items():
+        im = Image.open(src).convert("RGB")
+        W, H = (1200, 491) if k == "boss" else (1200, 363)
+        s = W / im.width; im = im.resize((W, round(im.height * s)), Image.LANCZOS)
+        y = max(0, min(im.height - H, round(im.height * (0.62 if k in ("garden2", "pit") else 0.45) - H / 2)))
+        key = f"ui/sel_thumb_ep1_{k}"
+        put(man, key, im.crop((0, y, W, y + H)), q=86, dom=True)
+        print(key)
 
 if __name__ == "__main__":
     mp = A / "manifest.json"; man = json.loads(mp.read_text())

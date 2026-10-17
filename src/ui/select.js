@@ -138,15 +138,24 @@ export function showSelect(act) {
   void goFace;
 
   let pick = 99;   // the picked stage of this chapter (99 = the last open one)
+  // a chapter with more stages than rows is shown a page at a time (docs/DESIGN.md 选关: the user picked pages of 3): the arrows above /
+  // below the rows, the wheel over them, or ↑ ↓ turn the page; the page follows the picked stage
+  let page = 0, pageFollows = true;
+  const pagesG = group('pages', chap);
   function renderRows() {
-    rowsG.innerHTML = ''; rowTexts = [];
-    const e = eps[idx], R = L.rows;
+    rowsG.innerHTML = ''; rowTexts = []; pagesG.innerHTML = '';
+    const e = eps[idx], R = L.rows, per = R.slots.length;
     if (!open(e)) { rowsG.classList.add('s-none'); return; }
     rowsG.classList.remove('s-none');
-    const steps = (e.steps || []).filter(isStage).slice(0, R.slots.length), nOpen = stagesOpen(e.id);
+    const all = (e.steps || []).filter(isStage), nOpen = stagesOpen(e.id), pages = Math.ceil(all.length / per);
     if (pick >= nOpen) pick = nOpen - 1;
-    steps.forEach((s, i) => {
-      const pc = s.boss ? P.row_boss : P.row_n, y0 = R.slots[i];
+    if (pageFollows) page = Math.floor(Math.max(0, pick) / per);
+    page = Math.max(0, Math.min(pages - 1, page)); pageFollows = true;
+    const steps = all.slice(page * per, page * per + per);
+    if (pages > 1) renderPager(pages);
+    steps.forEach((s, j) => {
+      const i = page * per + j;
+      const pc = s.boss ? P.row_boss : P.row_n, y0 = R.slots[j];
       // the piece's own top sits on its mockup slot (row_n came from slot 2, row_boss from slot 3)
       const dy = y0 - (s.boss ? R.slots[2] : R.slots[1]);
       const g = group('row', rowsG); g.style.setProperty('--i', i);
@@ -171,6 +180,35 @@ export function showSelect(act) {
       if (locked && has('ui/sel_icon_lock_big')) img(g, 'ui/sel_icon_lock_big', [R.chev.box[0] - 30, ys + R.chev.dy0 - 22, R.chev.box[2] + 6, ys + R.chev.dy1 + 22], 'rlock', true);
     });
   }
+  // the page arrows and dots (ui/select.json rows.pager)
+  function renderPager(pages) {
+    const Q = L.rows.pager;
+    for (const [dir, b] of [[-1, Q.up], [1, Q.down]]) {
+      const a = el('div', `pgar ${dir < 0 ? 'up' : 'dn'}`, pagesG); box(a, b);
+      a.classList.toggle('s-off', dir < 0 ? page === 0 : page === pages - 1);
+      a.dataset.cur = 'hover';
+      tap(a, () => turnPage(dir));
+    }
+    for (let k = 0; k < pages; k++) {
+      const d = el('div', 'pgdot', pagesG); box(d, [Q.dots.x + k * Q.dots.gap, Q.dots.y, Q.dots.x + k * Q.dots.gap + Q.dots.size, Q.dots.y + Q.dots.size]);
+      d.classList.toggle('s-on', k === page);
+      tap(d, () => { if (k !== page) { page = k; pageFollows = false; sfx.panel(); renderRows(); } });
+    }
+  }
+  function turnPage(dir) {
+    const e = eps[idx], per = L.rows.slots.length, pages = Math.ceil((e.steps || []).filter(isStage).length / per);
+    const np = page + dir;
+    if (!open(e) || np < 0 || np >= pages) { sfx.ui(); return; }
+    page = np; pageFollows = false; sfx.panel(); renderRows();
+  }
+  // ↑ ↓: the stage before / after (the page turns with it)
+  function step(dir) {
+    const e = eps[idx]; if (!open(e)) return;
+    const n = Math.min(stagesOpen(e.id), (e.steps || []).filter(isStage).length), np = Math.max(0, Math.min(n - 1, (pick >= n ? n - 1 : pick) + dir));
+    if (np === pick) { sfx.ui(); return; }
+    pick = np; sfx.ui(); renderRows();
+  }
+  rowsG.addEventListener('wheel', (ev) => { ev.preventDefault(); turnPage(ev.deltaY > 0 ? 1 : -1); }, { passive: false });
 
   // the next chapter waits behind, as a dark card
   const nextG = group('next btn'); nextG.dataset.cur = 'hover';
@@ -309,7 +347,7 @@ export function showSelect(act) {
     { duration: 480, delay: 60 + i * 28, easing: 'cubic-bezier(0.2, 1.3, 0.4, 1)', fill: 'backwards' }));
   root.classList.add('in');
   // keys / pad (main.js): arrows or LB / RB flip the chapter, Enter or A departs
-  const api = { flip, go, dispose: () => { alive = false; window.removeEventListener('resize', fit); window.removeEventListener('langchange', say); } };
+  const api = { flip, go, step, dispose: () => { alive = false; window.removeEventListener('resize', fit); window.removeEventListener('langchange', say); } };
   root.dispose = api.dispose;
   return api;
 }

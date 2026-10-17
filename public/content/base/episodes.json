@@ -39,53 +39,107 @@
   "ep1": {
     "id": "ep1",
     "no": 1,
-    "teaser": true,
-    "title": { "zh": "第1话　腐蜜之家（制作中）", "en": "Ep.1  Rotten Honey Home (in production)", "ja": "第1話　腐蜜の家（制作中）" },
+    "title": { "zh": "第1话　腐蜜之家", "en": "Ep.1  Rotten Honey Home", "ja": "第1話　腐蜜の家" },
     "sub": { "zh": "致敬：《スウィートホーム》(1989)", "en": "Homage: Sweet Home (1989)", "ja": "オマージュ：スウィートホーム (1989)" },
     "blurb": {
-      "zh": "废弃洋馆、壁画、焚化炉……下一个异变已经在敲门了。",
-      "en": "An abandoned mansion, frescoes, an incinerator… the next anomaly is already knocking.",
-      "ja": "廃洋館、フレスコ画、焼却炉……次の異変がもう扉を叩いている。"
+      "zh": "山坡尽头新开了一家意式冰淇淋店「DOLCE CASA」，开在一栋翻新的老洋馆里。两人冲进去正要点限定口味——门在身后自己关上了。",
+      "en": "A new gelateria, DOLCE CASA, has opened in an old mansion at the top of the hill. The girls rush in for the limited flavour, and the door shuts behind them by itself.",
+      "ja": "丘の上の古い洋館に、新しいジェラテリア「DOLCE CASA」ができた。限定フレーバーを目当てに飛び込んだ二人の背後で、扉がひとりでに閉まる。"
     },
     "steps": [
       { "comic": "ep1_intro" },
-      { "stage": "shop", "set": "ep1_shop", "stations": ["sh1", "sh2"], "name": { "zh": "冰淇淋店", "en": "GELATERIA", "ja": "ジェラテリア" } },
+      {
+        "stage": "shop",
+        "set": "ep1_shop",
+        "stations": ["sh1", "sh2"],
+        "name": { "zh": "冰淇淋店", "en": "GELATERIA", "ja": "ジェラテリア" },
+        "thumb": "ui/sel_thumb_ep1_shop"
+      },
       { "comic": "ep1_glass" },
       {
         "door": { "frame": "ep1/door1_frame", "leaf": "ep1/door1_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_photo" },
-      { "stage": "gallery", "set": "ep1_gallery", "stations": ["ga1", "ga2"], "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" } },
+      {
+        "stage": "gallery",
+        "set": "ep1_gallery",
+        "stations": ["ga1", "ga2"],
+        "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" },
+        "thumb": "ui/sel_thumb_ep1_gallery"
+      },
       { "comic": "ep1_web" },
       {
         "door": { "frame": "ep1/door3_frame", "leaf": "ep1/door3_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_fountain" },
-      { "stage": "garden", "set": "ep1_garden", "stations": ["gd1"], "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" } },
-      { "stage": "pit", "set": "ep1_pit", "stations": ["pt1"], "name": { "zh": "坑底", "en": "THE PIT", "ja": "穴の底" } },
-      { "stage": "garden2", "set": "ep1_garden", "stations": ["gd2"], "name": { "zh": "骑士厅", "en": "KNIGHTS' HALL", "ja": "騎士の間" } },
+      {
+        "stage": "garden",
+        "set": "ep1_garden",
+        "stations": ["gd1"],
+        "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" },
+        "thumb": "ui/sel_thumb_ep1_garden"
+      },
+      {
+        "stage": "pit",
+        "set": "ep1_pit",
+        "stations": ["pt1"],
+        "name": { "zh": "坑底", "en": "THE PIT", "ja": "穴の底" },
+        "thumb": "ui/sel_thumb_ep1_pit"
+      },
+      {
+        "stage": "garden2",
+        "set": "ep1_garden",
+        "stations": ["gd2"],
+        "name": { "zh": "骑士厅", "en": "KNIGHTS' HALL", "ja": "騎士の間" },
+        "thumb": "ui/sel_thumb_ep1_garden2"
+      },
       {
         "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
       },
-      { "stage": "cold", "set": "ep1_cold", "stations": ["co1", "co2"], "name": { "zh": "地下冷库", "en": "COLD STORE", "ja": "地下冷凍庫" } },
+      {
+        "stage": "cold",
+        "set": "ep1_cold",
+        "stations": ["co1", "co2"],
+        "name": { "zh": "地下冷库", "en": "COLD STORE", "ja": "地下冷凍庫" },
+        "thumb": "ui/sel_thumb_ep1_cold"
+      },
       {
         "door": { "frame": "ep1/door5_frame", "leaf": "ep1/door5_leaf", "leaves": 1, "hinge": "left" }
       },
-      { "stage": "oven", "set": "ep1_oven", "stations": ["ov1", "ov2"], "name": { "zh": "烤炉厨房", "en": "BAKERY", "ja": "パン焼き窯" } },
+      {
+        "stage": "oven",
+        "set": "ep1_oven",
+        "stations": ["ov1", "ov2"],
+        "name": { "zh": "烤炉厨房", "en": "BAKERY", "ja": "パン焼き窯" },
+        "thumb": "ui/sel_thumb_ep1_oven"
+      },
       {
         "door": { "frame": "ep1/door6_frame", "leaf": "ep1/door6_leaf", "leaves": 1, "hinge": "left" }
       },
-      { "stage": "nether", "set": "ep1_nether", "stations": ["ne1"], "name": { "zh": "冥界", "en": "NETHERWORLD", "ja": "冥界" } },
+      {
+        "stage": "nether",
+        "set": "ep1_nether",
+        "stations": ["ne1"],
+        "name": { "zh": "冥界", "en": "NETHERWORLD", "ja": "冥界" },
+        "thumb": "ui/sel_thumb_ep1_nether"
+      },
       {
         "door": { "frame": "ep1/door7_frame", "leaf": "ep1/door7_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_boss" },
-      { "boss": "madame", "set": "ep1_hall", "station": "hall", "name": { "zh": "大舞厅", "en": "BALLROOM", "ja": "舞踏室" } },
+      {
+        "boss": "madame",
+        "set": "ep1_hall",
+        "station": "hall",
+        "name": { "zh": "大舞厅", "en": "BALLROOM", "ja": "舞踏室" },
+        "thumb": "ui/sel_thumb_ep1_boss"
+      },
       { "comic": "ep1_end" }
     ],
     "cover": "ui/sel_next_ep1",
     "set": "ep1_shop",
-    "par": 900
+    "par": 900,
+    "reward": {}
   },
   "corridor_test": {
     "id": "corridor_test",

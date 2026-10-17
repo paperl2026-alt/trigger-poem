@@ -13296,147 +13296,6 @@
   "src": "assets/jig/pink_fire_w3.png",
   "w": 968
  },
- "kagura/active": {
-  "h": 1014,
-  "rawH": 992,
-  "sheet": "kagura_active",
-  "src": "assets/kagura/active.webp",
-  "w": 661
- },
- "kagura/active_out": {
-  "h": 1010,
-  "rawH": 987,
-  "sheet": "kagura_active",
-  "src": "assets/kagura/active_out.webp",
-  "w": 700
- },
- "kagura/aim": {
-  "h": 996,
-  "rawH": 973,
-  "sheet": "kagura_gun",
-  "src": "assets/kagura/aim.webp",
-  "w": 789
- },
- "kagura/aim_out": {
-  "h": 1004,
-  "rawH": 982,
-  "sheet": "kagura_aim2",
-  "src": "assets/kagura/aim_out.webp",
-  "w": 728
- },
- "kagura/back": {
-  "h": 1026,
-  "rawH": 1003,
-  "sheet": "kagura_sheet",
-  "src": "assets/kagura/back.webp",
-  "w": 452
- },
- "kagura/cam_happy": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/kagura/cam_happy.webp",
-  "w": 307
- },
- "kagura/cam_hurt": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/kagura/cam_hurt.webp",
-  "w": 301
- },
- "kagura/cam_hype": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/kagura/cam_hype.webp",
-  "w": 305
- },
- "kagura/cam_scared": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/kagura/cam_scared.webp",
-  "w": 298
- },
- "kagura/cover": {
-  "h": 737,
-  "rawH": 715,
-  "sheet": "kagura_gun",
-  "src": "assets/kagura/cover.webp",
-  "w": 651
- },
- "kagura/cutin": {
-  "h": 546,
-  "src": "assets/kagura/cutin.webp",
-  "w": 1600
- },
- "kagura/down": {
-  "h": 667,
-  "rawH": 653,
-  "sheet": "kagura_misc",
-  "src": "assets/kagura/down.webp",
-  "w": 1045
- },
- "kagura/front": {
-  "h": 1031,
-  "rawH": 1009,
-  "sheet": "kagura_sheet",
-  "src": "assets/kagura/front.webp",
-  "w": 469
- },
- "kagura/hurt": {
-  "h": 1011,
-  "rawH": 989,
-  "sheet": "kagura_hurt",
-  "src": "assets/kagura/hurt.webp",
-  "w": 594
- },
- "kagura/peek": {
-  "h": 1020,
-  "rawH": 1001,
-  "sheet": "kagura_cover2",
-  "src": "assets/kagura/peek.webp",
-  "w": 720
- },
- "kagura/recoil": {
-  "h": 924,
-  "rawH": 901,
-  "sheet": "kagura_aim2",
-  "src": "assets/kagura/recoil.webp",
-  "w": 730
- },
- "kagura/reload": {
-  "h": 738,
-  "rawH": 716,
-  "sheet": "kagura_hurt",
-  "src": "assets/kagura/reload.webp",
-  "w": 562
- },
- "kagura/run": {
-  "h": 1023,
-  "rawH": 999,
-  "sheet": "kagura_run",
-  "src": "assets/kagura/run.webp",
-  "w": 579
- },
- "kagura/run_b": {
-  "h": 990,
-  "rawH": 966,
-  "sheet": "kagura_run",
-  "src": "assets/kagura/run_b.webp",
-  "w": 574
- },
- "kagura/taunt": {
-  "h": 1025,
-  "rawH": 1003,
-  "sheet": "kagura_cover2",
-  "src": "assets/kagura/taunt.webp",
-  "w": 672
- },
- "kagura/victory": {
-  "h": 1028,
-  "rawH": 1007,
-  "sheet": "kagura_misc",
-  "src": "assets/kagura/victory.webp",
-  "w": 511
- },
  "neko/active": {
   "h": 1150,
   "rawH": 1198,
@@ -15055,147 +14914,6 @@
   "h": 1024,
   "src": "assets/tex/yard.webp",
   "w": 1024
- },
- "tsubaki/active": {
-  "h": 1019,
-  "rawH": 997,
-  "sheet": "tsubaki_active",
-  "src": "assets/tsubaki/active.webp",
-  "w": 761
- },
- "tsubaki/active_out": {
-  "h": 1028,
-  "rawH": 1006,
-  "sheet": "tsubaki_active",
-  "src": "assets/tsubaki/active_out.webp",
-  "w": 652
- },
- "tsubaki/aim": {
-  "h": 1015,
-  "rawH": 993,
-  "sheet": "tsubaki_gun",
-  "src": "assets/tsubaki/aim.webp",
-  "w": 677
- },
- "tsubaki/aim_out": {
-  "h": 987,
-  "rawH": 965,
-  "sheet": "tsubaki_aim2",
-  "src": "assets/tsubaki/aim_out.webp",
-  "w": 623
- },
- "tsubaki/back": {
-  "h": 1036,
-  "rawH": 1015,
-  "sheet": "tsubaki_sheet",
-  "src": "assets/tsubaki/back.webp",
-  "w": 590
- },
- "tsubaki/cam_happy": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/tsubaki/cam_happy.webp",
-  "w": 343
- },
- "tsubaki/cam_hurt": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/tsubaki/cam_hurt.webp",
-  "w": 327
- },
- "tsubaki/cam_hype": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/tsubaki/cam_hype.webp",
-  "w": 338
- },
- "tsubaki/cam_scared": {
-  "dom": true,
-  "h": 360,
-  "src": "assets/tsubaki/cam_scared.webp",
-  "w": 327
- },
- "tsubaki/cover": {
-  "h": 797,
-  "rawH": 776,
-  "sheet": "tsubaki_gun",
-  "src": "assets/tsubaki/cover.webp",
-  "w": 531
- },
- "tsubaki/cutin": {
-  "h": 674,
-  "src": "assets/tsubaki/cutin.webp",
-  "w": 1600
- },
- "tsubaki/down": {
-  "h": 631,
-  "rawH": 610,
-  "sheet": "tsubaki_misc",
-  "src": "assets/tsubaki/down.webp",
-  "w": 730
- },
- "tsubaki/front": {
-  "h": 1036,
-  "rawH": 1014,
-  "sheet": "tsubaki_sheet",
-  "src": "assets/tsubaki/front.webp",
-  "w": 628
- },
- "tsubaki/hurt": {
-  "h": 1004,
-  "rawH": 982,
-  "sheet": "tsubaki_hurt",
-  "src": "assets/tsubaki/hurt.webp",
-  "w": 809
- },
- "tsubaki/peek": {
-  "h": 904,
-  "rawH": 882,
-  "sheet": "tsubaki_cover2",
-  "src": "assets/tsubaki/peek.webp",
-  "w": 786
- },
- "tsubaki/recoil": {
-  "h": 1012,
-  "rawH": 990,
-  "sheet": "tsubaki_aim2",
-  "src": "assets/tsubaki/recoil.webp",
-  "w": 632
- },
- "tsubaki/reload": {
-  "h": 939,
-  "rawH": 917,
-  "sheet": "tsubaki_hurt",
-  "src": "assets/tsubaki/reload.webp",
-  "w": 634
- },
- "tsubaki/run": {
-  "h": 1000,
-  "rawH": 978,
-  "sheet": "tsubaki_run",
-  "src": "assets/tsubaki/run.webp",
-  "w": 618
- },
- "tsubaki/run_b": {
-  "h": 1023,
-  "rawH": 1001,
-  "sheet": "tsubaki_run",
-  "src": "assets/tsubaki/run_b.webp",
-  "w": 589
- },
- "tsubaki/taunt": {
-  "h": 966,
-  "rawH": 944,
-  "sheet": "tsubaki_cover2",
-  "src": "assets/tsubaki/taunt.webp",
-  "w": 627
- },
- "tsubaki/victory": {
-  "h": 1033,
-  "rawH": 1011,
-  "sheet": "tsubaki_misc",
-  "src": "assets/tsubaki/victory.webp",
-  "w": 605
  },
  "ui/alert_continue_chrome": {
   "h": 217,
@@ -17071,6 +16789,60 @@
   "dom": true,
   "h": 491,
   "src": "assets/ui/sel_thumb_boss.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_boss": {
+  "dom": true,
+  "h": 491,
+  "src": "assets/ui/sel_thumb_ep1_boss.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_cold": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_cold.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_gallery": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_gallery.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_garden": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_garden.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_garden2": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_garden2.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_nether": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_nether.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_oven": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_oven.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_pit": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_pit.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_shop": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_shop.webp",
   "w": 1200
  },
  "ui/sh_duck": {

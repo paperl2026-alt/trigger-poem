@@ -131,6 +131,16 @@
   - `screens`（结算 `showResults`：漫画杂志目录页，版式在 `style.css .res8`，条目按数据重复；数据来自 `Game.applyRewards`：`st.newItems` 只有首通的新道具、`st.unlocked` 只有新开的章节、`st.mulBy` 每个倍率道具一条；插画 `res/cover`、`res/face_<角色>`、`res/item_<道具>`，没有就退回 Q 版脸 / 道具图标）、`uifx`（菜单粒子）、`cursor`。
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
 
+## 图片按小关加载（`src/core/groups.js`、`src/core/assets.js`）
+- 为什么：一张图不管文件多小，解码后都是 宽 × 高 × 4 字节（加 mipmap 再多 1/3），全部内容包解码约 6 GB；three.js 的贴图不会被垃圾回收，只有 `dispose()` 才从显卡上释放。所以不能一口气全读，也不能读了不放。
+- 分组（运行时从内容算出来，模组的新大关也一样分）：
+  - 一个小关的图 `stageKeys(ep, step)`：它的场景（板、掩体、道具、贴花、机关）、波次里的怪（每个造型的每一帧）、它们的飞行物、Boss 的全部图，连同浮雕图和 `_x` 腐化版；
+  - 核心 `coreKeys()`：没有任何小关认领的（界面、HUD、特效、两位主角）；`ep1/…`、`cover/ep1_…` 这种带大关名的图即使还没被用到也不算核心；只被旧数据（没有大关用的场景、怪、Boss）用到的也不算核心；
+  - 漫画页从来不做成贴图（只用 `<img>` 显示）。
+- 时机：启动只读核心（`setManifest` + `loadKeys(coreKeys())`）；开局前读起始小关的（`main.js needPics`，没读完就显示读条）；每个漫画页 / 开门特写一开始，后台读下一个小关的；小关开始时等它的图（没读完显示读条），然后 `releaseExcept(核心 + 这个小关)` 把别的全部释放。任何时候只有核心 + 一到两个小关在内存里，显存不随大关数量增长。
+- 实测（2026-10-18，`playthrough.cjs` 的 mem）：第 1 话通关时显卡上的贴图 94 → 894 张一路涨（改之前）→ 一直在 380～580 张（改之后），估算显存 350～760 MB；启动后页面内存 942 → 413 MB。页面内存还会每关慢慢涨约 40 MB（可能是 Chromium 的图片缓存），待长时间连续玩验证会不会封顶。
+- 以后要再省：显卡压缩贴图（KTX2 / Basis，显存约减到 1/4～1/8，要下载编码工具）；内容包里删掉不用的旧图（tsubaki / kagura 已删）。
+
 ## 场景：PanelWorld（`src/battle/panels.js`）
 - 关卡数据：`sets/<id>.json`，写 `"panels": true`。字段见文件里的 `_doc`。
 - 结构：

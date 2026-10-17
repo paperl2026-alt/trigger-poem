@@ -29,10 +29,20 @@
     },
     "coins": { "icon": { "img": "ui/sel_icon_coin", "box": [1352, 30, 1402, 80] }, "text": { "x1": 1514, "y": 56, "size": 31, "deg": -1.2 } },
     "gear": { "icon": { "img": "ui/p5_icon_gear", "box": [1584, 26, 1642, 82] } },
-    "bag": { "_doc": "书包页（src/ui/bag.js，docs/DESIGN.md「书包」）：线框 tools/rounds/bag_wireframe.py 的格子，参考图像素。grid 道具格（一页 cols x rows），wornSlots 装备中显示几个",
-      "panel": [880, 172, 1658, 872], "cost": [895, 185, 1645, 245], "costLabel": [900, 192, 1005, 238], "costPips": [1015, 198, 1432, 232],
-      "costNum": [1440, 190, 1522, 240], "costUp": [1530, 188, 1642, 242], "pager": [895, 718, 1324, 760], "worn": [895, 772, 1324, 860],
-      "detail": [1340, 258, 1645, 862], "grid": { "x": 895, "y": 258, "w": 135, "h": 142, "gap": 12, "cols": 3, "rows": 3 }, "wornSlots": 6 },
+    "bag": {
+      "_doc": "书包页（src/ui/bag.js，docs/DESIGN.md「书包」）：线框 tools/rounds/bag_wireframe.py 的格子，参考图像素。grid 道具格（一页 cols x rows），wornSlots 装备中显示几个",
+      "panel": [880, 172, 1658, 872],
+      "cost": [895, 185, 1645, 245],
+      "costLabel": [900, 192, 1005, 238],
+      "costPips": [1015, 198, 1432, 232],
+      "costNum": [1440, 190, 1522, 240],
+      "costUp": [1530, 188, 1642, 242],
+      "pager": [895, 718, 1324, 760],
+      "worn": [895, 772, 1324, 860],
+      "detail": [1340, 258, 1645, 862],
+      "grid": { "x": 895, "y": 258, "w": 135, "h": 142, "gap": 12, "cols": 3, "rows": 3 },
+      "wornSlots": 6
+    },
     "tabs": [
       {
         "id": "team",
@@ -58,7 +68,13 @@
         "textX": 228
       },
       "thumb": { "x0": 370, "x1": 585, "dy0": 1, "dy1": 67 },
-      "chev": { "img": "ui/sel_chevrons", "box": [534, 0, 564, 0], "dy0": 21, "dy1": 50 }
+      "chev": { "img": "ui/sel_chevrons", "box": [534, 0, 564, 0], "dy0": 21, "dy1": 50 },
+      "pager": {
+        "_doc": "小关多于 3 行时的翻页（上下箭头、页码点），设计稿像素",
+        "up": [296, 352, 348, 370],
+        "down": [296, 618, 348, 636],
+        "dots": { "x": 366, "y": 621, "gap": 22, "size": 12 }
+      }
     },
     "best": {
       "crown": { "img": "ui/sel_icon_crown", "box": [55, 642, 105, 682] },

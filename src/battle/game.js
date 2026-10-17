@@ -21,6 +21,8 @@ import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
 import { C, T, isStage } from '../core/content.js';
+import { coreKeys, stageKeys, stageFrom } from '../core/groups.js';
+import { loadKeys } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -120,6 +122,11 @@ export class Game {
     const st = this.ep.steps[this.stepIdx];
     if (!st) { this.finish(); return; }
     this.checkpoint = this.stepIdx;
+    // while a comic page or a door plays, the next stage's pictures load in the background (src/core/groups.js); a stage waits for its
+    // pictures (a loading bar if they are not all there yet) and then the previous stage's are released
+    if (!isStage(st)) { const nx = stageFrom(this.ep, this.stepIdx + 1); if (nx) loadKeys(stageKeys(this.ep, nx)); }
+    else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeys(this.ep, st)]), () => this.nextStep()); return; }
+    this.picsReady = false;
     // a door close-up between two places (src/ui/door.js): like a comic page, over the wipe
     if (st.door) {
       if (this.G.skipComics || !meta[st.door.frame] || !meta[st.door.leaf]) { this.afterComic = true; this.nextStep(); return; }

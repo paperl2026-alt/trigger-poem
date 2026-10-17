@@ -175,3 +175,11 @@ body:has(.screen.sel) #dbg-btn { display: none; }
   white-space: nowrap; opacity: 0; pointer-events: none; box-shadow: calc(4 * var(--u)) calc(4 * var(--u)) 0 var(--ink); }
 .sel .s-bnote.s-pop { animation: sBagNote 1.6s ease-out; }
 @keyframes sBagNote { 0% { opacity: 0; translate: 0 10px; } 10% { opacity: 1; translate: 0 0; } 80% { opacity: 1; } 100% { opacity: 0; } }
+
+/* the stage list's pages (select.js renderPager): red slanted arrows above / below the rows, dots under them */
+.sel .s-pgar { position: absolute; cursor: pointer; background: #e2122a; clip-path: polygon(50% 0, 100% 100%, 0 100%); filter: drop-shadow(3px 3px 0 #000); transition: transform 0.15s; }
+.sel .s-pgar.s-dn { clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.sel .s-pgar:hover { transform: scale(1.2); }
+.sel .s-pgar.s-off { background: #4a4446; opacity: 0.5; cursor: default; }
+.sel .s-pgdot { position: absolute; border-radius: 50%; background: #3c383a; outline: 2px solid #000; cursor: pointer; transition: transform 0.15s; }
+.sel .s-pgdot.s-on { background: #e2122a; transform: scale(1.25); }

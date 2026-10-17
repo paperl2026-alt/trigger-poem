@@ -36,30 +36,56 @@ export function alphaAt(key, u, v) {
   return m.a[y * m.w + x];
 }
 
-export async function loadAll(onProgress) {
-  const manifest = C.assets;
-  const keys = Object.keys(manifest);
-  const loader = new THREE.TextureLoader();
-  let done = 0;
-  for (const k of keys) meta[k] = manifest[k];
-  await Promise.all(keys.map((k) => new Promise((resolve) => {
-    if (manifest[k].dom) { // DOM-only images (comic panels, busts): just warm the cache
+// Pictures are loaded in groups and released explicitly (docs/TECH.md「图片按小关加载」, src/core/groups.js): a texture is freed only by
+// dispose(), never by the garbage collector, and every picture decodes to w × h × 4 bytes whatever its file size.
+const loading = new Map();   // key -> Promise (being loaded)
+const loader = new THREE.TextureLoader();
+function loadOne(k) {
+  if (tex[k] || loading.has(k)) return loading.get(k) || Promise.resolve();
+  const m = meta[k];
+  const p = new Promise((resolve) => {
+    if (m.dom) { // DOM-only images (busts): just warm the cache
       const im = new Image();
-      im.onload = im.onerror = () => { done++; onProgress && onProgress(done / keys.length); resolve(); };
+      im.onload = im.onerror = () => resolve();
       im.src = url(k);
       return;
     }
     loader.load(url(k), (t) => {
       t.colorSpace = THREE.NoColorSpace;
       // data maps (jiggle part weights): exact values, no mipmaps
-      t.generateMipmaps = !manifest[k].data;
-      t.minFilter = manifest[k].data ? THREE.LinearFilter : THREE.LinearMipmapLinearFilter;
+      t.generateMipmaps = !m.data;
+      t.minFilter = m.data ? THREE.LinearFilter : THREE.LinearMipmapLinearFilter;
       t.magFilter = THREE.LinearFilter;
       t.anisotropy = renderer ? Math.min(4, renderer.capabilities.getMaxAnisotropy()) : 1;
       tex[k] = t;
-      if (manifest[k].hit) buildMask(k, t.image);
-      done++; onProgress && onProgress(done / keys.length);
+      if (m.hit) buildMask(k, t.image);
       resolve();
-    }, undefined, () => { console.warn('missing', k); done++; resolve(); });
-  })));
+    }, undefined, () => { console.warn('missing', k); resolve(); });
+  }).then(() => loading.delete(k));
+  loading.set(k, p);
+  return p;
+}
+// load these pictures (the ones not loaded yet); onProgress(0..1)
+export async function loadKeys(keys, onProgress) {
+  const todo = [...keys].filter((k) => meta[k] && !tex[k]);
+  let done = 0;
+  await Promise.all(todo.map((k) => loadOne(k).then(() => { done++; onProgress && onProgress(done / todo.length); })));
+  onProgress && onProgress(1);
+}
+export const isLoaded = (keys) => [...keys].every((k) => !meta[k] || meta[k].dom || tex[k]);
+// free every loaded picture that is not in keep (a mesh still showing one just uploads it again: nothing breaks)
+export function releaseExcept(keep) {
+  let n = 0;
+  for (const k of Object.keys(tex)) if (!keep.has(k)) { tex[k].dispose(); delete tex[k]; delete masks[k]; n++; }
+  return n;
+}
+// the manifest (every picture's size and place) is known from the start; only the core pictures are loaded then
+export function setManifest() { for (const [k, v] of Object.entries(C.assets)) meta[k] = v; }
+// how much the textures on the graphics card take, roughly (each uploaded one: w × h × 4 bytes + a third for mipmaps), in MB: for the
+// memory checks (tools/node/playthrough.cjs)
+export function vramMB() {
+  if (!renderer) return 0;
+  let b = 0;
+  for (const [k, t] of Object.entries(tex)) if (renderer.properties.get(t).__webglTexture) b += (meta[k]?.w || 0) * (meta[k]?.h || 0) * 4 * (t.generateMipmaps ? 1.33 : 1);
+  return Math.round(b / 1048576);
 }
