@@ -1,5 +1,5 @@
 {
-  "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），files 声音文件（相对内容包，放在 sfx/ 下，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
+  "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），署名：用到魔王魂的素材要写「効果音：魔王魂」，OtoLogic 的写「OtoLogic」（都是 CC BY 4.0，docs/ART.md「声音」）。files 声音文件（相对内容包，放在 sfx/<站名>/ 下，保留原文件名，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
   "sfx": {
     "ui": { "when": "菜单按钮按下、悬停", "want": "清脆短促的「ポン」，像 P5 菜单那种干净的电子音", "src": "lib", "files": [], "vol": 1 },
     "panel": { "when": "选关翻页、切章节", "want": "纸张翻动 + 一点点「シャッ」", "src": "lib", "files": [], "vol": 1 },

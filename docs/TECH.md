@@ -35,6 +35,8 @@
   - `monsters`：怪物叫声（按怪的种类 × windup / attack / hurt / die），`cry(type, act)`，现在挂在蓄力和死亡上；
   - `voices`：角色语音设定（lang、Fish Audio 声线 ref、tone），`lines` 登记有文件的台词（键 `<场合>_<第几句>`，对应 text/stickers.json 的同一句）；`voice(who, kind, i)` 在气泡出现时说（stickers.js、标题页气泡）。
   - 文件路径相对内容包（`soundPaths` 在 content.js 里转成网址），所以模组也能换声音。
+  - 解码时 `level()` 量一次：峰值拉到 0.7、从第一声（裁掉开头静音）开始放；不同音效库的响度差别不用手调。
+  - 挑素材的工具：`tools/node/sfx_scan.cjs`（ART「声音」）。
 - 语音生成（待用户开账号）：Fish Audio API，用户自己把 API 密钥设成本机环境变量，Claude 写脚本按 text/stickers.json 的日语台词批量生成到 `public/content/base/voice/<角色>/`，再登记进 sounds.json。
 - BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
 

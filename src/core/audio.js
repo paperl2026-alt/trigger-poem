@@ -211,16 +211,27 @@ function load(url) {
   if (!ctx || !url) return null;
   if (BUF.has(url)) return BUF.get(url);
   const p = fetch(url).then((r) => (r.ok ? r.arrayBuffer() : Promise.reject(new Error(r.status)))).then((a) => ctx.decodeAudioData(a))
-    .then((b) => { BUF.set(url, b); return b; }, (e) => { console.warn('[audio]', url, e.message); BUF.set(url, null); return null; });
+    .then((b) => { level(b); BUF.set(url, b); return b; }, (e) => { console.warn('[audio]', url, e.message); BUF.set(url, null); return null; });
   BUF.set(url, p);
   return p;
 }
+// files from different libraries come at different levels and with silence in front: each one is measured once when it decodes and
+// played from its first sound, scaled to the same peak (vol in sounds.json is then the only loudness choice)
+const PEAK = 0.7;
+function level(b) {
+  let peak = 0, start = b.length;
+  for (let c = 0; c < b.numberOfChannels; c++) {
+    const d = b.getChannelData(c);
+    for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > peak) peak = v; if (v > 0.01 && i < start) start = i; }
+  }
+  b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.004)) / b.sampleRate;
+}
 function playBuf(b, { pan = 0, vol = 1, rate = 1, bus = sfxBus } = {}) {
   const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
-  const g = ctx.createGain(); g.gain.value = vol;
+  const g = ctx.createGain(); g.gain.value = vol * (b.gainK || 1);
   const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
   s.connect(g); if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
-  s.start(); return s;
+  s.start(0, b.startAt || 0); return s;
 }
 // one of these files, now if it is ready (true), else loading it for next time (false: the caller uses its stand-in)
 function playOne(files, opt) {
