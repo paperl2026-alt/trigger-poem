@@ -115,7 +115,7 @@ export class Heroine {
       U.dark.value = st.dark || 0;
       U.opacity.value = st.opacity ?? 1;
       const A = this.aura, pc = A.pulse > 0 && A.pcol ? A.pcol : A.col;
-      U.aura.value.set(A.col.r * (1 - A.pulse) + pc.r * A.pulse, A.col.g * (1 - A.pulse) + pc.g * A.pulse, A.col.b * (1 - A.pulse) + pc.b * A.pulse, Math.min(1, A.a + A.pulse * 0.8));
+      U.aura.value.set(A.col.r * (1 - A.pulse) + pc.r * A.pulse, A.col.g * (1 - A.pulse) + pc.g * A.pulse, A.col.b * (1 - A.pulse) + pc.b * A.pulse, Math.min(1, A.a + A.pulse * 0.35));
       U.auraFlow.value = A.flow; U.auraPulse.value = A.pulse;
       const halo = p.userData.halo, hs = 1 + 0.02 + A.halo * 0.05 + A.pulse * 0.04;
       halo.visible = p.visible && U.aura.value.w > 0.02;

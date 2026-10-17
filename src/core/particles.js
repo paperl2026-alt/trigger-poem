@@ -1,12 +1,12 @@
-// Instanced camera-facing quads. One system per blend mode; frames come from a 4x2 atlas.
+// Instanced camera-facing quads. One system per blend mode; frames come from a 4x4 atlas (all drawn by code except the painted flames / star).
 import * as THREE from 'three';
 
-export const FR = { PAPER: 0, GLOW: 1, INK: 2, SMOKE: 3, FLAME1: 4, FLAME2: 5, STAR: 6, ASH: 7 };
+export const FR = { PAPER: 0, GLOW: 1, INK: 2, SMOKE: 3, FLAME1: 4, FLAME2: 5, STAR: 6, ASH: 7, STREAK: 8, CASING: 9, HEART: 10, PAW: 11, RUNE: 12, SHARD: 13 };
 
 // Atlas: procedural paper bits / glow / ink / smoke / ash + painted flames and star from the fx sheet.
 export function buildAtlas(images) {
   const S = 128, c = document.createElement('canvas');
-  c.width = S * 4; c.height = S * 2;
+  c.width = S * 4; c.height = S * 4;
   const g = c.getContext('2d');
   const cell = (i) => [(i % 4) * S, Math.floor(i / 4) * S];
   // paper scrap
@@ -33,6 +33,31 @@ export function buildAtlas(images) {
   // ash flake
   [x, y] = cell(FR.ASH);
   g.fillStyle = '#fff'; g.beginPath(); g.moveTo(x + 30, y + 50); g.lineTo(x + 70, y + 30); g.lineTo(x + 100, y + 60); g.lineTo(x + 76, y + 96); g.lineTo(x + 40, y + 84); g.closePath(); g.fill();
+  // a spark stretched along its flight (rotate the particle to its velocity): a long thin glowing needle
+  [x, y] = cell(FR.STREAK);
+  gr = g.createLinearGradient(x + 4, 0, x + S - 4, 0);
+  gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.75, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0.2)');
+  g.fillStyle = gr; g.beginPath(); g.ellipse(x + 64, y + 64, 60, 7, 0, 0, 6.283); g.fill();
+  // a spent cartridge: brass body (tinted by the particle colour), darker neck and rim
+  [x, y] = cell(FR.CASING);
+  g.fillStyle = '#fff'; g.fillRect(x + 34, y + 52, 52, 24); g.fillStyle = '#bbb'; g.fillRect(x + 86, y + 56, 14, 16); g.fillStyle = '#999'; g.fillRect(x + 28, y + 50, 7, 28);
+  g.fillStyle = 'rgba(255,255,255,0.9)'; g.fillRect(x + 38, y + 55, 44, 5);
+  // a heart
+  [x, y] = cell(FR.HEART);
+  g.fillStyle = '#fff'; g.beginPath(); g.moveTo(x + 64, y + 108);
+  g.bezierCurveTo(x + 6, y + 70, x + 14, y + 16, x + 64, y + 42); g.bezierCurveTo(x + 114, y + 16, x + 122, y + 70, x + 64, y + 108); g.fill();
+  // a paw print: a pad and four toes
+  [x, y] = cell(FR.PAW);
+  g.fillStyle = '#fff'; g.beginPath(); g.ellipse(x + 64, y + 80, 30, 25, 0, 0, 6.283); g.fill();
+  for (const [dx, dy] of [[-34, -16], [-13, -38], [13, -38], [34, -16]]) { g.beginPath(); g.ellipse(x + 64 + dx, y + 64 + dy, 12, 15, dx * 0.012, 0, 6.283); g.fill(); }
+  // a rune: a ring with a cross and four ticks (a mantra spark)
+  [x, y] = cell(FR.RUNE);
+  g.strokeStyle = '#fff'; g.lineWidth = 9; g.beginPath(); g.arc(x + 64, y + 64, 40, 0, 6.283); g.stroke();
+  g.lineWidth = 7; g.beginPath(); g.moveTo(x + 64, y + 30); g.lineTo(x + 64, y + 98); g.moveTo(x + 30, y + 64); g.lineTo(x + 98, y + 64); g.stroke();
+  for (let i = 0; i < 4; i++) { const a = i * 1.5708 + 0.785; g.beginPath(); g.moveTo(x + 64 + Math.cos(a) * 46, y + 64 + Math.sin(a) * 46); g.lineTo(x + 64 + Math.cos(a) * 58, y + 64 + Math.sin(a) * 58); g.stroke(); }
+  // a sharp shard (glass, crystal)
+  [x, y] = cell(FR.SHARD);
+  g.fillStyle = '#fff'; g.beginPath(); g.moveTo(x + 64, y + 6); g.lineTo(x + 84, y + 70); g.lineTo(x + 60, y + 122); g.lineTo(x + 46, y + 60); g.closePath(); g.fill();
   // painted frames
   const put = (fr, img) => {
     if (!img) return;
@@ -56,7 +81,7 @@ void main(){
   vec4 mv = modelViewMatrix * vec4(iPos, 1.0);
   mv.xy += p;
   float f = iSRF.z;
-  vUv = (uv + vec2(mod(f, 4.0), 1.0 - floor(f / 4.0))) * vec2(0.25, 0.5);
+  vUv = (uv + vec2(mod(f, 4.0), 3.0 - floor(f / 4.0))) * vec2(0.25, 0.25);
   gl_Position = projectionMatrix * mv;
 }`;
 const FRAG = `

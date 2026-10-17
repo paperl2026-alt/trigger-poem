@@ -11,9 +11,9 @@ import { buildStats } from './characters.js';
 import { Fever } from './fever.js';
 import { bagFx } from './items.js';
 import { C, T } from '../core/content.js';
-import { COL } from './fx.js';
 import { Soft } from './soft.js';
 import { Heroine } from './heroine.js';
+import { Muzzle } from './muzzle.js';
 import { FEVER_KEYS } from './fever.js';
 const AURA = new THREE.Color();
 
@@ -55,10 +55,7 @@ export class Player {
     // her own layer: drawn after the world and its ink lines (Game.render), so nothing in the scene ever crosses her
     this.group.traverse((o) => o.layers.set(1));
     this.pose = 'cover';
-    this.flashes = { rifle: tex['hud/flash_rifle'], gatling: tex['hud/flash_gatling'], mantra: tex['hud/flash_mantra'] };
-    this.flashMesh = paperMesh(this.flashes[this.w.kind] || this.flashes.rifle, 1, { pivot: 'center' });
-    this.flashMesh.renderOrder = 12; this.flashMesh.visible = false; this.flashMesh.material.depthTest = false; this.flashMesh.material.uniforms.useFog.value = 0;
-    this.group.add(this.flashMesh);
+    this.muzzle = new Muzzle(game, this);   // the shot at her gun / paw: painted flash + shader + glow + ring + particles (muzzle.js)
     this.ammo = this.w.mag;
     this.charge = 0; this.activeT = 0; this.beamGrace = 0; this.beam = null; this.beamTick = 0;
     this.state = 'away'; // cover | out | reload | hurt | down | run | victory | away
@@ -166,6 +163,9 @@ export class Player {
   update(dt, t) {
     const g = this.game, c = this.ctrl;
     this.invuln -= dt; this.fireCD -= dt; this.recoilT -= dt; this.tauntT -= dt; this.focus.t -= dt;
+    // the shot effects follow her Fever: share of all levels, full Fever, her special
+    this.muzzle.setLevel(FEVER_KEYS.reduce((s, k) => s + this.fever.level(k), 0) / (FEVER_KEYS.length * T.fever.maxLevel), this.fever.full, this.activeOn);
+    this.muzzle.update(dt, t);
     const busy = this.state === 'run' || this.state === 'victory' || this.state === 'away' || !g.combat;
     // aim point: snaps to the controller, except while beaming (heavy, slow reticle)
     if (c) {
@@ -246,7 +246,6 @@ export class Player {
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,
         flash: this.activeOn ? 0.08 + 0.06 * Math.sin(t * 12) : 0,
       });
-      if (this.flashMesh.visible) { this.flashT -= dt; if (this.flashT <= 0) this.flashMesh.visible = false; }
       return;
     }
     const m = this.poses[this.pose];
@@ -274,7 +273,6 @@ export class Player {
     mu.opacity.value = this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1;
     const lit = g.world.lightAt(g.world.camPos);
     mu.lit.value.setRGB(0.8 + lit.r * 0.2, 0.8 + lit.g * 0.2, 0.8 + lit.b * 0.2);
-    if (this.flashMesh.visible) { this.flashT -= dt; if (this.flashT <= 0) this.flashMesh.visible = false; }
   }
 
   startReload(k = 1) {
@@ -302,13 +300,7 @@ export class Player {
     const mz = this.muzzlePos();
     if (w.kind === 'mantra') { g.fx.mantra(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit, this.c.glyph); if (this.c.glyph === 'jade') g.fx.rune(mz.x, mz.y, this.H * 0.11); }
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
-    this.flashMesh.material.uniforms.map.value = (this.gatling && this.flashes.gatling) || this.flashes[w.kind] || this.flashes.rifle;
-    this.flashMesh.position.set(mz.x, mz.y, 0);
-    const out = this.outerAim();
-    this.flashMesh.rotation.z = ((this.side < 0) === out ? Math.PI : 0) + rnd(-0.4, 0.4);
-    this.flashMesh.scale.setScalar(this.H * rnd(0.13, 0.2) * (w.kick > 1.2 ? 1.3 : 1) * (this.gatling ? 1.3 : 1));
-    this.flashMesh.visible = true; this.flashT = 0.045;
-    g.fx.sparks(mz.x, mz.y, 3, w.kind === 'mantra' ? COL.gold : COL.fire, 0.6);
+    this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
     this.kick = 1;
     if (this.hero) this.hero.shoot(this.gatling);
     else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces
@@ -320,6 +312,7 @@ export class Player {
 
   updateBeam(dt, t) {
     const g = this.game, mz = this.muzzlePos();
+    this.muzzle.sustain(mz.x, mz.y);
     const B = T.combat.beam, width = g.H * B.width;
     if (this.beam) this.beam.set(mz.x, mz.y, this.aimX, g.H - this.aimY, width, t);
     this.kick = 0.6;

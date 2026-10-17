@@ -121,7 +121,7 @@ float sparkle(vec2 uv, float cs) {
 // Fever / skill aura (battle): light running up the figure in stripes; the halo copy draws only this, larger, behind her
 float auraLight() {
   float flow = 0.5 + 0.5 * sin(vUv.y * 26.0 - time * (3.0 + auraFlow * 9.0) + vUv.x * 6.0);
-  return mix(0.55, 1.0, flow * min(1.0, auraFlow + 0.3)) + auraPulse * 1.5 * smoothstep(0.25, 0.0, abs(vUv.y - fract(time * 1.6)));
+  return mix(0.55, 1.0, flow * min(1.0, auraFlow + 0.3)) + auraPulse * 0.8 * smoothstep(0.25, 0.0, abs(vUv.y - fract(time * 1.6)));
 }
 void main() {
   vec4 t = texture2D(map, vUv);
@@ -156,7 +156,7 @@ void main() {
   if (aura.a > 0.001) {   // rim light just inside the outline
     float e = 1.0 - min(min(texture2D(map, vUv + vec2(texel.x * 6.0, 0.0)).a, texture2D(map, vUv - vec2(texel.x * 6.0, 0.0)).a),
                         min(texture2D(map, vUv + vec2(0.0, texel.y * 6.0)).a, texture2D(map, vUv - vec2(0.0, texel.y * 6.0)).a));
-    col += aura.rgb * aura.a * (0.25 + 1.1 * smoothstep(0.1, 0.9, e)) * auraLight();
+    col += aura.rgb * aura.a * (0.1 + 1.1 * smoothstep(0.1, 0.9, e)) * auraLight();   // the light stays at her outline, she stays readable
   }
   col *= 1.0 - dark;
   col = mix(col, vec3(1.0), flash);
