@@ -8,6 +8,7 @@ import { C, list } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 import { SAVE, persist, levelProgress, maxLv, stagesOpen } from '../core/save.js';
 import { UiFx } from './uifx.js';
+import { mountBag } from './bag.js';
 import { cursorScene } from './cursor.js';
 import './select.css';
 
@@ -104,6 +105,10 @@ export function showSelect(act) {
   function setTab(id) {
     tab = id;
     for (const k of tabs) { const on = k.T.id === id; k.face.src = url(on ? k.pc.on : k.pc.off); k.g.classList.toggle('s-on', on); }
+    // the bag page lies over the team cards (src/ui/bag.js)
+    const team = id === 'team';
+    for (const n of [...lows.map((l) => l.g), ...Object.values(arts), swapG]) n.classList.toggle('s-none', !team);
+    bag.show(!team);
   }
 
   // ---- the chapter: header, stage rows, best, GO, next chapter card, arrows
@@ -240,6 +245,7 @@ export function showSelect(act) {
   img(swapG, P.swap.img, P.swap.box);
   img(swapG, L.swap.icon.img, L.swap.icon.box, 'sico', true);
   text(swapG, L.swap.text, 'wh');
+  let bag = { show() {} };   // (made once the feedback helpers below exist)
 
   // ---- feedback and actions
   const fx = new UiFx(stage, DW, DH, shift);
@@ -251,11 +257,9 @@ export function showSelect(act) {
   for (const n of [back, gear, ...tabs.map((k) => k.g), goG, nextG, arrows.l, arrows.r, swapG]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === goG ? 8 : 4); });
   tap(back, (e) => { sfx.ui(); pop(back, e); act.title(); });
   tap(gear, (e) => { sfx.ui(); pop(gear, e); act.settings(); });
-  for (const k of tabs) tap(k.g, (e) => {
-    pop(k.g, e);
-    if (k.T.id === 'bag') { shake(k.g); sfx.ui(); return; }   // the school bag page is the next screen to be designed
-    sfx.ui(); setTab(k.T.id);
-  });
+  for (const k of tabs) tap(k.g, (e) => { pop(k.g, e); sfx.ui(); setTab(k.T.id); });
+  bag = mountBag({ el, pre, box, px, RS, tap, pop, shake, say }, U);
+  window.addEventListener('langchange', () => { if (tab === 'bag') bag.render(); });
   tap(arrows.l, (e) => { pop(arrows.l, e); flip(-1); });
   tap(arrows.r, (e) => { pop(arrows.r, e); flip(1); });
   tap(nextG, (e) => { pop(nextG, e); flip(1); });

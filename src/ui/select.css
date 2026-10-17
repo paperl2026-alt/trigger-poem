@@ -91,3 +91,87 @@
 @keyframes selShake { 0%, 100% { translate: 0 0; } 20% { translate: -7px 0; } 40% { translate: 6px 0; } 60% { translate: -4px 0; } 80% { translate: 3px 0; } }
 
 body:has(.screen.sel) #dbg-btn { display: none; }
+
+/* ---- the school bag page (src/ui/bag.js): look A, the select screen's own language. --u = one mockup px */
+.sel .s-bag { position: absolute; inset: 0; pointer-events: none; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif; font-weight: 900; color: var(--ink); }
+.sel .s-bag > * { position: absolute; pointer-events: auto; box-sizing: border-box; }
+.sel .s-bpanel { background: radial-gradient(#12101222 1.2px, transparent 1.6px) 0 0 / calc(7 * var(--u)) calc(7 * var(--u)), #f4f2ee;
+  border: calc(5 * var(--u)) solid var(--ink); box-shadow: calc(10 * var(--u)) calc(10 * var(--u)) 0 var(--ink); clip-path: polygon(0 1.5%, 100% 0, 100% 100%, 0.8% 99%); pointer-events: auto; }
+/* COST: a black slab, the red tag, 20 slots, the number, the expand button */
+.sel .s-bcost { background: var(--ink); clip-path: polygon(1.5% 0, 100% 0, 98.5% 100%, 0 100%); }
+.sel .s-bcostlab { display: flex; align-items: center; justify-content: center; background: var(--red); color: #fff; font-style: italic; font-size: calc(30 * var(--u));
+  letter-spacing: 0.04em; transform: skewX(-12deg); box-shadow: calc(4 * var(--u)) calc(4 * var(--u)) 0 #fff; }
+.sel .s-bpips { display: flex; gap: calc(3 * var(--u)); align-items: stretch; }
+.sel .s-bpips i { flex: 1; transform: skewX(-14deg); border: calc(2 * var(--u)) solid #fff; transition: background 0.2s, scale 0.2s; }
+.sel .s-bpips i.s-used { background: var(--red); border-color: #fff; box-shadow: 0 0 calc(8 * var(--u)) #ff3a4a; }
+.sel .s-bpips i.s-free { background: #fff; }
+.sel .s-bpips i.s-lock { background: #2e2a2e; border-color: #4a454a; }
+.sel .s-bcostnum { display: flex; align-items: baseline; justify-content: center; color: #fff; font-style: italic; }
+.sel .s-bcostnum b { font-size: calc(40 * var(--u)); line-height: 1; }
+.sel .s-bcostnum span { font-size: calc(22 * var(--u)); opacity: 0.85; }
+.sel .s-bcostup { display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--red); color: #fff; cursor: pointer;
+  clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%); line-height: 1.05; }
+.sel .s-bcostup b { font-size: calc(21 * var(--u)); }
+.sel .s-bcostup small { font-size: calc(15 * var(--u)); font-weight: 700; }
+.sel .s-bcostup.s-off { background: #5a565a; color: #cfcbcf; }
+/* the item cards: white stickers, tilted, a black shadow; the picked one red; E badge, level tag, cost diamonds */
+.sel .s-bcell { background: #fff; border: calc(4 * var(--u)) solid var(--ink); box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink); cursor: pointer; }
+.sel .s-bcell img { position: absolute; left: 10%; top: 6%; width: 80%; height: 70%; object-fit: contain; pointer-events: none; }
+.sel .s-bcell.s-pick { background: var(--red); box-shadow: calc(6 * var(--u)) calc(6 * var(--u)) 0 var(--ink), 0 0 0 calc(4 * var(--u)) #fff inset; }
+.sel .s-bcell.s-lockd img { filter: brightness(0) opacity(0.22); }
+.sel .s-bcell.s-empty { background: transparent; border: calc(3 * var(--u)) dashed #12101255; box-shadow: none; cursor: default; }
+.sel .s-bcell .s-lv { position: absolute; right: calc(-4 * var(--u)); top: calc(-4 * var(--u)); background: var(--ink); color: #fff; font-size: calc(16 * var(--u)); padding: calc(2 * var(--u)) calc(6 * var(--u)); font-style: italic; }
+.sel .s-bcell .s-dots { position: absolute; left: calc(8 * var(--u)); bottom: calc(4 * var(--u)); color: var(--red); font-size: calc(17 * var(--u)); letter-spacing: 0.05em; }
+.sel .s-bcell.s-pick .s-dots { color: #fff; }
+.sel .s-bcell .s-e { position: absolute; left: calc(-12 * var(--u)); top: calc(-12 * var(--u)); width: calc(36 * var(--u)); height: calc(36 * var(--u)); border-radius: 50%;
+  background: var(--red); color: #fff; border: calc(3 * var(--u)) solid #fff; display: flex; align-items: center; justify-content: center; font-size: calc(20 * var(--u)); font-style: italic;
+  box-shadow: calc(3 * var(--u)) calc(3 * var(--u)) 0 var(--ink); }
+.sel .s-bcell.s-pick .s-e { background: var(--ink); }
+.sel .s-bcell .s-q { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: calc(30 * var(--u)); color: #12101288; font-style: italic; }
+.sel .s-bpager { display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--u)); background: var(--ink); clip-path: polygon(2% 0, 100% 0, 98% 100%, 0 100%); }
+.sel .s-bpager i { width: 0; height: 0; border-top: calc(12 * var(--u)) solid transparent; border-bottom: calc(12 * var(--u)) solid transparent; cursor: pointer; margin: 0 calc(30 * var(--u)); }
+.sel .s-bpager i.s-pl { border-right: calc(18 * var(--u)) solid #fff; }
+.sel .s-bpager i.s-pr { border-left: calc(18 * var(--u)) solid #fff; }
+.sel .s-bpager b { width: calc(12 * var(--u)); height: calc(12 * var(--u)); border-radius: 50%; background: #fff6; }
+.sel .s-bpager b.s-on { background: var(--red); }
+/* equipped now */
+.sel .s-bworn { display: flex; align-items: center; gap: calc(8 * var(--u)); padding: 0 calc(10 * var(--u)); background: var(--ink); clip-path: polygon(1.5% 0, 100% 0, 98.5% 100%, 0 100%); }
+.sel .s-bworn .s-wl { color: #fff; background: var(--red); font-size: calc(20 * var(--u)); font-style: italic; white-space: nowrap; padding: calc(8 * var(--u)) calc(12 * var(--u)); transform: skewX(-12deg); margin-right: calc(8 * var(--u)); }
+.sel .s-bworn i { width: calc(48 * var(--u)); height: calc(48 * var(--u)); background: #fff; border: calc(2 * var(--u)) solid #fff; display: flex; }
+.sel .s-bworn i:empty { background: transparent; border-style: dashed; border-color: #ffffff55; }
+.sel .s-bworn i img { width: 100%; height: 100%; object-fit: contain; }
+/* the item's card */
+.sel .s-bcard { background: #fff; border: calc(4 * var(--u)) solid var(--ink); box-shadow: calc(8 * var(--u)) calc(8 * var(--u)) 0 var(--red); rotate: -0.8deg;
+  padding: calc(14 * var(--u)); display: flex; flex-direction: column; gap: calc(10 * var(--u)); }
+.sel .s-bcard .s-ch { display: flex; gap: calc(10 * var(--u)); }
+.sel .s-bcard .s-ci { flex: none; width: calc(110 * var(--u)); height: calc(110 * var(--u)); background: var(--red); border: calc(3 * var(--u)) solid var(--ink); display: flex; }
+.sel .s-bcard .s-ci img { width: 100%; height: 100%; object-fit: contain; }
+.sel .s-bcard .s-ci img.s-sil { filter: brightness(0) opacity(0.35); }
+.sel .s-bcard .s-cn { display: flex; flex-direction: column; justify-content: center; gap: calc(6 * var(--u)); min-width: 0; }
+.sel .s-bcard .s-cn b { font-size: calc(26 * var(--u)); line-height: 1.1; }
+.sel .s-bcard .s-cn span { font-size: calc(18 * var(--u)); font-style: italic; }
+.sel .s-bcard .s-cn em { font-style: normal; font-size: calc(16 * var(--u)); }
+.sel .s-bcard .s-cn em i { color: var(--red); font-style: normal; }
+.sel .s-bcard .s-cfx { border-left: calc(6 * var(--u)) solid var(--red); padding: calc(4 * var(--u)) calc(10 * var(--u)); background: #f1eeea; display: flex; flex-direction: column; gap: calc(3 * var(--u)); }
+.sel .s-bcard .s-cfx b { font-size: calc(19 * var(--u)); }
+.sel .s-bcard .s-cfx small { font-size: calc(15 * var(--u)); font-weight: 700; color: #5a565a; }
+/* the three paragraphs: like an item text in Dark Souls / Elden Ring, quieter type */
+.sel .s-bcard .s-lore { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: calc(9 * var(--u)); }
+.sel .s-bcard .s-lore p { margin: 0; font-weight: 500; font-size: calc(15.5 * var(--u)); line-height: 1.55; color: #2a262a; }
+.sel .s-bcard .s-lore p:last-child { font-style: italic; color: #6a2028; }
+.sel .s-bcard .s-btns { display: flex; gap: calc(8 * var(--u)); }
+.sel .s-bcard button { font: inherit; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.1;
+  height: calc(56 * var(--u)); clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%); transition: translate 0.15s cubic-bezier(0.2, 1.6, 0.4, 1), filter 0.15s; }
+.sel .s-bcard button:hover { translate: 3px -2px; filter: brightness(1.15); }
+.sel .s-bcard button b { font-size: calc(19 * var(--u)); font-weight: 900; }
+.sel .s-bcard button small { font-size: calc(14 * var(--u)); font-weight: 700; }
+.sel .s-bcard .s-be { flex: 0 0 44%; flex-direction: row; gap: calc(8 * var(--u)); background: var(--ink); color: #fff; }
+.sel .s-bcard .s-be i { font-style: italic; font-size: calc(24 * var(--u)); width: calc(32 * var(--u)); height: calc(32 * var(--u)); border-radius: 50%; background: #fff; color: var(--ink);
+  display: flex; align-items: center; justify-content: center; }
+.sel .s-bcard .s-be.s-on { background: var(--red); }
+.sel .s-bcard .s-bup { flex: 1; background: var(--red); color: #fff; }
+.sel .s-bcard button.s-off { background: #8e8a8e; color: #e8e4e8; cursor: default; }
+.sel .s-bnote { position: absolute; transform: translate(-50%, -100%); background: var(--red); color: #fff; font-size: calc(18 * var(--u)); padding: calc(6 * var(--u)) calc(14 * var(--u));
+  white-space: nowrap; opacity: 0; pointer-events: none; box-shadow: calc(4 * var(--u)) calc(4 * var(--u)) 0 var(--ink); }
+.sel .s-bnote.s-pop { animation: sBagNote 1.6s ease-out; }
+@keyframes sBagNote { 0% { opacity: 0; translate: 0 10px; } 10% { opacity: 1; translate: 0 0; } 80% { opacity: 1; } 100% { opacity: 0; } }
