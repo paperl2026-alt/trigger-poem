@@ -250,7 +250,7 @@ export class Player {
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
         dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,
-        flash: this.activeOn ? 0.08 + 0.06 * Math.sin(t * 12) : 0,
+        flash: this.activeOn ? 0.03 + 0.03 * Math.sin(t * 12) : 0,
       });
       return;
     }
@@ -307,6 +307,7 @@ export class Player {
     if (w.kind === 'mantra') { g.fx.mantra(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit, this.c.glyph); if (this.c.glyph === 'jade') g.fx.rune(mz.x, mz.y, this.H * 0.11); }
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
     this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
+    if (res.n) this.muzzle.hit(sx, g.H - sy, res.crit);
     this.kick = 1;
     if (this.hero) this.hero.shoot(this.gatling);
     else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces

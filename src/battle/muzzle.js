@@ -1,4 +1,6 @@
-// The shot at the gun / the paw (docs/DESIGN.md「射击特效」): the painted flash (hud/flash_*) is only the base; the program puts on top
+// The shot at the gun / the paw (docs/DESIGN.md「射击特效」「特效要看得见」): painted flashes (fx/<pink|cat>[_fever]_0..5, six of each, a
+// different one every shot; the Fever ones in Fever) held long enough to be seen (a few overlap at her fire rate), and hit bursts
+// (fx/hit_0..5) where the shots land. The program puts on top
 // of it a shader pass (pop, flip, radial smear, colour split, hue running in Fever), a glow with star rays, a shock ring (the gun) or a
 // spinning talisman ring (the paw), and particles: needle sparks along the shot, ejected casings (gun), runes and paw prints (paw), hearts
 // at full Fever. How strong all of it is follows her Fever (level share 0..1), full Fever, and her special (endless gatling / beam).
@@ -22,7 +24,7 @@ void main(){
   c /= 2.8; al /= 2.8;
   float r = texture2D(map, vUv + d * split).a, b = texture2D(map, vUv - d * split).a;
   c = hueRot(c * tint, hue) + vec3(max(0.0, r - al), 0.0, max(0.0, b - al)) * split * 6.0;
-  gl_FragColor = vec4(c * a, clamp(al * a, 0.0, 1.0));
+  gl_FragColor = vec4(c / max(al, 0.001), clamp(al * a, 0.0, 1.0));   // straight colour (normal blending: the painting as drawn)
 }`;
 // soft glow + star rays, flickering
 export const GLOW_FRAG = `
@@ -55,9 +57,9 @@ void main(){
 }`;
 
 const quad = new THREE.PlaneGeometry(1, 1);
-function layer(game, frag, uniforms, order) {
+function layer(game, frag, uniforms, order, additive = true) {
   const m = new THREE.Mesh(quad, new THREE.ShaderMaterial({ uniforms, vertexShader: VERT, fragmentShader: frag, transparent: true, depthTest: false,
-    depthWrite: false, blending: THREE.AdditiveBlending }));
+    depthWrite: false, blending: additive ? THREE.AdditiveBlending : THREE.NormalBlending }));
   m.renderOrder = order; m.visible = false; m.frustumCulled = false;
   game.overlay.add(m);
   return m;
@@ -73,8 +75,16 @@ export class Muzzle {
     this.flashes = { rifle: tex['hud/flash_rifle'], gatling: tex['hud/flash_gatling'], mantra: tex['hud/flash_mantra'] };
     this.col = new THREE.Color(player.c.color);
     this.tracer = new THREE.Color(w.tracer || player.c.color);
-    this.flash = layer(game, FLASH_FRAG, { map: { value: this.flashes[w.kind] || this.flashes.rifle }, tint: { value: new THREE.Color(1, 1, 1) },
-      a: { value: 0 }, smear: { value: 0 }, split: { value: 0 }, hue: { value: 0 } }, 39);
+    // the painted flashes of this girl (six normal, six Fever): a few meshes in turn, so one is still fading when the next comes
+    const set = (k) => [0, 1, 2, 3, 4, 5].map((i) => tex[`fx/${k}_${i}`]).filter(Boolean);
+    this.art = { normal: set(this.paw ? 'cat' : 'pink'), fever: set(this.paw ? 'cat_fever' : 'pink_fever'), hit: set('hit').slice(this.paw ? 3 : 0, this.paw ? 6 : 3) };
+    this.flashesM = [0, 1, 2].map(() => ({ m: layer(game, FLASH_FRAG, { map: { value: null }, tint: { value: new THREE.Color(1, 1, 1) }, a: { value: 0 },
+      smear: { value: 0 }, split: { value: 0 }, hue: { value: 0 } }, 39, false), t: 9, life: 0.1, sz: 1, flip: 1, x: 0, y: 0, ang: 0, ar: 1 }));
+    this.fi = 0;
+    this.hits = [0, 1, 2, 3].map(() => ({ m: layer(game, FLASH_FRAG, { map: { value: null }, tint: { value: new THREE.Color(1, 1, 1) }, a: { value: 0 },
+      smear: { value: 0.2 }, split: { value: 0 }, hue: { value: 0 } }, 37, false), t: 9 }));
+    this.hi = 0;
+    this.flash = this.flashesM[0].m;
     this.glow = layer(game, GLOW_FRAG, { col: { value: new THREE.Color() }, a: { value: 0 }, rays: { value: 0 }, rot: { value: 0 }, time: { value: 0 } }, 38);
     this.ring = layer(game, RING_FRAG, { col: { value: new THREE.Color() }, a: { value: 0 }, k: { value: 0 }, kind: { value: this.paw ? 1 : 0 },
       spin: { value: 0 } }, 38.5);
@@ -83,19 +93,29 @@ export class Muzzle {
   // her Fever share (0..1), full Fever, special on: called every frame by the player
   setLevel(lv, full, skill) { this.lv = lv; this.full = full; this.skill = skill; }
 
+  // a shot landed at (x, y) (overlay pixels, y up): a painted burst there, held for a moment
+  hit(x, y, crit = false) {
+    const h = this.hits[this.hi++ % this.hits.length], list = this.art.hit;
+    if (!list.length) return;
+    h.m.material.uniforms.map.value = list[Math.floor(Math.random() * list.length)];
+    h.t = 0; h.x = x; h.y = y; h.rot = rnd(0, 6.28); h.sz = this.p.H * (crit ? 0.2 : 0.12) * rnd(0.85, 1.15);
+  }
   // one shot from (x, y) toward (tx, ty), all in overlay pixels (y up)
   fire(x, y, tx, ty, crit = false) {
-    const g = this.game, H = this.p.H, U = this.flash.material.uniforms, fx = g.fx;
+    const g = this.game, H = this.p.H, fx = g.fx;
     const ang = Math.atan2(ty - y, tx - x), lv = this.skill ? 1 : this.lv, hot = this.full || this.skill;
-    // Fever shows in colour, smear, rays and more particles, not in a bigger white blob over her (nothing may hide the heroines)
-    const sz = H * (this.paw ? 0.15 : 0.14) * (1 + lv * 0.2 + (this.skill ? 0.15 : 0)) * rnd(0.9, 1.1);
+    // Fever: the Fever paintings, more colour, smear, rays and particles; not a bigger white blob over her (nothing may hide the heroines)
+    const sz = H * (this.paw ? 0.15 : 0.22) * (1 + lv * 0.15 + (this.skill ? 0.1 : 0)) * rnd(0.9, 1.1);
     this.x = x; this.y = y; this.ang = ang; this.sz = sz; this.t = 0;
-    // the painted flash: popped, flipped at random, smeared and colour-split as the Fever grows, hue running at full Fever
-    U.map.value = (this.skill && !this.paw && this.flashes.gatling) || this.flashes[this.p.w.kind] || this.flashes.rifle;
-    U.smear.value = 0.3 + lv * 1.2; U.split.value = lv * 0.035 + (hot ? 0.02 : 0);
-    U.tint.value.copy(C1.set(1, 1, 1).lerp(this.col, 0.25 + lv * 0.35));
-    this.flash.rotation.z = (this.paw ? ang - Math.PI / 2 : ang) + rnd(-0.25, 0.25);
-    this.flip = Math.random() < 0.5 ? -1 : 1;
+    const F = this.flashesM[this.fi++ % this.flashesM.length], U = F.m.material.uniforms;
+    const list = (lv >= 0.34 || hot) && this.art.fever.length ? this.art.fever : this.art.normal;
+    U.map.value = list.length ? list[Math.floor(Math.random() * list.length)] : this.flashes[this.p.w.kind] || this.flashes.rifle;
+    U.smear.value = 0.08 + lv * 0.35; U.split.value = lv * 0.015 + (hot ? 0.01 : 0);
+    U.tint.value.setRGB(1, 1, 1);
+    const img = U.map.value?.image;
+    F.ar = img ? img.height / img.width : 1; F.t = 0; F.life = this.paw ? 0.2 : 0.11; F.sz = sz; F.ang = ang; F.x = x; F.y = y;
+    F.flip = Math.random() < 0.5 ? -1 : 1; F.rot = this.paw ? rnd(-0.5, 0.5) : ang + rnd(-0.08, 0.08);
+    this.flip = F.flip;
     // glow and rays, ring
     this.glow.material.uniforms.rays.value = lv > 0.15 || crit ? (this.paw ? 8 : 6) : 0;
     this.glow.material.uniforms.rot.value = rnd(0, 6.28);
@@ -134,17 +154,30 @@ export class Muzzle {
   update(dt, t) {
     this.time = t;
     this.t += dt; this.rt += dt * (this.paw ? 2.6 : 4.2); this.hold = Math.max(0, this.hold - dt);
-    const life = this.paw ? 0.09 : 0.055, on = this.t < life || this.hold > 0, e = Math.min(1, this.t / life);
+    const life = this.paw ? 0.2 : 0.11, on = this.t < life || this.hold > 0, e = Math.min(1, this.t / life);
     const lv = this.skill ? 1 : this.lv, hot = this.full || this.skill;
-    // flash: pops big and settles, fades out
-    const F = this.flash, U = F.material.uniforms;
-    F.visible = on;
-    if (on) {
-      const pop = 1.35 - 0.35 * Math.min(1, e * 3);
-      F.position.set(this.x, this.y, 0);
-      F.scale.set(this.sz * pop * this.flip, this.sz * pop, 1);
-      U.a.value = (1 - e * 0.7) * (0.9 + lv * 0.25);
-      U.hue.value = hot ? Math.sin(t * 7) * 0.5 : 0;
+    // the painted flashes: each pops big and settles while it fades; the gun's start at the muzzle and point along the shot
+    for (const F of this.flashesM) {
+      F.t += dt;
+      const fe = Math.min(1, F.t / F.life), U = F.m.material.uniforms;
+      F.m.visible = (F.t < F.life || (this.hold > 0 && F === this.flashesM[(this.fi + 2) % 3])) && !!U.map.value;
+      if (!F.m.visible) continue;
+      const pop = 1.25 - 0.25 * Math.min(1, fe * 4), w = F.sz * pop, h = w * F.ar;
+      F.m.scale.set(w, h * F.flip, 1); F.m.rotation.z = F.rot;
+      const off = this.paw ? w * 0.45 : w * 0.42;   // out in front of the paw / the barrel, away from her
+      F.m.position.set(F.x + Math.cos(F.ang) * off, F.y + Math.sin(F.ang) * off, 0);
+      U.a.value = Math.max(0, 1 - fe * fe) * (this.hold > 0 ? 0.9 : 1);
+      U.hue.value = hot ? Math.sin(t * 7) * 0.35 : 0;
+    }
+    // hit bursts: pop and fade where the shots landed
+    for (const h of this.hits) {
+      h.t += dt;
+      const he = Math.min(1, h.t / 0.24), U = h.m.material.uniforms;
+      h.m.visible = h.t < 0.24 && !!U.map.value;
+      if (!h.m.visible) continue;
+      const s = h.sz * (0.7 + 0.5 * Math.min(1, he * 3));
+      h.m.position.set(h.x, h.y, 0); h.m.scale.set(s, s, 1); h.m.rotation.z = h.rot + he * 0.4;
+      U.a.value = 1 - he * he;
     }
     // glow: the player's colour, warmer at the core, bigger and longer with Fever
     const G = this.glow, GU = G.material.uniforms, ga = on ? 1 - e * 0.6 : Math.max(0, GU.a.value - dt * 9);
@@ -166,5 +199,5 @@ export class Muzzle {
       R.rotation.z = this.paw ? 0 : this.ang;
     }
   }
-  dispose() { for (const m of [this.flash, this.glow, this.ring]) { this.game.overlay.remove(m); m.material.dispose(); } }
+  dispose() { for (const m of [...this.flashesM.map((f) => f.m), ...this.hits.map((h) => h.m), this.glow, this.ring]) { this.game.overlay.remove(m); m.material.dispose(); } }
 }

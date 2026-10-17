@@ -69,7 +69,6 @@ export class Game {
     this.assignControllers();
     const p2 = this.players[1];
     const on = this.p2on();
-    this.hud.panels[1].el.classList.toggle('hidden', !on);
     if (!on) { p2.state = 'away'; p2.poses[p2.pose] && (p2.poses[p2.pose].visible = false); if (p2.hero) p2.hero.g.visible = false; }
     else if (p2.state === 'away' && this.combat) { p2.state = 'cover'; p2.y0 = 0; }
   }

@@ -57,10 +57,11 @@ void main(){
     if (E.a < 0.001) continue;
     float x = s == 0 ? vUv.x : 1.0 - vUv.x;
     float fl = fbm(vec2(vUv.y * 5.0 - time * 1.2, time * 0.7 + float(s) * 3.0));
-    float band = smoothstep(0.08 + 0.2 * E.a + fl * 0.09, 0.0, x) * (0.55 + 0.45 * smoothstep(1.0, 0.2, vUv.y));
+    // a band at the very edge (the heroines stand at 10-30% of the width: the glow must not wash over them)
+    float band = smoothstep(0.05 + 0.07 * E.a + fl * 0.04, 0.0, x) * (0.55 + 0.45 * smoothstep(1.0, 0.2, vUv.y));
     float stripes = 0.75 + 0.25 * sin(vUv.y * 40.0 - time * 8.0);
     c += E.rgb * band * stripes * min(1.0, E.a) * 0.9;
-    c = mix(c, E.rgb, band * 0.18 * E.a);
+    c = mix(c, E.rgb, band * 0.12 * E.a);
   }
   // stream grain + faint scanlines
   float gn = hash12(vUv * vec2(1920.0, 1080.0) + fract(time * 7.0) * 100.0);

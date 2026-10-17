@@ -322,7 +322,7 @@ export class Enemy extends Actor {
     if (this.lock) {
       const c = g.world.project(this.center());
       const b = this.screenBox();
-      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t);
+      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t, this.timer);
     }
   }
 

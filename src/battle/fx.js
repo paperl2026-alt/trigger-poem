@@ -6,6 +6,19 @@ import { Particles, buildAtlas, FR } from '../core/particles.js';
 import { paperMaterial } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
 import { VERT as FXVERT, GLOW_FRAG, RING_FRAG } from './muzzle.js';
+import { Text } from '../ui/glhud.js';
+import { lang } from '../core/i18n.js';
+// the countdown on a warning's ring: the time left as a red arc running down from the top
+const ARC_FRAG = `
+uniform float p; uniform vec3 col; uniform float a;
+varying vec2 vUv;
+void main(){
+  vec2 q = (vUv - 0.5) * 2.0; float r = length(q);
+  if (r < 0.62 || r > 0.82) discard;
+  float u = mod(atan(q.x, q.y) + 6.28319, 6.28319) / 6.28319;   // 0 at the top, clockwise
+  if (u > p) discard;
+  gl_FragColor = vec4(col, a * smoothstep(0.82, 0.78, r) * smoothstep(0.62, 0.66, r));
+}`;
 
 // colours / threat rings / mantra glyphs: content theme.json (filled by initTheme() once the packs are loaded)
 export const COL = {};
@@ -418,37 +431,78 @@ export class FX {
     };
   }
   // slot: which player it will hit (0 / 1), -1 = everyone. The small notch points at that player in their colour.
+  // the attack warning over a winding-up monster (docs/DESIGN.md: some attacks are stopped by staggering it, some must be hidden from):
+  // the battle HUD's 打断! / 躲! art (ui/hud_interrupt, ui/hud_hide), a countdown arc and the seconds left on its ring, a notch pointing
+  // at the girl it is after
   lock(type = 'ranged', slot = 0) {
+    if (type === 'shot') return this.shotLock(slot);
+    const game = this.game, hide = type === 'heavy';
+    const key = hide ? 'ui/hud_hide' : 'ui/hud_interrupt', T0 = tex[key];
+    const RC = hide ? [0.669, 0.662, 0.136] : [0.472, 0.726, 0.146];   // its ring: centre (share of the picture), radius (share of its width)
+    const WC = hide ? [0.26, 0.5] : [0.47, 0.26];                       // where its word goes
+    const ar = T0 ? T0.image.height / T0.image.width : 0.8;
     const g = new THREE.Group();
-    const ring = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: this.rings[type], transparent: true, depthTest: false, color: THREAT[type] }));
+    const pic = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: T0, transparent: true, depthTest: false, depthWrite: false }));
+    const AU = { p: { value: 0 }, col: { value: new THREE.Color(0xffffff) }, a: { value: 1 } };
+    const arc = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: AU, vertexShader: FXVERT, fragmentShader: ARC_FRAG,
+      transparent: true, depthTest: false, depthWrite: false }));
+    const word = new Text(43, { color: hide ? '#ffffff' : '#ffffff', shadow: '#d8141e', sw: 0.12 });
+    const num = new Text(44, { sw: 0.14 });
     const notch = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: this.notch, transparent: true, depthTest: false, color: 0xffffff }));
-    g.add(ring, notch);
-    g.traverse((o) => { o.renderOrder = 42; o.frustumCulled = false; });
+    g.add(pic, arc, word.m, num.m, notch);
+    pic.renderOrder = 42; arc.renderOrder = 42.5; notch.renderOrder = 42;
+    g.traverse((o) => { o.frustumCulled = false; });
     this.game.overlay.add(g);
-    const game = this.game;
+    const W3 = { zh: hide ? '躲!' : '打断!', ja: hide ? '隠れて!' : '止めて!', en: hide ? 'HIDE!' : 'STOP IT!' };
+    let born = 0;
     const L = {
       type, slot, p: 0,
-      set(x, y, size, p, t) { // p: 0 -> 1 progress to the hit
-        L.p = p;
-        g.position.set(x, y, 0);
-        const s = size * (type === 'shot' ? 1.5 - 0.6 * p : 2.1 - 1.2 * p);
-        ring.scale.set(s, s, 1);
-        ring.rotation.z = type === 'shot' ? t * 4 : type === 'heavy' ? -t * 1.5 : t * 1.2;
-        const blink = Math.abs(Math.sin(t * (6 + p * 22)));
-        ring.material.opacity = 0.6 + 0.4 * blink;
-        ring.material.color.setHex(p > 0.86 && blink > 0.5 ? 0xffffff : THREAT[type]);
+      set(x, y, size, p, t, left) { // p: 0 -> 1 progress to the hit; left: seconds to it
+        L.p = p; born = Math.min(1, born + 0.08);
+        const blink = Math.abs(Math.sin(t * (5 + p * 20)));
+        const W = Math.max(game.H * 0.13, size * 2.4) * (1 + (1 - born) * 0.5) * (p > 0.85 ? 1 + 0.06 * blink : 1);
+        // over the monster, but kept under the HUD's top strip (27% of the height) and on the screen
+        const hh = W * ar / 2, top = game.H * 0.73 - hh;
+        g.position.set(Math.max(game.W * 0.22, Math.min(game.W * 0.78, x)), Math.min(y + size * 0.9, top), 0);
+        pic.scale.set(W, W * ar, 1);
+        pic.rotation.z = Math.sin(t * 3) * 0.03;
+        const cx = (RC[0] - 0.5) * W, cy = (0.5 - RC[1]) * W * ar, r = RC[2] * W;
+        arc.position.set(cx, cy, 0); arc.scale.setScalar(r * 2.6);
+        AU.p.value = 1 - p; AU.col.value.setHex(p > 0.75 && blink > 0.5 ? 0xffffff : 0xff2a3a);
+        num.set(`${Math.max(0, Math.ceil(left ?? (1 - p) * 2))}`, r * 1.1);
+        num.at(cx, cy, -6, 1 + (p > 0.75 ? 0.15 * blink : 0));
+        word.set(W3[lang] || W3.en, W * 0.17);
+        word.at((WC[0] - 0.5) * W, (0.5 - WC[1]) * W * ar, -8, 1 + 0.06 * blink);
         const pl = slot >= 0 ? game.players[slot] : null;
         notch.visible = !!pl;
         if (pl) {
-          const ang = Math.atan2(game.H * 0.15 - y, pl.baseX - x);
-          const r = s * 0.5;
-          notch.position.set(Math.cos(ang) * r, Math.sin(ang) * r, 0);
+          const ang = Math.atan2(game.H * 0.15 - (y + cy), pl.baseX - (x + cx));
+          notch.position.set(cx + Math.cos(ang) * r * 1.5, cy + Math.sin(ang) * r * 1.5, 0);
           notch.rotation.z = ang + Math.PI / 2;
-          notch.scale.setScalar(Math.max(14, size * 0.32));
+          notch.scale.setScalar(Math.max(14, r * 0.7));
           notch.material.color.setHex(pl.c.hex);
         }
       },
-      remove() { g.parent && g.parent.remove(g); ring.geometry.dispose(); ring.material.dispose(); notch.geometry.dispose(); notch.material.dispose(); },
+      remove() { g.parent && g.parent.remove(g); pic.geometry.dispose(); pic.material.dispose(); arc.geometry.dispose(); arc.material.dispose(); notch.geometry.dispose(); notch.material.dispose(); },
+    };
+    return L;
+  }
+  // a small spinning ring on something flying at her (shoot it down): many at once, so no words
+  shotLock(slot) {
+    const game = this.game, g = new THREE.Group();
+    const ring = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: this.rings.shot, transparent: true, depthTest: false, color: THREAT.shot }));
+    g.add(ring); ring.renderOrder = 42; ring.frustumCulled = false;
+    this.game.overlay.add(g);
+    const L = {
+      type: 'shot', slot, p: 0,
+      set(x, y, size, p, t) {
+        L.p = p; g.position.set(x, y, 0);
+        const s = size * (1.5 - 0.6 * p), blink = Math.abs(Math.sin(t * (6 + p * 22)));
+        ring.scale.set(s, s, 1); ring.rotation.z = t * 4;
+        ring.material.opacity = 0.6 + 0.4 * blink;
+        ring.material.color.setHex(p > 0.86 && blink > 0.5 ? 0xffffff : (slot >= 0 ? game.players[slot]?.c.hex : null) ?? THREAT.shot);
+      },
+      remove() { g.parent && g.parent.remove(g); ring.geometry.dispose(); ring.material.dispose(); },
     };
     return L;
   }
