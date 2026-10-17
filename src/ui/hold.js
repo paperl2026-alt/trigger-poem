@@ -1,5 +1,5 @@
 // "You can't shoot now" (docs/DESIGN.md「不能射击的阶段的提示」): while the game holds the fight (moving on, a station cleared, the terrain
-// folding, an anomaly, the boss arriving or transforming). Only the boss gets the big show ("banner": true in text/holds.json): two hazard
+// folding, an anomaly, the boss arriving or transforming). Only the boss arriving gets the big show (its transformations get the small tag: the change itself must be seen) ("banner": true in text/holds.json): two hazard
 // tapes scroll across the screen and a big caption flickers over the picture. Everything else is a small see-through tag at the top
 // centre, flickering gently, out of the way (user: WARNING only for the boss, the rest low-key). What it says depends on the moment
 // (several lines each, picked at random). It goes away by itself when the fight is on again (or after its time).

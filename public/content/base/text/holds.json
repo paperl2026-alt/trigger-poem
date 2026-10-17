@@ -15,7 +15,7 @@
    { "zh": "异变发生!", "en": "ANOMALY!", "ja": "異変発生!" }, { "zh": "学校被侵蚀了!", "en": "THE SCHOOL IS CORRUPTED!", "ja": "学校が侵食された!" }] },
   "boss": { "banner": true, "color": "#ff1a2a", "tape": "WARNING ⚠ HUGE REACTION", "sub": "WARNING", "lines": [
    { "zh": "巨大反应接近!", "en": "SOMETHING HUGE APPROACHES!", "ja": "巨大反応接近!" }, { "zh": "{name} 出现!", "en": "{name} APPEARS!", "ja": "{name} 出現!" }] },
-  "phase": { "banner": true, "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
+  "phase": { "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
   "info": { "color": "#ff2a3a", "tape": "NOTICE", "sub": "", "lines": [{ "zh": "", "en": "", "ja": "" }] }
  }
 }

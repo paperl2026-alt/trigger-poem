@@ -121,7 +121,7 @@ export class Player {
   get alive() { return this.state !== 'down' && this.state !== 'away'; }
 
   damage(n) {
-    if (this.invuln > 0 || this.game.G.god || this.state === 'down' || this.activeOn) return false;   // her special: untouchable (DESIGN)
+    if (this.invuln > 0 || this.game.G.god || this.state === 'down' || this.activeOn || this.game.lull) return false;   // her special: untouchable (DESIGN)
     this.hp = Math.max(0, this.hp - n);
     this.taken += n;
     this.invuln = PL().invuln;
@@ -173,7 +173,9 @@ export class Player {
     // the shot effects follow her Fever: share of all levels, full Fever, her special
     this.muzzle.setLevel(FEVER_KEYS.reduce((s, k) => s + this.fever.level(k), 0) / (FEVER_KEYS.length * T.fever.maxLevel), this.fever.full, this.activeOn);
     this.muzzle.update(dt, t);
-    const busy = this.state === 'run' || this.state === 'victory' || this.state === 'away' || !g.combat;
+    // game.lull: the fight pauses for a moment (the boss changing form): she ducks, nobody shoots, her special's clock stops
+    const busy = this.state === 'run' || this.state === 'victory' || this.state === 'away' || !g.combat || g.lull;
+    if (g.lull && this.state === 'out') this.state = 'cover';
     // aim point: snaps to the controller; while beaming it follows close behind (a touch of weight, still where you point)
     if (c) {
       if (this.beaming) { const k = 1 - Math.exp(-dt * this.a.aim); this.aimX += (c.x - this.aimX) * k; this.aimY += (c.y - this.aimY) * k; } else { this.aimX = c.x; this.aimY = c.y; }
@@ -213,9 +215,9 @@ export class Player {
         }
       }
       if (c.skill && this.charge >= 1 && !this.activeOn && this.state !== 'down' && this.state !== 'hurt') this.startActive();
-    } else if (this.activeOn && !g.combat) this.endActive(false);
+    } else if (this.activeOn && !g.combat && !g.lull) this.endActive(false);
     this.exposed = this.state === 'out';
-    if (this.state === 'out' && c) { if (this.beaming) this.updateBeam(dt, t); else this.updateGun(dt, t); }
+    if (this.state === 'out' && c && !g.lull) { if (this.beaming) this.updateBeam(dt, t); else this.updateGun(dt, t); }
 
     // ---- frame ----
     let pose = 'cover';

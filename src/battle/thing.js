@@ -74,7 +74,7 @@ export class TheThing extends Actor {
   // ---------------------------------------------------------------- hits
   weakNow() { return this.S.core || this.state === 'windup' || this.state === 'attack'; }
   hit(info) {
-    if (!this.alive) return;
+    if (!this.alive || this.mutating) return;
     const D = this.def, weak = this.weakNow();
     const dmg = info.dmg * (weak ? D.weakMul : D.bodyMul);
     info.dealt = dmg; this.lastHitBy = info.by;
@@ -197,24 +197,29 @@ export class TheThing extends Actor {
     this.timer = 1.2 + list.length * 0.7 + this.def.summonRest;
   }
 
-  // ---------------------------------------------------------------- the next mutation: it convulses, splashes ooze, grows into the next stage
+  // ---------------------------------------------------------------- the next mutation (DESIGN「Boss」: about 2 s, nobody can shoot):
+  // it convulses and splashes ooze, a white flash, the next form bursts out and grows in. Real time (not the enemies' slower clock).
   mutate(n) {
-    const g = this.game, tw = g.etw;
+    const g = this.game, tw = g.tweens, M = this.def.mutate || { shake: 1.1, grow: 0.8 };
     this.mutating = true; this.seq++; this.endWindup(); this.armor = false;
+    g.lull = true;
     g.clearProjectiles && g.clearProjectiles();
     this.state = 'hurt'; this.play('hurt');
     sfx.roar(); sfx.madness(); g.post.flash(0.8, 0xff3a8a); g.post.shake(1.4); g.G.stop(0.25);
-    g.hud.gl.hold('phase', { text: tr(this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: 2.2 });
+    g.hud.gl.hold('phase', { text: tr(this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: M.shake + M.grow + 0.2 });
     let k = 0;
-    tw.run(1.4, (e) => {
+    tw.run(M.shake, (e) => {
+      this.flash = Math.max(this.flash, e > 0.7 ? (e - 0.7) / 0.3 : 0.25 * Math.max(0, Math.sin(e * 30)));
       this.inner.position.x = Math.sin(e * 70) * 0.12 * (1 - e);
       this.inner.scale.set(1 + Math.sin(e * 40) * 0.08, 1 - Math.sin(e * 40) * 0.06, 1);
       if (e * 6 > k) { k++; const p = this.uvToWorld(rnd(0.2, 0.8), rnd(0.2, 0.9)); g.fx.ink(p, 10, 3, COL.hot); g.fx.confetti(p, 12, 2.5, [COL.hot, 0x2a0a2a]); }
     }, { onDone: () => {
       this.inner.position.x = 0;
       this.setStage(n);
-      this.inner.scale.set(0.7, 0.7, 1); this.flash = 1;
-      tw.to(this.inner.scale, { x: 1, y: 1 }, 0.9, { ease: Ease.outBack, onDone: () => { this.mutating = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3); } });
+      this.inner.scale.set(0.45, 0.45, 1); this.flash = 1;
+      g.post.flash(0.45, 0xffffff);
+      for (let i = 0; i < 8; i++) { const q = this.uvToWorld(rnd(0.1, 0.9), rnd(0.1, 0.9)); g.fx.confetti(q, 14, 3.5, [COL.hot, 0x2a0a2a, COL.bone]); }
+      tw.to(this.inner.scale, { x: 1, y: 1 }, M.grow, { ease: Ease.outBack, onDone: () => { this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3); } });
       g.post.shake(1.2); sfx.slam();
       if (n === this.def.wreckAt && g.world.named?.school && tex[this.def.schoolAfter]) {   // it smashes the school: the building is damaged from now on
         const sc = g.world.named.school; sc.m.material.map = tex[this.def.schoolAfter]; sc.m.material.needsUpdate = true; sc.m.userData.texKey = this.def.schoolAfter;

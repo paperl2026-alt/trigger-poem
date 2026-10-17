@@ -47,7 +47,7 @@ export class Game {
     this.comic = new Comic();
     this.actors = [];
     this.boxes = new Map();
-    this.combat = false;
+    this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
     this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
     this.time = 0; this.playT = 0;
     this.camPlaced = false;

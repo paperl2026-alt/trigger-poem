@@ -113,7 +113,7 @@ const along = (x, out) => { const n = STOPS.length - 1, f = ((x % n) + n) % n, i
 const IN = ['glow', 'wipe', 'pixel', 'glitch', 'squish', 'spin'];
 const OUT = ['glow', 'wipe', 'burn', 'shatter', 'ink', 'implode', 'pixel'];
 const MATS = 8;
-const T_IN = 0.2, T_HOLD = 0.3, T_OUT = 0.42;
+const T_IN = 0.16, T_HOLD = 0.14, T_OUT = 0.3;   // (short: what she hits must stay visible, DESIGN「Boss」)
 const rnd = (a, b) => a + Math.random() * (b - a);
 const easeOutBack = (x) => 1 + 2.4 * Math.pow(x - 1, 3) + 1.4 * Math.pow(x - 1, 2);
 
@@ -196,7 +196,7 @@ export class Mantra {
   // dress a glyph: its material, its way in and out, its colours, its circle
   dress(g, i, ch, style, colAt, opt = {}) {
     const n = this.n++;
-    g.on = true; g.t = -(opt.delay || 0); g.speed = opt.speed || 1; g.ride = null; g.crit = !!opt.crit; g.burst = false;
+    g.on = true; g.light = false; g.t = -(opt.delay || 0); g.speed = opt.speed || 1; g.ride = null; g.crit = !!opt.crit; g.burst = false;
     g.u.map.value = opt.tex || this.texOf(ch, style); g.u.seed.value = Math.random() * 100;
     g.u.mat.value = opt.mat ?? ((i * 3 + n) % MATS);
     g.ein = opt.ein || IN[(i + n) % IN.length]; g.eout = opt.eout || OUT[(i * 2 + n) % OUT.length];
@@ -209,7 +209,7 @@ export class Mantra {
   cast(x0, y0, x, y, i, crit = false) {
     const n = this.syll.length, s = ((i % n) + n) % n, g = this.mesh(), H = this.game.H;
     this.dress(g, s, this.syll[s], this.styles.mantra, s, { crit });
-    g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.size = H * (crit ? 0.2 : 0.14);
+    g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.size = H * (crit ? 0.16 : 0.11); g.light = true;
     this.game.fx.tracer(x0, y0, x, y, g.u.c0.value.getHex());
     return g;
   }
@@ -277,7 +277,7 @@ export class Mantra {
       if (t > T_IN + T_HOLD + T_OUT) { g.on = false; m.visible = g.circle.visible = false; continue; }
       m.visible = true;
       let sx = 1, sy = 1, rot = g.rot, dx = 0, dy = 0;
-      u.a.value = 1; u.diss.value = 0; u.dmode.value = 0; u.pix.value = 0; u.split.value = 0; u.wig.value = 0; u.flash.value = g.crit ? 0.12 : 0; u.time.value = time;
+      u.a.value = g.light ? 0.85 : 1; u.diss.value = 0; u.dmode.value = 0; u.pix.value = 0; u.split.value = 0; u.wig.value = 0; u.flash.value = g.crit ? 0.12 : 0; u.time.value = time;
       u.k.value = Math.min(1, Math.max(0, (t - T_IN * 0.5) / (T_HOLD + T_OUT * 0.6)));
       const mode = (e) => ({ glow: 1, wipe: 2, burn: 3, shatter: 4, ink: 5 }[e] || 0);
       if (t < T_IN) {   // ---- in
@@ -307,7 +307,7 @@ export class Mantra {
       if (ci.visible) {
         const open = Math.min(1, t / (T_IN * 1.2)), gone = Math.max(0, (t - T_IN - T_HOLD) / T_OUT);
         ci.position.set(g.x, g.y, 0); ci.scale.setScalar(g.size * (0.6 + 1.1 * easeOutBack(open)) * (1 + gone * 0.3));
-        g.cu.a.value = Math.min(1, open * 1.5) * (1 - gone) * 1.3; g.cu.time.value = time; g.cu.spin.value = t * 3 + g.cu.seed.value;
+        g.cu.a.value = Math.min(1, open * 1.5) * (1 - gone) * (g.light ? 0.75 : 1.3); g.cu.time.value = time; g.cu.spin.value = t * 3 + g.cu.seed.value;
       }
     }
   }
