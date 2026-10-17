@@ -252,6 +252,11 @@ export class Enemy extends Actor {
     if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop') {   // (flyers: their hovering spot, below)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8);
       s = { ...s, x: q.x, z: q.z };
+      if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
+        const c = world.camPos, cd = cov.x !== undefined ? Math.hypot(cov.x - c.x, cov.z - c.z) : 2.8, qd = Math.hypot(q.x - c.x, q.z - c.z) || 1;
+        const k = Math.min(1, (cd + (bp.goalBeforeCover ?? 1.1)) / qd);
+        this.goal.set(c.x + (q.x - c.x) * k, 0, c.z + (q.z - c.z) * k);
+      }
     }
     if (this.beh === 'flyer') {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
@@ -330,25 +335,33 @@ export class Enemy extends Actor {
     else if (this.beh === 'thrower') this.updateThrower(dt, t);
     else this.updateCrawler(dt, t);
     if (this.lock) {
-      const c = g.world.project(this.center());
+      const wc = this.center(), c = g.world.project(wc);
       const b = this.screenBox();
-      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t, this.timer);
+      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t, this.timer, b, wc);
     }
   }
 
+  // the camera's horizontal forward (stations look any way: the classroom's second stop looks back)
+  fwd() { const w = this.game.world, la = w.lookAt, c = w.camPos; if (!la) return { x: 0, z: -1 }; const x = la.x - c.x, z = la.z - c.z, d = Math.hypot(x, z) || 1; return { x: x / d, z: z / d }; }
+  // what kind of attack its wind-up leads to (DESIGN「攻击分三种」): 'kill' = a ram you can only stop by killing / interrupting it (hiding
+  // does not help: flyers' dives), 'hide' = a blast nothing stops (hide), null = an ordinary attack (a bite, a throw whose projectiles carry
+  // their own marker): no marker
+  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' ? 'kill' : null; }
   startWindup(time) {
     this.state = 'windup';
     this.timer = this.timer0 = time;
     if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
     if (this.lock) this.lock.remove();
-    this.lock = this.game.fx.lock(this.threat, this.targetSlot);
+    this.mark = this.markKind();
+    this.lock = this.mark ? this.game.fx.lock(this.mark, this.targetSlot) : null;
     if (this.beh !== 'walker') this.game.fx.charge(this, this.def.blast ? 0xff4fc8 : 0xffb04a);   // the glow it gathers (art has no effects drawn in)
     sfx.warn();
   }
   endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
 
   // ---- stagger: enough sustained hits interrupt whatever it was about to do
-  canStagger() { return this.alive && this.state !== 'stun' && this.poiseCD <= 0 && !(this.bp.armor || []).includes(this.state); }
+  // only a special attack being gathered ('kill') is broken off by hits: ordinary hits never freeze a monster (DESIGN「怪物挨打的样子」)
+  canStagger() { return this.alive && this.state === 'windup' && this.mark === 'kill' && this.poiseCD <= 0 && !(this.bp.armor || []).includes(this.state); }
   stagger(time) {
     const g = this.game;
     this.endWindup();
@@ -364,7 +377,7 @@ export class Enemy extends Actor {
     sfx.thud(0);
     const P = this.root.position, c = g.world.camPos, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
     const bp = this.bp;
-    if (this.beh === 'walker') { P.x += dx / d * bp.staggerPush; P.z += dz / d * bp.staggerPush; } else if (this.beh === 'flyer') { g.etw.kill(P); P.z -= bp.staggerKnock[0]; P.y += bp.staggerKnock[1]; }
+    if (this.beh === 'walker') { P.x += dx / d * bp.staggerPush; P.z += dz / d * bp.staggerPush; } else if (this.beh === 'flyer') { const f = this.fwd(); g.etw.kill(P); P.x += f.x * bp.staggerKnock[0]; P.z += f.z * bp.staggerKnock[0]; P.y += bp.staggerKnock[1]; }
   }
   recover() {
     this.inner.position.x = 0;
@@ -394,21 +407,25 @@ export class Enemy extends Actor {
         this.state = 'leap';
         this.play('leap');
         // jump onto the barricade, right in your face
-        const cov = g.world.covers[this.targetSlot]?.def;
-        const tz = cov ? cov.z - bp.leapOntoCover : P.z + 1.5, ty = cov ? cov.h * bp.leapHeight : 0.6, z0 = P.z, y0 = P.y;
-        tw.run(bp.leapTime, (e) => { P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * bp.leapArc; }, {
+        const cov = g.world.covers[this.targetSlot]?.def, c = g.world.camPos;
+        // onto the barricade: just beyond it on the monster's side, whichever way the camera looks
+        let tx = P.x, tz = P.z;
+        if (cov) { const dx = cov.x - c.x, dz = cov.z - c.z, d = Math.hypot(dx, dz) || 1; tx = cov.x + dx / d * bp.leapOntoCover; tz = cov.z + dz / d * bp.leapOntoCover; }
+        else { const dx = c.x - P.x, dz = c.z - P.z, d = Math.hypot(dx, dz) || 1; tx = P.x + dx / d * 1.5; tz = P.z + dz / d * 1.5; }
+        const ty = cov ? cov.h * bp.leapHeight : 0.6, x0 = P.x, z0 = P.z, y0 = P.y;
+        tw.run(bp.leapTime, (e) => { P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * bp.leapArc; }, {
           onDone: () => {
             if (!this.alive) return;
             this.state = 'bite';
             this.play('bite');
             g.post.shake(0.6);
-            g.playerAttacked({ kind: 'melee', dmg: enemyHit(), from: this, slot: this.targetSlot });
+            g.playerAttacked({ kind: 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides)
             tw.wait(bp.biteHold, () => {
               if (!this.alive) return;
               this.state = 'recoil';
               this.play('recoil');
-              const zz = P.z, yy = P.y;
-              tw.run(bp.recoilTime, (e) => { P.z = zz - bp.recoilDist * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); } } });
+              const xx = P.x, zz = P.z, yy = P.y, cc = g.world.camPos, dd = Math.hypot(P.x - cc.x, P.z - cc.z) || 1, ux = (P.x - cc.x) / dd, uz = (P.z - cc.z) / dd;   // back, away from the camera
+              tw.run(bp.recoilTime, (e) => { P.x = xx + ux * bp.recoilDist * e; P.z = zz + uz * bp.recoilDist * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); } } });
             });
           },
         });
@@ -427,18 +444,18 @@ export class Enemy extends Actor {
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
     } else if (this.state === 'windup') {
       this.timer -= dt;
-      P.z -= dt * bp.windupDrift;
+      { const f = this.fwd(); P.x += f.x * dt * bp.windupDrift; P.z += f.z * dt * bp.windupDrift; }   // (drawing back, away from the camera)
       if (this.timer <= 0) {
         this.endWindup();
         this.state = 'dive';
         this.play('dive');
         sfx.whoosh(0);
-        const c = g.world.camPos;
-        g.etw.to(P, { x: c.x + (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter), y: c.y - bp.diveDrop, z: c.z - bp.diveStop }, bp.diveTime, {
+        const c = g.world.camPos, f = this.fwd(), side = (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter);
+        g.etw.to(P, { x: c.x - f.z * side + f.x * bp.diveStop, y: c.y - bp.diveDrop, z: c.z + f.x * side + f.z * bp.diveStop }, bp.diveTime, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
-            g.playerAttacked({ kind: 'ranged', dmg: enemyHit(), from: this, slot: this.targetSlot });
+            g.playerAttacked({ kind: 'ram', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (a ram: hiding does not help)
             this.state = 'recoil';
             this.play('fly', 14);
             g.etw.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.returnTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rr(bp.hoverAgain); } } });
@@ -555,7 +572,7 @@ export class Enemy extends Actor {
     else fx.embers(p, 2, 0.15);
     if (info.stagger && this.canStagger()) {
       this.poise += info.stagger;
-      if (this.poise >= this.def.poise) this.stagger(info.stun || 0.5);
+      if (this.poise >= this.def.poise) this.stagger(Math.min(0.45, info.stun || 0.45));
     }
     if (this.beh === 'walker' && this.state === 'walk') { // a little push back per hit
       const c = this.game.world.camPos, P = this.root.position, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
@@ -573,6 +590,7 @@ export class Enemy extends Actor {
   }
   die(kind, info) {
     this.alive = false;
+    this.u.outlineOn.value = 0;   // (the "can be shot" outline goes at once: DESIGN「怪物挨打的样子」)
     this.endWindup();
     this.game.tweens.kill(this.root.position); this.game.etw.kill(this.root.position);
     if (this.string) this.game.tweens.to(this.string.position, { y: 20 }, 0.6);
@@ -628,7 +646,7 @@ export class Projectile extends Actor {
     if (k >= 1) {
       this.alive = false;
       this.lock.remove(); this.lock = null;
-      const blocked = this.game.playerAttacked({ kind: 'ranged', dmg: this.dmg, from: this, slot: this.targetSlot });
+      const blocked = this.game.playerAttacked({ kind: 'shot', dmg: this.dmg, from: this, slot: this.targetSlot });   // (hiding does not help: shoot it down)
       if (blocked) this.game.tweens.to(this.root.position, { y: -1, x: this.root.position.x + (Math.random() - 0.5) * 3 }, 0.6, { ease: Ease.inQuad, onDone: () => this.dispose() });
       else this.dispose();
     }
@@ -637,7 +655,7 @@ export class Projectile extends Actor {
     if (!this.alive) return;
     this.alive = false;
     this.lastHitBy = info.by;
-    this.lock.remove(true); this.lock = null;
+    this.lock.remove(true); this.lock = null; this.u.outlineOn.value = 0;
     info.dealt = 0;
     this.game.onHit(this, info.kind, info);
     if (this.kind === 'takoyaki') sfx.thud(0); else sfx.shatter(0);

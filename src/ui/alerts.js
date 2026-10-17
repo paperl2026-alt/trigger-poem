@@ -212,7 +212,7 @@ export class Alerts {
     // what threatens each side now
     const want = [{ hide: 0, shot: 0, low: 0, left: 9 }, { hide: 0, shot: 0, low: 0, left: 9 }];
     for (const lk of T.layout.edgeWarn ? g.fx.live || [] : []) {   // (shoot-down / hide: told by the sights on the things themselves)
-      const kind = lk.type === 'heavy' ? 'hide' : lk.type === 'shot' ? 'shot' : null;
+      const kind = lk.type === 'heavy' || lk.type === 'hide' ? 'hide' : lk.type === 'shot' ? 'shot' : null;
       if (!kind || !g.combat) continue;
       const sides = lk.slot < 0 || both ? [0, 1] : [lk.slot];
       for (const s of sides) { want[s][kind] = Math.max(want[s][kind], 0.45 + 0.55 * lk.p); if (kind === 'hide') want[s].left = Math.min(want[s].left, lk.left ?? 9); }

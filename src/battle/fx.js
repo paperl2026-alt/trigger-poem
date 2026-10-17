@@ -6,9 +6,10 @@ import { Particles, buildAtlas, FR } from '../core/particles.js';
 import { paperMaterial } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
 import { VERT as FXVERT, GLOW_FRAG, RING_FRAG } from './muzzle.js';
-import { Text, picture } from '../ui/glhud.js';
+import { picture } from '../ui/glhud.js';
 import { Mantra } from './glyphs.js';
 import { lang } from '../core/i18n.js';
+import { markCanvas } from '../ui/marks.js';
 // the countdown on a warning's ring: the time left as a red arc running down from the top
 const ARC_FRAG = `
 uniform float p; uniform vec3 col; uniform float a;
@@ -136,6 +137,87 @@ const runeTex = () => canvasTex(256, 256, (g) => {
   for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2; g.beginPath(); g.moveTo(Math.cos(a) * 112, Math.sin(a) * 112); g.lineTo(Math.cos(a) * 126, Math.sin(a) * 126); g.stroke(); }
 });
 
+// the orbit marker's ring (fx.orbit): drawn on a quad, the ring at 0.4 of it
+const ORBIT_FRAG = `
+uniform vec3 col; uniform float a; uniform float time; uniform float p; uniform float hide; uniform float tilt; uniform float squash;
+uniform float side; uniform float flare; uniform float flareA;
+varying vec2 vUv;
+float h1(float n){ return fract(sin(n) * 43758.5453); }
+void main(){
+  vec2 q = vUv - 0.5;
+  float spin = time * (0.8 + p * 3.0);
+  vec3 c = vec3(0.0); float al = 0.0;
+  if (hide > 0.5) {
+    // a tilted, flattened belt: rotate, stretch to a circle, measure the distance to the ring
+    float cs = cos(-tilt), sn = sin(-tilt);
+    vec2 r = vec2(q.x * cs - q.y * sn, q.x * sn + q.y * cs);
+    vec2 e = vec2(r.x, r.y / squash);
+    float d = abs(length(e) - 0.44) * squash * 1.6;
+    float ang = atan(e.y, e.x);
+    float near = smoothstep(0.15, -0.15, sin(ang));            // the near half (lower) bright, the far half dim
+    float keep = side > 0.5 ? near : side < -0.5 ? 1.0 - near : 1.0;   // the half this quad draws (side -1: the far half, behind the monster)
+    float hot = flare;                                          // a flare: the whole belt flashes white-hot and wide
+    float core = smoothstep(0.022 + 0.014 * hot, 0.006, d - 0.008 * near);
+    float glow = exp(-d * (20.0 - 12.0 * hot)) * (0.5 + 0.5 * near);
+    float run = 0.75 + 0.25 * sin(ang * 6.0 - spin * 3.0);       // light running along it
+    float d2 = abs(length(e) - 0.40) * squash * 1.6;               // a thin second belt inside
+    float thin = smoothstep(0.01, 0.002, d2) * (0.45 + 0.45 * near) * step(0.5, fract(ang * 3.0 / 6.2832 * 4.0 + spin * 0.3));
+    float ink = smoothstep(0.045, 0.028, d) * (0.55 + 0.45 * near);
+    c = mix(col * 1.25, vec3(1.0), core * (0.75 + 0.25 * hot)); al = max(core * (0.6 + 0.4 * near), min(1.0, glow * run * (1.3 + hot)));
+    al = max(al, thin);
+    c = mix(vec3(0.06, 0.02, 0.1), c, clamp(al * 1.4, 0.0, 1.0)); al = max(al, ink * 0.85);
+    al *= keep;
+    if (side > -0.5) {
+      // the eruption (on the near half): a hot spot, a four-point glint, and a loop of light leaping off the belt like a solar prominence
+      vec2 fe = vec2(cos(flareA), sin(flareA) * squash) * 0.44;
+      vec2 fq = vec2(fe.x * cos(tilt) - fe.y * sin(tilt), fe.x * sin(tilt) + fe.y * cos(tilt));
+      vec2 o = q - fq; float od = length(o);
+      float bloom = exp(-od * 14.0) * hot * 1.1;
+      float rw = 0.006 + 0.012 * exp(-od * 12.0);                  // the glint's rays, thick at the middle, needle-thin at the ends
+      float rays = (smoothstep(rw, 0.0, abs(o.y)) * smoothstep(0.48, 0.0, abs(o.x)) + smoothstep(rw, 0.0, abs(o.x)) * smoothstep(0.34, 0.0, abs(o.y))) * hot;
+      vec2 o2 = vec2(o.x + o.y, o.x - o.y) * 0.7071;                // and a smaller diagonal cross
+      rays = max(rays, (smoothstep(0.005, 0.0, abs(o2.y)) * smoothstep(0.16, 0.0, abs(o2.x)) + smoothstep(0.005, 0.0, abs(o2.x)) * smoothstep(0.16, 0.0, abs(o2.y))) * hot * 0.8);
+      // two arches standing on the belt, on its outer side (a solar prominence), growing as the flare goes off
+      vec2 nrm = normalize(fq + 1e-4), tg = vec2(-nrm.y, nrm.x); float lr = 0.025 + 0.045 * hot;
+      float out1 = step(0.0, dot(q - fq, nrm)), out2 = step(0.0, dot(q - fq - tg * lr * 1.4, nrm));
+      float loopL = max(smoothstep(0.008, 0.002, abs(length(q - fq) - lr)) * out1, smoothstep(0.006, 0.0015, abs(length(q - fq - tg * lr * 1.4) - lr * 0.55)) * out2) * hot;
+      float fl = clamp(max(bloom, max(rays, loopL)), 0.0, 1.0);
+      c = mix(c, mix(col * 1.6 + 0.25, vec3(1.0), 0.65), fl); al = max(al, fl);
+    }
+  } else {
+    float R = length(q), ang = atan(q.y, q.x);
+    float d = abs(R - 0.4);
+    float core = smoothstep(0.022, 0.007, d);
+    float glow = exp(-d * 18.0);
+    // the dashed inner ring, turning the other way
+    float d2 = abs(R - 0.33);
+    float dash = smoothstep(0.012, 0.003, d2) * step(0.45, fract((ang + spin * 0.7) * 12.0 / 6.2832));
+    // four arrowheads on the ring pointing in, turning
+    float tri = 0.0;
+    for (int k = 0; k < 4; k++) {
+      float aa = float(k) * 1.5708 - spin * 0.5;
+      vec2 dir = vec2(cos(aa), sin(aa)), nrm = vec2(-dir.y, dir.x);
+      vec2 o = q - dir * (0.44 - 0.03 * p);
+      float along = dot(o, -dir), side = abs(dot(o, nrm));
+      tri = max(tri, step(0.0, along) * step(along, 0.085) * step(side, (0.085 - along) * 0.6));
+    }
+    // sparkles riding the ring
+    float sp = 0.0;
+    for (int k = 0; k < 5; k++) {
+      float aa = h1(float(k) * 7.1) * 6.2832 + spin * (0.6 + 0.2 * float(k));
+      vec2 sq = q - vec2(cos(aa), sin(aa)) * (0.4 + 0.05 * sin(time * 3.0 + float(k)));
+      float st = max(smoothstep(0.03, 0.0, abs(sq.x)) * smoothstep(0.004, 0.0, abs(sq.y)), smoothstep(0.03, 0.0, abs(sq.y)) * smoothstep(0.004, 0.0, abs(sq.x)));
+      sp = max(sp, st * (0.6 + 0.4 * sin(time * 9.0 + float(k) * 2.0)));
+    }
+    float ink = smoothstep(0.042, 0.026, d) + smoothstep(0.03, 0.02, d2) * 0.6;
+    c = mix(col * 1.25, vec3(1.0), max(core * 0.7, max(sp, tri * 0.25)));
+    al = max(max(core, min(1.0, glow * 1.1)), max(dash * 0.9, max(tri, sp)));
+    c = mix(vec3(0.08, 0.01, 0.04), c, clamp(al * 1.4, 0.0, 1.0)); al = max(al, min(1.0, ink) * 0.85);
+  }
+  gl_FragColor = vec4(c, al * a);
+}`;
+const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3();
+const markTex = (k) => MT[k] || (MT[k] = (() => { const t = new THREE.CanvasTexture(markCanvas(k)); t.colorSpace = THREE.NoColorSpace; return t; })());
 const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
 const notchTex = () => canvasTex(64, 64, (g) => { g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = 6; g.beginPath(); g.moveTo(32, 58); g.lineTo(6, 10); g.lineTo(58, 10); g.closePath(); g.stroke(); g.fill(); });
 
@@ -479,147 +561,122 @@ export class FX {
     };
     return B;
   }
-  // Attack warnings on the threats themselves (docs/DESIGN.md「提示是设计过的美术」「要击落的东西自带准星，要躲的攻击带另一种准星」),
-  // all R44 / R46 art moved by shaders (stop-motion boil, a shine sweeping over it, layers turning against each other, closing in, blinking
-  // faster as the hit gets close, a countdown filling the dial). They stand on / around the thing, never over the girls or the HUD.
-  // slot: who it will hit (0 / 1), -1 = everyone.
-  //   'melee' / 'ranged' (can be interrupted): four cyan corner pieces close round the monster, the lettering 打断! / 打它! beside it
-  //                       (toward the middle of the screen) with its countdown dial, a pointer above it
-  //   'heavy' (must hide): the red DANGER SIGHT locks onto the monster (angular frame, jagged ring, spikes, the ! mark, R46 ui/sh_*), the
-  //                       chibi ducking behind a wall beside it with the seconds left
-  //   'shot' (shoot it down): the gold TARGET SIGHT rides on the flying thing (R46 ui/ss_*); its circle is also where a shot counts
-  lock(type = 'ranged', slot = 0) {
-    if (type === 'shot') return this.shotLock(slot);
-    if (type === 'heavy') return this.dangerSight(slot);
-    const game = this.game, g = new THREE.Group(), pre = 'ui/wi_';
-    const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
-    const corners = [0, 1, 2, 3].map((i) => pic('ui/wi_corner', 42, i * 0.27));
-    const lk = (lang === 'zh' || lang === 'ja' ? lang : 'en') + (Math.random() < 0.5 ? '' : '2');
-    const word = pic(`${pre}${lk}`, 43, 0.4), top = pic('ui/wi_ptr', 42.5, 0.7), dial = pic(`${pre}dial`, 42.6, 0.9);
-    const AU = { p: { value: 0 }, col: { value: new THREE.Color(0x38d8ff) }, a: { value: 1 } };
-    const arc = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: AU, vertexShader: FXVERT, fragmentShader: ARC_FRAG, transparent: true, depthTest: false, depthWrite: false }));
-    arc.renderOrder = 42.55; arc.frustumCulled = false; g.add(arc);
-    this.overlay().add(g);
-    let born = 0;
-    const live = this.live;
-    const L = {
-      type, slot, p: 0, left: 9,
-      set(x, y, size, p, t, left) { // x, y: the thing on screen (y up); size: about half its height; p: 0 -> 1 progress to the hit; left: seconds
-        L.p = p; L.left = left ?? (1 - p) * 2; born = Math.min(1, born + 0.08);
-        const H = game.H, fast = 3 + p * 12, blink = Math.abs(Math.sin(t * fast)), urgent = p > 0.7;
-        g.position.set(x, y, 0);
-        const half = Math.max(H * 0.045, size * 1.05), snap = (1 - born) * half * 0.8, breathe = 1 + 0.05 * Math.sin(t * fast);
-        const cs = Math.max(H * 0.03, half * 0.42) * breathe;
-        corners.forEach((m, i) => {
-          const sx = i === 0 || i === 3 ? -1 : 1, sy = i < 2 ? 1 : -1;
-          m.position.set(sx * (half + snap) - sx * cs * 0.3, sy * (half * 1.05 + snap) - sy * cs * 0.3, 0);
-          m.rotation.z = [0, -Math.PI / 2, Math.PI, Math.PI / 2][i];
-          m.scale.set(cs, cs * ar(m), 1);
-          const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.6; u.a.value = born * (urgent ? 0.6 + 0.4 * blink : 0.95); u.flash.value = urgent && blink > 0.8 ? 0.35 : 0;
-        });
-        const side = x > game.W / 2 ? -1 : 1, wh = H * 0.05, ww = wh / ar(word);
-        word.scale.set(ww * (0.6 + 0.4 * born), wh * (0.6 + 0.4 * born), 1);
-        word.position.set(side * (half + ww * 0.55 + H * 0.01), half * 0.75 + Math.sin(t * 4) * H * 0.004, 0); word.rotation.z = side * -0.06;
-        const wu = word.material.uniforms; wu.time.value = t; wu.shine.value = 1.2; wu.boil.value = 0.8; wu.a.value = born; wu.flash.value = urgent && blink > 0.75 ? 0.3 : 0;
-        const ds = H * 0.04, dx = side * (half + ww * 1.1 + ds * 0.7 + H * 0.01), dy = half * 0.75;
-        dial.position.set(dx, dy, 0); dial.scale.set(ds, ds * ar(dial), 1); dial.rotation.z = -t * 0.8;
-        const du = dial.material.uniforms; du.time.value = t; du.boil.value = 0.4; du.a.value = born;
-        arc.position.set(dx, dy, 0); arc.scale.setScalar(ds * 0.95);
-        AU.p.value = 1 - p; AU.col.value.setHex(urgent && blink > 0.5 ? 0xffffff : 0x38d8ff); AU.a.value = born;
-        const ts = H * 0.035;
-        top.position.set(0, half * 1.05 + ts * 0.8 + Math.abs(Math.sin(t * 5)) * H * 0.012, 0); top.scale.set(ts / ar(top), ts, 1);
-        const tu = top.material.uniforms; tu.time.value = t; tu.shine.value = 1; tu.a.value = born;
-      },
-      remove() { live.delete(L); g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); }); arc.geometry.dispose(); },
-    };
-    live.add(L);
-    return L;
+  // Special-attack markers (docs/DESIGN.md「攻击分三种」, the user's round-8 mockup): only rings, no words. Two clearly different kinds,
+  // an orbit round the special monster / the flying thing (like a planet's satellite belt):
+  //   'kill' / 'shot' (kill it fast, hiding does not help): a RED-PINK ring facing you, the monster inside it, breathing in and out all
+  //                    the time (faster as the hit comes), four arrowheads pointing in, a dashed inner ring turning the other way, sparkles
+  //                    riding it, the winged heart fixed on top
+  //   'hide' (hide, shooting does not help): a VIOLET tilted belt that goes ROUND the monster: its far half is in the world just behind the
+  //                    monster (the monster hides it), its near half in front, so you only see part of the belt and its track; a winged
+  //                    heart and two small hearts ride along it like moons (passing behind the monster too); every so often it erupts
+  //                    like a solar flare (a white-hot flash, a glint, a loop of light leaping off it), more often as the hit comes
+  // The hearts and wings are drawn by src/ui/marks.js (the lesson cards use the same drawing). A flying thing gets the small ring; its
+  // circle is also where a shot counts (Game.targetsAt). slot: who it is after (0 / 1), -1 = everyone.
+  lock(type = 'kill', slot = 0) {
+    const kind = type === 'hide' || type === 'heavy' ? 'hide' : type === 'shot' ? 'shot' : 'kill';
+    return this.orbit(kind, slot);
   }
-  // the red danger sight locked onto a monster about to unleash something that cannot be shot down: hide (R46 ui/sh_*): the frame and the
-  // jagged ring turn against each other and close in on it, the spikes pulse outward, the ! blinks faster and faster; beside it the chibi
-  // ducking behind a wall and the seconds left
-  dangerSight(slot) {
-    const game = this.game, g = new THREE.Group();
-    const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
-    const outer = pic('ui/sh_outer', 42, 0.1), inner = pic('ui/sh_inner', 42.1, 0.3), spikes = pic('ui/sh_spikes', 41.9, 0.5), mark = pic('ui/sh_mark', 42.2, 0.7);
-    const duck = pic('ui/sh_duck', 42.3, 0.9);
-    const sec = new Text(42.4, { color: '#ffffff', shadow: '#d8141e', sw: 0.14 }); g.add(sec.m);
+  shotLock(slot) { return this.orbit('shot', slot); }
+  orbit(kind, slot) {
+    const game = this.game, fx = this, g = new THREE.Group(), hide = kind === 'hide', small = kind === 'shot';
+    const col = new THREE.Color(hide ? 0xb04dff : 0xff2a4a);
+    const U = { col: { value: col }, a: { value: 0 }, time: { value: 0 }, p: { value: 0 }, hide: { value: hide ? 1 : 0 }, tilt: { value: -0.35 }, squash: { value: 0.36 },
+      side: { value: 0 }, flare: { value: 0 }, flareA: { value: 0 } };
+    const quad = (u, order, depth) => {
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: u, vertexShader: FXVERT, fragmentShader: ORBIT_FRAG, transparent: true, depthTest: depth, depthWrite: false }));
+      m.renderOrder = order; m.frustumCulled = false; return m;
+    };
+    const ring = quad(U, 42, false); g.add(ring);
+    // the hide belt's far half: a group in the world just behind the monster, facing the camera, scaled so one unit is one screen pixel there
+    const back = hide ? new THREE.Group() : null, ringB = hide ? quad({ ...U, side: { value: -1 } }, 0, true) : null;
+    if (back) { back.add(ringB); back.visible = false; game.world.scene.add(back); }
+    const pic = (t, o, seed) => { const m = picture(null, o, seed); m.material.uniforms.map.value = t; m.visible = true; g.add(m); return m; };
+    const crest = small ? null : pic(markTex(hide ? 'hide' : 'kill'), 42.5, 0.3);
+    // the moons riding the belt (hide): the winged heart first, then two small hearts
+    const moons = hide ? [crest, pic(markTex('hideHeart'), 42.6, 0.5), pic(markTex('hideHeart'), 42.6, 0.8)] : [];
     this.overlay().add(g);
-    let born = 0;
-    const live = this.live;
+    let born = 0, prevT = null, flareT = 0.5, flareK = 9;
+    const live = this.live, cam = game.world.camera;
     const L = {
-      type: 'heavy', slot, p: 0, left: 9,
-      set(x, y, size, p, t, left) {
-        L.p = p; L.left = left ?? (1 - p) * 2; born = Math.min(1, born + 0.06);
-        const H = game.H, fast = 3 + p * 14, blink = Math.abs(Math.sin(t * fast)), urgent = p > 0.7;
+      type: kind, slot, p: 0, left: 9, x: 0, y: 0, r: 0,
+      // x, y: the thing's centre on screen (y up); size: about half its height (a flying thing: its ring radius); p: 0 -> 1 to the hit;
+      // box: its screen box (y down); wc: its centre in the world (the hide belt needs it to go behind the monster)
+      set(x, y, size, p, t, left, box, wc) {
+        const dt = prevT == null ? 1 / 60 : Math.min(0.1, Math.max(0, t - prevT)); prevT = t;
+        L.p = p; L.left = left ?? 9; L.x = x; L.y = y; born = Math.min(1, born + dt * 5);
+        const H = game.H, urgent = p > 0.7, beat = 0.5 + 0.5 * Math.sin(t * (5 + p * 14));
+        // the size: round the whole thing (its box), a little bigger; the kill ring breathes in and out all the time
+        const half = box ? Math.max(box.x1 - box.x0, box.y1 - box.y0) * 0.5 : size;
+        const breathe = hide ? 1 : 1 + 0.13 * Math.sin(t * (4.5 + 7 * p));
+        const r = (small ? size : Math.max(H * 0.07, half * (hide ? 1.5 : 1.15))) * (1 + (1 - born) * 0.7) * breathe;
+        L.r = r;
+        const S = r * 2 / 0.8;   // the shader's ring sits at 0.4 of the quad
         g.position.set(x, y, 0);
-        const r = Math.max(H * 0.055, size * 0.95) * (1 + (1 - born) * 1.2);   // it slams in from big and locks on
-        const close = 1 + (1 - p) * 0.15;                                     // and keeps closing in until it fires
-        const lay = (m, k, rot, a) => { m.scale.set(r * k * close, r * k * close * ar(m), 1); m.rotation.z = rot; const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.5; u.a.value = born * a; u.flash.value = urgent && blink > 0.8 ? 0.45 : 0; };
-        lay(outer, 2.1, t * 0.6, 0.9);
-        lay(inner, 1.5, -t * 1.3, 0.85);
-        lay(spikes, 2.4 * (1 + 0.08 * Math.sin(t * fast)), 0, 0.8);
-        lay(mark, 0.55 * (1 + 0.1 * blink), 0, urgent ? 0.5 + 0.5 * blink : 1);
-        // the chibi ducking + the seconds, beside it toward the middle of the screen
-        const side = x > game.W / 2 ? -1 : 1, dh = H * 0.07, dw = dh / ar(duck);
-        duck.scale.set(dw, dh, 1); duck.position.set(side * (r * 1.15 + dw * 0.55), -r * 0.4 + Math.abs(Math.sin(t * 6)) * H * 0.006, 0); duck.rotation.z = 0;
-        const du = duck.material.uniforms; du.time.value = t; du.boil.value = 0.6; du.a.value = born;
-        sec.set(`${Math.max(1, Math.ceil(L.left))}`, H * 0.055, '#ffffff', H);
-        sec.at(side * (r * 1.15 + dw * 1.1 + H * 0.03), -r * 0.4, side * -8, 1 + (urgent ? 0.12 * blink : 0)); sec.m.material.uniforms.a.value = born;
+        ring.scale.set(S, S, 1);
+        U.time.value = t; U.p.value = p; U.a.value = born * (urgent ? 0.85 + 0.15 * beat : 1);
+        // the winged heart's quad is centred a little above the heart itself (marks.js markCanvas: the heart at 0.593 of its height)
+        if (crest && !hide) {
+          const img = crest.material.uniforms.map.value.image, w = Math.max(H * 0.15, r * 1.6), h = w * img.height / img.width;
+          crest.scale.set(w, h, 1); crest.position.set(0, r + h * 0.093, 0); crest.rotation.z = 0;
+          const u = crest.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.25; u.a.value = born; u.flash.value = urgent && beat > 0.85 ? 0.5 : 0;
+        }
+        if (!hide) return;
+        // the far half behind the monster: on the line from the camera through its centre, a little further away
+        const inWorld = !!wc;
+        U.side.value = inWorld ? 1 : 0; back.visible = inWorld;
+        if (inWorld) {
+          const cp = cam.position, dir = TV.copy(wc).sub(cp), D = dir.length();
+          back.position.copy(cp).addScaledVector(dir.divideScalar(D), D + 0.6);
+          back.quaternion.copy(cam.quaternion);
+          const zv = TV2.set(0, 0, -1).applyQuaternion(cam.quaternion).dot(TV.copy(back.position).sub(cp));
+          const k = 2 * zv * Math.tan(cam.fov * Math.PI / 360) / H;
+          back.scale.set(k, k, k); ringB.scale.set(S, S, 1);
+        }
+        // the flare: every so often (more often as the hit comes), somewhere on the near half
+        flareT -= dt; flareK += dt;
+        if (flareT <= 0) { flareT = 0.6 + Math.random() * (1.1 - 0.6 * p); flareK = 0; U.flareA.value = -Math.PI / 2 + (Math.random() - 0.5) * 2.2; }
+        const f = flareK < 0.05 ? flareK / 0.05 : Math.max(0, 1 - (flareK - 0.05) / 0.45);
+        U.flare.value = f * f * (3 - 2 * f);
+        // the moons riding the tilted belt, bigger and brighter on the near half; on the far half they go behind the monster
+        moons.forEach((m, k) => {
+          const img = m.material.uniforms.map.value.image;
+          const ang = -t * (1.3 + p * 2.2) + k * 2.1, ex = Math.cos(ang) * r * 1.1, ey = Math.sin(ang) * r * 1.1 * U.squash.value;
+          const c = Math.cos(U.tilt.value), sn = Math.sin(U.tilt.value), near = 0.5 - 0.5 * Math.sin(ang);
+          const w = (k ? Math.max(H * 0.045, r * 0.28) : Math.max(H * 0.13, r * 1.0)) * (0.75 + 0.4 * near), h = w * img.height / img.width;
+          const behind = inWorld && near < 0.5;
+          if (behind && m.parent !== back) { back.add(m); m.renderOrder = 0; } else if (!behind && m.parent !== g) { g.add(m); m.renderOrder = k ? 42.6 : 42.5; }
+          m.scale.set(w, h, 1); m.position.set(ex * c - ey * sn, ex * sn + ey * c + (k ? 0 : h * 0.093), 0); m.rotation.z = k ? 0 : U.tilt.value * 0.5;
+          const u = m.material.uniforms; u.a.value = born * (0.4 + 0.6 * near); u.time.value = t; u.boil.value = 0.25; u.shine.value = k ? 0 : 1;
+          u.flash.value = Math.max(U.flare.value * 0.6, urgent && beat > 0.85 ? 0.4 : 0);
+        });
       },
-      remove() { live.delete(L); g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); }); },
+      remove(broken) {
+        live.delete(L);
+        if (broken && small) fx.ringPop(L.x, L.y, L.r, col);
+        for (const o of [g, back]) if (o) { o.parent && o.parent.remove(o); o.traverse((m) => { if (m.material) m.material.dispose(); }); }
+        ring.geometry.dispose(); ringB?.geometry.dispose();
+      },
     };
     live.add(L);
     return L;
   }
   overlay() { return this.game.overlay; }
-  // the gold target sight riding on something flying at the girls (R46 ui/ss_*): the outer ring turns, the segmented ring turns the other
-  // way, the four arrows close in as it comes nearer, the dot blinks; its circle is the hit zone (Game.targetsAt: no precise aim needed).
-  // Shot down: the break burst flashes where it was.
-  shotLock(slot) {
-    const game = this.game, g = new THREE.Group(), fx = this;
-    const pic = (key, o, seed) => { const m = picture(key, o, seed); m.visible = !!tex[key]; g.add(m); return m; };
-    const outer = pic('ui/ss_outer', 42, Math.random()), inner = pic('ui/ss_inner', 42.1, Math.random()), arrows = pic('ui/ss_arrows', 42.2, 0.4), dot = pic('ui/ss_dot', 42.3, 0.6);
-    this.overlay().add(g);
-    let born = 0;
-    const live = this.live;
-    const L = {
-      type: 'shot', slot, p: 0, x: 0, y: 0, r: 0,
-      set(x, y, r, p, t) {   // r: the sight's radius = its hit zone (screen px)
-        L.p = p; L.x = x; L.y = y; L.r = r; born = Math.min(1, born + 0.12);
-        const blink = Math.abs(Math.sin(t * (6 + p * 22)));
-        g.position.set(x, y, 0);
-        const d = r * 2 * (1 + (1 - born) * 0.6);
-        const lay = (m, k, rot, a) => { m.scale.set(d * k, d * k * ar(m), 1); m.rotation.z = rot; const u = m.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.4; u.a.value = born * a; u.flash.value = p > 0.85 && blink > 0.6 ? 0.5 : 0; };
-        lay(outer, 1, t * 1.2, 0.9);
-        lay(inner, 0.78, -t * 2, 0.85);
-        lay(arrows, 0.75 + (1 - p) * 0.45, Math.PI / 4 * Math.floor(t * 2) * 0, 0.95);
-        lay(dot, 0.16, 0, 0.6 + 0.4 * blink);
-      },
-      remove(broken) {
-        live.delete(L);
-        if (broken && tex['ui/ss_break']) fx.sightBreak(L.x, L.y, L.r);
-        g.parent && g.parent.remove(g); g.traverse((o) => { if (o.material) o.material.dispose(); });
-      },
-    };
-    live.add(L);
-    return L;
-  }
-  // a target sight's break burst where something was shot down: slaps in big, spins, fades
-  sightBreak(x, y, r) {
-    const m = picture('ui/ss_break', 43, Math.random()), a = ar(m);
-    this.overlay().add(m);
+  // a flying thing shot down: its ring bursts outward, white, and fades
+  ringPop(x, y, r, col) {
+    const U = { col: { value: new THREE.Color(0xffffff) }, a: { value: 1 }, time: { value: 0 }, p: { value: 1 }, hide: { value: 0 }, tilt: { value: 0 }, squash: { value: 1 },
+      side: { value: 0 }, flare: { value: 0 }, flareA: { value: 0 } };
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: U, vertexShader: FXVERT, fragmentShader: ORBIT_FRAG, transparent: true, depthTest: false, depthWrite: false }));
+    m.renderOrder = 43; m.frustumCulled = false; this.overlay().add(m);
     let t = 0;
     this.add({
       update: (dt) => {
-        t += dt; const k = t / 0.32;
-        if (k >= 1) { this.overlay().remove(m); m.material.dispose(); return false; }
-        const s = r * 2.6 * (0.7 + 0.5 * Math.min(1, k * 4));
-        m.position.set(x, y, 0); m.scale.set(s, s * a, 1); m.rotation.z = k * 0.6;
-        const u = m.material.uniforms; u.a.value = 1 - k * k; u.flash.value = k < 0.2 ? 0.6 : 0; u.time.value = t;
+        t += dt; const k = t / 0.22;
+        if (k >= 1) { this.overlay().remove(m); m.material.dispose(); m.geometry.dispose(); return false; }
+        const S = r * 2 / 0.8 * (1 + k * 1.3); m.position.set(x, y, 0); m.scale.set(S, S, 1);
+        U.a.value = 1 - k; U.col.value.copy(col || U.col.value).lerp(new THREE.Color(0xffffff), 1 - k); U.time.value = t;
         return true;
       },
-      dispose: () => { this.overlay().remove(m); m.material.dispose(); },
+      dispose: () => { this.overlay().remove(m); m.material.dispose(); m.geometry.dispose(); },
     });
   }
   // NIKKE-style skill cut-in: a slanted stripe band slams in, the heroine lunges across it. Runs on real time (the world is in hit-stop).

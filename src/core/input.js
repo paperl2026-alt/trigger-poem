@@ -6,6 +6,7 @@
 //   wantsOut  stay leaned out when not firing (pad / keys / AI: yes; mouse: no — releasing the button = cover)
 // Mouse (1P): move = aim, hold left = lean out + fire, release = cover, right = skill. Nothing else.
 // Gamepad (standard mapping): stick = aim, RT or A = fire, LT or LB = cover, Y or RB = skill, START = join as 2P / menu.
+import { T } from './content.js';
 const dz = (v, d = 0.16) => (Math.abs(v) < d ? 0 : (v - Math.sign(v) * d) / (1 - d));
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
@@ -99,55 +100,56 @@ export class KeyCtrl {
 
 // Computer teammate: picks a target, drifts its reticle there with human-ish lag and wobble, shoots when roughly on,
 // ducks when something it can block is about to hit it. "Okay, not great" by design.
+// The 2P partner when nobody plays her (DESIGN「AI 队友不能太勤快」): she joins in only part of the time (busy ~40%), her aim drifts and
+// sometimes misses for a while, she leaves the quick-kill things (projectiles, monsters gathering a ram) to the player, and the moment a
+// must-hide attack is coming at her she ducks and stays down until it is over. The player has to do the work.
 export class AICtrl {
   constructor(G, player, skill = 0.5) {
     this.G = G; this.p = player; this.kind = 'ai'; this.skill = skill;
     this.x = G.W * 0.6; this.y = G.H * 0.45; this.wantsOut = true; this.active = true;
     this.target = null; this.reactT = 0; this.off = { x: 0, y: 0 }; this.hideT = 0; this.wob = Math.random() * 10;
+    this.busy = false; this.busyT = 0; this.miss = 0;
   }
   update(dt, game) {
-    const s = this.skill, me = this.p;
+    const s = this.skill, me = this.p, A = T.combat.ai || {};
     this.skill = false;
-    this.reactT -= dt; this.hideT -= dt; this.wob += dt;
+    this.reactT -= dt; this.hideT -= dt; this.wob += dt; this.busyT -= dt;
+    // her rhythm: in for a while, then back in cover for a while (in about rate of the time)
+    if (this.busyT <= 0) { this.busy = Math.random() < (A.rate ?? 0.4); this.busyT = this.busy ? 0.9 + Math.random() * 1.4 : 1.2 + Math.random() * 1.8; this.miss = Math.random() < (A.miss ?? 0.25) ? 1 : 0; }
     if (this.target && (!this.target.alive || this.target.removed)) this.target = null;
     if ((!this.target || this.reactT < -2.5) && this.reactT <= 0) {
       let best = null, bs = -1;
       for (const a of game.actors) {
         if (!a.alive || !a.hitMeshes().length) continue;
+        if (a.lock && (a.lock.type === 'shot' || a.lock.type === 'kill')) continue;   // the quick-kill things are the player's job
         const b = a.screenBox();
         if (b.x1 < 0 || b.x0 > game.W) continue;
         let sc = 1 + Math.random() * 0.8;
-        if (a.lock) sc += a.lock.slot === me.slot ? 5 : 2;
-        if (a.threat === 'shot') sc += 2.5;
-        if (a.threat === 'melee' && a.lock) sc += 3;
         const cx = (b.x0 + b.x1) / 2;
         sc -= Math.abs(cx - me.baseX) / game.W * 1.5; // prefers its own side of the screen
         if (sc > bs) { bs = sc; best = a; }
       }
-      if (best !== this.target) { this.target = best; this.reactT = 0.55 - s * 0.35 + Math.random() * 0.25; this.off = { x: (Math.random() - 0.5) * 0.5, y: (Math.random() - 0.5) * 0.5 }; }
-      else this.reactT = 0.4;
+      if (best !== this.target) { this.target = best; this.reactT = 0.7 - s * 0.35 + Math.random() * 0.4; this.off = { x: (Math.random() - 0.5) * 0.6, y: (Math.random() - 0.5) * 0.6 }; }
+      else this.reactT = 0.5;
     }
     let tx = me.baseX + (me.side < 0 ? 0.25 : -0.25) * game.W, ty = game.H * 0.45;
     if (this.target && this.reactT <= 0.25) {
-      const b = this.target.screenBox();
-      tx = (b.x0 + b.x1) / 2 + this.off.x * (b.x1 - b.x0) * (1 - s * 0.6);
-      ty = b.y0 + (b.y1 - b.y0) * (0.45 + this.off.y * 0.4 * (1 - s * 0.6));
-      this.off.x *= Math.exp(-dt * (0.6 + s)); this.off.y *= Math.exp(-dt * (0.6 + s));
+      const b = this.target.screenBox(), w = b.x1 - b.x0, h = b.y1 - b.y0;
+      tx = (b.x0 + b.x1) / 2 + this.off.x * w * (1 - s * 0.5) + this.miss * w * 0.9 * Math.sign(this.off.x || 1);   // (a miss: off to the side)
+      ty = b.y0 + h * (0.45 + this.off.y * 0.4 * (1 - s * 0.5));
+      this.off.x *= Math.exp(-dt * (0.4 + s * 0.6)); this.off.y *= Math.exp(-dt * (0.4 + s * 0.6));
     }
-    const wob = game.H * 0.02 * (1.2 - s);
-    this.x += (tx - this.x) * Math.min(1, dt * (2.5 + s * 4)) + Math.sin(this.wob * 3.1) * wob * dt * 6;
-    this.y += (ty - this.y) * Math.min(1, dt * (2.5 + s * 4)) + Math.cos(this.wob * 2.3) * wob * dt * 6;
-    // duck for blockable hits aimed at me (not always in time)
-    for (const a of game.actors) {
-      const L = a.lock;
-      if (!L || (L.slot !== me.slot && L.slot !== -1) || L.type === 'melee') continue; // -1 = hits everyone
-      if (L.p > 0.68 && L.p < 0.98 && this.hideT < -0.3 && Math.random() < (L.type === 'heavy' ? 0.95 : 0.55 + s * 0.3) && (!me.beaming || L.type === 'heavy')) this.hideT = 0.55;
-    }
-    this.hide = this.hideT > 0;
+    const wob = game.H * 0.025 * (1.2 - s);
+    this.x += (tx - this.x) * Math.min(1, dt * (2 + s * 3)) + Math.sin(this.wob * 3.1) * wob * dt * 6;
+    this.y += (ty - this.y) * Math.min(1, dt * (2 + s * 3)) + Math.cos(this.wob * 2.3) * wob * dt * 6;
+    // a must-hide attack coming at her: down at once, and stay down until it is over
+    const danger = [...(game.fx.live || [])].some((L) => (L.type === 'hide' || L.type === 'heavy') && (L.slot === me.slot || L.slot === -1));
+    if (danger) this.hideT = 0.35;
+    this.hide = this.hideT > 0 || !this.busy;
     let on = false;
     if (this.target) { const b = this.target.screenBox(); on = this.x > b.x0 && this.x < b.x1 && this.y > b.y0 && this.y < b.y1; }
-    this.fire = on && !this.hide && this.reactT <= 0;
-    if (me.charge >= 1 && (game.boss || game.actors.filter((a) => a.alive && a.type).length >= 2)) this.skill = true;
-    if (me.beaming) this.fire = !!this.target; // keep the beam on target (it only ducks out of it for heavy hits)
+    this.fire = this.busy && !this.hide && this.reactT <= 0 && (on || this.miss > 0);
+    if (me.charge >= 1 && Math.random() < dt * 0.5 && (game.boss || game.actors.filter((a) => a.alive && a.type).length >= 2)) this.skill = true;
+    if (me.beaming) this.fire = !!this.target && !danger;
   }
 }

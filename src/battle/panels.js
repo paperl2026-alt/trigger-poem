@@ -396,8 +396,30 @@ export class PanelWorld {
     if (fly) {
       const lo = Math.max(h / 2 + 0.3, yAt(M.flyY[0], depth) + h / 2), top = Hd && Hd.ceil ? Hd.h - h / 2 - 0.15 : 99;
       p.y = Math.min(top, Math.max(lo, Math.min(p.y, yAt(M.flyY[1], depth) - h / 2)));
-    }
+    } else this.clearOfProps(p, w, f, rt, depth);
     return p;
+  }
+  // a monster on the floor never stands inside a prop or half hidden behind one (it would look like it clips through: DESIGN「怪不能站在
+  // 遮挡物后面穿模」): if a drawn prop is in the way (its footprint on the line from the camera, nearer than the monster, or under it), the
+  // monster moves sideways to the nearest clear spot (then nearer to the camera)
+  clearOfProps(p, w, f, rt, depth) {
+    const props = (this.props || []).filter((q) => q.m.visible);
+    if (!props.length) return;
+    const c = this.camPos, blocked = (x, z) => props.some((q) => {
+      const vx = x - c.x, vz = z - c.z, L = Math.hypot(vx, vz) || 1, ux = vx / L, uz = vz / L;
+      const qx = q.x - c.x, qz = q.z - c.z, along = qx * ux + qz * uz;
+      if (along < 0.3 || along > L + q.w * 0.5) return false;            // behind the camera or well behind the monster
+      const off = Math.abs(qx * uz - qz * ux);                             // its distance from the line of sight
+      return off < q.w * 0.5 + w * 0.45;
+    });
+    if (!blocked(p.x, p.z)) return;
+    for (const d of [0.6, -0.6, 1.2, -1.2, 1.8, -1.8, 2.4, -2.4]) {
+      const x = p.x + rt.x * d, z = p.z + rt.z * d;
+      const Hd = this.set.hall;
+      if (Hd && (x < Hd.x0 + w / 2 + 0.15 || x > Hd.x1 - w / 2 - 0.15)) continue;
+      if (!blocked(x, z)) { p.x = x; p.z = z; return; }
+    }
+    for (const k of [0.8, 0.6]) { const x = c.x + (p.x - c.x) * k, z = c.z + (p.z - c.z) * k; if (!blocked(x, z)) { p.x = x; p.z = z; return; } }
   }
   // the run moves on to another set: everything this one made goes (the pictures stay loaded, they belong to the asset cache)
   dispose() {

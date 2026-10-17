@@ -7,6 +7,7 @@ import { C, T } from '../core/content.js';
 import { FEVER_KEYS } from '../battle/fever.js';
 import './hud.css';
 import { HudGL } from './glhud.js';
+import { markIcon } from './marks.js';
 
 const $ = (tag, cls, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (parent) parent.appendChild(e); return e; };
 const L3 = (zh, en, ja) => ({ zh, en, ja }[lang] || en);
@@ -74,6 +75,7 @@ export class Hud {
     for (const r of D.rows) {
       const row = $('div', 'lrow', rows), ic = $('div', `lic ${r.icon || ''}`, row);
       if (r.img && url(r.img)) { const im = $('img', 'limg', ic); im.src = url(r.img); }
+      if (r.icon === 'markKill' || r.icon === 'markHide') ic.appendChild(markIcon(r.icon === 'markKill' ? 'kill' : 'hide')).className = 'limg';
       if (r.icon === 'mouseL' || r.icon === 'mouseR' || r.icon === 'release') { const m = $('div', `mouse ${r.icon === 'mouseR' ? 'r' : r.icon === 'mouseL' ? 'l' : ''}`, ic); $('i', '', m); $('i', '', m); }
       $('div', 'ltext', row).textContent = tr(r.text);
     }

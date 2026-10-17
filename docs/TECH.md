@@ -87,7 +87,7 @@
   - `title`（标题+设置）、`select`（选关，类名一律加 `s-` 前缀）；
   - `manga`（翻页转场）、`comic`（漫画播放）；
   - `hud`（战斗 HUD 外壳：教程提示、开场横幅、伤害数字仍是 DOM）+ **`glhud`（战斗 HUD 本体，WebGL）**：效果图拆出的图层 + 程序画的文字（画布文字贴图）、条、环、格、弹药、Q 版头像、准星、装填图、倒计时、Boss 条；位置数据在 `ui/battle.json`（效果图像素，按屏幕高度换算，四角锚定）；
-  - 攻击提示在 `fx.lock`：青色四角框 + 打断字（可打断）、红色危险准星 + 躲墙小人 + 秒数（必须躲，`dangerSight`）、金色靶心准星（飞行物，`shotLock`）；
+  - 攻击提示在 `fx.lock` → `fx.orbit`（DESIGN「攻击分三种」）：环是 `ORBIT_FRAG` 着色器画在一块方片上（快打红粉圆环一缩一放；快躲紫色斜环带，`side` 只画前半圈 / 后半圈，后半圈的方片和走到后面的卫星放在世界场景里一个面朝镜头、按那里一像素多大缩放的 group，摆在怪中心沿视线往后 0.6，靠透明物体由远到近排序被怪挡住；`flare` 耀斑）；爱心和翅膀是 `src/ui/marks.js` 画的画布贴图；`lock.set(x, y, size, p, t, left, box, wc)`，wc 是怪的世界中心；闪避 LED 小条在 `glhud` 的 `Dodge`（`src/ui/ledsign.js` 先在一格一像素的小画布上画字和花边、再按格画成发光圆点，位置 `ui/battle.json` center.dodge）；
   - `alerts`（街机式醒目提示：屏幕边缘只剩低血量；RELOAD! / NO AMMO! 半屏闪、被打裂屏 + OUCH!、倒地半屏 CONTINUE? + 倒计时、必须躲时全屏 DANGER!!；装填的 Q 版大头贴纸在她角落不规律叠）；
   - `space`（弹出物找空地：避开 HUD、Boss 条、教程提示、两人当前身形）、`hold`（不能射击时的警示覆盖，文字在 `text/holds.json`）、`stickers`（气泡贴纸，台词在 `text/stickers.json`）；
   - `hud.showBanner` 旧接口：战斗中变成气泡（`stickers.callout`），战斗外变成警示覆盖；
@@ -122,7 +122,7 @@
 
 ## Boss：「？？？」（`src/battle/thing.js`，数据 `bosses.json` qq）
 - 一整张图按动作分帧（R43 `boss/qq_s<n>_<idle0|idle1|move|windup|attack|hurt>`），五个阶段换一套帧、换大小（`setStage` 重建网格），后两阶段浮空；在 `zone` 里来回移动。
-- 招式一次一个（`stages[].pattern`）：drift（换位置、喘口气）、volley（飞行物，金色准星）、lunge（蓄力扑掩体，青框打断）、burst（长蓄力大招，红色危险准星）、summon（一种杂鱼）。
+- 招式一次一个（`stages[].pattern`）：drift（换位置、喘口气）、volley（飞行物，红环）、lunge（蓄力扑过来，快打红环，能打断）、burst（长蓄力大招，快躲紫色环带）、summon（一种杂鱼）。
 - 蓄力和出招时弱点张开（描边变粉、伤害 ×weakMul），最后的核心阶段一直是弱点；血量到 `at` 时变异（抽搐、溅黏液、长成下一阶段，wreckAt 那一阶段把教学楼换成被压坏的那张），不插漫画。
 - 时间都走敌方时钟（`game.etw`）。
 

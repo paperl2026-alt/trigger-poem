@@ -493,7 +493,8 @@ export class Game {
     let hurt = false;
     for (const p of targets) {
       if (!this.combat || ['run', 'away', 'down', 'victory'].includes(p.state) || p.activeOn) continue;   // her special: untouchable
-      const cov = this.world.covers[p.slot], shielded = kind !== 'melee' && !p.exposed && !(cov && cov.broken);
+      const cov = this.world.covers[p.slot], through = kind === 'ram' || kind === 'shot' || kind === 'melee';
+      const shielded = !through && !p.exposed && !(cov && cov.broken);
       if (shielded) {
         this.coverHit(p, from, heavy);
         if (!heavy || !p.damage(dmg * T.combat.cover.chip)) continue;

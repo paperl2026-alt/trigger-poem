@@ -2,11 +2,11 @@
 # references: a manga magazine's table of contents and its next-issue preview spread). Mockups first, the user picks, then it is split into
 # layers (docs/DESIGN.md: every screen gets a mockup before it is built).
 REFS = ["art/ref/ui/manga_preview.webp", "art/ref/ui/manga_contents.png", "art/ref/cat_sheet.png", "art/ref/pink_sheet.png",
-        "art/raw/r43/item_pig_c.png", "art/ref/select_ref.png"]
+        "art/raw/r43/item_pig_c.png"]
 P = ("Reference image 1 is a Japanese manga magazine's next-issue preview spread and reference image 2 a manga magazine's table of contents: "
      "design this game screen in EXACTLY that kind of graphic language: a printed manga page, black ink and white paper with screentone dots, "
      "hatching, speed lines and focus lines, hand-lettered titles, bursts and starbursts, egg / speech-bubble shaped callouts, panel borders, "
-     "with ONE spot colour (red, like reference image 6, this game's chapter-select screen). It must NOT look like a web or app UI: no rounded "
+     "with ONE spot colour (red, like this game's red-black-white chapter-select screen). It must NOT look like a web or app UI: no rounded "
      "rectangles, no flat cards, no progress-bar widgets, no icons in boxes, no gradients. "
      "Reference images 3 and 4 are the two heroines (the white-haired cat girl with the ghost paw, the black-haired twin-tail gun girl): draw "
      "them NEW, in manga style, celebrating (dynamic poses: a V sign and a wink, a fist pump, back to back). Reference image 5 is an item: an "

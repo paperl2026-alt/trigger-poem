@@ -117,8 +117,8 @@ export class TheThing extends Actor {
     // breathing
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
     if (this.lock) {
-      const c = g.world.project(this.center()), b = g.box(this);
-      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, 1 - this.timer / this.timer0), t, this.timer);
+      const wc = this.center(), c = g.world.project(wc), b = g.box(this);
+      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, 1 - this.timer / this.timer0), t, this.timer, b, wc);
       this.timer -= dt;
       return;
     }
@@ -143,7 +143,7 @@ export class TheThing extends Actor {
     this.state = 'windup'; this.timer = this.timer0 = time; this.poise = 0;
     this.play('windup');
     this.lock = g.fx.lock(threat, slot);
-    g.fx.charge(this, threat === 'heavy' ? 0xff4fc8 : 0xffb04a);
+    g.fx.charge(this, threat === 'hide' ? 0xff4fc8 : 0xffb04a);
     sfx.warn();
     this.later(time, () => { this.endWindup(); then(); });
   }
@@ -163,7 +163,7 @@ export class TheThing extends Actor {
   }
   lunge() {
     const g = this.game, D = this.def.lunge, slot = g.pickTarget(this.root.position.x - g.world.camPos.x);
-    this.windup(D.windup, 'melee', slot, () => {
+    this.windup(D.windup, 'kill', slot, () => {
       // it throws itself at that girl's cover and comes back
       const P = this.root.position, home = P.clone(), cov = g.world.covers[slot], c = g.world.camPos;
       const to = new THREE.Vector3(cov ? cov.def.x : c.x + (slot ? 1 : -1), P.y, cov ? cov.def.z - 1.2 : c.z - 3);
@@ -172,7 +172,7 @@ export class TheThing extends Actor {
         if (!this.alive) return;
         sfx.slam(); g.post.shake(1.3); g.fx.confetti(to, 20, 2.2, [COL.hot, COL.bone]);
         if (cov && cov.hp !== undefined) { cov.hp -= D.coverDmg; if (cov.hp <= 0 && g.world.breakCover) g.world.breakCover(cov); }
-        g.playerAttacked({ kind: 'melee', dmg: D.dmg, from: this, slot });
+        g.playerAttacked({ kind: 'ram', dmg: D.dmg, from: this, slot });
         g.etw.to(P, { x: home.x, z: home.z }, 0.9, { delay: 0.3, ease: Ease.inOutQuad });
       } });
     });
@@ -181,7 +181,7 @@ export class TheThing extends Actor {
   burst() {
     const g = this.game, D = this.def.burst;
     this.armor = true;
-    this.windup(D.windup, 'heavy', -1, () => {
+    this.windup(D.windup, 'hide', -1, () => {
       this.armor = false; this.attackPose(0.8);
       sfx.slam(); sfx.madness(); g.post.flash(0.6, 0xff3aa0); g.post.shake(1.6);
       const p = this.center(); g.fx.confetti(p, 50, 6, [COL.pink, COL.hot, COL.white]); g.fx.star(p, 8, COL.pink);

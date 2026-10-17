@@ -12,6 +12,7 @@ import { Stickers } from './stickers.js';
 import { Space } from './space.js';
 import { Hold } from './hold.js';
 import { Alerts } from './alerts.js';
+import { SIGNS, ledCanvas } from './ledsign.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 // every HUD picture: boil (the lines wobble a little at 8 steps a second, like drawn animation), a light sweeping along the white
@@ -410,6 +411,37 @@ class Top {
   }
 }
 
+// ---------------------------------------------------------------- the tiny DODGE sign just above the stage label (ledsign.js)
+// Lit while a hide belt is out (fx.orbit 'hide'): an LED strip that switches on with a flicker and flicks through its signs and memes.
+class Dodge {
+  constructor(hud) {
+    this.hud = hud; this.m = picture(null, 64, 0.4); this.m.visible = false; hud.g.add(this.m);
+    this.tex = []; this.i = Math.floor(Math.random() * SIGNS.length); this.k = 0; this.t = 0; this.on = 0; this.was = false;
+  }
+  texOf(i) { return this.tex[i] || (this.tex[i] = (() => { const t = new THREE.CanvasTexture(ledCanvas(SIGNS[i])); t.colorSpace = THREE.NoColorSpace; return t; })()); }
+  next() { this.i = (this.i + 1) % SIGNS.length; this.t = 0; this.k = 0; }
+  update(dt, t) {
+    const g = this.hud.game, L = this.hud.L, B = this.hud.B.center, D = B.dodge;
+    let want = false;
+    if (g.combat && D) for (const lk of g.fx?.live || []) if (lk.type === 'hide') { want = true; break; }
+    if (want && !this.was) this.next();
+    this.was = want;
+    this.on = want ? Math.min(1, this.on + dt * 8) : Math.max(0, this.on - dt * 5);
+    this.m.visible = this.on > 0;
+    if (!this.m.visible) return;
+    this.t += dt; this.k += dt;
+    if (want && this.t > 0.6) this.next();
+    const tx = this.texOf(this.i), img = tx.image, b = D.box, an = B.anchor || 'bc';
+    const h = (b[3] - b[1]) * L.s, w = h * img.width / img.height;
+    const u = this.m.material.uniforms; u.map.value = tx;
+    this.m.scale.set(w, h * (0.5 + 0.5 * this.on), 1);
+    this.m.position.set(L.x((b[0] + b[2]) / 2, an), L.y((b[1] + b[3]) / 2, an), 0); this.m.rotation.z = 0;
+    // each sign switches on like an LED panel: a few flickers, then steady
+    const fl = this.k < 0.14 && Math.floor(this.k * 50) % 2 ? 0.25 : 1;
+    u.a.value = this.on * fl; u.boil.value = 0; u.shine.value = 0; u.time.value = t; u.flash.value = this.k < 0.05 ? 0.5 : 0;
+  }
+}
+
 // ---------------------------------------------------------------- the reticle: her state decides its form (DESIGN: shape, not colour)
 const STATES = ['idle', 'lock', 'fire', 'reload', 'cover', 'empty', 'fever', 'special'];
 class Reticle {
@@ -663,6 +695,7 @@ export class HudGL {
     this.g = new THREE.Group(); game.hudScene.add(this.g);   // after the post pass: fixed on screen
     this.panels = game.players.map((p) => new Panel(this, p));
     this.top = new Top(this);
+    this.dodge = new Dodge(this);
     this.reticles = game.players.map((p) => new Reticle(this, p));
     // (the old in-panel reload panel and down timer are replaced by alerts.js: reload stickers in her corner, CONTINUE? on her half)
     this.bossBar = new BossBar(this);
@@ -691,6 +724,7 @@ export class HudGL {
     this.space.begin();   // what is taken this frame (HUD, boss bar, the girls); pop-ups below find their places around it
     for (const p of this.panels) p.update(dt, t);
     this.top.update(dt, t);
+    this.dodge.update(dt, t);
     for (const r of this.reticles) r.update(dt, t);
     this.bossBar.update(dt, t);
     this.damage.update(dt);

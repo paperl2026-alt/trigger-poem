@@ -1,5 +1,5 @@
 {
-  "_doc": "教学卡（docs/DESIGN.md 序章「这是教学关，要真的教」，代码 src/ui/hud.js lesson）：停留点写了 \"lesson\" 的，开打前先弹这张卡，点一下再开打；每张只在第一次出现（存档 SAVE.lessons）。title 标题，who 哪个主角出来讲（cat / pink，她的 Q 版表情 face 号），rows 每行一个图标：img 用游戏里的图（准星、提示字），或 icon（mouseL 左键 / mouseR 右键 / release 松开躲 / fever / edgeAmber 黄边 / edgeRed 红边 / bracket 蓝框 / ring 必杀环 / eye 弱点 / cover 掩体）和一句话，note 卡片底下的小字。skill 这张开打时两人的必杀直接充满。",
+  "_doc": "教学卡（docs/DESIGN.md 序章「这是教学关，要真的教」，代码 src/ui/hud.js lesson）：停留点写了 \"lesson\" 的，开打前先弹这张卡，点一下再开打；每张只在第一次出现（存档 SAVE.lessons）。title 标题，who 哪个主角出来讲（cat / pink，她的 Q 版表情 face 号），rows 每行一个图标：img 用游戏里的图，或 icon（markKill 快打红环 / markHide 快躲紫带（src/ui/marks.js 画）/ mouseL 左键 / mouseR 右键 / release 松开躲 / fever / edgeAmber 黄边 / edgeRed 红边 / bracket 蓝框 / ring 必杀环 / eye 弱点 / cover 掩体）和一句话，note 卡片底下的小字。skill 这张开打时两人的必杀直接充满。",
   "lessons": {
     "shoot": {
       "who": "pink",
@@ -21,6 +21,14 @@
             "en": "Keep hitting to raise FEVER: more damage, faster reloads, and every level heals you",
             "ja": "当て続けるとフィーバー：火力もリロードもアップ、レベルが上がるたび回復"
           }
+        },
+        {
+          "icon": "cover",
+          "text": {
+            "zh": "普通的怪走近了会咬人：探身射击时会被咬到，躲在掩体后就挡得住",
+            "en": "Ordinary monsters bite when they get close: they get you while you lean out, cover stops them",
+            "ja": "普通のモンスターは近づくと噛みつく：撃っている時は当たる、隠れていれば防げる"
+          }
         }
       ],
       "note": { "zh": "怪物从课桌堆里冒出来了，先打打看！", "en": "Monsters are crawling out of the desks. Give it a try!", "ja": "机の山からモンスターが！まずは撃ってみよう！" }
@@ -31,19 +39,19 @@
       "title": { "zh": "教学 2 · 击落和躲避", "en": "LESSON 2 · SHOOT DOWN & HIDE", "ja": "レッスン2・撃ち落とす＆隠れる" },
       "rows": [
         {
-          "img": "ui/ss_full",
+          "icon": "markKill",
           "text": {
-            "zh": "套着金色准星的东西正朝你飞来：朝准星里打一枪就能打下来，不用瞄得很准",
-            "en": "Anything wearing a GOLD SIGHT is flying at you: shoot anywhere inside the sight to knock it down, no need to aim precisely",
-            "ja": "金色の照準がついた物が飛んでくる：照準の中を撃てば撃ち落とせる。細かく狙わなくていい"
+            "zh": "飞过来的东西套着一个一缩一放的红色光环：躲没用，朝环里打一枪就能打下来，不用瞄得很准",
+            "en": "Anything flying at you sits in a pulsing RED RING: hiding won't help, shoot anywhere inside the ring to knock it down",
+            "ja": "飛んでくる物には脈打つ赤い輪：隠れても無駄、輪の中を撃てば撃ち落とせる"
           }
         },
         {
-          "img": "ui/sh_full",
+          "icon": "markHide",
           "text": {
-            "zh": "被红色危险准星锁住的怪要放大招，打不掉：看着旁边的秒数，到之前松开左键躲好",
-            "en": "A monster locked in a RED DANGER SIGHT is about to unleash something you can't shoot down: watch the countdown and let go to hide",
-            "ja": "赤い危険照準に捕まったモンスターは撃ち落とせない大技を出す：カウントを見て、指を離して隠れよう"
+            "zh": "被紫色光带绕着转、还时不时爆闪的怪要放打不掉的大招：射击没用，松开左键躲好",
+            "en": "A monster circled by a flaring VIOLET BELT is about to unleash something you can't shoot down: let go and hide",
+            "ja": "紫の帯がまわって時々フレアするモンスターは撃ち落とせない大技：撃っても無駄、指を離して隠れよう"
           }
         },
         {
@@ -60,15 +68,15 @@
     "interrupt": {
       "who": "pink",
       "face": 18,
-      "title": { "zh": "教学 3 · 打断", "en": "LESSON 3 · INTERRUPT", "ja": "レッスン3・中断" },
+      "title": { "zh": "教学 3 · 快打", "en": "LESSON 3 · KILL IT FAST", "ja": "レッスン3・速攻" },
       "rows": [
         {
+          "icon": "markKill",
           "text": {
-            "zh": "怪物身上出现青色框和「打断!」：它在蓄力，出手之前一直打它就能打断",
-            "en": "CYAN brackets and \"BREAK IT!\" on a monster: it's charging up. Keep shooting it before it strikes to interrupt it",
-            "ja": "モンスターに青い枠と「止めろ!」：力をためている。出す前に撃ち続ければ止められる"
-          },
-          "img": "ui/wi_zh"
+            "zh": "被红色光环套住的怪在准备冲过来：躲没用，趁它冲之前快打掉（打得够多也能把它打断）",
+            "en": "A monster inside a RED RING is about to ram you: hiding won't help, kill it before it comes (enough hits also break it off)",
+            "ja": "赤い輪に囲まれたモンスターは突進してくる：隠れても無駄、来る前に倒せ（十分当てれば止められる）"
+          }
         },
         {
           "icon": "mouseL",
@@ -76,9 +84,9 @@
         }
       ],
       "note": {
-        "zh": "青框：打断它　金准星：打下来　红准星：躲。",
-        "en": "Cyan brackets: interrupt. Gold sight: shoot it down. Red sight: hide.",
-        "ja": "青い枠は止める、金の照準は撃ち落とす、赤い照準は隠れる。"
+        "zh": "红色光环：快打　紫色光带：快躲　其他的：躲着就挡得住。",
+        "en": "Red ring: kill it fast. Violet belt: hide. Everything else: cover stops it.",
+        "ja": "赤い輪は速攻、紫の帯は隠れる、それ以外は隠れれば防げる。"
       }
     },
     "skill": {
@@ -123,11 +131,11 @@
           }
         },
         {
-          "img": "ui/sh_full",
+          "icon": "markHide",
           "text": {
-            "zh": "青框打断、金准星打下来、红准星躲，照学过的来",
-            "en": "Cyan: interrupt. Gold: shoot down. Red: hide. Just like you learned",
-            "ja": "青は止める、金は撃ち落とす、赤は隠れる。習った通りに"
+            "zh": "红色光环快打、紫色光带快躲，照学过的来",
+            "en": "Red ring: kill fast. Violet belt: hide. Just like you learned",
+            "ja": "赤い輪は速攻、紫の帯は隠れる。習った通りに"
           }
         },
         {

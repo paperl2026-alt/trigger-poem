@@ -144,8 +144,10 @@ export function showSelect(act) {
       const pc = s.boss ? P.row_boss : P.row_n, y0 = R.slots[i];
       // the piece's own top sits on its mockup slot (row_n came from slot 2, row_boss from slot 3)
       const dy = y0 - (s.boss ? R.slots[2] : R.slots[1]);
-      const g = group('row', rowsG); g.style.setProperty('--i', i); g.style.translate = `0 ${dy * RS}px`;
+      const g = group('row', rowsG); g.style.setProperty('--i', i);
       const locked = i >= nOpen;
+      // its own slot, and the picked one nudged out (one translate: a CSS one would replace the slot offset and hide the row under the next)
+      g.style.translate = `${!locked && i === pick ? 14 : 0}px ${dy * RS}px`;
       g.classList.toggle('s-row-lock', locked); g.classList.toggle('s-row-open', !locked); g.classList.toggle('s-row-pick', i === pick);
       g.dataset.cur = 'hover';
       tap(g, (ev) => { if (locked) { shake(g); sfx.ui(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
