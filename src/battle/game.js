@@ -461,6 +461,7 @@ export class Game {
     if (!by) return;
     const dealt = info.dealt || 0;
     if (dealt) { by.dealt += dealt; by.fever.hit(dealt); }
+    if (dealt && this.combo > 0) { this.comboT = Math.max(this.comboT, T.combat.comboTime); this.comboF = this.combo; }
     if (by.a.charge.hit) by.addCharge(by.a.charge.hit);
     if (by.gatling && dealt) by.heal(by.a.heal);
     // every hit shows: one counter per enemy above its head that keeps adding up
@@ -475,7 +476,7 @@ export class Game {
     if (target instanceof Projectile) return;
     this.kills++;
     if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
-    this.combo++; this.comboT = T.combat.comboTime;
+    this.combo++; this.comboT = T.combat.comboTime; this.comboF = this.combo;
     this.maxCombo = Math.max(this.maxCombo, this.combo);
     if (crit && !(by && by.activeOn)) { const s = this.world.project(target.center()); this.fx.stamp('don', s.x, this.H - s.y + this.H * 0.06, 0.15, 0.8); this.G.stop(0.05); }
     if (this.combo >= T.combat.tauntCombo && by && by.state === 'cover') by.tauntT = 0.7;
@@ -497,8 +498,11 @@ export class Game {
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) this.checkWave();
     this.fx.update(dt, now);
-    this.comboT -= dt;
-    if (this.comboT <= 0) this.combo = 0;
+    // the combo holds outside the fight (walks, comics); in it, after comboTime without a hit it slides down, faster and faster
+    if (this.combat && this.combo > 0) {
+      this.comboT -= dt;
+      if (this.comboT < 0) { this.comboF = Math.min(this.comboF ?? this.combo, this.combo) - dt * T.combat.comboDrop * (1 - this.comboT * T.combat.comboAccel); this.combo = Math.max(0, Math.floor(this.comboF)); }
+    }
     const active = this.players.some((p) => p.activeOn);
     const mu = this.post.u.madness;
     mu.value += ((active ? 0.22 : 0) - mu.value) * Math.min(1, dt * 3);

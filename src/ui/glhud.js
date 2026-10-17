@@ -11,6 +11,7 @@ import { FEVER_KEYS } from '../battle/fever.js';
 import { Stickers } from './stickers.js';
 import { Space } from './space.js';
 import { Hold } from './hold.js';
+import { Alerts } from './alerts.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 // every HUD picture: boil (the lines wobble a little at 8 steps a second, like drawn animation), a light sweeping along the white
@@ -165,7 +166,7 @@ export class Text {
 
 // ---- layout: mockup pixels -> screen pixels (y up), anchored to a side of the HUD frame
 class Layout {
-  set(W, H, frame) { this.W = W; this.H = H; this.f = frame || { x: 0, w: W }; this.s = H / 941; }
+  set(W, H, frame, k = 1) { this.W = W; this.H = H; this.f = frame || { x: 0, w: W }; this.s = H / 941 * k; }   // k: the HUD's own scale (battle.json scale)
   x(x, an) {
     const f = this.f, s = this.s;
     if (an === 'tr' || an === 'br') return f.x + f.w - (1672 - x) * s;
@@ -173,6 +174,7 @@ class Layout {
     return f.x + x * s;
   }
   y(y, an) { return an && an[0] === 'b' ? (941 - y) * this.s : this.H - y * this.s; }
+  // (anchors: tl / tc / tr keep the distance to the top edge, bl / bc / br to the bottom edge; l / c / r to the left / middle / right)
   // a mesh over a mockup box (centre, size), optional extra scale about the box centre
   box(m, b, an, k = 1, deg = 0) {
     const cx = this.x((b[0] + b[2]) / 2, an), cy = this.y((b[1] + b[3]) / 2, an);
@@ -197,7 +199,7 @@ class Panel {
     const side = p.slot ? 'p2' : 'p1';
     const B = hud.B, D = this.D = B[side], an = this.an = D.anchor, g = hud.g, col = this.col = new THREE.Color(p.c.color);
     this.lay = B.layers[p.slot ? 'right' : 'left'];
-    this.layer = picture(`ui/hud_${p.slot ? 'right' : 'left'}`, 61, p.slot * 0.37);
+    this.layer = picture(this.lay.img || `ui/hud_${p.slot ? 'right' : 'left'}`, 61, p.slot * 0.37);
     recolor(this.layer, col);
     this.face = picture(`ui/chibi_${this.who()}_1`, 62, 0.2); this.face.material.uniforms.circle.value = 0.5; this.face.material.uniforms.boil.value = 0;
     this.ring = new THREE.Mesh(quad, mat(RING_FRAG, { fill: { value: 0 }, r0: { value: 0 }, r1: { value: 1 }, segs: { value: D.ring.segs },
@@ -207,7 +209,7 @@ class Panel {
     this.hp = new THREE.Mesh(quad, mat(BAR_FRAG, { fill: { value: 1 }, lag: { value: 1 }, col: { value: col.clone() }, col2: { value: new THREE.Color(1, 0.92, 0.95) },
       a: { value: 1 }, time: { value: 0 }, flash: { value: 0 }, px: { value: new THREE.Vector2(100, 10) } }));
     this.hp.renderOrder = 62; this.hp.frustumCulled = false;
-    this.heart = picture(this.cat ? 'ui/hud_ic_heart2' : 'ui/hud_ic_heart', 64, 0.5);
+    this.heart = D.hp.heart ? picture(this.cat ? 'ui/hud_ic_heart2' : 'ui/hud_ic_heart', 64, 0.5) : null;
     this.t = {
       tag: new Text(65), name: new Text(65), lv: new Text(65), hp: new Text(65, { sw: 0.12 }),
       key: new Text(65, { color: '#121012', stroke: null, italic: false }), ammo: new Text(65, { shadow: '#d8141e', sw: 0.14 }), ammoMax: new Text(65, { sw: 0.14 }),
@@ -215,13 +217,13 @@ class Panel {
     // Fever: three gauges of six segments, each with its icon, label and level
     this.fv = FEVER_KEYS.map((k, i) => {
       const F = D.fever[i], c = new THREE.Color(B.colors.fever[k]);
-      const icon = picture(`ui/hud_ic_${['flame', 'aim', 'chain'][i]}`, 64, i * 0.3);
+      const icon = F.icon ? picture(`ui/hud_ic_${['flame', 'aim', 'chain'][i]}`, 64, i * 0.3) : null;   // the new panels have the icons in their art
       const segs = F.segs.map(() => { const m = new THREE.Mesh(quad, new THREE.MeshBasicMaterial({ color: c, transparent: true, depthTest: false, depthWrite: false }));
         m.renderOrder = 63; m.frustumCulled = false; return m; });
       return { k, F, c, icon, segs, label: new Text(65, { color: B.colors.fever[k], sw: 0.18 }), lv: new Text(65, { sw: 0.16 }), lvN: -1, up: 0 };
     });
     // ammo: her 40-round magazine as ticks along the slab's curve, or the cat girl's 8 talismans
-    this.ammoIcon = !this.cat ? picture('ui/hud_ic_bullets', 64, 0.8) : null;
+    this.ammoIcon = !this.cat && D.ammo.icon ? picture('ui/hud_ic_bullets', 64, 0.8) : null;
     const n = p.w.mag;
     this.ticks = [];
     if (!this.cat) for (let i = 0; i < n; i++) {
@@ -257,8 +259,8 @@ class Panel {
     L.box(this.ring, [rc[0] - rr, rc[1] - rr, rc[0] + rr, rc[1] + rr], an);
     this.ring.material.uniforms.r0.value = D.ring.r0 / rr; this.ring.material.uniforms.r1.value = D.ring.r1 / rr;
     L.box(this.hp, D.hp.box, an); this.hp.material.uniforms.px.value.set((D.hp.box[2] - D.hp.box[0]) * s, (D.hp.box[3] - D.hp.box[1]) * s);
-    L.box(this.heart, D.hp.heart, an);
-    this.fv.forEach((f) => { L.box(f.icon, f.F.icon, an); f.F.segs.forEach((b, i) => L.box(f.segs[i], [b[0] + 1.5, b[1] + 1.5, b[2] - 1.5, b[3] - 1.5], an, 1, -3)); });
+    if (this.heart) L.box(this.heart, D.hp.heart, an);
+    this.fv.forEach((f) => { if (f.icon) L.box(f.icon, f.F.icon, an); f.F.segs.forEach((b, i) => L.box(f.segs[i], [b[0] + 1.5, b[1] + 1.5, b[2] - 1.5, b[3] - 1.5], an, 1, -3)); });
     if (this.ammoIcon) L.box(this.ammoIcon, D.ammo.icon, an);
     // magazine ticks along the curve through three points; talismans in a row
     if (!this.cat) {
@@ -279,6 +281,7 @@ class Panel {
   }
   text(name, str, color, k = 1, maxW) {
     const L = this.hud.L, T = this.D.text[name], t = this.t[name], b = T.box;
+    if (t.str !== null && String(str) !== t.str) t.pop = 1;
     t.set(str, (b[3] - b[1]) * L.s * k, color, (maxW ?? (b[2] - b[0]) * 1.2) * L.s * k);
     const [cx, cy] = [L.x((b[0] + b[2]) / 2, this.an), L.y((b[1] + b[3]) / 2, this.an)];
     t.at(cx, cy, T.deg, 1);
@@ -310,12 +313,12 @@ class Panel {
     this.text('lv', `Lv${p.lv}`);
     this.text('hp', `${Math.ceil(p.hp)} / ${p.maxHp}`);
     const k = p.ctrl?.kind;
-    this.text('key', k === 'pad' ? 'Y' : k === 'keys' ? '⌫' : k === 'ai' ? 'AI' : ({ zh: '右键', ja: '右クリック', en: 'R-CLICK' }[lang] || 'R-CLICK'));
+    this.text('key', k === 'pad' ? 'Y' : k === 'keys' ? '⌫' : k === 'ai' ? 'AI' : ({ zh: '右键', ja: '右クリック', en: 'R-CLICK' }[lang] || 'R-CLICK'), '#121012', 0.62);
+    for (const tx of Object.values(this.t)) tx.pop = Math.max(0, tx.pop - dt * 5);
     // ammo
     const inf = p.gatling || p.beaming, n = this.ticks.length;
     const ammoStr = inf ? '∞' : `${p.ammo}`;
-    if (ammoStr !== last.ammo) { this.t.ammo.pop = 1; last.ammo = ammoStr; }
-    this.t.ammo.pop = Math.max(0, this.t.ammo.pop - dt * 6);
+    last.ammo = ammoStr;
     this.text('ammo', ammoStr, inf ? '#fff36a' : p.ammo <= Math.max(1, p.w.mag * 0.2) ? '#ff3a4a' : '#ffffff', inf ? 1.15 : 1);
     this.text('ammoMax', inf ? '' : `/${p.w.mag}`);
     const reload = p.state === 'reload', rk = reload ? 1 - p.reloadT / (p.reloadT0 || 1) : 0;
@@ -342,8 +345,7 @@ class Panel {
       f.label.at(L.x((F.label[0] + F.label[2]) / 2, this.an), L.y((F.label[1] + F.label[3]) / 2, this.an), -4, 1 + f.up * 0.3);
       f.lv.set(lv >= max ? 'MAX' : `Lv${lv}`, (F.lv[3] - F.lv[1]) * s * 0.75, lv >= max ? '#fff36a' : '#ffffff', (F.lv[2] - F.lv[0]) * s * 1.1);
       f.lv.at(L.x((F.lv[0] + F.lv[2]) / 2, this.an), L.y((F.lv[1] + F.lv[3]) / 2, this.an), -4, 1 + f.up * 0.3);
-      f.icon.material.uniforms.time.value = t;
-      f.icon.scale.multiplyScalar(1 + f.up * 0.35 + (lv >= max ? 0.06 * Math.sin(t * 8) : 0));
+      if (f.icon) { f.icon.material.uniforms.time.value = t; f.icon.scale.multiplyScalar(1 + f.up * 0.35 + (lv >= max ? 0.06 * Math.sin(t * 8) : 0)); }
     });
     // combo-up reactions
     if (g.combo > this.lastCombo && g.combo > 0 && g.combo % 10 === 0) this.react('combo', 1.2);
@@ -365,7 +367,7 @@ class Panel {
     this.face.scale.multiplyScalar(1 + this.facePop * 0.12);
     this.face.position.x += this.shake * Math.sin(t * 90) * s * 5;
     this.layer.position.x += sx;
-    this.heart.scale.multiplyScalar(1 + (hp < 0.3 ? 0.15 * Math.max(0, Math.sin(t * 9)) : 0.05 * Math.max(0, Math.sin(t * 4))));
+    if (this.heart) this.heart.scale.multiplyScalar(1 + (hp < 0.3 ? 0.15 * Math.max(0, Math.sin(t * 9)) : 0.05 * Math.max(0, Math.sin(t * 4))));
   }
   meshes() { return [this.layer, this.face, this.ring, this.hp, this.heart, this.ammoIcon, ...this.ticks, ...Object.values(this.t).map((x) => x.m), ...this.fv.flatMap((f) => [f.icon, f.label.m, f.lv.m])].filter(Boolean); }
 }
@@ -374,7 +376,7 @@ class Panel {
 class Top {
   constructor(hud) {
     this.hud = hud; const B = hud.B;
-    this.layer = picture('ui/hud_center', 61, 0.6);
+    this.layer = picture(B.layers.center.img || 'ui/hud_center', 61, 0.6);
     this.stage = new Text(65, { sw: 0.12 }); this.combo = new Text(65, { shadow: '#d8141e', sw: 0.1 }); this.comboL = new Text(65, { sw: 0.14 });
     this.rank = new Text(65, { color: '#d8141e', sw: 0.12, stroke: '#fff' }); this.mul = new Text(65, { color: '#fff36a', sw: 0.16 });
     for (const m of [this.layer, this.stage.m, this.combo.m, this.comboL.m, this.rank.m, this.mul.m]) hud.g.add(m);
@@ -383,14 +385,15 @@ class Top {
   put(t, name, str, k = 1, color) {
     const L = this.hud.L, D = this.D[name], b = D.box;
     t.set(str, (b[3] - b[1]) * L.s * 0.9, color, (b[2] - b[0]) * L.s * 1.15);
-    t.at(L.x((b[0] + b[2]) / 2, 'tc'), L.y((b[1] + b[3]) / 2, 'tc'), D.deg, k);
+    const an = this.D.anchor || 'tc';
+    t.at(L.x((b[0] + b[2]) / 2, an), L.y((b[1] + b[3]) / 2, an), D.deg, k);
   }
   update(dt, t) {
     const g = this.hud.game, L = this.hud.L, on = g.combat || !!g.boss;
     for (const m of [this.layer, this.stage.m, this.combo.m, this.comboL.m, this.rank.m, this.mul.m]) m.visible = on;
     if (!on) return;
     const lay = this.hud.B.layers.center;
-    L.box(this.layer, lay.box, lay.anchor);
+    L.box(this.layer, lay.box, lay.anchor);   // (anchor bc: the strip at the bottom middle)
     this.layer.material.uniforms.time.value = t; this.layer.material.uniforms.shine.value = 0.8;
     const c = g.combo;
     if (c !== this.last) { if (c > this.last) this.pop = 1; this.last = c; }
@@ -604,16 +607,16 @@ class BossBar {
     // narrower than the mockup and centred, so it stays between the girls' feet
     const k = D.fit, c = [(D.box[0] + D.box[2]) / 2, (D.box[1] + D.box[3]) / 2];
     const fit = (b) => [c[0] + (b[0] - c[0]) * k, c[1] + (b[1] - c[1]) * k, c[0] + (b[2] - c[0]) * k, c[1] + (b[3] - c[1]) * k];
-    L.box(this.m, fit(D.box), 'bc'); this.m.material.uniforms.time.value = t; this.m.material.uniforms.shine.value = 0.8;
+    L.box(this.m, fit(D.box), D.anchor || 'bc'); this.m.material.uniforms.time.value = t; this.m.material.uniforms.shine.value = 0.8;
     const tb = fit(D.track);
-    L.box(this.fill, tb, 'bc', 1, -1.5);
+    L.box(this.fill, tb, D.anchor || 'bc', 1, -1.5);
     this.lag += (this.frac - this.lag) * Math.min(1, dt * 1.5); if (this.lag < this.frac) this.lag = this.frac;
     const U = this.fill.material.uniforms; U.fill.value = this.frac; U.lag.value = this.lag; U.time.value = t; U.flash.value = Math.max(0, U.flash.value - dt * 4);
     U.px.value.set((tb[2] - tb[0]) * L.s, (tb[3] - tb[1]) * L.s);
-    const nb = fit(D.name); this.name.set(this.str, (nb[3] - nb[1]) * L.s * 0.8, undefined, (nb[2] - nb[0]) * L.s); this.name.at(L.x((nb[0] + nb[2]) / 2, 'bc'), L.y((nb[1] + nb[3]) / 2, 'bc'), -3);
+    const nb = fit(D.name); this.name.set(this.str, (nb[3] - nb[1]) * L.s * 0.8, undefined, (nb[2] - nb[0]) * L.s); this.name.at(L.x((nb[0] + nb[2]) / 2, D.anchor || 'bc'), L.y((nb[1] + nb[3]) / 2, D.anchor || 'bc'), -3);
     this.pips.forEach((m, i) => {
       const P = D.pips[i], pc = fit([P[0], P[1], P[0], P[1]]), r = 9 * L.s * k;
-      m.visible = i < this.phases; m.position.set(L.x(pc[0], 'bc'), L.y(pc[1], 'bc'), 0); m.scale.setScalar(r * 2 * (i === this.phase ? 1.3 + 0.15 * Math.sin(t * 8) : 1)); m.rotation.z = Math.PI / 4;
+      m.visible = i < this.phases; m.position.set(L.x(pc[0], D.anchor || 'bc'), L.y(pc[1], D.anchor || 'bc'), 0); m.scale.setScalar(r * 2 * (i === this.phase ? 1.3 + 0.15 * Math.sin(t * 8) : 1)); m.rotation.z = Math.PI / 4;
       m.material.color.set(i < this.phase ? '#5a5658' : i === this.phase ? '#ff2a3a' : '#ffffff');
     });
   }
@@ -661,13 +664,13 @@ export class HudGL {
     this.panels = game.players.map((p) => new Panel(this, p));
     this.top = new Top(this);
     this.reticles = game.players.map((p) => new Reticle(this, p));
-    this.reloads = game.players.map((p) => new Reload(this, p));
-    this.downs = game.players.map((p) => new Down(this, p));
+    // (the old in-panel reload panel and down timer are replaced by alerts.js: reload stickers in her corner, CONTINUE? on her half)
     this.bossBar = new BossBar(this);
     this.damage = new Damage(this);
     this.space = new Space(this);
     this.stickers = new Stickers(this);
     this.holdUI = new Hold(this);
+    this.alerts = new Alerts(this);
     this.visible = true;
   }
   show(v) { this.visible = v; this.g.visible = v; }
@@ -677,17 +680,16 @@ export class HudGL {
   hold(kind, opt) { this.holdUI.show(kind, opt); }
   update(dt, t) {
     const g = this.game;
-    this.L.set(g.W, g.H, g.G.frame);
+    this.L.set(g.W, g.H, g.G.frame, this.B.scale ?? 1);
     if (!this.visible) return;
     this.space.begin();   // what is taken this frame (HUD, boss bar, the girls); pop-ups below find their places around it
     for (const p of this.panels) p.update(dt, t);
     this.top.update(dt, t);
     for (const r of this.reticles) r.update(dt, t);
-    for (const v of this.reloads) v.update(dt, t);
-    for (const d of this.downs) d.update(dt, t);
     this.bossBar.update(dt, t);
     this.damage.update(dt);
     this.stickers.update(dt, t);
+    this.alerts.update(dt, t);
     this.holdUI.update(dt, t);
   }
   dispose() { this.game.overlay.remove(this.g); }

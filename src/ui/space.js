@@ -12,7 +12,7 @@ export class Space {
     // the HUD panels (the art's own box, a little trimmed: its outer corners are mostly splatter)
     for (const k of ['left', 'right', 'center']) { const l = B.layers[k]; T.push(box(l.box, l.anchor)); }
     if (hud.bossBar.str) { const D = B.boss, c = [(D.box[0] + D.box[2]) / 2, (D.box[1] + D.box[3]) / 2], k = D.fit;
-      T.push(box([c[0] + (D.box[0] - c[0]) * k, c[1] + (D.box[1] - c[1]) * k, c[0] + (D.box[2] - c[0]) * k, c[1] + (D.box[3] - c[1]) * k], 'bc')); }
+      T.push(box([c[0] + (D.box[0] - c[0]) * k, c[1] + (D.box[1] - c[1]) * k, c[0] + (D.box[2] - c[0]) * k, c[1] + (D.box[3] - c[1]) * k], D.anchor || 'bc')); }
     const tip = g.hud.tip;
     if (tip && !tip.classList.contains('hidden') && tip.offsetParent) {
       const r = tip.getBoundingClientRect(); T.push({ x0: r.left, x1: r.right, y0: L.H - r.bottom, y1: L.H - r.top, what: 'tip' });

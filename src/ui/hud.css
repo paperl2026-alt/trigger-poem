@@ -106,7 +106,7 @@
 #hud .shouts .shout { font-family: inherit; font-weight: 900; font-style: italic; }
 
 /* ---- tutorial tip ---- */
-#hud .tip { background: var(--ink); color: #fff; border: 0; box-shadow: 0 0 0 3px #fff, calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 3px var(--red); padding: calc(1 * var(--u)) calc(2 * var(--u)); transform: translateX(-50%) skewX(-8deg); }
+#hud .tip { bottom: 23%; background: var(--ink); color: #fff; border: 0; box-shadow: 0 0 0 3px #fff, calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 3px var(--red); padding: calc(1 * var(--u)) calc(2 * var(--u)); transform: translateX(-50%) skewX(-8deg); }
 #hud .tip.hidden { display: none; }
 
 /* ---- reticle: red / white ---- */

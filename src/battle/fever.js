@@ -2,7 +2,8 @@
 //   伤害 dmg   fed by damage dealt      -> damage multiplier
 //   准头 acc   fed by hits (misses nibble) -> crit rate + crit multiplier (the ONLY source of crits)
 //   连击 combo fed by kills in a chain    -> faster reloads
-// Not shooting for a while (hiding included) drains dmg + acc; a broken kill chain drains combo; getting hit knocks all three down.
+// docs/DESIGN.md「连击 / Fever 不会因为过场清零」: nothing drains outside the fight (update() only runs in it); in it, after idleDelay seconds
+// without a hit all three slide down, faster and faster (idleAccel); the next hit stops the slide. Getting hit knocks all three down.
 // All numbers: content tuning/fever.json.
 import { T } from '../core/content.js';
 
@@ -27,21 +28,24 @@ export class Fever {
   get full() { return FEVER_KEYS.every((k) => this.level(k) >= F().maxLevel); }
   add(k, d) { this.v[k] = Math.max(0, Math.min(F().maxLevel + 0.999, this.v[k] + d)); }
 
-  shot() { this.idle = 0; }
+  shot() {}   // shooting alone doesn't hold the Fever: hitting does
   hit(dealt) {
+    this.idle = 0;
     const w = this.w;
     this.add('dmg', dealt / (w.dmg / w.rate * F().dmgSecondsPerLevel)); // seconds of steady hitting per level
     this.add('acc', w.rate * F().accPerShot);
   }
   miss() { this.add('acc', -this.w.rate * F().accMissPerShot); }
-  kill() { this.add('combo', F().comboPerKill); this.chainT = F().chainTime; }
+  kill() { this.idle = 0; this.add('combo', F().comboPerKill); }
   hurt() { for (const k of FEVER_KEYS) this.add(k, -F().hurtLoss); }
 
   update(dt) {
     this.idle += dt;
-    if (this.idle > F().idleDelay) for (const k of ['dmg', 'acc']) if (this.v[k] > this.floor) this.v[k] = Math.max(this.floor, this.v[k] - dt * F().idleDrain * this.decay);
-    this.chainT -= dt;
-    if (this.chainT <= 0 && this.v.combo > this.floor) this.v.combo = Math.max(this.floor, this.v.combo - dt * F().comboDrain * this.decay);
+    const over = this.idle - F().idleDelay;
+    if (over > 0) {
+      const rate = F().idleDrain * (1 + over * F().idleAccel) * this.decay;   // slides faster the longer she doesn't hit
+      for (const k of FEVER_KEYS) if (this.v[k] > this.floor) this.v[k] = Math.max(this.floor, this.v[k] - dt * rate);
+    }
     for (const k of FEVER_KEYS) {
       const l = this.level(k);
       if (l > this.lv[k]) this.ups.push(k);

@@ -2664,6 +2664,36 @@
   "src": "assets/fx/cat_fever_5.webp",
   "w": 408
  },
+ "fx/crack_0": {
+  "h": 489,
+  "src": "assets/fx/crack_0.webp",
+  "w": 499
+ },
+ "fx/crack_1": {
+  "h": 501,
+  "src": "assets/fx/crack_1.webp",
+  "w": 495
+ },
+ "fx/crack_2": {
+  "h": 491,
+  "src": "assets/fx/crack_2.webp",
+  "w": 504
+ },
+ "fx/crack_3": {
+  "h": 500,
+  "src": "assets/fx/crack_3.webp",
+  "w": 494
+ },
+ "fx/crack_4": {
+  "h": 507,
+  "src": "assets/fx/crack_4.webp",
+  "w": 500
+ },
+ "fx/crack_5": {
+  "h": 478,
+  "src": "assets/fx/crack_5.webp",
+  "w": 494
+ },
  "fx/fu_a_0": {
   "h": 322,
   "src": "assets/fx/fu_a_0.webp",
@@ -2798,6 +2828,286 @@
   "h": 341,
   "src": "assets/fx/fu_w_8.webp",
   "w": 309
+ },
+ "fx/gl_cute_u4e34": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u4e34.webp",
+  "w": 307
+ },
+ "fx/gl_cute_u5175": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u5175.webp",
+  "w": 293
+ },
+ "fx/gl_cute_u5217": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u5217.webp",
+  "w": 304
+ },
+ "fx/gl_cute_u524d": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u524d.webp",
+  "w": 309
+ },
+ "fx/gl_cute_u6597": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u6597.webp",
+  "w": 309
+ },
+ "fx/gl_cute_u7686": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u7686.webp",
+  "w": 289
+ },
+ "fx/gl_cute_u8005": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u8005.webp",
+  "w": 297
+ },
+ "fx/gl_cute_u884c": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u884c.webp",
+  "w": 308
+ },
+ "fx/gl_cute_u9635": {
+  "h": 320,
+  "src": "assets/fx/gl_cute_u9635.webp",
+  "w": 306
+ },
+ "fx/gl_sharp_u4e34": {
+  "h": 318,
+  "src": "assets/fx/gl_sharp_u4e34.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u4e4b": {
+  "h": 317,
+  "src": "assets/fx/gl_sharp_u4e4b.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u4e94": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u4e94.webp",
+  "w": 313
+ },
+ "fx/gl_sharp_u4ea1": {
+  "h": 319,
+  "src": "assets/fx/gl_sharp_u4ea1.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u4ee4": {
+  "h": 152,
+  "src": "assets/fx/gl_sharp_u4ee4.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u4f0f": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u4f0f.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5149": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5149.webp",
+  "w": 319
+ },
+ "fx/gl_sharp_u5175": {
+  "h": 309,
+  "src": "assets/fx/gl_sharp_u5175.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u51a5": {
+  "h": 310,
+  "src": "assets/fx/gl_sharp_u51a5.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5217": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5217.webp",
+  "w": 317
+ },
+ "fx/gl_sharp_u5236": {
+  "h": 319,
+  "src": "assets/fx/gl_sharp_u5236.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u524d": {
+  "h": 308,
+  "src": "assets/fx/gl_sharp_u524d.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5343": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5343.webp",
+  "w": 302
+ },
+ "fx/gl_sharp_u5728": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5728.webp",
+  "w": 318
+ },
+ "fx/gl_sharp_u5929": {
+  "h": 295,
+  "src": "assets/fx/gl_sharp_u5929.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5949": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5949.webp",
+  "w": 318
+ },
+ "fx/gl_sharp_u5982": {
+  "h": 123,
+  "src": "assets/fx/gl_sharp_u5982.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5de8": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5de8.webp",
+  "w": 305
+ },
+ "fx/gl_sharp_u5f62": {
+  "h": 311,
+  "src": "assets/fx/gl_sharp_u5f62.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u5f69": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u5f69.webp",
+  "w": 311
+ },
+ "fx/gl_sharp_u5f8b": {
+  "h": 119,
+  "src": "assets/fx/gl_sharp_u5f8b.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u6025": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u6025.webp",
+  "w": 288
+ },
+ "fx/gl_sharp_u6211": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u6211.webp",
+  "w": 303
+ },
+ "fx/gl_sharp_u6240": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u6240.webp",
+  "w": 316
+ },
+ "fx/gl_sharp_u6597": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u6597.webp",
+  "w": 314
+ },
+ "fx/gl_sharp_u661f": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u661f.webp",
+  "w": 313
+ },
+ "fx/gl_sharp_u6ec5": {
+  "h": 312,
+  "src": "assets/fx/gl_sharp_u6ec5.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u7167": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u7167.webp",
+  "w": 304
+ },
+ "fx/gl_sharp_u731b": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u731b.webp",
+  "w": 318
+ },
+ "fx/gl_sharp_u7378": {
+  "h": 302,
+  "src": "assets/fx/gl_sharp_u7378.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u7384": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u7384.webp",
+  "w": 311
+ },
+ "fx/gl_sharp_u7686": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u7686.webp",
+  "w": 273
+ },
+ "fx/gl_sharp_u771f": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u771f.webp",
+  "w": 318
+ },
+ "fx/gl_sharp_u795e": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u795e.webp",
+  "w": 318
+ },
+ "fx/gl_sharp_u8005": {
+  "h": 311,
+  "src": "assets/fx/gl_sharp_u8005.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u8056": {
+  "h": 307,
+  "src": "assets/fx/gl_sharp_u8056.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u842c": {
+  "h": 316,
+  "src": "assets/fx/gl_sharp_u842c.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u8655": {
+  "h": 312,
+  "src": "assets/fx/gl_sharp_u8655.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u884c": {
+  "h": 317,
+  "src": "assets/fx/gl_sharp_u884c.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u8b77": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u8b77.webp",
+  "w": 313
+ },
+ "fx/gl_sharp_u8eab": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u8eab.webp",
+  "w": 308
+ },
+ "fx/gl_sharp_u8fce": {
+  "h": 304,
+  "src": "assets/fx/gl_sharp_u8fce.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u93ae": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u93ae.webp",
+  "w": 319
+ },
+ "fx/gl_sharp_u9635": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u9635.webp",
+  "w": 307
+ },
+ "fx/gl_sharp_u9748": {
+  "h": 314,
+  "src": "assets/fx/gl_sharp_u9748.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u9b3c": {
+  "h": 318,
+  "src": "assets/fx/gl_sharp_u9b3c.webp",
+  "w": 320
+ },
+ "fx/gl_sharp_u9b54": {
+  "h": 320,
+  "src": "assets/fx/gl_sharp_u9b54.webp",
+  "w": 312
  },
  "fx/hit_0": {
   "h": 407,
@@ -4246,6 +4556,51 @@
   "src": "assets/tsubaki/victory.webp",
   "w": 605
  },
+ "ui/alert_continue_chrome": {
+  "h": 217,
+  "src": "assets/ui/alert_continue_chrome.webp",
+  "w": 557
+ },
+ "ui/alert_continue_p5": {
+  "h": 271,
+  "src": "assets/ui/alert_continue_p5.webp",
+  "w": 547
+ },
+ "ui/alert_danger": {
+  "h": 288,
+  "src": "assets/ui/alert_danger.webp",
+  "w": 601
+ },
+ "ui/alert_hit": {
+  "h": 283,
+  "src": "assets/ui/alert_hit.webp",
+  "w": 511
+ },
+ "ui/alert_noammo": {
+  "h": 288,
+  "src": "assets/ui/alert_noammo.webp",
+  "w": 551
+ },
+ "ui/alert_ouch": {
+  "h": 284,
+  "src": "assets/ui/alert_ouch.webp",
+  "w": 515
+ },
+ "ui/alert_reload_chrome": {
+  "h": 198,
+  "src": "assets/ui/alert_reload_chrome.webp",
+  "w": 557
+ },
+ "ui/alert_reload_cute": {
+  "h": 234,
+  "src": "assets/ui/alert_reload_cute.webp",
+  "w": 534
+ },
+ "ui/alert_reload_p5": {
+  "h": 270,
+  "src": "assets/ui/alert_reload_p5.webp",
+  "w": 549
+ },
  "ui/bell": {
   "dom": true,
   "h": 244,
@@ -4876,6 +5231,21 @@
   "h": 161,
   "src": "assets/ui/heart.webp",
   "w": 154
+ },
+ "ui/hud2_C": {
+  "h": 517,
+  "src": "assets/ui/hud2_C.webp",
+  "w": 1100
+ },
+ "ui/hud2_L": {
+  "h": 1088,
+  "src": "assets/ui/hud2_L.webp",
+  "w": 1100
+ },
+ "ui/hud2_R": {
+  "h": 1100,
+  "src": "assets/ui/hud2_R.webp",
+  "w": 1041
  },
  "ui/hud_boss": {
   "h": 535,
@@ -5619,6 +5989,186 @@
   "h": 424,
   "src": "assets/ui/rl_pink_c_9.webp",
   "w": 395
+ },
+ "ui/rlq_cat_a_1": {
+  "h": 396,
+  "src": "assets/ui/rlq_cat_a_1.webp",
+  "w": 415
+ },
+ "ui/rlq_cat_a_2": {
+  "h": 395,
+  "src": "assets/ui/rlq_cat_a_2.webp",
+  "w": 418
+ },
+ "ui/rlq_cat_a_3": {
+  "h": 396,
+  "src": "assets/ui/rlq_cat_a_3.webp",
+  "w": 418
+ },
+ "ui/rlq_cat_a_4": {
+  "h": 398,
+  "src": "assets/ui/rlq_cat_a_4.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_a_5": {
+  "h": 364,
+  "src": "assets/ui/rlq_cat_a_5.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_a_6": {
+  "h": 388,
+  "src": "assets/ui/rlq_cat_a_6.webp",
+  "w": 400
+ },
+ "ui/rlq_cat_a_7": {
+  "h": 363,
+  "src": "assets/ui/rlq_cat_a_7.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_a_8": {
+  "h": 379,
+  "src": "assets/ui/rlq_cat_a_8.webp",
+  "w": 419
+ },
+ "ui/rlq_cat_a_9": {
+  "h": 361,
+  "src": "assets/ui/rlq_cat_a_9.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_1": {
+  "h": 390,
+  "src": "assets/ui/rlq_cat_b_1.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_2": {
+  "h": 379,
+  "src": "assets/ui/rlq_cat_b_2.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_3": {
+  "h": 388,
+  "src": "assets/ui/rlq_cat_b_3.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_4": {
+  "h": 400,
+  "src": "assets/ui/rlq_cat_b_4.webp",
+  "w": 407
+ },
+ "ui/rlq_cat_b_5": {
+  "h": 381,
+  "src": "assets/ui/rlq_cat_b_5.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_6": {
+  "h": 392,
+  "src": "assets/ui/rlq_cat_b_6.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_7": {
+  "h": 371,
+  "src": "assets/ui/rlq_cat_b_7.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_8": {
+  "h": 376,
+  "src": "assets/ui/rlq_cat_b_8.webp",
+  "w": 420
+ },
+ "ui/rlq_cat_b_9": {
+  "h": 374,
+  "src": "assets/ui/rlq_cat_b_9.webp",
+  "w": 420
+ },
+ "ui/rlq_pink_a_1": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_a_1.webp",
+  "w": 407
+ },
+ "ui/rlq_pink_a_2": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_a_2.webp",
+  "w": 401
+ },
+ "ui/rlq_pink_a_3": {
+  "h": 418,
+  "src": "assets/ui/rlq_pink_a_3.webp",
+  "w": 408
+ },
+ "ui/rlq_pink_a_4": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_a_4.webp",
+  "w": 403
+ },
+ "ui/rlq_pink_a_5": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_a_5.webp",
+  "w": 402
+ },
+ "ui/rlq_pink_a_6": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_a_6.webp",
+  "w": 401
+ },
+ "ui/rlq_pink_a_7": {
+  "h": 403,
+  "src": "assets/ui/rlq_pink_a_7.webp",
+  "w": 410
+ },
+ "ui/rlq_pink_a_8": {
+  "h": 403,
+  "src": "assets/ui/rlq_pink_a_8.webp",
+  "w": 409
+ },
+ "ui/rlq_pink_a_9": {
+  "h": 404,
+  "src": "assets/ui/rlq_pink_a_9.webp",
+  "w": 408
+ },
+ "ui/rlq_pink_b_1": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_1.webp",
+  "w": 293
+ },
+ "ui/rlq_pink_b_2": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_2.webp",
+  "w": 306
+ },
+ "ui/rlq_pink_b_3": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_3.webp",
+  "w": 307
+ },
+ "ui/rlq_pink_b_4": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_4.webp",
+  "w": 307
+ },
+ "ui/rlq_pink_b_5": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_5.webp",
+  "w": 314
+ },
+ "ui/rlq_pink_b_6": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_6.webp",
+  "w": 299
+ },
+ "ui/rlq_pink_b_7": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_7.webp",
+  "w": 324
+ },
+ "ui/rlq_pink_b_8": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_8.webp",
+  "w": 316
+ },
+ "ui/rlq_pink_b_9": {
+  "h": 420,
+  "src": "assets/ui/rlq_pink_b_9.webp",
+  "w": 308
  },
  "ui/sel_arrow_l": {
   "dom": true,

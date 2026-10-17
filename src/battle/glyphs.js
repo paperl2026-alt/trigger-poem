@@ -99,16 +99,43 @@ function pictureGlyph(img) {
   return t;
 }
 
+// her lettering as art (docs/DESIGN.md「猫娘的字」, R39: white characters with a black outline, sharp brush or cute): the white is the fill,
+// the whole shape the outline, a blur of it the glow
+function artGlyph(img) {
+  const S = 256, k = Math.min(S * 0.9 / img.width, S * 0.9 / img.height), w = img.width * k, h = img.height * k, x = (S - w) / 2, y = (S - h) / 2;
+  const c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d');
+  g.drawImage(img, x, y, w, h); const src = g.getImageData(0, 0, S, S).data;
+  g.clearRect(0, 0, S, S); g.filter = 'blur(10px)'; g.drawImage(img, x, y, w, h); g.drawImage(img, x, y, w, h); const bl = g.getImageData(0, 0, S, S).data;
+  const out = new Uint8Array(S * S * 4);
+  for (let yy = 0; yy < S; yy++) for (let xx = 0; xx < S; xx++) {
+    const i = (yy * S + xx) * 4, j = ((S - 1 - yy) * S + xx) * 4, a = src[i + 3] / 255, lum = (src[i] + src[i + 1] + src[i + 2]) / 765;
+    out[j] = Math.round(255 * a * Math.max(0, Math.min(1, (lum - 0.35) / 0.4))); out[j + 1] = src[i + 3]; out[j + 2] = bl[i + 3]; out[j + 3] = 255;
+  }
+  const t = new THREE.DataTexture(out, S, S, THREE.RGBAFormat);
+  t.minFilter = THREE.LinearFilter; t.magFilter = THREE.LinearFilter; t.needsUpdate = true;
+  return t;
+}
+
 export class Mantra {
   constructor(game) {
     this.game = game;
     this.syll = C.theme.mantra;
     this.cache = new Map();
-    this.tex = this.syll.map((ch) => this.texOf(ch));
+    this.tex = null;   // built on first use (the art is loaded by then)
     this.pool = [];
     this.geo = new THREE.PlaneGeometry(1, 1);
   }
-  texOf(ch) { if (!this.cache.has(ch)) this.cache.set(ch, glyphTexture(ch)); return this.cache.get(ch); }
+  // a character: her art lettering in the asked style (fx/gl_<style>_u<code>), else the other style, else the font
+  texOf(ch, style = 'sharp') {
+    const id = `${style}:${ch}`;
+    if (!this.cache.has(id)) {
+      const k = (st) => tex[`fx/gl_${st}_u${ch.codePointAt(0).toString(16)}`];
+      const art = k(style) || k(style === 'cute' ? 'sharp' : 'cute');
+      this.cache.set(id, art?.image ? artGlyph(art.image) : glyphTexture(ch));
+    }
+    return this.cache.get(id);
+  }
+  get styles() { return C.theme.glyphStyle || { mantra: 'cute', kuji: 'sharp', spell: 'sharp' }; }
   // a picture glyph (fx/fu_<name>), or the font when the art is missing
   picOf(key, ch) {
     if (!this.cache.has(key)) this.cache.set(key, tex[key]?.image ? pictureGlyph(tex[key].image) : glyphTexture(ch || '令'));
@@ -119,7 +146,7 @@ export class Mantra {
     const n = STYLE.length, s = ((i % n) + n) % n, g = this.mesh(), H = this.game.H;
     g.on = true; g.t = 0; g.s = s; g.rot = rnd(-0.25, 0.25); g.size = H * rnd(0.07, 0.1); g.crit = false; g.speed = 1.6;
     g.ride = { B, u: 0, side: Math.random() < 0.5 ? -1 : 1, amp: rnd(0.4, 1.2), ph: Math.random() * 6 };
-    g.u.map.value = this.texOf(ch); g.u.seed.value = Math.random() * 100;
+    g.u.map.value = this.texOf(ch, this.styles.spell); g.u.seed.value = Math.random() * 100;
     along(i * 0.35, g.u.c0.value); along(i * 0.35 + 1.4, g.u.c1.value);
     g.u.dmode.value = STYLE[s][1] === 'burn' ? 1 : STYLE[s][1] === 'shatter' ? 2 : 0;
     g.m.renderOrder = 42;
@@ -155,7 +182,7 @@ export class Mantra {
     const n = STYLE.length, s = ((i % n) + n) % n, g = this.mesh();
     g.on = true; g.t = 0; g.s = s; g.x = x; g.y = y; g.rot = rnd(-0.12, 0.12); g.size = size; g.crit = false; g.speed = 1.7; g.ride = null;
     g.m.renderOrder = 60;   // over the reload close-ups
-    g.u.map.value = this.texOf(ch); g.u.seed.value = Math.random() * 100;
+    g.u.map.value = this.texOf(ch, this.styles.kuji); g.u.seed.value = Math.random() * 100;
     along(i * 0.75, g.u.c0.value); along(i * 0.75 + 1.2, g.u.c1.value);
     g.u.dmode.value = STYLE[s][1] === 'burn' ? 1 : STYLE[s][1] === 'shatter' ? 2 : 0;
     return g;
@@ -180,7 +207,7 @@ export class Mantra {
     g.on = true; g.t = 0; g.s = s; g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.rot = rnd(-0.18, 0.18);
     g.size = H * (crit ? 0.19 : 0.135); g.crit = crit; g.speed = 1; g.ride = null;
     g.m.renderOrder = 41;
-    g.u.map.value = this.tex[s]; g.u.seed.value = Math.random() * 100;
+    g.u.map.value = this.texOf(this.syll[s], this.styles.mantra); g.u.seed.value = Math.random() * 100;
     along(s, g.u.c0.value); along(s + 1.5, g.u.c1.value);
     g.u.dmode.value = STYLE[s][1] === 'burn' ? 1 : STYLE[s][1] === 'shatter' ? 2 : 0;
     this.game.fx.tracer(x0, y0, x, y, g.u.c0.value.getHex());

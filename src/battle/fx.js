@@ -484,6 +484,7 @@ export class FX {
   lock(type = 'ranged', slot = 0) {
     if (type === 'shot') return this.shotLock(slot);
     const game = this.game, hide = type === 'heavy';
+    if (hide) game.hud.gl?.alerts.warnDanger();   // must hide: DANGER!! over the whole screen (alerts.js)
     const key = hide ? 'ui/hud_hide' : 'ui/hud_interrupt', T0 = tex[key];
     const RC = hide ? [0.669, 0.662, 0.136] : [0.472, 0.726, 0.146];   // its ring: centre (share of the picture), radius (share of its width)
     const WC = hide ? [0.26, 0.5] : [0.47, 0.26];                       // where its word goes
