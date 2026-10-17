@@ -1,14 +1,20 @@
 {
-  "_doc": "书包道具。cost 占书包几格，price 用伍德刀盾买的价格。effects 效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 伍德刀盾收入倍率，stageHeal 每个小关结束回多少血。 levels：可以升级的道具（没有满破、进化，就是升级；存档 SAVE.itemLv）每一级的效果和升到这一级的价格，效果按当前等级取；reward：不能买，是通关奖励（episodes.json 的 reward）。",
+  "_doc": "书包道具（docs/DESIGN.md「书包」，代码 src/battle/items.js）。cost 占书包几格（装备的 cost 合计不能超过书包上限 SAVE.cap），price 用伍德刀盾买的价格（reward：不能买，是通关奖励，episodes.json 的 reward）。effects 是 Lv1 的效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 伍德刀盾收入倍率，stageHeal 每个小关结束回多少血。grow：用伍德刀盾升级，max 最高等级，to 最高级时的效果（curve exp = 每级乘同一个倍数，否则线性），price 升到下一级的价格 = price[0] × price[1]^(当前等级-1)。desc 一行效果，{键} 换成当前等级的数值、{键%} 换成变化的百分比。lore 三段说明（像黑魂 / 老头环的道具文本）：一段是它是什么、有什么用，二段是来历，三段是一句耐人寻味的话。",
   "charm": {
     "id": "charm",
     "icon": "item/charm",
     "cost": 3,
     "price": 400,
     "name": { "zh": "备用护符", "en": "Spare Charm", "ja": "予備のお守り" },
-    "desc": { "zh": "体力上限 +1 心", "en": "+1 max heart", "ja": "体力上限 +1" },
+    "desc": { "zh": "体力上限 +{hp}", "en": "Max HP +{hp}", "ja": "体力上限 +{hp}" },
     "order": 0,
-    "effects": { "hp": 20 }
+    "effects": { "hp": 20 },
+    "grow": { "max": 10, "to": { "hp": 60 }, "price": [120, 1.35] },
+    "lore": [
+      { "zh": "学校后山神社求来的护身符，比需要的多买了一个。带着它，体力上限会提高。", "en": "A charm from the shrine behind the school, one more than she needed. While carried, it raises maximum health.", "ja": "学校の裏山の神社のお守り。必要な数より一つ多く買っておいたもの。持っていると体力の上限が上がる。" },
+      { "zh": "据说神社的神明早就不在了，只剩下卖护符的阿婆。阿婆说，灵不灵不重要，重要的是你信。", "en": "They say the shrine's god left long ago; only the old woman selling charms remains. Whether it works doesn't matter, she says. What matters is that you believe.", "ja": "神社の神様はとうにいないという。残ったのはお守り売りのおばあさんだけ。効くかどうかはどうでもいい、信じることが大事なのだと彼女は言う。" },
+      { "zh": "袋口的绳结系得很紧。千万别打开看里面——看了就不灵了。", "en": "The cord is tied tight. Never look inside. Once you look, it stops working.", "ja": "口の紐は固く結ばれている。決して中を覗いてはいけない。覗けば、効き目は失せる。" }
+    ]
   },
   "loader": {
     "id": "loader",
@@ -16,9 +22,15 @@
     "cost": 2,
     "price": 300,
     "name": { "zh": "速装器", "en": "Speed Loader", "ja": "スピードローダー" },
-    "desc": { "zh": "装填时间 −20%", "en": "Reload −20%", "ja": "リロード −20%" },
+    "desc": { "zh": "装填时间 −{reload%}", "en": "Reload −{reload%}", "ja": "リロード −{reload%}" },
     "order": 1,
-    "effects": { "reload": 0.8 }
+    "effects": { "reload": 0.8 },
+    "grow": { "max": 10, "to": { "reload": 0.55 }, "price": [100, 1.35] },
+    "lore": [
+      { "zh": "把一整排子弹一次压进去的小工具。装填时间缩短。", "en": "A little tool that pushes a whole row of rounds in at once. Shortens reload time.", "ja": "弾をひと列まとめて押し込む小道具。リロード時間が短くなる。" },
+      { "zh": "原本属于射击社的前任社长。她毕业那天把它塞进了后辈的书包，什么也没说。", "en": "It belonged to a former captain of the shooting club. On graduation day she slipped it into a junior's bag without a word.", "ja": "射撃部の元部長の持ち物。卒業の日、彼女は何も言わずに後輩のカバンへそれを入れた。" },
+      { "zh": "侧面刻着一行小字：「慢一秒，就少一个人。」", "en": "A line is scratched into its side: \"One second late, one friend fewer.\"", "ja": "側面に小さく刻まれた一文。「一秒遅れれば、一人減る」" }
+    ]
   },
   "drum": {
     "id": "drum",
@@ -26,9 +38,15 @@
     "cost": 2,
     "price": 300,
     "name": { "zh": "大号弹鼓", "en": "Big Drum", "ja": "ドラムマガジン" },
-    "desc": { "zh": "弹匣 +25%", "en": "Magazine +25%", "ja": "装弾数 +25%" },
+    "desc": { "zh": "弹匣 +{mag%}", "en": "Magazine +{mag%}", "ja": "装弾数 +{mag%}" },
     "order": 2,
-    "effects": { "mag": 1.25 }
+    "effects": { "mag": 1.25 },
+    "grow": { "max": 10, "to": { "mag": 1.7 }, "price": [100, 1.35] },
+    "lore": [
+      { "zh": "装得下更多子弹的圆形弹鼓。弹匣容量增加。", "en": "A round drum that holds far more rounds. Increases magazine size.", "ja": "より多くの弾が入る円形のドラム。装弾数が増える。" },
+      { "zh": "上面贴满了星星贴纸，是地雷妹自己贴的。她说这样子弹会比较开心。", "en": "Covered in star stickers, put on by the gun girl herself. She says it keeps the bullets happy.", "ja": "星のシールだらけ。地雷ちゃんが自分で貼った。こうすると弾がご機嫌になるらしい。" },
+      { "zh": "很重。背着它跑一天，第二天肩膀会跟你讲道理。", "en": "Heavy. Run with it all day and your shoulders will have words with you tomorrow.", "ja": "重い。一日背負って走れば、翌日、肩が文句を言う。" }
+    ]
   },
   "energy": {
     "id": "energy",
@@ -36,9 +54,15 @@
     "cost": 3,
     "price": 500,
     "name": { "zh": "能量饮料", "en": "Energy Drink", "ja": "エナドリ" },
-    "desc": { "zh": "主动技能充能 +25%", "en": "Skill charge +25%", "ja": "スキル充填 +25%" },
+    "desc": { "zh": "必杀充能 +{charge%}", "en": "Special charge +{charge%}", "ja": "必殺チャージ +{charge%}" },
     "order": 3,
-    "effects": { "charge": 1.25 }
+    "effects": { "charge": 1.25 },
+    "grow": { "max": 10, "to": { "charge": 1.7 }, "price": [150, 1.35] },
+    "lore": [
+      { "zh": "便利店最贵的那一罐。必杀充能加快。", "en": "The most expensive can in the convenience store. Charges the special faster.", "ja": "コンビニで一番高い一本。必殺技のチャージが速くなる。" },
+      { "zh": "成分表的最后一行被人用马克笔涂掉了。喝过的人都说，那天晚上听见了海浪的声音。", "en": "The last line of the ingredients has been blacked out with marker. Everyone who drank it says they heard waves that night.", "ja": "成分表の最後の一行がマジックで塗りつぶされている。飲んだ者は皆、その夜、波の音を聞いたという。" },
+      { "zh": "一天一罐。第二罐的事，谁也不想再提。", "en": "One can a day. Nobody wants to talk about the second can.", "ja": "一日一本。二本目の話は、誰もしたがらない。" }
+    ]
   },
   "anpan": {
     "id": "anpan",
@@ -46,9 +70,15 @@
     "cost": 2,
     "price": 350,
     "name": { "zh": "红豆面包", "en": "Anpan", "ja": "あんぱん" },
-    "desc": { "zh": "Fever 衰减 −40%", "en": "Fever decays 40% slower", "ja": "フィーバー減衰 −40%" },
+    "desc": { "zh": "Fever 衰减 −{feverDecay%}", "en": "Fever decays {feverDecay%} slower", "ja": "フィーバー減衰 −{feverDecay%}" },
     "order": 4,
-    "effects": { "feverDecay": 0.6 }
+    "effects": { "feverDecay": 0.6 },
+    "grow": { "max": 10, "to": { "feverDecay": 0.3 }, "price": [110, 1.35] },
+    "lore": [
+      { "zh": "小卖部的红豆面包，豆沙多到溢出来。Fever 冷却得更慢。", "en": "An anpan from the school store, bursting with bean paste. Fever fades more slowly.", "ja": "購買部のあんぱん。あんこがはみ出すほど詰まっている。フィーバーが冷めにくくなる。" },
+      { "zh": "蜜瓜包卖完的日子，人们只能退而求其次。可它从来没有让谁失望过。", "en": "On days the melon bread sells out, people settle for second best. It has never once let anyone down.", "ja": "メロンパンが売り切れた日、人は次善の策に頼る。だがこれは、一度も誰も裏切ったことがない。" },
+      { "zh": "猫娘坚持说自己其实更喜欢这个。没人信。", "en": "The cat girl insists she actually likes this one better. Nobody believes her.", "ja": "猫娘は本当はこっちの方が好きだと言い張る。誰も信じていない。" }
+    ]
   },
   "cat": {
     "id": "cat",
@@ -56,9 +86,15 @@
     "cost": 1,
     "price": 600,
     "name": { "zh": "招财猫", "en": "Lucky Cat", "ja": "招き猫" },
-    "desc": { "zh": "伍德刀盾收入 +25%", "en": "+25% What Da Dog Doin'", "ja": "ワッダドッグドゥーイン +25%" },
+    "desc": { "zh": "伍德刀盾收入 ×{dd}", "en": "What Da Dog Doin' ×{dd}", "ja": "ワッダドッグドゥーイン ×{dd}" },
     "order": 5,
-    "effects": { "dd": 1.25 }
+    "effects": { "dd": 1.25 },
+    "grow": { "max": 10, "to": { "dd": 2.5 }, "price": [200, 1.4] },
+    "lore": [
+      { "zh": "举着左手的陶瓷招财猫。伍德刀盾收入增加。", "en": "A porcelain lucky cat, left paw raised. Increases What Da Dog Doin' earned.", "ja": "左手を挙げた陶器の招き猫。ワッダドッグドゥーインの収入が増える。" },
+      { "zh": "猫娘在神社的跳蚤市场一眼看中了它，说它长得像自己的远房亲戚。", "en": "The cat girl spotted it at the shrine's flea market and said it looked like a distant relative.", "ja": "猫娘が神社の蚤の市で一目惚れした。遠い親戚に似ているのだそうだ。" },
+      { "zh": "夜里偶尔会换一只手举。最好别去确认是哪一只。", "en": "At night it sometimes switches paws. Better not to check which one.", "ja": "夜中、たまに挙げる手が替わる。どちらの手かは、確かめない方がいい。" }
+    ]
   },
   "armband": {
     "id": "armband",
@@ -66,9 +102,15 @@
     "cost": 4,
     "price": 800,
     "name": { "zh": "学生会臂章", "en": "Council Armband", "ja": "生徒会の腕章" },
-    "desc": { "zh": "Fever 三项从 1 级开始", "en": "Fever starts at Lv1", "ja": "フィーバー Lv1 から" },
+    "desc": { "zh": "Fever 三项从 {feverStart} 级开始", "en": "Fever starts at Lv{feverStart}", "ja": "フィーバー Lv{feverStart} から" },
     "order": 6,
-    "effects": { "feverStart": 1 }
+    "effects": { "feverStart": 1 },
+    "grow": { "max": 2, "to": { "feverStart": 2 }, "price": [2400, 1] },
+    "lore": [
+      { "zh": "风纪委员会的臂章，不知怎么落到了你手里。Fever 三项从高一级开始。", "en": "A discipline committee armband that somehow ended up with you. All three Fever gauges start a level higher.", "ja": "風紀委員会の腕章。なぜか手元にある。フィーバー三種が一段上から始まる。" },
+      { "zh": "戴上它的人会莫名地挺直腰板。风纪委员说，这就是规矩的力量。", "en": "Whoever wears it stands up straighter without knowing why. The discipline officer calls it the power of rules.", "ja": "付けた者はなぜか背筋が伸びる。風紀委員はそれを規律の力と呼んだ。" },
+      { "zh": "内侧用红线绣着一个名字，线头像是被什么东西扯断的。", "en": "A name is embroidered inside in red thread. The loose end looks as if something tore it off.", "ja": "内側に赤い糸で名前が縫い取られている。糸の端は、何かに引きちぎられたようだ。" }
+    ]
   },
   "bandaid": {
     "id": "bandaid",
@@ -76,9 +118,15 @@
     "cost": 2,
     "price": 400,
     "name": { "zh": "爱心创可贴", "en": "Heart Band-aid", "ja": "ハートの絆創膏" },
-    "desc": { "zh": "每个小关结束回 1 心", "en": "Heal 1 heart after each stage", "ja": "ステージ毎に 1 回復" },
+    "desc": { "zh": "每个小关结束回复 {stageHeal} 体力", "en": "Heal {stageHeal} after each stage", "ja": "ステージ毎に {stageHeal} 回復" },
     "order": 7,
-    "effects": { "stageHeal": 20 }
+    "effects": { "stageHeal": 20 },
+    "grow": { "max": 10, "to": { "stageHeal": 60 }, "price": [120, 1.35] },
+    "lore": [
+      { "zh": "印着爱心的创可贴。每个小关结束时回复体力。", "en": "Band-aids with hearts on them. Recover health at the end of each stage.", "ja": "ハート柄の絆創膏。ステージの終わりに体力が回復する。" },
+      { "zh": "保健室的老师总在抽屉里备着一大盒。她说，比起伤口，小孩子更需要的是可爱。", "en": "The school nurse keeps a big box in her drawer. Children, she says, need cuteness more than they need stitches.", "ja": "保健室の先生は引き出しにいつも大箱を置いている。子どもに要るのは傷の手当てより可愛さなのだと。" },
+      { "zh": "贴上去的瞬间就不痛了。至少，看起来不痛了。", "en": "The pain stops the moment it's on. Or at least, it stops looking like pain.", "ja": "貼った瞬間、痛みは消える。少なくとも、痛そうには見えなくなる。" }
+    ]
   },
   "pig": {
     "id": "pig",
@@ -90,6 +138,11 @@
     "desc": { "zh": "结算时伍德刀盾 ×{dd}", "en": "What Da Dog Doin' ×{dd} at the results", "ja": "リザルトでワッダドッグドゥーイン ×{dd}" },
     "order": 9,
     "effects": { "dd": 1.2 },
-    "levels": [{ "dd": 1.2 }, { "dd": 1.35, "price": 600 }, { "dd": 1.5, "price": 1200 }, { "dd": 1.7, "price": 2000 }, { "dd": 2.0, "price": 3200 }]
+    "grow": { "max": 100, "to": { "dd": 16 }, "curve": "exp", "price": [80, 1.06] },
+    "lore": [
+      { "zh": "眼睛多得过分的猪形存钱罐，嘴里永远咬着一枚硬币。结算时伍德刀盾成倍增加。", "en": "A piggy bank with far too many eyes, always biting a coin. Multiplies What Da Dog Doin' at the results.", "ja": "目がやたら多い豚の貯金箱。いつも硬貨を一枚くわえている。リザルトでワッダドッグドゥーインが増える。" },
+      { "zh": "那个东西破空坠落时洒下的碎片之一。它吞下的钱从不会消失，只会变多——没人知道多出来的是从哪里来的。", "en": "One of the shards scattered when that thing fell from the sky. Money it swallows never disappears, it only grows. No one knows where the extra comes from.", "ja": "あれが空を裂いて落ちた時に散った欠片のひとつ。飲み込んだ金は消えず、ただ増える。増えた分がどこから来るのかは誰も知らない。" },
+      { "zh": "喂得越多，它的眼睛就越多。半夜偶尔会轻轻地「哼」一声。", "en": "The more you feed it, the more eyes it has. Now and then, late at night, it softly grunts.", "ja": "餌をやるほど目が増える。真夜中、ときどき小さく「ブヒ」と鳴く。" }
+    ]
   }
 }

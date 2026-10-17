@@ -1,11 +1,10 @@
-// The out-of-run scenes (DOM): Chapter select (+ team / outfit / school bag), results, game over. (Title + settings: title.js)
-// Chapter select reads like flipping through a colour manga: each episode is a chapter cover + a facing page.
+// The out-of-run scenes (DOM): results, game over. (Title + settings: title.js; chapter select, team and bag: select.js)
 import { url, meta } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
 import { t, tr } from '../core/i18n.js';
-import { bagCost } from '../battle/items.js';
-import { SAVE, persist, levelProgress, nextCap, maxLv, itemLevel, nextLevel, upgradeItem } from '../core/save.js';
-import { C, list } from '../core/content.js';
+import { itemLevel, nextLevel, upgradeItem, itemDesc as fxDesc } from '../battle/items.js';
+import { SAVE, levelProgress } from '../core/save.js';
+import { C } from '../core/content.js';
 
 const ui = () => document.getElementById('ui');
 const h = (html) => { const d = document.createElement('div'); d.innerHTML = html.trim(); return d.firstChild; };
@@ -13,127 +12,6 @@ const has = (k) => !!meta[k];
 const img = (k) => (has(k) ? url(k) : '');
 const tap = (el, fn) => { el.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); sfx.ui(); fn(e); }; };
 const fmtT = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
-
-// ------------------------------------------------------------------ Chapter select / team / bag
-export function showSelect(act) {
-  const el = ui();
-  el.innerHTML = '';
-  const eps = list('episodes');
-  let idx = Math.max(0, eps.findIndex((e) => e.id === (SAVE.lastEp || 'ep0')));
-  let tab = 'team';
-  let note = '';
-  const s = h(`<div class="screen select">
-    <div class="sbg" style="background-image:url(${img('bg/clubroom')})"></div>
-    <div class="stop"><button class="back">◀ ${t('title')}</button><div class="money"></div><button class="gear">⚙</button></div>
-    <div class="book"><div class="pg l"></div><div class="pg r"></div><div class="spine"></div>
-      <button class="flip prev">◀</button><button class="flip next">▶</button></div>
-    <div class="side"><div class="tabs"><button data-t="team"></button><button data-t="bag"></button></div><div class="tabbody"></div><div class="note"></div></div>
-  </div>`);
-  el.appendChild(s);
-  const L = s.querySelector('.pg.l'), R = s.querySelector('.pg.r'), book = s.querySelector('.book'), body = s.querySelector('.tabbody'), money = s.querySelector('.money'), noteEl = s.querySelector('.note');
-  tap(s.querySelector('.back'), () => act.title());
-  tap(s.querySelector('.gear'), () => act.settings());
-
-  const epOpen = (e) => !e.teaser && !!SAVE.eps[e.id]?.open;
-  function renderBook() {
-    const e = eps[idx];
-    const rec = SAVE.eps[e.id] || {};
-    const open = epOpen(e);
-    L.className = `pg l ${open ? '' : e.teaser ? 'teaser' : 'locked'}`;
-    L.innerHTML = has(e.cover || '') ? `<div class="cover" style="background-image:url(${img(e.cover)})"></div>` : `<div class="cover blank"><span>${e.teaser ? '?' : open ? e.no : '🔒'}</span></div>`;
-    L.insertAdjacentHTML('beforeend', `<div class="pno">${String(e.no * 2 + 1).padStart(2, '0')}</div>`);
-    const stl = (e.steps || []).filter((st) => !st.comic).map((st, i) => `<li class="${st.boss ? 'boss' : ''}"><i><b>${st.boss ? '☠' : i + 1}</b></i>${tr(st.name)}</li>`).join('');
-    R.innerHTML = `<div class="chap">CHAPTER ${e.no}</div><h2>${tr(e.title)}</h2><div class="sub">${tr(e.sub)}</div>
-      ${e.blurb ? `<p class="blurb">${tr(e.blurb)}</p>` : ''}
-      ${stl ? `<ol class="stl">${stl}</ol>` : ''}
-      ${rec.best ? `<div class="best"><small>${t('best')}</small><b>${rec.best}</b></div>` : ''}
-      ${open ? `<button class="go">${t('go')}</button>` : `<div class="lockmsg">${e.teaser ? t('soon') : t('locked')}</div>`}
-      <div class="pno">${String(e.no * 2 + 2).padStart(2, '0')}</div>`;
-    const go = R.querySelector('.go');
-    if (go) tap(go, () => { SAVE.lastEp = e.id; persist(); act.play(e.id); });
-    s.querySelector('.prev').disabled = idx === 0;
-    s.querySelector('.next').disabled = idx === eps.length - 1;
-  }
-  // page turn: a copy of the right page swings over the spine while the new spread is drawn underneath
-  function flip(dir) {
-    const ni = idx + dir;
-    if (ni < 0 || ni >= eps.length) return;
-    const turn = (dir > 0 ? R : L).cloneNode(true);
-    turn.classList.add('turn', dir > 0 ? 'fwd' : 'bwd');
-    book.appendChild(turn);
-    sfx.panel();
-    idx = ni;
-    renderBook();
-    setTimeout(() => turn.remove(), 650);
-  }
-  tap(s.querySelector('.prev'), () => flip(-1));
-  tap(s.querySelector('.next'), () => flip(1));
-  s.flip = flip;
-
-  function renderTeam() {
-    body.innerHTML = '';
-    const wrap = h('<div class="team"></div>');
-    SAVE.team.forEach((id, slot) => {
-      const c = C.characters[id], st = SAVE.chars[id], pr = levelProgress(st.xp);
-      const card = h(`<div class="card" style="--pc:${c.color}">
-        <div class="slot">${slot ? '2P / AI' : '1P'}</div>
-        <img class="fig" src="${img(c.front)}" draggable="false">
-        <div class="ci"><div class="cn"><b>${tr(c.name)}</b><span>${tr(c.role)}</span></div>
-          <div class="lvl"><small>${t('mastery')}</small><b>Lv${pr.lv}${pr.lv >= maxLv() ? ' MAX' : ''}</b><i style="--f:${pr.frac}"></i></div>
-          <p>${tr(c.blurb)}</p><p class="sk"><b>${t('skill')}</b> ${tr(c.skill)}</p>
-          <div class="outfits"><button class="on">${t('base')}</button><button class="lock" title="${t('needLv')}">${t('limit')} 🔒</button></div>
-        </div></div>`);
-      wrap.appendChild(card);
-    });
-    body.appendChild(wrap);
-    const sw = h(`<button class="swap">⇄ ${t('swap')}</button>`);
-    tap(sw, () => { SAVE.team.reverse(); persist(); renderTeam(); });
-    body.appendChild(sw);
-  }
-  function renderBag() {
-    body.innerHTML = '';
-    const used = bagCost(SAVE.bag);
-    const nc = nextCap();
-    const top = h(`<div class="cap"><span>${t('cap')}</span><div class="cells">${Array.from({ length: SAVE.cap }, (_, i) => `<i class="${i < used ? 'on' : ''}"></i>`).join('')}</div><b>${used}/${SAVE.cap}</b>
-      ${nc ? `<button class="more">${t('bigger')} +1 <small>${nc[1]} 刀盾</small></button>` : ''}</div>`);
-    body.appendChild(top);
-    const more = top.querySelector('.more');
-    if (more) tap(more, () => { if (SAVE.dd < nc[1]) { say(t('poor')); return; } SAVE.dd -= nc[1]; SAVE.cap = nc[0]; persist(); sfx.clear(); renderAll(); });
-    const grid = h('<div class="items"></div>');
-    for (const it of list('items')) {
-      const own = SAVE.items.includes(it.id), on = SAVE.bag.includes(it.id);
-      const icon = has(it.icon) ? `<img src="${img(it.icon)}" draggable="false">` : '<span class="noi">?</span>';
-      const card = h(`<div class="item ${own ? 'own' : ''} ${on ? 'on' : ''}">${icon}
-        <div class="iname">${tr(it.name)}</div><div class="idesc">${tr(it.desc)}</div>
-        <div class="icost">${'◆'.repeat(it.cost)}</div>
-        <div class="iprice">${own ? (on ? '✔' : '') : `${it.price} 刀盾`}</div></div>`);
-      tap(card, () => {
-        if (!own) {
-          if (SAVE.dd < it.price) { say(t('poor')); return; }
-          SAVE.dd -= it.price; SAVE.items.push(it.id); persist(); sfx.clear(); renderAll(); return;
-        }
-        if (on) SAVE.bag = SAVE.bag.filter((x) => x !== it.id);
-        else if (bagCost(SAVE.bag) + it.cost > SAVE.cap) { say(t('full')); return; } else SAVE.bag.push(it.id);
-        persist(); renderAll();
-      });
-      grid.appendChild(card);
-    }
-    body.appendChild(grid);
-  }
-  function say(m) { note = m; noteEl.textContent = m; noteEl.classList.remove('pop'); void noteEl.offsetWidth; noteEl.classList.add('pop'); sfx.miss(0); }
-  function renderAll() {
-    money.innerHTML = `<b>${SAVE.dd.toLocaleString()}</b><span>刀盾</span>`;
-    s.querySelectorAll('.tabs button').forEach((b) => { b.textContent = t(b.dataset.t); b.classList.toggle('on', b.dataset.t === tab); });
-    if (tab === 'team') renderTeam(); else renderBag();
-    noteEl.textContent = note;
-  }
-  s.querySelectorAll('.tabs button').forEach((b) => tap(b, () => { tab = b.dataset.t; note = ''; renderAll(); }));
-  renderBook();
-  renderAll();
-  // keyboard / pad: ←→ flip, Enter go
-  s.go = () => { const go = R.querySelector('.go'); if (go) go.onpointerdown(new PointerEvent('pointerdown')); };
-  return s;
-}
 
 // ------------------------------------------------------------------ Results
 // No rating (DESIGN 场景结构 4「结算做简单的记录」): the clear time and the best one, each girl's 历战值 (a girl at the top level gets extra
@@ -169,7 +47,7 @@ export function showResults(st, onDone) {
     const it = C.items[id], dd = at(0.1);
     return `<div class="it in" data-id="${id}" style="--d:${dd}"><div class="tw">${thumb(`res/item_${id}`, it.icon)}<span class="upw"></span></div><div class="ebody">
       <div class="lead"><span class="tag pop" style="--d:${(+dd + 0.25).toFixed(2)}">NEW!</span>${t('firstReward')}</div>
-      <div class="ttl">${tr(it.name)}</div><div class="by"><span class="desc">${itemDesc(it)}</span><i class="dots"></i><b class="num lv">${it.levels ? `Lv ${itemLevel(id)}` : ''}</b></div></div></div>`;
+      <div class="ttl">${tr(it.name)}</div><div class="by"><span class="desc">${itemDesc(it)}</span><i class="dots"></i><b class="num lv">${it.grow ? `Lv ${itemLevel(id)}` : ''}</b></div></div></div>`;
   }).join('');
   // the numbers: the run on the left, the 伍德刀盾 on the right, the total under both, then the new chapters
   const ln = (k, v, cls = '') => `<div class="ln in ${cls}" style="--d:${at(0.06)}"><span>${k}</span><i class="dots"></i><b class="v">${v}</b></div>`;
@@ -207,7 +85,7 @@ export function showResults(st, onDone) {
   requestAnimationFrame(count);
   // a levelled item: its upgrade tab on its row (the price in 伍德刀盾)
   const drawUp = (row) => {
-    const id = row.dataset.id, it = C.items[id]; if (!it.levels) return;
+    const id = row.dataset.id, it = C.items[id]; if (!it.grow) return;
     const nx = nextLevel(id), w = row.querySelector('.upw');
     row.querySelector('.lv').textContent = `Lv ${itemLevel(id)}`;
     row.querySelector('.desc').textContent = itemDesc(it);
@@ -222,7 +100,7 @@ export function showResults(st, onDone) {
   tap(s.querySelector('.ok'), () => { el.innerHTML = ''; onDone(); });
 }
 // an item's description with its current numbers ({dd} = its 伍德刀盾 multiplier at its level)
-function itemDesc(it, lv) { const v = lv || (it.levels ? it.levels[itemLevel(it.id) - 1] : it.effects) || {}; return tr(it.desc).replace('{dd}', v.dd ?? ''); }
+function itemDesc(it) { return fxDesc(it.id, itemLevel(it.id), tr); }
 
 export function showGameOver(st, onRetry, onSelect) {
   const el = ui();

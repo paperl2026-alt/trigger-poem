@@ -1,6 +1,7 @@
 // The one save file: currency (伍德刀盾), unlocked episodes / items / characters, backpack loadout, mastery.
 // Everything unlocked is permanent; there are no consumables and no other currencies.
-// The starting save, the mastery table and the backpack expansions are content (tuning/economy.json);
+// The starting save and the mastery table are content (tuning/economy.json); items and the bag: battle/items.js.
+//
 // initSave() runs once the content packs are loaded.
 import { C, T } from './content.js';
 
@@ -25,6 +26,7 @@ export function initSave() {
     s.bag = (s.bag || []).filter((id) => C.items[id]);
   }
   Object.assign(SAVE, def, s || {}, s ? { eps: { ...def.eps, ...s.eps }, chars: { ...def.chars, ...s.chars } } : {});
+  SAVE.cap = Math.max(SAVE.cap || 0, T.economy.bag.start);   // (the bag's capacity: battle/items.js)
   // characters added by packs get a slot
   for (const id of Object.keys(C.characters)) if (!SAVE.chars[id]) SAVE.chars[id] = { open: true, xp: 0, outfit: 'base' };
 }
@@ -41,7 +43,6 @@ export function levelProgress(xp) {
   return { lv: l, frac: (xp - xpAt[l]) / (xpAt[l + 1] - xpAt[l]) };
 }
 
-// ---- backpack capacity upgrades
 // stage unlocks (docs/DESIGN.md 局外「小关解锁」): SAVE.eps[ep].stages = how many of its stages are open (1 = only the first)
 export function stagesOpen(epId) { return Math.max(1, SAVE.eps[epId]?.stages || 1); }
 export function openStage(epId, n) {
@@ -49,18 +50,3 @@ export function openStage(epId, n) {
   if ((r.stages || 1) < n) { r.stages = n; persist(); return true; }
   return false;
 }
-// items (DESIGN 局外「背包道具可以升级」): a reward is given once; an item with levels goes up one level for its price
-export function giveItem(id) {
-  if (!SAVE.items.includes(id)) SAVE.items.push(id);
-  SAVE.itemLv = SAVE.itemLv || {}; SAVE.itemLv[id] = SAVE.itemLv[id] || 1;
-  persist();
-}
-export function itemLevel(id) { return SAVE.itemLv?.[id] || 1; }
-export function nextLevel(id) { const L = C.items[id]?.levels; const lv = itemLevel(id); return L && lv < L.length ? { lv: lv + 1, ...L[lv] } : null; }
-export function upgradeItem(id) {
-  const n = nextLevel(id);
-  if (!n || SAVE.dd < (n.price || 0)) return false;
-  SAVE.dd -= n.price || 0; SAVE.itemLv[id] = n.lv; persist();
-  return true;
-}
-export function nextCap() { return T.economy.bagCapSteps.find(([c]) => c > SAVE.cap) || null; }

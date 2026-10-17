@@ -16,8 +16,8 @@ import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
-import { SAVE, persist, levelOf, openStage, giveItem, maxLv } from '../core/save.js';
-import { bagFx } from './items.js';
+import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
+import { bagFx, giveItem } from './items.js';
 import { C, T } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 
