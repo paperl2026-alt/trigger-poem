@@ -33,7 +33,10 @@
 /* chapter: rows slide in one after another; switching chapters slides the panel content */
 .sel .s-row { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); cursor: pointer; }
 /* stage unlocks: the picked row stands out (red shadow, nudged out); locked rows are grey with a padlock */
-.sel .s-row.s-row-pick .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(6px 6px 0 #d8141e); }
+/* every open stage stays lit (a red shadow, a slow shine); the picked one stands further out with a white edge; locked ones are dark */
+.sel .s-row.s-row-open .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(5px 5px 0 #d8141e) brightness(1.06); animation: sRowLit 2.4s ease-in-out infinite; }
+@keyframes sRowLit { 50% { filter: drop-shadow(0 0 0 #000) drop-shadow(5px 5px 0 #d8141e) brightness(1.18); } }
+.sel .s-row.s-row-pick .s-si:first-child { filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 0 #fff) drop-shadow(8px 8px 0 #d8141e) brightness(1.15); animation: none; }
 .sel .s-row.s-row-pick { translate: 14px 0 !important; }
 .sel .s-row.s-row-lock .s-si:not(.s-rlock), .sel .s-row.s-row-lock .s-tx { filter: grayscale(1) brightness(0.72); }
 .sel .s-row .s-rlock { filter: drop-shadow(2px 2px 0 #000); }

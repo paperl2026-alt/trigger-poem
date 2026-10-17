@@ -1,4 +1,4 @@
-// The one save file: currency (刀盾), unlocked episodes / items / characters, backpack loadout, mastery.
+// The one save file: currency (伍德刀盾), unlocked episodes / items / characters, backpack loadout, mastery.
 // Everything unlocked is permanent; there are no consumables and no other currencies.
 // The starting save, the mastery table and the backpack expansions are content (tuning/economy.json);
 // initSave() runs once the content packs are loaded.
@@ -48,5 +48,19 @@ export function openStage(epId, n) {
   const r = SAVE.eps[epId] || (SAVE.eps[epId] = { open: true, cleared: false, best: null });
   if ((r.stages || 1) < n) { r.stages = n; persist(); return true; }
   return false;
+}
+// items (DESIGN 局外「背包道具可以升级」): a reward is given once; an item with levels goes up one level for its price
+export function giveItem(id) {
+  if (!SAVE.items.includes(id)) SAVE.items.push(id);
+  SAVE.itemLv = SAVE.itemLv || {}; SAVE.itemLv[id] = SAVE.itemLv[id] || 1;
+  persist();
+}
+export function itemLevel(id) { return SAVE.itemLv?.[id] || 1; }
+export function nextLevel(id) { const L = C.items[id]?.levels; const lv = itemLevel(id); return L && lv < L.length ? { lv: lv + 1, ...L[lv] } : null; }
+export function upgradeItem(id) {
+  const n = nextLevel(id);
+  if (!n || SAVE.dd < (n.price || 0)) return false;
+  SAVE.dd -= n.price || 0; SAVE.itemLv[id] = n.lv; persist();
+  return true;
 }
 export function nextCap() { return T.economy.bagCapSteps.find(([c]) => c > SAVE.cap) || null; }

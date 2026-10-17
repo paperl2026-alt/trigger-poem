@@ -1,316 +1,90 @@
 {
- "_doc": "Boss。beh 选代码里的 Boss 行为（目前只有 float：教学关旧版的暴走花车，占位）。sprite 是图的前缀，h 高度（米），hp 血量，poise 硬直值，eyeMul / bodyMul 打眼睛 / 打身体的伤害倍率，phase2At 血量比例低于它进入二阶段。各招式的数值成对写的是 [一阶段, 二阶段]。 qq：序章 Boss「？？？」（beh thing，代码 src/battle/thing.js，DESIGN 序章 / Boss）：开场破空打中学校的不定形的东西附在风纪委员身上，五个阶段（stages）从局部变异到核心。每个阶段一整张图按动作分帧（art R43 boss/qq_s<n>_<idle0|idle1|move|windup|attack|hurt>），h 身高（米），float 浮空（y 离地米数），core 一直是弱点，at 血量比例到这里变成这一阶段，pattern 出招顺序（drift 换位置 = 喘口气、volley 吐一串飞行物（击落）、lunge 蓄力扑向一个人的掩体（打它能打断，poise）、burst 长蓄力大招（必须躲）、summon 召几只同一种的杂鱼），一次只出一招。蓄力和出招时弱点张开（weakMul，描边变粉），平时 bodyMul。zone 它在操场里走动的范围（米），speed 走多快，rest 每招后的空当（秒）。wreckAt 第几阶段（从 0 数）把教学楼压坏（换成 schoolAfter）。texts 每次变异时的提示。",
- "float": {
-  "beh": "float",
-  "sprite": "boss/f_",
-  "name": {
-   "zh": "暴走吉祥物花车",
-   "en": "THE RUNAWAY MASCOT FLOAT",
-   "ja": "暴走マスコット山車"
-  },
-  "h": 8.5,
-  "hp": 2600,
-  "poise": 380,
-  "eyeMul": 1.5,
-  "bodyMul": 0.75,
-  "phase2At": 0.5,
-  "poiseDrain": 0.12,
-  "poiseCooldown": 4,
-  "staggerTime": 1.6,
-  "homeDist": 21,
-  "enterFrom": [
-   14,
-   -6
-  ],
-  "enterTime": 1.6,
-  "firstDelay": 2.6,
-  "pattern": [
-   "spit",
-   "stomp",
-   "summon",
-   "spit",
-   "stomp",
-   "spit"
-  ],
-  "spit": {
-   "shots": [
-    3,
-    5
-   ],
-   "gap": [
-    0.38,
-    0.28
-   ],
-   "flight": [
-    1.8,
-    1.5
-   ],
-   "dmg": 20,
-   "curve": 2.5,
-   "rest": [
-    3.2,
-    2.4
-   ],
-   "restPerShot": 0.3,
-   "roam": [
-    3.2,
-    1.5
-   ],
-   "roamTime": [
-    1,
-    0.7
-   ],
-   "projectiles": [
-    "takoyaki",
-    "takoyaki",
-    "balloon"
-   ]
-  },
-  "stomp": {
-   "windup": [
-    1.6,
-    1.3
-   ],
-   "height": 2.6,
-   "dmg": 30,
-   "rest": [
-    2,
-    1.4
-   ]
-  },
-  "summon": {
-   "rest": 4.2,
-   "spawns": [
-    {
-     "type": "sheet",
-     "x": -3,
-     "y": 3,
-     "dz": 3
+  "_doc": "Boss。beh 选代码里的 Boss 行为（目前只有 float：教学关旧版的暴走花车，占位）。sprite 是图的前缀，h 高度（米），hp 血量，poise 硬直值，eyeMul / bodyMul 打眼睛 / 打身体的伤害倍率，phase2At 血量比例低于它进入二阶段。各招式的数值成对写的是 [一阶段, 二阶段]。 qq：序章 Boss「？？？」（beh thing，代码 src/battle/thing.js，DESIGN 序章 / Boss）：开场破空打中学校的不定形的东西附在风纪委员身上，五个阶段（stages）从局部变异到核心。每个阶段一整张图按动作分帧（art R43 boss/qq_s<n>_<idle0|idle1|move|windup|attack|hurt>），h 身高（米），float 浮空（y 离地米数），core 一直是弱点，at 血量比例到这里变成这一阶段，pattern 出招顺序（drift 换位置 = 喘口气、volley 吐一串飞行物（击落）、lunge 蓄力扑向一个人的掩体（打它能打断，poise）、burst 长蓄力大招（必须躲）、summon 召几只同一种的杂鱼），一次只出一招。蓄力和出招时弱点张开（weakMul，描边变粉），平时 bodyMul。zone 它在操场里走动的范围（米），speed 走多快，rest 每招后的空当（秒）。wreckAt 第几阶段（从 0 数）把教学楼压坏（换成 schoolAfter）。texts 每次变异时的提示。",
+  "float": {
+    "beh": "float",
+    "sprite": "boss/f_",
+    "name": { "zh": "暴走吉祥物花车", "en": "THE RUNAWAY MASCOT FLOAT", "ja": "暴走マスコット山車" },
+    "h": 8.5,
+    "hp": 2600,
+    "poise": 380,
+    "eyeMul": 1.5,
+    "bodyMul": 0.75,
+    "phase2At": 0.5,
+    "poiseDrain": 0.12,
+    "poiseCooldown": 4,
+    "staggerTime": 1.6,
+    "homeDist": 21,
+    "enterFrom": [14, -6],
+    "enterTime": 1.6,
+    "firstDelay": 2.6,
+    "pattern": ["spit", "stomp", "summon", "spit", "stomp", "spit"],
+    "spit": {
+      "shots": [3, 5],
+      "gap": [0.38, 0.28],
+      "flight": [1.8, 1.5],
+      "dmg": 20,
+      "curve": 2.5,
+      "rest": [3.2, 2.4],
+      "restPerShot": 0.3,
+      "roam": [3.2, 1.5],
+      "roamTime": [1, 0.7],
+      "projectiles": ["takoyaki", "takoyaki", "balloon"]
     },
-    {
-     "type": "sheet",
-     "x": 3,
-     "y": 3.4,
-     "dz": 3
-    },
-    {
-     "type": "zomb",
-     "from": "far",
-     "x": [
-      -2,
-      2
-     ],
-     "dz": 2
+    "stomp": { "windup": [1.6, 1.3], "height": 2.6, "dmg": 30, "rest": [2, 1.4] },
+    "summon": {
+      "rest": 4.2,
+      "spawns": [
+        { "type": "sheet", "x": -3, "y": 3, "dz": 3 },
+        { "type": "sheet", "x": 3, "y": 3.4, "dz": 3 },
+        { "type": "zomb", "from": "far", "x": [-2, 2], "dz": 2 }
+      ],
+      "phase2Extra": [{ "type": "sheet", "x": 0, "y": 4, "dz": 3 }, { "type": "zomb", "from": "far", "x": [-2, 2], "dz": 1 }]
     }
-   ],
-   "phase2Extra": [
-    {
-     "type": "sheet",
-     "x": 0,
-     "y": 4,
-     "dz": 3
-    },
-    {
-     "type": "zomb",
-     "from": "far",
-     "x": [
-      -2,
-      2
-     ],
-     "dz": 1
+  },
+  "qq": {
+    "beh": "thing",
+    "name": { "zh": "？？？", "en": "???", "ja": "？？？" },
+    "hp": 9000,
+    "weakMul": 2.5,
+    "bodyMul": 1,
+    "stunTime": 1.6,
+    "firstDelay": 1.6,
+    "speed": 1.6,
+    "rest": [1.0, 1.8],
+    "summonRest": 2.5,
+    "zone": { "x": [-3.5, 3.5], "z": [-6, -3.5] },
+    "stages": [
+      { "at": 1, "h": 2.6, "pattern": ["drift", "volley", "drift", "lunge", "drift", "volley"] },
+      { "at": 0.8, "h": 3.0, "pattern": ["drift", "volley", "drift", "lunge", "drift", "burst"] },
+      {
+        "at": 0.6,
+        "h": 3.4,
+        "pattern": ["drift", "lunge", "drift", "volley", "drift", "burst", "summon"],
+        "summon": [{ "type": "chair", "from": "pop", "x": -2, "z": -1 }, { "type": "chair", "from": "pop", "x": 2, "z": -1.5 }]
+      },
+      { "at": 0.4, "h": 3.2, "float": true, "y": 1.6, "pattern": ["volley", "drift", "burst", "drift", "lunge", "drift"] },
+      {
+        "at": 0.2,
+        "h": 2.8,
+        "float": true,
+        "y": 1.9,
+        "core": true,
+        "pattern": ["volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
+        "summon": [{ "type": "book", "x": -2, "y": 2.4, "z": -2 }, { "type": "paper", "x": 2, "y": 2.2, "z": -2.5 }]
+      }
+    ],
+    "volley": { "shots": [3, 5], "gap": 0.5, "flight": 1.9, "dmg": 14, "projectiles": ["eye", "ooze", "hair", "tooth", "lips", "eyes"] },
+    "lunge": { "windup": 1.8, "time": 0.45, "dmg": 22, "coverDmg": 50, "poise": 120 },
+    "burst": { "windup": 2.6, "dmg": 26 },
+    "summon": [{ "type": "paper", "x": -2, "y": 2.2, "z": -2 }],
+    "wreckAt": 2,
+    "schoolAfter": "st4/front2",
+    "texts": {
+      "mutate": { "zh": "它在变异!", "en": "IT'S MUTATING!", "ja": "変異している!" },
+      "s2": { "zh": "变异扩散!", "en": "IT SPREADS!", "ja": "変異拡大!" },
+      "s3": { "zh": "完全变异!", "en": "FULL MUTATION!", "ja": "完全変異!" },
+      "s4": { "zh": "失控!", "en": "OUT OF CONTROL!", "ja": "暴走!" },
+      "s5": { "zh": "核心暴露!", "en": "THE CORE!", "ja": "核心露出!" }
     }
-   ]
   }
- },
- "qq": {
-  "beh": "thing",
-  "name": {
-   "zh": "？？？",
-   "en": "???",
-   "ja": "？？？"
-  },
-  "hp": 9000,
-  "weakMul": 2.5,
-  "bodyMul": 1,
-  "stunTime": 1.6,
-  "firstDelay": 1.6,
-  "speed": 1.6,
-  "rest": [
-   1.0,
-   1.8
-  ],
-  "summonRest": 2.5,
-  "zone": {
-   "x": [
-    -3.5,
-    3.5
-   ],
-   "z": [
-    -6,
-    -3.5
-   ]
-  },
-  "stages": [
-   {
-    "at": 1,
-    "h": 2.6,
-    "pattern": [
-     "drift",
-     "volley",
-     "drift",
-     "lunge",
-     "drift",
-     "volley"
-    ]
-   },
-   {
-    "at": 0.8,
-    "h": 3.0,
-    "pattern": [
-     "drift",
-     "volley",
-     "drift",
-     "lunge",
-     "drift",
-     "burst"
-    ]
-   },
-   {
-    "at": 0.6,
-    "h": 3.4,
-    "pattern": [
-     "drift",
-     "lunge",
-     "drift",
-     "volley",
-     "drift",
-     "burst",
-     "summon"
-    ],
-    "summon": [
-     {
-      "type": "chair",
-      "from": "pop",
-      "x": -2,
-      "z": -1
-     },
-     {
-      "type": "chair",
-      "from": "pop",
-      "x": 2,
-      "z": -1.5
-     }
-    ]
-   },
-   {
-    "at": 0.4,
-    "h": 3.2,
-    "float": true,
-    "y": 1.6,
-    "pattern": [
-     "volley",
-     "drift",
-     "burst",
-     "drift",
-     "lunge",
-     "drift"
-    ]
-   },
-   {
-    "at": 0.2,
-    "h": 2.8,
-    "float": true,
-    "y": 1.9,
-    "core": true,
-    "pattern": [
-     "volley",
-     "drift",
-     "burst",
-     "drift",
-     "summon",
-     "drift",
-     "lunge"
-    ],
-    "summon": [
-     {
-      "type": "book",
-      "x": -2,
-      "y": 2.4,
-      "z": -2
-     },
-     {
-      "type": "paper",
-      "x": 2,
-      "y": 2.2,
-      "z": -2.5
-     }
-    ]
-   }
-  ],
-  "volley": {
-   "shots": [
-    3,
-    5
-   ],
-   "gap": 0.5,
-   "flight": 1.9,
-   "dmg": 14,
-   "projectiles": [
-    "eye",
-    "ooze",
-    "hair",
-    "tooth",
-    "lips",
-    "eyes"
-   ]
-  },
-  "lunge": {
-   "windup": 1.8,
-   "time": 0.45,
-   "dmg": 22,
-   "coverDmg": 50,
-   "poise": 120
-  },
-  "burst": {
-   "windup": 2.6,
-   "dmg": 26
-  },
-  "summon": [
-   {
-    "type": "paper",
-    "x": -2,
-    "y": 2.2,
-    "z": -2
-   }
-  ],
-  "wreckAt": 2,
-  "schoolAfter": "st4/front2",
-  "texts": {
-   "mutate": {
-    "zh": "它在变异!",
-    "en": "IT'S MUTATING!",
-    "ja": "変異している!"
-   },
-   "s2": {
-    "zh": "变异扩散!",
-    "en": "IT SPREADS!",
-    "ja": "変異拡大!"
-   },
-   "s3": {
-    "zh": "完全变异!",
-    "en": "FULL MUTATION!",
-    "ja": "完全変異!"
-   },
-   "s4": {
-    "zh": "失控!",
-    "en": "OUT OF CONTROL!",
-    "ja": "暴走!"
-   },
-   "s5": {
-    "zh": "核心暴露!",
-    "en": "THE CORE!",
-    "ja": "核心露出!"
-   }
-  }
- }
 }

@@ -4,7 +4,7 @@ import { url, meta } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
 import { t, tr } from '../core/i18n.js';
 import { bagCost } from '../battle/items.js';
-import { SAVE, persist, levelProgress, nextCap, maxLv } from '../core/save.js';
+import { SAVE, persist, levelProgress, nextCap, maxLv, itemLevel, nextLevel, upgradeItem } from '../core/save.js';
 import { C, list } from '../core/content.js';
 
 const ui = () => document.getElementById('ui');
@@ -136,37 +136,66 @@ export function showSelect(act) {
 }
 
 // ------------------------------------------------------------------ Results: the episode as an anime storyboard sheet
+// The results (DESIGN 场景结构 4「结算做简单的记录」): no rating; the clear time and the best one, each girl's 历战值 going up (level ups;
+// a girl at the top level gets extra 伍德刀盾 instead), the 伍德刀盾 earned line by line (clear, first clear, the top-level bonus, the bag's
+// multipliers like the eldritch piggy bank) counting up to the total, a new item if the episode gave one, the piggy bank's upgrade.
 export function showResults(st, onDone) {
   const el = ui();
   el.innerHTML = '';
-  const ep = C.episodes[st.ep];
-  const panels = ['comic/t1', 'comic/t2', 'comic/t3', 'comic/t4'].map((k, i) => (has(k) ? k : ['comic/c1', 'comic/c2', 'comic/c4', 'comic/c7'][i]));
-  const rows = [
-    [t('kills'), st.kills], [t('acc'), `${Math.round(st.acc * 100)}%`], [t('combo'), st.combo], [t('time'), fmtT(st.time)],
-  ];
-  const team = st.team.map((id) => C.characters[id]);
-  const s = h(`<div class="screen results sb">
-    <div class="sheet">
-      <div class="shead"><span class="ttl">${tr(ep.title)}</span><span class="kind">${t('result')}</span><span class="no">No. ${String(ep.no).padStart(3, '0')}</span></div>
-      <div class="cols"><span>CUT</span><span>${t('result')}</span><span>ACTION</span><span>TIME</span></div>
-      ${rows.map((r, i) => `<div class="cut" style="--d:${0.15 + i * 0.22}s"><span class="cn">${i + 1}</span>
-        <span class="pic" style="background-image:url(${img(panels[i])})"></span>
-        <span class="act"><small>${r[0]}</small><b>${r[1]}</b></span><span class="sec">${(2 + i * 1.5).toFixed(1)}″</span></div>`).join('')}
-      <div class="hanko"><small>${t('rank')}</small><b>${st.rank || '-'}</b></div>
-    </div>
-    <div class="rew">
-      <div class="dd"><span>刀盾</span><b>+${st.dd}</b>${st.firstClear ? `<em>${t('firstClear')} +300</em>` : ''}</div>
-      ${team.map((c) => { const x = st.xp[c.id]; if (!x) return ''; const pr = levelProgress(x.xp); return `<div class="mx" style="--pc:${c.color}"><img src="${img(c.cam.happy)}"><div><b>${tr(c.name)}</b> Lv${pr.lv} <small>+${x.gain} XP</small>${x.after > x.before ? `<em>${t('lvUp')}</em>` : ''}<i style="--f:${pr.frac}"></i></div></div>`; }).join('')}
-      ${st.unlocked.length ? `<div class="unl">${t('unlocked')}<br><b>${st.unlocked.map((id) => tr(C.episodes[id].title)).join('<br>')}</b></div>` : ''}
+  const ep = C.episodes[st.ep], DD = t('dd');
+  const team = [...new Set(st.team)].map((id) => C.characters[id]).filter(Boolean);
+  const face = (c) => { const k = `ui/chibi_${c.id}_${17}`; return has(k) ? img(k) : img(c.cam?.happy); };
+  const girls = team.map((c, i) => {
+    const x = st.xp[c.id]; if (!x) return '';
+    const p0 = levelProgress(x.xp0 ?? x.xp - x.gain), p1 = levelProgress(x.xp), up = x.after > x.before;
+    return `<div class="rg" style="--pc:${c.color};--d:${0.5 + i * 0.25}s"><img src="${face(c)}"><div class="rgi">
+      <b>${tr(c.name)}</b><small>${t('warXp')} <em>+${x.gain}</em></small>
+      <div class="rbar"><i style="--f0:${up ? 0 : p0.frac};--f1:${x.top ? 1 : p1.frac}"></i></div>
+      <span class="rlv">Lv ${x.before}${up ? ` → <b>${x.after}</b>` : ''}</span>
+      ${up ? `<em class="rup">${t('lvUp')}</em>` : ''}${x.top ? `<em class="rmax">${t('maxBonus')} +${x.bonus} ${DD}</em>` : ''}</div></div>`;
+  }).join('');
+  const lines = [[t('clear'), st.base], st.first ? [t('firstClear'), st.first] : null, st.bonus ? [t('maxBonus'), st.bonus] : null].filter(Boolean);
+  const pig = C.items.pig, pigOwned = SAVE.items.includes('pig');
+  const mulLine = st.mul && st.mul !== 1 ? `<div class="rl rmul"><span>${t('bagBonus') || 'BAG'}</span><b>×${st.mul.toFixed(2)}</b></div>` : '';
+  const got = st.gotItem && C.items[st.gotItem] ? (() => { const it = C.items[st.gotItem]; return `<div class="rgot"><img src="${img(it.icon)}"><div><em>${t('gotItem')}</em><b>${tr(it.name)}</b><small>${itemDesc(it)}</small></div></div>`; })() : '';
+  const s = h(`<div class="screen res7">
+    <div class="rplate">
+      <div class="rhead"><span class="rep">${tr(ep.title)}</span><b class="rclr">${st.win ? t('clear') : t('over')}</b></div>
+      ${st.win ? `<div class="rtime"><small>${t('clearTime')}</small><b>${fmtT(st.time)}</b>${st.newRecord ? `<em class="rnew">${t('newRecord')}</em>` : ''}<span>${t('best')} ${st.bestTime != null ? fmtT(st.bestTime) : '--:--'}</span></div>` : ''}
+      <div class="rgirls">${girls}</div>
+      <div class="rdd">
+        ${lines.map(([k, v], n) => `<div class="rl" style="--d:${1.2 + n * 0.2}s"><span>${k}</span><b>+${v}</b></div>`).join('')}
+        ${mulLine}
+        <div class="rtot"><span>${DD}</span><b class="rnum">+0</b><small>${t('dd')} ${SAVE.dd.toLocaleString()}</small></div>
+      </div>
+      ${got}
+      ${pigOwned ? `<div class="rpig"></div>` : ''}
+      ${st.unlocked?.length ? `<div class="runl">${t('unlocked')} <b>${st.unlocked.map((id) => tr(C.episodes[id].title)).join(' / ')}</b></div>` : ''}
       <button class="ok">${t('toSelect')} ▶</button>
     </div>
-    <img class="rfig" src="${img(team[0].poses.victory)}" draggable="false">
+    <img class="rfig" src="${img(team[0]?.poses?.victory)}" draggable="false">
   </div>`);
   el.appendChild(s);
   sfx.stamp();
-  setTimeout(() => sfx.slam && sfx.slam(), 1100);
+  // the total counts up
+  const num = s.querySelector('.rnum'), t0 = performance.now() + 1700, dur = 900;
+  const count = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); num.textContent = `+${Math.round(st.dd * (1 - Math.pow(1 - k, 3))).toLocaleString()}`; if (k < 1 && num.isConnected) requestAnimationFrame(count); else if (k >= 1) sfx.slam && sfx.slam(); };
+  requestAnimationFrame(count);
+  // the piggy bank: its level, its multiplier, and an upgrade for its price
+  const pigEl = s.querySelector('.rpig');
+  const drawPig = () => {
+    if (!pigEl || !pig) return;
+    const lv = itemLevel('pig'), cur = pig.levels[lv - 1], nx = nextLevel('pig');
+    pigEl.innerHTML = `<img src="${img(pig.icon)}"><div><b>${tr(pig.name)}</b> <span>Lv ${lv}</span><small>${itemDesc(pig, cur)}</small></div>` +
+      (nx ? `<button class="up${SAVE.dd < nx.price ? ' poor' : ''}">${t('upgrade')} Lv ${nx.lv} ×${nx.dd}<small>${nx.price.toLocaleString()} ${DD}</small></button>` : '');
+    const bt = pigEl.querySelector('.up');
+    if (bt) tap(bt, () => { if (upgradeItem('pig')) { sfx.stamp(); drawPig(); s.querySelector('.rtot small').textContent = `${DD} ${SAVE.dd.toLocaleString()}`; } else { bt.classList.remove('shake'); void bt.offsetWidth; bt.classList.add('shake'); } });
+  };
+  drawPig();
   tap(s.querySelector('.ok'), () => { el.innerHTML = ''; onDone(); });
 }
+// an item's description with its current numbers ({dd} = its 伍德刀盾 multiplier at its level)
+function itemDesc(it, lv) { const v = lv || (it.levels ? it.levels[itemLevel(it.id) - 1] : it.effects) || {}; return tr(it.desc).replace('{dd}', v.dd ?? ''); }
 
 export function showGameOver(st, onRetry, onSelect) {
   const el = ui();
@@ -175,7 +204,7 @@ export function showGameOver(st, onRetry, onSelect) {
   const s = h(`<div class="screen over">
     <img class="obust" src="${img(c.cam.hurt)}" draggable="false">
     <div class="otitle">${t('over')}</div>
-    <div class="odd">刀盾 +${st.dd}</div>
+    <div class="odd">${t('dd')} +${st.dd}</div>
     <div class="ostatic"></div>
     <div class="rbtns"><button class="retry">${t('retry')}</button><button class="home">${t('toSelect')}</button></div>
   </div>`);

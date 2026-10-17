@@ -1,556 +1,109 @@
 {
   "_doc": "选关屏（红黑白风格，参考图 art/ref/select_ref.png，1672x941）。位置都是参考图像素，程序按比例换算。底图、控件底板（pieces）、角色卡画、图标都是从参考图原样拆出的图片（tools/r20_import.py 写入 pieces 的位置，不要手改）；文字由程序按这里量好的位置、字号、角度写（art/ref/select_parts/text_boxes_measured.json）。text 的 x,y 是文字中心（align left 时 x 是左端），deg 是旋转角度。",
   "select": {
-    "design": [
-      1920,
-      1080
-    ],
-    "refSize": [
-      1672,
-      941
-    ],
-    "parallax": {
-      "max": 26,
-      "ease": 5
-    },
-    "colors": {
-      "red": "#d8141e",
-      "ink": "#121012",
-      "paper": "#f3f1ee",
-      "grey": "#c9c7c5",
-      "greyDark": "#8e8c8a",
-      "light": "#cfcdcb"
-    },
-    "plate": {
-      "img": "ui/sel_plate",
-      "depth": 0.05
-    },
+    "design": [1920, 1080],
+    "refSize": [1672, 941],
+    "parallax": { "max": 26, "ease": 5 },
+    "colors": { "red": "#d8141e", "ink": "#121012", "paper": "#f3f1ee", "grey": "#c9c7c5", "greyDark": "#8e8c8a", "light": "#cfcdcb" },
+    "plate": { "img": "ui/sel_plate", "depth": 0.05 },
     "uiDepth": 0.05,
     "pieces": {
-      "back": {
-        "img": "ui/sel_pc_back",
-        "box": [
-          11,
-          13,
-          290,
-          94
-        ]
-      },
-      "coins": {
-        "img": "ui/sel_pc_coins",
-        "box": [
-          1337,
-          22,
-          1561,
-          85
-        ]
-      },
-      "gear": {
-        "img": "ui/sel_pc_gear",
-        "box": [
-          1565,
-          12,
-          1659,
-          99
-        ]
-      },
-      "tab_team": {
-        "img": "ui/sel_pc_tab_team",
-        "box": [
-          906,
-          88,
-          1276,
-          168
-        ],
-        "on": "ui/sel_pc_tab_team",
-        "off": "ui/sel_pc_tab_team_off"
-      },
-      "tab_bag": {
-        "img": "ui/sel_pc_tab_bag",
-        "box": [
-          1262,
-          90,
-          1569,
-          169
-        ],
-        "off": "ui/sel_pc_tab_bag",
-        "on": "ui/sel_pc_tab_bag_on"
-      },
-      "header": {
-        "img": "ui/sel_pc_header",
-        "box": [
-          23,
-          118,
-          662,
-          366
-        ]
-      },
-      "row_n": {
-        "img": "ui/sel_pc_row_n",
-        "box": [
-          39,
-          457,
-          585,
-          532
-        ]
-      },
-      "row_boss": {
-        "img": "ui/sel_pc_row_boss",
-        "box": [
-          39,
-          541,
-          585,
-          617
-        ]
-      },
-      "best": {
-        "img": "ui/sel_pc_best",
-        "box": [
-          47,
-          630,
-          241,
-          691
-        ]
-      },
-      "go": {
-        "img": "ui/sel_pc_go",
-        "box": [
-          1,
-          650,
-          650,
-          875
-        ]
-      },
-      "low_cat": {
-        "img": "ui/sel_pc_low_cat",
-        "box": [
-          868,
-          574,
-          1264,
-          777
-        ]
-      },
-      "low_pink": {
-        "img": "ui/sel_pc_low_pink",
-        "box": [
-          1263,
-          574,
-          1672,
-          782
-        ]
-      },
-      "swap": {
-        "img": "ui/sel_pc_swap",
-        "box": [
-          1048,
-          772,
-          1466,
-          885
-        ]
-      },
-      "next": {
-        "img": "ui/sel_next_ep1",
-        "box": [
-          638,
-          231,
-          838,
-          793
-        ]
-      }
+      "back": { "img": "ui/sel_pc_back", "box": [11, 13, 290, 94] },
+      "coins": { "img": "ui/sel_pc_coins", "box": [1337, 22, 1561, 85] },
+      "gear": { "img": "ui/sel_pc_gear", "box": [1565, 12, 1659, 99] },
+      "tab_team": { "img": "ui/sel_pc_tab_team", "box": [906, 88, 1276, 168], "on": "ui/sel_pc_tab_team", "off": "ui/sel_pc_tab_team_off" },
+      "tab_bag": { "img": "ui/sel_pc_tab_bag", "box": [1262, 90, 1569, 169], "off": "ui/sel_pc_tab_bag", "on": "ui/sel_pc_tab_bag_on" },
+      "header": { "img": "ui/sel_pc_header", "box": [23, 118, 662, 366] },
+      "row_n": { "img": "ui/sel_pc_row_n", "box": [39, 457, 585, 532] },
+      "row_boss": { "img": "ui/sel_pc_row_boss", "box": [39, 541, 585, 617] },
+      "best": { "img": "ui/sel_pc_best", "box": [47, 630, 275, 691] },
+      "go": { "img": "ui/sel_pc_go", "box": [1, 650, 650, 875] },
+      "low_cat": { "img": "ui/sel_pc_low_cat", "box": [868, 574, 1264, 777] },
+      "low_pink": { "img": "ui/sel_pc_low_pink", "box": [1263, 574, 1672, 782] },
+      "swap": { "img": "ui/sel_pc_swap", "box": [1048, 772, 1466, 885] },
+      "next": { "img": "ui/sel_next_ep1", "box": [638, 231, 838, 793] }
     },
     "back": {
-      "text": {
-        "key": "title",
-        "x": 166,
-        "y": 53,
-        "size": 33.5,
-        "maxW": 136
-      },
-      "tri": [
-        [
-          49,
-          52
-        ],
-        [
-          76,
-          35
-        ],
-        [
-          76,
-          69
-        ]
-      ]
+      "text": { "key": "title", "x": 166, "y": 53, "size": 33.5, "maxW": 136 },
+      "tri": [[49, 52], [76, 35], [76, 69]]
     },
-    "coins": {
-      "icon": {
-        "img": "ui/sel_icon_coin",
-        "box": [
-          1352,
-          30,
-          1402,
-          80
-        ]
-      },
-      "text": {
-        "x1": 1514,
-        "y": 56,
-        "size": 31,
-        "deg": -1.2
-      }
-    },
-    "gear": {
-      "icon": {
-        "img": "ui/p5_icon_gear",
-        "box": [
-          1584,
-          26,
-          1642,
-          82
-        ]
-      }
-    },
+    "coins": { "icon": { "img": "ui/sel_icon_coin", "box": [1352, 30, 1402, 80] }, "text": { "x1": 1514, "y": 56, "size": 31, "deg": -1.2 } },
+    "gear": { "icon": { "img": "ui/p5_icon_gear", "box": [1584, 26, 1642, 82] } },
     "tabs": [
       {
         "id": "team",
-        "text": {
-          "key": "team",
-          "x": 1132,
-          "y": 134,
-          "size": 30
-        },
-        "icon": {
-          "img": "ui/sel_icon_team",
-          "box": [
-            1025,
-            112,
-            1082,
-            152
-          ]
-        }
+        "text": { "key": "team", "x": 1132, "y": 134, "size": 30 },
+        "icon": { "img": "ui/sel_icon_team", "box": [1025, 112, 1082, 152] }
       },
-      {
-        "id": "bag",
-        "text": {
-          "key": "bag",
-          "x": 1444,
-          "y": 134,
-          "size": 30
-        },
-        "icon": {
-          "img": "ui/sel_icon_bag",
-          "box": [
-            1340,
-            110,
-            1392,
-            155
-          ]
-        }
-      }
+      { "id": "bag", "text": { "key": "bag", "x": 1444, "y": 134, "size": 30 }, "icon": { "img": "ui/sel_icon_bag", "box": [1340, 110, 1392, 155] } }
     ],
     "chapter": {
-      "label": {
-        "text": "CHAPTER",
-        "x": 154.5,
-        "y": 194,
-        "size": 30.3,
-        "deg": -8.75,
-        "italic": true
-      },
-      "no": {
-        "x": 278,
-        "y": 165,
-        "size": 142,
-        "deg": 0,
-        "italic": true
-      },
-      "title": {
-        "x": 351,
-        "y": 255,
-        "size": 63,
-        "deg": -9,
-        "maxW": 600
-      },
-      "sub": {
-        "x": 322.5,
-        "y": 322,
-        "size": 28.5,
-        "deg": -7.75,
-        "maxW": 320
-      }
+      "label": { "text": "CHAPTER", "x": 154.5, "y": 194, "size": 30.3, "deg": -8.75, "italic": true },
+      "no": { "x": 278, "y": 165, "size": 142, "deg": 0, "italic": true },
+      "title": { "x": 351, "y": 255, "size": 63, "deg": -9, "maxW": 600 },
+      "sub": { "x": 322.5, "y": 322, "size": 28.5, "deg": -7.75, "maxW": 320 }
     },
     "rows": {
-      "slots": [
-        377,
-        460,
-        544
-      ],
+      "slots": [377, 460, 544],
       "_slots": "每行上边的 y（参考图三行），piece 的形状按这三处摆",
-      "no": {
-        "x": 88,
-        "dy": 33,
-        "size": 52,
-        "italic": true
-      },
-      "text": {
-        "x": 157,
-        "dy": 34,
-        "size": 29.5,
-        "maxW": 205
-      },
+      "no": { "x": 88, "dy": 33, "size": 52, "italic": true },
+      "text": { "x": 157, "dy": 34, "size": 29.5, "maxW": 205 },
       "boss": {
-        "skull": {
-          "img": "ui/sel_icon_skull",
-          "box": [
-            58,
-            552,
-            112,
-            606
-          ]
-        },
-        "word": {
-          "text": "BOSS",
-          "x": 155.5,
-          "y": 579,
-          "size": 24.8,
-          "italic": true
-        },
+        "skull": { "img": "ui/sel_icon_skull", "box": [58, 552, 112, 606] },
+        "word": { "text": "BOSS", "x": 155.5, "y": 579, "size": 24.8, "italic": true },
         "textX": 228
       },
-      "thumb": {
-        "x0": 370,
-        "x1": 585,
-        "dy0": 1,
-        "dy1": 67
-      },
-      "chev": {
-        "img": "ui/sel_chevrons",
-        "box": [
-          534,
-          0,
-          564,
-          0
-        ],
-        "dy0": 21,
-        "dy1": 50
-      }
+      "thumb": { "x0": 370, "x1": 585, "dy0": 1, "dy1": 67 },
+      "chev": { "img": "ui/sel_chevrons", "box": [534, 0, 564, 0], "dy0": 21, "dy1": 50 }
     },
     "best": {
-      "crown": {
-        "img": "ui/sel_icon_crown",
-        "box": [
-          55,
-          642,
-          105,
-          682
-        ]
-      },
-      "word": {
-        "text": "BEST",
-        "x": 149,
-        "y": 660.5,
-        "size": 26.3,
-        "italic": true
-      },
-      "no": {
-        "x": 212,
-        "y": 657,
-        "size": 41,
-        "italic": true
-      }
+      "crown": { "img": "ui/sel_icon_crown", "box": [55, 642, 105, 682] },
+      "word": { "text": "BEST", "x": 132, "y": 660.5, "size": 21, "italic": true },
+      "no": { "x": 216, "y": 657, "size": 31, "italic": true }
     },
     "go": {
-      "text": {
-        "key": "go",
-        "x": 374,
-        "y": 770.5,
-        "size": 104,
-        "italic": true
-      },
-      "icon": {
-        "img": "ui/p5_icon_play",
-        "box": [
-          134,
-          733,
-          200,
-          813
-        ]
-      }
+      "text": { "key": "go", "x": 374, "y": 770.5, "size": 104, "italic": true },
+      "icon": { "img": "ui/p5_icon_play", "box": [134, 733, 200, 813] }
     },
     "next": {
       "img": "ui/sel_next_ep1",
-      "box": [
-        638,
-        231,
-        838,
-        793
-      ],
-      "no": {
-        "x": 741,
-        "y": 319,
-        "size": 28,
-        "deg": -8.25
-      },
-      "title": {
-        "x": 740,
-        "y": 362,
-        "size": 56,
-        "deg": -7.25,
-        "maxW": 165
-      },
-      "wip": {
-        "key": "soon",
-        "x": 730,
-        "y": 562,
-        "size": 30,
-        "deg": -2.2
-      },
-      "lock": {
-        "img": "ui/sel_icon_lock_big",
-        "box": [
-          700,
-          445,
-          768,
-          525
-        ]
-      }
+      "box": [638, 231, 838, 793],
+      "no": { "x": 741, "y": 319, "size": 28, "deg": -8.25 },
+      "title": { "x": 740, "y": 362, "size": 56, "deg": -7.25, "maxW": 165 },
+      "wip": { "key": "soon", "x": 730, "y": 562, "size": 30, "deg": -2.2 },
+      "lock": { "img": "ui/sel_icon_lock_big", "box": [700, 445, 768, 525] }
     },
-    "arrows": {
-      "l": {
-        "img": "ui/sel_arrow_l",
-        "box": [
-          599,
-          440,
-          650,
-          530
-        ]
-      },
-      "r": {
-        "img": "ui/sel_arrow_r",
-        "box": [
-          824,
-          440,
-          879,
-          530
-        ]
-      }
-    },
+    "arrows": { "l": { "img": "ui/sel_arrow_l", "box": [599, 440, 650, 530] }, "r": { "img": "ui/sel_arrow_r", "box": [824, 440, 879, 530] } },
     "cards": {
-      "slots": [
-        0,
-        382
-      ],
+      "slots": [0, 382],
       "_slots": "两张卡画的横向位置差（1P 位、2P 位）",
       "art": {
-        "cat": {
-          "img": "ui/sel_card_cat",
-          "box": [
-            824,
-            109,
-            1253,
-            584
-          ]
-        },
-        "pink": {
-          "img": "ui/sel_card_pink",
-          "box": [
-            1262,
-            109,
-            1672,
-            584
-          ],
-          "slot": 1
-        }
+        "cat": { "img": "ui/sel_card_cat", "box": [824, 109, 1253, 584] },
+        "pink": { "img": "ui/sel_card_pink", "box": [1262, 109, 1672, 584], "slot": 1 }
       },
       "dx": 392,
       "_dx": "2P 卡上的文字、图标相对 1P 卡的横向偏移",
-      "badge": {
-        "x": 930.5,
-        "y": 609.5,
-        "size": 56,
-        "italic": true,
-        "maxW": 60
-      },
-      "name": {
-        "x": 992,
-        "y": 613,
-        "size": 31,
-        "maxW": 240
-      },
-      "swords": {
-        "img": "ui/sel_icon_swords",
-        "box": [
-          893,
-          645,
-          938,
-          690
-        ]
-      },
-      "mastery": {
-        "x": 949,
-        "y": 668.5,
-        "size": 22
-      },
-      "bar": {
-        "x0": 1073,
-        "x1": 1231,
-        "y": 668.5,
-        "h": 15
-      },
+      "badge": { "x": 930.5, "y": 609.5, "size": 56, "italic": true, "maxW": 60 },
+      "name": { "x": 992, "y": 613, "size": 31, "maxW": 240 },
+      "swords": { "img": "ui/sel_icon_swords", "box": [893, 645, 938, 690] },
+      "mastery": { "x": 949, "y": 668.5, "size": 22 },
+      "bar": { "x0": 1073, "x1": 1231, "y": 668.5, "h": 15 },
       "chips": [
         {
           "id": "base",
-          "icon": {
-            "img": "ui/sel_icon_shirt",
-            "box": [
-              904,
-              712,
-              950,
-              756
-            ]
-          },
-          "text": {
-            "key": "base",
-            "x": 991,
-            "y": 732.5,
-            "size": 22.4
-          }
+          "icon": { "img": "ui/sel_icon_shirt", "box": [904, 712, 950, 756] },
+          "text": { "key": "base", "x": 991, "y": 732.5, "size": 22.4 }
         },
         {
           "id": "limit",
-          "icon": {
-            "img": "ui/sel_icon_lock",
-            "box": [
-              1079,
-              711,
-              1116,
-              756
-            ]
-          },
-          "text": {
-            "key": "limit",
-            "x": 1171.5,
-            "y": 734,
-            "size": 21.1
-          }
+          "icon": { "img": "ui/sel_icon_lock", "box": [1079, 711, 1116, 756] },
+          "text": { "key": "limit", "x": 1171.5, "y": 734, "size": 21.1 }
         }
       ]
     },
     "swap": {
-      "text": {
-        "key": "swap",
-        "x": 1294.5,
-        "y": 821.5,
-        "size": 29
-      },
-      "icon": {
-        "img": "ui/sel_icon_swap",
-        "box": [
-          1150,
-          800,
-          1200,
-          850
-        ]
-      }
+      "text": { "key": "swap", "x": 1294.5, "y": 821.5, "size": 29 },
+      "icon": { "img": "ui/sel_icon_swap", "box": [1150, 800, 1200, 850] }
     },
     "textDy": -2
   }

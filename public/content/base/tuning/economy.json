@@ -1,13 +1,10 @@
 {
-  "_doc": "局外数值。rankDd / rankXp：通关评价对应的刀盾和熟练度经验；失败时按击杀数给 lossDdPerKill 刀盾、lossXpPerKill 经验；通关时每个击杀另加 winXpPerKill 经验；首次通关加 firstClearDd。score：评价算分（准头、受伤、连击、用时各占多少分，rankAt 是 S/A/B 的分数线）。mastery：熟练度等级表（xpAt[i] = 升到 i 级要的总经验），每级加伤害 dmgPerLv、减装填 reloadPerLv。bagCapSteps：背包扩容 [容量, 价格]。newSave：新存档的初始内容。",
+  "_doc": "局外数值（不做评级，DESIGN 局外）。通关：clearDd 伍德刀盾 + 每个击杀 winDdPerKill，首次通关再加 firstClearDd；历战值（熟练度经验）winXp + 每个击杀 winXpPerKill。失败：按击杀数给 lossDdPerKill 伍德刀盾、lossXpPerKill 历战值。角色已经满级（满破）时，她拿到的历战值按 maxXpDd 换成追加的伍德刀盾。背包里的道具（招财猫、克系存钱罐）再乘倍率。mastery：历战值等级表（xpAt[i] = 升到 i 级要的总经验），每级加伤害 dmgPerLv、减装填 reloadPerLv。bagCapSteps：背包扩容 [容量, 价格]。newSave：新存档的初始内容。",
   "economy": {
-    "rankDd": { "S": 500, "A": 350, "B": 200, "C": 100 },
-    "rankXp": { "S": 100, "A": 70, "B": 40, "C": 20 },
     "lossDdPerKill": 3,
     "winXpPerKill": 2,
     "lossXpPerKill": 1,
     "firstClearDd": 300,
-    "score": { "acc": 35, "taken": 25, "takenRef": 200, "comboMax": 20, "time": 20, "defaultPar": 300, "rankAt": { "S": 80, "A": 65, "B": 50 } },
     "mastery": { "maxLv": 10, "xpAt": [0, 0, 120, 280, 480, 740, 1060, 1440, 1900, 2440, 3080], "dmgPerLv": 0.03, "reloadPerLv": 0.015 },
     "bagCapSteps": [[5, 300], [6, 600], [7, 1000], [8, 1500]],
     "newSave": {
@@ -18,7 +15,12 @@
       "items": [],
       "bag": [],
       "cap": 4,
-      "seenTutorial": false
-    }
+      "seenTutorial": false,
+      "itemLv": {}
+    },
+    "clearDd": 300,
+    "winDdPerKill": 3,
+    "winXp": 80,
+    "maxXpDd": 0.5
   }
 }

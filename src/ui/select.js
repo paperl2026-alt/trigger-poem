@@ -123,7 +123,8 @@ export function showSelect(act) {
   img(bestG, P.best.img, P.best.box);
   img(bestG, L.best.crown.img, L.best.crown.box, '', true);
   text(bestG, L.best.word, 'ink');
-  text(bestG, L.best.no, 'red', () => String(SAVE.eps[eps[idx].id]?.best || 0));
+  // the best full-clear time of this chapter (no rating: DESIGN 局外)
+  text(bestG, L.best.no, 'red', () => { const b = SAVE.eps[eps[idx].id]?.bestTime; return b == null ? '--:--' : `${Math.floor(b / 60)}:${String(Math.floor(b % 60)).padStart(2, '0')}`; });
   const goG = group('go btn'); goG.dataset.cur = 'hover';
   const goFace = img(goG, P.go.img, P.go.box, 'face');
   el('div', 'sweep', goG).style.clipPath = 'inset(0)';
@@ -145,7 +146,7 @@ export function showSelect(act) {
       const dy = y0 - (s.boss ? R.slots[2] : R.slots[1]);
       const g = group('row', rowsG); g.style.setProperty('--i', i); g.style.translate = `0 ${dy * RS}px`;
       const locked = i >= nOpen;
-      g.classList.toggle('s-row-lock', locked); g.classList.toggle('s-row-pick', i === pick);
+      g.classList.toggle('s-row-lock', locked); g.classList.toggle('s-row-open', !locked); g.classList.toggle('s-row-pick', i === pick);
       g.dataset.cur = 'hover';
       tap(g, (ev) => { if (locked) { shake(g); sfx.ui(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
       img(g, pc.img, pc.box);

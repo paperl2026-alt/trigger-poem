@@ -1,5 +1,5 @@
 {
-  "_doc": "书包道具。cost 占书包几格，price 用刀盾买的价格。effects 效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 刀盾收入倍率，stageHeal 每个小关结束回多少血。",
+  "_doc": "书包道具。cost 占书包几格，price 用伍德刀盾买的价格。effects 效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 伍德刀盾收入倍率，stageHeal 每个小关结束回多少血。 levels：可以升级的道具（没有满破、进化，就是升级；存档 SAVE.itemLv）每一级的效果和升到这一级的价格，效果按当前等级取；reward：不能买，是通关奖励（episodes.json 的 reward）。",
   "charm": {
     "id": "charm",
     "icon": "item/charm",
@@ -56,7 +56,7 @@
     "cost": 1,
     "price": 600,
     "name": { "zh": "招财猫", "en": "Lucky Cat", "ja": "招き猫" },
-    "desc": { "zh": "刀盾收入 +25%", "en": "+25% 刀盾", "ja": "刀盾 +25%" },
+    "desc": { "zh": "伍德刀盾收入 +25%", "en": "+25% What Da Dog Doin'", "ja": "ワッダドッグドゥーイン +25%" },
     "order": 5,
     "effects": { "dd": 1.25 }
   },
@@ -79,5 +79,17 @@
     "desc": { "zh": "每个小关结束回 1 心", "en": "Heal 1 heart after each stage", "ja": "ステージ毎に 1 回復" },
     "order": 7,
     "effects": { "stageHeal": 20 }
+  },
+  "pig": {
+    "id": "pig",
+    "icon": "item/pig",
+    "cost": 1,
+    "price": 0,
+    "reward": true,
+    "name": { "zh": "克系存钱罐", "en": "Unspeakable Piggy Bank", "ja": "名状しがたい貯金箱" },
+    "desc": { "zh": "结算时伍德刀盾 ×{dd}", "en": "What Da Dog Doin' ×{dd} at the results", "ja": "リザルトでワッダドッグドゥーイン ×{dd}" },
+    "order": 9,
+    "effects": { "dd": 1.2 },
+    "levels": [{ "dd": 1.2 }, { "dd": 1.35, "price": 600 }, { "dd": 1.5, "price": 1200 }, { "dd": 1.7, "price": 2000 }, { "dd": 2.0, "price": 3200 }]
   }
 }

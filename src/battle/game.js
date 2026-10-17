@@ -16,7 +16,7 @@ import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
-import { SAVE, persist, levelOf, openStage } from '../core/save.js';
+import { SAVE, persist, levelOf, openStage, giveItem, maxLv } from '../core/save.js';
 import { bagFx } from './items.js';
 import { C, T } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
@@ -326,34 +326,37 @@ export class Game {
       taken: p1.taken, team: this.run.team, bag: this.run.bag,
       players: ps.map((p) => ({ id: p.id, kills: p.kills, dealt: Math.round(p.dealt), acc: p.shots ? p.hits / p.shots : 0 })),
     };
-    const K = T.economy.score;
-    const score = st.acc * K.acc + clamp(1 - st.taken / K.takenRef, 0, 1) * K.taken + Math.min(K.comboMax, st.combo) + clamp((this.ep.par || K.defaultPar) / Math.max(1, st.time), 0, 1) * K.time;
-    st.score = Math.round(score);
-    st.rank = win ? (score >= K.rankAt.S ? 'S' : score >= K.rankAt.A ? 'A' : score >= K.rankAt.B ? 'B' : 'C') : null;
     return st;
   }
-  // 刀盾 + mastery XP; clearing an episode unlocks the next ones. Applied to the save right away.
+  // 伍德刀盾 + 历战值 (mastery XP); no rating (DESIGN 局外「不做评级」): a clear pays a fixed amount and the kills, the best full-clear time
+  // is kept; a girl already at the top level turns her XP into extra 伍德刀盾 (满破追加); the first clear can give an item (episode
+  // "reward") and unlocks the next episodes. Applied to the save right away; st carries every number for the results screen.
   applyRewards(st) {
-    const E = T.economy, ddMul = bagFx(this.run.bag).dd;
+    const E = T.economy;
     const rec = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null });
-    let dd = st.win ? E.rankDd[st.rank] : st.kills * E.lossDdPerKill;
     st.firstClear = st.win && !rec.cleared && !this.ep.debug;
-    if (st.firstClear) dd += E.firstClearDd;
-    st.dd = Math.round(dd * ddMul);
-    st.xp = {};
-    st.unlocked = [];
+    st.base = st.win ? E.clearDd + st.kills * E.winDdPerKill : st.kills * E.lossDdPerKill;
+    st.first = st.firstClear ? E.firstClearDd : 0;
+    st.xp = {}; st.unlocked = []; st.bonus = 0;
     if (this.ep.debug) { st.dd = 0; return; }
-    SAVE.dd += st.dd;
     for (const id of new Set(st.team)) {
-      const c = SAVE.chars[id];
-      const gain = st.win ? E.rankXp[st.rank] + st.kills * E.winXpPerKill : st.kills * E.lossXpPerKill;
-      st.xp[id] = { gain, before: levelOf(c.xp), after: levelOf(c.xp + gain), xp: c.xp + gain };
-      c.xp += gain;
+      const c = SAVE.chars[id], gain = st.win ? E.winXp + st.kills * E.winXpPerKill : st.kills * E.lossXpPerKill;
+      const before = levelOf(c.xp), top = before >= maxLv();
+      st.xp[id] = { gain, before, after: levelOf(c.xp + gain), xp0: c.xp, xp: c.xp + gain, top, bonus: top ? Math.round(gain * E.maxXpDd) : 0 };
+      if (top) st.bonus += st.xp[id].bonus; else c.xp += gain;
     }
+    if (st.firstClear && this.ep.reward?.item && !SAVE.items.includes(this.ep.reward.item)) {   // (given before the multiplier: it counts at once)
+      giveItem(this.ep.reward.item); st.gotItem = this.ep.reward.item;
+      if (!SAVE.bag.includes(st.gotItem)) { SAVE.bag.push(st.gotItem); this.run.bag = [...this.run.bag, st.gotItem]; }
+    }
+    st.mul = bagFx(this.run.bag).dd;
+    st.dd = Math.round((st.base + st.first + st.bonus) * st.mul);
+    SAVE.dd += st.dd;
     if (st.win) {
       rec.cleared = true;
-      const order = 'CBAS';
-      if (!rec.best || order.indexOf(st.rank) > order.indexOf(rec.best)) rec.best = st.rank;
+      st.bestBefore = rec.bestTime ?? null;
+      if (rec.bestTime == null || st.time < rec.bestTime) { rec.bestTime = st.time; st.newRecord = st.bestBefore != null; }
+      st.bestTime = rec.bestTime;
       for (const id of this.ep.unlocks || []) if (!SAVE.eps[id]?.open) { SAVE.eps[id] = { open: true, cleared: false, best: null }; st.unlocked.push(id); }
     }
     persist();
