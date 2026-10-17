@@ -66,15 +66,17 @@
     - **`panels.js`（PanelWorld，现行）**：平板拼搭的场景；
     - `world.js`、`level.js`：旧的 3D 房间；
     - `plates.js`：作废的静态画假 3D，序章暂时还挂着；
-  - `player.js`：前景主角。现在是旧的纸片 + `soft.js` 简易晃动，要换成 `src/jiggle`，见 PLAN；
+  - `player.js`：前景主角的状态、射击、受伤、Fever；有 `rig` 的角色用 `heroine.js`（晃动技术画的两张立绘 cover / fire），没有的退回旧纸片 + `soft.js`；
+    - 主角在第 1 层（layers），`Game.render` 先画场景（含描边），再单独画主角，场景和描边永远压不到她；
+  - `muzzle.js`：射击特效（火光图 shader + 光晕 + 冲击环 / 符咒环 + 粒子，随 Fever 分级）；
   - `enemies.js`：Actor 纸片 + 浮雕、行为模板（walker / flyer / thrower / crawler）、飞行物、`blast`（必须躲的攻击）；
   - `boss.js`、`giant.js`：Boss（旧花车；巨大化风纪委员）；
-  - `fx.js`：粒子、弹道、预警圈、拟声字；`fever.js`、`characters.js`、`items.js`、`soft.js`。
+  - `fx.js`：粒子、弹道、预警圈、拟声字、怪物蓄力光（`charge`）、声波（`soundWave`）；`fever.js`、`characters.js`、`items.js`、`soft.js`。
 - `src/ui/`：
   - `title`（标题+设置）、`select`（选关，类名一律加 `s-` 前缀）；
   - `manga`（翻页转场）、`comic`（漫画播放）；
   - `hud` + `hud.css`（战斗 HUD，待按设计稿重做）、`screens`（旧结算等）、`uifx`（菜单粒子）、`cursor`。
-- `src/jiggle/`：晃动技术（见下），目前只在 `jiggle.html` 里用。
+- `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
 
 ## 场景：PanelWorld（`src/battle/panels.js`）
 - 关卡数据：`sets/<id>.json`，写 `"panels": true`。字段见文件里的 `_doc`。
@@ -85,9 +87,11 @@
   - 窗户抠空，外面是远景板；
   - `decals`：贴花；
   - `stations`：停留点，有镜头 `cam`、看向 `look`、来路 `via`、掩体 `covers`、怪物波次 `waves`、`fold`。
-- 掩体：
-  - 按停留点的镜头摆放（`side` 左右、`dist` 前方多远、`off` 偏到旁边多远、`h` 高度），开局就在关卡里；
-  - 有耐久（`tuning/combat.json` cover），打烂会倒下，到下一个停留点才换新的。
+- 掩体（规矩见 DESIGN「掩体」）：
+  - 关卡数据里只写每个停留点两人各用哪张图（`k`、`side`、`flip`），开局就立在走廊里；
+  - `placeCovers(players)`：按主角在这个停留点的站位算出位置和大小（立在她身后一点、顶边约在她跪姿 72% 高），布局变了重算；数值在 `tuning/layout.json` cover；
+  - 有耐久（`tuning/combat.json` cover），打烂向后倒；离站时 `dropCovers` 向后折倒压平（返回用时，Game 等它倒完才让人起身）。
+- 多版本：墙、天花板、尽头墙可以写一组图，按 `seed` 打乱、相邻不重复；地板按 3m 块随机（各版本边缘统一，拼不出缝）。
 - 和旧 World 接口相同（`place`、`travel`、`setCovers`、`covers`、`project`、`lightAt`……），Game 不用分支。多了：
   - `fold()`：走廊弯起、地板翘成棱；
   - `render()`：先渲到带深度的目标，再做描边和纸纹，然后 Game 画前景主角和 HUD。
