@@ -66,15 +66,18 @@
   - `tween`、`input`、`i18n`（`setLang` 会广播 `langchange`）、`save`、`settings`、`debug`。
 - `src/battle/`：
   - `game.js`：一局的流程：漫画 / 小关 / Boss 步骤，停留点，刷怪波次，射击规则，掩体受击，奖励；
+    - 每个小关可以有自己的场景（`episodes.json` 步骤写 `set`）：`useSet` 换场景时把两位主角、粒子挂到新场景上，旧场景 `dispose`；从中途开始（选关选了后面的小关）直接建那一关的场景；
+    - `interlude(id, then)`：战斗中插一页漫画（Boss 变身），停火、播完让两人回掩体，再交给 `then`；
+    - 射击会被挡：场景里标了 `occlude` 的板（操场的教学楼）挡在怪 / Boss 前面时打不到后面（`targetsAt`）；
   - 场景：
     - **`panels.js`（PanelWorld，现行）**：平板拼搭的场景；
     - `world.js`、`level.js`：旧的 3D 房间；
-    - `plates.js`：作废的静态画假 3D，序章暂时还挂着；
+    - `plates.js`：作废的静态画假 3D（已没有关卡用它）；
   - `player.js`：前景主角的状态、射击、受伤、Fever；有 `rig` 的角色用 `heroine.js`（晃动技术画的两张立绘 cover / fire），没有的退回旧纸片 + `soft.js`；
     - 主角在第 1 层（layers），`Game.render` 先画场景（含描边），再单独画主角，场景和描边永远压不到她；
   - `muzzle.js`：射击特效（火光图 shader + 光晕 + 冲击环 / 符咒环 + 粒子，随 Fever 分级）；
   - `enemies.js`：Actor 纸片 + 浮雕、行为模板（walker / flyer / thrower / crawler）、飞行物、`blast`（必须躲的攻击）；
-  - `boss.js`、`giant.js`：Boss（旧花车；巨大化风纪委员）；
+  - `boss.js`、`giant.js`：Boss（旧花车；巨大化风纪委员，见下面「Boss」）；
   - `fx.js`：粒子、弹道、预警圈、拟声字、怪物蓄力光（`charge`）、声波（`soundWave`）；`fever.js`、`characters.js`、`items.js`、`soft.js`。
 - `src/ui/`：
   - `title`（标题+设置）、`select`（选关，类名一律加 `s-` 前缀）；
@@ -100,10 +103,25 @@
   - `placeCovers(players)`：按主角在这个停留点的站位算出位置和大小（立在她身后一点、顶边约在她跪姿 72% 高），布局变了重算；数值在 `tuning/layout.json` cover；
   - 有耐久（`tuning/combat.json` cover），打烂向后倒；离站时 `dropCovers` 向后折倒压平（返回用时，Game 等它倒完才让人起身）。
 - 多版本：墙、天花板、尽头墙可以写一组图，按 `seed` 打乱、相邻不重复；地板按 3m 块随机（各版本边缘统一，拼不出缝）。
+- `hall` 里天花板、尽头墙、窗外远景都可以不写（操场露天）；墙图在 manifest 标了 `keyed`（抠空）就透明；`outsideAt` 摆窗外远景板，`outsideX` 是异变后的远景。
+- `boards`：自由摆放的板（教学楼正面、天空、教室后墙），`name` 给代码用（`world.named`，Boss 找教学楼），`occlude` 挡子弹，`sky` 不受雾影响。
+- 异变（`updateAnomaly`，Game 的 `invade` 把 `world.anomaly` 从 0 补间到 1）：每块有 `<图>_x` 版本的板从 `anomalyFrom` 那一点开始按距离一块接一块翻过去（压扁到一条线、离开表面、换图、再展开）；灯光 / 雾 / 天空跟着过渡到 `anomalyLit` / `anomalyFog` / `anomalySky`；`anomaly: true` 的贴花异变后才长出来。
+- 道具（`props`）站在某个停留点的掩体位置上时不画（`clearProps`，掩体按主角站位算，事先不知道在哪）。
 - 和旧 World 接口相同（`place`、`travel`、`setCovers`、`covers`、`project`、`lightAt`……），Game 不用分支。多了：
   - `fold()`：走廊弯起、地板翘成棱；
-  - `render()`：先渲到带深度的目标，再做描边和纸纹，然后 Game 画前景主角和 HUD。
-- 怪物位置：波次里写走廊坐标 `x` / `z`（米），浮空的写 `y`。
+  - `render()`：先渲到带深度的目标，再做描边和纸纹，然后 Game 画前景主角和 HUD；
+  - `fit(p, h, w, fly)`：怪物看得清（DESIGN「战斗画面布局」）：出场时挪到离镜头不太远（至少占屏幕高 `minShare`）、不比掩体近、脚在 HUD 带之上、左右在画面中间、飞的在上半屏；跟着停留点的朝向算；停留点的 `monsterFar` 能再拉近（走廊折叠后地板翘起的棱在后面）；数值 `tuning/layout.json` monster；
+  - `dispose()`：换场景时释放。
+- 怪物位置：波次里写场景坐标 `x` / `z`（米），浮空的写 `y`；只是大概位置，出场时 `fit` 会挪。
+- 序章三个场景在 `sets/ep0.json`：教室（平静 → 异变翻板；第二个停留点镜头转身看后墙）、走廊（沿用走廊验证，站点间转弯、折叠）、操场（Boss）。
+
+## Boss：巨大化风纪委员（`src/battle/giant.js`，数据 `bosses.json` dc）
+- 在操场（`ep0_yard`）打。她太大，屏幕里只有局部；三个形态各有自己的一套部件（`Part`：一个挂在锚点上的组，能显示不同样子，每种样子的几个版本出场时随机挑，受伤痕迹跨样子保留；画多宽、锚点在 `parts`）。
+  - 一形态：头在教学楼屋顶后面（按镜头到屋檐的视线算高度，屋檐挡住眼睛以下）、双手扒屋檐、头发垂在楼前；招式：扔手机 / 漫画、抬手拍掩体（抬着的时候打手能打断）、吹哨（必须躲），之后第三只眼睁开（弱点）；平时会眨眼，挨打多了会生气；
+  - 二形态：在楼后站起来，教学楼换成被压坏的那张，镜头上仰；手臂垂在楼前；招式由一只「动作手臂」顶替那边垂着的手臂：举尺（臂章是弱点，打够了打断）、甩胶带（连射）、指人（单打一个人，要躲）、交叉手臂防御（减伤）+ 召怪；
+  - 三形态：俯身压到操场上空，脸占满天空，头发帘垂在两边，双手从上面伸下来；第三只眼是单独一块盖在额头上（`eyeAt` 按每张脸对齐），一直是弱点；招式：喇叭尖叫（躲）、连射、抓掩体（打手能打断）、召怪。
+- 形态之间：旧形态沉下去 → `game.interlude` 播变身漫画页（`comics`）→ 新形态登场，镜头转到 `look`（掩体按新镜头重摆）→ 再开打。
+- 判定：每块部件的网格就是判定（按透明度），弱点是 `weak` 里的圆（按画出来的部分算）；受伤只变色不打洞（paper.js solid）。
 
 ## 浮雕和卡通光（`src/core/paper.js`）
 - 纸片网格有 `relief` 贴图时，顶点按远近往镜头方向推出（`reliefAmt`），片元用浮雕算法线，打两段卡通光，并写深度。
@@ -134,4 +152,3 @@
 - Windows 下 Electron 参数里带冒号会直接退出。
 - `src/style.css` 里有旧界面的全局样式，新界面要避开撞名。
 - 便携版（`npm run portable`）能构建，没实际运行验证过。
-- 序章（ep0）现在还挂在作废的 `plates.js` 场景上，等教室 / 玄关 / 操场按 PanelWorld 重做后切换。

@@ -5,7 +5,7 @@
 // A station = where the camera stops to fight: { via (rail points from the previous stop), cam, look, covers, waves }.
 // Anomaly (0 = calm, 1 = invaded): the world lerps its palette, set pieces float up, and tears open in the paper world.
 import * as THREE from 'three';
-import { tex } from '../core/assets.js';
+import { tex, meta } from '../core/assets.js';
 import { paperMesh } from '../core/paper.js';
 import { C } from '../core/content.js';
 
@@ -129,7 +129,10 @@ export class Level {
   flat(key, h, x, y, z, { rotY = 0, billboard = false, order = 0, float = 0 } = {}) {
     const t = tex[key];
     if (!t) return null;
-    const m = paperMesh(t, h * t.image.width / t.image.height, { pivot: 'bottom' });
+    // (h = the drawn height; a picture with a transparent margin, tools/pad_frames.py, still stands on its drawn bottom)
+    const pad = meta[key]?.pad || [0, 0, 0, 0], k = h / (t.image.height - pad[1] - pad[3]);
+    const m = paperMesh(t, t.image.width * k, { pivot: 'bottom' });
+    m.geometry.translate((pad[2] - pad[0]) / 2 * k, -pad[3] * k, 0);
     m.position.set(x, y, z);
     m.rotation.y = rotY;
     m.renderOrder = order;

@@ -12,7 +12,7 @@ import { sfx } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { shadowTex } from './fx.js';
 
-const tmpV = new THREE.Vector3();
+const tmpV = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
 const rnd = (a, b) => a + Math.random() * (b - a);
 
 // a flat board w x h (metres) showing texture key with the given uv scale; pivot at its centre
@@ -100,19 +100,34 @@ export class PanelWorld {
     // walls: one painted bay after another (left = classroom side, right = windows). Every surface kind has several pictures
     // (docs/ART.md 多版本): a fixed shuffled order per set, never the same picture twice in a row
     const bays = Math.ceil(L / bay), seed = S.seed ?? 7;
-    const KL = order(Hd.left, bays, seed), KR = order(Hd.right, bays, seed + 1), KC = order(Hd.ceil, bays, seed + 2);
+    const KL = order(Hd.left, bays, seed), KR = order(Hd.right, bays, seed + 1), KC = Hd.ceil ? order(Hd.ceil, bays, seed + 2) : null;
+    // boards with an anomaly version (<key>_x): when the evil energy hits they flip over to it, one after another (update)
+    this.flips = [];
+    const flip = (m, key, side, alt = `${key}_x`) => { if (tex[alt]) this.flips.push({ m, key, alt, side, p: 0, d: 0 }); return m; };
+    const keyed = (k) => !!(meta[k]?.keyed || /W$/.test(k));
     for (let i = 0; i < bays; i++) {
       const zc = z0 - (i + 0.5) * bay;
       const kl = KL[i], kr = KR[i];
-      const l = board(kl, bay, h); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc);
-      const r = board(kr, bay, h, { alpha: !!(meta[kr]?.keyed || /W$/.test(kr)) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc);
-      // ceiling, one bay at a time (so it folds with the rest)
-      const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc);
+      const l = board(kl, bay, h, { alpha: keyed(kl) }); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1);
+      const r = board(kr, bay, h, { alpha: keyed(kr) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc); flip(r, kr, -1);
+      // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
+      if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
     }
     // the end wall, the void behind it, the outside seen through the windows
-    const e = board(order(Hd.end, 1, seed + 3)[0], W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1);
-    for (const o of [{ x: x1 + 11, z: (z0 + z1) / 2, ry: -Math.PI / 2, w: 66 }, { x: 0, z: z1 - 14, ry: 0, w: 40 }]) {
-      const m = board(Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * 0.3, o.z); m.rotation.y = o.ry; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
+    if (Hd.end) { const ek = order(Hd.end, 1, seed + 3)[0], e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); }
+    if (Hd.outside) for (const o of (Hd.outsideAt || [{ x: x1 + 11, z: (z0 + z1) / 2, ry: -Math.PI / 2, w: 66 }, { x: 0, z: z1 - 14, ry: 0, w: 40 }])) {
+      const m = board(Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * (o.yk ?? 0.3), o.z); m.rotation.y = o.ry || 0; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
+      flip(m, Hd.outside, 0, Hd.outsideX);
+    }
+    // free-standing boards: a building front, a sky, a backdrop (x, z = bottom centre, y = its bottom, w = width; height from the picture)
+    for (const b of S.boards || []) {
+      const t = tex[b.k]; if (!t) continue;
+      const hh = b.h || b.w * t.image.height / t.image.width, m = board(b.k, b.w, hh, { alpha: keyed(b.k) || b.alpha });
+      m.position.set(b.x || 0, (b.y || 0) + hh / 2, b.z); m.rotation.y = (b.ry || 0) * Math.PI / 180;
+      if (b.sky) m.material.fog = false;
+      R.add(m); flip(m, b.k, 0);
+      if (b.name) (this.named || (this.named = {}))[b.name] = { m, w: b.w, h: hh, x: b.x || 0, y: b.y || 0, z: b.z };
+      if (b.occlude) (this.occluders || (this.occluders = [])).push(m);   // shots stop at it (Game.targetsAt)
     }
     // floor: tiles, so they can fold up into ridges; the painted boards run on across them
     this.tiles = [];
@@ -127,6 +142,7 @@ export class PanelWorld {
       t.rotation.x = Math.PI / 2;
       const g = new THREE.Group(); g.position.set(xa + tw / 2, 0, za - tl); g.add(t);
       put(g, za - tl);
+      if (tex[`${bk}_x`]) this.flips.push({ m: t, key: bk, alt: `${bk}_x`, side: 0, p: 0, d: 0, floor: true });
       this.tiles.push({ g, t, x: xa + tw / 2, z: za - tl / 2 });
     }
     // under the floor: the void the folds open onto
@@ -141,16 +157,24 @@ export class PanelWorld {
       else if (d.on === 'floor') { m.position.set(d.x, 0.01, d.z); m.rotation.x = -Math.PI / 2; m.rotation.z = d.r || 0; }
       else if (d.on === 'hang') { m.position.set(d.x, h - hh / 2 - 0.05, d.z); m.material.side = THREE.DoubleSide; }
       put(m, d.z);
+      if (d.anomaly) { m.visible = false; (this.anomalyDecals || (this.anomalyDecals = [])).push(m); }
     }
     // props standing in the corridor (relief drawings), and every station's covers: placed in the level, there from the start
     this.coverSets = {};
     for (const [sid, st] of Object.entries(S.stations)) this.coverSets[sid] = (st.covers || []).map((c) => this.makeCover(c, st, sid));
     for (const p of S.props || []) this.makeProp(p);
+    // the anomaly wave starts where the evil energy hits (set "anomalyFrom", default the far end) and runs outward from there
+    this.root.updateMatrixWorld(true);
+    const from = new THREE.Vector3(...(S.anomalyFrom || [0, h / 2, z1]));
+    for (const f of this.flips) { f.d = f.m.getWorldPosition(tmpV).distanceTo(from); f.base = f.m.position.clone(); }
   }
   // a relief drawing standing on the floor at (x, z), facing a point
+  // (h = the drawn height: a picture with a transparent margin for the outline, tools/pad_frames.py, still stands on the floor)
   relief(key, h, x, z, face, amtK = 0.32) {
-    const t = tex[key], ar = t.image.width / t.image.height, w = h * ar;
-    const m = paperMesh(t, w, { pivot: 'bottom', segs: [64, Math.max(8, Math.round(64 / ar))] });
+    const t = tex[key], ar = t.image.width / t.image.height, pad = meta[key]?.pad || [0, 0, 0, 0];
+    const k = h / (t.image.height - pad[1] - pad[3]), w = (t.image.width - pad[0] - pad[2]) * k;
+    const m = paperMesh(t, t.image.width * k, { pivot: 'bottom', segs: [64, Math.max(8, Math.round(64 / ar))] });
+    m.geometry.translate((pad[2] - pad[0]) / 2 * k, -pad[3] * k, 0);
     if (meta[key]?.relief) setRelief(m, tex[meta[key].relief], Math.min(w, h) * amtK);
     m.material.uniforms.lit.value.copy(this.lit);
     m.userData.texKey = key;
@@ -206,8 +230,17 @@ export class PanelWorld {
       cv.w = hh * cv.ar; cv.h = hh;
       cv.def.x = hit.x; cv.def.z = hit.z; cv.def.h = hh;
     }
+    this.clearProps();
   }
-  makeProp(p) { this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3); }
+  makeProp(p) { const r = this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3); (this.props || (this.props = [])).push({ ...r, x: p.x, z: p.z }); }
+  // a prop standing where a station's cover goes (covers are placed from the heroines' screen layout) steps aside: it is not drawn
+  clearProps() {
+    const all = Object.values(this.coverSets || {}).flat();
+    for (const p of this.props || []) {
+      const hit = all.some((c) => Math.hypot(c.def.x - p.x, c.def.z - p.z) < c.w / 2 + p.w / 2 + 0.15);
+      p.m.visible = p.sh.visible = !hit;
+    }
+  }
 
   // ---------------------------------------------------------------- folding (the "Inception" moves)
   // the corridor past the hinge bends up into a slope, and floor tiles near it rise into ridges, one after another
@@ -288,11 +321,80 @@ export class PanelWorld {
     return s;
   }
   applyAnomaly() {}
+  // the evil energy hits (game.invade tweens anomaly 0 -> 1): every board with an anomaly version flips over to it like a page, a wave from
+  // the far end toward the camera, popping off its surface on the way; the light, fog and sky shift with it (set "anomalyLit" / "anomalyFog"
+  // / "anomalySky"). Going straight to 1 (a later station) shows the anomaly versions at once.
+  updateAnomaly() {
+    const k = this.anomaly ?? 1;
+    if (k === this._ak) return;
+    const jump = this._ak === undefined || Math.abs(k - this._ak) > 0.5;
+    this._ak = k;
+    const S = this.set, maxD = Math.max(1, ...this.flips.map((f) => f.d));
+    for (const f of this.flips) {
+      const start = f.d / maxD * 0.55, p = jump ? (k >= 0.5 ? 1 : 0) : Math.min(1, Math.max(0, (k - start) / 0.4));
+      f.p = p;
+      const want = p >= 0.5 ? f.alt : f.key;
+      if (f.m.userData.texKey !== want && tex[want]) {
+        const t = tex[want], old = f.m.material.map;
+        if (old && (old.wrapS === THREE.RepeatWrapping)) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; }
+        f.m.material.map = t; f.m.material.needsUpdate = true; f.m.userData.texKey = want;
+      }
+      // the flip: squeezed to a sliver at the half-way point, lifted off its surface
+      const sq = Math.max(0.02, Math.abs(Math.cos(p * Math.PI)));
+      if (f.floor) f.m.scale.set(1, sq, 1); else f.m.scale.set(sq, 1, 1);
+      const lift = Math.sin(p * Math.PI) * 0.35;
+      f.m.position.copy(f.base);
+      if (f.side) f.m.position.x += f.side * lift; else if (!f.floor) f.m.position.z += lift * 0.5;
+    }
+    for (const d of this.anomalyDecals || []) { d.visible = k > 0.6; d.scale.setScalar(Math.min(1, Math.max(0.01, (k - 0.6) / 0.3))); }
+    if (S.anomalyLit) this.lit.setRGB(...(S.lit || [1, 0.94, 0.9])).lerp(TMPC.setRGB(...S.anomalyLit), k);
+    if (S.anomalyFog) { this.scene.fog.color.set(S.fog || '#8a6070').lerp(TMPC.set(S.anomalyFog), k); FOG.color.value.copy(this.scene.fog.color); }
+    if (S.anomalySky) this.scene.background.set(S.sky || '#2a1830').lerp(TMPC.set(S.anomalySky), k);
+  }
   litFlats() {}
+  // docs/DESIGN.md「战斗画面布局」: a monster h metres tall and w wide about to stand at p (a Vector3, changed in place) is moved to where
+  // the player can read it: no further than where it is minShare of the screen tall, not nearer than `near` (the covers), its feet
+  // above the bottom band (feetMin of the screen: HUD and the heroines' knees), inside the middle of the screen (walkX / flyX of the
+  // half width: the heroines stand at the sides) and inside the walls. A flyer (fly) also keeps between flyY of the screen height.
+  // Numbers: tuning/layout.json monster; a station's "monsterFar" (metres) keeps them nearer still. Works for any station direction.
+  fit(p, h, w, fly = false) {
+    const M = T.layout.monster, c = this.camPos, f = FIT_F.copy(this.lookAt).sub(c);
+    const pitch = Math.atan2(f.y, Math.hypot(f.x, f.z));
+    f.y = 0; f.normalize();
+    const rt = FIT_R.set(-f.z, 0, f.x), d0 = tmpV.copy(p).sub(c);
+    const tanV = Math.tan(THREE.MathUtils.degToRad(this.baseFov / 2)), tanH = tanV * this.camera.aspect;
+    // screen height share s (0 = bottom) at depth D -> height in the world, and back
+    const yAt = (s, D) => c.y + D * Math.tan(pitch + Math.atan((2 * s - 1) * tanV));
+    let depth = d0.dot(f), lat = d0.dot(rt);
+    const far = Math.min(h / (2 * tanV * M.minShare), this.game.S?.monsterFar ?? 99);   // (a station can keep them nearer: in front of floor ridges)
+    let near = M.near;
+    if (!fly) { const a = pitch + Math.atan((2 * M.feetMin - 1) * tanV); if (a < 0) near = Math.max(near, c.y / Math.tan(-a)); }
+    depth = Math.min(Math.max(depth, near), Math.max(far, near));
+    const lim = Math.max(0, depth * tanH * (fly ? M.flyX : M.walkX) - w / 2);
+    lat = Math.max(-lim, Math.min(lim, lat));
+    p.x = c.x + f.x * depth + rt.x * lat; p.z = c.z + f.z * depth + rt.z * lat;
+    const Hd = this.set.hall;
+    if (Hd) { p.x = Math.max(Hd.x0 + w / 2 + 0.15, Math.min(Hd.x1 - w / 2 - 0.15, p.x)); p.z = Math.max(Hd.z1 + 0.5, Math.min(Hd.z0 - 0.5, p.z)); }
+    if (fly) {
+      const lo = Math.max(h / 2 + 0.3, yAt(M.flyY[0], depth) + h / 2), top = Hd && Hd.ceil ? Hd.h - h / 2 - 0.15 : 99;
+      p.y = Math.min(top, Math.max(lo, Math.min(p.y, yAt(M.flyY[1], depth) - h / 2)));
+    }
+    return p;
+  }
+  // the run moves on to another set: everything this one made goes (the pictures stay loaded, they belong to the asset cache)
+  dispose() {
+    this.scene.traverse((o) => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) [].concat(o.material).forEach((m) => m.dispose());
+    });
+    for (const list of Object.values(this.coverSets || {})) for (const c of list) c.dm.dispose();
+    this.rt.dispose(); this.rt.depthTexture.dispose();
+  }
   lightAt(p, out = new THREE.Color()) { return out.copy(this.lit); }
 
   update(dt, t) {
     const g = this.game, cam = this.camera;
+    this.updateAnomaly(dt);
     const c1 = g.players[0]?.ctrl, on = c1 && c1.active;
     const lx = on ? c1.x / g.W - 0.5 : 0, ly = on ? c1.y / g.H - 0.5 : 0;
     this.look.x += (lx - this.look.x) * Math.min(1, dt * 4);

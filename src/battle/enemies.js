@@ -247,10 +247,16 @@ export class Enemy extends Actor {
     this.goal = new THREE.Vector3(world.camPos.x + side * rr(bp.goalSpread || [0.15, 0.6]), 0, cov.z - (bp.goalBeforeCover ?? 1.1));
     world.scene.add(this.root);
     const P = this.root.position;
+    // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
+    if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop') {   // (flyers: their hovering spot, below)
+      const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8);
+      s = { ...s, x: q.x, z: q.z };
+    }
     if (this.beh === 'flyer') {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
+      if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true);
       // a painted station: stay in front of the painted walls and inside the picture
       if (world.plates) {
         const d = Math.min(c.z - this.home.z, world.maxZ() * rnd(0.6, 0.9));

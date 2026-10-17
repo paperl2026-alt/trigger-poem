@@ -22,7 +22,7 @@
     "items": ["items.json"],
     "episodes": ["episodes.json"],
     "comics": ["comics.json"],
-    "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json"],
+    "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json", "sets/ep0.json"],
     "text": ["text/ui.json", "text/stickers.json", "text/holds.json"],
     "theme": ["theme.json"],
     "ui": ["ui/title.json", "ui/cursors.json", "ui/manga.json", "ui/select.json", "ui/battle.json"]

@@ -36,9 +36,9 @@ export class Game {
     this.overlay = new THREE.Scene();
     this.hudScene = new THREE.Scene();   // the HUD: drawn after the post pass, so shakes and warps never move it (DESIGN「战斗画面布局」)
     this.ortho = new THREE.OrthographicCamera(0, 1, 1, 0, -100, 100);
-    // painted 2.5D sets (one painting per battle station) or the older modelled rooms
-    const setDef = C.sets[this.ep.set];
-    this.world = setDef?.panels ? new PanelWorld(this, this.ep.set) : setDef?.plates ? new PlateWorld(this, this.ep.set) : new World(this, this.ep.set);
+    // the place: every stage can have a set of its own (episodes.json step "set", else the episode's); the run starts in the one of
+    // the step it starts from, and moves to the next set when a stage needs it (useSet)
+    this.useSet(this.setOf(run.step || 0));
     this.fx = new FX(this);
     this.players = run.team.map((id, i) => new Player(this, id, i, { xp: SAVE.chars[id]?.xp || 0, bag: run.bag }));
     this.hud = new Hud(this);
@@ -51,6 +51,27 @@ export class Game {
     this.camPlaced = false;
     this.assignControllers();
     this.layout(G.W, G.H);
+  }
+  // which set a step plays in: its own, or the next stage's (a comic before a stage), or the episode's
+  setOf(i) {
+    for (let k = i; k < this.ep.steps.length; k++) { const st = this.ep.steps[k]; if (!st.comic) return st.set || this.ep.set; }
+    return this.ep.set;
+  }
+  makeWorld(id) { const d = C.sets[id]; return d?.panels ? new PanelWorld(this, id) : d?.plates ? new PlateWorld(this, id) : new World(this, id); }
+  // build the set (first time), or swap to another one between stages: the heroines, the effects and the camera move over
+  useSet(id) {
+    if (id === this.setId && this.world) return;
+    const old = this.world;
+    this.setId = id;
+    this.world = this.makeWorld(id);
+    if (!old) return;
+    this.clearActors(); this.boss = null;
+    this.fx.clear();
+    for (const p of this.players) { old.camera.remove(p.group); this.world.camera.add(p.group); }
+    this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
+    if (old.dispose) old.dispose();
+    this.camPlaced = false;
+    this.layout(this.W, this.H);
   }
   get W() { return this.G.W; }
   get H() { return this.G.H; }
@@ -102,6 +123,7 @@ export class Game {
       return;
     }
     this.stage = st;
+    this.useSet(st.set || this.ep.set);
     this.hud.show(true);
     if (st.stage) {
       this.stationQ = [...st.stations];
@@ -174,6 +196,16 @@ export class Game {
     this.tweens.to(w, { anomaly: 1 }, 1.8, { ease: Ease.outCubic });
     this.tweens.wait(0.5, () => { sfx.tear(0); this.post.shake(0.8); });
     this.tweens.wait(2.0, () => { this.combat = true; then && then(); });
+  }
+  // a comic page in the middle of a fight (the boss transforming): the fight stops, the page plays over the wipe, the girls are back in
+  // cover after it; then() goes on (the boss turns the fight back on when she is ready)
+  interlude(id, then) {
+    this.combat = false;
+    this.clearProjectiles();
+    this.players.forEach((p) => { if (p.activeOn) p.endActive(false); });
+    const back = () => { this.post.u.wipe.value = 0; this.hud.show(true); this.enterCover(null, true); then && then(); };
+    if (!id || this.G.skipComics || !Comic.ready(id)) { back(); return; }
+    this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: () => { this.hud.show(false); this.comic.play(id, back); } });
   }
   // calm: take places but keep combat off (the world hasn't been invaded yet)
   enterCover(then, calm = false) {
@@ -363,8 +395,10 @@ export class Game {
     const w = this.world;
     w.ray.setFromCamera(w.ndc(sx, sy), w.camera);
     const out = [], seen = new Set();
+    const wall = w.occluders?.length ? w.ray.intersectObjects(w.occluders, false).find((h) => h.uv && alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) > 110) : null;
     for (const h of w.ray.intersectObjects(this.hitMeshes(), false)) {
       if (!h.uv) continue;
+      if (wall && wall.distance < h.distance) break;
       const mu = h.object.material.uniforms;
       if (mu && mu.sliceOn && mu.sliceOn.value) continue;
       const a = h.object.userData.owner;

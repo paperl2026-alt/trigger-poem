@@ -121,7 +121,7 @@ function startRun(epId = 'ep0', step = 0) {
   if (G.game) G.game.dispose();
   resetFx();
   const ep = C.episodes[epId] || C.episodes.ep0;
-  G.game = new Game(G, { ep, team: [...SAVE.team], bag: [...SAVE.bag] });
+  G.game = new Game(G, { ep, step, team: [...SAVE.team], bag: [...SAVE.bag] });
   G.game.start(step);
 }
 function endRun() { if (G.game) { G.game.dispose(); G.game = null; } resetFx(); }
