@@ -4,9 +4,10 @@
 //   NO AMMO!       when she is empty and not reloading
 //   hit            the screen glass cracks where it came from (fx/crack_*), a quick OUCH!! / HIT!, a red wash on her half
 //   down           her half goes dark: CONTINUE? and the big countdown to her revive (9 s)
-// Danger is told at the SCREEN EDGES (docs/DESIGN.md「危险提示在屏幕边缘」, user: the upper half is for the monsters' show): her side's edge
-// glows and pulses, see-through, with a small word by the edge: red 躲! (a must-hide attack coming, with its seconds), amber 击落!
-// (something flying at her), a slow dark-red heartbeat when her HP is low. The warnings on the monsters themselves stay small (fx.lock).
+// Danger is told at the SCREEN EDGES (docs/DESIGN.md「危险提示在屏幕边缘」「提示是设计过的美术」, user: the upper half is for the monsters'
+// show): along her side's edge runs the R44 strip art, scrolling, wobbling and pulsing over a soft glow, with the R44 lettering sticker by
+// the edge: red 躲! with the chibi ducking behind a wall and the seconds left (a must-hide attack coming), amber 击落! (something flying
+// at her), the dark-red veins beating like a heart when her HP is low. The warnings on the monsters themselves stay small (fx.lock).
 // The reload itself: chibi big-head stickers (ui/rlq_<who>_<set>_1..9) slapped on one after another, irregularly, overlapping, in her
 // corner above her HUD panel (never over the girls); the cat girl's nine seals also flash their characters by her paw.
 import * as THREE from 'three';
@@ -150,8 +151,20 @@ void main(){
   if (a < 0.003) discard;
   gl_FragColor = vec4((colL.rgb * al + colR.rgb * ar) / max(0.0001, al + ar), a);
 }`;
-const SAYS = { hide: { zh: '躲!', ja: '隠れて!', en: 'HIDE!' }, shot: { zh: '击落!', ja: '撃ち落とせ!', en: 'SHOOT DOWN!' }, low: { zh: '危险!', ja: 'ピンチ!', en: 'DANGER!' } };
+// the strip art along an edge: repeated down the screen, scrolling, a heat wobble, pulsing; mirrored for the right edge
+const STRIP_FRAG = `
+uniform sampler2D map; uniform float a; uniform float time; uniform float rep; uniform float flip; uniform float speed;
+varying vec2 vUv;
+void main(){
+  vec2 uv = vec2(flip > 0.5 ? 1.0 - vUv.x : vUv.x, vUv.y * rep + time * speed);
+  uv.x += sin(uv.y * 9.0 + time * 6.0) * 0.025 * (1.0 - uv.x);
+  vec4 t = texture2D(map, vec2(clamp(uv.x, 0.0, 1.0), fract(uv.y)));
+  float fade = smoothstep(0.0, 0.08, vUv.y) * smoothstep(1.0, 0.92, vUv.y);
+  float flick = 0.85 + 0.15 * step(0.15, fract(sin(floor(time * 14.0)) * 43758.5));
+  gl_FragColor = vec4(t.rgb, t.a * a * fade * flick);
+}`;
 const EDGE_COL = { hide: 0xff1f4a, shot: 0xffb21f, low: 0xb3001e };
+const STRIP = { hide: 'ui/edge_red', shot: 'ui/edge_amber', low: 'ui/edge_vein' };
 const TMPC = new THREE.Color();
 
 export class Alerts {
@@ -161,8 +174,18 @@ export class Alerts {
     this.EU = { res: { value: new THREE.Vector2(1, 1) }, fr: { value: new THREE.Vector2(0, 1) }, colL: { value: new THREE.Vector4() }, colR: { value: new THREE.Vector4() }, time: { value: 0 } };
     this.edge = new THREE.Mesh(quad, new THREE.ShaderMaterial({ uniforms: this.EU, vertexShader: EDGE_VERT, fragmentShader: EDGE_FRAG, transparent: true, depthTest: false, depthWrite: false }));
     this.edge.renderOrder = 59; this.edge.frustumCulled = false; this.g.add(this.edge);
-    this.words = [0, 1].map(() => { const w = new Text(59.5, { color: '#ffffff', shadow: '#121012', sw: 0.14 }); this.g.add(w.m); return w; });
     this.k = [{ hide: 0, shot: 0, low: 0 }, { hide: 0, shot: 0, low: 0 }];
+    const lk = lang === 'zh' || lang === 'ja' ? lang : 'en';
+    this.side = [0, 1].map((s) => {
+      const U = { map: { value: null }, a: { value: 0 }, time: { value: 0 }, rep: { value: 1 }, flip: { value: s }, speed: { value: 0.2 } };
+      const strip = new THREE.Mesh(quad, new THREE.ShaderMaterial({ uniforms: U, vertexShader: EDGE_VERT, fragmentShader: STRIP_FRAG, transparent: true, depthTest: false, depthWrite: false }));
+      strip.renderOrder = 59.2; strip.frustumCulled = false; this.g.add(strip);
+      const word = { hide: picture(`ui/wh_${lk}`, 59.6, 0.3 + s), shot: picture(`ui/ws_${lk}`, 59.6, 0.6 + s) };
+      const duck = picture('ui/wh_duck', 59.55, 0.8 + s);
+      const sec = new Text(59.7, { color: '#ffffff', shadow: '#d8141e', sw: 0.14 });
+      for (const m of [word.hide, word.shot, duck, sec.m]) { m.visible = false; this.g.add(m); }
+      return { strip, U, word, duck, sec };
+    });
   }
   warnDanger() {}   // (the old full-screen DANGER!!: the edges say it now)
   update(dt, t) {
@@ -187,16 +210,37 @@ export class Alerts {
       const top = k.hide > 0.05 ? 'hide' : k.shot > 0.05 ? 'shot' : k.low > 0.05 ? 'low' : null;
       const pulse = top === 'hide' ? 0.6 + 0.4 * Math.abs(Math.sin(t * (5 + 10 * k.hide))) : top === 'shot' ? 0.7 + 0.3 * Math.abs(Math.sin(t * 9)) : 0.45 + 0.55 * Math.pow(Math.abs(Math.sin(t * 2.6)), 6);
       TMPC.setHex(top ? EDGE_COL[top] : 0);
-      cols[s].set(TMPC.r, TMPC.g, TMPC.b, top ? Math.min(1, k[top]) * pulse * (top === 'low' ? 0.55 : 0.75) : 0);
-      // the small word by that edge (with the seconds left for 躲!)
-      const w = this.words[s];
-      w.m.visible = !!top && k[top] > 0.25;
-      if (w.m.visible) {
-        const say = SAYS[top][lang] || SAYS[top].en, sec = top === 'hide' && want[s].left < 9 ? ` ${Math.max(1, Math.ceil(want[s].left))}` : '';
-        w.set(say + sec, H * 0.042, top === 'shot' ? '#ffe7a6' : '#ffffff', H);
-        const x = s === 0 ? L.f.x + w.c.width * 0.5 + H * 0.03 : L.f.x + L.f.w - w.c.width * 0.5 - H * 0.03;
-        w.at(x, H * 0.56, s === 0 ? 8 : -8, 1 + 0.06 * pulse);
-        w.m.material.uniforms.a.value = Math.min(1, k[top]) * (0.6 + 0.4 * pulse);
+      cols[s].set(TMPC.r, TMPC.g, TMPC.b, top ? Math.min(1, k[top]) * pulse * (top === 'low' ? 0.3 : 0.4) : 0);
+      // the strip art along that edge, and the lettering sticker by it (hide: the chibi ducking and the seconds left)
+      const S = this.side[s], tx = top ? tex[STRIP[top]] : null, sw = H * 0.075, on = !!top && !!tx && k[top] > 0.04;
+      S.strip.visible = on;
+      if (on) {
+        S.U.map.value = tx; S.U.time.value = t; S.U.speed.value = top === 'low' ? 0.05 : top === 'shot' ? -0.35 : 0.25;
+        S.U.rep.value = H / (sw * tx.image.height / tx.image.width);
+        S.U.a.value = Math.min(1, k[top]) * (top === 'low' ? 0.35 + 0.55 * pulse : 0.55 + 0.45 * pulse);
+        S.strip.scale.set(sw, H, 1); S.strip.position.set(s === 0 ? L.f.x + sw / 2 : L.f.x + L.f.w - sw / 2, H / 2, 0);
+      }
+      for (const kind of ['hide', 'shot']) {
+        const m = S.word[kind], vis = top === kind && k[kind] > 0.25 && !!m.material.uniforms.map.value;
+        m.visible = vis;
+        if (!vis) continue;
+        const img = m.material.uniforms.map.value.image, wh = H * 0.075, ww = wh * img.width / img.height;
+        const x = s === 0 ? L.f.x + sw * 0.6 + ww / 2 : L.f.x + L.f.w - sw * 0.6 - ww / 2;
+        m.scale.set(ww * (1 + 0.05 * pulse), wh * (1 + 0.05 * pulse), 1); m.position.set(x, H * 0.58, 0); m.rotation.z = s === 0 ? 0.07 : -0.07;
+        const u = m.material.uniforms; u.a.value = Math.min(1, k[kind]) * (0.7 + 0.3 * pulse); u.time.value = t; u.shine.value = 1; u.boil.value = 0.7;
+      }
+      const hideOn = top === 'hide' && k.hide > 0.25;
+      S.duck.visible = hideOn && !!S.duck.material.uniforms.map.value; S.sec.m.visible = hideOn && want[s].left < 9;
+      if (hideOn) {
+        const di = S.duck.material.uniforms.map.value?.image, dh = H * 0.07, dw = di ? dh * di.width / di.height : dh;
+        const x = s === 0 ? L.f.x + sw * 0.6 + dw / 2 : L.f.x + L.f.w - sw * 0.6 - dw / 2;
+        S.duck.scale.set(dw, dh, 1); S.duck.position.set(x, H * 0.47 + Math.abs(Math.sin(t * 6)) * H * 0.006, 0);
+        const du = S.duck.material.uniforms; du.a.value = Math.min(1, k.hide); du.time.value = t; du.boil.value = 0.6;
+        if (S.sec.m.visible) {
+          S.sec.set(`${Math.max(1, Math.ceil(want[s].left))}`, H * 0.06, '#ffffff', H);
+          S.sec.at(x + (s === 0 ? 1 : -1) * (dw / 2 + H * 0.035), H * 0.47, s === 0 ? 8 : -8, 1 + 0.1 * pulse);
+          S.sec.m.material.uniforms.a.value = Math.min(1, k.hide);
+        }
       }
     });
     this.edge.position.set(L.W / 2, H / 2, 0); this.edge.scale.set(L.W, H, 1);

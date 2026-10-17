@@ -10830,6 +10830,21 @@
   "src": "assets/ui/dpct.webp",
   "w": 213
  },
+ "ui/edge_amber": {
+  "h": 1024,
+  "src": "assets/ui/edge_amber.webp",
+  "w": 156
+ },
+ "ui/edge_red": {
+  "h": 1024,
+  "src": "assets/ui/edge_red.webp",
+  "w": 189
+ },
+ "ui/edge_vein": {
+  "h": 1024,
+  "src": "assets/ui/edge_vein.webp",
+  "w": 208
+ },
  "ui/en_bgm": {
   "clean": true,
   "dom": true,
@@ -12555,6 +12570,141 @@
   "h": 1081,
   "src": "assets/ui/title_sky.webp",
   "w": 1920
+ },
+ "ui/wh_dial": {
+  "h": 298,
+  "src": "assets/ui/wh_dial.webp",
+  "w": 350
+ },
+ "ui/wh_duck": {
+  "h": 279,
+  "src": "assets/ui/wh_duck.webp",
+  "w": 445
+ },
+ "ui/wh_en": {
+  "h": 274,
+  "src": "assets/ui/wh_en.webp",
+  "w": 512
+ },
+ "ui/wh_en2": {
+  "h": 272,
+  "src": "assets/ui/wh_en2.webp",
+  "w": 512
+ },
+ "ui/wh_ja": {
+  "h": 292,
+  "src": "assets/ui/wh_ja.webp",
+  "w": 512
+ },
+ "ui/wh_ja2": {
+  "h": 283,
+  "src": "assets/ui/wh_ja2.webp",
+  "w": 512
+ },
+ "ui/wh_tri": {
+  "h": 274,
+  "src": "assets/ui/wh_tri.webp",
+  "w": 354
+ },
+ "ui/wh_zh": {
+  "h": 301,
+  "src": "assets/ui/wh_zh.webp",
+  "w": 512
+ },
+ "ui/wh_zh2": {
+  "h": 285,
+  "src": "assets/ui/wh_zh2.webp",
+  "w": 512
+ },
+ "ui/wi_corner": {
+  "h": 251,
+  "src": "assets/ui/wi_corner.webp",
+  "w": 253
+ },
+ "ui/wi_dial": {
+  "h": 292,
+  "src": "assets/ui/wi_dial.webp",
+  "w": 304
+ },
+ "ui/wi_en": {
+  "h": 288,
+  "src": "assets/ui/wi_en.webp",
+  "w": 512
+ },
+ "ui/wi_en2": {
+  "h": 264,
+  "src": "assets/ui/wi_en2.webp",
+  "w": 512
+ },
+ "ui/wi_ja": {
+  "h": 294,
+  "src": "assets/ui/wi_ja.webp",
+  "w": 512
+ },
+ "ui/wi_ja2": {
+  "h": 273,
+  "src": "assets/ui/wi_ja2.webp",
+  "w": 512
+ },
+ "ui/wi_ptr": {
+  "h": 264,
+  "src": "assets/ui/wi_ptr.webp",
+  "w": 193
+ },
+ "ui/wi_zh": {
+  "h": 301,
+  "src": "assets/ui/wi_zh.webp",
+  "w": 512
+ },
+ "ui/wi_zh2": {
+  "h": 273,
+  "src": "assets/ui/wi_zh2.webp",
+  "w": 512
+ },
+ "ui/ws_arrow": {
+  "h": 292,
+  "src": "assets/ui/ws_arrow.webp",
+  "w": 450
+ },
+ "ui/ws_burst": {
+  "h": 299,
+  "src": "assets/ui/ws_burst.webp",
+  "w": 379
+ },
+ "ui/ws_en": {
+  "h": 296,
+  "src": "assets/ui/ws_en.webp",
+  "w": 512
+ },
+ "ui/ws_en2": {
+  "h": 252,
+  "src": "assets/ui/ws_en2.webp",
+  "w": 512
+ },
+ "ui/ws_ja": {
+  "h": 303,
+  "src": "assets/ui/ws_ja.webp",
+  "w": 512
+ },
+ "ui/ws_ja2": {
+  "h": 258,
+  "src": "assets/ui/ws_ja2.webp",
+  "w": 512
+ },
+ "ui/ws_ring": {
+  "h": 285,
+  "src": "assets/ui/ws_ring.webp",
+  "w": 343
+ },
+ "ui/ws_zh": {
+  "h": 296,
+  "src": "assets/ui/ws_zh.webp",
+  "w": 512
+ },
+ "ui/ws_zh2": {
+  "h": 253,
+  "src": "assets/ui/ws_zh2.webp",
+  "w": 512
  },
  "ui/zh_chinese": {
   "clean": true,
