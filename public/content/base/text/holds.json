@@ -1,0 +1,21 @@
+{
+ "_doc": "不能射击的阶段（赶路、清场、地形异变、异变发生、Boss 出现 / 变身……）盖在画面上的若隐若现提示（src/ui/hold.js，docs/DESIGN.md「UI」）。每种：color 颜色，tape 两条警示胶带上滚动的英文，sub 大字下面的小字，lines 大字（随机挑一句，{name} = 关卡名 / Boss 名）。随便加句子。",
+ "holds": {
+  "stage": { "color": "#ff2a3a", "tape": "STAGE START", "sub": "READY?", "lines": [{ "zh": "{name}", "en": "{name}", "ja": "{name}" }] },
+  "move": { "color": "#ff5fa8", "tape": "MOVE ON ▶▶", "sub": "MOVING", "lines": [
+   { "zh": "前进!", "en": "MOVE ON!", "ja": "前進!" }, { "zh": "下一个地点!", "en": "NEXT POINT!", "ja": "次のポイントへ!" },
+   { "zh": "跑起来~", "en": "RUN RUN~", "ja": "走れ~" }, { "zh": "别掉队哦!", "en": "KEEP UP!", "ja": "遅れないで!" }] },
+  "clear": { "color": "#ffd23a", "tape": "AREA CLEAR ★", "sub": "CLEAR", "lines": [
+   { "zh": "清场!", "en": "CLEAR!", "ja": "クリア!" }, { "zh": "全部净化!", "en": "ALL PURIFIED!", "ja": "全部浄化!" }, { "zh": "干净啦~", "en": "SPOTLESS~", "ja": "キレイになった~" }] },
+  "stageClear": { "color": "#ffd23a", "tape": "STAGE CLEAR ★★★", "sub": "STAGE CLEAR", "lines": [
+   { "zh": "小关完成!", "en": "STAGE CLEAR!", "ja": "ステージクリア!" }, { "zh": "这里净化完毕!", "en": "THIS FLOOR IS CLEAN!", "ja": "ここは浄化完了!" }] },
+  "fold": { "color": "#a66bff", "tape": "CAUTION ⚠ SPACE DISTORTION", "sub": "CAUTION", "lines": [
+   { "zh": "空间扭曲!", "en": "SPACE IS BENDING!", "ja": "空間が歪む!" }, { "zh": "地面在弯!", "en": "THE FLOOR FOLDS!", "ja": "床が折れる!" }, { "zh": "抓紧了!", "en": "HOLD ON!", "ja": "つかまって!" }] },
+  "invade": { "color": "#ff2a8a", "tape": "WARNING ⚠ ANOMALY DETECTED", "sub": "WARNING", "lines": [
+   { "zh": "异变发生!", "en": "ANOMALY!", "ja": "異変発生!" }, { "zh": "学校被侵蚀了!", "en": "THE SCHOOL IS CORRUPTED!", "ja": "学校が侵食された!" }] },
+  "boss": { "color": "#ff1a2a", "tape": "WARNING ⚠ HUGE REACTION", "sub": "WARNING", "lines": [
+   { "zh": "巨大反应接近!", "en": "SOMETHING HUGE APPROACHES!", "ja": "巨大反応接近!" }, { "zh": "{name} 出现!", "en": "{name} APPEARS!", "ja": "{name} 出現!" }] },
+  "phase": { "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
+  "info": { "color": "#ff2a3a", "tape": "NOTICE", "sub": "", "lines": [{ "zh": "", "en": "", "ja": "" }] }
+ }
+}

@@ -139,6 +139,12 @@ export class Heroine {
     }
     this.lastBreath = b.breath;
   }
+  // where her figure is on screen right now (px, y up), for things that must not cover her (src/ui/space.js); the pictures have some
+  // empty canvas at the sides, trimmed off
+  box() {
+    const m = this.poses[this.pose], { w, h } = this.dims(this.pose), z = this.g.scale.x, cx = this.g.position.x + m.position.x * z;
+    return { x0: cx - w * z * 0.4, x1: cx + w * z * 0.4, y0: Math.max(0, this.g.position.y), y1: this.g.position.y + h * z * 0.96 };
+  }
   // the size of her standing figure, for layouts that ask (px)
   standH() { return this.dims('fire').h; }
 }

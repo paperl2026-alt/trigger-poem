@@ -207,6 +207,46 @@
        "ja": "うぅ…"
       }
      ]
+    },
+    "coverBroken": {
+     "bubble": "shout",
+     "lines": [
+      {
+       "zh": "掩体没啦!?",
+       "en": "My cover's gone!?",
+       "ja": "遮蔽物が!?"
+      },
+      {
+       "zh": "裸奔啦!",
+       "en": "Totally exposed!",
+       "ja": "丸見え!"
+      }
+     ]
+    },
+    "stagger": {
+     "bubble": "shout",
+     "lines": [
+      {
+       "zh": "打断成功♡",
+       "en": "Interrupted♡",
+       "ja": "阻止成功♡"
+      },
+      {
+       "zh": "定住啦!",
+       "en": "Got her!",
+       "ja": "止めた!"
+      }
+     ]
+    },
+    "join": {
+     "bubble": "cute",
+     "lines": [
+      {
+       "zh": "我来啦♡",
+       "en": "I'm in♡",
+       "ja": "参戦♡"
+      }
+     ]
     }
    },
    "cat": {
@@ -387,6 +427,46 @@
        "zh": "喵…",
        "en": "Mew…",
        "ja": "にゃ…"
+      }
+     ]
+    },
+    "coverBroken": {
+     "bubble": "shout",
+     "lines": [
+      {
+       "zh": "喵!掩体!",
+       "en": "Nya! My cover!",
+       "ja": "にゃ!遮蔽物!"
+      },
+      {
+       "zh": "躲不了了…",
+       "en": "Nowhere to hide…",
+       "ja": "隠れられない…"
+      }
+     ]
+    },
+    "stagger": {
+     "bubble": "shout",
+     "lines": [
+      {
+       "zh": "定!",
+       "en": "Freeze!",
+       "ja": "定!"
+      },
+      {
+       "zh": "打断了喵",
+       "en": "Stopped her, nya",
+       "ja": "止めたにゃ"
+      }
+     ]
+    },
+    "join": {
+     "bubble": "cute",
+     "lines": [
+      {
+       "zh": "参上喵",
+       "en": "Here, nya",
+       "ja": "参上にゃ"
       }
      ]
     }

@@ -30,7 +30,9 @@ export class Hud {
   dispose() { this.gl.dispose(); clearTimeout(this.bT); clearTimeout(this.tipT); }
   // the old face moods -> the chibi portrait's reactions
   setFace(slot, f, hold) { this.gl.react(slot, { scared: 'hurt', hurt: 'cry', hype: 'fever', happy: 'idle' }[f] || f, hold || 1.2); }
+  // out of the fight: the see-through warning overlay (hold.js); during it: a bubble (no overlay mid-fight)
   showBanner(text, cls = '', dur = 1.4) {
+    if (this.gl) { if (this.game.combat) this.gl.stickers.callout(text); else this.gl.hold('info', { text, dur: dur + 0.4 }); return; }
     const b = this.banner;
     b.textContent = text;
     b.className = `banner ${cls}`;

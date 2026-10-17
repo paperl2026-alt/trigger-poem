@@ -1,5 +1,5 @@
 {
-  "_doc": "战斗 HUD（红黑白风格，效果图 art/raw/r33/hud_a.png = 普通 / hud_b = 危急 / hud_c = 双必杀，1672x941，用户选定的版本 1 修订版）。位置都是效果图像素，程序按屏幕高度换算（src/ui/glhud.js）。layers 是从效果图原样拆出的底板（tools/r35_import.py），box 是它在效果图里的位置，anchor 决定贴哪边（tl 左上 / tc 上中 / tr 右上 / bc 下中）。p1 / p2 是两人面板里程序画的部分：头像圆 portrait（圆心 c、半径 r）、技能环 ring（内外半径、段数）、文字框 text（box = 效果图里那行字的范围，deg 倾斜）、血条槽 hp、Fever 三格每格 6 段的位置 fever、弹药 ammo（两边都写两种排法，按谁站在这边用哪种：枪 = 沿弧线的刻度 ticks（弧线上三点），猫娘 = 符咒 talisman 排在 row 里）。reticle：每个角色用哪套准星（ui/ret_<pink|cat>_<a|b|c>_<状态>，a/b/c 三套方案）。talisman：猫娘符咒用哪套。reload：每个角色装填时快速闪过的 9 张特写用哪一套（ui/rl_<人>_<套>_1..9；猫娘每张配一个九字印的大字），size 大小、y 高度（屏幕高度比例）、alpha 透明度、glyph 九字大字的大小。",
+  "_doc": "战斗 HUD（红黑白风格，效果图 art/raw/r33/hud_a.png = 普通 / hud_b = 危急 / hud_c = 双必杀，1672x941，用户选定的版本 1 修订版）。位置都是效果图像素，程序按屏幕高度换算（src/ui/glhud.js）。layers 是从效果图原样拆出的底板（tools/r35_import.py），box 是它在效果图里的位置，anchor 决定贴哪边（tl 左上 / tc 上中 / tr 右上 / bc 下中）。p1 / p2 是两人面板里程序画的部分：头像圆 portrait（圆心 c、半径 r）、技能环 ring（内外半径、段数）、文字框 text（box = 效果图里那行字的范围，deg 倾斜）、血条槽 hp、Fever 三格每格 6 段的位置 fever、弹药 ammo（两边都写两种排法，按谁站在这边用哪种：枪 = 沿弧线的刻度 ticks（弧线上三点），猫娘 = 符咒 talisman 排在 row 里）。reticle：每个角色用哪套准星（ui/ret_<pink|cat>_<a|b|c>_<状态>，a/b/c 三套方案）。talisman：猫娘符咒用哪套。reload：每个角色装填时快速闪过的 9 张特写用哪一套（ui/rl_<人>_<套>_1..9；猫娘每张配一个九字印的大字），size 漫画格的高（屏幕高度比例；位置由程序在不压 HUD 和人物的空地里找，src/ui/space.js）、alpha 透明度、glyph 九字大字的大小。",
   "battle": {
     "refSize": [1672, 941],
     "colors": { "red": "#d8141e", "ink": "#121012", "paper": "#f3f1ee", "track": "#3b383a", "p1": "#ff5fa8", "p2": "#a66bff",
@@ -56,6 +56,6 @@
     "warn": { "hide": "ui/hud_hide", "interrupt": "ui/hud_interrupt", "tag": "ui/hud_tag" },
     "reticle": { "pink": "pink_a", "cat": "cat_c", "size": 0.11 },
     "talisman": "a",
-    "reload": { "pink": "pink_c", "cat": "cat_b", "size": 0.36, "y": 0.56, "alpha": 0.86, "glyph": 0.2 }
+    "reload": { "pink": "pink_c", "cat": "cat_b", "size": 0.27, "alpha": 0.92, "glyph": 0.15 }
   }
 }

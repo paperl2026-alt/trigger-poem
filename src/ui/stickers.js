@@ -11,7 +11,7 @@ import { Text, picture } from './glhud.js';
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 // how much a kind of moment matters (a more important one replaces a showing sticker at once)
-const PRIO = { down: 9, skill: 8, low: 7, hurt: 6, fever: 6, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, revive: 6, reload: 2, hit: 1, cover: 1 };
+const PRIO = { coverBroken: 7, stagger: 6, join: 5, down: 9, skill: 8, low: 7, hurt: 6, fever: 6, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, revive: 6, reload: 2, hit: 1, cover: 1 };
 
 class Sticker {
   constructor(layer, order) {
@@ -69,31 +69,51 @@ export class Stickers {
     if (!H || !set) return;
     const pr = PRIO[kind] || 1, cur = H.s.t < H.s.life ? PRIO[H.s.kind] || 1 : -1;
     if (H.cd > 0 && pr <= cur) return;
-    const g = this.game, L = this.hud.L, s = L.s, f = L.f, Hh = L.H;
+    const L = this.hud.L, f = L.f, Hh = L.H;
     const line = pick(set.lines), text = (line[lang] || line.en);
     if (text === H.lastText && set.lines.length > 1) return this.say(p, kind, 1);
     H.lastText = text;
-    // by her own screen edge, below her panel, a little up and down each time
-    const left = p.slot === 0, x = left ? f.x + Hh * rnd(0.15, 0.24) : f.x + f.w - Hh * rnd(0.15, 0.24);
-    const y = Hh * rnd(0.42, 0.62), n = Math.floor(Math.random() * 6);
+    // a free place by her (never over the HUD or either girl, src/ui/space.js): beside her head toward the middle like a speech bubble,
+    // then by her screen edge below her panel, then above her head
+    const left = p.slot === 0, s = left ? 1 : -1, fig = this.hud.space.girl(p.slot), n = Math.floor(Math.random() * 6);
+    const bw = Hh * (kind === 'hit' ? 0.2 : 0.26), bh = bw * 0.62;
+    const fx0 = fig ? fig.x0 : p.baseX - Hh * 0.15, fx1 = fig ? fig.x1 : p.baseX + Hh * 0.15, top = fig ? fig.y1 : Hh * 0.55;
+    const inner = left ? fx1 : fx0, outer = left ? fx0 : fx1;
+    const spot = this.hud.space.find(bw, bh, [
+      { x: inner + s * (bw / 2 + Hh * 0.01), y: top - bh * 0.3 }, { x: inner + s * (bw / 2 + Hh * 0.01), y: top - bh * 1.4 },
+      { x: (left ? f.x : f.x + f.w) + s * (bw / 2 + Hh * 0.01), y: top - bh * 0.6 }, { x: outer - s * (bw / 2), y: top + bh * 0.7 },
+      { x: (fx0 + fx1) / 2, y: top + bh * 0.7 }, { x: inner + s * (bw / 2 + Hh * 0.01), y: top - bh * 2.5 },
+    ]);
+    const x = spot.x, y = spot.y;
     if (H.s.t < H.s.life) H.s.out();
     const s2 = H.s; H.s = H.next || new Sticker(this.layer, 75); H.next = s2;   // the old one pops out while the new one pops in
-    H.s.show(kind, `ui/bub_${set.bubble}_${n}`, text, x, y, Hh * (kind === 'hit' ? 0.2 : 0.26), set.bubble === 'cute' ? p.c.color : '#ffffff',
-      { flip: left ? 1 : -1, y: 1 });
+    H.s.show(kind, `ui/bub_${set.bubble}_${n}`, text, x, y, bw, set.bubble === 'cute' ? p.c.color : '#ffffff',
+      { flip: x > (fx0 + fx1) / 2 ? 1 : -1, y: 1 });
+    H.s.spot = spot;
     if (set.bubble === 'cute' && p.id !== 'pink') { const h = {}; new THREE.Color(p.c.color).getHSL(h); H.s.bub.material.uniforms.recol.value = 1; H.s.bub.material.uniforms.hueTo.value = h.h; }
     else H.s.bub.material.uniforms.recol.value = 0;
     H.cd = 0.45;
   }
+  // something the game says during the fight (no overlay mid-fight: it would break the rhythm): a loud bubble in free space up top
+  callout(text) {
+    const Hh = this.hud.L.H, W = this.hud.L.W, bw = Hh * 0.3, bh = bw * 0.62, st = this.mon[this.mi++ % this.mon.length];
+    const spot = this.hud.space.find(bw, bh, [{ x: W / 2, y: Hh * 0.62 }, { x: W / 2, y: Hh * 0.5 }, { x: W * 0.38, y: Hh * 0.55 }, { x: W * 0.62, y: Hh * 0.55 }]);
+    st.show('callout', `ui/bub_shout_${Math.floor(Math.random() * 6)}`, text, spot.x, spot.y, bw, '#ffffff', { flip: 1, y: 1 });
+    st.spot = spot;
+  }
   // a monster makes a sound (windup / attack / hurt / die) above itself
   monster(a, kind) {
+    if (this.hud.holdUI?.on) return;   // the hold overlay is talking
     if (this.monCd > 0 && kind !== 'windup' && kind !== 'die') return;
     const set = this.D.monsters[a.type] || this.D.monsters.default, lines = set[kind] || this.D.monsters.default[kind];
     if (!lines) return;
-    const g = this.game, b = g.box(a), Hh = this.hud.L.H;
+    const g = this.game, b = g.box(a), Hh = this.hud.L.H, bw = Hh * 0.2, bh = bw * 0.62;
     const st = this.mon[this.mi++ % this.mon.length];
-    const x = Math.max(Hh * 0.2, Math.min(g.W - Hh * 0.2, (b.x0 + b.x1) / 2 + rnd(-1, 1) * (b.x1 - b.x0) * 0.3));
-    const y = Math.min(Hh * 0.7, Hh - b.y0 + Hh * 0.05);
-    st.show(kind, `ui/bub_monster_${Math.floor(Math.random() * 6)}`, pick(lines), x, y, Hh * 0.2, '#ffffff', { flip: Math.random() < 0.5 ? 1 : -1, y: 1 });
+    // around the monster (screen box: y down), in free space
+    const cx = (b.x0 + b.x1) / 2, top = Hh - b.y0, mid = Hh - (b.y0 + b.y1) / 2;
+    const spot = this.hud.space.find(bw, bh, [{ x: cx, y: top + bh * 0.6 }, { x: b.x1 + bw * 0.55, y: mid }, { x: b.x0 - bw * 0.55, y: mid }, { x: cx, y: top + bh * 1.8 }]);
+    st.show(kind, `ui/bub_monster_${Math.floor(Math.random() * 6)}`, pick(lines), spot.x, spot.y, bw, '#ffffff', { flip: spot.x > cx ? -1 : 1, y: 1 });
+    st.spot = spot;
     this.monCd = 0.5;
   }
   update(dt, time) {
@@ -102,6 +122,7 @@ export class Stickers {
     g.players.forEach((p, i) => {
       const H = this.her[i], L = H.last;
       H.cd -= dt;
+      if (H.s.t < H.s.life && H.s.spot) this.hud.space.claim(H.s.spot);
       H.s.update(dt, time); if (H.next) H.next.update(dt, time);
       if (!(p.slot === 0 || g.p2on()) || !g.combat && p.state !== 'down') { L.state = p.state; return; }
       // what changed since the last frame
@@ -130,6 +151,6 @@ export class Stickers {
         this.seen.set(a, now);
       }
     }
-    for (const st of this.mon) st.update(dt, time);
+    for (const st of this.mon) { if (st.t < st.life && st.spot) this.hud.space.claim(st.spot); st.update(dt, time); }
   }
 }

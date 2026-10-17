@@ -104,9 +104,8 @@ export class Game {
     this.hud.show(true);
     if (st.stage) {
       this.stationQ = [...st.stations];
+      if (st.name) this.hud.gl.hold('stage', { name: tr(st.name) });   // can't shoot until the first stop: the stage's warning overlay
       this.goStation(this.stationQ.shift(), false);
-      const nm = st.name;
-      if (nm) this.tweens.wait(0.3, () => this.hud.showBanner(tr(nm), 'stage', 1.4));
     } else if (st.boss) this.goStation(st.station, true);
   }
   station(id) { return this.world.level.set.stations[id]; }
@@ -116,6 +115,7 @@ export class Game {
     this.stationId = id;
     this.combat = false;
     // the covers fold away first; only then do the girls get up and move on (DESIGN: nobody runs through a cover)
+    if (this.hud.gl.holdUI.kind !== 'stage' || !this.hud.gl.holdUI.on) this.hud.gl.hold(boss ? 'boss' : 'move', { name: boss && this.stage.boss ? tr(C.bosses[this.stage.boss]?.name || '') : '' });
     const fold = this.world.dropCovers();
     if (fold) { this.tweens.wait(fold + 0.05, () => this.goStation(id, boss)); return; }
     if (this.world.plates) {
@@ -155,7 +155,9 @@ export class Game {
     this.world.setCovers(S.covers);
     if (boss) this.spawnBoss(this.stage.boss);
     // the place itself changes (panel stages): the corridor bends up, the floor folds into ridges, then the fight starts
-    if (S.fold && this.world.fold) { this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
+    if (S.fold && this.world.fold) { this.hud.gl.hold('fold'); this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
+    // the boss: a warning while she shows herself, then the fight
+    if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => { this.combat = true; }); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
   }
@@ -166,7 +168,7 @@ export class Game {
     this.G.stop(0.25);
     this.post.flash(0.9, 0xff3aa0);
     this.post.shake(1.4);
-    this.hud.showBanner(t('invade'), 'warn', 1.8);
+    this.hud.gl.hold('invade');
     this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.6); p.soft.kick(1.6); });
     this.tweens.to(w, { anomaly: 1 }, 1.8, { ease: Ease.outCubic });
     this.tweens.wait(0.5, () => { sfx.tear(0); this.post.shake(0.8); });
@@ -205,10 +207,10 @@ export class Game {
     sfx.clear();
     this.players.forEach((p) => { p.tauntT = 1.1; if (p.activeOn) p.endActive(false); });
     if (this.stationQ.length) {
-      this.hud.showBanner(t('clear'), 'clear', 1.2);
+      this.hud.gl.hold('clear');
       this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
     } else {
-      this.hud.showBanner(t('stageClear'), 'clear big', 1.6);
+      this.hud.gl.hold('stageClear');
       const heal = bagFx(this.run.bag).stageHeal;
       if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });
       this.tweens.wait(1.7, () => this.nextStep());
@@ -437,7 +439,7 @@ export class Game {
     const mesh = cov.mesh || cov.m, CV = T.combat.cover;
     if (cov.hp !== undefined && !cov.broken) {
       cov.hp -= heavy ? CV.heavy : CV.hit;
-      if (cov.hp <= 0 && this.world.breakCover) { this.world.breakCover(cov); this.hud.showBanner(t('coverBroken'), 'warn', 1.2); }
+      if (cov.hp <= 0 && this.world.breakCover) { this.world.breakCover(cov); this.hud.gl.stickers.say(p, 'coverBroken'); }
     }
     const s = from && from.center ? this.world.project(from.center()) : { x: this.W * (p.slot ? 0.7 : 0.3) };
     const l = this.world.project(cov.m.localToWorld(new THREE.Vector3(-cov.w / 2, cov.h * 0.6, 0)));

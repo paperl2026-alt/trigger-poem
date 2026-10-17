@@ -168,7 +168,7 @@ function handlePads(pads) {
     }
     if (pd.pressed(PAD.START)) {
       if (isP1 || isP2) { settings.toggle(); continue; }
-      if (G.game && SET.p2 !== 'pad') { G.p2pad = i; setP2('pad'); sfx.clear(); G.game.hud.showBanner('2P!', 'clear', 0.9); continue; }
+      if (G.game && SET.p2 !== 'pad') { G.p2pad = i; setP2('pad'); sfx.clear(); G.game.hud.gl.stickers.say(G.game.players[1], 'join'); continue; }
       if (G.p1ctrl.pad === null) { G.p1ctrl.pad = i; continue; }
     } else if (!isP1 && !isP2 && G.p1ctrl.pad === null && (pd.pressed(PAD.A) || pd.held(PAD.RT))) G.p1ctrl.pad = i;
   }

@@ -9,6 +9,8 @@ import { C, T } from '../core/content.js';
 import { tr, lang } from '../core/i18n.js';
 import { FEVER_KEYS } from '../battle/fever.js';
 import { Stickers } from './stickers.js';
+import { Space } from './space.js';
+import { Hold } from './hold.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 // every HUD picture: boil (the lines wobble a little at 8 steps a second, like drawn animation), a light sweeping along the white
@@ -492,7 +494,19 @@ class Reload {
     this.cat = who === 'cat';
     this.keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `ui/rl_${R[who]}_${i}`).filter((k) => tex[k]);
     this.m = [0, 1].map((i) => { const m = picture(null, 58 + i * 0.1, p.slot * 0.5 + i); hud.g.add(m); return m; });
+    // the panel frame: a white outline and a black border behind the pictures, like a manga panel
+    const sq = (col, o) => { const m = new THREE.Mesh(quad, new THREE.MeshBasicMaterial({ color: col, transparent: true, depthTest: false, depthWrite: false })); m.renderOrder = o; m.frustumCulled = false; hud.g.add(m); return m; };
+    this.white = sq(0xffffff, 57.8); this.black = sq(0x121012, 57.9);
     this.step = -1; this.t = 0; this.on = false; this.cur = 0;
+  }
+  // a free place for the panel: low between her and the middle of the screen first (floor), then a bit higher, then by the middle
+  place(w, h) {
+    const p = this.p, hud = this.hud, H = hud.L.H, W = hud.L.W, fig = hud.space.girl(p.slot), s = p.slot ? -1 : 1;
+    const inner = fig ? (s > 0 ? fig.x1 : fig.x0) : p.baseX + s * H * 0.2;
+    const c = [];
+    for (const y of [0.2, 0.32, 0.45, 0.58]) c.push({ x: inner + s * (w / 2 + H * 0.02), y: H * y });
+    c.push({ x: W / 2 - s * w * 0.6, y: H * 0.2 }, { x: W / 2 - s * w * 0.6, y: H * 0.42 });
+    return hud.space.find(w * 1.08, h * 1.08, c);
   }
   update(dt, t) {
     const p = this.p, g = this.hud.game, H = this.hud.L.H, R = this.hud.B.reload, n = this.keys.length;
@@ -500,18 +514,22 @@ class Reload {
     if (want && !this.on) { this.on = true; this.step = -1; }
     if (!want) this.on = false;
     for (const m of this.m) m.visible = false;
+    this.white.visible = this.black.visible = false;
     if (!this.on && this.fade === undefined) return;
+    // its place: found when it starts, kept (claimed) while it shows
+    const ph = H * R.size, pw = ph * 0.92;
+    if (this.on && this.step < 0) this.spot = this.place(pw, ph); else if (this.spot) this.hud.space.claim(this.spot);
     const k = this.on ? 1 - p.reloadT / (p.reloadT0 || 1) : 1, step = Math.min(n - 1, Math.floor(k * n));
     if (this.on && step !== this.step) {
       this.step = step; this.cur ^= 1; this.age = 0;
       const m = this.m[this.cur], side = p.slot ? -1 : 1;
       m.material.uniforms.map.value = tex[this.keys[step]];
-      // where it flashes: over her side, jumping a little each step
-      this.pos = { x: p.baseX + side * H * (Math.random() * 0.16 - 0.04), y: H * (R.y + (Math.random() - 0.5) * 0.12), rot: (Math.random() - 0.5) * 0.3 };
+      // in its panel, each step a little different in angle and nudge
+      this.pos = { x: this.spot.x + (Math.random() - 0.5) * H * 0.012, y: this.spot.y + (Math.random() - 0.5) * H * 0.012, rot: (Math.random() - 0.5) * 0.12 + side * 0.04 };
       m.userData.pos = this.pos;
-      if (this.cat) {   // the seal's character, big, in its own colour, on the far side of the picture
+      if (this.cat) {   // the seal's character, big, in its own colour, at the panel's top corner toward the middle
         const ch = C.theme.kuji[step % C.theme.kuji.length];
-        g.fx.chant.flash(ch, step, this.pos.x + side * H * R.size * 0.5, this.pos.y + H * R.size * 0.22, H * R.glyph);   // toward the middle of the screen
+        g.fx.chant.flash(ch, step, this.spot.x + side * pw * 0.42, this.spot.y + ph * 0.42, H * R.glyph);
       }
     }
     this.age = (this.age || 0) + dt;
@@ -521,10 +539,17 @@ class Reload {
       const cur = i === this.cur && this.on;
       const e = cur ? Math.min(1, this.age / 0.06) : Math.max(0, 1 - this.age / 0.09);   // snaps in, the last one flicks out
       if (e <= 0) return;
-      const U = m.material.uniforms, img = U.map.value.image, ar = img.height / img.width, size = H * R.size * (cur ? 1.12 - 0.12 * e : 1 + 0.15 * (1 - e));
+      const U = m.material.uniforms, img = U.map.value.image, ar = img.height / img.width;
+      const fit = Math.min(pw / 1, ph / ar), size = fit * (cur ? 1.06 - 0.06 * e : 1 + 0.08 * (1 - e));
       m.visible = true;
       m.position.set(P.x, P.y, 0); m.rotation.z = P.rot;
       m.scale.set(size, size * ar, 1);
+      if (cur) {   // the frame follows the current picture
+        const fw = size, fh = size * ar;
+        for (const [q, k] of [[this.white, H * 0.012], [this.black, H * 0.006]]) {
+          q.visible = true; q.position.set(P.x, P.y, 0); q.rotation.z = P.rot; q.scale.set(fw + k * 2, fh + k * 2, 1); q.material.opacity = e * Math.min(1, R.alpha + 0.1);
+        }
+      }
       U.a.value = e * R.alpha * (0.85 + 0.15 * Math.sin(t * 40)); U.time.value = t; U.boil.value = 0.4;
       U.flash.value = cur ? Math.max(0, 0.5 - this.age * 6) : 0;   // a white pop as each one lands
     });
@@ -640,17 +665,21 @@ export class HudGL {
     this.downs = game.players.map((p) => new Down(this, p));
     this.bossBar = new BossBar(this);
     this.damage = new Damage(this);
+    this.space = new Space(this);
     this.stickers = new Stickers(this);
+    this.holdUI = new Hold(this);
     this.visible = true;
   }
   show(v) { this.visible = v; this.g.visible = v; }
   react(slot, kind, hold) { this.panels[slot]?.react(kind, hold); }
   boss(name, frac, phase, phases) { this.bossBar.set(name, frac, phase, phases); }
   dmg(target, x, y, value, crit, color) { this.damage.add(target, x, y, value, crit, color); }
+  hold(kind, opt) { this.holdUI.show(kind, opt); }
   update(dt, t) {
     const g = this.game;
     this.L.set(g.W, g.H, g.G.frame);
     if (!this.visible) return;
+    this.space.begin();   // what is taken this frame (HUD, boss bar, the girls); pop-ups below find their places around it
     for (const p of this.panels) p.update(dt, t);
     this.top.update(dt, t);
     for (const r of this.reticles) r.update(dt, t);
@@ -659,6 +688,7 @@ export class HudGL {
     this.bossBar.update(dt, t);
     this.damage.update(dt);
     this.stickers.update(dt, t);
+    this.holdUI.update(dt, t);
   }
   dispose() { this.game.overlay.remove(this.g); }
 }

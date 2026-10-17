@@ -247,7 +247,7 @@ export class DisciplineGiant extends Actor {
     g.tweens.to(h.g.position, { x: h.home.x, y: h.home.y, z: h.home.z }, 0.7, { ease: Ease.outBack });
     g.fx.stamp('don', g.W * 0.5, g.H * 0.72, 0.28, 0);
     g.post.shake(1); sfx.roar(); g.G.stop(0.12);
-    g.hud.showBanner(tr(this.def.texts.interrupt), 'clear', 1.1);
+    g.hud.gl.stickers.say(g.players.find((p) => p.state === 'out') || g.players[0], 'stagger');
     this.setTex(this.mesh, 'head_hurt');
     this.staggerT = 1.2;
     this.later(1.0, () => this.openEye(this.def.eyeOpen));
@@ -284,7 +284,7 @@ export class DisciplineGiant extends Actor {
     this.busy = true; this.pi = 0;
     sfx.roar(); sfx.madness();
     g.post.flash(0.9, 0xff3a8a); g.post.shake(1.5); g.G.stop(0.3);
-    g.hud.showBanner(tr(this.def.texts[`phase${n}`]), 'warn', 2);
+    g.hud.gl.hold('phase', { text: tr(this.def.texts[`phase${n}`]), dur: 2.4 });   // transforming: nothing to shoot for a moment
     g.clearProjectiles && g.clearProjectiles();
     if (n === 2) {
       // head and hands sink behind the roof; she climbs up, transformed
@@ -339,7 +339,7 @@ export class DisciplineGiant extends Actor {
     this.setTex(this.p2, 'p2_low');
     this.shake(0.6);
     g.fx.stamp('don', g.W * 0.5, g.H * 0.7, 0.3, 0); g.post.shake(1.2); sfx.roar(); g.G.stop(0.15);
-    g.hud.showBanner(tr(this.def.texts.interrupt), 'clear', 1.1);
+    g.hud.gl.stickers.say(g.players.find((p) => p.state === 'out') || g.players[0], 'stagger');
     this.staggerT = this.def.staggerTime;
     this.timer = this.def.staggerTime + 0.8;
   }
