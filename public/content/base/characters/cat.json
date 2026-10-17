@@ -345,7 +345,7 @@
       "kind": "beam",
       "dur": 4.5,
       "dps": 300,
-      "aim": 3.2,
+      "aim": 16,
       "heal": 40,
       "charge": {
         "sec": 0.04,

@@ -174,7 +174,7 @@ export class Player {
     this.muzzle.setLevel(FEVER_KEYS.reduce((s, k) => s + this.fever.level(k), 0) / (FEVER_KEYS.length * T.fever.maxLevel), this.fever.full, this.activeOn);
     this.muzzle.update(dt, t);
     const busy = this.state === 'run' || this.state === 'victory' || this.state === 'away' || !g.combat;
-    // aim point: snaps to the controller, except while beaming (heavy, slow reticle)
+    // aim point: snaps to the controller; while beaming it follows close behind (a touch of weight, still where you point)
     if (c) {
       if (this.beaming) { const k = 1 - Math.exp(-dt * this.a.aim); this.aimX += (c.x - this.aimX) * k; this.aimY += (c.y - this.aimY) * k; } else { this.aimX = c.x; this.aimY = c.y; }
     }
@@ -297,7 +297,7 @@ export class Player {
 
   updateGun(dt, t) {
     const g = this.game, c = this.ctrl, w = this.w;
-    if (!c.fire || this.fireCD > 0) return;
+    if (!(c.fire || this.activeOn) || this.fireCD > 0) return;   // her special fires by itself: just point (DESIGN「必杀」)
     if (this.ammo <= 0 && !this.gatling) { sfx.empty(); this.startReload(1); return; }
     this.fireCD += this.gatling ? this.a.rate : w.rate;
     if (this.fireCD < 0) this.fireCD = 0;

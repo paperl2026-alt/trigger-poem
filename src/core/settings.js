@@ -52,8 +52,14 @@ export function mountSettings(G, act) {
     row(L('全屏', 'Fullscreen', 'フルスクリーン'), [[document.fullscreenElement ? 'ON' : 'OFF', toggleFullscreen, !!document.fullscreenElement]]);
     row(L('渲染精度', 'Render scale', '描画解像度'), [0.5, 0.75, 1, 1.25].map((v) => [`${v * 100}%`, () => { SET.scale = v; act.resize(); }, SET.scale === v]));
     row(L('HUD 范围', 'HUD frame', 'HUD 範囲'), [['16:9', () => { SET.hud = '16:9'; act.resize(); }, SET.hud === '16:9'], ['21:9', () => { SET.hud = '21:9'; act.resize(); }, SET.hud === '21:9'], [L('全宽', 'Full', '全幅'), () => { SET.hud = 'full'; act.resize(); }, SET.hud === 'full']]);
-    row('2P', [['AI', () => act.setP2('ai'), SET.p2 === 'ai'], [L('手柄', 'Gamepad', 'パッド'), () => act.setP2('pad'), SET.p2 === 'pad'], [L('键盘 ←↑→↓', 'Keys ←↑→↓', 'キー ←↑→↓'), () => act.setP2('keys'), SET.p2 === 'keys'], [L('关', 'Off', 'オフ'), () => act.setP2('off'), SET.p2 === 'off']]);
-    row(L('音量', 'Volume', '音量'), [['−', () => { SET.volume = Math.max(0, +(SET.volume - 0.1).toFixed(1)); setVolume(SET.volume); }], [`${Math.round(getVolume() * 100)}%`, () => setMuted(!isMuted()), !isMuted()], ['+', () => { SET.volume = Math.min(1, +(SET.volume + 0.1).toFixed(1)); setVolume(SET.volume); }]]);
+    // who plays the second girl: the AI, a second player (pad / keys), or nobody (she stays out: solo)
+    row(L('2P 由谁来打', '2P is played by', '2P の操作'), [[L('AI 代打', 'AI', 'AI'), () => act.setP2('ai'), SET.p2 === 'ai'], [L('手柄玩家', 'Gamepad', 'パッド'), () => act.setP2('pad'), SET.p2 === 'pad'], [L('键盘玩家 ←↑→↓', 'Keys ←↑→↓', 'キー ←↑→↓'), () => act.setP2('keys'), SET.p2 === 'keys'], [L('不上场（单人）', 'Nobody (solo)', '出撃しない（ソロ）'), () => act.setP2('off'), SET.p2 === 'off']]);
+    // volumes: the total, then the music and the sound effects on their own (the middle button mutes / unmutes)
+    const step = (key, d, apply) => { SET[key] = Math.max(0, Math.min(1, +(SET[key] + d).toFixed(1))); apply(); };
+    const music = () => setMusicVolume(SET.bgmOn === false ? 0 : SET.bgm), effects = () => setSfxVolume(SET.sfxOn === false ? 0 : SET.sfx);
+    row(L('总音量', 'Volume', '全体音量'), [['−', () => step('volume', -0.1, () => setVolume(SET.volume))], [`${Math.round(getVolume() * 100)}%`, () => setMuted(!isMuted()), !isMuted()], ['+', () => step('volume', 0.1, () => setVolume(SET.volume))]]);
+    row(L('音乐', 'Music', 'BGM'), [['−', () => step('bgm', -0.1, music)], [`${Math.round(SET.bgm * 100)}%`, () => { SET.bgmOn = SET.bgmOn === false; music(); }, SET.bgmOn !== false], ['+', () => step('bgm', 0.1, music)]]);
+    row(L('音效', 'Sound effects', '効果音'), [['−', () => step('sfx', -0.1, effects)], [`${Math.round(SET.sfx * 100)}%`, () => { SET.sfxOn = SET.sfxOn === false; effects(); }, SET.sfxOn !== false], ['+', () => step('sfx', 0.1, effects)]]);
     row(L('语言', 'Language', '言語'), LANGS.map(([k, n]) => [n, () => setLang(k), k === lang]));
     row('', [[L('▶ 继续', '▶ Resume', '▶ 再開'), close], ...(G.game ? [[L('放弃本话 · 回选关', 'Quit to chapters', '章選択へ戻る'), () => { close(); act.select(); }]] : []), [L('回到标题', 'Title', 'タイトル'), () => { close(); act.title(); }], [L('调试', 'Debug', 'デバッグ'), () => { close(); act.debug(); }]]);
     const info = document.createElement('div'); info.className = 'sinfo';

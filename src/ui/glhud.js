@@ -12,6 +12,7 @@ import { Stickers } from './stickers.js';
 import { Space } from './space.js';
 import { Hold } from './hold.js';
 import { Alerts } from './alerts.js';
+import { sfx } from '../core/audio.js';
 import { SIGNS, ledCanvas } from './ledsign.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
@@ -215,6 +216,9 @@ class Panel {
       tag: new Text(65), name: new Text(65), lv: new Text(65), hp: new Text(65, { sw: 0.12 }),
       key: new Text(65, { color: '#121012', stroke: null, italic: false }), ammo: new Text(65, { shadow: '#d8141e', sw: 0.14 }), ammoMax: new Text(65, { sw: 0.14 }),
     };
+    // her special is ready: a badge stamped over her ring until she uses it (DESIGN「必杀」: you must see it at once)
+    this.rdy = new Text(66, { color: '#ffffff', shadow: '#d8141e', sw: 0.16 }); this.rdyK = new Text(66, { color: '#fff36a', sw: 0.18 });
+    this.rdy.m.visible = this.rdyK.m.visible = false; this.rdyT = 0; this.wasReady = false;
     // Fever: three gauges of six segments, each with its icon, label and level
     this.fv = FEVER_KEYS.map((k, i) => {
       const F = D.fever[i], c = new THREE.Color(B.colors.fever[k]);
@@ -236,7 +240,7 @@ class Panel {
       for (let i = 0; i < n; i++) this.ticks.push(picture(this.tali.ready, 63, i * 0.21));
     }
     for (const m of [this.layer, this.face, this.ring, this.hp, this.heart, this.ammoIcon, ...this.ticks, ...Object.values(this.t).map((x) => x.m),
-      ...this.fv.flatMap((f) => [f.icon, ...f.segs, f.label.m, f.lv.m])]) if (m) g.add(m);
+      ...this.fv.flatMap((f) => [f.icon, ...f.segs, f.label.m, f.lv.m]), this.rdy.m, this.rdyK.m]) if (m) g.add(m);
     this.last = {}; this.lag = 1; this.shake = 0; this.faceKey = ''; this.faceT = 0; this.faceHold = 0; this.event = null; this.lastCombo = 0;
   }
   who() { return this.cat ? 'cat' : 'pink'; }
@@ -307,6 +311,23 @@ class Panel {
     // skill ring
     const RU = this.ring.material.uniforms;
     RU.fill.value = p.activeOn ? p.activeT / p.a.dur : p.charge; RU.time.value = t; RU.full.value = p.charge >= 1 && !p.activeOn ? 1 : 0; RU.on.value = p.activeOn ? 1 : 0;
+    // the ready badge (a player's girl only: the AI fires hers by herself): stamped in with a sound, then it keeps bouncing
+    const kind = p.ctrl?.kind, ready = p.charge >= 1 && !p.activeOn && g.combat && !!kind && kind !== 'ai' && p.state !== 'down';
+    if (ready && !this.wasReady) { this.rdyT = 0; sfx.stamp(); if (p.slot === 0 && kind === 'mouse') g.hud.tutorial('skill'); }
+    this.wasReady = ready;
+    this.rdy.m.visible = this.rdyK.m.visible = ready;
+    if (ready) {
+      this.rdyT += dt;
+      const rc = this.D.ring.c, dir = p.slot ? -1 : 1, deg = -7 * dir;
+      const x = L.x(rc[0] + dir * 56, this.an), y = L.y(rc[1] - this.D.ring.r1 - 56, this.an);
+      const pop = this.rdyT < 0.16 ? 2 - this.rdyT / 0.16 : 1 + 0.07 * Math.sin(t * 9);
+      this.rdy.set({ zh: '必杀 OK!', ja: '必殺 OK!', en: 'SKILL OK!' }[lang] || 'SKILL OK!', 54 * s, '#ffffff', 360 * s);
+      this.rdy.at(x, y, deg, pop);
+      this.rdy.m.material.uniforms.flash.value = this.rdyT < 0.2 ? 1 - this.rdyT / 0.2 : Math.sin(t * 9) > 0.92 ? 0.35 : 0;
+      const key = kind === 'pad' ? 'Y / RB' : kind === 'keys' ? 'Backspace' : ({ zh: '▶ 右键发动', ja: '▶ 右クリック', en: '▶ RIGHT CLICK' }[lang] || '▶ RIGHT CLICK');
+      this.rdyK.set(key, 30 * s, '#fff36a', 360 * s);
+      this.rdyK.at(x + dir * 10 * s, y - 50 * s, deg, 1);
+    }
     // texts
     this.text('tag', p.slot ? '2P' : '1P');
     const nb = this.D.text.name.box, lb = this.D.text.lv.box;

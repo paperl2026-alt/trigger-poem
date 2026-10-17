@@ -21,6 +21,7 @@ WIN = {"cat": (880, 165, 1253, 584), "pink": (1262, 165, 1635, 584)}
 SIDES = {"cat": ("left", "top"), "pink": ("top", "right")}
 CUT = {"cat": RAW / "sel_cat_fit.png", "pink": RAW / "sel_pink.png"}
 OVER = 56     # how far a girl may stick out over the frame (left, top, right); never below: the name bar sits there
+PAPER = (247, 247, 246)   # the plate's paper white (under the card pictures)
 # bits of a girl over the tabs that the Codex cut-out missed (the cat's ear tips), mockup px: they belong to her picture
 EXTRA = {"cat": [[[988, 131], [1007, 134], [1056, 166], [990, 168]], [[1044, 150], [1066, 145], [1106, 171], [1044, 173]]]}
 
@@ -216,8 +217,23 @@ def plate():
     fill = np.asarray(Image.open(RAW / "sel_fill.png").convert("RGB").resize(mock.shape[1::-1], Image.LANCZOS)).astype(np.float32)
     m = np.asarray(Image.open(ROOT / "art" / "ref" / "select_parts" / "plate_mask.png")) > 0
     w = ndimage.gaussian_filter(ndimage.binary_dilation(m, iterations=1).astype(np.float32), 1.2)[..., None]
-    out = Image.fromarray((mock * (1 - w) + fill * w).clip(0, 255).astype(np.uint8)).resize((1920, 1080), Image.LANCZOS)
-    save("sel_plate", out)
+    out = mock * (1 - w) + fill * w
+    # the girls belong to their card pictures (they trade places on a 1P / 2P swap), so the plate under them is bare: paper inside
+    # the card windows, and where a girl sticks out of her window (ears, bows, the paw) the background around her (nearest colour)
+    hole = np.zeros(mock.shape[:2], bool); win = np.zeros_like(hole)
+    for who, (x0, y0, x1, y1) in WIN.items():
+        cut = np.asarray(Image.open(CUT[who]).convert("RGBA"))[..., 3]
+        sd = SIDES[who]
+        X0, Y0, X1, Y1 = x0 - (OVER if "left" in sd else 0), y0 - OVER, x1 + (OVER if "right" in sd else 0), y1
+        a = ndimage.grey_dilation(cut[Y0:Y1, X0:X1], size=5) > 10
+        if who in EXTRA: a |= poly_mask(a.shape, EXTRA[who], X0, Y0)
+        hole[Y0:Y1, X0:X1] |= a
+        win[y0:y1, x0:x1] = True
+    out[win] = PAPER
+    over = hole & ~win
+    iy, ix = ndimage.distance_transform_edt(hole | win, return_distances=False, return_indices=True)
+    out[over] = out[iy[over], ix[over]]
+    save("sel_plate", Image.fromarray(out.clip(0, 255).astype(np.uint8)).resize((1920, 1080), Image.LANCZOS))
 
 if __name__ == "__main__":
     what = sys.argv[1:] or ["base", "plate", "cards", "parts", "pieces"]
