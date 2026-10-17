@@ -6,7 +6,7 @@
 import { url, meta } from '../core/assets.js';
 import { sfx, initAudio, setMusicVolume, setSfxVolume } from '../core/audio.js';
 import { C } from '../core/content.js';
-import { t, lang, setLang } from '../core/i18n.js';
+import { t, tr, lang, setLang } from '../core/i18n.js';
 import { SET, saveSettings, toggleFullscreen } from '../core/settings.js';
 import { UiFx } from './uifx.js';
 import { cursorScene } from './cursor.js';
@@ -92,15 +92,31 @@ export function showTitle(act) {
   // the UI rides with the panel
   const U = layer(Ly.panel.depth, 'uil');
 
-  // ---- header
-  const H = L.header;
-  put(U, H.slash.img, H.slash.box, 'slash');
-  put(U, H.icon.img, H.icon.box, 'gear');
-  const ht = text(U, H.text, 'head'); Object.assign(ht.style, { left: px(H.text.box[0]), top: px(H.text.box[1]) });
+  // ---- the game's title (DESIGN「标题」): top left, clear of the girls. Ransom-note blocks like the rest of this red / black / white UI,
+  // each character on its own slanted slip of paper, stamped in one after another; under it the Japanese title on a red band (with
+  // its reading) and the English one. The settings below moved down to make room (ui/title.json "settings").
+  const LG = L.logo, logo = el('div', 'logo', U); box(logo, LG.box);
+  const T0 = C.text.gameTitle, slips = [];
+  const line = (str, size, y, cls) => {
+    const ln = el('div', `lline ${cls}`, logo); Object.assign(ln.style, { top: px(y), fontSize: px(size) });
+    [...str].forEach((ch) => { const s = el('span', 'slip', ln); s.textContent = ch; slips.push(s); });
+  };
+  line(T0.zh.small, LG.small, 0, 'small');
+  line(T0.zh.big, LG.big, LG.bigY, 'big');
+  slips.forEach((s, i) => { s.dataset.k = LG.pattern[i % LG.pattern.length]; s.style.rotate = `${LG.tilt[i % LG.tilt.length]}deg`; s.style.animationDelay = `${0.35 + i * 0.07}s`; });
+  const sub = el('div', 'lsub', logo); Object.assign(sub.style, { top: px(LG.subY), fontSize: px(LG.sub) });
+  sub.innerHTML = `<span>${T0.ja.small}</span><ruby>${T0.ja.big}<rt>${T0.ja.ruby}</rt></ruby>`;
+  sub.style.animationDelay = `${0.35 + slips.length * 0.07}s`;
+  const en = el('div', 'len', logo); Object.assign(en.style, { top: px(LG.enY), fontSize: px(LG.en) });
+  en.textContent = `${T0.en.small} · ${T0.en.big}`; en.style.animationDelay = sub.style.animationDelay;
+  // the settings block, moved down under the title (one group: it slides in together)
+  const SG = L.settings, S = el('div', 'setg', U);
+  S.style.transformOrigin = `${px(SG.origin[0])} ${px(SG.origin[1])}`;
+  S.style.transform = `translate(0, ${px(SG.dy)}) scale(${SG.scale})`;
 
   // ---- volume rows: icon, label, on/off toggle, slider, value
   for (const R of L.rows) {
-    const row = el('div', 'row', U); row.dataset.id = R.id;
+    const row = el('div', 'row', S); row.dataset.id = R.id;
     const hl = el('div', 'rowhl', row); Object.assign(hl.style, { left: px(30), top: px(R.y - 34), width: px(626), height: px(68) });
     const icon = put(row, R.icon.img, R.icon.box, 'ico');
     const lab = text(row, R.label, 'lab', null, R.toggle.box[0] - R.label.x - 12); Object.assign(lab.style, { left: px(R.label.x), top: px((R.label.y ?? R.y) - R.label.size * 0.68) });
@@ -137,12 +153,12 @@ export function showTitle(act) {
       sl.onpointerup = () => { sl.onpointermove = null; sl.classList.remove('drag'); saveSettings(); };
     };
   }
-  for (const ln of L.lines) { const d = el('div', 'hr', U); Object.assign(d.style, { left: px(ln.x0), top: px(ln.y), width: px(ln.x1 - ln.x0) }); }
+  for (const ln of L.lines) { const d = el('div', 'hr', S); Object.assign(d.style, { left: px(ln.x0), top: px(ln.y), width: px(ln.x1 - ln.x0) }); }
 
   // ---- segmented choices (language / display)
   const segs = [];
   for (const G of L.segments) {
-    const row = el('div', 'row seg', U);
+    const row = el('div', 'row seg', S);
     const hl = el('div', 'rowhl', row); Object.assign(hl.style, { left: px(30), top: px(G.y - 36), width: px(626), height: px(72) });
     put(row, G.icon.img, G.icon.box, 'ico');
     const lab = text(row, G.label, 'lab', null, G.box[0] - G.label.x - 12); Object.assign(lab.style, { left: px(G.label.x), top: px((G.label.y ?? G.y) - G.label.size * 0.7) });

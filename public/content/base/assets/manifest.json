@@ -6994,54 +6994,6 @@
   "src": "assets/hud/spark.webp",
   "w": 360
  },
- "item/anpan": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/anpan.webp",
-  "w": 224
- },
- "item/armband": {
-  "dom": true,
-  "h": 196,
-  "src": "assets/item/armband.webp",
-  "w": 256
- },
- "item/bandaid": {
-  "dom": true,
-  "h": 234,
-  "src": "assets/item/bandaid.webp",
-  "w": 256
- },
- "item/cat": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/cat.webp",
-  "w": 232
- },
- "item/charm": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/charm.webp",
-  "w": 234
- },
- "item/drum": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/drum.webp",
-  "w": 236
- },
- "item/energy": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/energy.webp",
-  "w": 200
- },
- "item/loader": {
-  "dom": true,
-  "h": 256,
-  "src": "assets/item/loader.webp",
-  "w": 232
- },
  "item/pig": {
   "dom": true,
   "h": 512,

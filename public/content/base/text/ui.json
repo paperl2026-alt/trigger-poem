@@ -80,8 +80,8 @@
     "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" }
   },
   "gameTitle": {
-    "zh": { "small": "相对希望少女们的", "big": "扣击诗" },
-    "ja": { "small": "相対希望少女たちの", "big": "引鉄詩", "ruby": "トリガーポエム" },
+    "zh": { "small": "相对希望的少女", "big": "扣击诗" },
+    "ja": { "small": "相対希望の少女", "big": "引鉄詩", "ruby": "トリガーポエム" },
     "en": { "small": "GIRLS OF RELATIVE HOPE", "big": "TRIGGER POEM" }
   },
   "feverLabel": { "dmg": { "zh": "力", "en": "DMG", "ja": "威" }, "acc": { "zh": "准", "en": "ACC", "ja": "精" }, "combo": { "zh": "连", "en": "CMB", "ja": "連" } },
