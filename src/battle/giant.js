@@ -84,7 +84,7 @@ export class DisciplineGiant extends Actor {
     const t = tex[key], m = paperMesh(t, width, { pivot });
     m.userData.owner = this; m.userData.texKey = key; m.userData.part = name;
     const ar = t.image.width / t.image.height, dm = new DamageMap(1 / ar, 512);
-    attachDamage(m, dm); m.userData.dm = dm; m.userData.w = width;
+    attachDamage(m, dm, true); m.userData.dm = dm; m.userData.w = width;
     return m;
   }
   face(obj, at) { const c = this.game.world.camPos; obj.rotation.y = Math.atan2(c.x - at.x, c.z - at.z); }

@@ -33,7 +33,7 @@ export class Actor {
     this.mesh.userData.owner = this;
     this.mesh.userData.texKey = key;
     this.dm = new DamageMap(1 / this.ar, this.w > 4 ? 512 : 256);
-    attachDamage(this.mesh, this.dm);
+    attachDamage(this.mesh, this.dm, true);   // hurt spots change colour, never hole (DESIGN「Boss」)
     this.inner = new THREE.Group();
     this.inner.add(this.mesh);
     this.root = new THREE.Group();

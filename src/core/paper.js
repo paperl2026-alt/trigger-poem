@@ -1,5 +1,5 @@
 // Paper cut-out material: one shader carries every hit / kill look.
-//  - damage map (per sprite canvas):  R = holes and cuts, G = scorch, B = heat glow
+//  - damage map (per sprite canvas):  R = holes and cuts, G = scorch, B = heat glow ("solid" sprites: R = how hurt, never holed)
 //  - dissolve: burn-away from an origin with an ember edge
 //  - slice: keep one side of a line (uv space) with a glowing cut edge
 //  - flash / tint for hit feedback, "boil" jitter is done by the owner on the mesh
@@ -39,7 +39,7 @@ void main(){
 export const FOG = { color: { value: new THREE.Color(0, 0, 0) }, density: { value: 0 } };
 
 const FRAG = `
-uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg;
+uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg; uniform float dmgSolid;
 uniform float flash; uniform vec3 tint; uniform float tintAmt; uniform float opacity; uniform float dark;
 uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float sliceOn; uniform float aspect;
 uniform float seed; uniform float time; uniform vec3 edgeColor;
@@ -65,7 +65,22 @@ void main(){
   vec2 q = vec2(vUv.x * aspect, vUv.y);
   float n = fbm(q * 14.0 + seed);
   float n2 = vnoise(q * 60.0 + seed * 3.0);
-  if (useDmg > 0.5) {
+  if (useDmg > 0.5 && dmgSolid > 0.5) {
+    // monsters and the boss (docs/DESIGN.md「Boss」): never holed — the shape and the hit area stay; where it is hurt, the material
+    // changes, old-arcade style: the colour drains and bruises toward violet-black, cracks open and glow, burns char and smoulder
+    vec3 d = texture2D(dmg, vUv).rgb;
+    float hv = d.r + (n - 0.5) * 0.3 + (n2 - 0.5) * 0.1;
+    float k = smoothstep(0.15, 0.6, hv);
+    float lum = dot(col, vec3(0.3, 0.5, 0.2));
+    vec3 bruise = mix(vec3(lum) * vec3(0.62, 0.42, 0.7), vec3(0.24, 0.05, 0.17), smoothstep(0.4, 0.9, hv));
+    col = mix(col, bruise, k * 0.9);
+    float vein = smoothstep(0.045, 0.0, abs(fbm(q * 7.0 + seed * 2.0) - 0.5)) * smoothstep(0.3, 0.75, hv);
+    col += vec3(1.0, 0.3, 0.68) * vein * (1.1 + 0.5 * n2);
+    col = mix(col, vec3(1.0, 0.85, 0.95), smoothstep(0.85, 1.1, hv) * 0.35);   // the worst spots blanch
+    float sc = d.g + (n - 0.5) * 0.35;
+    col = mix(col, col * vec3(0.18, 0.11, 0.1), smoothstep(0.12, 0.8, sc));
+    col += vec3(1.0, 0.42, 0.07) * d.b * smoothstep(0.2, 0.6, sc) * (0.6 + 1.1 * n2);
+  } else if (useDmg > 0.5) {
     vec3 d = texture2D(dmg, vUv).rgb;
     float hv = d.r + (n - 0.5) * 0.32 + (n2 - 0.5) * 0.12;
     if (hv > 0.55) discard;                                   // punched / cut through
@@ -111,7 +126,7 @@ function blankTex() {
 export function paperMaterial(map, aspect = 1) {
   return new THREE.ShaderMaterial({
     uniforms: {
-      map: { value: map }, dmg: { value: blankTex() }, useDmg: { value: 0 },
+      map: { value: map }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
       dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },
       slice: { value: new THREE.Vector3() }, sliceOn: { value: 0 }, aspect: { value: aspect },
@@ -213,7 +228,9 @@ export class DamageMap {
   dispose() { this.tex.dispose(); }
 }
 
-export function attachDamage(mesh, dm) {
+// solid: the damage changes the material only (monsters, the boss); otherwise it can hole the paper (covers, props)
+export function attachDamage(mesh, dm, solid = false) {
   mesh.material.uniforms.dmg.value = dm.tex;
   mesh.material.uniforms.useDmg.value = 1;
+  mesh.material.uniforms.dmgSolid.value = solid ? 1 : 0;
 }
