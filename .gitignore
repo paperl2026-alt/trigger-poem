@@ -9,3 +9,5 @@ tools/__pycache__/
 tools/models/
 dist-portable/
 trigger-poem-portable.zip
+# Codex job files: generated from tools/rounds/job_specsNN.py by tools/make_jobs.py
+art/jobs/

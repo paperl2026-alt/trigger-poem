@@ -1,5 +1,5 @@
 """Clean plate for a screen built from a mockup: the areas where the game draws its own controls / text are painted magenta on
-the mockup (this script), Codex fills ONLY those areas (job R20_fill), and tools/r20_import.py takes Codex's pixels only
+the mockup (this script), Codex fills ONLY those areas (job R20_fill), and tools/rounds/r20_import.py takes Codex's pixels only
 inside the mask, so everything else stays the mockup's own pixels and no shape can change.
 Pass 1 (no cut-out of the controls yet): loose boxes, used only to get Codex's fill. Pass 2 ("--ui"): the mask is the exact
 footprint of the controls, from Codex's controls-only cut-out (job R20_ui, art/raw/r20/sel_ui.png): only what a control

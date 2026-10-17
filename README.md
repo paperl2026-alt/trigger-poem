@@ -3,8 +3,8 @@
 光枪射击游戏（Steam / PC）。这个文件夹只放新游戏；旧的 MVP 在 `../nightmare-onair`，两边互不影响。
 
 ## 怎么测试
-- 双击 **`开始游戏.bat`**：每次都会先用最新代码构建，再打开游戏窗口，不会出现旧版本。
-- 想发给别人：双击 **`打包exe.bat`**，生成 `release/TriggerPoem-win32-x64/TriggerPoem.exe`（整个文件夹一起发）。
+- 双击 **`开始游戏.bat`**，直接回车就开始游戏（每次都先用最新代码构建，不会是旧版本）。
+- 同一个菜单里按数字：1 走廊验证、2 晃动技术验证、3 打包 exe（生成 `release/TriggerPoem-win32-x64/TriggerPoem.exe`，整个文件夹一起发）、4 存档并同步 GitHub、5 备份到 D 盘。
 
 ## 游戏里
 - 鼠标：按住左键探身射击，松开躲掩体并自动装填，右键必杀。手柄：摇杆瞄准，RT 射击，LT 掩体，Y 必杀，START 加入 2P。
@@ -19,7 +19,7 @@
 - `src/core/`：引擎和底层（内容包加载器、图片、音频、存档、设置、输入、文字）。
 - `src/battle/`：战斗规则。
 - `src/ui/`：画面（标题、选关、HUD、漫画、结算）。
-- `src/jiggle/`：立绘晃动和汗液（`晃动技术验证.bat`）。
-- `art/`：原图、参考图、GPT 资产（`art/gpt_sets`）。`tools/`：出图和处理脚本。
+- `src/jiggle/`：立绘晃动和汗液（菜单 2 晃动技术验证）。
+- `art/`：原图、参考图、GPT 资产（`art/gpt_sets`）。`tools/`：通用的出图 / 处理脚本；`tools/rounds/`：每一轮出图的提示词和导入脚本；`tools/node/`：构建、打包、截图脚本。
 - 文档见 `CLAUDE.md` 的表格：`docs/PLAN.md`（要做的事）、`docs/DESIGN.md`（设计）、`docs/ART.md`（美术生产）、`docs/TECH.md`（技术）、`docs/LOG.md`（日志）。
-- 存档：双击 `存档.bat`（同步到 GitHub 私有仓库）；备份：双击 `备份到D盘.bat`。
+- 存档：菜单 4（同步到 GitHub 私有仓库）；备份：菜单 5。

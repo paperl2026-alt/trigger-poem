@@ -2,10 +2,10 @@
 
 ## 来源和出图流程
 - 美术全部由 GPT 出（Codex CLI 的出图工具），**只有静态 2D 图**：没有 3D 模型，没有蒙皮动画。动起来靠程序（晃动、浮雕、shader）。
-- 一轮出图 = 一个 `tools/job_specsNN.py`：`JOBS = {任务名: [(输出路径, [参考图...], 提示词, "OPAQUE"?)]}`。
-  1. `python -I tools/make_jobs.py tools/job_specsNN.py [任务名...]` → 生成 `art/jobs/<任务名>.md`；
+- 一轮出图 = 一个 `tools/rounds/job_specsNN.py`：`JOBS = {任务名: [(输出路径, [参考图...], 提示词, "OPAQUE"?)]}`。
+  1. `python -I tools/make_jobs.py tools/rounds/job_specsNN.py [任务名...]` → 生成 `art/jobs/<任务名>.md`（不进存档）；
   2. `bash tools/run_jobs.sh <并行数> 任务名...`（单个用 `tools/codex_job.sh art/jobs/X.md`）→ 图在 `art/raw/rNN/`；
-  3. `python -I tools/rNN_import.py` → 进 `public/content/base/assets/` 和 `manifest.json`。
+  3. `python -I tools/rounds/rNN_import.py` → 进 `public/content/base/assets/` 和 `manifest.json`。
 - 被拒（`*.refused.txt`）的常见原因：
   - 地雷妹设计稿的半透明粉色连衣裙 + "流口水、脸红、踢腿"之类的描述，会触发安全过滤。
   - 改法：去掉设计稿参考，写成"粉色荷叶边校服衬衫 + 薄荷水手领，fully clothed"，语气写 wholesome。
@@ -30,7 +30,7 @@
 4. 去掉控件上的文字：文字涂洋红让 Codex 补下面的纹理；平色区直接用周围颜色填（`tools/text_mask.py`）。
 5. 文字由程序按实测的位置、字号、角度排（`tools/measure_text.py`，误差约 2px）。字体是打包的 Noto Sans SC 700/900。
 6. 人物用参考图里的人物原样抠，不拿别处的立绘顶替。
-7. 实机截图和参考图并排对照（`tools/shot.cjs` 截全尺寸），误差 1～2px 内。
+7. 实机截图和参考图并排对照（`tools/node/shot.cjs` 截全尺寸），误差 1～2px 内。
 - 已按此做完：标题+设置（`art/ref/ui_p5.png`）、选关（`art/ref/select_ref.png`）。
 
 ## 人物
@@ -63,19 +63,19 @@
 
 ## 怪物和 Boss
 - 方向见 DESIGN「怪物」。
-- 小怪：一张 3×2 的六姿势表（`tools/job_specs23.py`），`tools/r23_import.py` 按空白带切开，放进同一画布，存成 `enemy/<id>_<姿势>`。
+- 小怪：一张 3×2 的六姿势表（`tools/rounds/job_specs23.py`），`tools/rounds/r23_import.py` 按空白带切开，放进同一画布，存成 `enemy/<id>_<姿势>`。
 - Boss：
   1. 先出一张定稿主图（`art/raw/r25/master.png`）；
-  2. 以它为参考，每个动起来的部件单独出（头的几种表情、手的几种动作、各阶段的身体），`tools/r25_import.py`；
+  2. 以它为参考，每个动起来的部件单独出（头的几种表情、手的几种动作、各阶段的身体），`tools/rounds/r25_import.py`；
   3. 弱点位置写在 manifest 的 `weak`。
 - 所有站在场景里的东西（怪、掩体、道具），都用 `tools/relief.py` 生成深度浮雕图 `<key>_rd`（见下）。
 
 ## 场景（技术路线，2026-10-17 定，走廊验证已过）
 - **场景 = 平板拼出来的真 3D 空间**：地板、墙、天花板、门窗都是平板。每块板贴 GPT 画的**正视图**，透视交给 3D。
-  - 提示词要点（`tools/job_specs28.py` 的 FLAT）：
+  - 提示词要点（`tools/rounds/job_specs28.py` 的 FLAT）：
     - orthographic、完全正对、没有透视和消失点，画面就是这块表面，铺满到边；
     - 墙按 4.5m × 3m 一段出（3:2），地板 / 天花板 3m × 3m 一张，要能平铺。
-  - 窗户玻璃涂纯洋红 `#FF00FF`，导入时抠空（`tools/r28_import.py`）；窗外是单独一张远景全景。
+  - 窗户玻璃涂纯洋红 `#FF00FF`，导入时抠空（`tools/rounds/r28_import.py`）；窗外是单独一张远景全景。
   - 地板、天花板导入时把边缘做成可平铺。
   - 贴花（眼睛符号、横幅、裂纹、散落的考卷、书包、粘液）出成一张 3×2 表，切开后贴在板上。
 - **掩体、桌椅、道具、怪物、Boss = 单张 GPT 图 + 深度浮雕**：
@@ -112,7 +112,7 @@
   - R32：掩体 12 种、贴花 24 个、六种小怪各 2 个新造型；
   - R33：战斗 HUD 修订效果图（等用户确认）；
   - R34：R23 三张小怪表去掉特效；
-  - R35：HUD 拆解图层、图标、符咒弹药（3 套）、装填图（每人 3 张）、Q 版表情（每人 24 个）、准星（每人 3 套 × 8 态）、射击 / 命中特效原画（`tools/r35_import.py`）。
+  - R35：HUD 拆解图层、图标、符咒弹药（3 套）、装填图（每人 3 张）、Q 版表情（每人 24 个）、准星（每人 3 套 × 8 态）、射击 / 命中特效原画（`tools/rounds/r35_import.py`）。
 - 作废：
   - R11～R14、R16、R18：旧 UI 和旧人物；
   - R21：第一版怪物设计稿，被否；

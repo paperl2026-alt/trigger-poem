@@ -1,4 +1,4 @@
-"""Prologue comic pages (content comics.json, panels art/raw/r26/*.png from tools/job_specs26.py). No text anywhere (user rule:
+"""Prologue comic pages (content comics.json, panels art/raw/r26/*.png from tools/rounds/job_specs26.py). No text anywhere (user rule:
 the comics have no words, no sound-effect lettering). Panels -> comic/ep0_<n>; pages laid out as slanted manga panels.
 The cat girl's paw seal is made canonical on panels where the paw's back shows big (art/seal_placements.json "cm_<n>").
 usage: python -I tools/ep0_comics.py"""

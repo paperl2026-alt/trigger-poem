@@ -46,5 +46,5 @@ export default defineConfig({
   define: { __BUILD__: JSON.stringify(new Date().toLocaleString('zh-CN', { hour12: false })) },
   plugins: [shots, mods],
   server: { port: 5300, strictPort: true },
-  build: { chunkSizeWarningLimit: 2000, rollupOptions: { input: { main: path.resolve('index.html'), jiggle: path.resolve('jiggle.html'), depth: path.resolve('depth.html') } } },
+  build: { chunkSizeWarningLimit: 2000, rollupOptions: { input: { main: path.resolve('index.html'), jiggle: path.resolve('jiggle.html') } } },
 });

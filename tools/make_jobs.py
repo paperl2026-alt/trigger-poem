@@ -1,4 +1,4 @@
-# Builds Codex image job files from prompt specs in tools/job_specs.py
+# Builds Codex image job files from prompt specs in tools/rounds/job_specs.py
 import pathlib, sys, importlib.util
 
 HEAD = """You are an image-production worker for a game project. Your only job is to generate the images below with your built-in image generation tool and save them. Rules:

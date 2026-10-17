@@ -2,39 +2,43 @@
 
 ## 运行、交付、自检
 - 技术栈：Three.js r169 + Vite 5 + Electron 33。
-- 给用户的入口都是双击就能用的 .bat（先构建 `npm run build`，再 `npx electron . --page=<页面>`）：
+- 给用户的入口只有根目录的 `开始游戏.bat`，一个菜单（每项都先 `npm run build`，再 `npx electron . --page=<页面>`）：
 
-| 文件 | 打开什么 |
+| 选 | 打开什么 |
 |---|---|
-| `开始游戏.bat` | 整个游戏 |
-| `走廊验证.bat` | 隐藏关卡 `corridor_test`（`index.html?ep=corridor_test`） |
-| `晃动技术验证.bat` | `jiggle.html` |
-| `打包exe.bat` | 打包到 `release/` |
+| 回车 | 整个游戏（`npm run app`） |
+| 1 | 隐藏关卡 `corridor_test`（`index.html?ep=corridor_test`），当前在做的关卡验证 |
+| 2 | `jiggle.html` 晃动技术验证 |
+| 3 | 打包到 `release/`（`npm run exe`） |
+| 4 / 5 | 存档并同步 GitHub / 全部历史备份到 `D:\trigger-poem-backup\` |
+
+- 新的验证页加成菜单里的一项，不再加新的 bat。
 
 - **.bat 必须是 CRLF 换行**（LF 换行时 cmd 会解析错，双击打不开）。用 Python 写文件时 `newline=''` 加 `\r\n`。
 - URL 参数（`src/main.js`）：
   - `?ep=<id>&step=<n>`：直接开打；
   - `&auto`：1P 自动打；
   - `&skip`：跳过漫画；
+  - `&team=cat,pink`：指定 1P、2P（测换队）；
   - `?select`：直接进选关。
 - 自检：
-  - `NOA_SELFTEST=<png>` + `electron . --page=...` 会离屏跑几秒，写出截图和 `<png>.json`（报错、是否进入战斗、主角状态）；
+  - `NOA_SELFTEST=<png>` + `electron . --page=...` 会离屏跑几秒，写出截图和 `<png>.json`（报错和报错位置、是否进入战斗、主角状态）；这是**交付前必须过的检查**：用的是和用户一样的构建产物（`dist/`），两种队伍顺序都要跑；
   - 开发服务器：`.claude/launch.json` 的 trigger-poem-rec，端口 5310。
-  - `tools/shot.cjs`（只给自己检查用）：
-    - 用 Electron 截全尺寸图：`electron.exe tools/shot.cjs <端口> out.png 宽 高 [等待的选择器]`；
+  - `tools/node/shot.cjs`（只给自己检查用）：
+    - 用 Electron 截全尺寸图：`electron.exe tools/node/shot.cjs <端口> out.png 宽 高 [等待的选择器]`；
     - 参数不能带冒号，换网址用环境变量 `SHOT_URL`；
     - 其他环境变量：`SHOT_PRE`（先执行的 JS）、`SHOT_WAIT`、`SHOT_SEQ="js|帧数|间隔"`、`SHOT_EVAL`（取页面数据）。
 
 ## 存档
 - git 存档，同步到用户 GitHub 私有仓库 `paperl2026-alt/trigger-poem`。登录走 Git Credential Manager，Claude 不碰密码。
-- 用户双击：
-  - `存档.bat`：存一次并同步，列出最近的存档编号；
-  - `备份到D盘.bat`：把全部历史打包到 `D:\trigger-poem-backup\`。
+- 用户在 `开始游戏.bat` 菜单里：4 存一次并同步，列出最近的存档编号；5 把全部历史打包到 `D:\trigger-poem-backup\`。
 - 不进存档（都能重新生成）：
   - `node_modules/`、`dist/`、`release/`；
   - `art/_shots/`；
   - `art/jiggle_test/`；
-  - `tools/models/`（深度模型）。
+  - `tools/models/`（深度模型）；
+  - `art/jobs/`（Codex 任务文件，由 `tools/make_jobs.py` 从 `tools/rounds/job_specsNN.py` 生成）。
+- 目录：`tools/` 通用脚本（出图流水线、浮雕、咒印、测量、拆解），`tools/rounds/` 每轮出图的提示词和导入，`tools/node/` 构建 / 打包 / 截图。
 
 ## 内容包（DLC / 创意工坊同格式）
 - 本体也是一个内容包：`public/content/base/`。
