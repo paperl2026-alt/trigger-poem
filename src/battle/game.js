@@ -33,6 +33,7 @@ export class Game {
     this.tweens = G.tweens;
     // the enemies' clock (DESIGN「节奏要慢下来」): monsters, the boss, their shots and the waves run at tuning combat.pace of real time
     this.etw = new Tweens();
+    this.woundUp = new Set();   // the monster types that have wound up an attack in this run (the first one is slower: windupMul)
     this.post = G.post;
     this.pointer = G.pointer;
     this.overlay = new THREE.Scene();
@@ -477,8 +478,16 @@ export class Game {
     return n;
   }
 
+  // how much longer a wind-up of this monster type takes: the episode's ease (the tutorial warns longer), and the first time in the run
+  // even longer (DESIGN「关卡编排要有起伏」: new things come slowly, with room for mistakes)
+  windupMul(type) {
+    let k = this.ep.ease?.windup ?? 1;
+    if (type && !this.woundUp.has(type)) { this.woundUp.add(type); k *= T.combat.firstWindup ?? 1; }
+    return k;
+  }
   // returns true when nobody got hurt (blocked by cover / missed)
   playerAttacked({ kind, dmg, from, heavy, slot = 0 }) {
+    dmg *= this.ep.ease?.dmg ?? 1;
     const targets = slot === -1 ? this.players : [this.players[slot] || this.players[0]];
     let hurt = false;
     for (const p of targets) {

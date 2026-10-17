@@ -28,6 +28,7 @@ function board(key, w, h, opts = {}) {
 
 const INK_FRAG = `
 uniform sampler2D tColor; uniform sampler2D tDepth; uniform vec2 texel; uniform float near; uniform float far; uniform float time; uniform vec3 ink; uniform float paper;
+uniform vec3 gTint; uniform float gK; uniform float gSat;
 varying vec2 vUv;
 ${NOISE_GLSL}
 float lin(vec2 uv) { float z = texture2D(tDepth, uv).x; return near * far / (far - z * (far - near)); }
@@ -43,6 +44,11 @@ void main(){
     float e = max(smoothstep(0.012, 0.03, lap), smoothstep(0.06, 0.14, jump));
     c = mix(c, ink, e * 0.85);
   }
+  // the set's colour grade (DESIGN「画面一致性」): everything in the place (boards, props, covers, monsters) in one light; the heroines
+  // are drawn after this and keep their own colours
+  float lum = dot(c, vec3(0.299, 0.587, 0.114));
+  c = mix(vec3(lum), c, gSat);
+  c = mix(c, c * gTint, gK);
   // paper: a little fibre grain over everything
   float g = fbm(vUv * vec2(260.0, 150.0)) - 0.5;
   c *= 1.0 + g * paper;
@@ -83,7 +89,9 @@ export class PanelWorld {
     this.rt = new THREE.WebGLRenderTarget(4, 4);
     this.rt.depthTexture = new THREE.DepthTexture(4, 4);
     this.inkU = { tColor: { value: this.rt.texture }, tDepth: { value: this.rt.depthTexture }, texel: { value: new THREE.Vector2() }, near: { value: 0.05 }, far: { value: 120 },
-      time: { value: 0 }, ink: { value: new THREE.Color(set.ink || '#2a1420') }, paper: { value: set.paper ?? 0.06 } };
+      time: { value: 0 }, ink: { value: new THREE.Color(set.ink || '#2a1420') }, paper: { value: set.paper ?? 0.06 },
+      gTint: { value: new THREE.Color(1, 1, 1) }, gK: { value: 0 }, gSat: { value: 1 } };
+    this.grade(this.anomaly);
     this.inkScene = new THREE.Scene();
     this.inkCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     this.inkScene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), new THREE.ShaderMaterial({ uniforms: this.inkU, depthTest: false, depthWrite: false,
@@ -352,6 +360,14 @@ export class PanelWorld {
     if (S.anomalyLit) this.lit.setRGB(...(S.lit || [1, 0.94, 0.9])).lerp(TMPC.setRGB(...S.anomalyLit), k);
     if (S.anomalyFog) { this.scene.fog.color.set(S.fog || '#8a6070').lerp(TMPC.set(S.anomalyFog), k); FOG.color.value.copy(this.scene.fog.color); }
     if (S.anomalySky) this.scene.background.set(S.sky || '#2a1830').lerp(TMPC.set(S.anomalySky), k);
+    this.grade(k);
+  }
+  // the colour grade: set "grade" (calm) -> "anomalyGrade" with the anomaly ({ tint: [r, g, b], k: how much, sat: saturation })
+  grade(k) {
+    const S = this.set, a = S.grade || { tint: [1, 1, 1], k: 0, sat: 1 }, b = S.anomalyGrade || a, u = this.inkU;
+    if (!u) return;
+    u.gTint.value.setRGB(...a.tint).lerp(TMPC.setRGB(...b.tint), k);
+    u.gK.value = a.k + (b.k - a.k) * k; u.gSat.value = (a.sat ?? 1) + ((b.sat ?? 1) - (a.sat ?? 1)) * k;
   }
   litFlats() {}
   // docs/DESIGN.md「战斗画面布局」: a monster h metres tall and w wide about to stand at p (a Vector3, changed in place) is moved to where

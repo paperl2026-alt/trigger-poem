@@ -338,6 +338,7 @@ export class Enemy extends Actor {
 
   startWindup(time) {
     this.state = 'windup';
+    time *= this.game.windupMul(this.type);
     this.timer = this.timer0 = time;
     if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
     if (this.lock) this.lock.remove();

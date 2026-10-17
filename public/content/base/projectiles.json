@@ -7,5 +7,13 @@
   "shard": { "keys": ["p_shard"], "size": 0.45, "spin": 4 },
   "plane": { "keys": ["p_plane"], "size": 0.55, "spin": 1.5 },
   "phone": { "keys": ["p_phone"], "size": 0.9, "spin": 6 },
-  "manga": { "keys": ["p_manga"], "size": 1, "spin": -5 }
+  "manga": { "keys": ["p_manga"], "size": 1, "spin": -5 },
+  "hand": { "keys": ["p_hand", "p_hand2"], "size": 0.6, "spin": 8 },
+  "tack": { "keys": ["p_tack"], "size": 0.4, "spin": 10 },
+  "eye": { "keys": ["p_eye", "p_eye_b"], "size": 0.9, "spin": 3 },
+  "ooze": { "keys": ["p_ooze", "p_ooze_b"], "size": 0.95, "spin": -2 },
+  "hair": { "keys": ["p_hair", "p_hair_b"], "size": 0.85, "spin": 6 },
+  "tooth": { "keys": ["p_tooth", "p_tooth_b"], "size": 0.6, "spin": 9 },
+  "lips": { "keys": ["p_lips", "p_lips_b"], "size": 0.8, "spin": 2 },
+  "eyes": { "keys": ["p_eyes", "p_eyes_b"], "size": 0.9, "spin": -3 }
 }
