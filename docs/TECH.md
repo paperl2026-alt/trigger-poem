@@ -33,12 +33,18 @@
 - `src/core/audio.js`：所有音效先用 WebAudio 合成（临时）；content `audio/sounds.json`（内容类别 sounds）里填了文件的，就放文件（随机挑一个、每次略微变调），没有的照旧合成。不在清单里的文件一律不去加载。
   - `sfx`：每种音效（when 什么时候响、want 想要的感觉、src 打算从哪来：lib 音效库 / tts 语音合成后期 / synth、files、vol）；
   - `monsters`：怪物叫声（按怪的种类 × windup / attack / hurt / die），`cry(type, act)`，现在挂在蓄力和死亡上；
-  - `voices`：角色语音设定（lang、Fish Audio 声线 ref、tone），`lines` 登记有文件的台词（键 `<场合>_<第几句>`，对应 text/stickers.json 的同一句）；`voice(who, kind, i)` 在气泡出现时说（stickers.js、标题页气泡）。
+  - `voices`：角色语音（model 声音模型、read 每个场合的风格和语速、say 改读音、credit 署名），`lines` 登记有文件的台词（键 `<场合>_<第几句>`，对应 text/stickers.json 的同一句）；`voice(who, kind, i)` 在气泡出现时说（stickers.js、标题页气泡）。
   - 文件路径相对内容包（`soundPaths` 在 content.js 里转成网址），所以模组也能换声音。
   - sounds.json 每种声音可选 `len`（只放前几秒，结尾 60ms 内淡出）、`rate`（变调）；怪物叫声按种类有 `rate` / `vol`。便携版声音也从内嵌表取（window.__NOA_CONTENT）。
   - 解码时 `level()` 量一次：峰值拉到 0.7、从第一声（裁掉开头静音）开始放；不同音效库的响度差别不用手调。
   - 挑素材的工具：`tools/node/sfx_scan.cjs`（ART「声音」）。
-- 语音生成：`tools/voice_fish.py`（Fish Audio API；密钥只从环境变量 FISH_API_KEY 读，不进任何文件）。`search` 搜公开声线，`say` 生成一句，`lines <角色>` 把 text/stickers.json 里她的所有台词按 sounds.json voices.<角色>（ref 声线、lang、tone_en 表演指示）生成到 `public/content/base/voice/<角色>/<场合>_<第几句>.mp3` 并登记。模型默认 drama-3（台词前加 [表演指示]），`FISH_MODEL=s2.1-pro-free` 是免费档（只用来试听，不读指示）。**API 余额和网站点数是分开的**，drama-3 / s2.1-pro 要先在 fish.audio/app/developers 充 API 余额。声线试听在 `art/raw/voice_test/`。
+- 语音生成：`tools/voice_aivis.py`，用 AivisSpeech（免费、在本机跑的日语语音合成，Style-Bert-VITS2）。
+  - 引擎和 ffmpeg 不进 git，手动解压：官方 Windows zip 解到 `tools/aivis/app/`（GitHub Aivis-Project/AivisSpeech，官网下载按钮给的那个版本），BtbN 的 ffmpeg Windows 构建解到 `tools/ffmpeg/`。
+  - `start`：引擎没开就在后台开（`run.exe --port 10101`，日志 `tools/aivis/engine.log`），并从 AivisHub 装上 sounds.json 写的模型（引擎第一次启动还会自己装官方默认模型 コハク、まお；模型在 `%APPDATA%\AivisSpeech-Engine\Models`）。
+  - `read <角色>`：不出声音，列出每句用的风格和引擎实际的读法（假名）。汉字读错就在 `say` 里写假名。
+  - `lines <角色> [场合 | 场合_第几句 …]`：读 text/stickers.json 的日语台词，♡ ♪ 不念、空格当停顿、~ 当长音，按 `read` 设好风格、语速、语气浓淡；生成后裁掉首尾静音、峰值拉到 -1 dB，用 ffmpeg 转 Ogg Opus 48k，写到 `public/content/base/voice/<角色>/<场合>_<第几句>.ogg` 并登记进 `lines`。不写场合就整个重做。
+  - `say <角色> <风格> <输出> <文本>`：试一句。
+  - 音高（pitchScale）不调：AivisSpeech 一动音高音质就变差。
 - BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
 
 ## 存档文件（游戏进度，不是下面的 git 存档）
