@@ -704,5 +704,73 @@
     "rot": 0.0,
     "keep_frame": true,
     "png": "art/raw/r51/fixed/cover_b.png"
+  },
+  "r47_intro_c": {
+    "src": "art/raw/r47/page_intro_c.png",
+    "erase": [
+      288,
+      275,
+      358,
+      357
+    ],
+    "center": [
+      326,
+      311
+    ],
+    "ring": 52,
+    "rot": -40.0,
+    "keep_frame": true,
+    "png": "art/raw/r47/fixed/page_intro_c.png"
+  },
+  "r47_mid_a": {
+    "src": "art/raw/r47/page_mid_a.png",
+    "erase": [
+      262,
+      195,
+      416,
+      351
+    ],
+    "center": [
+      340,
+      269
+    ],
+    "ring": 86,
+    "rot": 10.0,
+    "keep_frame": true,
+    "png": "art/raw/r47/fixed/page_mid_a.png"
+  },
+  "r47_boss_b": {
+    "src": "art/raw/r47/page_boss_b.png",
+    "erase": [
+      527,
+      797,
+      580,
+      850
+    ],
+    "center": [
+      552,
+      822
+    ],
+    "ring": 42,
+    "rot": 0.0,
+    "keep_frame": true,
+    "png": "art/raw/r47/fixed/page_boss_b.png"
+  },
+  "r47_mid_a2": {
+    "src": "art/raw/r47/fixed/page_mid_a.png",
+    "erase": [
+      944,
+      622,
+      1012,
+      692
+    ],
+    "center": [
+      976,
+      655
+    ],
+    "ring": 40,
+    "rot": 0.0,
+    "keep_frame": true,
+    "png": "art/raw/r47/fixed/page_mid_a.png"
   }
 }
