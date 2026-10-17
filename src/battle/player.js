@@ -239,8 +239,14 @@ export class Player {
       const run = this.state === 'run' ? Math.abs(Math.sin(t * 10 + this.slot)) * this.H * 0.022 : 0;
       const hop = this.state === 'victory' ? Math.abs(Math.sin(t * 5 + this.slot)) * this.H * 0.03 : 0;
       const shake = this.state === 'hurt' ? Math.sin(t * 60) * this.H * 0.006 : 0;
+      // walking on: the shot moves in to above her knees (there is no walking picture, her legs would look wrong: DESIGN「画面」);
+      // eased in and out, she grows about her body line and sinks until her knees sit on the bottom of the screen
+      const Wk = T.layout.walk;
+      this.walkK = (this.walkK || 0) + ((this.state === 'run' ? 1 : 0) - (this.walkK || 0)) * Math.min(1, dt * Wk.ease);
+      const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = 1 + (Wk.zoom - 1) * wk;
+      const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom);
       this.hero.update(dt, t, {
-        state: this.state, x: this.baseX + shake, y: this.bottom + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0),
+        state: this.state, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0),
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
         dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,

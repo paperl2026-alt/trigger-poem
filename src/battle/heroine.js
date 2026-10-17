@@ -81,7 +81,7 @@ export class Heroine {
     const u = this.p.mirror ? 1 - F.muzzle[0] : F.muzzle[0];
     return { x: this.g.position.x + m.position.x + (u - 0.5) * w, y: this.g.position.y + m.position.y + F.muzzle[1] * h };
   }
-  // st: { state, x (body centre line px), y (feet px), lean, dark, opacity, flash }
+  // st: { state, x (body centre line px), y (feet px), zoom, lean, dark, opacity, flash }
   update(dt, t, st) {
     const J = this.J, b = this.body, sign = this.p.mirror ? -1 : 1;
     this.setOut(st.state === 'out' || st.state === 'victory' || st.state === 'run');
@@ -127,6 +127,7 @@ export class Heroine {
     this.hitT = Math.max(0, this.hitT - dt);
     this.aura.pulse = Math.max(0, this.aura.pulse - dt * 1.6);
     this.g.position.set(st.x, st.y, 0);
+    this.g.scale.setScalar(st.zoom || 1);   // walking: the shot moves in on her (player.js)
     this.g.visible = st.visible !== false;
     // breath vapour on every exhale (the breath cycle turning downward), from the nose toward the face
     const m = this.poses[this.pose];
