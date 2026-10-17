@@ -206,7 +206,20 @@ export function showTitle(act) {
   function boxOf(n) { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; }
   function pop(n, e) { n.classList.remove('pop'); void n.offsetWidth; n.classList.add('pop'); if (e) { const [x, y] = toDesign(e.clientX, e.clientY); fx.click(x, y); } }
   for (const n of [startB, quitB]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === startB ? 8 : 4); });
-  girls.addEventListener('pointerenter', (e) => { girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3); });
+  girls.addEventListener('pointerenter', (e) => { girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3);
+    const [rx] = toDesign(e.clientX, e.clientY); bubble(rx / RS < L.speech.split ? 'cat' : 'pink', 'poke'); });
+  // a speech bubble by one of the girls (text/stickers.json heroines.<id>.<kind>)
+  const bub = el('div', 'tbub', U), bubJa = el('b', '', bub), bubTr = el('small', '', bub);
+  let bubT = 0;
+  function bubble(who, kind) {
+    const set = C.text.stickers?.heroines?.[who]?.[kind]; if (!set) return;
+    const line = set.lines[Math.floor(Math.random() * set.lines.length)], at = L.speech[who];
+    bubJa.textContent = line.ja; bubTr.textContent = lang === 'ja' ? '' : (line[lang] || line.en);
+    bub.dataset.who = who; Object.assign(bub.style, { left: px(at[0]), top: px(at[1]) });
+    bub.classList.remove('on'); void bub.offsetWidth; bub.classList.add('on');
+    clearTimeout(bubT); bubT = setTimeout(() => bub.classList.remove('on'), 1800);
+  }
+  quitB.addEventListener('pointerenter', () => bubble(Math.random() < 0.5 ? 'pink' : 'cat', 'quit'));
   root.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth * 2 - 1; mouse.ty = e.clientY / window.innerHeight * 2 - 1; });
 
   let gone = false;

@@ -14,6 +14,7 @@
     "logo": { "_doc": "标题（DESIGN「标题」）：box 位置（参考图像素），small / big 两行字号，bigY / subY / enY 各行的上沿，pattern 每块纸片的样式（ink 黑底白字 / paper 白底黑字 / red 红底白字）轮流用，tilt 每块的角度轮流用",
       "box": [34, 12, 700, 236], "small": 42, "big": 84, "bigY": 50, "subY": 146, "sub": 24, "enY": 214, "en": 14,
       "pattern": ["ink", "paper", "ink", "red", "paper", "ink", "paper", "red", "ink", "paper"], "tilt": [-6, 4, -3, 5, -5, 2, -4, 3, -7, 5] },
+    "speech": { "_doc": "两人的说话气泡（src/ui/title.js bubble）：猫娘 / 地雷妹的气泡位置（参考图像素，气泡左下角对着她的头）；split 戳立绘时，鼠标在这条线左边算猫娘", "cat": [985, 175], "pink": [1340, 210], "split": 1170 },
     "settings": { "_doc": "设置那一块整体往下挪 dy、缩放 scale（以 origin 为准），给标题让位", "dy": 62, "scale": 0.88, "origin": [40, 212] },
     "rows": [
       { "id": "bgm", "y": 235, "icon": { "img": "ui/p5_icon_speaker", "off": "ui/p5_icon_speaker_off", "box": [44, 212, 98, 258] },

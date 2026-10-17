@@ -100,7 +100,7 @@ export class Stickers {
     if (pr < cur || (H.cd > 0 && pr <= cur)) return;
     const line = pick(set.lines), text = line[lang] || line.en;
     if (text === H.lastText && set.lines.length > 1) return this.say(p, kind, 1);
-    H.lastText = text;
+    H.lastText = text; this.quiet = 0;
     // from her head, on her OUTER side (toward her screen edge: her safe area), above her HUD panel; if that side is too narrow, above her head
     const L = this.hud.L, Hh = L.H, f0 = L.f, left = p.slot === 0 || !this.game.p2on(), dir = left ? -1 : 1, fig = this.hud.space.girl(p.slot);
     const h = Hh * 0.046, head = fig ? fig.y1 - (fig.y1 - fig.y0) * 0.1 : Hh * 0.5, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + dir * Hh * 0.12;
@@ -151,6 +151,9 @@ export class Stickers {
       if (p.fever.full && !L.full) this.say(p, 'fever');
       L.hp = p.hp; L.state = p.state; L.ammo = p.ammo; L.active = p.activeOn; L.charge = p.charge; L.full = p.fever.full;
     });
+    // nobody has said anything for a while: a little cute nonsense (えへへ, にゃ~, やだよぉ ...: DESIGN「台词」)
+    this.quiet = (this.quiet || 0) + dt;
+    if (g.combat && this.quiet > 9 && Math.random() < dt * 0.25) { this.quiet = 0; this.say(pick(g.players.filter((p) => (p.slot === 0 || g.p2on()) && p.state !== 'down')), 'idle'); }
     if (g.combo >= 10 && g.combo % 10 === 0 && g.combo !== this.lastCombo) { this.lastCombo = g.combo; this.say(pick(g.players.filter((p) => p.slot === 0 || g.p2on())), 'combo'); }
     for (const a of g.actors) {
       if (!a.def || !a.type) continue;
