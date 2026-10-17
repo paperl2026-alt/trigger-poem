@@ -3,8 +3,11 @@ The canonical seal (art/ref/cat_seal_decal.png) is cut from the user's design sh
 For each entry of art/seal_placements.json:
   1. the generated seal is erased: red line pixels inside "erase" [x0, y0, x1, y1] are filled from the fur around them;
   2. the canonical decal is laid on: its ring centre on "center" [x, y], ring diameter "ring" px, rotated "rot" degrees
-     (counter-clockwise = the pendant swings to the right), optionally squashed by "squash" (foreshortening);
+     (counter-clockwise = the pendant swings to the right), optionally squashed by "squash" (along the pendant) or "sx" (across:
+     a paw seen edge-on);
   3. the result goes to the base pack as ui/<out>.webp (or a PNG path with "png"), trimmed to its pixels unless "keep_frame".
+An entry with "auto": true finds the generated seal itself (find_seal): the ring of thin red lines on the fur (the claws are solid red
+and are left out), its size, and which way its pendant hangs; "center" / "ring" / "rot" / "erase" are then filled in and printed.
 usage: python -I tools/seal_fix.py [name ...]   (no names = all)   --preview <dir> writes before/after crops
 """
 import sys, json, pathlib
@@ -47,16 +50,71 @@ def erase(a, box):
     return a
 
 
+def find_seal(im):
+    """the generated seal on a paw: the biggest tangle of thin saturated-red lines lying on white fur (the claws are solid red and are
+    left out, so are the glasses and the cheeks: not on fur). Its densest spot is the ring's centre, its farthest point the pendant's
+    end (the rotation), its reach away from the pendant the ring's size. Returns centre, ring diameter, rotation, erase box, or None."""
+    a = np.asarray(im.convert("RGBA")).astype(np.int16)
+    R, G, B, A = a[..., 0], a[..., 1], a[..., 2], a[..., 3]
+    red = (R - G > 55) & (G < 170) & (A > 128) & (R > 120)
+    solid = ndimage.binary_dilation(ndimage.binary_opening(red, iterations=4), iterations=3)
+    thin = red & ~solid
+    fur = (A > 128) & (R > 200) & (G > 188) & (B > 188) & (np.abs(R - B) < 40)
+    onfur = ndimage.uniform_filter(fur.astype(np.float32), 15)
+    thin &= onfur > 0.35
+    if thin.sum() < 40: return None
+    lab, n = ndimage.label(ndimage.binary_dilation(thin, iterations=4))
+    counts = ndimage.sum(thin, lab, range(1, n + 1))
+    k = int(np.argmax(counts)) + 1
+    comp = thin & (lab == k)
+    if comp.sum() < 60: return None
+    ys, xs = np.nonzero(comp)
+    size = max(xs.max() - xs.min(), ys.max() - ys.min())
+    H, W = comp.shape
+    # the ring: the circle (centre inside the tangle) whose circumference is drawn the most
+    dist = ndimage.distance_transform_edt(~comp)
+    ang = np.linspace(0, 2 * np.pi, 72, endpoint=False)
+    gy, gx = np.mgrid[ys.min():ys.max() + 1:2, xs.min():xs.max() + 1:2]
+    gy, gx = gy.ravel(), gx.ravel()
+    best = None
+    for r in range(8, max(10, int(size * 0.45)), 1):
+        px = np.clip((gx[:, None] + r * np.cos(ang)[None]).astype(int), 0, W - 1)
+        py = np.clip((gy[:, None] + r * np.sin(ang)[None]).astype(int), 0, H - 1)
+        cover = (dist[py, px] < 1.6).mean(1)
+        j = int(np.argmax(cover))
+        sc = cover[j] * (1 + r / 200)
+        if cover[j] > 0.55 and (best is None or sc > best[0]): best = (sc, gx[j], gy[j], r)
+    if best is None: return None
+    _, cx, cy, r = best
+    # the outer ring of the decal is the one that counts: if a bigger concentric circle is also well drawn, take it
+    for r2 in range(int(r * 1.15), int(r * 1.8)):
+        px = np.clip((cx + r2 * np.cos(ang)).astype(int), 0, W - 1); py = np.clip((cy + r2 * np.sin(ang)).astype(int), 0, H - 1)
+        if (dist[py, px] < 1.6).mean() > 0.55: r = r2
+    # the pendant: the direction out of the ring with the most line along it
+    best = (-1, 0.0)
+    for deg in range(0, 360, 10):
+        t = np.radians(deg)
+        rr = np.arange(r * 1.15, r * 3.2, 1.0)
+        px = np.clip((cx + rr * np.sin(t)).astype(int), 0, W - 1); py = np.clip((cy + rr * np.cos(t)).astype(int), 0, H - 1)
+        hits = (dist[py, px] < 2.0).sum()
+        if hits > best[0]: best = (hits, deg)
+    rot = float(best[1] if best[1] <= 180 else best[1] - 360)   # 0 = hanging straight down; + = swung to the right
+    r = float(r)
+    H, W = comp.shape; pad = max(4, int(r / 3))
+    return {"center": [int(cx), int(cy)], "ring": int(round(r * 2)), "rot": round(rot, 1),
+            "erase": [int(max(0, xs.min() - pad)), int(max(0, ys.min() - pad)), int(min(W, xs.max() + pad)), int(min(H, ys.max() + pad))]}
+
+
 def stamp(im, p):
     d = Image.open(DECAL).convert("RGBA")
     s = p["ring"] / RING_D
-    W, H = max(1, round(d.width * s)), max(1, round(d.height * s * p.get("squash", 1)))
+    W, H = max(1, round(d.width * s * p.get("sx", 1))), max(1, round(d.height * s * p.get("squash", 1)))   # sx: seen edge-on (narrower across)
     d = d.resize((W, H), Image.LANCZOS)
     # small stamps lose their thin lines: firm the alpha up a little
     da = np.asarray(d).copy(); da[..., 3] = np.clip(da[..., 3].astype(np.float32) * p.get("ink", 2.2), 0, 255).astype(np.uint8)
     da[..., :3] = p.get("color", [206, 26, 46])   # the saturated seal red of the character art
     d = Image.fromarray(da)
-    cx, cy = RING_CENTER[0] * s, RING_CENTER[1] * s * p.get("squash", 1)
+    cx, cy = RING_CENTER[0] * s * p.get("sx", 1), RING_CENTER[1] * s * p.get("squash", 1)
     # rotate about the ring centre: pad so the centre is the image centre, then rotate
     pad = int(max(W, H) * 1.2)
     big = Image.new("RGBA", (pad * 2, pad * 2), (0, 0, 0, 0))
@@ -76,6 +134,11 @@ def run(name, p, preview=None):
     im = Image.open(ROOT / p["src"]).convert("RGBA")
     if "crop" in p:
         im = im.crop(tuple(p["crop"]))
+    if p.get("auto"):
+        f = find_seal(im)
+        if not f: print(name, "no seal found"); return
+        p = {**p, **f}
+        print(name, "found", f)
     a = np.asarray(im).copy()
     boxes = p.get("erase", [])
     if boxes and not isinstance(boxes[0], list):

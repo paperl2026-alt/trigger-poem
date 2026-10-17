@@ -23,7 +23,7 @@
     "episodes": ["episodes.json"],
     "comics": ["comics.json"],
     "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json"],
-    "text": ["text/ui.json"],
+    "text": ["text/ui.json", "text/stickers.json"],
     "theme": ["theme.json"],
     "ui": ["ui/title.json", "ui/cursors.json", "ui/manga.json", "ui/select.json", "ui/battle.json"]
   },

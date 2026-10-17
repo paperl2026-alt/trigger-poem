@@ -7,6 +7,7 @@ import { paperMaterial } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
 import { VERT as FXVERT, GLOW_FRAG, RING_FRAG } from './muzzle.js';
 import { Text } from '../ui/glhud.js';
+import { Mantra } from './glyphs.js';
 import { lang } from '../core/i18n.js';
 // the countdown on a warning's ring: the time left as a red arc running down from the top
 const ARC_FRAG = `
@@ -202,18 +203,21 @@ export class FX {
     this.stampCD = {};
     this.glyphs = { gold: C.theme.mantra.map((c) => glyphTex(c, 'gold')), jade: C.theme.mantra.map((c) => glyphTex(c, 'jade')) };
     this.runeT = runeTex();
+    this.chant = new Mantra(game);   // the cat girl's syllables (glyphs.js)
   }
 
   // ---------- generic ----------
   add(item) { this.items.push(item); return item; }
   update(dt, t) {
     this.wNorm.update(dt); this.wAdd.update(dt); this.oNorm.update(dt); this.oAdd.update(dt);
+    this.chant.update(dt);
     for (let i = this.items.length - 1; i >= 0; i--) if (!this.items[i].update(dt)) this.items.splice(i, 1);
     for (const tr of this.tracers) if (tr.m.visible) { tr.t -= dt; tr.m.material.uniforms.a.value = Math.max(0, tr.t / 0.07); if (tr.t <= 0) tr.m.visible = false; }
     this.trail.update(t, this.game.H);
     for (const k in this.stampCD) this.stampCD[k] -= dt;
   }
   clear() {
+    this.chant.clear();
     for (const d of this.decals) d.parent && d.parent.remove(d);
     this.decals.length = 0;
     this.wNorm.clear(); this.wAdd.clear(); this.oNorm.clear(); this.oAdd.clear();

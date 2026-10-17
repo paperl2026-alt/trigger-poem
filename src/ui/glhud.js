@@ -8,6 +8,7 @@ import { tex, meta } from '../core/assets.js';
 import { C, T } from '../core/content.js';
 import { tr, lang } from '../core/i18n.js';
 import { FEVER_KEYS } from '../battle/fever.js';
+import { Stickers } from './stickers.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 // every HUD picture: boil (the lines wobble a little at 8 steps a second, like drawn animation), a light sweeping along the white
@@ -100,11 +101,11 @@ const RED = new THREE.Color('#d8141e'), WHITE = new THREE.Color(1, 1, 1);
 function mat(frag, u, opts = {}) {
   return new THREE.ShaderMaterial({ uniforms: u, vertexShader: VERT, fragmentShader: frag, transparent: true, depthTest: false, depthWrite: false, ...opts });
 }
-function picture(key, order, seed = 0) {
+export function picture(key, order, seed = 0) {
   const u = { map: { value: tex[key] || null }, a: { value: 1 }, time: { value: 0 }, boil: { value: 1 }, shine: { value: 0 },
     tint: { value: new THREE.Color(1, 1, 1) }, tintK: { value: 0 }, flash: { value: 0 }, circle: { value: 0 }, seed: { value: seed },
     recol: { value: 0 }, hueTo: { value: 0 } };
-  const m = new THREE.Mesh(quad, mat(FRAG, u)); m.renderOrder = order; m.frustumCulled = false; m.visible = !!tex[key];
+  const m = new THREE.Mesh(quad, mat(FRAG, u)); m.renderOrder = order; m.frustumCulled = false; m.visible = !!(key && tex[key]);
   return m;
 }
 function recolor(m, col) { const h = {}; col.getHSL(h); m.material.uniforms.recol.value = 1; m.material.uniforms.hueTo.value = h.h; }
@@ -481,27 +482,53 @@ class Reticle {
   }
 }
 
-// ---------------------------------------------------------------- reloading: her own big picture, see-through, over her side
-class Veil {
+// ---------------------------------------------------------------- reloading: nine close-ups flashing by over her side
+// (docs/DESIGN.md「装填动画」): see-through, quick, a little jump in place and angle each time; the cat girl forms the nine seals and
+// each comes with its big character in the spectrum colours (glyphs.js); the gun girl's mix reloading with make-up and cute moments
+class Reload {
   constructor(hud, p) {
     this.hud = hud; this.p = p;
-    this.m = picture(`ui/load_${hud.B.load[p.w.kind === 'mantra' ? 'cat' : 'pink']}`, 58, p.slot * 0.5); hud.g.add(this.m);
-    this.k = 0;
+    const R = hud.B.reload, who = p.w.kind === 'mantra' ? 'cat' : 'pink';
+    this.cat = who === 'cat';
+    this.keys = [1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => `ui/rl_${R[who]}_${i}`).filter((k) => tex[k]);
+    this.m = [0, 1].map((i) => { const m = picture(null, 58 + i * 0.1, p.slot * 0.5 + i); hud.g.add(m); return m; });
+    this.step = -1; this.t = 0; this.on = false; this.cur = 0;
   }
   update(dt, t) {
-    const p = this.p, g = this.hud.game, H = this.hud.L.H;
-    const want = g.combat && (p.state === 'reload' || (p.ammo <= 0 && !p.gatling && !p.beaming)) && p.state !== 'down';
-    this.k += ((want ? 1 : 0) - this.k) * Math.min(1, dt * 8);
-    this.m.visible = this.k > 0.02 && !!this.m.material.uniforms.map.value;
-    if (!this.m.visible) return;
-    const rk = p.state === 'reload' ? 1 - p.reloadT / (p.reloadT0 || 1) : 0;
-    const size = H * this.hud.B.load.size * (0.85 + 0.15 * this.k);   // sits above her head, see-through: she stays visible
-    const U = this.m.material.uniforms;
-    U.a.value = this.k * this.hud.B.load.alpha * (0.8 + 0.2 * Math.sin(t * 7));   // see-through but clearly readable, pulsing (若隐若现)
-    U.time.value = t; U.shine.value = 1;
-    this.m.position.set(p.baseX, H * this.hud.B.load.y, 0);
-    this.m.rotation.z = Math.sin(t * 3) * 0.06 + rk * 0.5;
-    this.m.scale.set(size * (p.mirror ? -1 : 1), size, 1);
+    const p = this.p, g = this.hud.game, H = this.hud.L.H, R = this.hud.B.reload, n = this.keys.length;
+    const want = g.combat && p.state === 'reload' && n > 0;
+    if (want && !this.on) { this.on = true; this.step = -1; }
+    if (!want) this.on = false;
+    for (const m of this.m) m.visible = false;
+    if (!this.on && this.fade === undefined) return;
+    const k = this.on ? 1 - p.reloadT / (p.reloadT0 || 1) : 1, step = Math.min(n - 1, Math.floor(k * n));
+    if (this.on && step !== this.step) {
+      this.step = step; this.cur ^= 1; this.age = 0;
+      const m = this.m[this.cur], side = p.slot ? -1 : 1;
+      m.material.uniforms.map.value = tex[this.keys[step]];
+      // where it flashes: over her side, jumping a little each step
+      this.pos = { x: p.baseX + side * H * (Math.random() * 0.16 - 0.04), y: H * (R.y + (Math.random() - 0.5) * 0.12), rot: (Math.random() - 0.5) * 0.3 };
+      m.userData.pos = this.pos;
+      if (this.cat) {   // the seal's character, big, in its own colour, on the far side of the picture
+        const ch = C.theme.kuji[step % C.theme.kuji.length];
+        g.fx.chant.flash(ch, step, this.pos.x + side * H * R.size * 0.5, this.pos.y + H * R.size * 0.22, H * R.glyph);   // toward the middle of the screen
+      }
+    }
+    this.age = (this.age || 0) + dt;
+    const dur = (p.reloadT0 || 1) / n;
+    this.m.forEach((m, i) => {
+      const P = m.userData.pos; if (!P || !m.material.uniforms.map.value) return;
+      const cur = i === this.cur && this.on;
+      const e = cur ? Math.min(1, this.age / 0.06) : Math.max(0, 1 - this.age / 0.09);   // snaps in, the last one flicks out
+      if (e <= 0) return;
+      const U = m.material.uniforms, img = U.map.value.image, ar = img.height / img.width, size = H * R.size * (cur ? 1.12 - 0.12 * e : 1 + 0.15 * (1 - e));
+      m.visible = true;
+      m.position.set(P.x, P.y, 0); m.rotation.z = P.rot;
+      m.scale.set(size, size * ar, 1);
+      U.a.value = e * R.alpha * (0.85 + 0.15 * Math.sin(t * 40)); U.time.value = t; U.boil.value = 0.4;
+      U.flash.value = cur ? Math.max(0, 0.5 - this.age * 6) : 0;   // a white pop as each one lands
+    });
+    if (!this.on && this.age > 0.1) this.fade = undefined; else if (!this.on) this.fade = 1;
   }
 }
 
@@ -609,10 +636,11 @@ export class HudGL {
     this.panels = game.players.map((p) => new Panel(this, p));
     this.top = new Top(this);
     this.reticles = game.players.map((p) => new Reticle(this, p));
-    this.veils = game.players.map((p) => new Veil(this, p));
+    this.reloads = game.players.map((p) => new Reload(this, p));
     this.downs = game.players.map((p) => new Down(this, p));
     this.bossBar = new BossBar(this);
     this.damage = new Damage(this);
+    this.stickers = new Stickers(this);
     this.visible = true;
   }
   show(v) { this.visible = v; this.g.visible = v; }
@@ -626,10 +654,11 @@ export class HudGL {
     for (const p of this.panels) p.update(dt, t);
     this.top.update(dt, t);
     for (const r of this.reticles) r.update(dt, t);
-    for (const v of this.veils) v.update(dt, t);
+    for (const v of this.reloads) v.update(dt, t);
     for (const d of this.downs) d.update(dt, t);
     this.bossBar.update(dt, t);
     this.damage.update(dt);
+    this.stickers.update(dt, t);
   }
   dispose() { this.game.overlay.remove(this.g); }
 }

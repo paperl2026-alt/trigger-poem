@@ -418,5 +418,141 @@
     "ring": 51,
     "rot": -24,
     "png": "public/jiggle/cat_fire.png"
+  },
+  "rl_cat_b_1": {
+    "src": "art/raw/r36/rl_cat_b_cells/1.png",
+    "center": [
+      203,
+      239
+    ],
+    "ring": 58,
+    "sx": 0.74,
+    "rot": -21,
+    "erase": [
+      168,
+      195,
+      235,
+      318
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_1.png"
+  },
+  "rl_cat_b_2": {
+    "src": "art/raw/r36/rl_cat_b_cells/2.png",
+    "center": [
+      176,
+      219
+    ],
+    "ring": 59,
+    "sx": 0.9,
+    "rot": -45,
+    "erase": [
+      112,
+      182,
+      210,
+      282
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_2.png"
+  },
+  "rl_cat_b_3": {
+    "src": "art/raw/r36/rl_cat_b_cells/3.png",
+    "center": [
+      119,
+      267
+    ],
+    "ring": 66,
+    "sx": 0.76,
+    "rot": -25,
+    "erase": [
+      80,
+      225,
+      156,
+      338
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_3.png"
+  },
+  "rl_cat_b_4": {
+    "src": "art/raw/r36/rl_cat_b_cells/4.png",
+    "center": [
+      140,
+      263
+    ],
+    "ring": 63,
+    "sx": 0.73,
+    "rot": -42,
+    "erase": [
+      84,
+      226,
+      170,
+      323
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_4.png"
+  },
+  "rl_cat_b_5": {
+    "src": "art/raw/r36/rl_cat_b_cells/5.png",
+    "center": [
+      142,
+      262
+    ],
+    "ring": 60,
+    "sx": 0.75,
+    "rot": -39,
+    "erase": [
+      92,
+      225,
+      172,
+      325
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_5.png"
+  },
+  "rl_cat_b_6": {
+    "src": "art/raw/r36/rl_cat_b_cells/6.png",
+    "center": [
+      77,
+      263
+    ],
+    "ring": 81,
+    "sx": 0.43,
+    "rot": 17,
+    "erase": [
+      55,
+      215,
+      102,
+      328
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_6.png"
+  },
+  "rl_cat_b_8": {
+    "src": "art/raw/r36/rl_cat_b_cells/8.png",
+    "center": [
+      134,
+      215
+    ],
+    "ring": 56,
+    "sx": 0.9,
+    "rot": -30,
+    "erase": [
+      80,
+      181,
+      166,
+      304
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_8.png"
+  },
+  "rl_cat_b_9": {
+    "src": "art/raw/r36/rl_cat_b_cells/9.png",
+    "center": [
+      62,
+      225
+    ],
+    "ring": 69,
+    "sx": 0.38,
+    "rot": 2,
+    "erase": [
+      43,
+      184,
+      84,
+      311
+    ],
+    "png": "art/raw/r36/rl_cat_b_cells/fixed_9.png"
   }
 }

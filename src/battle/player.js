@@ -304,7 +304,7 @@ export class Player {
     if (res.n) this.hits++;
     this.recoilT = PL().recoilPose;
     const mz = this.muzzlePos();
-    if (w.kind === 'mantra') { g.fx.mantra(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit, this.c.glyph); if (this.c.glyph === 'jade') g.fx.rune(mz.x, mz.y, this.H * 0.11); }
+    if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit);   // each syllable its own colour and its own way in / out (glyphs.js)
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
     this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
     if (res.n) this.muzzle.hit(sx, g.H - sy, res.crit);
