@@ -4,7 +4,7 @@
 // The game writes its own text on top at the places, sizes and angles measured on the mockup.
 import { url, meta } from '../core/assets.js';
 import { sfx, initAudio } from '../core/audio.js';
-import { C, list } from '../core/content.js';
+import { C, list, isStage } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 import { SAVE, persist, levelProgress, maxLv, stagesOpen } from '../core/save.js';
 import { UiFx } from './uifx.js';
@@ -143,7 +143,7 @@ export function showSelect(act) {
     const e = eps[idx], R = L.rows;
     if (!open(e)) { rowsG.classList.add('s-none'); return; }
     rowsG.classList.remove('s-none');
-    const steps = (e.steps || []).filter((s) => !s.comic).slice(0, R.slots.length), nOpen = stagesOpen(e.id);
+    const steps = (e.steps || []).filter(isStage).slice(0, R.slots.length), nOpen = stagesOpen(e.id);
     if (pick >= nOpen) pick = nOpen - 1;
     steps.forEach((s, i) => {
       const pc = s.boss ? P.row_boss : P.row_n, y0 = R.slots[i];
@@ -270,9 +270,10 @@ export function showSelect(act) {
     if (!open(ep)) { shake(goG); sfx.ui(); return; }
     going = true; initAudio(); sfx.clear(); const [x, y, w, h] = boxOf(goG); fx.click(x + w / 2, y + h / 2, true); goG.classList.add('s-down');
     SAVE.lastEp = ep.id; persist();
-    // from the picked stage: its step, or the comic just before it
-    const stages = ep.steps.filter((s) => !s.comic), si = ep.steps.indexOf(stages[Math.min(pick, stages.length - 1)]);
-    const from = si > 0 && ep.steps[si - 1].comic ? si - 1 : Math.max(0, si);
+    // from the picked stage: its step, or the transitions just before it (comic pages, door close-ups)
+    const stages = ep.steps.filter(isStage), si = ep.steps.indexOf(stages[Math.min(pick, stages.length - 1)]);
+    let from = Math.max(0, si);
+    while (from > 0 && !isStage(ep.steps[from - 1])) from--;
     setTimeout(() => act.play(ep.id, from), 220);
   }
   tap(goG, () => go());

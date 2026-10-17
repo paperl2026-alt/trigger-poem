@@ -95,7 +95,9 @@
   - `paper`（纸片 / 浮雕 shader）、`particles`、`post`（全屏后期）；
   - `tween`、`input`、`i18n`（`setLang` 会广播 `langchange`）、`save`、`settings`、`debug`。
 - `src/battle/`：
-  - `game.js`：一局的流程：漫画 / 小关 / Boss 步骤，停留点，刷怪波次，射击规则，掩体受击，奖励；
+  - `game.js`：一局的流程：漫画 / 开门特写 / 小关 / Boss 步骤，停留点，刷怪波次，射击规则，掩体受击，奖励；
+    - 步骤分两类（`content.js isStage`）：小关（`stage` / `boss`，选关里一行一个）和转场（`comic` 漫画页、`door` 开门特写）；选关从某个小关开始时，连同它前面紧挨着的转场一起播；
+    - 开门特写（步骤 `door: { frame, leaf, leaves, hinge }`，`src/ui/door.js`）：原作每次进门的第一人称开门画面：黑底上的门框（门洞涂黑，导入时量出 manifest `hole`），门扇按铰链用 CSS 3D 慢慢转开（双开门左右各半张），吱呀声（sounds.json `creak`），再推镜头穿过门洞；点一下跳过；
     - 敌方时钟 `etw`：怪物、Boss、飞行物、刷怪按 `tuning/combat.json` pace 慢放（画面动画仍是实时）；
     - 教学卡 `teach`：停留点写 `lesson` 的先弹卡（`text/lessons.json`，`hud.lesson`），只第一次；
     - 飞行物自带准星：子弹打在准星圈里就算击落（`targetsAt`，`tuning/combat.json` sightMin / sightK）；
@@ -157,6 +159,13 @@
   - `dispose()`：换场景时释放。
 - 怪物位置：波次里写场景坐标 `x` / `z`（米），浮空的写 `y`；只是大概位置，出场时 `fit` 会挪。
 - 序章三个场景在 `sets/ep0.json`：教室（平静 → 异变翻板；第二个停留点镜头转身看后墙）、走廊（沿用走廊验证，站点间转弯、折叠）、操场（Boss）。
+- 第 1 话七个地方在 `sets/ep1.json`（店内、画廊、玻璃温室、冷库、烤炉厨房、冥界、大舞厅）。`hall` 的墙、天花板、尽头墙都可以不写（冥界四面是空的）。
+- 名场面用到的东西（DESIGN「第 1 话」）：
+  - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；
+  - **机关**（set `gimmicks`，`src/battle/gimmick.js`）：挂在墙上 / 站在地上 / 尽头墙上能打的画、铠甲、封印、棺材盖；带白描边，只在自己的站点能打，打够 `hp` 下就按顺序执行 `do`（`flash` 闪光、`flip` 翻成 `kx`、`turn` 翻地方、`spawn` 刷怪、`say` 台词、`sfx`、`gone` 消失）。`prop: true`：波次不等它，AI 队友不打它（`input.js`）；
+  - **鬼魂抓走**（站点 `grab`，`Game.grabbed`）：赶到这个站点的路上，一双鬼手扑满屏幕（`#ui .grab`），镜头被拖着晃过去；
+  - **木板桥**（站点 `bridge`）：赶路走到一半咔嚓一声，震屏、两人吓到、冒 `bridge` 台词。
+- 怪物 `rush: true`（走路怪）：扑上来是冲撞（穿过掩体），带快打环、蓄力能被打断（半截丧尸）。
 
 ## Boss：「？？？」（`src/battle/thing.js`，数据 `bosses.json` qq）
 - 一整张图按动作分帧（R43 `boss/qq_s<n>_<idle0|idle1|move|windup|attack|hurt>`），五个阶段换一套帧、换大小（`setStage` 重建网格），后两阶段浮空；在 `zone` 里来回移动。

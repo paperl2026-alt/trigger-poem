@@ -6,7 +6,7 @@ For each entry of art/seal_placements.json:
      (counter-clockwise = the pendant swings to the right), optionally squashed by "squash" (along the pendant) or "sx" (across:
      a paw seen edge-on);
   3. the result goes to the base pack as ui/<out>.webp (or a PNG path with "png"), trimmed to its pixels unless "keep_frame".
-An entry with "auto": true finds the generated seal itself (find_seal): the ring of thin red lines on the fur (the claws are solid red
+An entry with "auto": true finds the generated seal itself (find_seal; "within" a box of the picture when it shows several paws): the ring of thin red lines on the fur (the claws are solid red
 and are left out), its size, and which way its pendant hangs; "center" / "ring" / "rot" / "erase" are then filled in and printed.
 usage: python -I tools/seal_fix.py [name ...]   (no names = all)   --preview <dir> writes before/after crops
 """
@@ -134,9 +134,13 @@ def run(name, p, preview=None):
     im = Image.open(ROOT / p["src"]).convert("RGBA")
     if "crop" in p:
         im = im.crop(tuple(p["crop"]))
-    if p.get("auto"):
-        f = find_seal(im)
+    if p.get("auto"):   # ("within": [x0, y0, x1, y1] = look only there: a page with more than one paw gets one entry per paw)
+        w = p.get("within")
+        f = find_seal(im.crop(tuple(w)) if w else im)
         if not f: print(name, "no seal found"); return
+        if w:
+            f["center"] = [f["center"][0] + w[0], f["center"][1] + w[1]]
+            f["erase"] = [f["erase"][0] + w[0], f["erase"][1] + w[1], f["erase"][2] + w[0], f["erase"][3] + w[1]]
         p = {**p, **f}
         print(name, "found", f)
     a = np.asarray(im).copy()

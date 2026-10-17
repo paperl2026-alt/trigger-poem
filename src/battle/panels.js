@@ -109,16 +109,17 @@ export class PanelWorld {
     // walls: one painted bay after another (left = classroom side, right = windows). Every surface kind has several pictures
     // (docs/ART.md 多版本): a fixed shuffled order per set, never the same picture twice in a row
     const bays = Math.ceil(L / bay), seed = S.seed ?? 7;
-    const KL = order(Hd.left, bays, seed), KR = order(Hd.right, bays, seed + 1), KC = Hd.ceil ? order(Hd.ceil, bays, seed + 2) : null;
+    const some = (l) => l && [].concat(l).length;   // (a place may have no walls or ceiling: the netherworld is open all round)
+    const KL = some(Hd.left) ? order(Hd.left, bays, seed) : null, KR = some(Hd.right) ? order(Hd.right, bays, seed + 1) : null, KC = some(Hd.ceil) ? order(Hd.ceil, bays, seed + 2) : null;
     // boards with an anomaly version (<key>_x): when the evil energy hits they flip over to it, one after another (update)
     this.flips = [];
     const flip = (m, key, side, alt = `${key}_x`) => { if (tex[alt]) this.flips.push({ m, key, alt, side, p: 0, d: 0 }); return m; };
     const keyed = (k) => !!(meta[k]?.keyed || /W$/.test(k));
     for (let i = 0; i < bays; i++) {
       const zc = z0 - (i + 0.5) * bay;
-      const kl = KL[i], kr = KR[i];
-      const l = board(kl, bay, h, { alpha: keyed(kl) }); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1);
-      const r = board(kr, bay, h, { alpha: keyed(kr) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc); flip(r, kr, -1);
+      const kl = KL?.[i], kr = KR?.[i];
+      if (KL) { const l = board(kl, bay, h, { alpha: keyed(kl) }); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); }
+      if (KR) { const r = board(kr, bay, h, { alpha: keyed(kr) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc); flip(r, kr, -1); }
       // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
       if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
     }

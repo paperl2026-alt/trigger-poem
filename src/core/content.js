@@ -43,6 +43,8 @@ export function merge(a, b) {
   return out;
 }
 // "#rrggbb" -> 0xrrggbb (three.js / WebGL colours)
+// a step of an episode is a stage (something played: stage / boss), or a transition between stages (comic page, door close-up)
+export const isStage = (st) => !!(st && (st.stage || st.boss));
 export const hexNum = (v) => (typeof v === 'string' && v[0] === '#' ? parseInt(v.slice(1), 16) : v);
 
 // entries of a collection in display order (order / no, then id)

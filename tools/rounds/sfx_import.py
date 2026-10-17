@@ -39,6 +39,8 @@ SFX = {
     "warn":     ([M + "8bit02.mp3"], 0.5, {}),
     "miss":     (oto("Onoma-Negative16", "Onoma-Negative16-4(High).mp3", "Onoma-Negative16-3(Low).mp3"), 0.8, {}),
     "slam":     ([M + "battle_explosion07.mp3"], 0.9, {"len": 1.2}),
+    "creak":    ([M + "sound_door01.mp3"], 1, {"rate": 0.72}),
+    "doorSlam": ([M + "sound_door02.mp3"], 1, {}),
     "run":      ([M + "sound_footstep01.mp3", M + "sound_footstep02.mp3"], 0.6, {}),
     "hurt":     (oto("Hit-Punch09", "Hit-Punch09-2(High).mp3", "Hit-Punch09-4(High).mp3"), 0.8, {}),
     "madness":  (oto("Onoma-Syakiin05", "Onoma-Syakiin05-1(Heavy).mp3", "Onoma-Syakiin05-2(Light).mp3"), 0.8, {}),

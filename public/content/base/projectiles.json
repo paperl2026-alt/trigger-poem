@@ -15,5 +15,12 @@
   "hair": { "keys": ["p_hair", "p_hair_b"], "size": 0.85, "spin": 6 },
   "tooth": { "keys": ["p_tooth", "p_tooth_b"], "size": 0.6, "spin": 9 },
   "lips": { "keys": ["p_lips", "p_lips_b"], "size": 0.8, "spin": 2 },
-  "eyes": { "keys": ["p_eyes", "p_eyes_b"], "size": 0.9, "spin": -3 }
+  "eyes": { "keys": ["p_eyes", "p_eyes_b"], "size": 0.9, "spin": -3 },
+  "furniture": {
+    "keys": ["p_chair", "p_cup", "p_candle", "p_chair_b", "p_cup_b", "p_candle_b"],
+    "size": 0.7,
+    "spin": 4
+  },
+  "cherry": { "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"], "size": 0.45, "spin": 8 },
+  "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3 }
 }

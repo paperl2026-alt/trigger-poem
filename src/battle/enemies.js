@@ -222,7 +222,7 @@ export class Enemy extends Actor {
     // one of its versions (docs/ART.md 多版本): the one least seen among its kind on the field right now, so a group never looks cloned
     const vs = def.variants || [def.sprite];
     const live = game.actors.filter((a) => a.alive && a.type === s.type).map((a) => a.sprite);
-    const sprite = vs.map((v) => [v, live.filter((x) => x === v).length + Math.random() * 0.5]).sort((x, y) => x[1] - y[1])[0][0];
+    const sprite = s.sprite || vs.map((v) => [v, live.filter((x) => x === v).length + Math.random() * 0.5]).sort((x, y) => x[1] - y[1])[0][0];
     super(game, `enemy/${sprite}_${def.first}`, def.h, pivot);
     this.sprite = sprite;
     this.type = s.type;
@@ -295,6 +295,8 @@ export class Enemy extends Actor {
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
       this.timer = rr(bp.startDelay);
     };
+    // the turning-around scare (Game.scare): it waits, back turned, until turnAround()
+    if (s.from === 'scare') { P.set(s.x, s.y || 0, s.z); this.state = 'scripted'; this.setFrame(this.prefix + (this.frames.scare || [this.def.first])[0]); return; }
     if (walker) this.play('walk', 7); else this.play('rise');
     if (s.from === 'drop') {
       P.set(s.x, lv.ceilAt(s.z) + 1, s.z);
@@ -316,7 +318,7 @@ export class Enemy extends Actor {
 
   update(dt, t) {
     this.baseUpdate(dt, t);
-    if (!this.alive) return;
+    if (!this.alive || this.state === 'scripted') return;
     const g = this.game;
     this.hurtT -= dt;
     this.poiseCD -= dt;
@@ -341,12 +343,25 @@ export class Enemy extends Actor {
     }
   }
 
+  // the turning-around scare (docs/DESIGN.md 第 1 话 ⑰): frames.scare = back turned eating, its head lifting, looking over its shoulder,
+  // its face over its shoulder, turned round, rising; then it fights like any other. then('face') when it shows its face, then('go') at the end
+  turnAround(then) {
+    const F = this.frames.scare || [], tw = this.game.tweens, at = [0, 1.0, 1.75, 2.35, 3.15, 3.55];
+    F.forEach((f, i) => tw.wait(at[i] ?? i * 0.6, () => { if (!this.alive) return; this.setFrame(this.prefix + f); if (i === 3) then && then('face'); }));
+    tw.wait(3.95, () => {
+      if (!this.alive) return;
+      if (this.beh === 'walker') { this.state = 'walk'; this.play('walk', 7); } else { this.state = 'stand'; this.play('idle'); }
+      this.timer = rr(this.bp.startDelay);
+      then && then('go');
+    });
+  }
   // the camera's horizontal forward (stations look any way: the classroom's second stop looks back)
   fwd() { const w = this.game.world, la = w.lookAt, c = w.camPos; if (!la) return { x: 0, z: -1 }; const x = la.x - c.x, z = la.z - c.z, d = Math.hypot(x, z) || 1; return { x: x / d, z: z / d }; }
   // what kind of attack its wind-up leads to (DESIGN「攻击分三种」): 'kill' = a ram you can only stop by killing / interrupting it (hiding
   // does not help: flyers' dives), 'hide' = a blast nothing stops (hide), null = an ordinary attack (a bite, a throw whose projectiles carry
   // their own marker): no marker
-  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' ? 'kill' : null; }
+  // (a walker with "rush": its lunge is a ram, like the half-body ghoul crawling at you: kill it fast)
+  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.def.rush ? 'kill' : null; }
   startWindup(time) {
     cry(this.type, 'windup');   // its cry, when recorded (content audio/sounds.json monsters)
     this.state = 'windup';
@@ -420,7 +435,7 @@ export class Enemy extends Actor {
             this.state = 'bite';
             this.play('bite');
             g.post.shake(0.6);
-            g.playerAttacked({ kind: 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides)
+            g.playerAttacked({ kind: this.def.rush ? 'ram' : 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides; a rush goes through)
             tw.wait(bp.biteHold, () => {
               if (!this.alive) return;
               this.state = 'recoil';

@@ -24,7 +24,13 @@
         "thumb": "ui/sel_thumb1"
       },
       { "comic": "ep0_mid" },
-      { "stage": "corridor", "set": "ep0_corridor", "stations": ["cor1", "cor2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" }, "thumb": "ui/sel_thumb2" },
+      {
+        "stage": "corridor",
+        "set": "ep0_corridor",
+        "stations": ["cor1", "cor2"],
+        "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" },
+        "thumb": "ui/sel_thumb2"
+      },
       { "comic": "ep0_boss" },
       { "boss": "qq", "set": "ep0_yard", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
       { "comic": "ep0_end" }
@@ -41,8 +47,43 @@
       "en": "An abandoned mansion, frescoes, an incinerator… the next anomaly is already knocking.",
       "ja": "廃洋館、フレスコ画、焼却炉……次の異変がもう扉を叩いている。"
     },
-    "steps": [],
-    "cover": "ui/sel_next_ep1"
+    "steps": [
+      { "comic": "ep1_intro" },
+      { "stage": "shop", "set": "ep1_shop", "stations": ["sh1", "sh2"], "name": { "zh": "冰淇淋店", "en": "GELATERIA", "ja": "ジェラテリア" } },
+      { "comic": "ep1_glass" },
+      {
+        "door": { "frame": "ep1/door1_frame", "leaf": "ep1/door1_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_photo" },
+      { "stage": "gallery", "set": "ep1_gallery", "stations": ["ga1", "ga2"], "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" } },
+      { "comic": "ep1_web" },
+      {
+        "door": { "frame": "ep1/door3_frame", "leaf": "ep1/door3_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_fountain" },
+      { "stage": "garden", "set": "ep1_garden", "stations": ["gd1", "gd2"], "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" } },
+      {
+        "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
+      },
+      { "stage": "cold", "set": "ep1_cold", "stations": ["co1", "co2"], "name": { "zh": "地下冷库", "en": "COLD STORE", "ja": "地下冷凍庫" } },
+      {
+        "door": { "frame": "ep1/door5_frame", "leaf": "ep1/door5_leaf", "leaves": 1, "hinge": "left" }
+      },
+      { "stage": "oven", "set": "ep1_oven", "stations": ["ov1", "ov2"], "name": { "zh": "烤炉厨房", "en": "BAKERY", "ja": "パン焼き窯" } },
+      {
+        "door": { "frame": "ep1/door6_frame", "leaf": "ep1/door6_leaf", "leaves": 1, "hinge": "left" }
+      },
+      { "stage": "nether", "set": "ep1_nether", "stations": ["ne1"], "name": { "zh": "冥界", "en": "NETHERWORLD", "ja": "冥界" } },
+      {
+        "door": { "frame": "ep1/door7_frame", "leaf": "ep1/door7_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_boss" },
+      { "boss": "madame", "set": "ep1_hall", "station": "hall", "name": { "zh": "大舞厅", "en": "BALLROOM", "ja": "舞踏室" } },
+      { "comic": "ep1_end" }
+    ],
+    "cover": "ui/sel_next_ep1",
+    "set": "ep1_shop",
+    "par": 900
   },
   "corridor_test": {
     "id": "corridor_test",
@@ -53,6 +94,8 @@
     "par": 120,
     "title": { "zh": "走廊技术验证", "en": "Corridor tech test", "ja": "廊下 技術検証" },
     "sub": { "zh": "平板拼搭场景 + 深度浮雕", "en": "Panel stage + relief", "ja": "パネル舞台＋レリーフ" },
-    "steps": [{ "stage": "corridor", "stations": ["s1", "s2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" } }]
+    "steps": [
+      { "stage": "corridor", "stations": ["s1", "s2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" } }
+    ]
   }
 }

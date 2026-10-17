@@ -120,7 +120,7 @@ export class AICtrl {
     if ((!this.target || this.reactT < -2.5) && this.reactT <= 0) {
       let best = null, bs = -1;
       for (const a of game.actors) {
-        if (!a.alive || !a.hitMeshes().length) continue;
+        if (!a.alive || a.prop || !a.hitMeshes().length) continue;   // (the place's mechanisms are the player's to find)
         if (a.lock && (a.lock.type === 'shot' || a.lock.type === 'kill')) continue;   // the quick-kill things are the player's job
         const b = a.screenBox();
         if (b.x1 < 0 || b.x0 > game.W) continue;

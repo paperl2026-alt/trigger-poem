@@ -789,5 +789,65 @@
     "rot": -40.0,
     "keep_frame": true,
     "png": "art/raw/r47/fixed/page_intro_c2.png"
+  },
+  "r53_intro_a1": {
+    "src": "art/raw/r53b/page_intro_a.png",
+    "auto": true,
+    "within": [
+      735,
+      280,
+      1672,
+      625
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r53b/fixed/page_intro_a.png"
+  },
+  "r53_intro_a2": {
+    "src": "art/raw/r53b/fixed/page_intro_a.png",
+    "auto": true,
+    "within": [
+      0,
+      625,
+      840,
+      941
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r53b/fixed/page_intro_a.png"
+  },
+  "r53_glass_a1": {
+    "src": "art/raw/r53b/page_glass_a.png",
+    "auto": true,
+    "within": [
+      550,
+      0,
+      1110,
+      941
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r53b/fixed/page_glass_a.png"
+  },
+  "r53_glass_a2": {
+    "src": "art/raw/r53b/fixed/page_glass_a.png",
+    "auto": true,
+    "within": [
+      1110,
+      0,
+      1672,
+      941
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r53b/fixed/page_glass_a.png"
+  },
+  "r53_web_b1": {
+    "src": "art/raw/r53b/page_web_b.png",
+    "auto": true,
+    "within": [
+      555,
+      0,
+      1110,
+      941
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r53b/fixed/page_web_b.png"
   }
 }

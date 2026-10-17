@@ -17,6 +17,7 @@ import { Ease } from '../core/tween.js';
 import { sfx } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
 import { Actor } from './enemies.js';
+import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -26,7 +27,7 @@ const FRAMES = { idle: ['idle0', 'idle1'], move: ['move', 'idle0'], windup: ['wi
 export class TheThing extends Actor {
   constructor(game, def) {
     const S0 = def.stages[0];
-    super(game, `boss/qq_s1_idle0`, S0.h, S0.float ? 'center' : 'bottom');
+    super(game, `${def.sprite || 'boss/qq'}_s1_idle0`, S0.h, S0.float ? 'center' : 'bottom');
     this.def = def; this.type = 'boss'; this.name = def.name;
     this.hp = this.maxHp = def.hp;
     this.frames = FRAMES; this.bp = { throwFrom: [0.5, 0.55] };
@@ -52,7 +53,7 @@ export class TheThing extends Actor {
   // ---------------------------------------------------------------- a stage's drawing set: a new mesh (its own size and shape)
   setStage(n) {
     this.stage = n;
-    const S = this.S, key = `boss/qq_s${n + 1}_idle0`, t = tex[key];
+    const S = this.S, key = `${this.def.sprite || 'boss/qq'}_s${n + 1}_idle0`, t = tex[key];
     if (!t) { console.warn('boss: no frames for stage', n + 1); return; }
     const figH = meta[key]?.figH || 1, pivot = S.float ? 'center' : 'bottom';
     this.pivot = pivot; this.ar = t.image.width / t.image.height; this.h = S.h / figH; this.w = this.h * this.ar;
@@ -66,9 +67,44 @@ export class TheThing extends Actor {
     this.u = this.mesh.material.uniforms;
     this.u.outlineOn.value = 1; this.u.mapTexel.value.set(1 / t.image.width, 1 / t.image.height);
     this.inner.add(this.mesh);
-    this.prefix = `boss/qq_s${n + 1}_`; this.anim = null; this.play('idle', 3);
+    this.prefix = `${this.def.sprite || 'boss/qq'}_s${n + 1}_`; this.anim = null; this.play('idle', 3);
     this.root.position.y = S.float ? S.y : 0;
     this.shadowM.scale.setScalar(this.w * 0.6);
+  }
+
+  // ---------------------------------------------------------------- the offering (bosses.json "ritual"; docs/DESIGN.md 第 1 话: in Sweet Home
+  // the lady is laid to rest by showing her the photo, then the diary, then her child's coffin). In her last form the things float up in
+  // front of her (src/battle/gimmick.js); shot in the right order each one flies into her and hurts her badly, a wrong one bounces back.
+  ritual() {
+    const g = this.game, R = this.def.ritual, z = this.cam.z - (R.dist ?? 4.2);
+    this.ritualNext = 0;
+    this.ritualObjs = R.items.map((k, i) => {
+      const gm = new Gimmick(g, { id: `ritual${i}`, k, on: 'stand', x: this.cam.x + (i - (R.items.length - 1) / 2) * 2.4, y: 1.7 + (i % 2) * 0.5, z, w: 0.85,
+        station: g.stationId, do: [{ ritual: i }] });
+      gm.inner.scale.setScalar(0.01); g.tweens.to(gm.inner.scale, { x: 1, y: 1, z: 1 }, 0.6, { delay: i * 0.35, ease: Ease.outBack });
+      g.actors.push(gm); return gm;
+    });
+    sfx.clear(); g.post.flash(0.3, 0xfff0c8);
+  }
+  offer(i, gm) {
+    const g = this.game;
+    if (!this.alive) return;
+    if (i !== this.ritualNext) {   // not yet: it shakes and floats back
+      sfx.miss(); gm.spent = false; gm.hits = 0; gm.u.outlineOn.value = 1;
+      g.tweens.run(0.4, (e) => { gm.inner.position.x = Math.sin(e * 40) * 0.08 * (1 - e); });
+      return;
+    }
+    this.ritualNext++;
+    const P = gm.root.position, to = this.center();
+    g.tweens.to(P, { x: to.x, y: to.y, z: to.z + 0.3 }, 0.7, { ease: Ease.inQuad, onDone: () => {
+      gm.act({ gone: true });
+      if (!this.alive) return;
+      this.flash = 1; g.post.flash(0.6, 0xffffff); g.post.shake(0.8); sfx.slam();
+      g.fx.confetti(to, 30, 3, [COL.pink, COL.white]);
+      this.hp -= this.maxHp * (this.def.ritual.hit ?? 0.12);
+      if (this.ritualNext >= this.def.ritual.items.length) this.hp = Math.min(this.hp, 0);
+      if (this.hp <= 0) this.die();
+    } });
   }
 
   // ---------------------------------------------------------------- hits
@@ -220,6 +256,7 @@ export class TheThing extends Actor {
       g.post.flash(0.45, 0xffffff);
       for (let i = 0; i < 8; i++) { const q = this.uvToWorld(rnd(0.1, 0.9), rnd(0.1, 0.9)); g.fx.confetti(q, 14, 3.5, [COL.hot, 0x2a0a2a, COL.bone]); }
       tw.to(this.inner.scale, { x: 1, y: 1 }, M.grow, { ease: Ease.outBack, onDone: () => { this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3); } });
+      if (this.def.ritual && n === this.def.stages.length - 1) tw.wait(M.grow + 1.2, () => this.alive && this.ritual());
       g.post.shake(1.2); sfx.slam();
       if (n === this.def.wreckAt && g.world.named?.school && tex[this.def.schoolAfter]) {   // it smashes the school: the building is damaged from now on
         const sc = g.world.named.school; sc.m.material.map = tex[this.def.schoolAfter]; sc.m.material.needsUpdate = true; sc.m.userData.texKey = this.def.schoolAfter;
@@ -231,6 +268,7 @@ export class TheThing extends Actor {
   // ---------------------------------------------------------------- purified
   die() {
     this.alive = false; this.seq++; this.endWindup();
+    for (const o of this.ritualObjs || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
     sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6);
     this.play('hurt');

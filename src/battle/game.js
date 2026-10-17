@@ -2,7 +2,7 @@
 // enemies, shooting rules (pierce / ramp / Fever crits / stagger), rewards at the end.
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
-import { alphaAt } from '../core/assets.js';
+import { alphaAt, meta, url } from '../core/assets.js';
 import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
@@ -12,13 +12,15 @@ import { FX, COL } from './fx.js';
 import { Player } from './player.js';
 import { Enemy, Projectile } from './enemies.js';
 import { BOSSES } from './boss.js';
+import { Gimmick } from './gimmick.js';
 import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
+import { playDoor } from '../ui/door.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
-import { C, T } from '../core/content.js';
+import { C, T, isStage } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -46,6 +48,7 @@ export class Game {
     this.hud = new Hud(this);
     this.comic = new Comic();
     this.actors = [];
+    this.addGimmicks();
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
     this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
@@ -54,9 +57,9 @@ export class Game {
     this.assignControllers();
     this.layout(G.W, G.H);
   }
-  // which set a step plays in: its own, or the next stage's (a comic before a stage), or the episode's
+  // which set a step plays in: its own, or the next stage's (a comic / door before a stage), or the episode's
   setOf(i) {
-    for (let k = i; k < this.ep.steps.length; k++) { const st = this.ep.steps[k]; if (!st.comic) return st.set || this.ep.set; }
+    for (let k = i; k < this.ep.steps.length; k++) { const st = this.ep.steps[k]; if (isStage(st)) return st.set || this.ep.set; }
     return this.ep.set;
   }
   makeWorld(id) { const d = C.sets[id]; return d?.panels ? new PanelWorld(this, id) : d?.plates ? new PlateWorld(this, id) : new World(this, id); }
@@ -68,6 +71,7 @@ export class Game {
     this.world = this.makeWorld(id);
     if (!old) return;
     this.clearActors(); this.boss = null; this.etw.clear();
+    this.addGimmicks();
     this.fx.clear();
     for (const p of this.players) { old.camera.remove(p.group); this.world.camera.add(p.group); }
     this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
@@ -116,6 +120,15 @@ export class Game {
     const st = this.ep.steps[this.stepIdx];
     if (!st) { this.finish(); return; }
     this.checkpoint = this.stepIdx;
+    // a door close-up between two places (src/ui/door.js): like a comic page, over the wipe
+    if (st.door) {
+      if (this.G.skipComics || !meta[st.door.frame] || !meta[st.door.leaf]) { this.afterComic = true; this.nextStep(); return; }
+      this.hud.show(false);
+      stopMusic();
+      const play = () => playDoor(st.door, () => { this.post.u.wipe.value = 0; this.afterComic = true; this.nextStep(); });
+      if (this.camPlaced) this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: play }); else play();
+      return;
+    }
     if (st.comic) {
       if (this.G.skipComics || !Comic.ready(st.comic)) { this.afterComic = true; this.nextStep(); return; }
       this.hud.show(false);
@@ -175,7 +188,16 @@ export class Game {
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
     const go = () => this.arrive(S, boss);
-    if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, Math.max(1.6, len / 6.5), go);
+    const dur = Math.max(1.6, len / 6.5);
+    if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, dur, go);
+    // a plank bridge over a broken floor (docs/DESIGN.md 第 1 话: Sweet Home's planks break after a few steps): it cracks half-way
+    // a ghost grabs the view and drags it off to another part of the house (docs/DESIGN.md 第 1 话: Sweet Home's ghosts carry people off)
+    if (S.grab) this.grabbed(dur, S.grab);
+    if (S.bridge) this.tweens.wait(dur * 0.5, () => {
+      sfx.tear(0); sfx.thud(0); this.post.shake(1.3); this.G.stop(0.12);
+      this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.2); p.soft.kick(1.4); });
+      this.hud.gl.stickers.say(this.players[Math.random() < 0.5 || !this.p2on() ? 0 : 1], 'bridge');
+    });
   }
   // the prologue: the calm after-school world until the invasion station, invaded from then on. A set that turns between real and rotten
   // ("turns", docs/DESIGN.md 第 1 话) keeps whatever it is; its stations and waves turn it (turn)
@@ -191,7 +213,39 @@ export class Game {
     w.turnFrom(spec.from || w.set.anomalyFrom, to < (w.anomaly ?? 1) ? -1 : 1);
     if (spec.hit) { sfx.slam(); this.post.flash(0.7, to > 0.5 ? 0xffa040 : 0xfff2d0); this.post.shake(1); }
     sfx.tear(0);
-    this.tweens.to(w, { anomaly: to }, spec.dur ?? 1.6, { ease: Ease.inOutCubic, onDone: () => then && then() });
+    this.tweens.to(w, { anomaly: to }, spec.dur ?? 1.6, { ease: Ease.inOutCubic, onDone: () => {
+      // one of the girls reacts: the place rotted / came back (text/stickers.json rot / real)
+      const p = this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0];
+      if (p && p.state !== 'down') this.hud.gl.stickers.say(p, to > 0.5 ? 'rot' : 'real', 0.8);
+      then && then();
+    } });
+  }
+  // the turning-around scare (docs/DESIGN.md 第 1 话 ⑰, Sweet Home's ending, Resident Evil's first zombie): a monster crouched with its back
+  // turned, eating; the view creeps in on it (a slow zoom, no music), one of the girls asks what it is doing, it stops, slowly turns its
+  // head and faces them -> the fight starts, with it. Station { scare: { type, sprite, x, z, who: which girl asks (slot), zoom } }
+  scare(sp, then) {
+    const w = this.world, e = this.spawnEnemy({ type: sp.type, sprite: sp.sprite, x: sp.x ?? 0, z: sp.z, from: 'scare' });
+    stopMusic();
+    this.tweens.to(w, { fovKick: -(sp.zoom ?? 16) }, 3.6, { ease: Ease.inOutSine });
+    this.tweens.wait(2.4, () => this.hud.gl.stickers.say(this.players[sp.who ?? 1] && this.p2on() ? this.players[sp.who ?? 1] : this.players[0], 'scare'));
+    this.tweens.wait(3.8, () => e.turnAround((k) => {
+      if (k === 'face') {
+        sfx.madness(); this.post.flash(0.45, 0xffffff); this.post.shake(0.9);
+        this.tweens.to(w, { fovKick: 0 }, 0.3, { ease: Ease.outBack });
+        this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.4); p.soft.kick(1.4); });
+      } else { playMusic('stage'); this.combat = true; then && then(); }
+    }));
+  }
+  // the ghost's hands: over the screen while the view is dragged away (grab = the hands picture, or true for the default one)
+  grabbed(dur, pic) {
+    const el = document.createElement('img');
+    el.className = 'grab'; el.src = url(typeof pic === 'string' ? pic : 'ep1/hands_a');
+    el.style.animationDuration = dur + 's';
+    document.getElementById('ui').appendChild(el);
+    sfx.dollScreech(0); sfx.whoosh(0); this.post.flash(0.4, 0xffe0c0);
+    const w = this.world;
+    this.tweens.run(dur, (k) => { w.fovKick = Math.sin(k * Math.PI) * 14 * Math.sin(k * 40); this.post.shake(0.25); }, { onDone: () => { w.fovKick = 0; el.remove(); } });
+    this.players.forEach((p) => this.hud.setFace(p.slot, 'scared', dur));
   }
   // everyone runs to the next stop; a downed 2P gets back up for it
   setAll(state) {
@@ -209,6 +263,7 @@ export class Game {
     if (S.fold && this.world.fold) { this.hud.gl.hold('fold'); this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
     // the boss: a warning while she shows herself, then the fight
     if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => this.teach(S.lesson, () => { this.combat = true; })); return; }
+    if (S.scare) { this.enterCover(null, true); this.scare(S.scare, () => this.beginStation()); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     if (S.turn) { this.enterCover(null, true); this.tweens.wait(S.turn.wait ?? 0.6, () => this.turn(S.turn, () => this.enterCover(() => this.beginStation()))); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
@@ -274,7 +329,7 @@ export class Game {
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
-    if (this.actors.some((a) => a.alive && !(a instanceof Projectile))) return;
+    if (this.actors.some((a) => a.alive && !(a instanceof Projectile) && !a.prop)) return;
     this.waveLive = false;
     this.waveIndex++;
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
@@ -304,9 +359,9 @@ export class Game {
     sfx.roar();
     this.post.shake(1);
   }
-  // this stage is cleared: the next one opens on the select screen (stages = the episode's non-comic steps, in order)
+  // this stage is cleared: the next one opens on the select screen (stages = the episode's played steps, in order)
   openNextStage() {
-    const stages = this.ep.steps.filter((st) => !st.comic), i = stages.indexOf(this.ep.steps[this.stepIdx]);
+    const stages = this.ep.steps.filter(isStage), i = stages.indexOf(this.ep.steps[this.stepIdx]);
     if (i >= 0) openStage(this.ep.id, i + 2);
   }
   onBossDead() {
@@ -399,6 +454,8 @@ export class Game {
   }
 
   // ------------------------------------------------------------------ spawning / set pieces
+  // the place's shootable things (src/battle/gimmick.js): there for the whole set, each live at its own stop
+  addGimmicks() { for (const g of this.world.set?.gimmicks || []) this.actors.push(new Gimmick(this, g)); }
   spawnEnemy(s) { const e = new Enemy(this, s); this.actors.push(e); return e; }
   spawnProjectile(kind, from, opts) { const p = new Projectile(this, kind, from, opts); this.actors.push(p); return p; }
   // which player an attack goes for: mostly the one on the attacker's side of the screen

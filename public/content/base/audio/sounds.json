@@ -121,6 +121,15 @@
       "vol": 0.8
     },
     "slam": { "when": "Boss 落地、大冲击", "want": "低沉的「ズドン」", "src": "lib", "files": ["sfx/maou/maou_se_battle_explosion07.mp3"], "vol": 0.9, "len": 1.2 },
+    "creak": {
+      "when": "开门特写：门在黑底上慢慢打开（第 1 话，原作每次进门的第一人称开门画面）",
+      "want": "老洋馆的木门吱呀一声慢慢打开，拖得长、有点瘆人",
+      "src": "lib",
+      "files": ["sfx/maou/maou_se_sound_door01.mp3"],
+      "vol": 1,
+      "rate": 0.72
+    },
+    "doorSlam": { "when": "门在身后自己砰地关上（第 1 话开场）、开门特写结束", "want": "厚重的木门砰地关上，闷、短、回响", "src": "lib", "files": ["sfx/maou/maou_se_sound_door02.mp3"], "vol": 1 },
     "run": {
       "when": "两人跑去下一个点",
       "want": "小碎步「タタタ」",
@@ -242,7 +251,14 @@
         "stagger": { "style": "Positive" },
         "join": { "style": "Positive" },
         "quit": { "style": "Negative", "speed": 0.85 },
-        "poke": { "style": "Positive", "speed": 1.08 }
+        "poke": { "style": "Positive", "speed": 1.08 },
+        "scare": { "style": "ノーマル", "speed": 0.9, "intonation": 0.8 },
+        "photo": { "style": "Positive" },
+        "photo_2": { "style": "Negative" },
+        "bridge": { "style": "Negative", "speed": 1.15 },
+        "rot": { "style": "Negative" },
+        "rot_3": { "style": "Negative", "speed": 1.1, "intonation": 1.4 },
+        "real": { "style": "ノーマル" }
       },
       "say": {},
       "lines": {
@@ -298,7 +314,16 @@
         "idle_1": "voice/pink/idle_1.ogg",
         "idle_2": "voice/pink/idle_2.ogg",
         "idle_3": "voice/pink/idle_3.ogg",
-        "idle_4": "voice/pink/idle_4.ogg"
+        "idle_4": "voice/pink/idle_4.ogg",
+        "scare_1": "voice/pink/scare_1.ogg",
+        "photo_1": "voice/pink/photo_1.ogg",
+        "photo_2": "voice/pink/photo_2.ogg",
+        "bridge_1": "voice/pink/bridge_1.ogg",
+        "rot_1": "voice/pink/rot_1.ogg",
+        "rot_2": "voice/pink/rot_2.ogg",
+        "rot_3": "voice/pink/rot_3.ogg",
+        "real_1": "voice/pink/real_1.ogg",
+        "real_2": "voice/pink/real_2.ogg"
       }
     },
     "cat": {
@@ -326,7 +351,12 @@
         "poke": { "style": "あまあま" },
         "poke_1": { "style": "ノーマル", "speed": 1.1 },
         "idle": { "style": "ねむたい" },
-        "idle_1": { "style": "あまあま", "speed": 0.7 }
+        "idle_1": { "style": "あまあま", "speed": 0.7 },
+        "scare": { "style": "ノーマル", "speed": 0.85 },
+        "photo": { "style": "ねむたい" },
+        "bridge": { "style": "ノーマル", "speed": 1.15 },
+        "rot": { "style": "ねむたい" },
+        "real": { "style": "ノーマル" }
       },
       "say": {
         "crit_1": "きゅうきゅうにょりつりょう、にゃ!",
@@ -385,7 +415,16 @@
         "idle_1": "voice/cat/idle_1.ogg",
         "idle_2": "voice/cat/idle_2.ogg",
         "idle_3": "voice/cat/idle_3.ogg",
-        "idle_4": "voice/cat/idle_4.ogg"
+        "idle_4": "voice/cat/idle_4.ogg",
+        "scare_1": "voice/cat/scare_1.ogg",
+        "photo_1": "voice/cat/photo_1.ogg",
+        "photo_2": "voice/cat/photo_2.ogg",
+        "bridge_1": "voice/cat/bridge_1.ogg",
+        "rot_1": "voice/cat/rot_1.ogg",
+        "rot_2": "voice/cat/rot_2.ogg",
+        "rot_3": "voice/cat/rot_3.ogg",
+        "real_1": "voice/cat/real_1.ogg",
+        "real_2": "voice/cat/real_2.ogg"
       }
     }
   }

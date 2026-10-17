@@ -152,6 +152,35 @@
             { "zh": "嗯~哼哼♪", "en": "Hm-hmm♪", "ja": "ふんふ~ん♪" },
             { "zh": "好无聊~陪我玩嘛", "en": "Bored~ play with me?", "ja": "ひまぁ~ 遊ぼ?" }
           ]
+        },
+        "scare": {
+          "lines": [
+            { "zh": "那个……你在排队吗？", "en": "Um… are you in line?", "ja": "あの…並んでます?" }
+          ]
+        },
+        "photo": {
+          "lines": [
+            { "zh": "拍到了♡", "en": "Got it♡", "ja": "撮れた♡" },
+            { "zh": "诶…脸呢？", "en": "Huh… where are their faces?", "ja": "え…顔は?" }
+          ]
+        },
+        "bridge": {
+          "lines": [
+            { "zh": "呀——要断了！", "en": "Eek, it is breaking!", "ja": "やだ、折れる!" }
+          ]
+        },
+        "rot": {
+          "lines": [
+            { "zh": "呜哇，全化掉了…", "en": "Ew, it's all melting…", "ja": "うわ、溶けてる…" },
+            { "zh": "甜甜的味道…好怪", "en": "That sweet smell… it's wrong", "ja": "甘い匂い…ヘン" },
+            { "zh": "我的冰淇淋——!", "en": "My gelato!!", "ja": "あたしのジェラート~!" }
+          ]
+        },
+        "real": {
+          "lines": [
+            { "zh": "咦？变回来了？", "en": "Huh? It's back?", "ja": "あれ? 戻った?" },
+            { "zh": "刚才是做梦吗…", "en": "Was that a dream…?", "ja": "夢だったの…?" }
+          ]
         }
       },
       "cat": {
@@ -298,6 +327,35 @@
             { "zh": "哈啊~好困", "en": "Yawn~ sleepy", "ja": "ふぁ~ねむい" },
             { "zh": "呼噜呼噜~", "en": "Purr purr~", "ja": "ゴロゴロ~" },
             { "zh": "呀哒哟~", "en": "No way~", "ja": "やだよぉ~" }
+          ]
+        },
+        "scare": {
+          "lines": [
+            { "zh": "……你在干什么？", "en": "...What are you doing?", "ja": "…なにしてるの?" }
+          ]
+        },
+        "photo": {
+          "lines": [
+            { "zh": "……画在动", "en": "...The painting moved.", "ja": "…絵が動いた" },
+            { "zh": "不要乱拍啦", "en": "Stop taking pictures.", "ja": "撮らないで" }
+          ]
+        },
+        "bridge": {
+          "lines": [
+            { "zh": "别往下看！", "en": "Do not look down!", "ja": "下見ないで!" }
+          ]
+        },
+        "rot": {
+          "lines": [
+            { "zh": "……好臭", "en": "...It reeks.", "ja": "…くさい" },
+            { "zh": "房子在烂掉", "en": "The house is rotting.", "ja": "家が腐ってく" },
+            { "zh": "别碰那些糖浆", "en": "Don't touch the syrup.", "ja": "シロップ触らないで" }
+          ]
+        },
+        "real": {
+          "lines": [
+            { "zh": "……别放松", "en": "...Don't relax.", "ja": "…油断しないで" },
+            { "zh": "只是表面", "en": "It's only the surface.", "ja": "見た目だけ" }
           ]
         }
       }

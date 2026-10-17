@@ -1,5 +1,5 @@
 {
-  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），name 名字（准星锁定时标出来），sprite 图的前缀，variants 同一种怪的几个造型（图的前缀，刷怪时挑场上最少的那个，docs/ART.md 多版本），hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。 序章（2026-10-17）的六种怪：desk 课桌蜘蛛、shoe 鞋柜拟态（近战扑咬：攻击前蹲下蓄力，趁这时把它打出硬直才能打断，扑上来的咬会无视掩体）；board 黑板女教师（冒头扔粉笔，粉笔能打掉，掩体挡得住）；paper 考卷幽灵（飘着，俯冲撞人，掩体挡得住）；frame 相框群（连发镜片）；horn 广播喇叭（长时间蓄力后全屏声波，蓄力时霸体打不断，必须躲进掩体）。R43 四种相似的新怪（反复刷、降低重复感）：chair 椅子蜈蚣（像课桌蜘蛛）、book 课本蛾（像考卷幽灵）、clock 挂钟女（像黑板女教师，扔钟针）、ext 灭火器女妖（像广播喇叭，必须躲的泡沫）。 2026-10-17 第八批：小怪血量加多（有压迫感、多看看演出）；普通攻击（扑咬）不提示、躲在掩体后挡得住，飞着俯冲的是冲撞（快打，躲没用），扔出来的东西是飞行道具（快打），喇叭 / 灭火器的大招是快躲（DESIGN「攻击分三种」）。",
+  "_doc": "敌人。beh 用哪种行为模板（见 tuning/behaviors.json），name 名字（准星锁定时标出来），sprite 图的前缀，variants 同一种怪的几个造型（图的前缀，刷怪时挑场上最少的那个，docs/ART.md 多版本），hp 血量，h 身高（米），speed 走路速度，windup 攻击前摇（秒，越长越好躲），poise 打出硬直需要的累计值，frames 每个动作用哪几帧图，params 覆盖行为模板里的任何参数。 序章（2026-10-17）的六种怪：desk 课桌蜘蛛、shoe 鞋柜拟态（近战扑咬：攻击前蹲下蓄力，趁这时把它打出硬直才能打断，扑上来的咬会无视掩体）；board 黑板女教师（冒头扔粉笔，粉笔能打掉，掩体挡得住）；paper 考卷幽灵（飘着，俯冲撞人，掩体挡得住）；frame 相框群（连发镜片）；horn 广播喇叭（长时间蓄力后全屏声波，蓄力时霸体打不断，必须躲进掩体）。R43 四种相似的新怪（反复刷、降低重复感）：chair 椅子蜈蚣（像课桌蜘蛛）、book 课本蛾（像考卷幽灵）、clock 挂钟女（像黑板女教师，扔钟针）、ext 灭火器女妖（像广播喇叭，必须躲的泡沫）。 2026-10-17 第八批：小怪血量加多（有压迫感、多看看演出）；普通攻击（扑咬）不提示、躲在掩体后挡得住，飞着俯冲的是冲撞（快打，躲没用），扔出来的东西是飞行道具（快打），喇叭 / 灭火器的大招是快躲（DESIGN「攻击分三种」）。 第 1 话（腐蜜之家，docs/DESIGN.md「第 1 话」，每种对应原作的一种敌人）：ghoul 冰淇淋丧尸（走过来扑咬；frames.scare 是回头杀的六帧，Game.scare）、bat 威化蝙蝠（成群俯冲）、chandelier 吊灯骚灵（扔家具，要击落）、armor 甜点铠甲（很硬、慢慢逼近）、doll 杯中人偶（躲在后面冒头扔樱桃）、crawler 半截丧尸（rush：爬过来的扑咬是冲撞，带快打环，躲没用）、shadow 夫人之影（横扫，只能躲）、double_pink / double_cat 两人融化的分身（原作冥界里长得像主角一行的灵）。",
   "zomb": {
     "beh": "walker",
     "sprite": "zomb",
@@ -194,5 +194,162 @@
       "throw": ["blast"],
       "hurt": ["hurt"]
     }
+  },
+  "ghoul": {
+    "beh": "walker",
+    "name": { "zh": "冰淇淋丧尸", "en": "Gelato Ghoul", "ja": "ジェラートグール" },
+    "sprite": "ghoul",
+    "variants": ["ghoul", "ghoul_b", "ghoul_c"],
+    "hp": 190,
+    "h": 1.5,
+    "speed": 1.3,
+    "windup": 1.0,
+    "poise": 50,
+    "first": "walk0",
+    "frames": {
+      "idle": ["walk0"],
+      "walk": ["walk0", "walk1"],
+      "crouch": ["crouch"],
+      "leap": ["leap"],
+      "bite": ["bite"],
+      "recoil": ["hurt"],
+      "hurt": ["hurt"],
+      "scare": ["scare0", "scare1", "scare2", "scare3", "scare4", "scare5"]
+    }
+  },
+  "bat": {
+    "beh": "flyer",
+    "name": { "zh": "威化蝙蝠", "en": "Wafer Bat", "ja": "ウエハースバット" },
+    "sprite": "bat",
+    "variants": ["bat", "bat_b", "bat_c"],
+    "hp": 60,
+    "h": 0.8,
+    "windup": 0.8,
+    "poise": 14,
+    "first": "fly0",
+    "frames": { "fly": ["fly0", "fly1"], "windup": ["windup"], "dive": ["dive"], "hurt": ["hurt"] }
+  },
+  "chandelier": {
+    "beh": "thrower",
+    "name": { "zh": "吊灯骚灵", "en": "Chandelier Poltergeist", "ja": "シャンデリア・ポルターガイスト" },
+    "sprite": "chandelier",
+    "variants": ["chandelier", "chandelier_b", "chandelier_c"],
+    "hp": 230,
+    "h": 1.6,
+    "windup": 1.1,
+    "poise": 60,
+    "first": "hover0",
+    "hides": false,
+    "proj": "furniture",
+    "burst": 2,
+    "frames": {
+      "hide": ["hover0"],
+      "rise": ["hover0"],
+      "idle": ["hover0", "hover1", "idle", "hover1"],
+      "windup": ["windup"],
+      "throw": ["fire"],
+      "hurt": ["hurt"]
+    }
+  },
+  "armor": {
+    "beh": "walker",
+    "name": { "zh": "甜点铠甲", "en": "Armor Maiden", "ja": "アーマーメイデン" },
+    "sprite": "armor",
+    "variants": ["armor", "armor_b", "armor_c"],
+    "hp": 420,
+    "h": 1.95,
+    "speed": 0.7,
+    "windup": 1.4,
+    "poise": 110,
+    "first": "wake",
+    "frames": {
+      "idle": ["wake"],
+      "walk": ["walk0", "wake"],
+      "crouch": ["crouch"],
+      "leap": ["walk0"],
+      "bite": ["bite"],
+      "recoil": ["hurt"],
+      "hurt": ["hurt"],
+      "still": ["still"]
+    }
+  },
+  "doll": {
+    "beh": "thrower",
+    "name": { "zh": "杯中人偶", "en": "Coupe Doll", "ja": "クープドール" },
+    "sprite": "doll",
+    "variants": ["doll", "doll_b", "doll_c"],
+    "hp": 200,
+    "h": 1.4,
+    "windup": 1.0,
+    "poise": 50,
+    "first": "idle",
+    "hides": true,
+    "proj": "cherry",
+    "burst": 2,
+    "frames": { "hide": ["hide"], "rise": ["rise"], "idle": ["idle"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+  },
+  "crawler": {
+    "beh": "walker",
+    "rush": true,
+    "name": { "zh": "半截丧尸", "en": "Half Ghoul", "ja": "ハーフグール" },
+    "sprite": "crawler",
+    "variants": ["crawler", "crawler_b", "crawler_c"],
+    "hp": 120,
+    "h": 0.9,
+    "speed": 2.3,
+    "windup": 0.9,
+    "poise": 25,
+    "first": "walk0",
+    "frames": { "idle": ["idle"], "walk": ["walk0", "walk1"], "crouch": ["crouch"], "leap": ["bite"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] }
+  },
+  "shadow": {
+    "beh": "thrower",
+    "name": { "zh": "夫人之影", "en": "The Shadow", "ja": "夫人の影" },
+    "sprite": "shadow",
+    "variants": ["shadow", "shadow_b", "shadow_c"],
+    "hp": 300,
+    "h": 2.1,
+    "windup": 2.4,
+    "poise": 75,
+    "first": "hover0",
+    "hides": false,
+    "blast": { "dmg": 30 },
+    "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterThrow": [2.6, 3.6], "standAfterRise": [1.2, 1.8] },
+    "frames": {
+      "hide": ["hover0"],
+      "rise": ["hover0"],
+      "idle": ["hover0", "hover1", "idle", "hover1"],
+      "windup": ["windup"],
+      "throw": ["blast"],
+      "hurt": ["hurt"]
+    }
+  },
+  "double_pink": {
+    "beh": "thrower",
+    "name": { "zh": "融化的蔡蕾", "en": "Melted Mine", "ja": "とけたミネ" },
+    "sprite": "double_pink",
+    "variants": ["double_pink", "double_pink_b", "double_pink_c"],
+    "hp": 260,
+    "h": 1.6,
+    "windup": 1.0,
+    "poise": 60,
+    "first": "idle",
+    "hides": false,
+    "proj": "scoop",
+    "burst": 3,
+    "frames": { "hide": ["idle"], "rise": ["idle"], "idle": ["idle", "idle1", "walk", "idle1"], "windup": ["windup"], "throw": ["fire"], "hurt": ["hurt"] }
+  },
+  "double_cat": {
+    "beh": "walker",
+    "name": { "zh": "融化的庄乖", "en": "Melted Kaburu", "ja": "とけたカブル" },
+    "sprite": "double_cat",
+    "variants": ["double_cat", "double_cat_b", "double_cat_c"],
+    "hp": 260,
+    "h": 1.6,
+    "speed": 1.6,
+    "windup": 1.1,
+    "poise": 60,
+    "first": "idle",
+    "frames": { "idle": ["idle"], "walk": ["walk0", "idle1"], "crouch": ["crouch"], "leap": ["walk0"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] }
   }
 }

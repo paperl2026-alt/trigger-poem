@@ -1,0 +1,857 @@
+{
+  "_doc": "第 1 话「腐蜜之家」的七个地方（docs/DESIGN.md「第 1 话」，写法同 ep0.json 的说明）。turns: true = 这个地方会在现实和腐化之间来回翻（start = 一进来是 0 现实还是 1 腐化；站点的 turn = 到站蹲好后先翻；波次里 { t, turn } = 打到一半翻），翻转的样子和序章异变一样（每块有 _x 腐化版的板一块块翻过去）。scare = 回头杀（Game.scare）。gimmicks = 能打的机关（src/battle/gimmick.js：画闪光翻面、铠甲、结界、Boss 的三样东西……），每个只在自己的站点能打。",
+  "ep1_shop": {
+    "panels": true,
+    "turns": true,
+    "start": 0,
+    "seed": 11,
+    "fogNear": 9,
+    "fogFar": 34,
+    "fogDensity": 0.015,
+    "sky": "#f6dcc8",
+    "fog": "#f2cdb4",
+    "lit": [1.08, 1.0, 0.95],
+    "anomalySky": "#d89a5a",
+    "anomalyFog": "#d8a068",
+    "anomalyLit": [1.066, 0.967, 0.89],
+    "grade": { "tint": [1.02, 0.99, 0.96], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.072, 0.964, 0.892], "k": 0.33, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [2.4, 1.0, -3],
+    "hall": {
+      "x0": -2.7,
+      "x1": 2.7,
+      "z0": 6,
+      "z1": -15.6,
+      "h": 3.6,
+      "bay": 5.4,
+      "tile": 5.4,
+      "tilesX": 4,
+      "tileL": 1.35,
+      "left": ["ep1/shop_wallL1", "ep1/shop_wallL2", "ep1/shop_wallL3", "ep1/shop_wallL4", "ep1/shop_wallL5", "ep1/shop_wallL6"],
+      "right": ["ep1/shop_wallR1", "ep1/shop_wallR2", "ep1/shop_wallR3", "ep1/shop_wallR4", "ep1/shop_wallR5", "ep1/shop_wallR6"],
+      "floor": ["ep1/shop_floor1", "ep1/shop_floor2", "ep1/shop_floor3"],
+      "end": ["ep1/shop_end1", "ep1/shop_end2"],
+      "ceil": ["ep1/shop_ceil1", "ep1/shop_ceil2", "ep1/shop_ceil3"],
+      "outside": "ep1/shop_outside",
+      "outsideX": "ep1/shop_outside_x",
+      "outsideAt": [{ "x": -13.7, "z": -5, "ry": 1.5708, "w": 66 }, { "x": 0, "z": -30, "ry": 0, "w": 40 }]
+    },
+    "props": [
+      { "k": "prop/ep1_shop1", "h": 1.05, "x": -1.7, "z": 0.5 },
+      { "k": "prop/ep1_shop2", "h": 1.0, "x": -1.8, "z": -6.5 },
+      { "k": "prop/ep1_shop3", "h": 1.2, "x": 2.0, "z": -9 },
+      { "k": "prop/ep1_shop4", "h": 1.9, "x": -2.3, "z": -12 }
+    ],
+    "decals": [
+      { "k": "ep1/d_drip1", "on": "right", "z": -3, "y": 2.9, "w": 1.2, "anomaly": true },
+      { "k": "ep1/d_peel", "on": "left", "z": -6, "y": 2.2, "w": 0.9, "anomaly": true },
+      { "k": "ep1/d_puddle", "on": "floor", "x": 0.6, "z": -4, "w": 1.4, "anomaly": true },
+      { "k": "ep1/d_web", "on": "left", "z": -10, "y": 3.0, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_asobo", "on": "right", "z": -13, "y": 1.8, "w": 1.3, "anomaly": true }
+    ],
+    "stations": {
+      "sh1": {
+        "cam": [0, 1.1, 4.2],
+        "look": [0, 1.0, -12],
+        "covers": [{ "k": "cover/ep1_shop1", "side": -1 }, { "k": "cover/ep1_shop2", "side": 1 }],
+        "scare": { "type": "ghoul", "sprite": "ghoul", "x": 0.4, "z": -2.2, "who": 1, "zoom": 18 },
+        "waves": [
+          [
+            { "t": 1.6, "type": "ghoul", "x": -1.2, "z": -5, "from": "pop" }
+          ],
+          [
+            {
+              "t": 0,
+              "turn": { "to": 1, "from": [2.4, 1.0, -3], "hit": true, "dur": 2.2 }
+            },
+            { "t": 2.4, "type": "ghoul", "x": 1.4, "z": -6, "from": "pop" },
+            { "t": 3.6, "type": "ghoul", "x": -1.4, "z": -6.5, "from": "pop" }
+          ],
+          [{ "t": 0, "type": "bat", "x": 0, "z": -7, "y": 2.4 }, { "t": 1.4, "type": "bat", "x": 1.2, "z": -8, "y": 2.6 }],
+          [
+            { "t": 0, "type": "doll", "x": 1.6, "z": -5.5, "from": "pop" },
+            { "t": 1.6, "type": "ghoul", "x": -1.0, "z": -6, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "bat", "x": -1.4, "z": -7, "y": 2.4 },
+            { "t": 0.6, "type": "bat", "x": 0, "z": -8, "y": 2.7 },
+            { "t": 1.2, "type": "bat", "x": 1.4, "z": -7.5, "y": 2.5 },
+            { "t": 2.4, "type": "ghoul", "x": 0, "z": -6, "from": "pop" }
+          ]
+        ]
+      },
+      "sh2": {
+        "via": [[0, 1.35, 0.5]],
+        "cam": [0, 1.1, -3.5],
+        "look": [0, 1.0, -20],
+        "covers": [{ "k": "cover/ep1_shop3", "side": -1 }, { "k": "cover/ep1_shop4", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.4, "type": "chandelier", "x": 0, "z": -10, "y": 1.4 }
+          ],
+          [
+            { "t": 0, "type": "doll", "x": -1.6, "z": -9, "from": "pop" },
+            { "t": 1.0, "type": "doll", "x": 1.6, "z": -9.5, "from": "pop" },
+            { "t": 2.4, "type": "ghoul", "x": 0, "z": -11, "from": "pop" }
+          ],
+          [
+            { "t": 0, "turn": { "to": 0, "from": [0, 1.6, -10], "dur": 0.9 } },
+            { "t": 1.4, "turn": { "to": 1, "from": [0, 1.6, -10], "hit": true, "dur": 1.1 } },
+            { "t": 2.4, "type": "crawler", "x": 0.4, "z": -10, "from": "pop" },
+            { "t": 3.2, "type": "ghoul", "x": -1.2, "z": -11, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "bat", "x": -1.2, "z": -12, "y": 2.5 },
+            { "t": 0.5, "type": "bat", "x": 1.2, "z": -12, "y": 2.8 },
+            { "t": 1.4, "type": "chandelier", "x": 1.2, "z": -12, "y": 1.5 }
+          ],
+          [
+            { "t": 0, "type": "ghoul", "x": -1.4, "z": -10, "from": "pop" },
+            { "t": 0.8, "type": "ghoul", "x": 1.4, "z": -10.5, "from": "pop" },
+            { "t": 1.6, "type": "crawler", "x": 0, "z": -11, "from": "pop" },
+            { "t": 3.0, "type": "doll", "x": 0, "z": -13, "from": "pop" }
+          ]
+        ]
+      }
+    }
+  },
+  "ep1_gallery": {
+    "panels": true,
+    "turns": true,
+    "start": 0,
+    "seed": 23,
+    "fogNear": 8,
+    "fogFar": 30,
+    "fogDensity": 0.015,
+    "sky": "#ecd6c4",
+    "fog": "#e2c2a8",
+    "lit": [1.05, 0.97, 0.92],
+    "anomalySky": "#b07a4a",
+    "anomalyFog": "#c08a5a",
+    "anomalyLit": [1.055, 0.945, 0.879],
+    "grade": { "tint": [1.0, 0.97, 0.95], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.072, 0.94, 0.88], "k": 0.36, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [-1.8, 2.0, -2],
+    "hall": {
+      "x0": -1.8,
+      "x1": 1.8,
+      "z0": 6,
+      "z1": -21.0,
+      "h": 3.6,
+      "bay": 5.4,
+      "tile": 3.6,
+      "tilesX": 3,
+      "tileL": 1.2,
+      "left": ["ep1/gallery_wallL1", "ep1/gallery_wallL2", "ep1/gallery_wallL3", "ep1/gallery_wallL4", "ep1/gallery_wallL5", "ep1/gallery_wallL6"],
+      "right": ["ep1/gallery_wallR1", "ep1/gallery_wallR2", "ep1/gallery_wallR3", "ep1/gallery_wallR4", "ep1/gallery_wallR5", "ep1/gallery_wallR6"],
+      "floor": ["ep1/gallery_floor1", "ep1/gallery_floor2", "ep1/gallery_floor3"],
+      "end": ["ep1/gallery_end1", "ep1/gallery_end2"],
+      "ceil": ["ep1/gallery_ceil1", "ep1/gallery_ceil2", "ep1/gallery_ceil3"]
+    },
+    "gimmicks": [
+      {
+        "id": "fresco1",
+        "k": "ep1/fresco1",
+        "kx": "ep1/fresco1_x",
+        "on": "left",
+        "y": 2.05,
+        "z": -2.5,
+        "w": 1.05,
+        "station": "ga1",
+        "do": [
+          { "flash": true },
+          { "flip": true },
+          {
+            "t": 0,
+            "turn": { "to": 1, "from": [-1.8, 2.0, -2.5], "hit": true, "dur": 2.4 }
+          }
+        ]
+      },
+      {
+        "id": "fresco2",
+        "k": "ep1/fresco2",
+        "kx": "ep1/fresco2_x",
+        "on": "right",
+        "y": 2.05,
+        "z": -5,
+        "w": 1.05,
+        "station": "ga1",
+        "do": [{ "flash": true }, { "flip": true }, { "say": "photo" }]
+      },
+      {
+        "id": "fresco3",
+        "k": "ep1/fresco3",
+        "kx": "ep1/fresco3_x",
+        "on": "left",
+        "y": 2.05,
+        "z": -8.5,
+        "w": 1.05,
+        "station": "ga1",
+        "do": [{ "flash": true }, { "flip": true }]
+      },
+      {
+        "id": "fresco4",
+        "k": "ep1/fresco4",
+        "kx": "ep1/fresco4_x",
+        "on": "right",
+        "y": 2.05,
+        "z": -13,
+        "w": 1.05,
+        "station": "ga2",
+        "do": [
+          { "flash": true },
+          { "flip": true },
+          { "spawn": [{ "type": "ghoul", "x": 0.8, "z": -17, "from": "pop" }] }
+        ]
+      },
+      {
+        "id": "fresco5",
+        "k": "ep1/fresco5",
+        "kx": "ep1/fresco5_x",
+        "on": "left",
+        "y": 2.05,
+        "z": -16,
+        "w": 1.05,
+        "station": "ga2",
+        "do": [{ "flash": true }, { "flip": true }, { "spawn": [{ "type": "shadow", "x": -0.6, "z": -19 }] }]
+      },
+      {
+        "id": "fresco6",
+        "k": "ep1/fresco6",
+        "kx": "ep1/fresco6_x",
+        "on": "right",
+        "y": 2.05,
+        "z": -19,
+        "w": 1.05,
+        "station": "ga2",
+        "do": [{ "flash": true }, { "flip": true }]
+      }
+    ],
+    "decals": [
+      { "k": "ep1/d_drip2", "on": "left", "z": -4, "y": 3.0, "w": 1.1, "anomaly": true },
+      { "k": "ep1/d_asobo2", "on": "right", "z": -9, "y": 1.6, "w": 1.4, "anomaly": true },
+      { "k": "ep1/d_hand", "on": "left", "z": -12, "y": 1.3, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_mould", "on": "right", "z": -15.5, "y": 2.6, "w": 0.9, "anomaly": true },
+      { "k": "ep1/d_honey", "on": "floor", "x": -0.4, "z": -7, "w": 1.2, "anomaly": true }
+    ],
+    "stations": {
+      "ga1": {
+        "cam": [0, 1.1, 2.8],
+        "look": [0, 1.0, -16],
+        "covers": [{ "k": "cover/ep1_gallery1", "side": -1 }, { "k": "cover/ep1_gallery2", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "ghoul", "x": 0.4, "z": -6, "from": "pop" }
+          ],
+          [{ "t": 0, "type": "chandelier", "x": 0, "z": -9, "y": 1.5 }],
+          [
+            { "t": 0, "type": "bat", "x": -0.8, "z": -9, "y": 2.6 },
+            { "t": 0.6, "type": "bat", "x": 0.8, "z": -9.5, "y": 2.7 },
+            { "t": 1.2, "type": "bat", "x": 0, "z": -10, "y": 2.5 }
+          ],
+          [
+            { "t": 0, "type": "crawler", "x": 0, "z": -8, "from": "pop" },
+            { "t": 1.6, "type": "ghoul", "x": -0.8, "z": -9, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "chandelier", "x": -0.6, "z": -10, "y": 1.6 },
+            { "t": 1.4, "type": "doll", "x": 0.8, "z": -9, "from": "pop" }
+          ]
+        ]
+      },
+      "ga2": {
+        "via": [[0, 1.35, -3]],
+        "cam": [0, 1.1, -8],
+        "look": [0, 1.0, -24],
+        "covers": [{ "k": "cover/ep1_gallery3", "side": -1 }, { "k": "cover/ep1_gallery4", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.4, "type": "shadow", "x": 0, "z": -17, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "ghoul", "x": -0.8, "z": -15, "from": "pop" },
+            { "t": 0.8, "type": "ghoul", "x": 0.8, "z": -15.5, "from": "pop" },
+            { "t": 1.6, "type": "bat", "x": 0, "z": -16, "y": 2.6 }
+          ],
+          [
+            { "t": 0, "type": "chandelier", "x": 0, "z": -17, "y": 1.6 },
+            { "t": 1.8, "type": "crawler", "x": 0.4, "z": -15, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "doll", "x": -0.8, "z": -15, "from": "pop" },
+            { "t": 0.6, "type": "doll", "x": 0.8, "z": -16, "from": "pop" },
+            { "t": 1.6, "type": "bat", "x": -0.6, "z": -16, "y": 2.5 },
+            { "t": 2.0, "type": "bat", "x": 0.6, "z": -16.5, "y": 2.7 }
+          ]
+        ],
+        "grab": "ep1/hands_a"
+      }
+    }
+  },
+  "ep1_garden": {
+    "panels": true,
+    "turns": true,
+    "start": 1,
+    "seed": 37,
+    "fogNear": 14,
+    "fogFar": 50,
+    "fogDensity": 0.01,
+    "sky": "#f2e2c8",
+    "fog": "#ecd8bc",
+    "lit": [1.06, 1.02, 0.94],
+    "anomalySky": "#c88a4a",
+    "anomalyFog": "#d29a5e",
+    "anomalyLit": [1.066, 0.972, 0.89],
+    "grade": { "tint": [1.0, 1.0, 0.96], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.06, 0.958, 0.892], "k": 0.33, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [0, 1.5, -9],
+    "hall": {
+      "x0": -4.5,
+      "x1": 4.5,
+      "z0": 8,
+      "z1": -16,
+      "h": 6,
+      "bay": 6,
+      "tile": 9,
+      "tilesX": 4,
+      "tileL": 2.25,
+      "left": ["ep1/garden_wallL1", "ep1/garden_wallL2", "ep1/garden_wallL3", "ep1/garden_wallL4", "ep1/garden_wallL5", "ep1/garden_wallL6"],
+      "right": ["ep1/garden_wallR1", "ep1/garden_wallR2", "ep1/garden_wallR3", "ep1/garden_wallR4", "ep1/garden_wallR5", "ep1/garden_wallR6"],
+      "floor": ["ep1/garden_floor1", "ep1/garden_floor2", "ep1/garden_floor3"],
+      "end": ["ep1/garden_end2"],
+      "ceil": ["ep1/garden_ceil1", "ep1/garden_ceil2", "ep1/garden_ceil3"],
+      "outside": "ep1/garden_outside",
+      "outsideX": "ep1/garden_outside_x",
+      "outsideAt": [{ "x": -15.5, "z": -4, "ry": 1.5708, "w": 80 }, { "x": 15.5, "z": -4, "ry": -1.5708, "w": 80 }, { "x": 0, "z": -36, "ry": 0, "w": 60 }]
+    },
+    "props": [
+      { "k": "prop/ep1_garden1", "h": 2.8, "x": 0, "z": -9 },
+      { "k": "prop/ep1_garden3", "h": 2.2, "x": -3.6, "z": -3 },
+      { "k": "prop/ep1_garden3", "h": 2.0, "x": 3.6, "z": -6 },
+      { "k": "prop/ep1_garden4", "h": 2.6, "x": -3.8, "z": -12 }
+    ],
+    "gimmicks": [
+      {
+        "id": "armor1",
+        "k": "prop/ep1_garden2",
+        "on": "stand",
+        "x": -2.2,
+        "y": 0,
+        "z": -14.6,
+        "w": 0.95,
+        "station": "gd2",
+        "do": [{ "sfx": "clang" }, { "gone": true }]
+      },
+      {
+        "id": "armor2",
+        "k": "prop/ep1_garden2",
+        "on": "stand",
+        "x": 2.2,
+        "y": 0,
+        "z": -14.6,
+        "w": 0.95,
+        "station": "gd2",
+        "do": [{ "sfx": "clang" }, { "gone": true }, { "spawn": [{ "type": "armor", "x": 2.2, "z": -14.4 }] }]
+      }
+    ],
+    "decals": [
+      { "k": "ep1/d_syrup", "on": "floor", "x": 0, "z": -6.5, "w": 1.8, "anomaly": true },
+      { "k": "ep1/d_drip3", "on": "left", "z": -10, "y": 5.2, "w": 1.6, "anomaly": true },
+      { "k": "ep1/d_kaeshite", "on": "right", "z": -12, "y": 2.0, "w": 1.6, "anomaly": true }
+    ],
+    "stations": {
+      "gd1": {
+        "cam": [0, 1.1, 5.5],
+        "look": [0, 1.0, -14],
+        "covers": [{ "k": "cover/ep1_garden1", "side": -1 }, { "k": "cover/ep1_garden2", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "armor", "x": 0, "z": -6, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "crawler", "x": -1.2, "z": -4, "from": "pop" },
+            { "t": 0.9, "type": "crawler", "x": 1.2, "z": -4.5, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "bat", "x": -1.5, "z": -6, "y": 2.8 },
+            { "t": 0.4, "type": "bat", "x": 0, "z": -6.5, "y": 3.2 },
+            { "t": 0.8, "type": "bat", "x": 1.5, "z": -6, "y": 2.9 },
+            { "t": 1.6, "type": "bat", "x": 0, "z": -7, "y": 3.0 }
+          ],
+          [
+            { "t": 0, "turn": { "to": 0, "from": [0, 1.5, -9], "dur": 1.0 } },
+            { "t": 1.0, "type": "chandelier", "x": 0, "z": -7, "y": 2.4 },
+            { "t": 2.6, "turn": { "to": 1, "from": [0, 1.5, -9], "hit": true, "dur": 1.2 } }
+          ],
+          [
+            { "t": 0, "type": "ghoul", "x": -1.4, "z": -5, "from": "pop" },
+            { "t": 0.6, "type": "ghoul", "x": 1.4, "z": -5, "from": "pop" },
+            { "t": 1.4, "type": "crawler", "x": 0, "z": -4.5, "from": "pop" },
+            { "t": 2.6, "type": "doll", "x": 2.4, "z": -7, "from": "pop" }
+          ]
+        ]
+      },
+      "gd2": {
+        "via": [[0, 1.35, 1.5], [0, 1.2, -1.5]],
+        "bridge": true,
+        "cam": [0, 1.1, -3.2],
+        "look": [0, 1.0, -20],
+        "covers": [{ "k": "cover/ep1_garden3", "side": -1 }, { "k": "cover/ep1_garden4", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "shadow", "x": 0, "z": -11, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "armor", "x": -1.4, "z": -10, "from": "pop" },
+            { "t": 1.6, "type": "crawler", "x": 1.0, "z": -9, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "doll", "x": -2.4, "z": -11, "from": "pop" },
+            { "t": 0.8, "type": "doll", "x": 2.4, "z": -11, "from": "pop" },
+            { "t": 1.6, "type": "bat", "x": 0, "z": -11, "y": 3.0 }
+          ],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -12, "from": "pop" },
+            { "t": 3.4, "type": "ghoul", "x": -1.2, "z": -9, "from": "pop" },
+            { "t": 4.0, "type": "ghoul", "x": 1.2, "z": -9, "from": "pop" }
+          ]
+        ]
+      }
+    }
+  },
+  "ep1_cold": {
+    "panels": true,
+    "turns": true,
+    "start": 1,
+    "seed": 41,
+    "fogNear": 7,
+    "fogFar": 26,
+    "fogDensity": 0.015,
+    "sky": "#e8d8cc",
+    "fog": "#dccabc",
+    "lit": [1.0, 0.98, 0.96],
+    "anomalySky": "#a06a3e",
+    "anomalyFog": "#b07a4a",
+    "anomalyLit": [1.055, 0.934, 0.857],
+    "grade": { "tint": [1.0, 0.98, 0.98], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.072, 0.928, 0.856], "k": 0.39, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [0, 1.2, -16],
+    "hall": {
+      "x0": -2.25,
+      "x1": 2.25,
+      "z0": 6,
+      "z1": -12.0,
+      "h": 3,
+      "bay": 4.5,
+      "tile": 4.5,
+      "tilesX": 3,
+      "tileL": 1.5,
+      "left": ["ep1/cold_wallL1", "ep1/cold_wallL2", "ep1/cold_wallL3", "ep1/cold_wallL4", "ep1/cold_wallL5", "ep1/cold_wallL6"],
+      "right": ["ep1/cold_wallR1", "ep1/cold_wallR2", "ep1/cold_wallR3", "ep1/cold_wallR4", "ep1/cold_wallR5", "ep1/cold_wallR6"],
+      "floor": ["ep1/cold_floor1", "ep1/cold_floor2", "ep1/cold_floor3"],
+      "end": ["ep1/cold_end1", "ep1/cold_end2"],
+      "ceil": ["ep1/cold_ceil1", "ep1/cold_ceil2", "ep1/cold_ceil3"]
+    },
+    "props": [
+      { "k": "prop/ep1_cold1", "h": 1.0, "x": -1.5, "z": -3 },
+      { "k": "prop/ep1_cold2", "h": 2.2, "x": 1.7, "z": -6 },
+      { "k": "prop/ep1_cold3", "h": 0.7, "x": -1.2, "z": -8.5 },
+      { "k": "prop/ep1_cold1", "h": 1.0, "x": 1.5, "z": -10 }
+    ],
+    "gimmicks": [
+      {
+        "id": "coffin",
+        "k": "ep1/coffin_lid",
+        "on": "stand",
+        "x": 0,
+        "y": 0,
+        "z": -11.2,
+        "w": 1.0,
+        "ry": 0,
+        "station": "co2",
+        "hp": 3,
+        "do": [
+          { "sfx": "creak" },
+          { "gone": true },
+          { "t": 0.6, "spawn": [{ "type": "ghoul", "x": 0, "z": -11, "from": "pop" }] }
+        ]
+      }
+    ],
+    "decals": [
+      { "k": "ep1/d_bones", "on": "floor", "x": -0.6, "z": -5, "w": 1.3, "anomaly": true },
+      { "k": "ep1/d_zutto", "on": "left", "z": -7, "y": 1.6, "w": 1.4, "anomaly": true },
+      { "k": "ep1/d_crack", "on": "right", "z": -9, "y": 2.0, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_cones", "on": "floor", "x": 0.8, "z": -9.5, "w": 1.0, "anomaly": true }
+    ],
+    "stations": {
+      "co1": {
+        "cam": [0, 1.1, 3.8],
+        "look": [0, 1.0, -14],
+        "covers": [{ "k": "cover/ep1_cold1", "side": -1 }, { "k": "cover/ep1_cold2", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "crawler", "x": 0, "z": -5, "from": "pop" },
+            { "t": 1.6, "type": "crawler", "x": -0.8, "z": -6, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -8, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "doll", "x": -1.2, "z": -6, "from": "pop" },
+            { "t": 0.8, "type": "ghoul", "x": 0.8, "z": -7, "from": "pop" },
+            { "t": 2.0, "type": "ghoul", "x": -0.6, "z": -7.5, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "bat", "x": -0.8, "z": -7, "y": 2.2 },
+            { "t": 0.4, "type": "bat", "x": 0.8, "z": -7.5, "y": 2.3 },
+            { "t": 1.2, "type": "crawler", "x": 0, "z": -6, "from": "pop" },
+            { "t": 2.0, "type": "crawler", "x": 0.8, "z": -6.5, "from": "pop" }
+          ]
+        ]
+      },
+      "co2": {
+        "via": [[0, 1.35, 0]],
+        "cam": [0, 1.1, -3.5],
+        "look": [0, 1.0, -16],
+        "covers": [{ "k": "cover/ep1_cold3", "side": -1 }, { "k": "cover/ep1_cold4", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "ghoul", "x": -0.8, "z": -8, "from": "pop" },
+            { "t": 1.4, "type": "ghoul", "x": 0.8, "z": -8.5, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -10, "from": "pop" },
+            { "t": 3.6, "type": "crawler", "x": 0.6, "z": -8, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "armor", "x": 0, "z": -9, "from": "pop" },
+            { "t": 1.4, "type": "doll", "x": -1.2, "z": -9, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "crawler", "x": -0.8, "z": -8, "from": "pop" },
+            { "t": 0.5, "type": "crawler", "x": 0.8, "z": -8, "from": "pop" },
+            { "t": 1.2, "type": "bat", "x": 0, "z": -9, "y": 2.2 },
+            { "t": 2.0, "type": "ghoul", "x": 0, "z": -9.5, "from": "pop" }
+          ]
+        ]
+      }
+    }
+  },
+  "ep1_oven": {
+    "panels": true,
+    "turns": true,
+    "start": 0,
+    "seed": 53,
+    "fogNear": 8,
+    "fogFar": 30,
+    "fogDensity": 0.015,
+    "sky": "#f0d8c0",
+    "fog": "#e6c6a6",
+    "lit": [1.08, 0.98, 0.9],
+    "anomalySky": "#a8643a",
+    "anomalyFog": "#b8724a",
+    "anomalyLit": [1.077, 0.934, 0.846],
+    "grade": { "tint": [1.02, 0.98, 0.94], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.084, 0.928, 0.844], "k": 0.39, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [0, 1.2, -15],
+    "hall": {
+      "x0": -2.55,
+      "x1": 2.55,
+      "z0": 6,
+      "z1": -9.3,
+      "h": 3.4,
+      "bay": 5.1,
+      "tile": 5.1,
+      "tilesX": 3,
+      "tileL": 1.7,
+      "left": ["ep1/oven_wallL1", "ep1/oven_wallL2", "ep1/oven_wallL3", "ep1/oven_wallL4", "ep1/oven_wallL5", "ep1/oven_wallL6"],
+      "right": ["ep1/oven_wallR1", "ep1/oven_wallR2", "ep1/oven_wallR3", "ep1/oven_wallR4", "ep1/oven_wallR5", "ep1/oven_wallR6"],
+      "floor": ["ep1/oven_floor1", "ep1/oven_floor2", "ep1/oven_floor3"],
+      "end": ["ep1/oven_end1", "ep1/oven_end2"],
+      "ceil": ["ep1/oven_ceil1", "ep1/oven_ceil2", "ep1/oven_ceil3"],
+      "outside": "ep1/oven_outside",
+      "outsideX": "ep1/oven_outside_x",
+      "outsideAt": [{ "x": -13.5, "z": -5, "ry": 1.5708, "w": 60 }]
+    },
+    "props": [{ "k": "prop/ep1_oven1", "h": 1.0, "x": -1.6, "z": -2 }, { "k": "prop/ep1_oven2", "h": 1.0, "x": 1.7, "z": -4.5 }],
+    "gimmicks": [
+      {
+        "id": "crayon1",
+        "k": "ep1/crayon1",
+        "kx": "ep1/crayon1_x",
+        "on": "left",
+        "y": 1.75,
+        "z": -3,
+        "w": 0.75,
+        "station": "ov1",
+        "do": [{ "flip": true }, { "sfx": "panel" }]
+      },
+      {
+        "id": "crayon2",
+        "k": "ep1/crayon2",
+        "kx": "ep1/crayon2_x",
+        "on": "left",
+        "y": 1.75,
+        "z": -4.2,
+        "w": 0.75,
+        "station": "ov1",
+        "do": [{ "flip": true }, { "sfx": "panel" }]
+      },
+      {
+        "id": "crayon3",
+        "k": "ep1/crayon3",
+        "kx": "ep1/crayon3_x",
+        "on": "right",
+        "y": 1.75,
+        "z": -3.4,
+        "w": 0.75,
+        "station": "ov1",
+        "do": [{ "flip": true }, { "sfx": "panel" }]
+      },
+      {
+        "id": "crayon4",
+        "k": "ep1/crayon4",
+        "kx": "ep1/crayon4_x",
+        "on": "right",
+        "y": 1.75,
+        "z": -4.6,
+        "w": 0.75,
+        "station": "ov1",
+        "do": [{ "flip": true }, { "sfx": "panel" }]
+      },
+      {
+        "id": "seal1",
+        "k": "ep1/seal1",
+        "on": "stand",
+        "x": -1.0,
+        "y": 2.2,
+        "z": -14.8,
+        "w": 0.4,
+        "station": "ov2",
+        "do": [{ "sfx": "shatter" }, { "gone": true }]
+      },
+      {
+        "id": "seal2",
+        "k": "ep1/seal2",
+        "on": "stand",
+        "x": 1.0,
+        "y": 2.2,
+        "z": -14.8,
+        "w": 0.4,
+        "station": "ov2",
+        "do": [{ "sfx": "shatter" }, { "gone": true }]
+      },
+      {
+        "id": "seal3",
+        "k": "ep1/seal3",
+        "on": "stand",
+        "x": -1.0,
+        "y": 0.5,
+        "z": -14.8,
+        "w": 0.4,
+        "station": "ov2",
+        "do": [{ "sfx": "shatter" }, { "gone": true }]
+      },
+      {
+        "id": "seal4",
+        "k": "ep1/seal4",
+        "on": "stand",
+        "x": 1.0,
+        "y": 0.5,
+        "z": -14.8,
+        "w": 0.4,
+        "station": "ov2",
+        "do": [{ "sfx": "shatter" }, { "gone": true }]
+      }
+    ],
+    "decals": [
+      { "k": "ep1/d_cherries", "on": "floor", "x": 0.4, "z": -6, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_drip4", "on": "right", "z": -8, "y": 3.0, "w": 1.2, "anomaly": true },
+      { "k": "ep1/d_smile", "on": "left", "z": -9, "y": 1.7, "w": 0.9, "anomaly": true }
+    ],
+    "stations": {
+      "ov1": {
+        "cam": [0, 1.1, 3.5],
+        "look": [0, 1.0, -12],
+        "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
+        "waves": [
+          [
+            { "t": 1.0, "type": "ghoul", "x": 0, "z": -6, "from": "pop" }
+          ],
+          [
+            { "t": 0, "turn": { "to": 1, "from": [0, 1.2, -9], "hit": true, "dur": 2.0 } },
+            { "t": 2.2, "type": "double_cat", "x": 0.6, "z": -7, "from": "pop" },
+            { "t": 3.0, "type": "crawler", "x": -0.8, "z": -6, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "doll", "x": -1.4, "z": -7, "from": "pop" },
+            { "t": 0.8, "type": "doll", "x": 1.4, "z": -7.5, "from": "pop" },
+            { "t": 1.6, "type": "bat", "x": 0, "z": -8, "y": 2.2 }
+          ],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -8.5, "from": "pop" },
+            { "t": 3.6, "type": "ghoul", "x": -0.8, "z": -6, "from": "pop" },
+            { "t": 4.2, "type": "ghoul", "x": 0.8, "z": -6, "from": "pop" }
+          ]
+        ]
+      },
+      "ov2": {
+        "via": [[0, 1.35, 0]],
+        "cam": [0, 1.1, -3],
+        "look": [0, 1.0, -15],
+        "covers": [{ "k": "cover/ep1_oven3", "side": -1 }, { "k": "cover/ep1_oven4", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "double_pink", "x": 0, "z": -9, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "double_cat", "x": -0.8, "z": -8, "from": "pop" },
+            { "t": 1.2, "type": "crawler", "x": 0.8, "z": -7, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "chandelier", "x": 0, "z": -10, "y": 1.4 },
+            { "t": 1.2, "type": "doll", "x": 1.4, "z": -9, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "double_pink", "x": -0.9, "z": -9, "from": "pop" },
+            { "t": 0.8, "type": "double_cat", "x": 0.9, "z": -8.5, "from": "pop" },
+            { "t": 1.6, "type": "bat", "x": 0, "z": -10, "y": 2.3 }
+          ]
+        ]
+      }
+    }
+  },
+  "ep1_nether": {
+    "panels": true,
+    "seed": 61,
+    "fogNear": 10,
+    "fogFar": 60,
+    "fogDensity": 0.012,
+    "sky": "#e6a868",
+    "fog": "#e6b07a",
+    "lit": [1.12, 0.98, 0.86],
+    "ink": "#3a2010",
+    "paper": 0.05,
+    "void": "#d89050",
+    "grade": { "tint": [1.1, 0.95, 0.85], "k": 0.3, "sat": 1.08 },
+    "hall": {
+      "x0": -12,
+      "x1": 12,
+      "z0": 10,
+      "z1": -40,
+      "h": 12,
+      "bay": 10,
+      "tile": 6,
+      "tilesX": 4,
+      "tileL": 6,
+      "left": [],
+      "right": [],
+      "floor": ["ep1/nether_floor1", "ep1/nether_floor2", "ep1/nether_floor3"]
+    },
+    "boards": [
+      { "k": "ep1/nether_a", "x": 0, "y": -10, "z": -60, "w": 150, "sky": true }
+    ],
+    "props": [
+      { "k": "ep1/nb_cone", "h": 1.2, "x": -5, "z": -10 },
+      { "k": "ep1/nb_frame", "h": 1.6, "x": 6, "z": -16 },
+      { "k": "ep1/nb_cup", "h": 0.8, "x": -3, "z": -22 },
+      { "k": "ep1/nb_spoon", "h": 1.8, "x": 4, "z": -26 }
+    ],
+    "stations": {
+      "ne1": {
+        "cam": [0, 1.1, 5],
+        "look": [0, 1.0, -20],
+        "covers": [{ "k": "cover/ep1_hall1", "side": -1 }, { "k": "cover/ep1_hall2", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0.6, "type": "double_cat", "x": -0.8, "z": -6, "from": "pop" },
+            { "t": 1.2, "type": "double_pink", "x": 0.8, "z": -8, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "double_pink", "x": -1.4, "z": -8, "from": "pop" },
+            { "t": 0.6, "type": "double_pink", "x": 1.4, "z": -8.5, "from": "pop" },
+            { "t": 1.2, "type": "bat", "x": 0, "z": -9, "y": 2.4 }
+          ],
+          [
+            { "t": 0, "type": "double_cat", "x": -1.0, "z": -6, "from": "pop" },
+            { "t": 0.6, "type": "double_cat", "x": 1.0, "z": -6.5, "from": "pop" },
+            { "t": 1.4, "type": "crawler", "x": 0, "z": -5.5, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -10, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "double_cat", "x": -1.4, "z": -6, "from": "pop" },
+            { "t": 0.4, "type": "double_pink", "x": 1.4, "z": -8, "from": "pop" },
+            { "t": 1.2, "type": "double_cat", "x": 1.4, "z": -6.5, "from": "pop" },
+            { "t": 1.6, "type": "double_pink", "x": -1.4, "z": -8.5, "from": "pop" }
+          ]
+        ]
+      }
+    }
+  },
+  "ep1_hall": {
+    "panels": true,
+    "turns": true,
+    "start": 1,
+    "seed": 71,
+    "fogNear": 16,
+    "fogFar": 60,
+    "fogDensity": 0.01,
+    "sky": "#f4dcc8",
+    "fog": "#ecccb0",
+    "lit": [1.06, 1.0, 0.94],
+    "anomalySky": "#a8683e",
+    "anomalyFog": "#bc7c50",
+    "anomalyLit": [1.077, 0.945, 0.868],
+    "grade": { "tint": [1.02, 0.98, 0.96], "k": 0.2, "sat": 1.02 },
+    "anomalyGrade": { "tint": [1.084, 0.94, 0.868], "k": 0.39, "sat": 1.05 },
+    "ink": "#3a2018",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "anomalyFrom": [0, 4, -16],
+    "hall": {
+      "x0": -6.0,
+      "x1": 6.0,
+      "z0": 4,
+      "z1": -17.33,
+      "h": 8,
+      "bay": 5.333,
+      "tile": 6,
+      "tilesX": 4,
+      "tileL": 3,
+      "left": ["ep1/hall_wallL1", "ep1/hall_wallL2", "ep1/hall_wallL3", "ep1/hall_wallL4"],
+      "right": ["ep1/hall_wallR1", "ep1/hall_wallR2", "ep1/hall_wallR3", "ep1/hall_wallR4"],
+      "floor": ["ep1/hall_floor1", "ep1/hall_floor2", "ep1/hall_floor3"],
+      "end": ["ep1/hall_end1", "ep1/hall_end2"],
+      "ceil": ["ep1/hall_ceil1", "ep1/hall_ceil2", "ep1/hall_ceil3"],
+      "outside": "ep1/hall_outside",
+      "outsideX": "ep1/hall_outside_x",
+      "outsideAt": [{ "x": -17, "z": -5, "ry": 1.5708, "w": 90 }, { "x": 17, "z": -5, "ry": -1.5708, "w": 90 }]
+    },
+    "props": [{ "k": "prop/ep1_hall1", "h": 2.0, "x": -4.5, "z": -4 }, { "k": "prop/ep1_hall2", "h": 1.6, "x": 4.5, "z": -7 }],
+    "stations": {
+      "hall": {
+        "cam": [0, 1.2, 1.5],
+        "look": [0, 2.4, -14],
+        "covers": [{ "k": "cover/ep1_hall3", "side": -1 }, { "k": "cover/ep1_hall4", "side": 1 }],
+        "waves": []
+      }
+    }
+  }
+}

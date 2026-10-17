@@ -21,6 +21,7 @@ export class Comic {
     const el = this.el;
     el.innerHTML = '';
     el.className = 'on';
+    const tok = el.dataset.tok = String(Math.random());   // (the overlay is shared: a door close-up may take it over before this page's fade-out ends)
     const stage = document.createElement('div');
     stage.className = 'cstage';
     el.appendChild(stage);
@@ -34,7 +35,7 @@ export class Comic {
       done = true;
       this.clear();
       el.classList.add('out');
-      setTimeout(() => { el.className = ''; el.innerHTML = ''; }, 350);
+      setTimeout(() => { if (el.dataset.tok === tok) { el.className = ''; el.innerHTML = ''; } }, 350);
       onDone && onDone();
     };
     const showPage = (i) => {
