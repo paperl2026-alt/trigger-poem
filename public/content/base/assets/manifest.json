@@ -11730,6 +11730,17 @@
   "src": "assets/ep1/door1_leaf.webp",
   "w": 769
  },
+ "ep1/door1_room": {
+  "h": 880,
+  "hole": [
+   0.2619,
+   0.242,
+   0.7381,
+   0.9977
+  ],
+  "src": "assets/ep1/door1_room.webp",
+  "w": 882
+ },
  "ep1/door2_frame": {
   "h": 1024,
   "hole": [
@@ -11762,6 +11773,17 @@
   "src": "assets/ep1/door3_leaf.webp",
   "w": 827
  },
+ "ep1/door3_room": {
+  "h": 922,
+  "hole": [
+   0.2619,
+   0.1648,
+   0.7382,
+   0.9978
+  ],
+  "src": "assets/ep1/door3_room.webp",
+  "w": 741
+ },
  "ep1/door4_frame": {
   "h": 1024,
   "hole": [
@@ -11777,6 +11799,17 @@
   "h": 1331,
   "src": "assets/ep1/door4_leaf.webp",
   "w": 902
+ },
+ "ep1/door4_room": {
+  "h": 910,
+  "hole": [
+   0.2615,
+   0.1231,
+   0.7377,
+   0.9978
+  ],
+  "src": "assets/ep1/door4_room.webp",
+  "w": 1136
  },
  "ep1/door5_frame": {
   "h": 1024,
@@ -11857,6 +11890,17 @@
   "h": 1297,
   "src": "assets/ep1/door9_leaf.webp",
   "w": 1169
+ },
+ "ep1/door9_room": {
+  "h": 864,
+  "hole": [
+   0.262,
+   0.1632,
+   0.7381,
+   0.9977
+  ],
+  "src": "assets/ep1/door9_room.webp",
+  "w": 1023
  },
  "ep1/eye_l": {
   "h": 514,

@@ -64,7 +64,7 @@
       {
         "stage": "gallery",
         "set": "ep1_gallery",
-        "stations": ["ga1", "ga2", "ga2b"],
+        "stations": ["ga0", "ga1", "ga2", "ga2b"],
         "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" },
         "thumb": "ui/sel_thumb_ep1_gallery"
       },
@@ -88,7 +88,7 @@
         "thumb": "ui/sel_thumb_ep1_cold"
       },
       {
-        "door": { "frame": "ep1/door8_frame", "leaf": "ep1/door8_leaf", "leaves": 1, "hinge": "left" }
+        "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
       },
       { "comic": "ep1_nursery" },
       {
@@ -97,9 +97,6 @@
         "stations": ["nu1", "nu2"],
         "name": { "zh": "儿童房", "en": "NURSERY", "ja": "子供部屋" },
         "thumb": "ui/sel_thumb_ep1_nursery"
-      },
-      {
-        "door": { "frame": "ep1/door5_frame", "leaf": "ep1/door5_leaf", "leaves": 1, "hinge": "left" }
       },
       {
         "stage": "oven",

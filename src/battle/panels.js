@@ -21,7 +21,8 @@ function board(key, w, h, opts = {}) {
   if (opts.uv) { const uv = geo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * opts.uv[0] + (opts.uv0?.[0] || 0), uv.getY(i) * opts.uv[1] + (opts.uv0?.[1] || 0)); }
   const t = tex[key];
   if (t && opts.uv) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; }
-  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t || null, color: t ? 0xffffff : 0xff00ff, transparent: !!opts.alpha, alphaTest: opts.alpha ? 0.5 : 0, side: THREE.DoubleSide, fog: true, ...(opts.decal ? { depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 } : {}) }));
+  const soft = !!opts.soft;   // (soft: its alpha blends, edges that fade out; not cut at half)
+  const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: t || null, color: t ? 0xffffff : 0xff00ff, transparent: !!opts.alpha || soft, alphaTest: soft ? 0 : opts.alpha ? 0.5 : 0, side: THREE.DoubleSide, fog: true, ...(opts.decal || soft ? { depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 } : {}) }));
   m.userData.texKey = key;
   return m;
 }
@@ -151,6 +152,16 @@ export class PanelWorld {
     // the end wall, the void behind it, the outside seen through the windows
     const ek = Hd.end ? order(Hd.end, 1, seed + 3)[0] : null;
     if (ek) { const e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); }
+    // the door this room ends at (DESIGN「门和小关的衔接」): the very door the close-up after this room opens (tools/rounds/door_room.py),
+    // standing in the end wall from the start, so the girls see where they are going; hall.door = { frame, leaf, w (metres), x }
+    if (Hd.door && tex[Hd.door.frame]) {
+      const D = Hd.door, ft = tex[D.frame], hole = meta[D.frame]?.hole || [0.26, 0.2, 0.74, 1], dw = D.w, dh = dw * ft.image.height / ft.image.width, dx = D.x || 0;
+      const f = board(D.frame, dw, dh, { soft: true }); f.position.set(dx, dh / 2, z1 + 0.08); f.renderOrder = 2; put(f, z1);
+      if (tex[D.leaf]) {
+        const lw = dw * (hole[2] - hole[0]), lh = dh * (hole[3] - hole[1]), l = board(D.leaf, lw, lh, { alpha: true });
+        l.position.set(dx + dw * ((hole[0] + hole[2]) / 2 - 0.5), dh * (1 - (hole[1] + hole[3]) / 2), z1 + 0.05); put(l, z1);
+      }
+    }
     // a wall behind where the girls came in too (a station that looks back: the view whips round, Game.whip); back: true = the other
     // version of the end wall, or its own pictures
     if (Hd.back) {

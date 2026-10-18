@@ -192,7 +192,7 @@ export class Game {
     }
     // something behind them: the view whips round where they stand (DESIGN「演出」 背后出现敌人)
     if (S.whip) { this.post.u.wipe.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
-    const pts = [this.world.camPos.toArray(), ...S.via, S.cam];
+    const pts = [this.world.camPos.toArray(), ...(S.via || []), S.cam];
     this.post.u.wipe.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
     this.settleAnomaly(S);
@@ -201,7 +201,7 @@ export class Game {
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
     const go = () => this.arrive(S, boss);
-    const dur = Math.max(1.6, len / 6.5);
+    const dur = Math.max(1.6, len / (S.waves?.length ? 6.5 : S.walkSpeed ?? 2.6));   // (a walk-through stretch: slowly, looking round)
     if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, dur, go);
     // a plank bridge over a broken floor (docs/DESIGN.md 第 1 话: Sweet Home's planks break after a few steps): it cracks half-way
     // a ghost grabs the view and drags it off to another part of the house (docs/DESIGN.md 第 1 话: Sweet Home's ghosts carry people off)
@@ -321,6 +321,16 @@ export class Game {
 
   arrive(S, boss) {
     this.world.setCovers(S.covers);
+    // a stretch they only walk through (no waves: a corridor between two places, DESIGN「门和小关的衔接」): a line or a sound on the way, on
+    if (!boss && !S.waves?.length) {
+      if (S.sfx && sfx[S.sfx]) sfx[S.sfx](0);
+      this.tweens.wait(S.pause ?? 0.5, () => {
+        if (S.say) this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], S.say);
+        if (this.stationQ.length) this.goStation(this.stationQ.shift(), false);
+        else { this.combat = true; this.waveLive = true; this.pendingSpawns = 0; this.waveIndex = 0; this.S = { ...S, waves: [[]] }; }   // (the stage's end: as if cleared)
+      });
+      return;
+    }
     if (boss) this.spawnBoss(this.stage.boss);
     // the place itself changes (panel stages): the corridor bends up, the floor folds into ridges, then the fight starts
     if (S.fold && this.world.fold) { this.hud.gl.hold('fold'); this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }

@@ -37,7 +37,8 @@
       "ceil": ["ep1/shop_ceil1", "ep1/shop_ceil2", "ep1/shop_ceil3"],
       "outside": "ep1/shop_outside",
       "outsideX": "ep1/shop_outside_x",
-      "outsideAt": [{ "x": -13.7, "z": -5, "ry": 1.5708, "w": 66 }, { "x": 0, "z": -30, "ry": 0, "w": 40 }]
+      "outsideAt": [{ "x": -13.7, "z": -5, "ry": 1.5708, "w": 66 }, { "x": 0, "z": -30, "ry": 0, "w": 40 }],
+      "door": { "frame": "ep1/door1_room", "leaf": "ep1/door1_leaf", "w": 3.0, "x": 0 }
     },
     "props": [
       { "k": "prop/ep1_shop1", "h": 1.05, "x": -1.7, "z": 0.5 },
@@ -144,9 +145,10 @@
       "left": ["ep1/gallery_wallL1", "ep1/gallery_wallL2", "ep1/gallery_wallL3", "ep1/gallery_wallL4", "ep1/gallery_wallL5", "ep1/gallery_wallL6"],
       "right": ["ep1/gallery_wallR1", "ep1/gallery_wallR2", "ep1/gallery_wallR3", "ep1/gallery_wallR4", "ep1/gallery_wallR5", "ep1/gallery_wallR6"],
       "floor": ["ep1/gallery_floor1", "ep1/gallery_floor2", "ep1/gallery_floor3"],
-      "end": ["ep1/gallery_end1", "ep1/gallery_end2"],
+      "end": ["ep1/gallery_end2"],
       "ceil": ["ep1/gallery_ceil1", "ep1/gallery_ceil2", "ep1/gallery_ceil3"],
-      "back": true
+      "back": ["ep1/gallery_end1"],
+      "door": { "frame": "ep1/door3_room", "leaf": "ep1/door3_leaf", "w": 2.5, "x": 0 }
     },
     "gimmicks": [
       {
@@ -228,6 +230,7 @@
       { "k": "ep1/d_honey", "on": "floor", "x": -0.4, "z": -7, "w": 1.2, "anomaly": true }
     ],
     "stations": {
+      "ga0": { "cam": [0, 1.1, 5.4], "look": [0, 1.0, -16], "say": "scare", "pause": 0.3 },
       "ga1": {
         "cam": [0, 1.1, 2.8],
         "look": [0, 1.0, -16],
@@ -464,8 +467,9 @@
       "left": ["ep1/cold_wallL1", "ep1/cold_wallL2", "ep1/cold_wallL3", "ep1/cold_wallL4", "ep1/cold_wallL5", "ep1/cold_wallL6"],
       "right": ["ep1/cold_wallR1", "ep1/cold_wallR2", "ep1/cold_wallR3", "ep1/cold_wallR4", "ep1/cold_wallR5", "ep1/cold_wallR6"],
       "floor": ["ep1/cold_floor1", "ep1/cold_floor2", "ep1/cold_floor3"],
-      "end": ["ep1/cold_end1", "ep1/cold_end2"],
-      "ceil": ["ep1/cold_ceil1", "ep1/cold_ceil2", "ep1/cold_ceil3"]
+      "end": ["ep1/cold_end2"],
+      "ceil": ["ep1/cold_ceil1", "ep1/cold_ceil2", "ep1/cold_ceil3"],
+      "door": { "frame": "ep1/door4_room", "leaf": "ep1/door4_leaf", "w": 2.1, "x": 1.15 }
     },
     "props": [
       { "k": "prop/ep1_cold1", "h": 1.0, "x": -1.5, "z": -3 },
@@ -554,7 +558,7 @@
             { "t": 2, "type": "ghoul", "x": 1, "z": -10.5, "move": "charge", "from": "pop" }
           ]
         ],
-        "exit": { "to": [0, 1.1, -8.8], "look": [0, 1.0, -16] }
+        "exit": { "to": [1.15, 1.1, -9.0], "look": [1.15, 1.0, -16] }
       }
     }
   },
@@ -775,7 +779,8 @@
       "left": ["ep1/pit_wall1", "ep1/pit_wall2", "ep1/pit_wall3", "ep1/pit_wall4"],
       "right": ["ep1/pit_wall1", "ep1/pit_wall2", "ep1/pit_wall3", "ep1/pit_wall4"],
       "floor": ["ep1/pit_floor1", "ep1/pit_floor2"],
-      "end": ["ep1/pit_wall2", "ep1/pit_wall3"]
+      "end": ["ep1/pit_wall2", "ep1/pit_wall3"],
+      "door": { "frame": "ep1/door9_room", "leaf": "ep1/door9_leaf", "w": 2.6, "x": 0 }
     },
     "decals": [
       { "k": "ep1/d_bones", "on": "floor", "x": 0.4, "z": -3, "w": 1.0 },
