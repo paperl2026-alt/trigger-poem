@@ -171,7 +171,7 @@
     "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": ["sfx/maou/maou_se_sound17.mp3"], "vol": 0.7 }
   },
   "monsters": {
-    "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。",
+    "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。 第 1 话重做的新怪借用相近的怪的叫声、改音高（小东西高、影子低）。",
     "default": {
       "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
       "attack": [],
@@ -287,6 +287,62 @@
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-8_Low-Dry.mp3"],
       "rate": 1.1
+    },
+    "scoopling": {
+      "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
+      "rate": 1.5
+    },
+    "teacup": {
+      "windup": ["sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
+      "rate": 1.6
+    },
+    "doily": {
+      "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3", "sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
+      "rate": 1.4
+    },
+    "dollkin": {
+      "windup": ["sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
+      "rate": 1.35
+    },
+    "shade_hostess": {
+      "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
+      "rate": 1.0
+    },
+    "shade_mourner": {
+      "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
+      "rate": 0.85
+    },
+    "shade_mother": {
+      "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
+      "rate": 0.95
+    },
+    "shade_bride": {
+      "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
+      "attack": [],
+      "hurt": [],
+      "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
+      "rate": 0.9
     }
   },
   "voices": {

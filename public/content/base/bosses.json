@@ -91,7 +91,7 @@
     "beh": "thing",
     "sprite": "boss/md",
     "name": { "zh": "腐蜜夫人", "en": "Madame Rotten Honey", "ja": "腐蜜夫人" },
-    "hp": 8500,
+    "hp": 6000,
     "stunTime": 1.6,
     "firstDelay": 1.8,
     "speed": 1.2,

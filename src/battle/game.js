@@ -149,6 +149,7 @@ export class Game {
     this.hud.show(true);
     if (st.stage) {
       this.stationQ = [...st.stations];
+      this.mutated = false;
       if (st.name) this.hud.gl.hold('stage', { name: tr(st.name) });   // can't shoot until the first stop: the stage's warning overlay
       this.goStation(this.stationQ.shift(), false);
     } else if (st.boss) this.goStation(st.station, true);
@@ -156,6 +157,9 @@ export class Game {
   station(id) { return this.world.level.set.stations[id]; }
   goStation(id, boss) {
     const S = this.station(id);
+    // the boss's stop: the mechanisms the earlier stops of this place fire on their own are done by now (the studio's portraits stand
+    // empty even when the run starts at the boss)
+    if (boss) for (const a of this.actors) if (a.g?.shoot === false && a.g.station && a.g.station !== id && !a.spent) a.settle();
     this.S = S;
     this.stationId = id;
     this.combat = false;
@@ -345,12 +349,33 @@ export class Game {
   }
   startWave() {
     const wave = this.S.waves[this.waveIndex];
-    // a wave lists monsters, and may list things that happen to the place at a time ({ t, turn: {...} }: the place turns real / rotten)
+    // a wave lists monsters, and may list things that happen at a time { t, ... } or once so many of this wave's monsters are dead
+    // { kills: n, ... }: turn: {...} the place turns real / rotten; mutate: true every monster still standing becomes its full self
+    // (enemies.json mutatesTo); gimmick: id fires that mechanism of the set (a portrait empties)
     const spawns = wave.filter((s) => s.type);
     this.pendingSpawns = spawns.length;
-    this.waveLive = true;
+    this.waveLive = true; this.waveKills = 0;
     for (const s of spawns) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
-    for (const e of wave) if (e.turn) this.etw.wait(e.t || 0, () => this.combat && this.turn(e.turn));
+    this.waveEvents = wave.filter((e) => !e.type && e.kills);
+    for (const e of wave) if (!e.type && !e.kills) this.etw.wait(e.t || 0, () => this.combat && this.waveEvent(e));
+  }
+  waveEvent(e) {
+    if (e.turn) this.turn(e.turn);
+    if (e.mutate) this.mutateAll();
+    if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
+  }
+  // the house turns and what is left of the small things turns with it: each becomes its full self where it stands (a flash, a puff)
+  mutateAll() {
+    for (const a of [...this.actors]) {
+      if (!a.alive || !a.def?.mutatesTo || a instanceof Projectile) continue;
+      const P = a.root.position, to = a.def.mutatesTo;
+      this.fx.puff(P, 8, COL.pink, 1.2); this.fx.star(a.center(), 1.4, COL.pink);
+      a.alive = false; a.endWindup?.(); a.dispose();
+      this.pendingSpawns++;
+      this.etw.wait(0.15, () => { this.spawnEnemy({ type: to, x: P.x, z: P.z, near: true }); this.pendingSpawns--; });
+    }
+    this.mutated = true;   // (and whatever of the wave is still to come comes as its full self: spawnEnemy)
+    sfx.madness(); this.post.flash(0.5, 0xff8ab0);
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
@@ -370,7 +395,15 @@ export class Game {
       this.openNextStage();
       const heal = bagFx(this.run.bag).stageHeal;
       if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });
-      this.tweens.wait(1.7, () => this.nextStep());
+      // the room is done: the girls walk up to its door before the next step (a door close-up) (station "exit": { via, to, look })
+      const X = this.S.exit;
+      if (X && this.world.travel) {
+        this.tweens.wait(1.2, () => {
+          this.world.dropCovers?.(); this.setAll('run');
+          const pts = [this.world.camPos.toArray(), ...(X.via || []), X.to], len = pts.reduce((a, q, i) => a + (i ? Math.hypot(q[0] - pts[i - 1][0], q[2] - pts[i - 1][2]) : 0), 0);
+          this.world.travel(pts, X.look || [X.to[0], X.to[1], X.to[2] - 10], Math.max(1.4, len / 5.5), () => { this.setAll('cover'); this.tweens.wait(0.4, () => this.nextStep()); });
+        });
+      } else this.tweens.wait(1.7, () => this.nextStep());
     }
   }
   spawnBoss(id) {
@@ -481,7 +514,10 @@ export class Game {
   // ------------------------------------------------------------------ spawning / set pieces
   // the place's shootable things (src/battle/gimmick.js): there for the whole set, each live at its own stop
   addGimmicks() { for (const g of this.world.set?.gimmicks || []) this.actors.push(new Gimmick(this, g)); }
-  spawnEnemy(s) { const e = new Enemy(this, s); this.actors.push(e); return e; }
+  spawnEnemy(s) {
+    const to = this.mutated && C.enemies[s.type]?.mutatesTo;   // (after the house has turned: mutateAll)
+    const e = new Enemy(this, to ? { ...s, type: to, sprite: undefined } : s); this.actors.push(e); return e;
+  }
   spawnProjectile(kind, from, opts) { const p = new Projectile(this, kind, from, opts); this.actors.push(p); return p; }
   // which player an attack goes for: mostly the one on the attacker's side of the screen
   pickTarget(x = 0) {
@@ -658,6 +694,10 @@ export class Game {
     const by = target.lastHitBy;
     if (target instanceof Projectile) return;
     this.kills++;
+    if (this.waveLive && this.waveEvents?.length) {   // wave events waiting for so many kills
+      this.waveKills = (this.waveKills || 0) + 1;
+      for (const e of this.waveEvents.filter((x) => this.waveKills >= x.kills)) { this.waveEvents.splice(this.waveEvents.indexOf(e), 1); this.waveEvent(e); }
+    }
     if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
     this.combo++; this.comboT = T.combat.comboTime; this.comboF = this.combo;
     this.maxCombo = Math.max(this.maxCombo, this.combo);

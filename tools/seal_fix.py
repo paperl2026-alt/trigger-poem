@@ -8,6 +8,7 @@ For each entry of art/seal_placements.json:
   3. the result goes to the base pack as ui/<out>.webp (or a PNG path with "png"), trimmed to its pixels unless "keep_frame".
 An entry with "auto": true finds the generated seal itself (find_seal; "within" a box of the picture when it shows several paws): the ring of thin red lines on the fur (the claws are solid red
 and are left out), its size, and which way its pendant hangs; "center" / "ring" / "rot" / "erase" are then filled in and printed.
+"clip": [x0, y0, x1, y1] keeps the change inside that box (a paw cut off by a comic panel's border).
 usage: python -I tools/seal_fix.py [name ...]   (no names = all)   --preview <dir> writes before/after crops
 """
 import sys, json, pathlib
@@ -150,6 +151,8 @@ def run(name, p, preview=None):
     for box in boxes:
         a = erase(a, box)
     fixed = stamp(Image.fromarray(a), p)
+    if "clip" in p:   # only inside this box (a paw cut off by a panel border: the decal must not run over the border)
+        c = tuple(p["clip"]); base = im.copy(); base.paste(fixed.crop(c), c[:2]); fixed = base
     if preview:
         x0, y0, x1, y1 = boxes[0] if boxes else (0, 0, im.width, im.height)
         m = 30; box = (max(0, x0 - m), max(0, y0 - m), min(im.width, x1 + m), min(im.height, y1 + m))

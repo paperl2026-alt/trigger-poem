@@ -4,7 +4,8 @@
 // partner leaves them to the player.
 // Set data (sets/<set>.json "gimmicks"), or made by code:
 //   { id, k: picture, kx: picture once it has fired, on: "left" | "right" | "end" | "stand", x, y (centre height; "stand": 0 = on the
-//     floor), z, w (metres), ry (degrees, "stand"), hp: hits to fire (default 1), station: only shootable at that stop, do: [events] }
+//     floor), z, w (metres), ry (degrees, "stand"), hp: hits to fire (default 1), station: only shootable at that stop, do: [events],
+//     shoot: false = not a target (a wave event fires it: Game.waveEvent gimmick) }
 //   events (each may wait { t: seconds }): { flash } a camera flash; { flip } turns into kx like a page; { turn: {...} } the place turns
 //   (Game.turn); { spawn: [enemy spawns] }; { say: kind } a girl's line (text/stickers.json); { sfx: name }; { gone } it fades away;
 //   { ritual: i } offered to the boss (thing.js offer)
@@ -25,10 +26,11 @@ export class Gimmick extends Actor {
     else if (g.on === 'end') { P.set(g.x || 0, g.y, H.z1 + 0.03); }
     else { P.set(g.x || 0, g.y || 0, g.z); this.root.rotation.y = (g.ry || 0) * Math.PI / 180; }
     game.world.scene.add(this.root);
+    if (g.shoot === false) this.u.outlineOn.value = 0;
   }
   // shootable only at its own stop, once
   live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat; }
-  hitMeshes() { return this.alive && this.live() ? [this.mesh] : []; }
+  hitMeshes() { return this.alive && this.g.shoot !== false && this.live() ? [this.mesh] : []; }   // (shoot: false = only a wave event fires it)
   hit(info) {
     if (!this.live()) return;
     this.flash = 1;
@@ -39,6 +41,9 @@ export class Gimmick extends Actor {
     this.spent = true; this.u.outlineOn.value = 0;
     for (const e of this.g.do || []) g.tweens.wait(e.t || 0, () => this.act(e, by));
   }
+  // already done before this point of the place (a run started at a later stop, e.g. the boss in the studio whose portraits the shadows
+  // already stepped out of): shown as it is after it fired, nothing happens
+  settle() { this.spent = true; this.u.outlineOn.value = 0; if (this.g.kx) this.setFrame(this.g.kx); }
   act(e, by) {
     const g = this.game;
     if (e.flash) { g.post.flash(0.85, 0xffffff); sfx.shutter(); }

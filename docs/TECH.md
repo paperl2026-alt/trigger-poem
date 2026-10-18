@@ -132,11 +132,13 @@
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
 
 ## 怪怎么逼近、场景破坏（`src/battle/enemies.js`、`src/battle/panels.js`）
-- 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`），再逼过来；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。
+- 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`，波次写 `far` 能更远），再逼过来；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。
+- 波次里单只怪还能写 `hp`（这一只的血量）、`tough: true`（不吃硬直、挨打不后退；怪的定义里也能写）。
 - `move`（波次单独写 > 这种怪的 `moves`[第几个造型] > `move` > 按行为模板默认）：
   - 走路怪：`walk` 直走、`hop` 一跳一停、`zigzag` 左右翻滚走 Z 字（图转一整圈）、`charge` 慢慢挪，到 `chargeDist` 米内远远蓄力（红环）再整段扑过来（冲撞，穿过掩体）、`burrow` 钻进地里在几米外钻出来（`from: 'burrow'` 也能从地下出场）；参数 `tuning/behaviors.json walker`；
   - 飞的：`float` 每一秒左右换个点飘，每俯冲一次悬停点往前靠 `homeStep` 米；
-  - 扔东西的：`step` 扔完还远（深于 `stopDist`）就往前走几步（会躲的那种缩下去挪过去再冒出来）；蓄力和出手时只吃 `throwArmor` 倍伤害（霸体）；一次扔的个数 `burst`。
+  - 扔东西的：`step` 扔完还远（深于 `stopDist`）就往前走几步（会躲的那种缩下去挪过去再冒出来）；蓄力和出手时只吃 `throwArmor` 倍伤害（霸体）；一次扔的个数 `burst`；写了 `summon`（刷怪列表，x / z 相对自己）的改成在身边叫出怪来，场上这些怪已有 `summonMax` 只时照常扔东西；
+  - `recharge: true` 的冲撞怪（新娘之影）扑完退开后再蓄力冲一次。
 - 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`，没血了往后倒、淡出；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`）。
 
 ## 图片按小关加载（`src/core/groups.js`、`src/core/assets.js`）
@@ -168,7 +170,7 @@
 - 异变（`updateAnomaly`，Game 的 `invade` 把 `world.anomaly` 从 0 补间到 1）：每块有 `<图>_x` 版本的板从 `anomalyFrom` 那一点开始按距离一块接一块翻过去（压扁到一条线、离开表面、换图、再展开）；灯光 / 雾 / 天空跟着过渡到 `anomalyLit` / `anomalyFog` / `anomalySky`；`anomaly: true` 的贴花异变后才长出来。
 - 现实 ↔ 腐化来回翻（第 1 话，DESIGN「第 1 话」）：set 写 `turns: true`（`start` = 开场是 0 现实还是 1 腐化），Game 就不再按序章的规矩强制异变（`settleAnomaly`）；
   - 站点写 `turn: { to, from, dur, hit, wait }`：到站、蹲好后先翻再开打；
-  - 波次里可以夹事件 `{ t, turn: {...} }`（没有 `type` 的条目不算怪）；
+  - 波次里可以夹事件（没有 `type` 的条目不算怪）：`{ t, ... }` 到点发生，`{ kills: n, ... }` 这一波死了 n 只后发生（`Game.waveEvent`）；内容：`turn: {...}` 翻地方、`mutate: true` 场上（和这一波还没刷出来的）带 `mutatesTo` 的怪当场变成完全异化的那种（`Game.mutateAll`，第 1 话店里只翻一次）、`gimmick: id` 触发这个地方的机关；
   - `Game.turn(spec)` → `PanelWorld.turnFrom(from, dir)`：按新的起点重算每块板的远近，翻回现实时从起点往外一块块翻回去（`turnDir` -1）；`hit` 带闪光、震屏、重击声。
 - 道具（`props`）站在某个停留点的掩体位置上时不画（`clearProps`，掩体按主角站位算，事先不知道在哪）。
 - 和旧 World 接口相同（`place`、`travel`、`setCovers`、`covers`、`project`、`lightAt`……），Game 不用分支。多了：
@@ -178,10 +180,11 @@
   - `dispose()`：换场景时释放。
 - 怪物位置：波次里写场景坐标 `x` / `z`（米），浮空的写 `y`；只是大概位置，出场时 `fit` 会挪。
 - 序章三个场景在 `sets/ep0.json`：教室（平静 → 异变翻板；第二个停留点镜头转身看后墙）、走廊（沿用走廊验证，站点间转弯、折叠）、操场（Boss）。
-- 第 1 话七个地方在 `sets/ep1.json`（店内、画廊、玻璃温室、冷库、烤炉厨房、冥界、大舞厅）。`hall` 的墙、天花板、尽头墙都可以不写（冥界四面是空的）。
+- 第 1 话在 `sets/ep1.json`，一条路线：店内 → 画廊 → 玻璃温室 / 骑士厅 → 冷库 → 儿童房 → 烤炉厨房 → 坑道（`ep1_pit`，三个点）→ 画室（四个影子，然后 Boss 在同一个地方的 `boss` 点）。只有店写 `turns`；其余一直是腐化的（有 `_x` 的板显示 `_x`，儿童房、画室只画了腐化版）。冥界、大舞厅不用了（图还在内容包里）。
+- 房间打完走到门前：小关最后一个站点写 `exit: { via, to, look }`，清场后两人收起掩体、走到 `to`，再进下一步（开门特写）。
 - 名场面用到的东西（DESIGN「第 1 话」）：
-  - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；
-  - **机关**（set `gimmicks`，`src/battle/gimmick.js`）：挂在墙上 / 站在地上 / 尽头墙上能打的画、铠甲、封印、棺材盖；带白描边，只在自己的站点能打，打够 `hp` 下就按顺序执行 `do`（`flash` 闪光、`flip` 翻成 `kx`、`turn` 翻地方、`spawn` 刷怪、`say` 台词、`sfx`、`gone` 消失）。`prop: true`：波次不等它，AI 队友不打它（`input.js`）；
+  - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`；第 1 话现在改用单独一页漫画，这个演出留着备用）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；
+  - **机关**（set `gimmicks`，`src/battle/gimmick.js`）：挂在墙上 / 站在地上 / 尽头墙上能打的画、铠甲、封印、棺材盖；带白描边，只在自己的站点能打，打够 `hp` 下就按顺序执行 `do`（`flash` 闪光、`flip` 翻成 `kx`、`turn` 翻地方、`spawn` 刷怪、`say` 台词、`sfx`、`gone` 消失）。`prop: true`：波次不等它，AI 队友不打它（`input.js`）。`shoot: false` 的不能打，由波次事件 `gimmick` 触发（画室的画像一幅幅走空）；从 Boss 点直接开局时，别的站点的这种机关当作已经触发过（`settle`，画像是空的）；
   - **鬼魂抓走**（站点 `grab`，`Game.grabbed`）：赶到这个站点的路上，一双鬼手扑满屏幕（`#ui .grab`），镜头被拖着晃过去；
   - **木板桥**（站点 `bridge`）：赶路走到一半咔嚓一声，震屏、两人吓到、冒 `bridge` 台词；
   - **从别处进来**（小关第一个站点的 `enter: { from, dur, shake, overlay, sfx }`，`Game.enterFrom`）：镜头从偏移 `from` 的地方移到站点（掉进坑：从上面落下来、震屏；被拽出坑：从下面升上来，`overlay` 的图（猫爪）同时从屏幕上方伸下来再拉走，`#ui .haul`）。

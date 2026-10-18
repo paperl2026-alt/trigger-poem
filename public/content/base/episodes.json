@@ -48,6 +48,7 @@
     },
     "steps": [
       { "comic": "ep1_intro" },
+      { "comic": "ep1_turn" },
       {
         "stage": "shop",
         "set": "ep1_shop",
@@ -75,23 +76,9 @@
       {
         "stage": "garden",
         "set": "ep1_garden",
-        "stations": ["gd1"],
-        "name": { "zh": "玻璃温室", "en": "GLASSHOUSE", "ja": "温室" },
+        "stations": ["gd1", "gd2"],
+        "name": { "zh": "温室与骑士厅", "en": "GLASSHOUSE", "ja": "温室と騎士の間" },
         "thumb": "ui/sel_thumb_ep1_garden"
-      },
-      {
-        "stage": "pit",
-        "set": "ep1_pit",
-        "stations": ["pt1"],
-        "name": { "zh": "坑底", "en": "THE PIT", "ja": "穴の底" },
-        "thumb": "ui/sel_thumb_ep1_pit"
-      },
-      {
-        "stage": "garden2",
-        "set": "ep1_garden",
-        "stations": ["gd2"],
-        "name": { "zh": "骑士厅", "en": "KNIGHTS' HALL", "ja": "騎士の間" },
-        "thumb": "ui/sel_thumb_ep1_garden2"
       },
       {
         "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
@@ -104,6 +91,17 @@
         "thumb": "ui/sel_thumb_ep1_cold"
       },
       {
+        "door": { "frame": "ep1/door8_frame", "leaf": "ep1/door8_leaf", "leaves": 1, "hinge": "left" }
+      },
+      { "comic": "ep1_nursery" },
+      {
+        "stage": "nursery",
+        "set": "ep1_nursery",
+        "stations": ["nu1", "nu2"],
+        "name": { "zh": "儿童房", "en": "NURSERY", "ja": "子供部屋" },
+        "thumb": "ui/sel_thumb_ep1_nursery"
+      },
+      {
         "door": { "frame": "ep1/door5_frame", "leaf": "ep1/door5_leaf", "leaves": 1, "hinge": "left" }
       },
       {
@@ -113,25 +111,31 @@
         "name": { "zh": "烤炉厨房", "en": "BAKERY", "ja": "パン焼き窯" },
         "thumb": "ui/sel_thumb_ep1_oven"
       },
+      { "comic": "ep1_fall" },
       {
-        "door": { "frame": "ep1/door6_frame", "leaf": "ep1/door6_leaf", "leaves": 1, "hinge": "left" }
+        "stage": "tunnel",
+        "set": "ep1_pit",
+        "stations": ["pt1", "pt2", "pt3"],
+        "name": { "zh": "蜜之坑道", "en": "HONEY TUNNEL", "ja": "蜜の坑道" },
+        "thumb": "ui/sel_thumb_ep1_pit"
       },
       {
-        "stage": "nether",
-        "set": "ep1_nether",
-        "stations": ["ne1"],
-        "name": { "zh": "冥界", "en": "NETHERWORLD", "ja": "冥界" },
-        "thumb": "ui/sel_thumb_ep1_nether"
+        "door": { "frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left" }
       },
+      { "comic": "ep1_studio" },
       {
-        "door": { "frame": "ep1/door7_frame", "leaf": "ep1/door7_leaf", "leaves": 2, "hinge": "left" }
+        "stage": "studio",
+        "set": "ep1_studio",
+        "stations": ["st1"],
+        "name": { "zh": "画室", "en": "STUDIO", "ja": "アトリエ" },
+        "thumb": "ui/sel_thumb_ep1_studio"
       },
-      { "comic": "ep1_boss" },
+      { "comic": "ep1_merge" },
       {
         "boss": "madame",
-        "set": "ep1_hall",
-        "station": "hall",
-        "name": { "zh": "大舞厅", "en": "BALLROOM", "ja": "舞踏室" },
+        "set": "ep1_studio",
+        "station": "boss",
+        "name": { "zh": "夫人的画像", "en": "HER PORTRAIT", "ja": "夫人の肖像" },
         "thumb": "ui/sel_thumb_ep1_boss"
       },
       { "comic": "ep1_end" }

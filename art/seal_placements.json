@@ -849,5 +849,112 @@
     ],
     "keep_frame": true,
     "png": "art/raw/r53b/fixed/page_web_b.png"
+  },
+  "r56_turn_b1": {
+    "src": "art/raw/r56/page_turn_b.png",
+    "auto": true,
+    "within": [
+      180,
+      590,
+      350,
+      790
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_turn_b.png"
+  },
+  "r56_fall_b1": {
+    "src": "art/raw/r56/page_fall_b.png",
+    "auto": true,
+    "within": [
+      100,
+      120,
+      420,
+      340
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_fall_b.png"
+  },
+  "r56_fall_b2": {
+    "src": "art/raw/r56/fixed/page_fall_b.png",
+    "auto": true,
+    "within": [
+      140,
+      470,
+      360,
+      680
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_fall_b.png"
+  },
+  "r56_fall_b3": {
+    "src": "art/raw/r56/fixed/page_fall_b.png",
+    "auto": true,
+    "within": [
+      840,
+      730,
+      1060,
+      920
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_fall_b.png"
+  },
+  "r56_studio_a1": {
+    "src": "art/raw/r56/page_studio_a.png",
+    "auto": true,
+    "within": [
+      110,
+      290,
+      290,
+      460
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_studio_a.png"
+  },
+  "r56_studio_a2": {
+    "src": "art/raw/r56/fixed/page_studio_a.png",
+    "erase": [
+      974,
+      442,
+      1016,
+      463
+    ],
+    "center": [
+      994,
+      453
+    ],
+    "ring": 22,
+    "rot": 0,
+    "clip": [
+      880,
+      360,
+      1110,
+      463
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_studio_a.png"
+  },
+  "r56_merge_b1": {
+    "src": "art/raw/r56/page_merge_b.png",
+    "auto": true,
+    "within": [
+      320,
+      290,
+      480,
+      460
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_merge_b.png"
+  },
+  "r56_merge_b2": {
+    "src": "art/raw/r56/fixed/page_merge_b.png",
+    "auto": true,
+    "within": [
+      1000,
+      680,
+      1140,
+      830
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r56/fixed/page_merge_b.png"
   }
 }

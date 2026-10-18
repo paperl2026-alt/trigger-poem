@@ -241,7 +241,8 @@ export class Enemy extends Actor {
     const B = T.behaviors;
     this.bp = { ...B.common, ...B[def.beh], ...def.params };   // this enemy's behaviour numbers
     this.frames = def.frames;
-    this.hp = def.hp;
+    this.hp = s.hp ?? def.hp;   // (a wave can make one tougher: the turning-around ghoul)
+    this.tough = !!(s.tough || def.tough);   // never staggered, not pushed back by hits
     this.state = 'enter';
     this.timer = 0;
     this.hurtT = 0;
@@ -260,8 +261,8 @@ export class Enemy extends Actor {
     const P = this.root.position;
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
     if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop') {   // (flyers: their hovering spot, below)
-      const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」)
-      const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: ML.spawnFar, min: ML.spawnMin });
+      const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
+      const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
       if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
         const c = world.camPos, cd = cov.x !== undefined ? Math.hypot(cov.x - c.x, cov.z - c.z) : 2.8, qd = Math.hypot(q.x - c.x, q.z - c.z) || 1;
@@ -390,7 +391,7 @@ export class Enemy extends Actor {
 
   // ---- stagger: enough sustained hits interrupt whatever it was about to do
   // only a special attack being gathered ('kill') is broken off by hits: ordinary hits never freeze a monster (DESIGN「怪物挨打的样子」)
-  canStagger() { return this.alive && this.state === 'windup' && this.mark === 'kill' && this.poiseCD <= 0 && !(this.bp.armor || []).includes(this.state); }
+  canStagger() { return this.alive && !this.tough && this.state === 'windup' && this.mark === 'kill' && this.poiseCD <= 0 && !(this.bp.armor || []).includes(this.state); }
   stagger(time) {
     const g = this.game;
     this.endWindup();
@@ -464,7 +465,7 @@ export class Enemy extends Actor {
               this.state = 'recoil';
               this.play('recoil');
               const xx = P.x, zz = P.z, yy = P.y, cc = g.world.camPos, dd = Math.hypot(P.x - cc.x, P.z - cc.z) || 1, ux = (P.x - cc.x) / dd, uz = (P.z - cc.z) / dd;   // back, away from the camera
-              tw.run(bp.recoilTime, (e) => { P.x = xx + ux * bp.recoilDist * e; P.z = zz + uz * bp.recoilDist * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); } } });
+              tw.run(bp.recoilTime, (e) => { P.x = xx + ux * bp.recoilDist * e; P.z = zz + uz * bp.recoilDist * e; P.y = yy * (1 - e) + Math.sin(e * Math.PI) * 0.4; }, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'walk'; this.play('walk', 7); if (this.def.recharge) this.charged = false; } } });   // (recharge: it charges again from where it landed)
             });
           },
         });
@@ -569,7 +570,13 @@ export class Enemy extends Actor {
         this.endWindup();
         this.play('throw');
         if (this.def.blast) this.blast();
-        else {
+        else if (this.def.summon && this.game.actors.filter((a) => a.alive && this.def.summon.some((q) => q.type === a.type)).length < (this.def.summonMax ?? 99)) {
+          // it calls things up around itself instead of throwing (enemies.json summon: spawns, x / z relative; while fewer than summonMax
+          // of them are up, else it throws)
+          const P = this.root.position;
+          this.def.summon.forEach((q, i) => this.game.etw.wait(i * 0.25, () => { if (this.alive) this.game.spawnEnemy({ ...q, x: P.x + (q.x || 0), z: P.z + (q.z || 0), near: true }); }));
+          sfx.roar();
+        } else {
           // a burst: several shots fanned out, a beat apart (each can be shot down)
           const n = this.def.burst || 1;
           for (let i = 0; i < n; i++) {
@@ -685,7 +692,7 @@ export class Enemy extends Actor {
       this.poise += info.stagger;
       if (this.poise >= this.def.poise) this.stagger(Math.min(0.45, info.stun || 0.45));
     }
-    if (this.beh === 'walker' && this.state === 'walk') { // a little push back per hit
+    if (this.beh === 'walker' && this.state === 'walk' && !this.tough) { // a little push back per hit
       const c = this.game.world.camPos, P = this.root.position, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
       const k = this.bp.hitPush?.[info.kind] ?? this.bp.hitPush?.rifle ?? 0.04;
       P.x += dx / d * k; P.z += dz / d * k;
