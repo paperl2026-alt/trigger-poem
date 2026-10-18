@@ -9,7 +9,8 @@ usage:
   python -I tools/voice_aivis.py lines <who> [<kind> | <kind>_<n> ...]   every line (or only these) -> voice/<who>/<kind>_<n>.ogg,
                                                                   registered in sounds.json voices.<who>.lines
   python -I tools/voice_aivis.py grains <who>                     her weapon's voice (sounds.json voices.<who>.grains: each key a list of
-                                                                  syllables "say", a style, a speed or one per syllable) -> voice/<who>/g_<key>_<n>.ogg,
+                                                                  syllables "say", a style / speed / intonation or one per syllable, and
+                                                                  "takes": the whole list said again in other styles) -> voice/<who>/g_<key>_<n>.ogg,
                                                                   cut tight (they are played back to back, one per shot), registered in grains.<key>.files"""
 import io, sys, json, time, wave, pathlib, subprocess, urllib.request, urllib.parse
 import numpy as np
@@ -178,13 +179,15 @@ if __name__ == "__main__":
         for key, G in V.get("grains", {}).items():
             if key.startswith("_"): continue
             G["files"] = []
-            for i, text in enumerate(G["say"]):
-                sp_ = G.get("speed", 1.3); speed = sp_[i % len(sp_)] if isinstance(sp_, list) else sp_
-                sid = ids[G.get("style", "ノーマル")]
-                x, sr = synth(query(spoken(text), sid, {"speed": speed, "intonation": G.get("intonation", 1.2)}), sid)
-                y = tight(x, sr); rel = f"voice/{who}/g_{key}_{i + 1}.ogg"
-                write(y, sr, PACK / rel); G["files"].append(rel)
-                print(f"{rel:<28} {text:<8} {len(y) / sr:.2f}s", flush=True)
+            # takes: every syllable said once per take (each take its own style / speed / intonation), files take after take
+            for t, tk in enumerate(G.get("takes") or [{}]):
+                for i, text in enumerate(G["say"]):
+                    one = lambda k, d: (lambda v: v[i % len(v)] if isinstance(v, list) else v)(tk.get(k, G.get(k, d)))   # (a list: one per syllable)
+                    sid = ids[one("style", "ノーマル")]
+                    x, sr = synth(query(spoken(text), sid, {"speed": one("speed", 1.3), "intonation": one("intonation", 1.2)}), sid)
+                    y = tight(x, sr); rel = f"voice/{who}/g_{key}_{t * len(G['say']) + i + 1}.ogg"
+                    write(y, sr, PACK / rel); G["files"].append(rel)
+                    print(f"{rel:<28} {text:<8} {len(y) / sr:.2f}s", flush=True)
         txt = json.dumps(S, ensure_ascii=False, indent=2) + "\n"
         sp.write_bytes((txt.replace("\n", "\r\n") if crlf else txt).encode("utf-8"))
         subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(sp)], check=True, stdin=subprocess.DEVNULL)

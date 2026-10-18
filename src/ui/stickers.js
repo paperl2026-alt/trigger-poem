@@ -78,7 +78,7 @@ export class Stickers {
   constructor(hud) {
     this.hud = hud; this.game = hud.game;
     this.layer = new THREE.Group(); hud.g.add(this.layer);
-    this.her = this.game.players.map(() => ({ f: new Fan(this.layer, 75), cd: 0, last: {} }));
+    this.her = this.game.players.map(() => ({ f: new Fan(this.layer, 75), cd: 0, last: {}, recent: {} }));
     this.mon = [0, 1].map(() => new Fan(this.layer, 74));
     this.big = new Fan(this.layer, 76);
     this.onos = [0, 1, 2, 3, 4, 5].map(() => { const m = picture(null, 73, Math.random()); this.layer.add(m); m.userData.t = 9; return m; });
@@ -100,12 +100,14 @@ export class Stickers {
     if (!H || !set) return;
     const pr = PRIO[kind] || 1, cur = H.f.on ? PRIO[H.f.kind] || 1 : -1;
     if (pr < cur || (H.cd > 0 && pr <= cur)) return;
-    const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], text = line[lang] || line.en;
-    if (text === H.lastText && set.lines.length > 1) return this.say(p, kind, 1);
+    // which line: not one of the last half of this kind she said (user 2026-10-18: too repetitive; every kind has at least six)
+    const n = set.lines.length, R = H.recent[kind] || (H.recent[kind] = []), keep = Math.min(n - 1, Math.floor(n / 2));
+    const free = [...Array(n).keys()].filter((j) => !R.slice(R.length - keep).includes(j));
+    const li = free[Math.floor(Math.random() * free.length)], line = set.lines[li], text = line[lang] || line.en;
     // her voice for this line (core/audio.js voice: one channel for both girls, by priority); small talk that cannot be said now is not
     // shown either (fewer, clearer lines: docs/TECH.md「声音」)
     if (voice(p.id, kind, li, p.slot, pr) === false && pr <= 4) return;
-    H.lastText = text; this.quiet = 0;
+    H.lastText = text; this.quiet = 0; R.push(li); if (R.length > 8) R.shift();
     // from her head, on her OUTER side (toward her screen edge: her safe area), above her HUD panel; if that side is too narrow, above her head
     const L = this.hud.L, Hh = L.H, f0 = L.f, left = p.slot === 0 || !this.game.p2on(), dir = left ? -1 : 1, fig = this.hud.space.girl(p.slot);
     const h = Hh * 0.046, head = fig ? fig.y1 - (fig.y1 - fig.y0) * 0.1 : Hh * 0.5, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + dir * Hh * 0.12;

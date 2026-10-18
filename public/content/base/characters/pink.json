@@ -91,7 +91,7 @@
       "sfx": "smg",
       "kick": 0.8,
       "tracer": "#ff7ac0",
-      "voice": { "grain": "shot", "every": 0.15, "len": 0.16 }
+      "voice": { "grain": "shot", "every": 0.15, "len": 0.22 }
     },
     "active": {
       "kind": "gatling",
@@ -101,7 +101,7 @@
       "stagger": 2.2,
       "heal": 0.4,
       "charge": { "sec": 0.015, "hit": 0.011, "kill": 0.05 },
-      "voice": { "grain": "shot", "every": 0.1, "len": 0.11, "rate": 1.1 }
+      "voice": { "grain": "shot", "every": 0.1, "len": 0.13, "rate": 1.1 }
     },
     "order": 0,
     "rig": {

@@ -348,14 +348,17 @@ export function grain(who, V, pan = 0, i = 0) {
   if (talking(who)) { STATS.grainsQuiet++; return true; }
   const G = GRAIN.get(who) || {}, t = now();
   if (t - (G.t ?? -9) < (V.every || 0)) return true;
-  const seq = C.sounds.voices[who].grains[V.grain || 'shot'].seq;
-  let k = seq ? ((i % files.length) + files.length) % files.length : Math.floor(Math.random() * files.length);
-  if (!seq && files.length > 1 && k === G.k) k = (k + 1) % files.length;
+  // seq: the syllable of the glyph she shoots, one of its takes at random (sounds.json grains takes); otherwise any of them but the last
+  // two (user 2026-10-18: 突突突 alone was dull)
+  const GR = C.sounds.voices[who].grains[V.grain || 'shot'], n = GR.say?.length || files.length;
+  let k;
+  if (GR.seq) k = (((i % n) + n) % n) + n * Math.floor(Math.random() * Math.max(1, Math.floor(files.length / n)));
+  else { const free = files.map((_, j) => j).filter((j) => files.length < 4 || (j !== G.k && j !== G.k2)); k = free[Math.floor(Math.random() * free.length)]; }
   const b = BUF.get(files[k]);
   if (!b || b instanceof Promise) { if (b === undefined) load(files[k]); return false; }
   stopGrain(who);
   const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate: (V.rate || 1) * (0.96 + Math.random() * 0.08), len: V.len || 0 });
-  GRAIN.set(who, { s, t, k }); STATS.grains++;
+  GRAIN.set(who, { s, t, k, k2: G.k }); STATS.grains++;
   return true;
 }
 // a monster's cry (windup / attack / hurt / die), its own or the default one. At most CRY_MAX at once: a new one only takes a place

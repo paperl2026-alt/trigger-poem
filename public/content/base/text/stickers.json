@@ -5,14 +5,27 @@
       "pink": {
         "hit": {
           "bubble": "shout",
-          "lines": [{ "zh": "嘿咻♡", "en": "Hup♡", "ja": "えいっ♡" }, { "zh": "呵呵♡", "en": "Hehe♡", "ja": "ふふっ" }, { "zh": "喏!", "en": "There!", "ja": "ほらっ" }]
+          "lines": [
+            { "zh": "嘿咻♡", "en": "Hup♡", "ja": "えいっ♡" },
+            { "zh": "呵呵♡", "en": "Hehe♡", "ja": "ふふっ" },
+            { "zh": "喏!", "en": "There!", "ja": "ほらっ" },
+            { "zh": "看招♡", "en": "Yoink♡", "ja": "それっ♡" },
+            { "zh": "嘭♡", "en": "Boop♡", "ja": "ぽんっ♡" },
+            { "zh": "嗯♡", "en": "Mm♡", "ja": "んっ♡" },
+            { "zh": "中了♡", "en": "Bingo♡", "ja": "あたり♡" },
+            { "zh": "哼哼~", "en": "Heh-heh", "ja": "へへんっ" }
+          ]
         },
         "crit": {
           "bubble": "shout",
           "lines": [
             { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
             { "zh": "啾♡", "en": "Ba-dump♡", "ja": "ずきゅん♡" },
-            { "zh": "呀哈♡", "en": "Kyaha♡", "ja": "きゃはっ♡" }
+            { "zh": "呀哈♡", "en": "Kyaha♡", "ja": "きゃはっ♡" },
+            { "zh": "biu♡", "en": "Pew-pew♡", "ja": "ばきゅーん♡" },
+            { "zh": "狙击♡", "en": "No-scope♡", "ja": "ねらいうち♡" },
+            { "zh": "么么哒♡", "en": "Smooch♡", "ja": "むちゅー♡" },
+            { "zh": "心动♡", "en": "Doki♡", "ja": "きゅんっ♡" }
           ]
         },
         "kill": {
@@ -20,65 +33,171 @@
           "lines": [
             { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
             { "zh": "掰掰♡", "en": "Bye-bye♡", "ja": "ばいばーい♡" },
-            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" }
+            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" },
+            { "zh": "晚安♡", "en": "Nighty-night♡", "ja": "おやすみ♡" },
+            { "zh": "下一个♡", "en": "Next♡", "ja": "つぎー♡" },
+            { "zh": "杂鱼♡", "en": "Git gud♡", "ja": "ざぁこ♡" },
+            { "zh": "啪叽♡", "en": "Squish♡", "ja": "ぷちっ♡" },
+            { "zh": "好弱♡", "en": "Weak♡", "ja": "よわーい♡" }
           ]
         },
         "combo": {
           "bubble": "shout",
-          "lines": [{ "zh": "还要♡", "en": "More♡", "ja": "もっとぉ♡" }, { "zh": "嗯呼呼♡", "en": "Mhm-hm♡", "ja": "んふふ♡" }]
+          "lines": [
+            { "zh": "还要♡", "en": "More♡", "ja": "もっとぉ♡" },
+            { "zh": "嗯呼呼♡", "en": "Mhm-hm♡", "ja": "んふふ♡" },
+            { "zh": "停不下来♡", "en": "Can't stop♡", "ja": "とまんない♡" },
+            { "zh": "还早呢♡", "en": "Not done yet♡", "ja": "まだまだぁ♡" },
+            { "zh": "好爽♡", "en": "So good♡", "ja": "きもちいー♡" },
+            { "zh": "看我看我♡", "en": "Look at me♡", "ja": "みてみて♡" },
+            { "zh": "全是我的♡", "en": "Mine mine♡", "ja": "ぜんぶわたしの♡" }
+          ]
         },
         "hurt": {
           "bubble": "shout",
-          "lines": [{ "zh": "呀!", "en": "Kya!", "ja": "きゃっ!" }, { "zh": "好痛!", "en": "Ow!", "ja": "いたっ!" }, { "zh": "切", "en": "Tch", "ja": "ちぇっ" }]
+          "lines": [
+            { "zh": "呀!", "en": "Kya!", "ja": "きゃっ!" },
+            { "zh": "好痛!", "en": "Ow!", "ja": "いたっ!" },
+            { "zh": "切", "en": "Tch", "ja": "ちぇっ" },
+            { "zh": "过分!", "en": "Rude!", "ja": "ひどっ!" },
+            { "zh": "嘤", "en": "Sadge", "ja": "ぴえん" },
+            { "zh": "呜哇", "en": "Oof", "ja": "んぎゃっ" },
+            { "zh": "住手啦!", "en": "Stahp!", "ja": "やめてよっ!" }
+          ]
         },
         "low": {
           "bubble": "shout",
-          "lines": [{ "zh": "不要…", "en": "Nooo…", "ja": "やだぁ…" }, { "zh": "救我…", "en": "Help…", "ja": "たすけてぇ…" }]
+          "lines": [
+            { "zh": "不要…", "en": "Nooo…", "ja": "やだぁ…" },
+            { "zh": "救我…", "en": "Help…", "ja": "たすけてぇ…" },
+            { "zh": "嘤到不行…", "en": "Ultra sadge…", "ja": "ぱおん…" },
+            { "zh": "抱抱我…", "en": "Hug me…", "ja": "ぎゅってして…" },
+            { "zh": "要死掉了…", "en": "I'm dying…", "ja": "しんじゃう…" },
+            { "zh": "别丢下我…", "en": "Don't leave me…", "ja": "みすてないで…" }
+          ]
         },
         "reload": {
           "bubble": "cute",
-          "lines": [{ "zh": "切", "en": "Tch", "ja": "ちぇっ" }, { "zh": "嗯咻", "en": "Hngh", "ja": "んしょっ" }, { "zh": "等我♡", "en": "Wait♡", "ja": "まってて♡" }]
+          "lines": [
+            { "zh": "切", "en": "Tch", "ja": "ちぇっ" },
+            { "zh": "嗯咻", "en": "Hngh", "ja": "んしょっ" },
+            { "zh": "等我♡", "en": "Wait♡", "ja": "まってて♡" },
+            { "zh": "嘿哟♡", "en": "Heave-ho♡", "ja": "よいしょ♡" },
+            { "zh": "等一下", "en": "Brb", "ja": "ちょっとまって" },
+            { "zh": "咔嚓♡", "en": "Click-clack♡", "ja": "カシャッ♡" },
+            { "zh": "续杯♡", "en": "Refill♡", "ja": "おかわり♡" }
+          ]
         },
         "empty": {
           "bubble": "shout",
-          "lines": [{ "zh": "切!", "en": "Tch!", "ja": "ちぇっ!" }, { "zh": "咦?", "en": "Huh?", "ja": "あれぇ?" }]
+          "lines": [
+            { "zh": "切!", "en": "Tch!", "ja": "ちぇっ!" },
+            { "zh": "咦?", "en": "Huh?", "ja": "あれぇ?" },
+            { "zh": "空了…", "en": "Empty…", "ja": "からっぽ…" },
+            { "zh": "诶，骗人", "en": "Bruh", "ja": "えっ、うそ" },
+            { "zh": "唔…", "en": "Mou…", "ja": "むぅ…" },
+            { "zh": "没啦没啦", "en": "All gone", "ja": "ないないー" }
+          ]
         },
         "fever": {
           "bubble": "shout",
-          "lines": [{ "zh": "来了来了♡", "en": "Here it comes♡", "ja": "きたきたぁ♡" }, { "zh": "上头♡", "en": "Hyped♡", "ja": "アガるぅ♡" }]
+          "lines": [
+            { "zh": "来了来了♡", "en": "Here it comes♡", "ja": "きたきたぁ♡" },
+            { "zh": "上头♡", "en": "Hyped♡", "ja": "アガるぅ♡" },
+            { "zh": "嗨翻♡", "en": "Let's gooo♡", "ja": "ぶちあげ♡" },
+            { "zh": "好热♡", "en": "So hot♡", "ja": "あつーい♡" },
+            { "zh": "要飞了♡", "en": "Sugar rush♡", "ja": "ハイになっちゃう♡" },
+            { "zh": "要融化了♡", "en": "Melting♡", "ja": "とろけそう♡" }
+          ]
         },
         "ready": {
           "bubble": "cute",
-          "lines": [{ "zh": "呐♡", "en": "Hey♡", "ja": "ねぇ♡" }, { "zh": "快嘛♡", "en": "Hurry♡", "ja": "はやくぅ♡" }]
+          "lines": [
+            { "zh": "呐♡", "en": "Hey♡", "ja": "ねぇ♡" },
+            { "zh": "快嘛♡", "en": "Hurry♡", "ja": "はやくぅ♡" },
+            { "zh": "可以了♡", "en": "Ready♡", "ja": "いける♡" },
+            { "zh": "手痒痒♡", "en": "Itchy finger♡", "ja": "うずうず♡" },
+            { "zh": "看好了♡", "en": "Watch me♡", "ja": "みてて♡" },
+            { "zh": "攒好了♡", "en": "Charged♡", "ja": "ためたよ♡" }
+          ]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
             { "zh": "全部打成筛子♡", "en": "Swiss cheese♡", "ja": "ぜーんぶ蜂の巣♡" },
-            { "zh": "冲呀♡", "en": "Go go♡", "ja": "いっけー♡" }
+            { "zh": "冲呀♡", "en": "Go go♡", "ja": "いっけー♡" },
+            { "zh": "只准看着我♡", "en": "Eyes on me♡", "ja": "わたしだけ見て♡" },
+            { "zh": "爱之子弹♡", "en": "Love bullets♡", "ja": "愛の弾丸♡" },
+            { "zh": "不准看别人♡", "en": "No cheating♡", "ja": "よそ見禁止♡" },
+            { "zh": "绝对不放过♡", "en": "You can't escape♡", "ja": "ぜったい逃がさない♡" }
           ]
         },
         "cover": {
           "bubble": "cute",
-          "lines": [{ "zh": "躲猫猫♡", "en": "Peekaboo♡", "ja": "かくれんぼ♡" }, { "zh": "呀", "en": "Eep", "ja": "ひゃっ" }]
+          "lines": [
+            { "zh": "躲猫猫♡", "en": "Peekaboo♡", "ja": "かくれんぼ♡" },
+            { "zh": "呀", "en": "Eep", "ja": "ひゃっ" },
+            { "zh": "好可怕", "en": "Scary~", "ja": "こわーい" },
+            { "zh": "秘密♡", "en": "Secret♡", "ja": "ひみつ♡" },
+            { "zh": "不许偷看♡", "en": "No peeking♡", "ja": "のぞかないで♡" },
+            { "zh": "呼…", "en": "Phew…", "ja": "ふぅ…" }
+          ]
         },
         "revive": {
           "bubble": "cute",
-          "lines": [{ "zh": "我回来了♡", "en": "I'm back♡", "ja": "ただいま♡" }, { "zh": "复活♡", "en": "Revived♡", "ja": "ふっかーつ♡" }]
+          "lines": [
+            { "zh": "我回来了♡", "en": "I'm back♡", "ja": "ただいま♡" },
+            { "zh": "复活♡", "en": "Revived♡", "ja": "ふっかーつ♡" },
+            { "zh": "想我了吗?", "en": "Miss me?", "ja": "さびしかった?" },
+            { "zh": "还能打♡", "en": "Still going♡", "ja": "まだいける♡" },
+            { "zh": "活过来了", "en": "Respawned", "ja": "生きかえったぁ" },
+            { "zh": "久等了♡", "en": "Sorry for the wait♡", "ja": "おまたせ♡" }
+          ]
         },
         "down": {
           "bubble": "shout",
-          "lines": [{ "zh": "呜…", "en": "Uu…", "ja": "うぅ…" }, { "zh": "过分…", "en": "Mean…", "ja": "ひどい…" }]
+          "lines": [
+            { "zh": "呜…", "en": "Uu…", "ja": "うぅ…" },
+            { "zh": "过分…", "en": "Mean…", "ja": "ひどい…" },
+            { "zh": "嘤…", "en": "Pien…", "ja": "ぴえん…" },
+            { "zh": "等等…", "en": "Wait…", "ja": "まって…" },
+            { "zh": "别忘了我…", "en": "Remember me…", "ja": "わすれないで…" },
+            { "zh": "好痛…", "en": "It hurts…", "ja": "いたいよぉ…" }
+          ]
         },
         "coverBroken": {
           "bubble": "shout",
-          "lines": [{ "zh": "喂!?", "en": "Hey!?", "ja": "ちょっ!?" }, { "zh": "呀嗯!", "en": "Yaan!", "ja": "やぁん!" }]
+          "lines": [
+            { "zh": "喂!?", "en": "Hey!?", "ja": "ちょっ!?" },
+            { "zh": "呀嗯!", "en": "Yaan!", "ja": "やぁん!" },
+            { "zh": "不会吧!", "en": "No way!", "ja": "ありえない!" },
+            { "zh": "呀——!", "en": "Kyaa!", "ja": "きゃー!" },
+            { "zh": "要被看光了!", "en": "Wardrobe malfunction!", "ja": "みえちゃう!" },
+            { "zh": "色狼!", "en": "Lewd!", "ja": "えっち!" }
+          ]
         },
         "stagger": {
           "bubble": "shout",
-          "lines": [{ "zh": "定♡", "en": "Stop♡", "ja": "ストップ♡" }, { "zh": "乖♡", "en": "Good girl♡", "ja": "いい子♡" }]
+          "lines": [
+            { "zh": "定♡", "en": "Stop♡", "ja": "ストップ♡" },
+            { "zh": "乖♡", "en": "Good girl♡", "ja": "いい子♡" },
+            { "zh": "等着♡", "en": "Stay♡", "ja": "まて♡" },
+            { "zh": "别动♡", "en": "Freeze♡", "ja": "うごかないで♡" },
+            { "zh": "坐下♡", "en": "Sit♡", "ja": "おすわり♡" },
+            { "zh": "抓到了♡", "en": "Gotcha♡", "ja": "つかまえた♡" }
+          ]
         },
-        "join": { "bubble": "cute", "lines": [{ "zh": "参战♡", "en": "Joining♡", "ja": "さんせーん♡" }] },
+        "join": {
+          "bubble": "cute",
+          "lines": [
+            { "zh": "参战♡", "en": "Joining♡", "ja": "さんせーん♡" },
+            { "zh": "我来啦♡", "en": "I'm here♡", "ja": "きたよ♡" },
+            { "zh": "带我一个♡", "en": "Let me in♡", "ja": "まぜて♡" },
+            { "zh": "登场♡", "en": "Enter♡", "ja": "とうじょう♡" },
+            { "zh": "一起吧♡", "en": "Together♡", "ja": "いっしょにね♡" },
+            { "zh": "别丢下我一个♡", "en": "Don't go solo♡", "ja": "ひとりにしないで♡" }
+          ]
+        },
         "quit": {
           "bubble": "cute",
           "lines": [
@@ -99,19 +218,73 @@
           "lines": [
             { "zh": "哼哼~♪", "en": "Hm-hmm♪", "ja": "ふんふーん♪" },
             { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" },
-            { "zh": "好闲~", "en": "Bored~", "ja": "ひまぁ~" }
+            { "zh": "好闲~", "en": "Bored~", "ja": "ひまぁ~" },
+            { "zh": "呐呐", "en": "Hey hey", "ja": "ねぇねぇ" },
+            { "zh": "啦啦♪", "en": "La-la♪", "ja": "るんるん♪" },
+            { "zh": "哈~", "en": "*yawn*", "ja": "ふわぁ" },
+            { "zh": "理理我~", "en": "Notice me~", "ja": "かまって~" }
           ]
         },
-        "scare": { "lines": [{ "zh": "那个…?", "en": "Um…?", "ja": "あの…?" }] },
+        "scare": {
+          "lines": [
+            { "zh": "那个…?", "en": "Um…?", "ja": "あの…?" },
+            { "zh": "谁…?", "en": "Who…?", "ja": "だれ…?" },
+            { "zh": "喂…", "en": "Hello…?", "ja": "ねぇ…" },
+            { "zh": "后面…?", "en": "Behind…?", "ja": "うしろ…?" },
+            { "zh": "醒着吗…?", "en": "You awake…?", "ja": "おきてる…?" },
+            { "zh": "喂喂…?", "en": "Hellooo…?", "ja": "もしもし…?" }
+          ]
+        },
         "photo": {
-          "lines": [{ "zh": "咔嚓♡", "en": "Snap♡", "ja": "パシャッ♡" }, { "zh": "诶…?", "en": "Huh…?", "ja": "え…?" }]
+          "lines": [
+            { "zh": "咔嚓♡", "en": "Snap♡", "ja": "パシャッ♡" },
+            { "zh": "诶…?", "en": "Huh…?", "ja": "え…?" },
+            { "zh": "茄子♡", "en": "Say cheese♡", "ja": "はい、チーズ♡" },
+            { "zh": "出片♡", "en": "So aesthetic♡", "ja": "映えー♡" },
+            { "zh": "诶，拍进去了…?", "en": "Is that… in the shot?", "ja": "あれ、うつってる…?" },
+            { "zh": "好上镜♡", "en": "Filter on♡", "ja": "盛れた♡" }
+          ]
         },
-        "bridge": { "lines": [{ "zh": "咿!", "en": "Eek!", "ja": "ひっ!" }] },
+        "bridge": {
+          "lines": [
+            { "zh": "咿!", "en": "Eek!", "ja": "ひっ!" },
+            { "zh": "要掉了!", "en": "Falling!", "ja": "おちるっ!" },
+            { "zh": "在晃!", "en": "It's shaking!", "ja": "ゆれてる!" },
+            { "zh": "不要不要!", "en": "Nope nope!", "ja": "やだやだ!" },
+            { "zh": "骗人吧!", "en": "No way!", "ja": "うそぉ!" },
+            { "zh": "呀啊啊!", "en": "Aaah!", "ja": "きゃああっ!" }
+          ]
+        },
         "rot": {
-          "lines": [{ "zh": "呕", "en": "Ew", "ja": "うぇっ" }, { "zh": "好臭", "en": "Stinky", "ja": "くさっ" }]
+          "lines": [
+            { "zh": "呕", "en": "Ew", "ja": "うぇっ" },
+            { "zh": "好臭", "en": "Stinky", "ja": "くさっ" },
+            { "zh": "好恶心", "en": "Gross", "ja": "きもっ" },
+            { "zh": "不行不行", "en": "Nope", "ja": "むりむり" },
+            { "zh": "黏糊糊…", "en": "Sticky…", "ja": "ベタベタ…" },
+            { "zh": "甜得发腻…", "en": "Too sweet…", "ja": "あまったるい…" }
+          ]
         },
-        "real": { "lines": [{ "zh": "咦?", "en": "Huh?", "ja": "あれ?" }] },
-        "armor": { "lines": [{ "zh": "噢♡", "en": "Ooh♡", "ja": "おぉ~♡" }] },
+        "real": {
+          "lines": [
+            { "zh": "咦?", "en": "Huh?", "ja": "あれ?" },
+            { "zh": "变回来了?", "en": "Back to normal?", "ja": "もどった?" },
+            { "zh": "是梦…?", "en": "A dream…?", "ja": "ゆめ…?" },
+            { "zh": "呼", "en": "Phew", "ja": "ほっ" },
+            { "zh": "错觉?", "en": "Just me?", "ja": "きのせい?" },
+            { "zh": "好怪", "en": "Weird", "ja": "へんなの" }
+          ]
+        },
+        "armor": {
+          "lines": [
+            { "zh": "噢♡", "en": "Ooh♡", "ja": "おぉ~♡" },
+            { "zh": "好帅♡", "en": "So cool♡", "ja": "かっこいー♡" },
+            { "zh": "动了!?", "en": "It moved!?", "ja": "うごいた!?" },
+            { "zh": "里面有人?", "en": "Anyone in there?", "ja": "なかのひと?" },
+            { "zh": "看着好硬", "en": "Looks tanky", "ja": "かたそう" },
+            { "zh": "哐当?", "en": "Clank?", "ja": "ガシャン?" }
+          ]
+        },
         "start": {
           "bubble": "cute",
           "lines": [{ "zh": "走吧♡", "en": "Let's go♡", "ja": "いこっ♡" }, { "zh": "约会吧♡", "en": "Date time♡", "ja": "デートしよ♡" }]
@@ -131,73 +304,194 @@
       "cat": {
         "hit": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵!", "en": "Nya!", "ja": "にゃ!" }, { "zh": "哼", "en": "Hmph", "ja": "ふっ" }]
+          "lines": [
+            { "zh": "喵!", "en": "Nya!", "ja": "にゃ!" },
+            { "zh": "哼", "en": "Hmph", "ja": "ふっ" },
+            { "zh": "嘿", "en": "Hai", "ja": "えいっ" },
+            { "zh": "啪", "en": "Bonk", "ja": "ぺしっ" },
+            { "zh": "喵", "en": "Mew", "ja": "にゃっ" },
+            { "zh": "嗨", "en": "Hoi", "ja": "ほい" },
+            { "zh": "咻", "en": "Swish", "ja": "しゅっ" }
+          ]
         },
         "crit": {
           "bubble": "shout",
-          "lines": [{ "zh": "呔!", "en": "Tai!", "ja": "たいっ!" }, { "zh": "喝!", "en": "Ka!", "ja": "かっ!" }, { "zh": "喵哈", "en": "Nyaha", "ja": "にゃはっ" }]
+          "lines": [
+            { "zh": "呔!", "en": "Tai!", "ja": "たいっ!" },
+            { "zh": "喝!", "en": "Ka!", "ja": "かっ!" },
+            { "zh": "喵哈", "en": "Nyaha", "ja": "にゃはっ" },
+            { "zh": "破!", "en": "Ha!", "ja": "破っ!" },
+            { "zh": "灭!", "en": "Begone!", "ja": "滅!" },
+            { "zh": "呀!", "en": "Sei!", "ja": "せいっ!" },
+            { "zh": "斩!", "en": "Slash!", "ja": "斬!" }
+          ]
         },
         "kill": {
           "bubble": "cute",
-          "lines": [{ "zh": "南无~", "en": "Namu~", "ja": "なむ~" }, { "zh": "呼喵~", "en": "Funya~", "ja": "ふにゃ~" }, { "zh": "收工", "en": "Done", "ja": "おしまい" }]
+          "lines": [
+            { "zh": "南无~", "en": "Namu~", "ja": "なむ~" },
+            { "zh": "呼喵~", "en": "Funya~", "ja": "ふにゃ~" },
+            { "zh": "收工", "en": "Done", "ja": "おしまい" },
+            { "zh": "成佛吧喵", "en": "Rest in peace, nya", "ja": "成仏しにゃ" },
+            { "zh": "多谢款待", "en": "GG", "ja": "ごちそうさま" },
+            { "zh": "叮~", "en": "*ding*", "ja": "ちーん" },
+            { "zh": "阿门喵?", "en": "Amen, nya?", "ja": "あーめんにゃ?" }
+          ]
         },
         "combo": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵喵喵!", "en": "Nyanyanya!", "ja": "にゃにゃにゃ!" }, { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" }]
+          "lines": [
+            { "zh": "喵喵喵!", "en": "Nyanyanya!", "ja": "にゃにゃにゃ!" },
+            { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" },
+            { "zh": "来劲了", "en": "In the zone", "ja": "のってきた" },
+            { "zh": "喵呼~", "en": "Nyahoo", "ja": "にゃっふー" },
+            { "zh": "还没完喵", "en": "Not done, nya", "ja": "まだまだにゃ" },
+            { "zh": "哼哼", "en": "Hmph-hmph", "ja": "ふふん" }
+          ]
         },
         "hurt": {
           "bubble": "shout",
-          "lines": [{ "zh": "咪呀!", "en": "Mya!", "ja": "みゃっ!" }, { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" }]
+          "lines": [
+            { "zh": "咪呀!", "en": "Mya!", "ja": "みゃっ!" },
+            { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" },
+            { "zh": "痛", "en": "Ow", "ja": "いたっ" },
+            { "zh": "呼喵!?", "en": "Funya!?", "ja": "ふにゃっ!?" },
+            { "zh": "唔", "en": "Hmph!", "ja": "むっ" },
+            { "zh": "咪呜!", "en": "Myau!", "ja": "みゃう!" }
+          ]
         },
         "low": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵呜…", "en": "Nyau…", "ja": "にゃぅ…" }, { "zh": "摸摸…", "en": "Pet me…", "ja": "なでて…" }]
+          "lines": [
+            { "zh": "喵呜…", "en": "Nyau…", "ja": "にゃぅ…" },
+            { "zh": "摸摸…", "en": "Pet me…", "ja": "なでて…" },
+            { "zh": "困…", "en": "Sleepy…", "ja": "ねむい…" },
+            { "zh": "不妙喵…", "en": "Uh-oh, nya…", "ja": "まずいにゃ…" },
+            { "zh": "好冷…", "en": "Cold…", "ja": "さむい…" },
+            { "zh": "膝枕…", "en": "Lap pillow…", "ja": "ひざまくら…" }
+          ]
         },
         "reload": {
           "bubble": "cute",
-          "lines": [{ "zh": "临", "en": "Rin", "ja": "りんっ" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }, { "zh": "舔舔", "en": "Lick lick", "ja": "ぺろぺろ" }]
+          "lines": [
+            { "zh": "临", "en": "Rin", "ja": "りんっ" },
+            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
+            { "zh": "舔舔", "en": "Lick lick", "ja": "ぺろぺろ" },
+            { "zh": "兵", "en": "Pyo", "ja": "兵っ" },
+            { "zh": "斗", "en": "Tou", "ja": "闘っ" },
+            { "zh": "画符", "en": "Scribble", "ja": "かきかき" }
+          ]
         },
         "empty": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵!?", "en": "Nya!?", "ja": "にゃ!?" }, { "zh": "摸鱼~", "en": "Slacking~", "ja": "サボり~" }]
+          "lines": [
+            { "zh": "喵!?", "en": "Nya!?", "ja": "にゃ!?" },
+            { "zh": "摸鱼~", "en": "Slacking~", "ja": "サボり~" },
+            { "zh": "没了喵", "en": "Out, nya", "ja": "ないにゃ" },
+            { "zh": "呼喵…", "en": "Funya…", "ja": "ふにゃ…" },
+            { "zh": "嗯?", "en": "Hm?", "ja": "あれ?" },
+            { "zh": "符用完了", "en": "Out of talismans", "ja": "お札ぎれ" }
+          ]
         },
         "fever": {
           "bubble": "shout",
-          "lines": [{ "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" }, { "zh": "喵~♡", "en": "Nyaan♡", "ja": "にゃーん♡" }]
+          "lines": [
+            { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" },
+            { "zh": "喵~♡", "en": "Nyaan♡", "ja": "にゃーん♡" },
+            { "zh": "暖洋洋♡", "en": "Toasty♡", "ja": "ほかほか♡" },
+            { "zh": "喵哈~♡", "en": "Nyahaa♡", "ja": "にゃっはー♡" },
+            { "zh": "心情好♡", "en": "Good mood♡", "ja": "ごきげん♡" },
+            { "zh": "木天蓼♡", "en": "Catnip♡", "ja": "またたび♡" }
+          ]
         },
         "ready": {
           "bubble": "cute",
-          "lines": [{ "zh": "想要?", "en": "Want it?", "ja": "ほしい?" }, { "zh": "喵♡", "en": "Nyan♡", "ja": "にゃん♡" }]
+          "lines": [
+            { "zh": "想要?", "en": "Want it?", "ja": "ほしい?" },
+            { "zh": "喵♡", "en": "Nyan♡", "ja": "にゃん♡" },
+            { "zh": "随时", "en": "Anytime", "ja": "いつでも" },
+            { "zh": "要看吗?", "en": "Wanna see?", "ja": "みる?" },
+            { "zh": "哼哼", "en": "Heh", "ja": "ふふん" },
+            { "zh": "攒好了喵", "en": "Charged, nya", "ja": "ためたにゃ" }
+          ]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
             { "zh": "大慈大悲观世音菩萨", "en": "Great Compassion, Kannon", "ja": "大慈大悲観世音菩薩" },
             { "zh": "急急如律令!", "en": "Swiftly, by the law!", "ja": "急急如律令!" },
-            { "zh": "呼格鲁伊 姆格鲁纳弗", "en": "Ph'nglui mglw'nafh", "ja": "ふんぐるい むぐるうなふ" }
+            { "zh": "呼格鲁伊 姆格鲁纳弗", "en": "Ph'nglui mglw'nafh", "ja": "ふんぐるい むぐるうなふ" },
+            { "zh": "临兵斗者皆阵列在前", "en": "Rin pyo to sha kai jin retsu zai zen", "ja": "臨兵闘者皆陣列在前" },
+            { "zh": "南无阿弥陀佛", "en": "Namu Amida Butsu", "ja": "南無阿弥陀仏" },
+            { "zh": "色即是空!", "en": "Form is emptiness!", "ja": "色即是空!" }
           ]
         },
         "cover": {
           "bubble": "cute",
-          "lines": [{ "zh": "喵", "en": "Nya", "ja": "にゃっ" }, { "zh": "纸箱~", "en": "Box~", "ja": "ダンボール~" }]
+          "lines": [
+            { "zh": "喵", "en": "Nya", "ja": "にゃっ" },
+            { "zh": "纸箱~", "en": "Box~", "ja": "ダンボール~" },
+            { "zh": "歇会儿", "en": "Break time", "ja": "ひとやすみ" },
+            { "zh": "缩成一团", "en": "Loaf mode", "ja": "まるくなる" },
+            { "zh": "这里暖和", "en": "Cozy spot", "ja": "ここ、あったかい" },
+            { "zh": "嘘——", "en": "Shh", "ja": "しーっ" }
+          ]
         },
         "revive": {
           "bubble": "cute",
-          "lines": [{ "zh": "喵~", "en": "Nyaan~", "ja": "にゃ~ん" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }]
+          "lines": [
+            { "zh": "喵~", "en": "Nyaan~", "ja": "にゃ~ん" },
+            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
+            { "zh": "早", "en": "Morning", "ja": "おはよ" },
+            { "zh": "有九条命喵", "en": "Nine lives, nya", "ja": "九つあるにゃ" },
+            { "zh": "复活喵", "en": "Back, nya", "ja": "ふっかつにゃ" },
+            { "zh": "才没睡", "en": "Wasn't sleeping", "ja": "ねてないし" }
+          ]
         },
         "down": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵…", "en": "Nya…", "ja": "にゃ…" }, { "zh": "哼…", "en": "Hmph…", "ja": "ふん…" }]
+          "lines": [
+            { "zh": "喵…", "en": "Nya…", "ja": "にゃ…" },
+            { "zh": "哼…", "en": "Hmph…", "ja": "ふん…" },
+            { "zh": "睡…一下", "en": "Nap time…", "ja": "ちょっと…ねる" },
+            { "zh": "南无…", "en": "Namu…", "ja": "なむ…" },
+            { "zh": "累了…", "en": "Tired…", "ja": "つかれた…" },
+            { "zh": "交给你了…", "en": "Your turn…", "ja": "あとはまかせた…" }
+          ]
         },
         "coverBroken": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵!?", "en": "Nya!?", "ja": "にゃっ!?" }, { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" }]
+          "lines": [
+            { "zh": "喵!?", "en": "Nya!?", "ja": "にゃっ!?" },
+            { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" },
+            { "zh": "咪!?", "en": "Mya!?", "ja": "みゃっ!?" },
+            { "zh": "被发现了!?", "en": "Busted!?", "ja": "ばれた!?" },
+            { "zh": "尾巴!", "en": "My tail!", "ja": "しっぽ!" },
+            { "zh": "碍事!", "en": "Rude!", "ja": "じゃま!" }
+          ]
         },
         "stagger": {
           "bubble": "shout",
-          "lines": [{ "zh": "定!", "en": "Freeze!", "ja": "定!" }, { "zh": "摄!", "en": "Seize!", "ja": "摂!" }]
+          "lines": [
+            { "zh": "定!", "en": "Freeze!", "ja": "定!" },
+            { "zh": "摄!", "en": "Seize!", "ja": "摂!" },
+            { "zh": "封!", "en": "Seal!", "ja": "封!" },
+            { "zh": "缚!", "en": "Bind!", "ja": "縛!" },
+            { "zh": "止!", "en": "Halt!", "ja": "止まれ!" },
+            { "zh": "等着!", "en": "Stay!", "ja": "待て!" }
+          ]
         },
-        "join": { "bubble": "cute", "lines": [{ "zh": "参上喵", "en": "Here, nya", "ja": "参上にゃ" }] },
+        "join": {
+          "bubble": "cute",
+          "lines": [
+            { "zh": "参上喵", "en": "Here, nya", "ja": "参上にゃ" },
+            { "zh": "哟", "en": "Yo", "ja": "よっ" },
+            { "zh": "来帮忙喵", "en": "Helping, nya", "ja": "てつだうにゃ" },
+            { "zh": "打扰了", "en": "Pardon the intrusion", "ja": "おじゃまします" },
+            { "zh": "哈…来了", "en": "*yawn* here", "ja": "ふぁ…きたよ" },
+            { "zh": "借你猫爪喵", "en": "Lending a paw", "ja": "猫の手にゃ" }
+          ]
+        },
         "quit": {
           "bubble": "cute",
           "lines": [
@@ -215,16 +509,76 @@
         },
         "idle": {
           "bubble": "cute",
-          "lines": [{ "zh": "喵~", "en": "Nya~", "ja": "にゃ~" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }, { "zh": "呼噜呼噜", "en": "Purr", "ja": "ゴロゴロ" }]
+          "lines": [
+            { "zh": "喵~", "en": "Nya~", "ja": "にゃ~" },
+            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
+            { "zh": "呼噜呼噜", "en": "Purr", "ja": "ゴロゴロ" },
+            { "zh": "困…", "en": "Zzz…", "ja": "ねむ…" },
+            { "zh": "好无聊", "en": "Bored", "ja": "ひま" },
+            { "zh": "喵呜~", "en": "Meow~", "ja": "にゃーご" },
+            { "zh": "鲣鱼干…", "en": "Bonito flakes…", "ja": "かつおぶし…" }
+          ]
         },
-        "scare": { "lines": [{ "zh": "…喵?", "en": "…Nya?", "ja": "…にゃ?" }] },
-        "photo": { "lines": [{ "zh": "喵…", "en": "Nya…", "ja": "にゃ…" }] },
-        "bridge": { "lines": [{ "zh": "喵!", "en": "Nya!", "ja": "にゃっ!" }] },
+        "scare": {
+          "lines": [
+            { "zh": "…喵?", "en": "…Nya?", "ja": "…にゃ?" },
+            { "zh": "…谁?", "en": "…Who?", "ja": "…だれ?" },
+            { "zh": "嘘", "en": "Shh", "ja": "しっ" },
+            { "zh": "…有味道", "en": "…Smells", "ja": "…におう" },
+            { "zh": "有动静", "en": "Something's here", "ja": "けはいがする" },
+            { "zh": "…会回头喵", "en": "…It'll turn, nya", "ja": "…ふりむくにゃ" }
+          ]
+        },
+        "photo": {
+          "lines": [
+            { "zh": "喵…", "en": "Nya…", "ja": "にゃ…" },
+            { "zh": "拍进去了喵", "en": "It's in the shot", "ja": "写ってるにゃ" },
+            { "zh": "好晃", "en": "Bright", "ja": "まぶし" },
+            { "zh": "…瘆人", "en": "…Creepy", "ja": "…きみわるい" },
+            { "zh": "咔", "en": "Snap", "ja": "ぱしゃ" },
+            { "zh": "念写?", "en": "Psychic photo?", "ja": "念写?" }
+          ]
+        },
+        "bridge": {
+          "lines": [
+            { "zh": "喵!", "en": "Nya!", "ja": "にゃっ!" },
+            { "zh": "要掉了!", "en": "Falling!", "ja": "おちる!" },
+            { "zh": "呼喵!", "en": "Funya!", "ja": "ふにゃっ!" },
+            { "zh": "猫才不会掉喵", "en": "Cats land on their feet", "ja": "ねこはおちないにゃ" },
+            { "zh": "在晃!", "en": "Shaky!", "ja": "ゆれる!" },
+            { "zh": "哇", "en": "Whoa", "ja": "わっ" }
+          ]
+        },
         "rot": {
-          "lines": [{ "zh": "好臭", "en": "Stinks", "ja": "くさっ" }, { "zh": "呜喵…", "en": "Unya…", "ja": "うにゃ…" }]
+          "lines": [
+            { "zh": "好臭", "en": "Stinks", "ja": "くさっ" },
+            { "zh": "呜喵…", "en": "Unya…", "ja": "うにゃ…" },
+            { "zh": "甜得发臭", "en": "Sweet stench", "ja": "あまくさい" },
+            { "zh": "黏糊糊", "en": "Sticky", "ja": "べたべた" },
+            { "zh": "秽气…", "en": "Impure…", "ja": "けがれ…" },
+            { "zh": "鼻子…", "en": "My nose…", "ja": "はなが…" }
+          ]
         },
-        "real": { "lines": [{ "zh": "…哼", "en": "…Hmph", "ja": "…ふん" }] },
-        "armor": { "lines": [{ "zh": "…绅士", "en": "…Gentleman", "ja": "…紳士" }] },
+        "real": {
+          "lines": [
+            { "zh": "…哼", "en": "…Hmph", "ja": "…ふん" },
+            { "zh": "恢复原样", "en": "Back to normal", "ja": "もとどおり" },
+            { "zh": "…幻觉", "en": "…Illusion", "ja": "…まぼろし" },
+            { "zh": "呼", "en": "Phew", "ja": "ふぅ" },
+            { "zh": "别大意喵", "en": "Stay sharp, nya", "ja": "ゆだんしないにゃ" },
+            { "zh": "…还在", "en": "…Still here", "ja": "…まだいる" }
+          ]
+        },
+        "armor": {
+          "lines": [
+            { "zh": "…绅士", "en": "…Gentleman", "ja": "…紳士" },
+            { "zh": "好硬", "en": "Tanky", "ja": "かたそう" },
+            { "zh": "空的?", "en": "Empty?", "ja": "からっぽ?" },
+            { "zh": "哐哐", "en": "Clank clank", "ja": "ガシャガシャ" },
+            { "zh": "里面没人喵", "en": "Nobody home, nya", "ja": "中身はないにゃ" },
+            { "zh": "麻烦", "en": "Ugh", "ja": "めんどくさ" }
+          ]
+        },
         "start": {
           "bubble": "cute",
           "lines": [{ "zh": "走喵", "en": "Let's go, nya", "ja": "いくにゃ" }, { "zh": "没办法喵", "en": "Fine, nya", "ja": "しかたないにゃ" }]
