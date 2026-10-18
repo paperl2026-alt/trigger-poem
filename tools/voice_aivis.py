@@ -11,7 +11,7 @@ usage:
   python -I tools/voice_aivis.py grains <who>                     her weapon's voice (sounds.json voices.<who>.grains: each key a list of
                                                                   syllables "say", a style / speed / intonation or one per syllable, and
                                                                   "takes": the whole list said again in other styles) -> voice/<who>/g_<key>_<n>.ogg,
-                                                                  cut tight (they are played back to back, one per shot), registered in grains.<key>.files"""
+                                                                  trimmed like the lines (whole words with their tails), registered in grains.<key>.files"""
 import io, sys, json, time, wave, pathlib, subprocess, urllib.request, urllib.parse
 import numpy as np
 sys.stdout.reconfigure(encoding="utf-8")
@@ -185,7 +185,7 @@ if __name__ == "__main__":
                     one = lambda k, d: (lambda v: v[i % len(v)] if isinstance(v, list) else v)(tk.get(k, G.get(k, d)))   # (a list: one per syllable)
                     sid = ids[one("style", "ノーマル")]
                     x, sr = synth(query(spoken(text), sid, {"speed": one("speed", 1.3), "intonation": one("intonation", 1.2)}), sid)
-                    y = tight(x, sr); rel = f"voice/{who}/g_{key}_{t * len(G['say']) + i + 1}.ogg"
+                    y = tidy(x, sr); rel = f"voice/{who}/g_{key}_{t * len(G['say']) + i + 1}.ogg"   # (a whole word, its natural tail: user 2026-10-18)
                     write(y, sr, PACK / rel); G["files"].append(rel)
                     print(f"{rel:<28} {text:<8} {len(y) / sr:.2f}s", flush=True)
         txt = json.dumps(S, ensure_ascii=False, indent=2) + "\n"

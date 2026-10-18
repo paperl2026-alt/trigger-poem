@@ -43,7 +43,7 @@
 - 台词和战斗声音的混编（`src/core/audio.js`，2026-10-18 查过别人的做法：DICE 的 HDR 音频把响度当优先级、只放最重要的几个声音（"播对的声音，不是所有声音"）；CRI ADX 的发声数上限组 + 优先级；常见的台词系统是优先级 + 冷却 + 说话时压低别的声音（ducking））：
   - **说话通道** `talk()`：两人共用一个。有人在说时，新的一句只有优先级高出 2 级才插进来（旧的 50 ms 淡出），否则不播；优先级 4 以下的闲聊离上一句开始至少 `TALK_GAP` 秒，`setIntensity` 超过 0.85（打得最凶）时不说；`voice()` 返回 true / false（没说）/ null（没有语音文件）。优先级在 `src/ui/stickers.js` PRIO（倒地 9、必杀 8……命中 1），没说出口的闲聊气泡也不出；标题页戳她们 3、离开 7。
   - **让开**：说话时效果总线 `fxBus` 降到 `DUCK_FX`、音乐 `musDuck` 降到 `DUCK_MUS`，说完慢慢回来；语音直接走 `sfxBus`（不被压）。
-  - **武器的声音是她自己的声音** `grain(who, V, pan, i)`：sounds.json `voices.<角色>.grains.<键>.files`，怎么播在角色的 `weapon.voice` / `active.voice`：`every` 至少隔几秒一个、`len` 只放前几秒、`rate`、`vol`；同一个人的新音节切掉上一个（一张嘴）；`seq` = 按第几发轮（猫娘的字）；她在说台词时不出武器声。没有音节文件时退回原来的枪声。
+  - **武器的声音是她自己的声音** `grain(who, V, pan, i)`：sounds.json `voices.<角色>.grains.<键>.files`，怎么播在角色的 `weapon.voice` / `active.voice`：`every` 至少隔几秒一个、`rate`、`vol`；每个字整个放完，上一个字还没说完时这一枪不出声（一张嘴；以前切成一截，用户说听着怪）；`seq` = 按第几发轮（猫娘的字）；她在说台词时不出武器声。没有音节文件时退回原来的枪声。
   - **怪叫**最多同时 `CRY_MAX` 个，满了只有更重要的（死 > 蓄力 > 攻击 > 挨打）顶掉最不重要的那个，否则跳过；sounds.json 音效写 `gap` 的，两次之间至少隔这么久（命中声）。
   - 离屏测试听不到：`tools/node/playthrough.cjs` 开局就打开声音，结果里 `audio` 是计数（说了 / 没说 / 插嘴的台词、武器音节、她说话时停掉的音节、怪叫播了 / 跳过）。
 - 关卡外的音效：`tools/ui_sfx.py` 从零合成（纸片的拍、滑、翻页、盖章 + 玻璃小铃，48 kHz，一点房间混响，Ogg Opus），写到 `public/content/base/sfx/ui/` 并登记进 sounds.json；每种声音一个函数，改了重跑；`--wav <目录>` 另存 wav 试听。代码里每个界面动作用自己的键（`uiMove` 光标移到、`ui` 确定、`uiBack`、`uiDeny`、`uiPage`、`uiTab`、`uiToggle`、`uiSwap`、`uiStart`、`stamp`、`count`、`item`、`levelUp`、`comicPage`、`panel`、`victory`、`defeat`），合成的替身在 audio.js `sfx`。
@@ -55,7 +55,8 @@
   - `read <角色>`：不出声音，列出每句用的风格和引擎实际的读法（假名）。汉字读错就在 `say` 里写假名。
   - `lines <角色> [场合 | 场合_第几句 …]`：读 text/stickers.json 的日语台词，♡ ♪ 不念、空格当停顿、~ 当长音，按 `read` 设好风格、语速、语气浓淡；生成后裁掉首尾静音、峰值拉到 -1 dB，用 ffmpeg 转 Ogg Opus 48k，写到 `public/content/base/voice/<角色>/<场合>_<第几句>.ogg` 并登记进 `lines`。不写场合就整个重做。
   - `say <角色> <风格> <输出> <文本>`：试一句。
-  - `grains <角色>`：武器的音节（sounds.json `voices.<角色>.grains`：`say` 每个音节、`style`、`speed` 可以每个音节一个），切得很紧（前面不留气、尾巴 30 ms），写到 `voice/<角色>/g_<键>_<n>.ogg`。
+  - `grains <角色>`：武器的音节（sounds.json `voices.<角色>.grains`：`say` 每个音节、`style` / `speed` / `intonation` 可以每个音节一个，`takes` 整串换几种语气再念几遍），和台词一样修剪（留自然的头和尾巴），写到 `voice/<角色>/g_<键>_<n>.ogg`。
+  - 解码时 `level()` 裁开头静音只裁到第一个大于 0.003 的采样再往前留 20 ms（以前 0.01 / 4 ms，轻的辅音 ふ し ひ 被裁掉）。
   - 音高（pitchScale）不调：AivisSpeech 一动音高音质就变差。
 - 主题曲 `tools/bgm_theme.py <名字> [--only <段>]` → `art/raw/bgm/<名字>.ogg`（游戏用）、`.mp3`（给人听）、`.wav`（不进 git）；语音引擎要开着（`voice_aivis.py start`）；整首渲染要十几分钟，`--only` 只出一段试听。
   - 结构：每段一个 `Sec`（自己的速度、小节数、伴奏 / 人声 / 混响送出三条轨），段落函数往里排东西，`mix()` 各自混（混响、人声频段给伴奏挖 5 dB、人声在时伴奏往下压、`glitches` 切片重复、`stop` 卡带减速），最后按顺序首尾接起来，超出结尾的混响尾巴绕回开头 = 文件本身无缝循环。

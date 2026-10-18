@@ -244,9 +244,10 @@ function level(b) {
   let peak = 0, start = b.length;
   for (let c = 0; c < b.numberOfChannels; c++) {
     const d = b.getChannelData(c);
-    for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > peak) peak = v; if (v > 0.01 && i < start) start = i; }
+    for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > peak) peak = v; if (v > 0.003 && i < start) start = i; }
   }
-  b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.004)) / b.sampleRate;
+  // (the lead-in kept generous: soft consonants - fu, shi, hi - start quietly and were cut off: user 2026-10-18)
+  b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.02)) / b.sampleRate;
 }
 function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = fxBus, fadeIn = 0 } = {}) {
   const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
@@ -347,7 +348,9 @@ export function grain(who, V, pan = 0, i = 0) {
   if (!ctx || muted || !files?.length) return false;
   if (talking(who)) { STATS.grainsQuiet++; return true; }
   const G = GRAIN.get(who) || {}, t = now();
-  if (t - (G.t ?? -9) < (V.every || 0)) return true;
+  // one mouth, and every word said whole (user 2026-10-18: cut short they sounded strange): while her last word is still being said, this
+  // shot says nothing; the next word starts as the last one ends
+  if (t < (G.end ?? -9) - 0.03 || t - (G.t ?? -9) < (V.every || 0)) return true;
   // seq: the syllable of the glyph she shoots, one of its takes at random (sounds.json grains takes); otherwise any of them but the last
   // two (user 2026-10-18: 突突突 alone was dull)
   const GR = C.sounds.voices[who].grains[V.grain || 'shot'], n = GR.say?.length || files.length;
@@ -356,9 +359,9 @@ export function grain(who, V, pan = 0, i = 0) {
   else { const free = files.map((_, j) => j).filter((j) => files.length < 4 || (j !== G.k && j !== G.k2)); k = free[Math.floor(Math.random() * free.length)]; }
   const b = BUF.get(files[k]);
   if (!b || b instanceof Promise) { if (b === undefined) load(files[k]); return false; }
-  stopGrain(who);
-  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate: (V.rate || 1) * (0.96 + Math.random() * 0.08), len: V.len || 0 });
-  GRAIN.set(who, { s, t, k, k2: G.k }); STATS.grains++;
+  const rate = (V.rate || 1) * (0.96 + Math.random() * 0.08);
+  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate });
+  GRAIN.set(who, { s, t, k, k2: G.k, end: t + (b.duration - (b.startAt || 0)) / rate }); STATS.grains++;
   return true;
 }
 // a monster's cry (windup / attack / hurt / die), its own or the default one. At most CRY_MAX at once: a new one only takes a place
