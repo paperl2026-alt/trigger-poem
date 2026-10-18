@@ -11757,6 +11757,17 @@
   "src": "assets/ep1/door2_leaf.webp",
   "w": 776
  },
+ "ep1/door2_room": {
+  "h": 927,
+  "hole": [
+   0.2618,
+   0.1175,
+   0.7382,
+   0.9978
+  ],
+  "src": "assets/ep1/door2_room.webp",
+  "w": 940
+ },
  "ep1/door3_frame": {
   "h": 1024,
   "hole": [

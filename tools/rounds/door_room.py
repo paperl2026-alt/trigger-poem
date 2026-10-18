@@ -11,7 +11,7 @@ from scipy import ndimage
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 A = ROOT / "public" / "content" / "base" / "assets"
-DOORS = [1, 3, 4, 9]
+DOORS = [1, 2, 3, 4, 9]
 SIDE, TOP, FADE = 0.55, 0.32, 0.16   # wall kept beside / above the opening (x its width / height), fading over this share of the cut
 
 if __name__ == "__main__":

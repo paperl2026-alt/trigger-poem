@@ -148,7 +148,7 @@
       "end": ["ep1/gallery_end2"],
       "ceil": ["ep1/gallery_ceil1", "ep1/gallery_ceil2", "ep1/gallery_ceil3"],
       "back": ["ep1/gallery_end1"],
-      "door": { "frame": "ep1/door3_room", "leaf": "ep1/door3_leaf", "w": 2.5, "x": 0 }
+      "door": { "frame": "ep1/door2_room", "leaf": "ep1/door2_leaf", "w": 2.5, "x": 0 }
     },
     "gimmicks": [
       {

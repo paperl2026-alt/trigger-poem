@@ -70,7 +70,7 @@
       },
       { "comic": "ep1_web" },
       {
-        "door": { "frame": "ep1/door3_frame", "leaf": "ep1/door3_leaf", "leaves": 2, "hinge": "left" }
+        "door": { "frame": "ep1/door2_frame", "leaf": "ep1/door2_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_fountain" },
       {
