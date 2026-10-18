@@ -13,7 +13,8 @@
       "tuning/behaviors.json",
       "tuning/layout.json",
       "tuning/settings.json",
-      "tuning/soft.json"
+      "tuning/soft.json",
+      "tuning/chase.json"
     ],
     "characters": ["characters/pink.json", "characters/cat.json"],
     "enemies": ["enemies.json"],
@@ -22,7 +23,7 @@
     "items": ["items.json"],
     "episodes": ["episodes.json"],
     "comics": ["comics.json"],
-    "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json", "sets/ep0.json", "sets/ep1.json"],
+    "sets": ["sets/school.json", "sets/school_p.json", "sets/corridor_test.json", "sets/ep0.json", "sets/ep1.json", "sets/ep2.json"],
     "text": ["text/ui.json", "text/stickers.json", "text/holds.json", "text/lessons.json", "text/credits.json"],
     "theme": ["theme.json"],
     "sounds": ["audio/sounds.json"],

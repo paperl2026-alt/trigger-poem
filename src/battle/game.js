@@ -13,6 +13,7 @@ import { Player } from './player.js';
 import { Enemy, Projectile } from './enemies.js';
 import { BOSSES } from './boss.js';
 import { Gimmick } from './gimmick.js';
+import { Chase } from './chase.js';
 import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { playDoor } from '../ui/door.js';
@@ -52,6 +53,7 @@ export class Game {
     this.hud = new Hud(this);
     this.comic = new Comic();
     this.actors = [];
+    this.chase = new Chase(this);   // (episode 2: she who cannot be killed, and the run she drives: src/battle/chase.js)
     this.addGimmicks();
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
@@ -165,6 +167,7 @@ export class Game {
     this.S = S;
     this.stationId = id;
     this.combat = false;
+    if (this.chase.mode === 'block' || this.chase.mode === 'prowl') this.chase.mode = null;
     // the covers fold away first; only then do the girls get up and move on (DESIGN: nobody runs through a cover)
     if (this.hud.gl.holdUI.kind !== 'stage' || !this.hud.gl.holdUI.on) this.hud.gl.hold(boss ? 'boss' : 'move', { name: boss && this.stage.boss ? tr(C.bosses[this.stage.boss]?.name || '') : '' });
     const fold = this.world.dropCovers();
@@ -193,6 +196,8 @@ export class Game {
       this.arrive(S, boss);
       return;
     }
+    // episode 2: a stretch run looking back at her (station chase, src/battle/chase.js); arrives at the end of it
+    if (S.chase) { this.post.u.wipe.value = 0; this.settleAnomaly(S); this.world.setCovers(S.covers); this.chase.run(S, () => this.arrive(S, boss)); return; }
     // something behind them: the view whips round where they stand (DESIGN「演出」 背后出现敌人)
     if (S.whip) { this.post.u.wipe.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
     const pts = [this.world.camPos.toArray(), ...(S.via || []), S.cam];
@@ -350,13 +355,14 @@ export class Game {
 
   arrive(S, boss) {
     this.world.setCovers(S.covers);
+    // episode 2: a hiding place (station hide): she comes, the forced stabs, then on (src/battle/chase.js)
+    if (S.hide) { this.enterCover(null, true); this.tweens.wait(0.3, () => this.chase.hide(S, () => this.onward(S))); return; }
     // a stretch they only walk through (no waves: a corridor between two places, DESIGN「门和小关的衔接」): a line or a sound on the way, on
     if (!boss && !S.waves?.length) {
       if (S.sfx && sfx[S.sfx]) sfx[S.sfx](0);
       this.tweens.wait(S.pause ?? 0.5, () => {
         if (S.say) this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], S.say);
-        if (this.stationQ.length) this.goStation(this.stationQ.shift(), false);
-        else { this.combat = true; this.waveLive = true; this.pendingSpawns = 0; this.waveIndex = 0; this.S = { ...S, waves: [[]] }; }   // (the stage's end: as if cleared)
+        this.onward(S);
       });
       return;
     }
@@ -369,6 +375,11 @@ export class Game {
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     if (S.turn) { this.enterCover(null, true); this.tweens.wait(S.turn.wait ?? 0.6, () => this.turn(S.turn, () => this.enterCover(() => this.beginStation()))); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
+  }
+  // on from a stop with no fight of its own (a walk-through, the end of a chase, a hiding place): the next stop, or the stage's end
+  onward(S) {
+    if (this.stationQ.length) this.goStation(this.stationQ.shift(), false);
+    else { this.combat = true; this.waveLive = true; this.pendingSpawns = 0; this.waveIndex = 0; this.S = { ...S, waves: [[]] }; }   // (the stage's end: as if cleared)
   }
   // the evil god breaks into the calm after-school world: a hit, the paper world tears, the light turns wrong, desks float up
   invade(then) {
@@ -410,6 +421,8 @@ export class Game {
   beginStation() {
     this.waveIndex = 0; this.spawners = []; this.gateHint = false;
     if (this.S.hint) this.tweens.wait(1.2, () => this.hint(this.S.hint));   // (a dark room: light the lamps)
+    if (this.S.block) this.chase.block(this.S);   // (episode 2: the way blocked while she comes up behind)
+    if (this.S.she) this.chase.prowl(this.S);     // (episode 2: she prowls this fighting stop)
     this.teach(this.S.lesson, () => this.startWave());
   }
   teach(id, then) {
@@ -466,9 +479,11 @@ export class Game {
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
     if (this.spawners?.some((s) => s.live)) return;
+    // episode 2: the things blocking the way (gimmicks with block: true) must all be gone too
+    if (this.S.block && this.actors.some((a) => a.g?.block && (!a.g.station || a.g.station === this.stationId) && !a.spent)) return;
     // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
     // up; the last wave of a stop is fought to the end
-    const left = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom).length;
+    const left = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker).length;
     const last = this.waveIndex >= this.S.waves.length - 1;
     if (left > (last ? 0 : T.combat.waveCarry ?? 0)) return;
     if (!last && left && this.waveEvents?.length) return;   // (this wave's kill-events still to come: it finishes first)
@@ -607,6 +622,7 @@ export class Game {
   clearActors() { for (const a of this.actors) if (!a.removed) a.dispose(); this.actors.length = 0; }
   clearProjectiles() { for (const a of this.actors) if (a instanceof Projectile && a.alive) { a.alive = false; if (a.lock) { a.lock.remove(); a.lock = null; } a.dieShatter({ u: 0.5, v: 0.5 }, 0.6); } }
   dispose() {
+    this.chase.dispose();
     this.clearActors();
     this.fx.clear();
     this.comic.abort();
@@ -695,6 +711,7 @@ export class Game {
   // One shot from player p at screen (sx, sy). Rifle rounds pierce; mantra hits ramp up on the same target.
   // Crits come from the accuracy Fever plus her mastery (critRate / critMul). Returns { n: targets hit, crit }.
   shoot(p, sx, sy) {
+    this.chase.onShot(p);   // (held by her: every pull of the trigger counts toward breaking free)
     const w = p.w;
     const K = T.combat;
     const hits = this.targetsAt(sx, sy, this.H * (p.ctrl?.kind === 'mouse' ? K.aimRadiusMouse : K.aimRadiusPad), 1 + (w.pierce || 0));
@@ -833,6 +850,7 @@ export class Game {
     const edt = dt * (T.combat.pace ?? 1);
     this.rdt = dt;
     this.etw.update(edt);
+    this.chase.update(dt);
     for (const a of this.actors) a.update(edt, now);
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }

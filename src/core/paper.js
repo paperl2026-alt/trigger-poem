@@ -249,6 +249,9 @@ export class DamageMap {
     g.globalCompositeOperation = 'lighter';
     this.tex.needsUpdate = true;
   }
+  // the marks fade (k = what is left: 0.9 keeps 90%), or all go at once (clear): episode 2's stalker never keeps her wounds for long
+  fade(k) { const g = this.g, v = Math.round(255 * k); g.globalCompositeOperation = 'multiply'; g.fillStyle = `rgb(${v},${v},${v})`; g.fillRect(0, 0, this.w, this.h); g.globalCompositeOperation = 'lighter'; this.tex.needsUpdate = true; }
+  clear() { const g = this.g; g.globalCompositeOperation = 'source-over'; g.fillStyle = '#000'; g.fillRect(0, 0, this.w, this.h); g.globalCompositeOperation = 'lighter'; this.heat = 0; this.tex.needsUpdate = true; }
   dispose() { this.tex.dispose(); }
 }
 

@@ -1,0 +1,68 @@
+{
+ "_doc": "第 2 话（docs/DESIGN.md「第 2 话」，src/battle/chase.js）：打不死的「她」和她带动的追逐。she：她的数值（stagger = 打满一次要多少伤害；windupStagger = 她张开剪刀蓄力时挨打的倍数；down / downDecay / downMin = 倒地秒数，每倒一次乘 downDecay、最少 downMin；stagDrain = 不挨打时硬直槽每秒掉多少；trapDown = 被机关砸中倒多久；walk / reach = 在房间里走的速度、够到人的距离；windup 蓄力秒数；lungeDmg 扑一下的伤害（穿过掩体）；grabChance 扑中时抓住人的概率，mash / mashTime = 狂点多少下、几秒内挣脱，grabDmg 抓着时每 0.7 秒掉多少；recoil 扑完退开几米；shove 每次挨打推开多少；h 各形态身高；kaiko* = 地下的お蚕様）。run：倒跑的追逐（speed 镜头每秒几米、herSpeed 她每秒几米、startDist 她开始离多远、reach 离多近就扑）。block：路障站点她从背后走过来（herSpeed、startDist、turnAt 近到几米镜头甩过去）。hide：躲藏点（stabs 一波捅几下、dmg 每下伤害、every 间隔、high / mid = 攒到多少比例算好 / 一般，next = 三种结局下一段追逐她离多远）。meter：争取到的时间每样加多少（满 max）。panic：头像颜色从 far 米开始变、near 米是最红。",
+ "chase": {
+  "she": {
+   "h": {
+    "a": 2.15,
+    "e": 2.4,
+    "c": 1.9,
+    "kaiko": 3.2
+   },
+   "stagger": 1100,
+   "windupStagger": 2.0,
+   "down": 5.5,
+   "downDecay": 0.88,
+   "downMin": 2.0,
+   "stagDrain": 0.08,
+   "trapDown": 8,
+   "riseTime": 0.9,
+   "walk": 1.5,
+   "reach": 3.0,
+   "windup": 1.2,
+   "lungeDmg": 22,
+   "grabChance": 0.35,
+   "mash": 14,
+   "mashTime": 4,
+   "grabDmg": 5,
+   "recoil": 2.2,
+   "shove": 0.02,
+   "kaikoStagger": 2600,
+   "kaikoDmg": 30
+  },
+  "run": {
+   "speed": 2.4,
+   "herSpeed": 3.0,
+   "startDist": 9,
+   "reach": 1.9
+  },
+  "block": {
+   "herSpeed": 0.6,
+   "startDist": 15,
+   "turnAt": 4.5
+  },
+  "hide": {
+   "stabs": 6,
+   "dmg": 9,
+   "every": 0.55,
+   "high": 0.7,
+   "mid": 0.35,
+   "next": {
+    "high": 13,
+    "mid": 8,
+    "low": 4.5
+   }
+  },
+  "meter": {
+   "trap": 30,
+   "door": 25,
+   "lure": 20,
+   "block": 15,
+   "knock": 12,
+   "max": 100
+  },
+  "panic": {
+   "near": 2.5,
+   "far": 14
+  }
+ }
+}

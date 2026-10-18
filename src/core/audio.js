@@ -197,13 +197,34 @@ const SONGS = {
 };
 let song = null, step = 0, nextT = 0, timer = null, intensity = 0;
 export function setIntensity(v) { intensity = v; }
+// the music: a recorded track (content audio/sounds.json music.<name>: files, vol, loop) plays when there is one, looping, crossfading
+// from what was playing; otherwise the synthesized loop of that name (SONGS). A name without either is silence (episode 2's quiet stretches:
+// only the clocks)
+let track = null, trackName = null;
 export function playMusic(name) {
   if (!ctx) return;
+  const M = C.sounds?.music?.[name];
+  if (M?.files?.length) {
+    if (trackName === name && track) return;   // (already on: a stage's stops keep it going)
+    stopMusic();
+    const f = M.files[Math.floor(Math.random() * M.files.length)], b = BUF.get(f);
+    if (!b || b instanceof Promise) { if (b === undefined) load(f); Promise.resolve(BUF.get(f)).then((x) => { if (x && !track && wantMusic === name) playMusic(name); }); wantMusic = name; return; }
+    const s = ctx.createBufferSource(); s.buffer = b; s.loop = M.loop !== false; if (M.loopStart != null) { s.loopStart = M.loopStart; s.loopEnd = M.loopEnd ?? b.duration; }
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, now()); g.gain.linearRampToValueAtTime((M.vol ?? 0.9), now() + (M.fadeIn ?? 0.8));
+    s.connect(g); g.connect(musBus); s.start(0, 0);
+    track = { s, g }; trackName = name; wantMusic = name;
+    return;
+  }
   stopMusic();
-  song = SONGS[name]; step = 0; nextT = now() + 0.1;
-  timer = setInterval(schedule, 25);
+  song = SONGS[name] || null; step = 0; nextT = now() + 0.1; wantMusic = name;
+  if (song) timer = setInterval(schedule, 25);
 }
-export function stopMusic() { if (timer) clearInterval(timer); timer = null; song = null; }
+let wantMusic = null;
+export function stopMusic(fade = 0.6) {
+  if (timer) clearInterval(timer); timer = null; song = null; wantMusic = null;
+  if (track) { const { s, g } = track; try { g.gain.setTargetAtTime(0.0001, now(), fade / 4); s.stop(now() + fade + 0.05); } catch (e) { /* over */ } track = null; trackName = null; }
+}
+export const musicNow = () => trackName || (song ? 'synth' : null);
 export function duckMusic(v, t = 0.3) { if (musBus) musBus.gain.setTargetAtTime(v, now(), t); }
 function schedule() {
   if (!song || muted) { if (song) nextT = now() + 0.1; return; }
@@ -286,6 +307,7 @@ export function preloadSounds() {
     for (const G of Object.values(v?.grains || {})) rest.push(...(G?.files || []));
   }
   for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) rest.push(...(m[a] || []));
+  for (const m of Object.values(S.music || {})) if (m?.files) rest.push(...m.files);
   preloading = Promise.all(first.map(load)).then(() => { STATS.menuReadyMs = Math.round(performance.now()); STATS.ctxState = ctx.state; STATS.menuSounds = first.length; });
   preloading.then(async () => { for (let i = 0; i < rest.length; i += 4) await Promise.all(rest.slice(i, i + 4).map(load)); });
   return preloading;
@@ -302,6 +324,31 @@ for (const k of Object.keys(sfx)) {
     return synth(...a);
   };
 }
+// a sound by its sounds.json key (the ones with no synthesized stand-in: episode 2's scissors, paper screens, clocks…); false = nothing
+// to play (yet). opt: pan, vol (times the key's), rate
+export function sound(key, opt = {}) {
+  const e = C.sounds?.sfx?.[key]; if (!ctx || muted || !e?.files?.length) return false;
+  if (e.gap) { if (now() - (LAST.get(key) ?? -9) < e.gap) return true; LAST.set(key, now()); }
+  return playOne(e.files, { pan: opt.pan || 0, vol: (e.vol ?? 1) * (opt.vol ?? 1), rate: (e.rate || 1) * (opt.rate ?? (0.94 + Math.random() * 0.12)), len: e.len || 0 });
+}
+// a looping bed (sounds.json sfx entries with loop: true: the clocks ticking, the rain, the fire): on / off with a fade; vol can change
+const BEDS = new Map();
+export function bed(key, on, vol = 1) {
+  if (!ctx) return;
+  const cur = BEDS.get(key);
+  if (!on) { if (cur === 'want') { BEDS.delete(key); return; } if (cur) { try { cur.g.gain.setTargetAtTime(0.0001, now(), 0.25); cur.s.stop(now() + 1.2); } catch (e) { /* over */ } BEDS.delete(key); } return; }
+  const e = C.sounds?.sfx?.[key];
+  if (cur === 'want') return;
+  if (cur) { cur.g.gain.setTargetAtTime((e?.vol ?? 1) * vol, now(), 0.3); return; }
+  if (!e?.files?.length) return;
+  const f = e.files[Math.floor(Math.random() * e.files.length)], b = BUF.get(f);
+  if (!b || b instanceof Promise) { if (b === undefined) load(f); Promise.resolve(BUF.get(f)).then((x) => { if (x && BEDS.get(key) === 'want') { BEDS.delete(key); bed(key, true, vol); } }); BEDS.set(key, 'want'); return; }
+  const s = ctx.createBufferSource(); s.buffer = b; s.loop = true;
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, now()); g.gain.setTargetAtTime((e.vol ?? 1) * vol, now(), 0.4);
+  s.connect(g); g.connect(fxBus); s.start(0, Math.random() * b.duration);
+  BEDS.set(key, { s, g });
+}
+export function bedsOff() { for (const k of [...BEDS.keys()]) bed(k, false); }
 // ---- the girls' voices (docs/TECH.md「声音」: how other games keep barks apart — one channel, priorities, gaps, ducking)
 // One channel for both girls: a line starts only when nobody is talking, or cuts in (the other fades out in 50 ms) when it matters
 // clearly more (2 priority steps); small talk (priority 4 and below) waits TALK_GAP after the last line and is dropped while the fight is

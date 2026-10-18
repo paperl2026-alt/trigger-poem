@@ -13,7 +13,7 @@
 //   spawner pours out of and stops it (Game.sealSpawner); { gate: true } one of the seals holding the drawbridge (PanelWorld.gateHit)
 import { Actor } from './enemies.js';
 import { tex } from '../core/assets.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 import { Ease } from '../core/tween.js';
 
 export class Gimmick extends Actor {
@@ -44,6 +44,7 @@ export class Gimmick extends Actor {
   fire(by) {
     const g = this.game;
     this.spent = true; this.u.outlineOn.value = 0;
+    if (this.g.block) g.chase?.cleared(this);   // (episode 2: a thing in the way is gone: time earned)
     for (const e of this.g.do || []) g.tweens.wait(e.t || 0, () => this.act(e, by));
   }
   // already done before this point of the place (a run started at a later stop, e.g. the boss in the studio whose portraits the shadows
@@ -76,7 +77,22 @@ export class Gimmick extends Actor {
       } });
     }
     if (e.gate) g.world.gateHit?.();
+    // episode 2 (src/battle/chase.js): it falls from where it hangs (drop: { t }), onto her if she is under it (trap: { r, down, hold });
+    // a door / shutters slammed between her and the girls (door: { hold }); a clock struck to draw her away (lure: { t }); meter: time earned
+    if (e.drop) this.drop(e.drop);
+    if (e.trap) g.tweens.wait(e.drop ? (e.drop.t ?? 0.45) : e.topple ? 0.7 : 0, () => g.chase?.trap(this, e.trap));
+    if (e.door) g.chase?.door(this, e.door);
+    if (e.lure) g.chase?.lure(this, e.lure);
+    if (e.meter) g.chase?.add(e.meter, this.center());
+    if (e.sound) sound(e.sound);
     if (e.gone) g.tweens.run(0.6, (k) => { this.u.opacity.value = 1 - k; }, { onDone: () => { this.alive = false; this.dispose(); } });
+  }
+  // a hanging thing comes down (its chain shot through): falls flat onto the floor with a crash
+  drop(spec) {
+    const g = this.game, P = this.root.position, y1 = this.pivot === 'center' ? this.h * 0.42 : 0, d = spec.t ?? 0.45;
+    sound('beamFall') || sfx.slam();
+    g.tweens.to(P, { y: y1 }, d, { ease: Ease.inQuad, onDone: () => { g.post.shake(1.0); g.fx.puff(P, 12, 0xd8c8b0, 1.3); sfx.thud(0); } });
+    g.tweens.to(this.root.rotation, { z: (Math.random() - 0.5) * 0.7 }, d, { ease: Ease.inQuad });
   }
   update(dt, t) {
     if (!this.alive) return;

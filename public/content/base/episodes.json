@@ -138,7 +138,8 @@
     "cover": "ui/sel_card_ep1",
     "set": "ep1_shop",
     "par": 900,
-    "reward": { "item": "cone" }
+    "reward": { "item": "cone" },
+    "unlocks": ["ep2"]
   },
   "corridor_test": {
     "id": "corridor_test",
@@ -151,6 +152,29 @@
     "sub": { "zh": "平板拼搭场景 + 深度浮雕", "en": "Panel stage + relief", "ja": "パネル舞台＋レリーフ" },
     "steps": [
       { "stage": "corridor", "stations": ["s1", "s2"], "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" } }
+    ]
+  },
+  "ep2": {
+    "id": "ep2",
+    "no": 2,
+    "title": { "zh": "第2话　钟楼惊宿", "en": "Ep.2  Bell Tower Inn", "ja": "第2話　時鐘の宿" },
+    "sub": { "zh": "致敬：《クロックタワー》(1995)", "en": "Homage: Clock Tower (1995)", "ja": "オマージュ：クロックタワー (1995)" },
+    "blurb": {
+      "zh": "订房网站上便宜得离谱的周末方案：雾里山城的老民宿「时守屋」，一晚 980 円。两人到了才发现，迎客的只有一张留言条，和柜子里那个拿着剪刀的人偶。",
+      "en": "A weekend deal too cheap to be true: an old inn in a misty mountain town, 980 yen a night. Nobody greets them but a note on the desk, and a doll in a glass case holding a pair of scissors.",
+      "ja": "予約サイトで見つけた格安プラン。霧の山あいの古い宿「時守屋」、一泊980円。出迎えたのは置き手紙と、ガラスケースの中でハサミを持つ人形だけだった。"
+    },
+    "set": "ep2_proto",
+    "par": 1800,
+    "reward": { "outfits": ["yk"] },
+    "steps": [
+      {
+        "stage": "inn",
+        "set": "ep2_proto",
+        "stations": ["p0", "p1", "p2", "p3", "p4"],
+        "name": { "zh": "时守屋", "en": "TOKIMORI INN", "ja": "時守屋" },
+        "she": "she"
+      }
     ]
   }
 }

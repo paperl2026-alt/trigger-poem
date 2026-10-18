@@ -22,5 +22,7 @@
     "spin": 4
   },
   "cherry": { "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"], "size": 0.45, "spin": 8 },
-  "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3 }
+  "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3 },
+  "lanternlet": { "keys": ["p_cherry", "p_cherry_b"], "size": 0.42, "spin": 4 },
+  "kokehead": { "keys": ["p_cherry", "p_cherry_b"], "size": 0.4, "spin": 10 }
 }

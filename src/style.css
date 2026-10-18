@@ -172,6 +172,25 @@ button { font-family: var(--font); cursor: pointer; }
 #comic.on { display: flex; align-items: center; justify-content: center; animation: fadein .2s; }
 #comic.out { animation: fadeout .35s forwards; }
 /* a ghost's hands drag the view away (Game.grabbed) */
+/* episode 2 (src/battle/chase.js): inside a hiding place the view is a slit between two dark doors; a stab = a blade flashing across
+   (stopped ones gold); held by her: mash the trigger (the bar fills); the time earned: a little wadokei clock top left */
+#ui .peek { position: fixed; inset: 0; pointer-events: none; z-index: 11; opacity: 0; transition: opacity .5s;
+  background: linear-gradient(90deg, #07040a 0 33%, rgba(7,4,10,.7) 37%, transparent 41% 59%, rgba(7,4,10,.7) 63%, #07040a 67% 100%); }
+#ui .peek.on { opacity: 1; }
+#ui .stab { position: fixed; width: 34vh; height: 2.2vh; margin: -1.1vh 0 0 -17vh; pointer-events: none; z-index: 12; transform: rotate(var(--r)) scaleX(0);
+  background: linear-gradient(90deg, transparent, #c9c2b8 18%, #fff 50%, #b8b0a6 82%, transparent); clip-path: polygon(0 50%, 12% 0, 100% 40%, 100% 60%, 12% 100%);
+  filter: drop-shadow(0 0 1vh #ff2040); animation: stab .16s ease-out forwards, stabOut .5s .7s forwards; }
+#ui .stab.stop { filter: drop-shadow(0 0 1.2vh #ffd166); }
+@keyframes stab { to { transform: rotate(var(--r)) scaleX(1); } }
+@keyframes stabOut { to { opacity: 0; } }
+#ui .mash { position: fixed; left: 50%; top: 26%; transform: translate(-50%, -50%) rotate(-4deg); z-index: 13; pointer-events: none; text-align: center; --k: 0; }
+#ui .mash b { display: block; font: 900 6.4vh 'Noto Sans SC', sans-serif; color: #fff; -webkit-text-stroke: .5vh #000; paint-order: stroke; text-shadow: .6vh .6vh 0 #d8141e; letter-spacing: .1em; }
+#ui .mash i { display: block; margin: 1vh auto 0; width: 36vh; height: 2.2vh; background: #160a10; border: .4vh solid #fff; transform: skewX(-14deg); position: relative; overflow: hidden; }
+#ui .mash i::after { content: ''; position: absolute; inset: 0; transform-origin: left; transform: scaleX(var(--k)); background: repeating-linear-gradient(-45deg, #ff2a3a 0 1.2vh, #ff7a59 1.2vh 2.4vh); }
+#ui .mash.pop b { animation: mashPop .12s; }
+@keyframes mashPop { 50% { transform: scale(1.12); } }
+#ui .tmeter { position: fixed; left: 2.2vh; top: 2.2vh; width: 11vh; height: 11vh; z-index: 9; pointer-events: none; opacity: 0; transform: scale(.7) rotate(-20deg); transition: opacity .4s, transform .4s cubic-bezier(.3,1.6,.5,1); }
+#ui .tmeter.on { opacity: .95; transform: none; }
 #ui .grab { position: fixed; left: 50%; top: 0; width: 120vw; transform: translate(-50%, -100%); pointer-events: none; z-index: 12; animation: grab 2s ease-in-out forwards; }
 @keyframes grab { 0% { transform: translate(-50%, -100%) scale(0.8); opacity: 0; } 25% { transform: translate(-50%, -18%) scale(1.15); opacity: 1; } 75% { transform: translate(-50%, -8%) scale(1.3) rotate(-4deg); opacity: 1; } 100% { transform: translate(-50%, 10%) scale(1.6); opacity: 0; } }
 /* a paw reaching down to haul the view up out of a pit (Game.enterFrom) */

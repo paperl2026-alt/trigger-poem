@@ -47,6 +47,13 @@ void main(){
   c = mix(c, vec3(1.0), flash);
   gl_FragColor = vec4(c, t.a * a);
 }`;
+// episode 2: the original's portrait colour (Clock Tower: calm blue, then yellow, orange, red as the stalker nears): a disc behind the chibi,
+// its rim brighter, pulsing when she is right there
+const PANIC_FRAG = `uniform vec3 col; uniform float a; uniform float time; varying vec2 vUv;
+void main(){ float r = length(vUv - 0.5) * 2.0; float band = smoothstep(0.8, 0.86, r) * smoothstep(1.0, 0.95, r); if (band <= 0.0) discard;
+  float glow = 0.75 + 0.25 * sin(atan(vUv.y - 0.5, vUv.x - 0.5) * 6.0 - time * 4.0);
+  gl_FragColor = vec4(col * (0.8 + 0.4 * glow), a * band); }`;
+const PANIC = [[0.25, 0.5, 0.95], [1.0, 0.86, 0.3], [1.0, 0.55, 0.18], [0.95, 0.12, 0.16]].map((c) => new THREE.Color(...c));
 // bars: a fill with moving diagonal stripes and a lighter "just lost" chunk, in a rounded slot
 const BAR_FRAG = `
 uniform float fill; uniform float lag; uniform vec3 col; uniform vec3 col2; uniform float a; uniform float time; uniform float flash; uniform vec2 px;
@@ -205,6 +212,8 @@ class Panel {
     this.layer = picture(this.lay.img || `ui/hud_${p.slot ? 'right' : 'left'}`, 61, p.slot * 0.37);
     recolor(this.layer, col);
     this.face = picture(`ui/chibi_${this.who()}_1`, 62, 0.2); this.face.material.uniforms.circle.value = 0.5; this.face.material.uniforms.boil.value = 0;
+    this.panicM = new THREE.Mesh(quad, mat(PANIC_FRAG, { col: { value: PANIC[0].clone() }, a: { value: 0 }, time: { value: 0 } }));
+    this.panicM.renderOrder = 62.4; this.panicM.frustumCulled = false; g.add(this.panicM);
     this.ring = new THREE.Mesh(quad, mat(RING_FRAG, { fill: { value: 0 }, r0: { value: 0 }, r1: { value: 1 }, segs: { value: D.ring.segs },
       a0: { value: D.ring.from * Math.PI / 180 }, a1: { value: D.ring.to * Math.PI / 180 }, col: { value: col.clone() }, a: { value: 1 }, time: { value: 0 },
       full: { value: 0 }, on: { value: 0 } }));
@@ -258,6 +267,7 @@ class Panel {
     const pc = D.portrait.c, pr = D.portrait.r * 1.32;   // the chibi's own round frame lies outside the white disc: masked off
     const disc = D.portrait.r * 1.1;
     L.box(this.face, [pc[0] - pr, pc[1] - pr, pc[0] + pr, pc[1] + pr], an);
+    const pd = disc * 1.22; L.box(this.panicM, [pc[0] - pd, pc[1] - pd, pc[0] + pd, pc[1] + pd], an);
     this.face.material.uniforms.circle.value = disc / (2 * pr);
     const rc = D.ring.c, rr = D.ring.r1 + 2;
     L.box(this.ring, [rc[0] - rr, rc[1] - rr, rc[0] + rr, rc[1] + rr], an);
@@ -307,6 +317,11 @@ class Panel {
     HU.col.value.copy(hp < 0.3 && Math.sin(t * 14) > 0 ? RED : this.col);
     // the whole panel nudges when she takes a hit
     const sx = this.shake * Math.sin(t * 70) * s * 6;
+    // her portrait's colour while she is about (episode 2, src/battle/chase.js panic)
+    { const ch = this.hud.game.chase, PU = this.panicM.material.uniforms, k = ch?.panic || 0, vis = ch && (ch.she || ch.mode);
+      PU.a.value += ((vis ? 0.9 : 0) - PU.a.value) * Math.min(1, dt * 3);
+      const f = Math.min(2.999, k * 3), i = Math.floor(f); PU.col.value.copy(PANIC[i]).lerp(PANIC[i + 1], f - i);
+      PU.time.value = t; if (k > 0.8) PU.col.value.multiplyScalar(0.85 + 0.3 * Math.abs(Math.sin(t * 9))); this.panicM.visible = PU.a.value > 0.01; }
     // skill ring
     const RU = this.ring.material.uniforms;
     RU.fill.value = p.activeOn ? p.activeT / p.a.dur : p.charge; RU.time.value = t; RU.full.value = p.charge >= 1 && !p.activeOn ? 1 : 0; RU.on.value = p.activeOn ? 1 : 0;
@@ -392,7 +407,7 @@ class Panel {
     this.layer.position.x += sx;
     if (this.heart) this.heart.scale.multiplyScalar(1 + (hp < 0.3 ? 0.15 * Math.max(0, Math.sin(t * 9)) : 0.05 * Math.max(0, Math.sin(t * 4))));
   }
-  meshes() { return [this.layer, this.face, this.ring, this.hp, this.heart, this.ammoIcon, ...this.ticks, ...Object.values(this.t).map((x) => x.m), ...this.fv.flatMap((f) => [f.icon, f.label.m, f.lv.m])].filter(Boolean); }
+  meshes() { return [this.layer, this.panicM, this.face, this.ring, this.hp, this.heart, this.ammoIcon, ...this.ticks, ...Object.values(this.t).map((x) => x.m), ...this.fv.flatMap((f) => [f.icon, f.label.m, f.lv.m])].filter(Boolean); }
 }
 
 // ---------------------------------------------------------------- the top middle: stage name, combo, rank
