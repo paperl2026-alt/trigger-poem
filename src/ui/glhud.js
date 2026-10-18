@@ -14,6 +14,7 @@ import { Hold } from './hold.js';
 import { Alerts } from './alerts.js';
 import { sfx } from '../core/audio.js';
 import { SIGNS, ledCanvas } from './ledsign.js';
+import { FeverGauge } from './feverfx.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }';
 // every HUD picture: boil (the lines wobble a little at 8 steps a second, like drawn animation), a light sweeping along the white
@@ -219,13 +220,11 @@ class Panel {
     // her special is ready: a badge stamped over her ring until she uses it (DESIGN「必杀」: you must see it at once)
     this.rdy = new Text(66, { color: '#ffffff', shadow: '#d8141e', sw: 0.16 }); this.rdyK = new Text(66, { color: '#fff36a', sw: 0.18 });
     this.rdy.m.visible = this.rdyK.m.visible = false; this.rdyT = 0; this.wasReady = false;
-    // Fever: three gauges of six segments, each with its icon, label and level
+    // Fever: three gauges of six segments, each with its icon, label and level; each kind its own look (feverfx.js)
     this.fv = FEVER_KEYS.map((k, i) => {
       const F = D.fever[i], c = new THREE.Color(B.colors.fever[k]);
       const icon = F.icon ? picture(`ui/hud_ic_${['flame', 'aim', 'chain'][i]}`, 64, i * 0.3) : null;   // the new panels have the icons in their art
-      const segs = F.segs.map(() => { const m = new THREE.Mesh(quad, new THREE.MeshBasicMaterial({ color: c, transparent: true, depthTest: false, depthWrite: false }));
-        m.renderOrder = 63; m.frustumCulled = false; return m; });
-      return { k, F, c, icon, segs, label: new Text(65, { color: B.colors.fever[k], sw: 0.18 }), lv: new Text(65, { sw: 0.16 }), lvN: -1, up: 0 };
+      return { k, F, c, icon, gauge: new FeverGauge(k, F, c), label: new Text(65, { color: B.colors.fever[k], sw: 0.18 }), lv: new Text(65, { sw: 0.16 }), lvN: -1, up: 0 };
     });
     // ammo: her 40-round magazine as ticks along the slab's curve, or the cat girl's 8 talismans
     this.ammoIcon = !this.cat && D.ammo.icon ? picture('ui/hud_ic_bullets', 64, 0.8) : null;
@@ -240,7 +239,7 @@ class Panel {
       for (let i = 0; i < n; i++) this.ticks.push(picture(this.tali.ready, 63, i * 0.21));
     }
     for (const m of [this.layer, this.face, this.ring, this.hp, this.heart, this.ammoIcon, ...this.ticks, ...Object.values(this.t).map((x) => x.m),
-      ...this.fv.flatMap((f) => [f.icon, ...f.segs, f.label.m, f.lv.m]), this.rdy.m, this.rdyK.m]) if (m) g.add(m);
+      ...this.fv.flatMap((f) => [f.icon, ...f.gauge.meshes, f.label.m, f.lv.m]), this.rdy.m, this.rdyK.m]) if (m) g.add(m);
     this.last = {}; this.lag = 1; this.shake = 0; this.faceKey = ''; this.faceT = 0; this.faceHold = 0; this.event = null; this.lastCombo = 0;
   }
   who() { return this.cat ? 'cat' : 'pink'; }
@@ -265,7 +264,7 @@ class Panel {
     this.ring.material.uniforms.r0.value = D.ring.r0 / rr; this.ring.material.uniforms.r1.value = D.ring.r1 / rr;
     L.box(this.hp, D.hp.box, an); this.hp.material.uniforms.px.value.set((D.hp.box[2] - D.hp.box[0]) * s, (D.hp.box[3] - D.hp.box[1]) * s);
     if (this.heart) L.box(this.heart, D.hp.heart, an);
-    this.fv.forEach((f) => { if (f.icon) L.box(f.icon, f.F.icon, an); f.F.segs.forEach((b, i) => L.box(f.segs[i], [b[0] + 1.5, b[1] + 1.5, b[2] - 1.5, b[3] - 1.5], an, 1, -3)); });
+    this.fv.forEach((f) => { if (f.icon) L.box(f.icon, f.F.icon, an); f.gauge.layout(L, an); });
     if (this.ammoIcon) L.box(this.ammoIcon, D.ammo.icon, an);
     // magazine ticks along the curve through three points; talismans in a row
     if (!this.cat) {
@@ -295,7 +294,7 @@ class Panel {
     const p = this.p, g = this.hud.game, L = this.hud.L, s = L.s, last = this.last;
     const on = p.slot === 0 || g.p2on();
     for (const m of this.meshes()) m.visible = on && !(m.material.uniforms?.map && !m.material.uniforms.map.value);
-    if (!on) { this.fv.forEach((f) => f.segs.forEach((m) => { m.visible = false; })); return; }
+    if (!on) { this.fv.forEach((f) => f.gauge.hide()); return; }
     const down = p.state === 'down';
     // shake when hit
     this.shake = Math.max(0, this.shake - dt * 3);
@@ -357,12 +356,12 @@ class Panel {
         m.material.uniforms.a.value = full ? 1 : 0.85;
       }
     });
-    // Fever gauges: lit segments, level text, a pop on level-up
+    // Fever gauges: the segments (feverfx.js: their own look, flaring where they rise), level text, a pop on level-up
     this.fv.forEach((f) => {
-      const lv = p.fever.level(f.k), v = p.fever.v[f.k], max = T.fever.maxLevel, lit = lv >= max ? 6 : Math.floor(v / max * 6 + 1e-6);
-      if (lv > f.lvN && f.lvN >= 0) { f.up = 1; if (lv >= max) this.react('fever', 1.4); }
+      const lv = p.fever.level(f.k), v = p.fever.v[f.k], max = T.fever.maxLevel, lvUp = lv > f.lvN && f.lvN >= 0;
+      if (lvUp) { f.up = 1; if (lv >= max) this.react('fever', 1.4); }
       f.lvN = lv; f.up = Math.max(0, f.up - dt * 2.5);
-      f.segs.forEach((m, i) => { m.visible = i < lit; m.material.color.copy(f.c).lerp(WHITE, f.up * 0.6 + (lv >= max ? 0.25 + 0.25 * Math.sin(t * 9 + i) : 0)); });
+      f.gauge.update(dt, t, { lv, v, max, up: f.up, lvUp });
       const F = f.F;
       f.label.set(tr(C.text.feverLabel[f.k]), (F.label[3] - F.label[1]) * s * 0.8, undefined, (F.label[2] - F.label[0]) * s * 1.2);
       f.label.at(L.x((F.label[0] + F.label[2]) / 2, this.an), L.y((F.label[1] + F.label[3]) / 2, this.an), -4, 1 + f.up * 0.3);
