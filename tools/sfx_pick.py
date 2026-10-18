@@ -54,6 +54,8 @@ def score(kind, sr, x):
     attack = float((np.argmax(e > -6) - on[0]) * 0.01)
     rms = 20 * np.log10(np.sqrt((x ** 2).mean()) + 1e-9); pk = 20 * np.log10(np.abs(x).max() + 1e-9); crest = pk - rms
     ends_inside = tail < L - 0.12
+    # (a hit that never decays - its envelope's median within 12 dB of its peak - is the generator's noise texture: never picked)
+    if kind in ("hit", "multi") and float(np.median(e)) > -12: return -1e6, dict(start=round(start, 2), floor=round(float(np.median(e)), 1), noise=True)
     if kind == "hit":
         s = crest - gaps * 6 - start * 12 - attack * 40 - max(0.0, floor + 18) * 1.5 + (6 if ends_inside else -8)
     elif kind == "multi":
@@ -99,7 +101,8 @@ def main():
         cand = []
         for p in files:
             sr, x = read2(p); sc, st = score(kind, sr, x); cand.append((sc, p, sr, x, st))
-        cand.sort(key=lambda c: -c[0]); keep = cand[:s.get("keep", 6)]
+        cand.sort(key=lambda c: -c[0]); keep = [c for c in cand if c[0] > -1e5][:s.get("keep", 6)]
+        if not keep: print("only noise for", key, "- make it again"); continue
         report[key] = [(round(float(c[0]), 1), c[1].name, {k: (float(v) if not isinstance(v, bool) else v) for k, v in c[4].items()}) for c in cand]
         rows, out = [], []
         for c in OUT.glob(f"{key}_*.ogg"):

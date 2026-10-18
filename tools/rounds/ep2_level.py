@@ -38,10 +38,12 @@ def hall(k):
     if have(f"ep2/{k}_end1"): H["end"] = [f"ep2/{k}_end1"]
     if have(f"ep2/{k}_back1"): H["back"] = [f"ep2/{k}_back1"]
     outs = [f"ep2/{k}_outside{i}" for i in (1, 2) if have(f"ep2/{k}_outside{i}")]
-    if outs:   # (an open place: the garden / the town beyond its railings, on both sides)
+    if outs:   # (an open place: the garden / the town beyond its railings, on both sides; the bell chamber is open on all four)
         H["outside"] = outs[0]
         H["outsideAt"] = [{"k": outs[0], "x": -W / 2 - 14, "z": (z0 + z1) / 2, "ry": math.pi / 2, "w": 64, "yk": 0.32},
                           {"k": outs[-1], "x": W / 2 + 14, "z": (z0 + z1) / 2, "ry": -math.pi / 2, "w": 64, "yk": 0.32}]
+        if k == "kane": H["outsideAt"] += [{"k": outs[0], "x": 0, "z": z1 - 14, "ry": 0, "w": 64, "yk": 0.32},
+                                          {"k": outs[-1], "x": 0, "z": z0 + 14, "ry": math.pi, "w": 64, "yk": 0.32}]
     return H
 
 def door(key, W, h):

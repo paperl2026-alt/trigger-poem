@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
 import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex, loadLog } from './core/assets.js';
-import { coreKeys, stageKeys, stageFrom, stageAt, outfitKeys } from './core/groups.js';
+import { coreKeys, stageFrom, stageAt, outfitKeys, stageKeysAt, placeOf } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
 import { initAudio, sfx, preloadSounds } from './core/audio.js';
@@ -130,12 +130,13 @@ function needPics(keys, then) {
 }
 G.waits = [];   // ms the loading bar was shown before each stage (tools/node/playthrough.cjs)
 G.needPics = needPics;
-const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : []), ...outfitKeys(SAVE.team, (id) => SAVE.chars[id]?.outfit)]);
+// (a stage through several places: only the place it starts in and the next one, src/core/groups.js stageKeysAt)
+const picsFor = (ep, st, station) => new Set([...coreKeys(), ...(st ? stageKeysAt(ep, st, placeOf(st, station)) : []), ...outfitKeys(SAVE.team, (id) => SAVE.chars[id]?.outfit)]);
 function startRun(epId = 'ep0', step = 0, station = null) {
   const ep0 = C.episodes[epId] || C.episodes.ep0;
   // a long stage's checkpoint (episode 2): the retry gives it; starting that stage again from the select screen resumes there too
   const cp = SAVE.eps[epId]?.cp; if (!station && cp && cp.step === step) station = cp.station;
-  needPics(picsFor(ep0, stageAt(ep0, step)), () => beginRun(ep0, step, station));   // (the ending: the last stage's place)
+  needPics(picsFor(ep0, stageAt(ep0, step), station), () => beginRun(ep0, step, station));   // (the ending: the last stage's place)
 }
 function beginRun(ep, step, station = null) {
   clearScreen();
@@ -274,7 +275,7 @@ async function boot() {
   if (q.has('outfit')) for (const id of SAVE.team) if (SAVE.chars[id]) SAVE.chars[id].outfit = q.get('outfit');   // test runs: ?outfit=yk (both wear it)
   if (q.has('play') || q.has('ep') || q.has('step')) {
     if (q.has('skip')) DBG.skip = true;
-    startRun(q.get('ep') || 'ep0', +(q.get('step') || 0));
+    startRun(q.get('ep') || 'ep0', +(q.get('step') || 0), q.get('station'));   // (test runs: &station= a stop inside a long stage)
   } else if (q.has('select')) toSelect();
   else toTitle();
   requestAnimationFrame(frame);

@@ -65,7 +65,8 @@ export class Game {
     this.layout(G.W, G.H);
   }
   // which set a step plays in: its own, or the next stage's (a comic / door before a stage), or the episode's
-  setOf(i) { const st = stageAt(this.ep, i); return st?.set || this.ep.set; }   // (the pictures loaded for the start are that stage's: main.js)
+  // (the pictures loaded for the start are that stage's, main.js; a stage through several places: the place of the stop it starts at)
+  setOf(i) { const st = stageAt(this.ep, i); return st?.places ? placeOf(st, this.run.station) : st?.set || this.ep.set; }
   makeWorld(id) { const d = C.sets[id]; return d?.panels ? new PanelWorld(this, id) : d?.plates ? new PlateWorld(this, id) : new World(this, id); }
   // build the set (first time), or swap to another one between stages: the heroines, the effects and the camera move over
   useSet(id) {

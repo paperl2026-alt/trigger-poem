@@ -460,6 +460,12 @@ export class Chase {
     if (this.armed && she.state !== 'down' && she.state !== 'rising') this.arm(null);   // (she got up before it was shot: next time)
     if (g.lull || she.busy()) return;
     if (she.state === 'stalk' || she.state === 'follow') this.stalk(dt);
+    // (she keeps to where the view looks, between the camera and the clock's middle: never beside the camera where she cannot be seen)
+    if (!she.busy() && she.state !== 'windup') {
+      const c = g.world.camPos, P = she.root.position, fx = this.center.x - c.x, fz = this.center.z - c.z, fl = Math.hypot(fx, fz) || 1, ux = fx / fl, uz = fz / fl;
+      const rx = P.x - c.x, rz = P.z - c.z, along = Math.max(K().she.reach * 0.9, rx * ux + rz * uz), side = -rx * uz + rz * ux, lim = along * 0.4;
+      if (Math.abs(side) > lim) { const s2 = side + (Math.sign(side) * lim - side) * Math.min(1, dt * 3); P.x = c.x + ux * along - uz * s2; P.z = c.z + uz * along + ux * s2; }
+    }
     // between her lunges each form has a shot of its own (DESIGN 第 2 话 决战: forms and attacks switching), when she is not close: a kicks a
     // geta off at one of them, c rears and throws a fan of scissors and pins, e looses paper cranes from her sleeves (and the dolls, the scream)
     this.shotT = (this.shotT ?? 4) - dt;
@@ -602,11 +608,12 @@ export class Chase {
     if (this.lit % this.perForm === 0) this.changeForm();
   }
   changeForm() {
-    const g = this.g, she = this.she, P = she ? she.root.position.clone() : this.center.clone();
+    const g = this.g;
     this.formI = Math.min(this.forms.length - 1, this.formI + 1);
     g.lull = true; sound('roar') || sfx.roar(); sound('madness'); g.post.flash(0.8, 0xff3a5a); g.post.shake(1.4);
     g.hud.gl.hold('boss', { name: t('sheForm' + this.formI) });
-    g.tweens.wait(1.6, () => { const n = this.ensure(this.forms[this.formI], { x: P.x, z: P.z }); n.state = 'stalk'; n.speedK = 1 + this.formI * 0.25; g.lull = false; });
+    g.tweens.wait(1.6, () => { const n = this.ensure(this.forms[this.formI], { x: this.center.x, z: this.center.z }); n.state = 'stalk';   // (out of the clock's middle)
+      n.speedK = 1 + this.formI * 0.25; g.lull = false; });
   }
   // every plate lit: the bell (a gimmick with toll) can be struck; both specials come full for it
   bell() {
