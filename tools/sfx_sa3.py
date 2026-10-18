@@ -10,6 +10,13 @@ import argparse, importlib.util, json, os, pathlib, random, sys, time
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 SA3 = pathlib.Path(os.environ.get("SA3_ROOT", r"C:\AI\sa3"))
 OUT = ROOT / "art" / "raw" / "sfx_ai"
+# always a negative prompt: without one about half the prompts come out as full-scale white noise, every seed (tried 2026-10-18: the
+# same prompt with this negative is clean)
+NEG = "white noise, static, hiss, distortion, low quality"
+# and only durations it can do: at others (0.4-0.9, 1.1, 1.2, 1.6, 1.8, 2.2 s ...) Small-SFX gives full-scale white noise for EVERY prompt and
+# seed (found 2026-10-18 by trying one prompt at many lengths); a sound is made at the next safe length and trimmed by tools/sfx_pick.py
+SAFE = [1.0, 1.4, 1.5, 2.0, 2.4, 2.6, 3.0, 4.0, 6.0, 8.0, 10.0]
+def safe(d): return next((x for x in SAFE if x >= d - 1e-6), d)
 
 
 def load_model():
@@ -46,7 +53,7 @@ def main():
         (d / "prompts.json").write_text(json.dumps(log, ensure_ascii=False, indent=1), encoding="utf-8")
         for i in range(max(0, n)):
             seed = random.randrange(1, 2**31 - 1); t1 = time.time()
-            audio = model.generate(prompt="TrackType: SFX, " + s["prompt"], negative_prompt=s.get("neg"), duration=s["dur"], seed=seed)
+            audio = model.generate(prompt="TrackType: SFX, " + s["prompt"], negative_prompt=s.get("neg") or NEG, duration=safe(s["dur"]), seed=seed)
             x = audio[0] if hasattr(audio, "shape") and len(audio.shape) == 3 else audio
             x = x.float().cpu().numpy().T if hasattr(x, "cpu") else x
             sf.write(str(d / f"{key}_{seed}.wav"), x, 44100)

@@ -297,6 +297,14 @@ function playOne(files, opt) {
 // decoding all of them at once kept the menus' own sounds waiting behind ~170 others (user 2026-10-18: the first clicks were silent):
 // first the menus' effects and the lines said there (boot waits for these, behind the loading bar), then the rest a few at a time
 const MENU_SFX = /^(ui|stamp|count|item|levelUp|comicPage|panel|victory|defeat|clear)/, MENU_LINES = /^(quit|poke|start|win|lose)_/;
+// the recorded music is not preloaded with the rest (a track is ~30 MB decoded): a run decodes its own episode's tracks (warmMusic) and
+// lets the others go
+export function warmMusic(names) {
+  if (!ctx) return;
+  const M = C.sounds?.music || {}, want = new Set(names.flatMap((n) => M[n]?.files || []));
+  for (const m of Object.values(M)) for (const f of m?.files || []) if (!want.has(f) && BUF.has(f) && track?.s.buffer !== BUF.get(f)) BUF.delete(f);
+  for (const f of want) load(f);
+}
 let preloading = null;
 export function preloadSounds() {
   if (preloading || !ctx) return preloading || Promise.resolve();
@@ -307,7 +315,6 @@ export function preloadSounds() {
     for (const G of Object.values(v?.grains || {})) rest.push(...(G?.files || []));
   }
   for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) rest.push(...(m[a] || []));
-  for (const m of Object.values(S.music || {})) if (m?.files) rest.push(...m.files);
   preloading = Promise.all(first.map(load)).then(() => { STATS.menuReadyMs = Math.round(performance.now()); STATS.ctxState = ctx.state; STATS.menuSounds = first.length; });
   preloading.then(async () => { for (let i = 0; i < rest.length; i += 4) await Promise.all(rest.slice(i, i + 4).map(load)); });
   return preloading;
@@ -417,9 +424,11 @@ export function grain(who, V, pan = 0, i = 0) {
 // from a less important one (die > windup > attack > hurt), else it is skipped (the fight stays readable: "play the right sounds")
 const CRY_MAX = 2, CRY_PR = { die: 3, windup: 2, attack: 1, hurt: 0 };
 const CRIES = [];
+// a monster's own files for that action, else its family's AI cries (sounds.json monsters.<type>.cry = girl / paper / wood / beast ->
+// sfx cry_<family>_<act>, tools/rounds/sfx_specs62.py), else the default
 export function cry(type, act, pan = 0) {
-  const M = C.sounds?.monsters || {}, own = M[type]?.[act]?.length;
-  const files = own ? M[type][act] : M.default?.[act], rate = (M[type]?.rate || 1) * (0.92 + Math.random() * 0.16);
+  const M = C.sounds?.monsters || {}, own = M[type]?.[act]?.length, fam = C.sounds?.sfx?.[`cry_${M[type]?.cry}_${act}`]?.files;
+  const files = own ? M[type][act] : fam?.length ? fam : M.default?.[act], rate = (M[type]?.rate || 1) * (0.92 + Math.random() * 0.16);
   if (!ctx || !files?.length) return;
   const t = now(), pr = CRY_PR[act] ?? 0;
   for (let k = CRIES.length - 1; k >= 0; k--) if (CRIES[k].end <= t) CRIES.splice(k, 1);

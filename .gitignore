@@ -24,3 +24,9 @@ art/raw/bgm/*.wav
 art/raw/bgm/*.mp3
 art/raw/sfx_ai/**/*.wav
 art/raw/bgm_ai/**/*.wav
+# ACE-Step's own cache when it runs from the project folder (tools/bgm_ace.py)
+.cache/
+# the sheets the sound / music pickers draw (tools/sfx_look.py, sfx_pick.py, bgm_pick.py): made again on every run
+art/raw/sfx_ai/_look/*.png
+art/raw/bgm_ai/_look/*.png
+art/raw/bgm_ai/_raw/

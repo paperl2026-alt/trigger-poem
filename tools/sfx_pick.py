@@ -100,7 +100,7 @@ def main():
         for p in files:
             sr, x = read2(p); sc, st = score(kind, sr, x); cand.append((sc, p, sr, x, st))
         cand.sort(key=lambda c: -c[0]); keep = cand[:s.get("keep", 6)]
-        report[key] = [(round(c[0], 1), c[1].name, c[4]) for c in cand]
+        report[key] = [(round(float(c[0]), 1), c[1].name, {k: (float(v) if not isinstance(v, bool) else v) for k, v in c[4].items()}) for c in cand]
         rows, out = [], []
         for c in OUT.glob(f"{key}_*.ogg"):
             if not dry: c.unlink()

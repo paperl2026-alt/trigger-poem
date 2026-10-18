@@ -174,6 +174,7 @@ Codex 只出静态底子；好看、会动的部分由程序做，几种手段�
 - 用户下载的原始包在 `art/raw/sfx_dl/`（魔王魂效果音整包、9 个魔王魂 BGM 整包、OtoLogic 17 组），`python -I tools/sfx_unpack.py <输出> <zip...>` 解到 `art/raw/sfx_dl/se/<包名>/`（只取音频、防止解到外面），`sfx_scan` 的结果在 `art/raw/sfx_dl/scan/`。
 - 挑中的写在 `tools/rounds/sfx_import.py`（每种声音：文件、vol，需要时 len 只放前几秒、rate 变调），运行后复制进 `public/content/base/sfx/<maou|otologic>/` 并写进 sounds.json；要换哪个就改这里再跑一次。
 - 怪物叫声：现在是按怪的种类给不同素材 + 不同 rate（课桌低沉、试卷尖细……）；以后要更怪再做变调 / 倒放 / 失真 / 混响的离线处理。
+- **AI 音效**（2026-10-18 起，Stable Audio 3 Small-SFX，做法见 TECH「声音」）：第 2 话的新音效、关卡里的命中 / 掩体 / 门 / 碎裂、四类怪各四种叫声（beast / girl / paper / wood × windup / attack / hurt / die）每种出 10 版，挑 4～6 版进 `sfx/ai/`；提示词和挑法在 `tools/rounds/sfx_specs62.py`。只写声音本身（材料、动作、空间），不写「游戏音效」之类的空话。
 - 还在用程序合成的：弹壳、撕纸、撕布、镭射持续音、火焰。两人的武器声改成她们自己的声音（TECH「声音」grains），关卡外的音效改成 `tools/ui_sfx.py` 自己做的一套（2026-10-18 用户：免费的不堪用）；关卡里其余的音效（命中、掩体、怪的动静）还是两站的素材。
 - 语音的声线（2026-10-17 读过条款，用户定的）：
   - **地雷妹 = 火山夢_T2モデル**（AivisHub，作者 TαkoeProject，制作 Yumehaki Project V / VSMB Project）：Tαkoe プロジェクト利用規約（原页 wedst.pj.ymhk.jp/tos.html，模型文件里附了同样的全文）。可商用；**必须署名**，要看得出是 Tαkoe 项目的作品、软件名和角色名 → 写「Tαkoe:AivisSpeech:火山夢」；有违公序良俗的禁止，但不含流血、猎奇、违法表现的不算，**青少年不宜的表现必须分区**（Steam 成人内容标记 / 年龄提示）；禁止：不适当内容、损害这个角色的形象、赌博相关、宗教、反社会、模型原样再分发。

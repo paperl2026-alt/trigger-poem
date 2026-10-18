@@ -529,7 +529,8 @@
     "hides": false,
     "proj": "lanternlet",
     "burst": 3,
-    "frames": { "hide": ["idle"], "rise": ["rise"], "idle": ["idle", "rise", "coy", "rise"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+    "frames": { "hide": ["idle"], "rise": ["rise"], "idle": ["idle", "rise", "coy", "rise"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] },
+    "params": { "stopDist": 6.5 }
   },
   "surippa": {
     "beh": "walker",

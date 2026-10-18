@@ -5,6 +5,7 @@
 // so a mod's new chapter is split the same way.
 //   stageKeys(ep, st)  the pictures of one stage (an episodes.json step with stage / boss)
 //   coreKeys()         the pictures no stage of any episode claims
+//   stageKeysAt(ep, st, place)  a stage through several places (episode 2): only the place it is in and the next one (Game.streamPlaces)
 import { C, isStage } from './content.js';
 import { meta } from './assets.js';
 
@@ -50,6 +51,18 @@ export function stageKeys(ep, st) {
   for (const k of [...keys]) if (k.startsWith('comic/')) keys.delete(k);   // (comic pages are shown as plain images, never textures)
   cache.set(id, keys);
   return keys;
+}
+// a stage through several places (an episodes.json step with places: episode 2's inn, ten of them; all held at once took ~1.9 GB of the
+// graphics card): the boards, props and covers of the place it is in and of the next one; the monsters, their shots, her forms and
+// whatever no place claims stay for the whole stage. Game.streamPlaces lets the places behind go and loads the next one as they walk on
+const setCache = new Map();
+export function setKeys(id) { if (!setCache.has(id)) { const keys = new Set(); collect(id, keys, new Set()); setCache.set(id, keys); } return setCache.get(id); }
+export const placeOf = (st, station) => st.places?.find((p) => C.sets[p]?.stations?.[station]) || st.places?.[0];
+export function stageKeysAt(ep, st, place) {
+  const all = stageKeys(ep, st);
+  if (!st.places?.length) return all;
+  const i = Math.max(0, st.places.indexOf(place)), near = new Set(st.places.slice(i, i + 2).flatMap((p) => [...setKeys(p)]));
+  return new Set([...all].filter((k) => near.has(k) || k.startsWith('enemy/') || !st.places.some((p) => setKeys(p).has(k))));
 }
 // the pictures of the outfits the team is wearing (characters/<id>.json rigs, e.g. the yukata: user 2026-10-18): outfit/… pictures are
 // never core, they load only when worn. outfitOf(id) = the outfit a girl wears (SAVE.chars[id].outfit)

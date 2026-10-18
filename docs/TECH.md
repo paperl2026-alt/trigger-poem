@@ -64,7 +64,10 @@
   - 人声的三种用法：`say` 照她自己的语调说一句（放进几拍，长了就压缩）；`speak(..., tune=67)` 平调念、移到某个音上（念经）；`line` 唱：歌词按假名拆成音节（小写假名、ー、っ并进前一个），每个音节单独合成（音符长就带长音），量出音高，重采样移到旋律音上，再用 ffmpeg atempo 拉成音符的长度（「人力ボカロ」的做法）；`fit_notes` 让旋律模板对上音节数（多了拆最长的音、少了并最短的两个）。`crowd` 叠几份 = 一群人，`deep` 叠低八度（不像人），`hop` 每个音节左右跳。
   - 两人平调念出来都在 G4 附近，所以进行曲段落定 G 小调；移调靠重采样（共振峰跟着移），旋律尽量在 G4 上下五个半音内，ffmpeg 没有 rubberband。
   - 伴奏全部 numpy / scipy 合成：太鼓、军鼓、木鱼、锣、铃、钟（下课铃是威斯敏斯特钟声，公有领域）、八音盒、低音、「哦」合唱（锯齿波过 o 的共振峰）、铜管、弦乐、电钢琴（FM）、芯片方波、摇摆低音、低鸣、风、黑胶底噪，以及勺子碰玻璃 / 铅笔 / 纸 / 快门拼的鼓。
-- BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
+- **AI 音效**（2026-10-18）：`tools/sfx_sa3.py`（在 `C:\AI\sa3\venv` 里跑：Stable Audio 3 Small-SFX，CPU 上 4.5 秒一条；模型是 cocktailpeanut 在 Hugging Face 上不设门槛的同一份文件，Stability 社区许可 + Gemma 条款）照 `tools/rounds/sfx_specs62.py` 每种出很多版。**它只会出某些长度**：0.4～0.9、1.1、1.2、1.6、1.8、2.2 秒这些长度不管什么提示词、什么种子都是满幅白噪声（2026-10-18 拿同一个提示词试各种长度查出来的；反向提示词 `NEG` 没用），能用的长度列在 `SAFE`（1.0、1.4、1.5、2.0、2.4、2.6、3、4、6、8、10 秒），生成时取不短于要求的最近一个，`sfx_pick` 再修剪；`tools/sfx_look.py` 把每版画成波形 + 频谱（听不到，靠看）；`tools/sfx_pick.py` 按种类打分（hit 起音快、单次、衰减干净；loop 平稳无洞……）挑出最好的几版、修剪 / 做成无缝循环、转 Ogg Opus 进 `sfx/ai/`，登记进 sounds.json。代码里新的声音用 `sound(key)` 播（没有合成替身的），环境声 `bed(key, on)` 开关循环。
+- **BGM（2026-10-18 用户装好 ACE-Step 1.5）**：两步。`tools/bgm_guide.py` 把 Claude 写的曲谱（`tools/rounds/bgm_specs.py`：每段的和弦、旋律、鼓型、乐器）用 `bgm_theme.py` 的合成乐器加三味线 / 筝（Karplus-Strong）、尺八、梵钟、钟表滴答合成导引音轨；`tools/bgm_ace.py`（在 `C:\AI\ACE-Step-1.5\venv_cpu` 里跑，CPU + bf16）用 ACE-Step 的 cover 按导引的旋律、和声、结构重新演奏成真乐器（`audio_cover_strength` 越高越贴导引），说明文字只写乐器和情绪，不提别的作品。ACE-Step 会在给它的长度结束前 4～8 小节自己收尾（淡出 / 停），所以导引最后多接一段「尾巴」（循环回去的那一段的前 8 小节），收尾落在尾巴里。第三步 `tools/bgm_pick.py`（游戏的 Python）：听不到，靠量：每版和导引比节拍（起音相关）、每小节的和声（色度相关）、落后多少、哪里断了 / 忽大忽小，挑分最高的（用户听过后可以在 `PICK` 指定），循环从 `loopFrom` 段（默认第二段，第一段是只放一次的前奏）开始到最后一段结束（按这一版自己的落后量对齐），循环末尾 80 毫秒和循环起点之前的 80 毫秒交叉淡化（跳回去听不出接缝），统一响度，转 Ogg Opus 进内容包 `bgm/<曲名>.ogg`，sounds.json `music.<曲名>` 写 `loopStart` / `loopEnd`；`art/raw/bgm_ai/_look/` 有每首的图和分数。
+- 曲名：`<大关>_stage` / `<大关>_boss`（`Game.music`，set 的 `music` / `bossMusic` 可以指定别的，`music: null` = 只有钟声），第 2 话她的主题 `ep2_she`、决战 `ep2_final`、民宿 `ep2_inn`；没有录好的就退回合成的 stage / boss。录好的曲子解码后每首约 30 MB，不跟着开机预载：开一局时只解这一大关的（`warmMusic`），别的大关的放掉。
+- BGM 仿写的做法（旧方案：参考曲转 MIDI + Suno）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
 
 ## 存档文件（游戏进度，不是下面的 git 存档）
 - 桌面版（Electron）：`electron/store.cjs` 把每份存档（`save` 进度、`settings` 设置）写两处：
@@ -170,6 +173,17 @@
 - 伤害：`characters.js buildStats` = 角色的枪 + 熟练度（每级 `economy.json mastery` dmgPerLv / critPerLv / critMulPerLv / reloadPerLv，现在 2% / 0.5% / 0.02 / 1%，满级 +18% 伤害）+ 书包；暴击率 = Fever 准头 + `w.critAdd`，暴击倍率 = Fever + `w.critMulAdd`（`Game.critRate / critMul`）。
 - 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`，没血了往后倒、淡出；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`）。
 
+## 第 2 话：她和追逐（`src/battle/chase.js`，数值 `tuning/chase.json`，关卡 `sets/ep2.json` 由 `tools/rounds/ep2_level.py` 生成）
+- **她**（`Stalker`，三个形态 a / c / e 的图 `enemy/she_<形态>_<姿势>`，お蚕様 `enemy/kaiko_<姿势>`）：没有血，打她只攒硬直槽（`she.stagger`；张开剪刀蓄力时挨打 ×`windupStagger`；不挨打时慢慢掉），攒满倒地 `down` 秒，每倒一次乘 `downDecay`（最少 `downMin`），爬起来；够到人（`reach`）就蓄力（红色快打环）再扑（穿过掩体），扑中有 `grabChance` 抓住一个人：屏幕中间「狂点射击挣脱」，`mashTime` 秒内打 `mash` 下挣脱（她被推倒），否则一直掉血；身上的伤痕慢慢褪、倒地时清空（她打不死）。お蚕様打满只会退一下，只有灯油 / 蜡烛的机关（`trap.kill`）烧得死。她不算波次里的怪（`a.stalker`，`checkWave` 不等她）。
+- **Game 交给 Chase 的站点**：`chase`（镜头沿 `path` 跑到站点，`face` back 朝后看她 / fwd / left / right / down 竖井朝下，`speed` 镜头、`herSpeed` 她每秒几米，`dist` 她开始离多远）；`block`（镜头朝前对着挡路的东西，她从背后 `herSpeed` 走近，近到 `turnAt` 镜头甩过去打倒她再甩回来；`gimmicks` 里 `block: true` 的东西和这一站的怪都清掉才算完）；`hide`（躲藏点：镜头在柜子 / 石灯笼后面，两边黑门只留一条缝，她走过来，一波 `stabs` 下捅刺，「争取到的时间」够多的挡掉多少下，结局三档 high / mid / low 决定她怎么走、下一段追逐她离多远）；`she`（她在这一站巡游，`wake` 秒后动，`burst` 从浴桶里扑出来）；`dial`（钟楼表盘决战，见下）。
+- **争取到的时间**（`chase.meter`，左上角一只小和時計，十二格）：机关砸中她、关门、引开、清掉路障、打倒她都加（`tuning/chase.json meter`），躲藏点结算后清零。
+- **机关**（`gimmick.js` 的 do）：`drop` 吊着的东西掉下来、`trap` 砸她（`r` 米内倒 `down` 秒，否则挡她一下）、`door` 关门拖住她、`lure` 敲响别处引开她、`read` 弹出文字卡（`text/ui.json`）、`node` / `toll` 表盘决战、`free` 放走乌鸦、`collapse` 塌方；`on: floor` 平放在地上，`armed: false` 等战斗让它能打。
+- **头像的恐慌色**（原作詹妮弗头像的颜色）：她在附近时两人 Q 版头像外圈一圈光环，蓝 → 黄 → 橙 → 红（`tuning/chase.json panic` 的远近），最近时闪；她出现时音乐立刻切到她的主题（`playMusic('she')`），她走了只剩钟声（`bed('clockTick')`），很近时有心跳（`bed('heartbeat')`）。
+- **表盘决战**（站点 `dial`，`Chase.dial`）：钟楼顶的地板是一面十二支和時計（`ep2/kane_diala`），十二块刻度（`ep2/zodiac_<名>`，`node` 序号）平放在圆周上；她每倒下一次，下一刻的刻度套红环、能打，打亮了时针走一格、镜头绕圆周走一格；每 `perForm` 刻换下一个形态（a 剪刀人偶 → c 千刃蜘蛛 → e 空振袖：放纸人、蓄力尖叫要躲）；她离得远时每个形态有自己的远程（`Chase.volley`，状态 `cast`，这时打她照样攒硬直）：a 踢木屐（`geta`）、c 扬起身扔一扇剪刀和针（`scissors` / `pins`，五发散开）、e 袖子里放纸鹤（`crane`，弧线飘过来），都是能打掉的飞行物；十二刻全亮，两人必杀充满、钟（`bell: true`）能打，敲响三声把她震下钟楼，这一站结束。
+- **一个小关十个地方，不切画面**（`Game.passThrough`）：大关的小关步骤写 `places`（场景按顺序）和 `stations`（所有站点，站点 id 在各场景里不重复）；下一个站点在别的场景时，两人走进这个场景的出口门洞（场景 `exit`，或站点的 `leave: { exit, via, hole }`；`hole` = 她剪开的墙洞先爆开），一眨眼黑（`#ui .blackout`），换场景，从下一个场景的入口（`entry` / 站点的 `arrive: { at, look }`）走出来；门洞是 R63 在尽头墙 / 来路墙上画成洋红、导入时抠空的，`ep2_level.py` 从图里量出位置。重新搭的场景直接显示站点 `state` 说的样子（0 平静 / 1 停电后，翻板一下子翻完）。塌方（`collapse`）在多场景的小关里不结束小关，掉进下一个场景（它的第一个站点写 `enter` 从上面落下来）。
+- **关内检查点**：站点写 `cp: true` 就存进 `SAVE.eps[大关].cp = { step, station }`；全灭的「从检查点重来」从这个站点开始，下次从选关进这个小关也接着这里（`main.js startRun`），通关清掉。从中途开始的那个站点按 `state` 摆好场景（`Game.resumed`）。
+- 场景的音乐：set 写 `music`（null = 没有音乐，只有钟声）/ `bossMusic`；站点写 `music` 当场换；有录好的曲子（sounds.json `music`）放文件，没有就退回合成的 stage / boss。
+
 ## 图片按小关加载（`src/core/groups.js`、`src/core/assets.js`）
 - 为什么：一张图不管文件多小，解码后都是 宽 × 高 × 4 字节（加 mipmap 再多 1/3），全部内容包解码约 6 GB；three.js 的贴图不会被垃圾回收，只有 `dispose()` 才从显卡上释放。所以不能一口气全读，也不能读了不放。
 - 分组（运行时从内容算出来，模组的新大关也一样分）：
@@ -177,6 +191,7 @@
   - 核心 `coreKeys()`：没有任何小关认领的（界面、HUD、特效、两位主角）；`ep1/…`、`cover/ep1_…` 这种带大关名的图即使还没被用到也不算核心；只被旧数据（没有大关用的场景、怪、Boss）用到的也不算核心；
   - 漫画页从来不做成贴图（只用 `<img>` 显示）。
 - 时机：启动只读核心（`setManifest` + `loadKeys(coreKeys())`）；开局前读起始小关的（`main.js needPics`，没读完就显示读条）；每个漫画页 / 开门特写一开始，后台读下一个小关的；小关开始时等它的图（没读完显示读条），然后 `releaseExcept(核心 + 这个小关)` 把别的全部释放。任何时候只有核心 + 一到两个小关在内存里，显存不随大关数量增长。
+- 一个小关跨好几个地方（第 2 话民宿的十个地方，全部进显卡约 1.9 GB）：只留所在的地方和下一个地方的板、掩体、道具（`stageKeysAt`），怪、飞行物、她的几个形态整关都留着；每进一个地方（`Game.useSet` → `streamPlaces`）放掉身后的、后台读下一个；走得比读得快就先等它读完再走进门洞（`goStation`）。从检查点接着打时从那个地方算起（`placeOf`）。
 - 实测（2026-10-18，`playthrough.cjs` 的 mem）：第 1 话通关时显卡上的贴图 94 → 894 张一路涨（改之前）→ 一直在 380～580 张（改之后），估算显存 350～760 MB；启动后页面内存 942 → 413 MB。页面内存还会每关慢慢涨约 40 MB（可能是 Chromium 的图片缓存），待长时间连续玩验证会不会封顶。
 - 以后要再省：显卡压缩贴图（KTX2 / Basis，显存约减到 1/4～1/8，要下载编码工具）；内容包里删掉不用的旧图（tsubaki / kagura 已删）。
 

@@ -26,6 +26,7 @@ export class Gimmick extends Actor {
     if (g.on === 'left') { P.set(H.x0 + 0.03, g.y, g.z); this.root.rotation.y = Math.PI / 2; }
     else if (g.on === 'right') { P.set(H.x1 - 0.03, g.y, g.z); this.root.rotation.y = -Math.PI / 2; }
     else if (g.on === 'end') { P.set(g.x || 0, g.y, H.z1 + 0.03); }
+    else if (g.on === 'floor') { P.set(g.x || 0, 0.03, g.z); this.root.rotation.set(-Math.PI / 2, 0, (g.ry || 0) * Math.PI / 180); }   // (lying flat: the clock face's plates)
     else { P.set(g.x || 0, g.y || 0, g.z); this.root.rotation.y = (g.ry || 0) * Math.PI / 180; }
     game.world.scene.add(this.root);
     if (g.shoot === false) this.u.outlineOn.value = 0;
@@ -35,7 +36,7 @@ export class Gimmick extends Actor {
   // shootable only at its own stop, once
   // (needs: a spawner's id: only while that hole is pouring monsters out is it there to be shot: the shelf that blocks it)
   live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat && (!this.g.needs || !!this.game.spawners?.some((s) => s.id === this.g.needs && s.live && s.ready !== false)); }
-  hitMeshes() { return this.alive && this.g.shoot !== false && this.live() ? [this.mesh] : []; }   // (shoot: false = only a wave event fires it)
+  hitMeshes() { return this.alive && this.g.shoot !== false && this.g.armed !== false && this.live() ? [this.mesh] : []; }   // (armed: false until the fight lets it be shot: chase.js dial)   // (shoot: false = only a wave event fires it)
   hit(info) {
     if (!this.live()) return;
     this.flash = 1;
@@ -85,6 +86,11 @@ export class Gimmick extends Actor {
     if (e.lure) g.chase?.lure(this, e.lure);
     if (e.meter) g.chase?.add(e.meter, this.center());
     if (e.sound) sound(e.sound);
+    if (e.read) g.chase?.read(e.read, this);   // (a note / a ledger: its text on a card)
+    if (e.toll) g.chase?.toll(this);           // (the bell of the tower: the end of her)
+    if (e.node) g.chase?.node(this);           // (a plate of the clock face lit)
+    if (e.free) g.chase?.freeCrow(this);       // (the crow let out of its cage)
+    if (e.collapse) g.collapse();              // (the storehouse's floor hatch: down into the cave)
     if (e.gone) g.tweens.run(0.6, (k) => { this.u.opacity.value = 1 - k; }, { onDone: () => { this.alive = false; this.dispose(); } });
   }
   // a hanging thing comes down (its chain shot through): falls flat onto the floor with a crash
@@ -100,7 +106,7 @@ export class Gimmick extends Actor {
     if (this.g.needs && !this.spent) this.u.outlineOn.value = this.live() ? 1 : 0;
     // mark: while it can be shot, the red "shoot this" ring round it (fx.lock, like a monster about to ram), so it can't be missed
     if (this.g.mark) {
-      const on = this.live();
+      const on = this.live() && this.g.armed !== false;
       if (on && !this.lock) this.lock = this.game.fx.lock('kill', 0);
       if (!on && this.lock) { this.lock.remove(); this.lock = null; }
       if (this.lock) { const g = this.game, wc = this.center(), c = g.world.project(wc), b = this.screenBox(); this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.6), 1, t, 1, b, wc); }

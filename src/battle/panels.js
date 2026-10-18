@@ -178,11 +178,15 @@ export class PanelWorld {
     this.flips = [];
     const flip = (m, key, side, alt = `${key}_x`) => { if (tex[alt]) this.flips.push({ m, key, alt, side, p: 0, d: 0 }); return m; };
     const keyed = (k) => !!(meta[k]?.keyed || /W$/.test(k));
+    const rows = Hd.rows || 1, rh = h / rows;   // (a tall place: its walls stacked in rows, each row a picture of its own)
+    const KL2 = rows > 1 && KL ? order(Hd.left, bays * rows, seed + 5) : KL, KR2 = rows > 1 && KR ? order(Hd.right, bays * rows, seed + 6) : KR;
     for (let i = 0; i < bays; i++) {
       const zc = z0 - (i + 0.5) * bay;
-      const kl = KL?.[i], kr = KR?.[i];
-      if (KL) { const l = board(kl, bay, h, { alpha: keyed(kl) }); l.position.set(x0, h / 2, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); }
-      if (KR) { const r = board(kr, bay, h, { alpha: keyed(kr) }); r.position.set(x1, h / 2, zc); r.rotation.y = -Math.PI / 2; put(r, zc); flip(r, kr, -1); }
+      for (let r = 0; r < rows; r++) {
+        const kl = KL2?.[i * rows + r], kr = KR2?.[i * rows + r], yc = (r + 0.5) * rh;
+        if (KL) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); }
+        if (KR) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); }
+      }
       // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
       if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
     }
@@ -217,7 +221,7 @@ export class PanelWorld {
       if (bk) { const b = board(bk, W, h, { alpha: true }); b.position.set((x0 + x1) / 2, h / 2, z0); b.rotation.y = Math.PI; R.add(b); flip(b, bk, 0); }
     }
     if (Hd.outside) for (const o of (Hd.outsideAt || [{ x: x1 + 11, z: (z0 + z1) / 2, ry: -Math.PI / 2, w: 66 }, { x: 0, z: z1 - 14, ry: 0, w: 40 }])) {
-      const m = board(Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * (o.yk ?? 0.3), o.z); m.rotation.y = o.ry || 0; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
+      const m = board(o.k || Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * (o.yk ?? 0.3), o.z); m.rotation.y = o.ry || 0; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
       flip(m, Hd.outside, 0, Hd.outsideX);
     }
     // free-standing boards: a building front, a sky, a backdrop (x, z = bottom centre, y = its bottom, w = width; height from the picture)
@@ -408,6 +412,11 @@ export class PanelWorld {
     for (const c of this.chains || []) c.visible = false;
     sfx.tear(0); sfx.whoosh(0);
     g.tweens.to(this.bridge.rotation, { x: Math.PI / 2 }, 1.1, { ease: Ease.outBounce, onDone: () => { G.open = true; sfx.slam(); g.post.shake(1.0); g.fx.puff(new THREE.Vector3(0, 0.1, this.set.hall.bridge.z0), 10, COL.bone, 1.2); } });
+  }
+  swapBoard(from, to) {
+    if (!tex[to]) return;
+    this.root.traverse((o) => { if (o.isMesh && o.userData.texKey === from) { o.material.map = tex[to]; o.material.needsUpdate = true; o.userData.texKey = to; } });
+    for (const f of this.flips) if (f.key === from) f.key = to;
   }
   // a candle in a dark room: unlit, a faint glint so it can be found (lamp(p)); lit (light), a warm pool round it and the room a step lighter
   lamp(p) { const L = { p: p.clone(), k: 0, max: 0.75, r: 0.12 }; this.lampList.push(L); return L; }

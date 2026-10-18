@@ -1,5 +1,5 @@
 {
-  "_doc": "飞行物。keys 随机用哪张图，size 大小（米），spin 旋转速度。",
+  "_doc": "飞行物。keys 随机用哪张图，size 大小（米），spin 旋转速度。第 2 话决战里她每个形态的远程：geta 剪刀人偶踢过来的木屐、scissors / pins 千刃蜘蛛扬起来扔的一扇剪刀和针、crane 空振袖袖子里放出的纸鹤（arc 弧更高，飘过来）。",
   "wisp": { "keys": ["wisp"], "size": 0.7, "spin": 3 },
   "takoyaki": { "keys": ["takoyaki"], "size": 0.9, "spin": -7 },
   "balloon": { "keys": ["balloon"], "size": 1, "spin": 1.5 },
@@ -23,6 +23,10 @@
   },
   "cherry": { "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"], "size": 0.45, "spin": 8 },
   "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3 },
-  "lanternlet": { "keys": ["p_cherry", "p_cherry_b"], "size": 0.42, "spin": 4 },
-  "kokehead": { "keys": ["p_cherry", "p_cherry_b"], "size": 0.4, "spin": 10 }
+  "lanternlet": { "keys": ["p_lanternlet"], "size": 0.42, "spin": 4 },
+  "kokehead": { "keys": ["p_kokehead"], "size": 0.4, "spin": 10 },
+  "geta": { "keys": ["p_geta"], "size": 0.42, "spin": 9 },
+  "crane": { "keys": ["p_crane"], "size": 0.5, "spin": 1.5, "arc": 1.6 },
+  "pins": { "keys": ["p_pins"], "size": 0.34, "spin": 14 },
+  "scissors": { "keys": ["p_scissors"], "size": 0.46, "spin": 12 }
 }

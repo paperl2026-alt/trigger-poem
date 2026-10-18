@@ -25,6 +25,46 @@
             "source": "https://otologic.jp/",
             "use": "音效、怪物叫声 51 个文件（sfx/otologic/）",
             "changes": "截取片段、变调、统一音量"
+          },
+          {
+            "name": "Stable Audio 3.0 Small-SFX（Stability AI）",
+            "credit": "Powered by Stability AI",
+            "required": true,
+            "ship": true,
+            "license": "Stability AI Community License（年收入 100 万美元以下可免费商用；商用前要在 stability.ai 登记，只能用户本人去登记）",
+            "licenseUrl": "https://stability.ai/community-license",
+            "copyright": "This Stability AI Model is licensed under the Stability AI Community License, Copyright © Stability AI Ltd. All Rights Reserved",
+            "source": "Stability AI 的 Stable Audio 3.0 Small-SFX 模型（本机 C:\\AI\\sa3\\small-sfx，Hugging Face 上不设门槛的同一份文件）",
+            "use": "AI 生成的音效（sfx/ai/，tools/sfx_sa3.py 生成）；模型本身不随游戏分发",
+            "changes": "从很多版里挑选、修剪、做成循环、统一音量"
+          },
+          {
+            "name": "Gemma（T5Gemma 文本编码器，Stable Audio 3.0 内含）",
+            "credit": "",
+            "required": false,
+            "license": "Gemma Terms of Use",
+            "licenseUrl": "https://ai.google.dev/gemma/terms",
+            "copyright": "Gemma is provided under and subject to the Gemma Terms of Use found at ai.google.dev/gemma/terms",
+            "source": "https://huggingface.co/google/t5gemma-b-b-ul2（随 Stable Audio 3.0 一起）",
+            "use": "生成音效时理解提示词；不随游戏分发，生成的音效不算 Gemma 的衍生模型，只登记"
+          }
+        ]
+      },
+      {
+        "id": "music",
+        "title": { "zh": "音乐", "en": "Music", "ja": "音楽" },
+        "items": [
+          {
+            "name": "ACE-Step 1.5",
+            "credit": "ACE-Step",
+            "required": false,
+            "ship": true,
+            "license": "MIT（代码和模型）",
+            "licenseUrl": "https://github.com/ace-step/ACE-Step-1.5/blob/main/LICENSE",
+            "copyright": "Copyright (c) 2026 ACEStep",
+            "source": "https://github.com/ace-step/ACE-Step-1.5（用户本机 C:\\AI\\ACE-Step-1.5）",
+            "use": "BGM（bgm/）：Claude 写的曲谱（tools/rounds/bgm_specs.py）合成导引音轨，ACE-Step 的 cover 用真乐器重新演奏；模型本身不随游戏分发",
+            "changes": "挑选一版、做成无缝循环、统一音量"
           }
         ]
       },

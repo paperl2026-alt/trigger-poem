@@ -18,7 +18,7 @@ import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { sfx, sound, bed, playMusic, stopMusic } from '../core/audio.js';
 import { Ease } from '../core/tween.js';
-import { T } from '../core/content.js';
+import { C, T } from '../core/content.js';
 import { t } from '../core/i18n.js';
 import { Actor } from './enemies.js';
 import { COL } from './fx.js';
@@ -57,7 +57,7 @@ export class Stalker extends Actor {
   frameOk(name) { return (this.frames[name] || []).some((f) => tex[this.prefix + f]); }
   pose(name, fps = 8) { this.play(this.frameOk(name) ? name : 'still', fps); }
   hitMeshes() { return this.alive && this.state !== 'gone' ? [this.mesh] : []; }
-  busy() { return ['down', 'rising', 'stuck', 'lunge', 'grab', 'lured', 'gone', 'scripted'].includes(this.state); }
+  busy() { return ['down', 'rising', 'stuck', 'lunge', 'grab', 'lured', 'gone', 'scripted', 'cast'].includes(this.state); }
   // where she is relative to the camera (metres, horizontal)
   dist() { const c = this.game.world.camPos, P = this.root.position; return Math.hypot(P.x - c.x, P.z - c.z); }
 
@@ -83,7 +83,7 @@ export class Stalker extends Actor {
       this.inner.position.x = Math.sin(tt * 30) * 0.02 * Math.min(1, this.timer);
       if (Math.random() < dt * 4) g.fx.star(this.uvToWorld(rnd(0.3, 0.7), 0.35), 0.35, COL.lime);
       if (this.timer <= 0) this.rise();
-    } else if (this.state === 'rising' || this.state === 'stuck') {
+    } else if (this.state === 'rising' || this.state === 'stuck' || this.state === 'cast') {
       if ((this.timer -= dt) <= 0) { if (this.state === 'stuck') { sound('shoji') || sfx.tear(0); g.post.shake(0.5); } this.state = this.after; this.inner.position.x = 0; }
     } else if (this.state === 'windup') {
       this.timer -= dt;
@@ -100,7 +100,7 @@ export class Stalker extends Actor {
     if (!this.alive) return;
     const g = this.game, p = this.uvToWorld(info.uv.u, info.uv.v);
     this.lastHitBy = info.by;
-    if (this.busy() && this.state !== 'lunge' || this.invul > 0) {   // (down already / stuck in a door: the shots only spark off the steel)
+    if (this.busy() && this.state !== 'lunge' && this.state !== 'cast' || this.invul > 0) {   // (down already / stuck in a door: the shots only spark off the steel)
       info.dealt = 0; this.flash = Math.max(this.flash, 0.25); g.fx.star(p, 0.3, COL.white);
       if (Math.random() < 0.3) sfx.clang();
       return;
@@ -195,7 +195,7 @@ export class Chase {
   music(on) {
     if (on === this.theme) return;
     this.theme = on;
-    if (on) { playMusic('she'); bed('clockTick', false); } else { stopMusic(1.5); if (this.g.world.set?.clocks !== false && this.g.ep?.id === 'ep2') bed('clockTick', true, 0.7); }
+    if (on) { playMusic('ep2_she'); bed('clockTick', false); } else { stopMusic(1.5); if (this.g.world.set?.clocks !== false && this.g.ep?.id === 'ep2') bed('clockTick', true, 0.7); }
   }
   add(n, at = null) {
     const M = K().meter;
@@ -229,7 +229,7 @@ export class Chase {
   placeShe() {
     const she = this.she; if (!she) return;
     if (this.mode === 'run') {
-      this.at(this.s - this.dist, V); she.root.position.set(V.x, this.S?.chase?.climb ? Math.max(0, V.y - 1.1) : 0, V.z);
+      this.at(this.s - this.dist, V); she.root.position.set(V.x, this.face === 'down' ? V.y - 1.0 : 0, V.z);
     } else if (this.mode === 'block' && this.facing === 'fwd' && !she.busy()) {
       const w = this.g.world, f = V2.subVectors(w.lookAt, w.camPos).setY(0).normalize();
       she.root.position.set(w.camPos.x - f.x * this.dist, 0, w.camPos.z - f.z * this.dist);
@@ -241,6 +241,7 @@ export class Chase {
     else if (this.mode === 'block' && this.facing === 'fwd') this.dist += m * (recoil ? 1 : 0.05);
   }
   onKnock(she, how) {
+    if (this.mode === 'dial' && !this.bellReady) { const next = this.nodes?.[this.lit]; if (next) { this.arm(next); next.g.mark = true; this.g.hint('sheNode'); } }
     this.add(how === 'trap' ? K().meter.trap : K().meter.knock, she.center());
     const g = this.g, p = g.players[Math.random() < 0.5 || !g.p2on() ? 0 : 1];
     if (p) g.hud.gl.stickers.say(p, 'stagger');
@@ -285,6 +286,7 @@ export class Chase {
     const she = this.ensure(H.form || 'a', H.from ? { x: H.from[0], z: H.from[1] } : null);
     she.state = 'scripted'; she.endWindup();
     const at = H.at ? { x: H.at[0], z: H.at[1] } : null, P = she.root.position;
+    if (H.y != null) P.y = H.y;
     this.peek(true);
     bed('heartbeat', true, 0.9); this.music(false); stopMusic(0.4);
     g.hud.gl.hold('hide');
@@ -370,6 +372,12 @@ export class Chase {
   trap(gm, spec) {
     const she = this.she, at = gm.root.position; if (!she || !she.alive) return;
     const d = Math.hypot(she.root.position.x - at.x, she.root.position.z - at.z);
+    if (spec.kill && she.kaiko) {   // (under the house: the kerosene and the candles; it burns)
+      if (d <= (spec.r ?? 3)) { sound('kerosene') || sfx.burnOut(0); bed('fireLoop', true, 0.8); this.g.post.flash(0.8, 0xffa040); this.g.post.shake(1.6); this.add(K().meter.trap, at);
+        she.die(); this.kaikoDead = true; this.g.tweens.wait(1.5, () => { this.she = null; this.music(false); }); }
+      else { sound('kerosene', { vol: 0.6 }); she.flinch(); }
+      return;
+    }
     if (d <= (spec.r ?? 2.2)) she.knockDown(spec.down ?? K().she.trapDown, 'trap');
     else { this.add(K().meter.trap * 0.4, at); if (this.mode === 'run' && she.state === 'follow') she.stuck(spec.hold ?? 1.2); }
   }
@@ -400,6 +408,7 @@ export class Chase {
       if (she.state === 'lured') { she.timer -= dt; if (this.mode === 'run') this.dist += (this.speed + 0.6) * dt; if (she.timer <= 0) she.state = 'follow'; }
       if (this.mode === 'run') this.updateRun(dt);
       else if (this.mode === 'block') this.updateBlock(dt);
+      else if (this.mode === 'dial') this.updateDial(dt);
       else if (she.state === 'stalk') this.stalk(dt);
       // the HUD: how close she is (the portraits' colour, the original's) and her music
       const d = she.dist(), P = K().panic;
@@ -428,6 +437,8 @@ export class Chase {
     w.bob = Math.abs(Math.sin(this.s * 2.1)) * 0.045 * k;
     const st = Math.floor(this.s * 1.6); if (st !== this.stepI) { this.stepI = st; g.onStep(st); }
     if (!she.busy() && she.state !== 'windup') { she.state = 'follow'; this.placeShe(); }
+    // the shaft (face down): she climbs up below the camera; her drawing lies facing up at it, the shadow gone
+    const up = face === 'down'; she.billboard = !up; if (up) { she.root.rotation.set(-Math.PI / 2, 0, 0); if (she.shadowM) she.shadowM.visible = false; }
     else if (she.state === 'down' || she.state === 'stuck' || she.state === 'rising' || she.state === 'lured') { /* she stays where she fell */ }
     // close enough: the blades go up (the red ring) and she lunges
     if (she.state === 'follow' && this.dist <= R.reach && !this.grabbing) she.windup();
@@ -438,6 +449,46 @@ export class Chase {
       this.nextDist = Math.max(this.dist, 2.5);
       then && then();
     }
+  }
+  updateDial(dt) {
+    const she = this.she, g = this.g;
+    if (this.armed && she.state !== 'down' && she.state !== 'rising') this.arm(null);   // (she got up before it was shot: next time)
+    if (g.lull || she.busy()) return;
+    if (she.state === 'stalk' || she.state === 'follow') this.stalk(dt);
+    // between her lunges each form has a shot of its own (DESIGN 第 2 话 决战: forms and attacks switching), when she is not close: a kicks a
+    // geta off at one of them, c rears and throws a fan of scissors and pins, e looses paper cranes from her sleeves (and the dolls, the scream)
+    this.shotT = (this.shotT ?? 4) - dt;
+    if (this.shotT <= 0 && she.state === 'stalk' && she.dist() > K().she.reach + 1.2) { this.shotT = she.form === 'c' ? 6 : 8; this.volley(she); return; }
+    if (she.form === 'e') {   // the true form: paper dolls out of her sleeves, a scream to duck under
+      this.summonT = (this.summonT ?? 6) - dt;
+      if (this.summonT <= 0 && she.state !== 'windup') {
+        this.summonT = 9; she.pose('summon'); sound('katashiroSwarm') || sfx.whoosh(0);
+        const P = she.root.position; g.spawnEnemy({ type: 'katashiro', count: undefined, x: P.x - 1, z: P.z, y: 2.2, near: true }); g.spawnEnemy({ type: 'katashiro', x: P.x + 1, z: P.z, y: 2.4, near: true });
+        for (let i = 0; i < 6; i++) g.etw.wait(0.15 * i, () => g.spawnEnemy({ type: 'katashiro', x: P.x + (Math.random() - 0.5) * 3, z: P.z + (Math.random() - 0.5) * 2, y: 2 + Math.random(), near: true }));
+      }
+      this.screamT = (this.screamT ?? 12) - dt;
+      if (this.screamT <= 0 && she.state !== 'windup') { this.screamT = 14; this.scream(she); }
+    }
+  }
+  volley(she) {
+    const g = this.g, f = she.form, kinds = f === 'c' ? ['scissors', 'pins', 'scissors', 'pins', 'scissors'] : f === 'e' ? ['crane', 'crane', 'crane'] : ['geta', 'geta'];
+    she.state = 'cast'; she.after = 'stalk'; she.timer = 0.5 + 0.16 * kinds.length; she.pose(f === 'c' ? 'rear' : f === 'e' ? 'summon' : 'stab');
+    sound(f === 'e' ? 'paperRip' : 'bladeOpen') || sfx.whoosh(0);
+    const slot = g.pickTarget(she.root.position.x - g.world.camPos.x);
+    kinds.forEach((k, i) => g.etw.wait(0.3 + 0.16 * i, () => {
+      if (she.alive && she.state === 'cast' && tex[`enemy/${C.projectiles[k]?.keys[0]}`]) g.spawnProjectile(k, she.center(), { slot: f === 'c' ? undefined : slot, curve: kinds.length > 1 ? (i - (kinds.length - 1) / 2) * 1.3 : 0 });
+    }));
+  }
+  // her scream: a long wind-up with the purple ring (hide!), then a blast that hits whoever is out
+  scream(she) {
+    const g = this.g; she.pose('scream'); she.state = 'stuck'; she.timer = 3.4; she.after = 'stalk';
+    const lock = g.fx.lock('hide', -1); sound('sheLaugh'); g.hud.gl.hold?.('danger');
+    const t0 = performance.now();
+    const upd = () => { if (!she.alive) { lock.remove(); return; } const c = g.world.project(she.center()), b = she.screenBox(), k = Math.min(1, (performance.now() - t0) / 2600);
+      lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.5), k, performance.now() / 1000, 2.6 * (1 - k), b, she.center()); if (k < 1) requestAnimationFrame(upd); };
+    upd();
+    g.tweens.wait(2.6, () => { lock.remove(); if (!she.alive) return; sound('roar'); g.fx.soundWave?.(she); g.post.shake(1.4);
+      g.playerAttacked({ kind: 'blast', dmg: 26, from: she, heavy: true, slot: -1 }); });
   }
   updateBlock(dt) {
     const she = this.she, B = this.S.block;
@@ -460,9 +511,13 @@ export class Chase {
   // a fighting stop with her prowling in it (station she): she comes in from where the set says and stalks the girls
   prowl(S) {
     const H = S.she, she = this.ensure(H.form || 'a', H.at ? { x: H.at[0], z: H.at[1] } : null);
-    she.state = 'scripted'; she.pose('stare');
+    she.state = 'scripted'; she.pose(she.kaiko ? 'still' : 'stare');
+    if (H.burst) {   // (out of the bath water: up from below with a splash, the lights going out)
+      const P = she.root.position, y0 = P.y; P.y = -2.4; sound('splash') || sfx.slam(); this.g.post.flash(0.6, 0xffffff); this.g.post.shake(1.4);
+      this.g.tweens.to(P, { y: y0 }, 0.55, { ease: Ease.outBack }); she.pose('lunge'); sound('sheLaugh');
+    }
     this.music(true);
-    this.g.etw.wait(H.wake ?? 2.5, () => { if (she.alive && she.state === 'scripted') she.state = 'stalk'; });
+    this.g.etw.wait(H.wake ?? 2.5, () => { if (she.alive && she.state === 'scripted') { if (she.kaiko) { she.pose('wake'); sound('kaikoWail') || sfx.roar(); this.g.post.shake(1); } she.state = 'stalk'; } });
     this.mode = 'prowl';
   }
   // the time earned: a little clock beside the stage name (drawn by the program), the twelve hours filling up
@@ -486,6 +541,93 @@ export class Chase {
     c.strokeStyle = '#fff'; c.lineWidth = 5; c.lineCap = 'round'; const a = -Math.PI / 2 + k * Math.PI * 2;
     c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.cos(a) * R * 0.85, Math.sin(a) * R * 0.85); c.stroke();
     c.restore();
+  }
+  // ---- a note or a ledger page read (gimmick read: key of text/ui.json): its text on a paper card for a while
+  read(key, gm) {
+    const el = document.createElement('div'); el.className = 'note';
+    el.innerHTML = t(key).split('\n').map((l) => `<p>${l}</p>`).join('');
+    document.getElementById('ui').appendChild(el); requestAnimationFrame(() => el.classList.add('on'));
+    sound('fusumaOpen') || sfx.panel();
+    setTimeout(() => { el.classList.remove('on'); setTimeout(() => el.remove(), 600); }, 6500);
+    void gm;
+  }
+  freeCrow(gm) { this.crow = true; sound('crow'); sound('cage'); this.g.hud.gl.stickers.say(this.g.players[0], 'real'); void gm; }
+
+  // ---- the last fight (station dial: { forms, perForm, orbit }): on the clock face of the bell tower she keeps getting up; every time she
+  // is down, the next hour's plate on the floor can be shot (the red ring) and lights, the hand moves on and the camera walks round the
+  // circle; every perForm plates she changes into her next form; at the last plate the bell can be struck (both girls' specials full):
+  // its toll sends her off the tower (the original's ending: the bell, the fall)
+  dial(S) {
+    const g = this.g, D = S.dial;
+    this.mode = 'dial'; this.S = S; this.lit = 0; this.sentOff = false; this.formI = 0;
+    this.center = new THREE.Vector3(...(D.center || [0, 0, -6])); this.orbitR = D.r ?? 4.4; this.angle = Math.atan2(g.world.camPos.x - this.center.x, g.world.camPos.z - this.center.z);
+    this.nodes = g.actors.filter((a) => a.g?.node !== undefined).sort((a, b) => a.g.node - b.g.node);
+    this.forms = D.forms || ['a', 'c', 'e']; this.perForm = D.perForm || Math.ceil(this.nodes.length / this.forms.length);
+    const she = this.ensure(this.forms[0], { x: this.center.x, z: this.center.z - 1 });
+    she.state = 'stalk'; this.music(true); playMusic('ep2_final');
+    this.arm(null);
+    this.hand = g.actors.find((a) => a.g?.hand); this.handA = null; this.pointHand(0, 0);
+    g.hint('sheDial');
+  }
+  // the bronze hour hand lying at the middle of the face (a gimmick with hand: true) points at the next plate to light; it only ever turns
+  // clockwise, round to the first plate again when all are lit. Plate i lies at the angle pi - i * 2pi / n (tools/rounds/ep2_level.py)
+  pointHand(i, dur) {
+    const h = this.hand; if (!h) return;
+    const t = tex[h.g.k], L = h.g.w * t.image.height / t.image.width, c = this.center, P = h.root.position;
+    const a1 = Math.PI - i * Math.PI * 2 / Math.max(1, this.nodes.length), a0 = this.handA ?? a1, to = a1 > a0 + 1e-6 ? a1 - Math.PI * 2 : a1;
+    this.handA = to;
+    const set = (a) => { P.set(c.x + Math.sin(a) * L * 0.46, 0.05, c.z + Math.cos(a) * L * 0.46); h.root.rotation.set(-Math.PI / 2, 0, a + Math.PI); };
+    if (!dur) { set(to); return; }
+    sound('gears', { vol: 0.7 });
+    this.g.tweens.run(dur, (e) => set(a0 + (to - a0) * e), { ease: Ease.outBack });
+  }
+  // the next plate to light: armed (shootable, the red ring) while she is down
+  arm(on) { for (const n of this.nodes || []) n.g.armed = false; if (on) on.g.armed = true; this.armed = on; }
+  node(gm) {
+    const g = this.g;
+    this.lit++; this.arm(null); this.pointHand(this.lit % this.nodes.length, 1.1);
+    sound('clockChime') || sfx.clang(); g.post.flash(0.35, 0xffd166); g.fx.star(gm.center(), 1.4, COL.gold);
+    gm.u.tint.value.setRGB(1.0, 0.82, 0.3); gm.u.tintAmt.value = 0.7; gm.u.outlineOn.value = 0;
+    this.add(100 / Math.max(1, this.nodes.length), gm.center());
+    // the camera walks round the circle a step, still looking at the middle
+    const w = g.world, a0 = this.angle, a1 = this.angle + Math.PI * 2 / Math.max(6, this.nodes.length), c = this.center, R = this.orbitR;
+    this.angle = a1;
+    g.tweens.run(1.1, (e) => { const a = a0 + (a1 - a0) * e; w.camPos.set(c.x + Math.sin(a) * R, w.camPos.y, c.z + Math.cos(a) * R); w.lookAt.set(c.x, 1.3, c.z); }, { ease: Ease.inOutSine });
+    if (this.lit >= this.nodes.length) { this.bell(); return; }
+    if (this.lit % this.perForm === 0) this.changeForm();
+  }
+  changeForm() {
+    const g = this.g, she = this.she, P = she ? she.root.position.clone() : this.center.clone();
+    this.formI = Math.min(this.forms.length - 1, this.formI + 1);
+    g.lull = true; sound('roar') || sfx.roar(); sound('madness'); g.post.flash(0.8, 0xff3a5a); g.post.shake(1.4);
+    g.hud.gl.hold('boss', { name: t('sheForm' + this.formI) });
+    g.tweens.wait(1.6, () => { const n = this.ensure(this.forms[this.formI], { x: P.x, z: P.z }); n.state = 'stalk'; n.speedK = 1 + this.formI * 0.25; g.lull = false; });
+  }
+  // every plate lit: the bell (a gimmick with toll) can be struck; both specials come full for it
+  bell() {
+    const g = this.g;
+    this.bellReady = true;
+    for (const p of g.players) p.charge = 1;
+    const b = g.actors.find((a) => a.g?.bell); if (b) { b.g.armed = true; b.g.mark = true; }
+    g.hint('sheBell');
+  }
+  toll(gm) {
+    const g = this.g, she = this.she;
+    sound('bellToll') || sfx.slam(); g.post.flash(1.0, 0xfff2d0); g.post.shake(2.0); g.G.stop(0.2);
+    for (let i = 1; i < 4; i++) g.tweens.wait(i * 1.6, () => { sound('bellToll', { vol: 0.8 - i * 0.15 }); g.post.shake(1.2 - i * 0.25); });
+    if (gm) g.tweens.run(5, (e) => { gm.root.rotation.z = Math.sin(e * 20) * 0.25 * (1 - e); });
+    // the log striker beside it (a gimmick with striker: true) swings into it with every toll
+    const st = g.actors.find((a) => a.g?.striker), sx = st?.root.position.x, toB = gm ? Math.sign(gm.root.position.x - sx) || 1 : 1;
+    if (st) for (let i = 0; i < 4; i++) g.tweens.wait(Math.max(0, i * 1.6 - 0.25), () => g.tweens.run(0.9, (e) => { st.root.position.x = sx + toB * Math.sin(Math.min(1, e * 3.6) * Math.PI / 2) * 0.7 * (1 - e) ** 0.6; st.root.rotation.z = -toB * Math.sin(e * Math.PI) * 0.18; }));
+    this.sentOff = true; this.mode = null;
+    if (she && she.alive) {   // the toll throws her off the tower: up, out, falling away, gone
+      she.endWindup(); she.state = 'gone'; she.pose('down'); sound('sheLaugh', { rate: 0.7 });
+      const P = she.root.position, x0 = P.x, z0 = P.z, c = g.world.camPos, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
+      g.tweens.run(2.6, (e) => { P.x = x0 + dx / d * 14 * e; P.z = z0 + dz / d * 14 * e; P.y = Math.sin(e * Math.PI * 0.6) * 3 - e * e * 12; she.inner.rotation.z = e * 9; she.u.opacity.value = 1 - Math.max(0, e - 0.6) / 0.4; },
+        { onDone: () => this.gone() });
+    }
+    if (this.crow) g.tweens.wait(0.8, () => { sound('crow'); g.hud.gl.stickers.say(g.players[0], 'real'); });
+    g.tweens.wait(3.2, () => { g.waveLive = true; g.pendingSpawns = 0; g.waveIndex = (g.S.waves?.length || 1) - 1; });
   }
   dispose() { this.free(false); this.peek(false); bed('heartbeat', false); this.ui?.remove(); this.ui = null; }
 }

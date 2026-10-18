@@ -37,133 +37,280 @@
       "len": 0.16
     },
     "cannon": { "when": "猫娘每一发真言", "want": "法术弹「ボン」+ 铃声余韵（她头上有铃铛）", "src": "lib", "files": [], "vol": 1 },
-    "shell": { "when": "弹壳落地", "want": "细小的「チャリン」", "src": "lib", "files": [], "vol": 0.6 },
-    "empty": { "when": "没子弹了", "want": "空扳机「カチッ」", "src": "lib", "files": ["sfx/maou/maou_se_sound_switch01.mp3"], "vol": 0.8 },
+    "shell": {
+      "when": "弹壳落地",
+      "want": "清脆的叮",
+      "src": "ai",
+      "files": ["sfx/ai/shell_1.ogg", "sfx/ai/shell_2.ogg", "sfx/ai/shell_3.ogg", "sfx/ai/shell_4.ogg", "sfx/ai/shell_5.ogg", "sfx/ai/shell_6.ogg"],
+      "vol": 0.6
+    },
+    "empty": {
+      "when": "没子弹扣扳机",
+      "want": "空响的咔",
+      "src": "ai",
+      "files": ["sfx/ai/empty_1.ogg", "sfx/ai/empty_2.ogg", "sfx/ai/empty_3.ogg", "sfx/ai/empty_4.ogg"],
+      "vol": 0.8
+    },
     "reload": {
-      "when": "装填",
-      "want": "上弹匣「ガシャッ」；猫娘是抽符纸「シュッ」（以后分开）",
-      "src": "lib",
-      "files": ["sfx/maou/maou_se_sound19.mp3", "sfx/maou/maou_se_sound20.mp3"],
+      "when": "地雷妹换弹匣",
+      "want": "弹匣「咔嗒」",
+      "src": "ai",
+      "files": ["sfx/ai/reload_1.ogg", "sfx/ai/reload_2.ogg", "sfx/ai/reload_3.ogg", "sfx/ai/reload_4.ogg", "sfx/ai/reload_5.ogg", "sfx/ai/reload_6.ogg"],
       "vol": 0.8
     },
     "hit": {
       "when": "子弹打中怪",
-      "want": "软软的「ポスッ」命中声，不要血腥",
-      "src": "lib",
+      "want": "打在软东西上清脆有肉感的「啪」，不要血腥",
+      "src": "ai",
       "files": [
-        "sfx/otologic/Hit-Punch02-1_Dry.mp3",
-        "sfx/otologic/Hit-Punch02-2_Dry.mp3",
-        "sfx/otologic/Hit-Punch02-3_Dry.mp3",
-        "sfx/otologic/Hit-Punch02-4_Dry.mp3"
+        "sfx/ai/hit_1.ogg",
+        "sfx/ai/hit_2.ogg",
+        "sfx/ai/hit_3.ogg",
+        "sfx/ai/hit_4.ogg",
+        "sfx/ai/hit_5.ogg",
+        "sfx/ai/hit_6.ogg",
+        "sfx/ai/hit_7.ogg",
+        "sfx/ai/hit_8.ogg"
       ],
       "vol": 0.5,
       "gap": 0.05
     },
-    "thud": { "when": "重物落地、怪摔倒", "want": "「ドスン」", "src": "lib", "files": ["sfx/maou/maou_se_battle12.mp3"], "vol": 0.9 },
-    "shatter": { "when": "飞行道具被打下来、玻璃碎", "want": "清脆的碎裂「パリーン」", "src": "lib", "files": ["sfx/maou/maou_se_magic_ice05.mp3"], "vol": 0.7, "len": 0.8 },
-    "paperRip": { "when": "纸怪被撕开", "want": "撕纸「ビリッ」", "src": "lib", "files": [], "vol": 1 },
-    "tear": { "when": "布 / 皮被撕开", "want": "撕布「ビリビリ」", "src": "lib", "files": [], "vol": 1 },
+    "thud": {
+      "when": "重物落地、怪摔倒",
+      "want": "闷响",
+      "src": "ai",
+      "files": ["sfx/ai/thud_1.ogg", "sfx/ai/thud_2.ogg", "sfx/ai/thud_3.ogg", "sfx/ai/thud_4.ogg", "sfx/ai/thud_5.ogg", "sfx/ai/thud_6.ogg"],
+      "vol": 0.9
+    },
+    "shatter": {
+      "when": "玻璃 / 瓷器碎掉",
+      "want": "清脆的碎裂",
+      "src": "ai",
+      "files": [
+        "sfx/ai/shatter_1.ogg",
+        "sfx/ai/shatter_2.ogg",
+        "sfx/ai/shatter_3.ogg",
+        "sfx/ai/shatter_4.ogg",
+        "sfx/ai/shatter_5.ogg",
+        "sfx/ai/shatter_6.ogg"
+      ],
+      "vol": 0.7,
+      "len": 0.8
+    },
+    "paperRip": {
+      "when": "纸片被打碎",
+      "want": "很短的撕纸",
+      "src": "ai",
+      "files": [
+        "sfx/ai/paperRip_1.ogg",
+        "sfx/ai/paperRip_2.ogg",
+        "sfx/ai/paperRip_3.ogg",
+        "sfx/ai/paperRip_4.ogg",
+        "sfx/ai/paperRip_5.ogg",
+        "sfx/ai/paperRip_6.ogg"
+      ],
+      "vol": 1
+    },
+    "tear": {
+      "when": "撕开布 / 纸（怪被打烂、拉门被撕开）",
+      "want": "长一点的撕裂",
+      "src": "ai",
+      "files": ["sfx/ai/tear_1.ogg", "sfx/ai/tear_2.ogg", "sfx/ai/tear_3.ogg", "sfx/ai/tear_4.ogg", "sfx/ai/tear_5.ogg", "sfx/ai/tear_6.ogg"],
+      "vol": 1
+    },
     "slash": {
-      "when": "猫爪挥击",
-      "want": "风切「シュバッ」",
-      "src": "lib",
-      "files": ["sfx/otologic/Cut02-1.mp3", "sfx/otologic/Cut02-2.mp3", "sfx/otologic/Cut02-3.mp3", "sfx/otologic/Cut02-4.mp3"],
+      "when": "利刃挥过",
+      "want": "刀刃划过空气",
+      "src": "ai",
+      "files": ["sfx/ai/slash_1.ogg", "sfx/ai/slash_2.ogg", "sfx/ai/slash_3.ogg", "sfx/ai/slash_4.ogg", "sfx/ai/slash_5.ogg", "sfx/ai/slash_6.ogg"],
       "vol": 0.8
     },
     "clang": {
-      "when": "打在金属 / 盔甲上",
-      "want": "「カキン」",
-      "src": "lib",
-      "files": ["sfx/maou/maou_se_battle10.mp3", "sfx/maou/maou_se_battle04.mp3"],
+      "when": "打在金属上（铠甲、剪刀刃）",
+      "want": "金属铛的一声",
+      "src": "ai",
+      "files": ["sfx/ai/clang_1.ogg", "sfx/ai/clang_2.ogg", "sfx/ai/clang_3.ogg", "sfx/ai/clang_4.ogg", "sfx/ai/clang_5.ogg", "sfx/ai/clang_6.ogg"],
       "vol": 0.7,
       "len": 0.5
     },
     "coverHit": {
-      "when": "掩体被打中",
-      "want": "木头 / 铁皮被砸「ゴン」",
-      "src": "lib",
-      "files": ["sfx/otologic/Hit-Punch09-1_Low.mp3", "sfx/otologic/Hit-Punch09-3_Low.mp3"],
+      "when": "怪打在掩体上",
+      "want": "木头被重击",
+      "src": "ai",
+      "files": [
+        "sfx/ai/coverHit_1.ogg",
+        "sfx/ai/coverHit_2.ogg",
+        "sfx/ai/coverHit_3.ogg",
+        "sfx/ai/coverHit_4.ogg",
+        "sfx/ai/coverHit_5.ogg",
+        "sfx/ai/coverHit_6.ogg"
+      ],
       "vol": 0.8
     },
-    "crackle": { "when": "猫娘的必杀镭射持续", "want": "电流 + 念经的嗡嗡声，可以循环", "src": "lib", "files": [], "vol": 0.8 },
-    "burnOut": { "when": "怪物净化消散", "want": "「シュワァ」的消散声 + 一点亮晶晶", "src": "lib", "files": ["sfx/maou/maou_se_magical25.mp3"], "vol": 0.6, "len": 1.6 },
-    "whoosh": {
-      "when": "东西飞过、镜头甩",
-      "want": "「ヒュン」",
-      "src": "lib",
+    "crackle": {
+      "when": "火花噼啪（短）",
+      "want": "一声噼啪",
+      "src": "ai",
       "files": [
-        "sfx/otologic/Motion-Swish01-07.mp3",
-        "sfx/otologic/Motion-Swish01-08.mp3",
-        "sfx/otologic/Motion-Swish01-09.mp3",
-        "sfx/otologic/Motion-Swish01-10.mp3"
+        "sfx/ai/crackle_1.ogg",
+        "sfx/ai/crackle_2.ogg",
+        "sfx/ai/crackle_3.ogg",
+        "sfx/ai/crackle_4.ogg",
+        "sfx/ai/crackle_5.ogg",
+        "sfx/ai/crackle_6.ogg"
       ],
+      "vol": 0.8
+    },
+    "burnOut": {
+      "when": "怪被打死、溶解消失",
+      "want": "噗地化开 + 细碎噼啪",
+      "src": "ai",
+      "files": [
+        "sfx/ai/burnOut_1.ogg",
+        "sfx/ai/burnOut_2.ogg",
+        "sfx/ai/burnOut_3.ogg",
+        "sfx/ai/burnOut_4.ogg",
+        "sfx/ai/burnOut_5.ogg",
+        "sfx/ai/burnOut_6.ogg"
+      ],
+      "vol": 0.6,
+      "len": 1.6
+    },
+    "whoosh": {
+      "when": "东西飞过、镜头甩过",
+      "want": "呼地掠过",
+      "src": "ai",
+      "files": ["sfx/ai/whoosh_1.ogg", "sfx/ai/whoosh_2.ogg", "sfx/ai/whoosh_3.ogg", "sfx/ai/whoosh_4.ogg", "sfx/ai/whoosh_5.ogg", "sfx/ai/whoosh_6.ogg"],
       "vol": 0.6
     },
     "throwIt": {
-      "when": "怪物扔东西",
-      "want": "投掷「ブンッ」",
-      "src": "lib",
-      "files": ["sfx/otologic/Motion-Swish01-07.mp3", "sfx/otologic/Motion-Swish01-08.mp3"],
+      "when": "怪扔东西",
+      "want": "甩手扔出",
+      "src": "ai",
+      "files": [
+        "sfx/ai/throwIt_1.ogg",
+        "sfx/ai/throwIt_2.ogg",
+        "sfx/ai/throwIt_3.ogg",
+        "sfx/ai/throwIt_4.ogg",
+        "sfx/ai/throwIt_5.ogg",
+        "sfx/ai/throwIt_6.ogg"
+      ],
       "vol": 0.7,
       "rate": 0.8
     },
     "warn": { "when": "要快躲 / 快打的攻击开始蓄力", "want": "短促的警报「ピピッ」，一听就紧张", "src": "lib", "files": ["sfx/maou/maou_se_8bit02.mp3"], "vol": 0.5 },
     "miss": {
-      "when": "钱不够、装不下、操作无效",
-      "want": "「ブブッ」的否定音，可爱一点",
-      "src": "lib",
-      "files": ["sfx/otologic/Onoma-Negative16-4_High.mp3", "sfx/otologic/Onoma-Negative16-3_Low.mp3"],
+      "when": "子弹打空打在墙上",
+      "want": "小小的噗",
+      "src": "ai",
+      "files": ["sfx/ai/miss_1.ogg", "sfx/ai/miss_2.ogg", "sfx/ai/miss_3.ogg", "sfx/ai/miss_4.ogg", "sfx/ai/miss_5.ogg", "sfx/ai/miss_6.ogg"],
       "vol": 0.8
     },
-    "slam": { "when": "Boss 落地、大冲击", "want": "低沉的「ズドン」", "src": "lib", "files": ["sfx/maou/maou_se_battle_explosion07.mp3"], "vol": 0.9, "len": 1.2 },
+    "slam": {
+      "when": "场景塌方、Boss 落地、大冲击",
+      "want": "震动的巨响",
+      "src": "ai",
+      "files": ["sfx/ai/slam_1.ogg", "sfx/ai/slam_2.ogg", "sfx/ai/slam_3.ogg", "sfx/ai/slam_4.ogg", "sfx/ai/slam_5.ogg", "sfx/ai/slam_6.ogg"],
+      "vol": 0.9,
+      "len": 1.2
+    },
     "creak": {
-      "when": "开门特写：门在黑底上慢慢打开（第 1 话，原作每次进门的第一人称开门画面）",
-      "want": "老洋馆的木门吱呀一声慢慢打开，拖得长、有点瘆人",
-      "src": "lib",
-      "files": ["sfx/maou/maou_se_sound_door01.mp3"],
+      "when": "门慢慢打开",
+      "want": "老木门吱呀",
+      "src": "ai",
+      "files": ["sfx/ai/creak_1.ogg", "sfx/ai/creak_2.ogg", "sfx/ai/creak_3.ogg", "sfx/ai/creak_4.ogg", "sfx/ai/creak_5.ogg", "sfx/ai/creak_6.ogg"],
       "vol": 1,
       "rate": 0.72
     },
-    "doorSlam": { "when": "门在身后自己砰地关上（第 1 话开场）、开门特写结束", "want": "厚重的木门砰地关上，闷、短、回响", "src": "lib", "files": ["sfx/maou/maou_se_sound_door02.mp3"], "vol": 1 },
+    "doorSlam": {
+      "when": "门砰地关上",
+      "want": "木门砸上",
+      "src": "ai",
+      "files": [
+        "sfx/ai/doorSlam_1.ogg",
+        "sfx/ai/doorSlam_2.ogg",
+        "sfx/ai/doorSlam_3.ogg",
+        "sfx/ai/doorSlam_4.ogg",
+        "sfx/ai/doorSlam_5.ogg",
+        "sfx/ai/doorSlam_6.ogg"
+      ],
+      "vol": 1
+    },
     "run": {
-      "when": "两人跑去下一个点",
-      "want": "小碎步「タタタ」",
-      "src": "lib",
-      "files": ["sfx/maou/maou_se_sound_footstep01.mp3", "sfx/maou/maou_se_sound_footstep02.mp3"],
+      "when": "跑步的脚步",
+      "want": "木地板上的脚步",
+      "src": "ai",
+      "files": [
+        "sfx/ai/run_1.ogg",
+        "sfx/ai/run_2.ogg",
+        "sfx/ai/run_3.ogg",
+        "sfx/ai/run_4.ogg",
+        "sfx/ai/run_5.ogg",
+        "sfx/ai/run_6.ogg",
+        "sfx/ai/run_7.ogg",
+        "sfx/ai/run_8.ogg"
+      ],
       "vol": 0.6
     },
     "hurt": {
-      "when": "她被打中（语音之外的打击声）",
-      "want": "「バシッ」",
-      "src": "lib",
-      "files": ["sfx/otologic/Hit-Punch09-2_High.mp3", "sfx/otologic/Hit-Punch09-4_High.mp3"],
+      "when": "主角被打中",
+      "want": "钝重的打击",
+      "src": "ai",
+      "files": ["sfx/ai/hurt_1.ogg", "sfx/ai/hurt_2.ogg", "sfx/ai/hurt_3.ogg", "sfx/ai/hurt_4.ogg", "sfx/ai/hurt_5.ogg", "sfx/ai/hurt_6.ogg"],
       "vol": 0.8
     },
     "madness": {
-      "when": "放必杀、Boss 变身",
-      "want": "上升的能量蓄积「キュイーン」",
-      "src": "lib",
-      "files": ["sfx/otologic/Onoma-Syakiin05-1_Heavy.mp3", "sfx/otologic/Onoma-Syakiin05-2_Light.mp3"],
+      "when": "异变发生的一刹那",
+      "want": "诡异的反向吸入 + 八音盒走调",
+      "src": "ai",
+      "files": [
+        "sfx/ai/madness_1.ogg",
+        "sfx/ai/madness_2.ogg",
+        "sfx/ai/madness_3.ogg",
+        "sfx/ai/madness_4.ogg",
+        "sfx/ai/madness_5.ogg",
+        "sfx/ai/madness_6.ogg"
+      ],
       "vol": 0.8
     },
     "viewer": { "when": "漫画翻页", "want": "翻书「パラッ」", "src": "lib", "files": ["sfx/otologic/Book02-1_Flip.mp3"], "vol": 1 },
     "roar": {
-      "when": "Boss 吼叫、变身",
-      "want": "不可名状的怪叫：女声尖叫 + 低音 + 倒放 + 扭曲（TTS 念「キィィアアア」后期处理）",
-      "src": "lib",
-      "files": ["sfx/otologic/Monster02-10.mp3", "sfx/otologic/Monster02-11.mp3"],
+      "when": "Boss 出场 / 变身",
+      "want": "怪物的嘶吼，带女声",
+      "src": "ai",
+      "files": ["sfx/ai/roar_1.ogg", "sfx/ai/roar_2.ogg", "sfx/ai/roar_3.ogg", "sfx/ai/roar_4.ogg", "sfx/ai/roar_5.ogg", "sfx/ai/roar_6.ogg"],
       "vol": 1,
       "rate": 0.8,
       "len": 2.2
     },
     "dollScreech": {
-      "when": "人偶类怪尖叫",
-      "want": "小女孩笑声变调成尖叫（TTS + 变调 + 失真）",
-      "src": "lib",
-      "files": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3", "sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
+      "when": "人偶怪叫",
+      "want": "小女孩的怪笑 + 尖叫",
+      "src": "ai",
+      "files": [
+        "sfx/ai/dollScreech_1.ogg",
+        "sfx/ai/dollScreech_2.ogg",
+        "sfx/ai/dollScreech_3.ogg",
+        "sfx/ai/dollScreech_4.ogg",
+        "sfx/ai/dollScreech_5.ogg",
+        "sfx/ai/dollScreech_6.ogg"
+      ],
       "vol": 0.8
     },
-    "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": ["sfx/maou/maou_se_sound17.mp3"], "vol": 0.7 },
+    "mothFlap": {
+      "when": "纸 / 布翅膀扑腾",
+      "want": "纸翅膀扑扇",
+      "src": "ai",
+      "files": [
+        "sfx/ai/mothFlap_1.ogg",
+        "sfx/ai/mothFlap_2.ogg",
+        "sfx/ai/mothFlap_3.ogg",
+        "sfx/ai/mothFlap_4.ogg",
+        "sfx/ai/mothFlap_5.ogg",
+        "sfx/ai/mothFlap_6.ogg"
+      ],
+      "vol": 0.7
+    },
     "_doc": " gap = 两次之间至少隔几秒（连射的命中声不糊成一片）。",
     "uiMove": { "when": "光标移到按钮 / 选项上", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/move.ogg"], "vol": 0.5 },
     "uiBack": { "when": "返回", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/back.ogg"], "vol": 0.65 },
@@ -176,10 +323,620 @@
     "count": { "when": "数字往上跳", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/count.ogg"], "vol": 0.4 },
     "item": { "when": "拿到道具", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/item.ogg"], "vol": 0.75 },
     "levelUp": { "when": "升级", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/levelup.ogg"], "vol": 0.8 },
-    "comicPage": { "when": "漫画翻到新的一页", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/comicpage.ogg"], "vol": 0.7 }
+    "comicPage": { "when": "漫画翻到新的一页", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/comicpage.ogg"], "vol": 0.7 },
+    "shutter": {
+      "when": "手机拍照",
+      "want": "快门",
+      "src": "ai",
+      "files": ["sfx/ai/shutter_1.ogg", "sfx/ai/shutter_2.ogg", "sfx/ai/shutter_3.ogg", "sfx/ai/shutter_4.ogg"],
+      "vol": 0.8
+    },
+    "snip": {
+      "when": "她的剪刀合上一下（脚步、攻击）",
+      "want": "大剪刀「咔嚓」",
+      "src": "ai",
+      "files": [
+        "sfx/ai/snip_1.ogg",
+        "sfx/ai/snip_2.ogg",
+        "sfx/ai/snip_3.ogg",
+        "sfx/ai/snip_4.ogg",
+        "sfx/ai/snip_5.ogg",
+        "sfx/ai/snip_6.ogg",
+        "sfx/ai/snip_7.ogg",
+        "sfx/ai/snip_8.ogg"
+      ],
+      "vol": 0.8
+    },
+    "snipFar": {
+      "when": "远处传来的剪刀声（她在附近，看不见）",
+      "want": "远处空荡的咔嚓",
+      "src": "ai",
+      "files": [
+        "sfx/ai/snipFar_1.ogg",
+        "sfx/ai/snipFar_2.ogg",
+        "sfx/ai/snipFar_3.ogg",
+        "sfx/ai/snipFar_4.ogg",
+        "sfx/ai/snipFar_5.ogg",
+        "sfx/ai/snipFar_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "bladeDrag": {
+      "when": "她的刀刃拖过地板",
+      "want": "金属刮木地板",
+      "src": "ai",
+      "files": [
+        "sfx/ai/bladeDrag_1.ogg",
+        "sfx/ai/bladeDrag_2.ogg",
+        "sfx/ai/bladeDrag_3.ogg",
+        "sfx/ai/bladeDrag_4.ogg",
+        "sfx/ai/bladeDrag_5.ogg",
+        "sfx/ai/bladeDrag_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "bladeOpen": {
+      "when": "她张开剪刀蓄力",
+      "want": "刀刃慢慢拉开的金属摩擦",
+      "src": "ai",
+      "files": [
+        "sfx/ai/bladeOpen_1.ogg",
+        "sfx/ai/bladeOpen_2.ogg",
+        "sfx/ai/bladeOpen_3.ogg",
+        "sfx/ai/bladeOpen_4.ogg",
+        "sfx/ai/bladeOpen_5.ogg",
+        "sfx/ai/bladeOpen_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "stab": {
+      "when": "剪刀捅穿拉门 / 地板 / 柜门",
+      "want": "捅穿纸和木板",
+      "src": "ai",
+      "files": ["sfx/ai/stab_1.ogg", "sfx/ai/stab_2.ogg", "sfx/ai/stab_3.ogg", "sfx/ai/stab_4.ogg", "sfx/ai/stab_5.ogg", "sfx/ai/stab_6.ogg"],
+      "vol": 0.8
+    },
+    "sheKnock": {
+      "when": "她被打倒摔在地上",
+      "want": "一大堆金属和木头倒下",
+      "src": "ai",
+      "files": [
+        "sfx/ai/sheKnock_1.ogg",
+        "sfx/ai/sheKnock_2.ogg",
+        "sfx/ai/sheKnock_3.ogg",
+        "sfx/ai/sheKnock_4.ogg",
+        "sfx/ai/sheKnock_5.ogg",
+        "sfx/ai/sheKnock_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "sheRise": {
+      "when": "她重新站起来",
+      "want": "关节咯咯响、刀刃摩擦",
+      "src": "ai",
+      "files": [
+        "sfx/ai/sheRise_1.ogg",
+        "sfx/ai/sheRise_2.ogg",
+        "sfx/ai/sheRise_3.ogg",
+        "sfx/ai/sheRise_4.ogg",
+        "sfx/ai/sheRise_5.ogg",
+        "sfx/ai/sheRise_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "sheLaugh": {
+      "when": "她发现人 / 抓住人",
+      "want": "人偶的轻笑，被剪碎",
+      "src": "ai",
+      "files": [
+        "sfx/ai/sheLaugh_1.ogg",
+        "sfx/ai/sheLaugh_2.ogg",
+        "sfx/ai/sheLaugh_3.ogg",
+        "sfx/ai/sheLaugh_4.ogg",
+        "sfx/ai/sheLaugh_5.ogg",
+        "sfx/ai/sheLaugh_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "grab": {
+      "when": "她抓住主角",
+      "want": "一把抓住 + 布料",
+      "src": "ai",
+      "files": ["sfx/ai/grab_1.ogg", "sfx/ai/grab_2.ogg", "sfx/ai/grab_3.ogg", "sfx/ai/grab_4.ogg", "sfx/ai/grab_5.ogg", "sfx/ai/grab_6.ogg"],
+      "vol": 0.8
+    },
+    "shoji": {
+      "when": "拉门纸被撕破 / 捅破",
+      "want": "和纸撕破 + 木格断",
+      "src": "ai",
+      "files": ["sfx/ai/shoji_1.ogg", "sfx/ai/shoji_2.ogg", "sfx/ai/shoji_3.ogg", "sfx/ai/shoji_4.ogg", "sfx/ai/shoji_5.ogg", "sfx/ai/shoji_6.ogg"],
+      "vol": 0.8
+    },
+    "fusumaSlam": {
+      "when": "拉门砰地拉上",
+      "want": "推拉门撞上",
+      "src": "ai",
+      "files": [
+        "sfx/ai/fusumaSlam_1.ogg",
+        "sfx/ai/fusumaSlam_2.ogg",
+        "sfx/ai/fusumaSlam_3.ogg",
+        "sfx/ai/fusumaSlam_4.ogg",
+        "sfx/ai/fusumaSlam_5.ogg",
+        "sfx/ai/fusumaSlam_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "fusumaOpen": {
+      "when": "拉门拉开",
+      "want": "推拉门滑开",
+      "src": "ai",
+      "files": [
+        "sfx/ai/fusumaOpen_1.ogg",
+        "sfx/ai/fusumaOpen_2.ogg",
+        "sfx/ai/fusumaOpen_3.ogg",
+        "sfx/ai/fusumaOpen_4.ogg",
+        "sfx/ai/fusumaOpen_5.ogg",
+        "sfx/ai/fusumaOpen_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "amado": {
+      "when": "雨户（防雨木板窗）甩上",
+      "want": "一排木板哗啦撞上",
+      "src": "ai",
+      "files": ["sfx/ai/amado_1.ogg", "sfx/ai/amado_2.ogg", "sfx/ai/amado_3.ogg", "sfx/ai/amado_4.ogg", "sfx/ai/amado_5.ogg", "sfx/ai/amado_6.ogg"],
+      "vol": 0.8
+    },
+    "woodBreak": {
+      "when": "木头被打断 / 劈开",
+      "want": "木头断裂",
+      "src": "ai",
+      "files": [
+        "sfx/ai/woodBreak_1.ogg",
+        "sfx/ai/woodBreak_2.ogg",
+        "sfx/ai/woodBreak_3.ogg",
+        "sfx/ai/woodBreak_4.ogg",
+        "sfx/ai/woodBreak_5.ogg",
+        "sfx/ai/woodBreak_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "beamFall": {
+      "when": "吊着的东西掉下来砸人",
+      "want": "链子断 + 重物砸地",
+      "src": "ai",
+      "files": [
+        "sfx/ai/beamFall_1.ogg",
+        "sfx/ai/beamFall_2.ogg",
+        "sfx/ai/beamFall_3.ogg",
+        "sfx/ai/beamFall_4.ogg",
+        "sfx/ai/beamFall_5.ogg",
+        "sfx/ai/beamFall_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "tiles": {
+      "when": "屋顶瓦片滑落摔碎",
+      "want": "陶瓦哗啦碎",
+      "src": "ai",
+      "files": ["sfx/ai/tiles_1.ogg", "sfx/ai/tiles_2.ogg", "sfx/ai/tiles_3.ogg", "sfx/ai/tiles_4.ogg", "sfx/ai/tiles_5.ogg", "sfx/ai/tiles_6.ogg"],
+      "vol": 0.8
+    },
+    "stoneLantern": {
+      "when": "石灯笼倒下",
+      "want": "石头倒地",
+      "src": "ai",
+      "files": [
+        "sfx/ai/stoneLantern_1.ogg",
+        "sfx/ai/stoneLantern_2.ogg",
+        "sfx/ai/stoneLantern_3.ogg",
+        "sfx/ai/stoneLantern_4.ogg",
+        "sfx/ai/stoneLantern_5.ogg",
+        "sfx/ai/stoneLantern_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "clockTick": {
+      "when": "安静时满屋的钟（环境）",
+      "want": "好几座老钟的滴答交错",
+      "src": "ai",
+      "files": ["sfx/ai/clockTick_1.ogg", "sfx/ai/clockTick_2.ogg", "sfx/ai/clockTick_3.ogg", "sfx/ai/clockTick_4.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "clockChime": {
+      "when": "柱时计报时",
+      "want": "当——",
+      "src": "ai",
+      "files": [
+        "sfx/ai/clockChime_1.ogg",
+        "sfx/ai/clockChime_2.ogg",
+        "sfx/ai/clockChime_3.ogg",
+        "sfx/ai/clockChime_4.ogg",
+        "sfx/ai/clockChime_5.ogg",
+        "sfx/ai/clockChime_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "clocksAll": {
+      "when": "满墙的钟同时敲（丑三つ）",
+      "want": "几十座钟同时乱响",
+      "src": "ai",
+      "files": ["sfx/ai/clocksAll_1.ogg", "sfx/ai/clocksAll_2.ogg", "sfx/ai/clocksAll_3.ogg", "sfx/ai/clocksAll_4.ogg"],
+      "vol": 0.8
+    },
+    "bellToll": {
+      "when": "时之钟敲响（决战、结尾）",
+      "want": "寺院大钟的低鸣，余音很长",
+      "src": "ai",
+      "files": [
+        "sfx/ai/bellToll_1.ogg",
+        "sfx/ai/bellToll_2.ogg",
+        "sfx/ai/bellToll_3.ogg",
+        "sfx/ai/bellToll_4.ogg",
+        "sfx/ai/bellToll_5.ogg",
+        "sfx/ai/bellToll_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "bellSmall": {
+      "when": "帐房的铃 / 风铃",
+      "want": "清亮的小铃",
+      "src": "ai",
+      "files": ["sfx/ai/bellSmall_1.ogg", "sfx/ai/bellSmall_2.ogg", "sfx/ai/bellSmall_3.ogg", "sfx/ai/bellSmall_4.ogg"],
+      "vol": 0.8
+    },
+    "rain": {
+      "when": "中庭的雨（环境）",
+      "want": "下在瓦和石头上的雨",
+      "src": "ai",
+      "files": ["sfx/ai/rain_1.ogg", "sfx/ai/rain_2.ogg", "sfx/ai/rain_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "shishiOdoshi": {
+      "when": "鹿威し敲石头",
+      "want": "竹筒「咚」",
+      "src": "ai",
+      "files": ["sfx/ai/shishiOdoshi_1.ogg", "sfx/ai/shishiOdoshi_2.ogg", "sfx/ai/shishiOdoshi_3.ogg", "sfx/ai/shishiOdoshi_4.ogg"],
+      "vol": 0.8
+    },
+    "splash": {
+      "when": "她从浴桶里扑出来",
+      "want": "水猛地溅开",
+      "src": "ai",
+      "files": ["sfx/ai/splash_1.ogg", "sfx/ai/splash_2.ogg", "sfx/ai/splash_3.ogg", "sfx/ai/splash_4.ogg", "sfx/ai/splash_5.ogg", "sfx/ai/splash_6.ogg"],
+      "vol": 0.8
+    },
+    "bathLid": {
+      "when": "浴桶盖子掀开",
+      "want": "木盖子滑开",
+      "src": "ai",
+      "files": ["sfx/ai/bathLid_1.ogg", "sfx/ai/bathLid_2.ogg", "sfx/ai/bathLid_3.ogg", "sfx/ai/bathLid_4.ogg"],
+      "vol": 0.8
+    },
+    "crow": {
+      "when": "乌鸦",
+      "want": "乌鸦叫",
+      "src": "ai",
+      "files": ["sfx/ai/crow_1.ogg", "sfx/ai/crow_2.ogg", "sfx/ai/crow_3.ogg", "sfx/ai/crow_4.ogg", "sfx/ai/crow_5.ogg", "sfx/ai/crow_6.ogg"],
+      "vol": 0.8
+    },
+    "cage": {
+      "when": "鸟笼门被打开",
+      "want": "金属笼门",
+      "src": "ai",
+      "files": ["sfx/ai/cage_1.ogg", "sfx/ai/cage_2.ogg", "sfx/ai/cage_3.ogg", "sfx/ai/cage_4.ogg"],
+      "vol": 0.8
+    },
+    "kerosene": {
+      "when": "灯油泼到火上烧起来",
+      "want": "轰地着火",
+      "src": "ai",
+      "files": [
+        "sfx/ai/kerosene_1.ogg",
+        "sfx/ai/kerosene_2.ogg",
+        "sfx/ai/kerosene_3.ogg",
+        "sfx/ai/kerosene_4.ogg",
+        "sfx/ai/kerosene_5.ogg",
+        "sfx/ai/kerosene_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "fireLoop": {
+      "when": "大火（环境）",
+      "want": "烧得很旺的火",
+      "src": "ai",
+      "files": ["sfx/ai/fireLoop_1.ogg", "sfx/ai/fireLoop_2.ogg", "sfx/ai/fireLoop_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "ropeCreak": {
+      "when": "吊台的绳子吱呀",
+      "want": "绳子和滑轮",
+      "src": "ai",
+      "files": ["sfx/ai/ropeCreak_1.ogg", "sfx/ai/ropeCreak_2.ogg", "sfx/ai/ropeCreak_3.ogg", "sfx/ai/ropeCreak_4.ogg"],
+      "vol": 0.8
+    },
+    "lift": {
+      "when": "吊台往上升（环境）",
+      "want": "木头吊台上升，滑轮转",
+      "src": "ai",
+      "files": ["sfx/ai/lift_1.ogg", "sfx/ai/lift_2.ogg", "sfx/ai/lift_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "gears": {
+      "when": "钟楼齿轮（环境）",
+      "want": "巨大齿轮咔哒转",
+      "src": "ai",
+      "files": ["sfx/ai/gears_1.ogg", "sfx/ai/gears_2.ogg", "sfx/ai/gears_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "weightDrop": {
+      "when": "配重掉下去",
+      "want": "铁块砸下 + 绳子哗地",
+      "src": "ai",
+      "files": ["sfx/ai/weightDrop_1.ogg", "sfx/ai/weightDrop_2.ogg", "sfx/ai/weightDrop_3.ogg", "sfx/ai/weightDrop_4.ogg"],
+      "vol": 0.8
+    },
+    "heartbeat": {
+      "when": "她很近时的心跳",
+      "want": "急促心跳",
+      "src": "ai",
+      "files": ["sfx/ai/heartbeat_1.ogg", "sfx/ai/heartbeat_2.ogg", "sfx/ai/heartbeat_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "katashiroSwarm": {
+      "when": "成群的纸人（环境）",
+      "want": "一大群纸片扑扇",
+      "src": "ai",
+      "files": ["sfx/ai/katashiroSwarm_1.ogg", "sfx/ai/katashiroSwarm_2.ogg", "sfx/ai/katashiroSwarm_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "slurp": {
+      "when": "お蚕様吃东西",
+      "want": "黏糊糊的咀嚼",
+      "src": "ai",
+      "files": ["sfx/ai/slurp_1.ogg", "sfx/ai/slurp_2.ogg", "sfx/ai/slurp_3.ogg", "sfx/ai/slurp_4.ogg", "sfx/ai/slurp_5.ogg", "sfx/ai/slurp_6.ogg"],
+      "vol": 0.8
+    },
+    "crawl": {
+      "when": "お蚕様爬过来（环境）",
+      "want": "巨大的身体在地上拖",
+      "src": "ai",
+      "files": ["sfx/ai/crawl_1.ogg", "sfx/ai/crawl_2.ogg", "sfx/ai/crawl_3.ogg"],
+      "vol": 0.8,
+      "loop": true
+    },
+    "kaikoWail": {
+      "when": "お蚕様嚎叫",
+      "want": "巨婴一样的哭嚎",
+      "src": "ai",
+      "files": [
+        "sfx/ai/kaikoWail_1.ogg",
+        "sfx/ai/kaikoWail_2.ogg",
+        "sfx/ai/kaikoWail_3.ogg",
+        "sfx/ai/kaikoWail_4.ogg",
+        "sfx/ai/kaikoWail_5.ogg",
+        "sfx/ai/kaikoWail_6.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_girl_windup": {
+      "when": "怪叫（girl 类）windup",
+      "want": "a creepy monster girl：growling and hissing as it gathers itself to attack, rising tension",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_girl_windup_1.ogg",
+        "sfx/ai/cry_girl_windup_2.ogg",
+        "sfx/ai/cry_girl_windup_3.ogg",
+        "sfx/ai/cry_girl_windup_4.ogg",
+        "sfx/ai/cry_girl_windup_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_girl_attack": {
+      "when": "怪叫（girl 类）attack",
+      "want": "a creepy monster girl：a sharp shriek as it lunges",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_girl_attack_1.ogg",
+        "sfx/ai/cry_girl_attack_2.ogg",
+        "sfx/ai/cry_girl_attack_3.ogg",
+        "sfx/ai/cry_girl_attack_4.ogg",
+        "sfx/ai/cry_girl_attack_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_girl_hurt": {
+      "when": "怪叫（girl 类）hurt",
+      "want": "a creepy monster girl：a short pained squeal",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_girl_hurt_1.ogg",
+        "sfx/ai/cry_girl_hurt_2.ogg",
+        "sfx/ai/cry_girl_hurt_3.ogg",
+        "sfx/ai/cry_girl_hurt_4.ogg",
+        "sfx/ai/cry_girl_hurt_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_girl_die": {
+      "when": "怪叫（girl 类）die",
+      "want": "a creepy monster girl：a dying wail that fades into a whisper",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_girl_die_1.ogg",
+        "sfx/ai/cry_girl_die_2.ogg",
+        "sfx/ai/cry_girl_die_3.ogg",
+        "sfx/ai/cry_girl_die_4.ogg",
+        "sfx/ai/cry_girl_die_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_paper_windup": {
+      "when": "怪叫（paper 类）windup",
+      "want": "a creature made of paper：growling and hissing as it gathers itself to attack, rising tension",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_paper_windup_1.ogg",
+        "sfx/ai/cry_paper_windup_2.ogg",
+        "sfx/ai/cry_paper_windup_3.ogg",
+        "sfx/ai/cry_paper_windup_4.ogg",
+        "sfx/ai/cry_paper_windup_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_paper_attack": {
+      "when": "怪叫（paper 类）attack",
+      "want": "a creature made of paper：a sharp shriek as it lunges",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_paper_attack_1.ogg",
+        "sfx/ai/cry_paper_attack_2.ogg",
+        "sfx/ai/cry_paper_attack_3.ogg",
+        "sfx/ai/cry_paper_attack_4.ogg",
+        "sfx/ai/cry_paper_attack_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_paper_hurt": {
+      "when": "怪叫（paper 类）hurt",
+      "want": "a creature made of paper：a short pained squeal",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_paper_hurt_1.ogg",
+        "sfx/ai/cry_paper_hurt_2.ogg",
+        "sfx/ai/cry_paper_hurt_3.ogg",
+        "sfx/ai/cry_paper_hurt_4.ogg",
+        "sfx/ai/cry_paper_hurt_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_paper_die": {
+      "when": "怪叫（paper 类）die",
+      "want": "a creature made of paper：a dying wail that fades into a whisper",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_paper_die_1.ogg",
+        "sfx/ai/cry_paper_die_2.ogg",
+        "sfx/ai/cry_paper_die_3.ogg",
+        "sfx/ai/cry_paper_die_4.ogg",
+        "sfx/ai/cry_paper_die_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_wood_windup": {
+      "when": "怪叫（wood 类）windup",
+      "want": "a wooden doll creature：growling and hissing as it gathers itself to attack, rising tension",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_wood_windup_1.ogg",
+        "sfx/ai/cry_wood_windup_2.ogg",
+        "sfx/ai/cry_wood_windup_3.ogg",
+        "sfx/ai/cry_wood_windup_4.ogg",
+        "sfx/ai/cry_wood_windup_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_wood_attack": {
+      "when": "怪叫（wood 类）attack",
+      "want": "a wooden doll creature：a sharp shriek as it lunges",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_wood_attack_1.ogg",
+        "sfx/ai/cry_wood_attack_2.ogg",
+        "sfx/ai/cry_wood_attack_3.ogg",
+        "sfx/ai/cry_wood_attack_4.ogg",
+        "sfx/ai/cry_wood_attack_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_wood_hurt": {
+      "when": "怪叫（wood 类）hurt",
+      "want": "a wooden doll creature：a short pained squeal",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_wood_hurt_1.ogg",
+        "sfx/ai/cry_wood_hurt_2.ogg",
+        "sfx/ai/cry_wood_hurt_3.ogg",
+        "sfx/ai/cry_wood_hurt_4.ogg",
+        "sfx/ai/cry_wood_hurt_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_wood_die": {
+      "when": "怪叫（wood 类）die",
+      "want": "a wooden doll creature：a dying wail that fades into a whisper",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_wood_die_1.ogg",
+        "sfx/ai/cry_wood_die_2.ogg",
+        "sfx/ai/cry_wood_die_3.ogg",
+        "sfx/ai/cry_wood_die_4.ogg",
+        "sfx/ai/cry_wood_die_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_beast_windup": {
+      "when": "怪叫（beast 类）windup",
+      "want": "a big soft monster：growling and hissing as it gathers itself to attack, rising tension",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_beast_windup_1.ogg",
+        "sfx/ai/cry_beast_windup_2.ogg",
+        "sfx/ai/cry_beast_windup_3.ogg",
+        "sfx/ai/cry_beast_windup_4.ogg",
+        "sfx/ai/cry_beast_windup_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_beast_attack": {
+      "when": "怪叫（beast 类）attack",
+      "want": "a big soft monster：a sharp shriek as it lunges",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_beast_attack_1.ogg",
+        "sfx/ai/cry_beast_attack_2.ogg",
+        "sfx/ai/cry_beast_attack_3.ogg",
+        "sfx/ai/cry_beast_attack_4.ogg",
+        "sfx/ai/cry_beast_attack_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_beast_hurt": {
+      "when": "怪叫（beast 类）hurt",
+      "want": "a big soft monster：a short pained squeal",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_beast_hurt_1.ogg",
+        "sfx/ai/cry_beast_hurt_2.ogg",
+        "sfx/ai/cry_beast_hurt_3.ogg",
+        "sfx/ai/cry_beast_hurt_4.ogg",
+        "sfx/ai/cry_beast_hurt_5.ogg"
+      ],
+      "vol": 0.8
+    },
+    "cry_beast_die": {
+      "when": "怪叫（beast 类）die",
+      "want": "a big soft monster：a dying wail that fades into a whisper",
+      "src": "ai",
+      "files": [
+        "sfx/ai/cry_beast_die_1.ogg",
+        "sfx/ai/cry_beast_die_2.ogg",
+        "sfx/ai/cry_beast_die_3.ogg",
+        "sfx/ai/cry_beast_die_4.ogg",
+        "sfx/ai/cry_beast_die_5.ogg"
+      ],
+      "vol": 0.8
+    }
   },
   "monsters": {
-    "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。 第 1 话重做的新怪借用相近的怪的叫声、改音高（小东西高、影子低）。",
+    "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。 第 1 话重做的新怪借用相近的怪的叫声、改音高（小东西高、影子低）。 cry = 这种怪的声音属于哪一类（girl / paper / wood / beast），自己哪个动作没有文件就用那一类的 AI 怪叫（sfx 的 cry_<类>_<动作>，tools/rounds/sfx_specs62.py）。",
     "default": {
       "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
       "attack": [],
@@ -192,7 +949,8 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
-      "rate": 0.75
+      "rate": 0.75,
+      "cry": "wood"
     },
     "shoe": {
       "want": "鞋柜：门板咔哒 + 闷闷的「くさい…」",
@@ -200,7 +958,8 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
-      "rate": 0.9
+      "rate": 0.9,
+      "cry": "beast"
     },
     "board": {
       "want": "黑板：粉笔刮擦 + 低语「せいれつ…」",
@@ -208,7 +967,8 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-8_Low-Dry.mp3"],
-      "rate": 0.7
+      "rate": 0.7,
+      "cry": "girl"
     },
     "paper": {
       "want": "试卷：纸片沙沙 + 小声尖笑",
@@ -216,14 +976,16 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
-      "rate": 1.3
+      "rate": 1.3,
+      "cry": "paper"
     },
     "frame": {
       "want": "画框：玻璃嗡鸣 + 「みてる…」",
       "windup": ["sfx/otologic/Horror-Scream03-6_High-Dry.mp3"],
       "attack": [],
       "hurt": [],
-      "die": ["sfx/otologic/Horror-Scream03-8_Low-Dry.mp3"]
+      "die": ["sfx/otologic/Horror-Scream03-8_Low-Dry.mp3"],
+      "cry": "wood"
     },
     "horn": {
       "want": "喇叭：广播的啸叫 + 失真的校园广播",
@@ -238,21 +1000,24 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
-      "rate": 0.85
+      "rate": 0.85,
+      "cry": "beast"
     },
     "bat": {
       "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3", "sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
-      "rate": 1.6
+      "rate": 1.6,
+      "cry": "paper"
     },
     "chandelier": {
       "windup": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3", "sfx/otologic/Horror-Laugh02-5_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream03-6_High-Dry.mp3"],
-      "rate": 1.1
+      "rate": 1.1,
+      "cry": "wood"
     },
     "armor": {
       "windup": ["sfx/otologic/Monster02-08.mp3"],
@@ -266,92 +1031,111 @@
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
-      "rate": 1.15
+      "rate": 1.15,
+      "cry": "girl"
     },
     "crawler": {
       "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
-      "rate": 0.95
+      "rate": 0.95,
+      "cry": "beast"
     },
     "shadow": {
       "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
-      "rate": 0.8
+      "rate": 0.8,
+      "cry": "girl"
     },
     "double_pink": {
       "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
-      "rate": 1.2
+      "rate": 1.2,
+      "cry": "girl"
     },
     "double_cat": {
       "windup": ["sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-8_Low-Dry.mp3"],
-      "rate": 1.1
+      "rate": 1.1,
+      "cry": "girl"
     },
     "scoopling": {
       "windup": ["sfx/otologic/Monster02-01.mp3", "sfx/otologic/Monster02-02.mp3", "sfx/otologic/Monster02-04.mp3", "sfx/otologic/Monster02-05.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Monster01-1.mp3", "sfx/otologic/Monster01-2.mp3"],
-      "rate": 1.5
+      "rate": 1.5,
+      "cry": "beast"
     },
     "teacup": {
       "windup": ["sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
-      "rate": 1.6
+      "rate": 1.6,
+      "cry": "wood"
     },
     "doily": {
       "windup": ["sfx/otologic/Horror-Laugh01-3_Dry.mp3", "sfx/otologic/Horror-Laugh01-4_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream02-6_High-Dry.mp3"],
-      "rate": 1.4
+      "rate": 1.4,
+      "cry": "paper"
     },
     "dollkin": {
       "windup": ["sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-3_Dry.mp3"],
-      "rate": 1.35
+      "rate": 1.35,
+      "cry": "girl"
     },
     "shade_hostess": {
       "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
-      "rate": 1.0
+      "rate": 1.0,
+      "cry": "girl"
     },
     "shade_mourner": {
       "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
-      "rate": 0.85
+      "rate": 0.85,
+      "cry": "girl"
     },
     "shade_mother": {
       "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
-      "rate": 0.95
+      "rate": 0.95,
+      "cry": "girl"
     },
     "shade_bride": {
       "windup": ["sfx/otologic/Horror-Laugh02-1_Reverb.mp3"],
       "attack": [],
       "hurt": [],
       "die": ["sfx/otologic/Horror-Scream01-1_Reverb.mp3"],
-      "rate": 0.9
-    }
+      "rate": 0.9,
+      "cry": "girl"
+    },
+    "katashiro": { "cry": "paper", "rate": 1.2 },
+    "chochin": { "cry": "paper" },
+    "surippa": { "cry": "beast", "rate": 1.15 },
+    "karakasa": { "cry": "paper", "rate": 0.9 },
+    "futon": { "cry": "girl", "rate": 0.85 },
+    "kokeshi": { "cry": "wood", "rate": 1.1 }
   },
   "voices": {
     "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。 grains = 武器的声音（第十三批：武器声用主角自己的声音）：say 每个音节，style / speed（可以每个音节一个）；tools/voice_aivis.py grains <角色> 生成 voice/<角色>/g_<键>_<n>.ogg 写进 files；seq = 按顺序对着打出来的字（猫娘的真言 唵嘛呢叭咪吽）；takes = 整串换几种语气再念几遍（文件一遍接一遍排），seq 时每发从这个字的几遍里随机挑一个；不是 seq 的随机挑、不连着重复最近两个（2026-10-18 用户：重复度太高）。怎么播见 characters/*.json weapon.voice。",

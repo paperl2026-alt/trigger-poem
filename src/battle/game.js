@@ -3,7 +3,7 @@
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { alphaAt, meta, url } from '../core/assets.js';
-import { sfx, playMusic, stopMusic, setIntensity } from '../core/audio.js';
+import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
@@ -22,8 +22,8 @@ import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
 import { C, T, isStage } from '../core/content.js';
-import { coreKeys, stageKeys, stageFrom, stageAt, outfitKeys } from '../core/groups.js';
-import { loadKeys } from '../core/assets.js';
+import { coreKeys, stageKeys, stageKeysAt, setKeys, placeOf, stageFrom, stageAt, outfitKeys } from '../core/groups.js';
+import { loadKeys, releaseExcept, isLoaded } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
 
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
@@ -37,6 +37,7 @@ export class Game {
     this.G = G;
     this.run = run;
     this.ep = run.ep;
+    warmMusic(Object.keys(C.sounds?.music || {}).filter((n) => n.startsWith(`${this.ep.id}_`)));   // (its recorded tracks: music())
     this.tweens = G.tweens;
     // the enemies' clock (DESIGN「节奏要慢下来」): monsters, the boss, their shots and the waves run at tuning combat.pace of real time
     this.etw = new Tweens();
@@ -72,6 +73,7 @@ export class Game {
     const old = this.world;
     this.setId = id;
     this.world = this.makeWorld(id);
+    this.justBuilt = true;
     if (!old) return;
     this.clearActors(); this.boss = null; this.etw.clear();
     this.addGimmicks();
@@ -81,6 +83,12 @@ export class Game {
     if (old.dispose) old.dispose();
     this.camPlaced = false;
     this.layout(this.W, this.H);
+    if (this.stage?.places?.includes(id)) this.streamPlaces(id);
+  }
+  // a stage through several places (src/core/groups.js stageKeysAt): the places behind are let go, the next one starts loading
+  streamPlaces(id) {
+    const keys = new Set([...coreKeys(), ...stageKeysAt(this.ep, this.stage, id), ...outfitKeys(this.run.team, (c) => SAVE.chars[c]?.outfit)]);
+    releaseExcept(keys); loadKeys(keys);
   }
   get W() { return this.G.W; }
   get H() { return this.G.H; }
@@ -125,8 +133,8 @@ export class Game {
     this.checkpoint = this.stepIdx;
     // while a comic page or a door plays, the next stage's pictures load in the background (src/core/groups.js); a stage waits for its
     // pictures (a loading bar if they are not all there yet) and then the previous stage's are released
-    if (!isStage(st)) { const nx = stageFrom(this.ep, this.stepIdx + 1); if (nx) loadKeys(stageKeys(this.ep, nx)); }
-    else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeys(this.ep, st), ...outfitKeys(this.run.team, (id) => SAVE.chars[id]?.outfit)]), () => this.nextStep()); return; }
+    if (!isStage(st)) { const nx = stageFrom(this.ep, this.stepIdx + 1); if (nx) loadKeys(stageKeysAt(this.ep, nx, placeOf(nx, this.run.station))); }
+    else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeysAt(this.ep, st, placeOf(st, this.run.station)), ...outfitKeys(this.run.team, (id) => SAVE.chars[id]?.outfit)]), () => this.nextStep()); return; }
     this.picsReady = false;
     // a door close-up between two places (src/ui/door.js): like a comic page, over the wipe
     // (they followed a monster through the hole it broke, Game.breakoutAt, or fell through the floor, collapse: not through this door)
@@ -149,18 +157,25 @@ export class Game {
     }
     this.stage = st;
     this.skipDoor = false;   // (a door is skipped only right after the hole / the fall that leads past it)
-    this.useSet(st.set || this.ep.set);
+    this.useSet(st.places ? placeOf(st, this.run.station) : st.set || this.ep.set);
     this.hud.show(true);
     if (st.stage) {
+      // a stage through several places (episode 2): which place each stop is in (the step's "places": [set ids]; a stop's id is looked up in them)
+      this.setOfStation = null;
+      if (st.places) { this.setOfStation = {}; for (const s of st.places) for (const k of Object.keys(C.sets[s]?.stations || {})) this.setOfStation[k] = s; }
       this.stationQ = [...st.stations];
+      // resumed at a checkpoint inside the stage (run.station: the results page's retry, or the save's SAVE.eps[ep].cp)
+      if (this.run.station && st.stations.includes(this.run.station)) { this.stationQ = st.stations.slice(st.stations.indexOf(this.run.station)); this.resumed = true; this.run.station = null; }
       this.mutated = false;
       if (st.name) this.hud.gl.hold('stage', { name: tr(st.name) });   // can't shoot until the first stop: the stage's warning overlay
       this.goStation(this.stationQ.shift(), false);
     } else if (st.boss) this.goStation(st.station, true);
   }
-  station(id) { return this.world.level.set.stations[id]; }
+  station(id) { return C.sets[this.setOfStation?.[id] || this.setId]?.stations?.[id] || this.world.level.set.stations[id]; }
   goStation(id, boss) {
     const S = this.station(id);
+    // a checkpoint inside a long stage (episode 2): a retry starts here, and so does the next run from the select screen until it is cleared
+    if (S?.cp && !boss) { this.cpStation = id; const r = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null }); r.cp = { step: this.stepIdx, station: id }; persist(); }
     // the boss's stop: the mechanisms the earlier stops of this place fire on their own are done by now (the studio's portraits stand
     // empty even when the run starts at the boss)
     if (boss) for (const a of this.actors) if (a.g?.shoot === false && a.g.station && a.g.station !== id && !a.spent) a.settle();
@@ -172,13 +187,18 @@ export class Game {
     if (this.hud.gl.holdUI.kind !== 'stage' || !this.hud.gl.holdUI.on) this.hud.gl.hold(boss ? 'boss' : 'move', { name: boss && this.stage.boss ? tr(C.bosses[this.stage.boss]?.name || '') : '' });
     const fold = this.world.dropCovers();
     if (fold) { this.tweens.wait(fold + 0.05, () => this.goStation(id, boss)); return; }
+    // episode 2's one long stage (DESIGN 第 2 话: no cuts): this stop is in the next place: through its doorway first (passThrough)
+    const sid = this.setOfStation?.[id];
+    if (sid && sid !== this.setId && !isLoaded(setKeys(sid))) { loadKeys(setKeys(sid)).then(() => this.goStation(id, boss)); return; }   // (walked on faster than it loaded)
+    if (sid && sid !== this.setId && this.camPlaced && !this.afterComic) { this.passThrough(sid, id, boss); return; }
+    if (sid && sid !== this.setId) this.useSet(sid);
     if (this.world.plates) {
       // painted stations: push forward into the painting, the next one glides in
       const first = !this.camPlaced || this.afterComic;
       this.camPlaced = true; this.afterComic = false;
       this.post.u.wipe.value = 0;
       this.settleAnomaly(S);
-      playMusic(boss ? 'boss' : 'stage');
+      this.music(boss);
       this.setAll('run');
       this.world.enter(id, first, () => this.arrive(S, boss));
       return;
@@ -189,7 +209,7 @@ export class Game {
       this.camPlaced = true; this.afterComic = false;
       this.post.u.wipe.value = 0;
       this.settleAnomaly(S);
-      playMusic(boss ? 'boss' : 'stage');
+      this.music(boss);
       this.world.place(S.cam, S.look);
       this.setAll('cover'); this.settled = true;
       if (S.enter) { this.enterFrom(S.enter, () => this.arrive(S, boss)); return; }
@@ -204,7 +224,7 @@ export class Game {
     this.post.u.wipe.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
     this.settleAnomaly(S);
-    playMusic('stage');
+    this.music(false);
     this.setAll('run');
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
@@ -220,10 +240,46 @@ export class Game {
       this.hud.gl.stickers.say(this.players[Math.random() < 0.5 || !this.p2on() ? 0 : 1], 'bridge');
     });
   }
+  // into the next place without a cut (DESIGN 第 2 话): the girls walk into the way on (the far wall's doorway: the set's "exit", a point
+  // just inside its darkness; "exitVia" on the way), a blink of black there, and they come out of the next place's doorway (its "entry":
+  // { at, look }) and walk on to the stop. Whatever she was doing carries on (src/battle/chase.js keeps her state, not her drawing)
+  passThrough(sid, id, boss) {
+    const w = this.world, H = w.set.hall || {}, L = this.station(id)?.leave || {}, X = L.exit || w.set.exit || [w.camPos.x, 1.1, (H.z1 ?? -10) - 0.5];
+    const pts = [w.camPos.toArray(), ...(L.via || w.set.exitVia || []), X];
+    if (L.hole) {   // (the way on is a hole she cut through the wall: it bursts open first)
+      const o = L.hole; w.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z ?? 0), o.size ?? 2.4);
+      sound('woodBreak') || sfx.slam(); sound('shoji'); this.post.shake(1.2); this.fx.confetti(new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z ?? 0), 30, 2.2);
+    }
+    let len = 0; for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
+    this.setAll('run'); this.combat = false;
+    const go = () => this.blackout(true, () => {
+      this.useSet(sid);
+      const N = this.world.set, NH = N.hall || {}, E = this.station(id)?.arrive || N.entry || { at: [0, 1.1, (NH.z0 ?? 5) - 0.2], look: [0, 1.0, (NH.z1 ?? -10)] };
+      this.world.place(E.at, E.look); this.camPlaced = true; this.afterComic = false;
+      this.blackout(false); this.goStation(id, boss);
+    });
+    if (len < 0.1) go(); else w.travel(pts, [X[0], X[1], X[2] - 6], Math.max(1.1, len / 3.2), go);
+  }
+  // the recorded tracks (content audio/sounds.json music) are named <episode>_stage / <episode>_boss unless the set names its own (music,
+  // bossMusic; music null = only the clocks); without a recording, the synthesized loops
+  music(boss) {
+    const set = this.world.set || {}, ep = this.ep?.id, name = boss ? set.bossMusic ?? `${ep}_boss` : set.music !== undefined ? set.music : `${ep}_stage`;
+    if (this.chase?.theme) return;   // (her theme plays while she is about: src/battle/chase.js)
+    if (!name) { stopMusic(1.2); return; }
+    playMusic(C.sounds?.music?.[name] ? name : boss ? 'boss' : 'stage');
+  }
+  // a blink of black (through a doorway): in, then(), out
+  blackout(on, then) {
+    let el = document.querySelector('#ui .blackout');
+    if (!el) { el = document.createElement('div'); el.className = 'blackout'; document.getElementById('ui').appendChild(el); }
+    el.classList.toggle('on', on);
+    if (then) setTimeout(then, on ? 260 : 0);
+  }
   // the prologue: the calm after-school world until the invasion station, invaded from then on. A set that turns between real and rotten
   // ("turns", docs/DESIGN.md 第 1 话) keeps whatever it is; its stations and waves turn it (turn)
   settleAnomaly(S) {
-    if (this.world.set?.turns) return;
+    // (a stop that knows how its place looks by then, station "state": 0 calm / 1 turned: a run resumed there from a checkpoint)
+    if (this.world.set?.turns) { if (S.state != null && (this.resumed || this.justBuilt)) { this.world.anomaly = S.state; this.world.grade?.(S.state); } this.justBuilt = false; return; }
     if (S.invade) this.world.anomaly = 0; else if (this.world.anomaly < 1) this.world.anomaly = 1;
   }
   // the place turns: to 1 = the rotten version of every board that has one, 0 = back to the real place; a page-flip wave running out from
@@ -300,6 +356,11 @@ export class Game {
       a.alive = false; a.endWindup?.(); this.etw.kill(a.root.position);
       this.tweens.to(a.root.position, { y: -8 }, 1.2, { delay: 0.2 + Math.random() * 0.4, ease: Ease.inQuad, onDone: () => a.dispose() });
     }
+    if (this.setOfStation && this.stationQ.length) {   // (a stage through several places: they land in the next one, its first stop's enter)
+      const on = () => this.blackout(true, () => { this.camPlaced = false; this.blackout(false); this.goStation(this.stationQ.shift(), false); });
+      if (this.world.collapse) this.world.collapse(on); else on();
+      return;
+    }
     this.stationQ = [];
     this.openNextStage();
     const go = () => { this.skipDoor = true; this.tweens.to(this.post.u.wipe, { value: 1 }, 0.25, { onDone: () => { this.afterComic = true; this.nextStep(); } }); };
@@ -358,8 +419,11 @@ export class Game {
     // episode 2: a hiding place (station hide): she comes, the forced stabs, then on (src/battle/chase.js)
     if (S.hide) { this.enterCover(null, true); this.tweens.wait(0.3, () => this.chase.hide(S, () => this.onward(S))); return; }
     // a stretch they only walk through (no waves: a corridor between two places, DESIGN「门和小关的衔接」): a line or a sound on the way, on
+    if (S.swap) for (const [from, to] of Object.entries(S.swap)) this.world.swapBoard?.(from, to);   // (a wall that has changed: the burnt altar)
+    if (S.fire) for (const gid of S.fire) this.actors.find((a) => a.g?.id === gid && !a.spent)?.fire();
+    if (S.music !== undefined) S.music ? playMusic(S.music) : stopMusic(1.2);
     if (!boss && !S.waves?.length) {
-      if (S.sfx && sfx[S.sfx]) sfx[S.sfx](0);
+      if (S.sfx) { if (sfx[S.sfx]) sfx[S.sfx](0); else sound(S.sfx); }
       this.tweens.wait(S.pause ?? 0.5, () => {
         if (S.say) this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], S.say);
         this.onward(S);
@@ -422,6 +486,7 @@ export class Game {
     this.waveIndex = 0; this.spawners = []; this.gateHint = false;
     if (this.S.hint) this.tweens.wait(1.2, () => this.hint(this.S.hint));   // (a dark room: light the lamps)
     if (this.S.block) this.chase.block(this.S);   // (episode 2: the way blocked while she comes up behind)
+    if (this.S.dial) this.chase.dial(this.S);     // (episode 2: the bell tower's clock face, the last fight)
     if (this.S.she) this.chase.prowl(this.S);     // (episode 2: she prowls this fighting stop)
     this.teach(this.S.lesson, () => this.startWave());
   }
@@ -455,6 +520,7 @@ export class Game {
     if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
     if (e.collapse) { this.collapse(); return; }
     if (e.hint) this.hint(e.hint);
+    if (e.sound) sound(e.sound);
     // a hole in a side wall that keeps pouring monsters out until something is toppled onto it (DESIGN「地形和机关」 堵住出怪口):
     // { spawner: { id, type: [kinds], side, z, every } }; the wave does not end while it runs (checkWave)
     if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: e.spawner.first ?? 0.4, n: 0, kills: 0, ready: e.spawner.sealAfter ? false : true });
@@ -481,6 +547,7 @@ export class Game {
     if (this.spawners?.some((s) => s.live)) return;
     // episode 2: the things blocking the way (gimmicks with block: true) must all be gone too
     if (this.S.block && this.actors.some((a) => a.g?.block && (!a.g.station || a.g.station === this.stationId) && !a.spent)) return;
+    if (this.S.dial && !this.chase.sentOff) return;   // (the last fight: over when the bell has sent her off)
     // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
     // up; the last wave of a stop is fought to the end
     const left = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker).length;
@@ -572,7 +639,7 @@ export class Game {
     const shots = ps.reduce((a, p) => a + p.shots, 0), hits = ps.reduce((a, p) => a + p.hits, 0);
     const p1 = this.players[0];
     const st = {
-      win, ep: this.ep.id, kills: this.kills, acc: shots ? hits / shots : 0, combo: this.maxCombo, time: this.playT, checkpoint: this.checkpoint,
+      win, ep: this.ep.id, kills: this.kills, acc: shots ? hits / shots : 0, combo: this.maxCombo, time: this.playT, checkpoint: this.checkpoint, cpStation: this.cpStation,
       taken: p1.taken, team: this.run.team, bag: this.run.bag,
       players: ps.map((p) => ({ id: p.id, kills: p.kills, dealt: Math.round(p.dealt), acc: p.shots ? p.hits / p.shots : 0 })),
     };
@@ -611,7 +678,7 @@ export class Game {
     st.dd = Math.round((st.base + st.first + st.bonus) * st.mul);
     SAVE.dd += st.dd;
     if (st.win) {
-      rec.cleared = true;
+      rec.cleared = true; delete rec.cp;
       st.bestBefore = rec.bestTime ?? null;
       if (rec.bestTime == null || st.time < rec.bestTime) { rec.bestTime = st.time; st.newRecord = st.bestBefore != null; }
       st.bestTime = rec.bestTime;

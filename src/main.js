@@ -131,11 +131,13 @@ function needPics(keys, then) {
 G.waits = [];   // ms the loading bar was shown before each stage (tools/node/playthrough.cjs)
 G.needPics = needPics;
 const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : []), ...outfitKeys(SAVE.team, (id) => SAVE.chars[id]?.outfit)]);
-function startRun(epId = 'ep0', step = 0) {
+function startRun(epId = 'ep0', step = 0, station = null) {
   const ep0 = C.episodes[epId] || C.episodes.ep0;
-  needPics(picsFor(ep0, stageAt(ep0, step)), () => beginRun(ep0, step));   // (the ending: the last stage's place)
+  // a long stage's checkpoint (episode 2): the retry gives it; starting that stage again from the select screen resumes there too
+  const cp = SAVE.eps[epId]?.cp; if (!station && cp && cp.step === step) station = cp.station;
+  needPics(picsFor(ep0, stageAt(ep0, step)), () => beginRun(ep0, step, station));   // (the ending: the last stage's place)
 }
-function beginRun(ep, step) {
+function beginRun(ep, step, station = null) {
   clearScreen();
   cursorScene('battle'); // the HUD draws each heroine's reticle
   G.skipComics = DBG.skip;
@@ -143,7 +145,7 @@ function beginRun(ep, step) {
   document.getElementById('ui').innerHTML = '';
   if (G.game) G.game.dispose();
   resetFx();
-  G.game = new Game(G, { ep, step, team: [...SAVE.team], bag: [...SAVE.bag] });
+  G.game = new Game(G, { ep, step, station, team: [...SAVE.team], bag: [...SAVE.bag] });
   G.game.start(step);
 }
 function endRun() { if (G.game) { G.game.dispose(); G.game = null; } resetFx(); }
@@ -166,7 +168,7 @@ const turnTo = (show) => mangaTurn(document.querySelector('#ui > .screen'), show
 // the results page, won or lost (both girls down: the same page with a retry from the checkpoint)
 G.showResults = (st) => {
   G.game.hud.show(false);
-  const ep = G.game.ep.id, retry = st.win ? null : () => startRun(ep, st.checkpoint);
+  const ep = G.game.ep.id, retry = st.win ? null : () => startRun(ep, st.checkpoint, st.cpStation);
   endRun(); cursorScene('menu'); showResults(st, () => toSelect(), retry);
 };
 
