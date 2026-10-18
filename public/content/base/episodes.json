@@ -106,6 +106,7 @@
         "thumb": "ui/sel_thumb_ep1_oven"
       },
       { "comic": "ep1_fall" },
+      { "comic": "ep1_double" },
       {
         "stage": "tunnel",
         "set": "ep1_pit",

@@ -1327,6 +1327,11 @@
   "src": "assets/comic/ep1p_boss.webp",
   "w": 1920
  },
+ "comic/ep1p_double": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_double.webp",
+  "w": 1920
+ },
  "comic/ep1p_end": {
   "h": 1081,
   "src": "assets/comic/ep1p_end.webp",
