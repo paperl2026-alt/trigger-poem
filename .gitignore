@@ -18,3 +18,5 @@ art/raw/sfx_dl/
 # the voice-synthesis engine (official AivisSpeech zip) and ffmpeg, unpacked here by hand (tools/voice_aivis.py)
 tools/aivis/
 tools/ffmpeg/
+# downloaded KTX tools (KTX2 was dropped: user 2026-10-18)
+tools/ktx/
