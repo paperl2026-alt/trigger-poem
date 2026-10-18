@@ -1,5 +1,5 @@
 {
-  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。",
+  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。",
   "stickers": {
     "heroines": {
       "pink": {
@@ -328,6 +328,69 @@
             { "zh": "安慰我嘛…", "en": "Comfort me…", "ja": "なぐさめて…" },
             { "zh": "下次一定赢", "en": "Next time for sure", "ja": "次は勝つもん" }
           ]
+        },
+        "sheSeen": {
+          "lines": [
+            { "zh": "剪刀声…!", "en": "Scissors…!", "ja": "ハサミのおと…!" },
+            { "zh": "是她!", "en": "It's her!", "ja": "あのこだ!" },
+            { "zh": "又来了!", "en": "Not again!", "ja": "またきた!" },
+            { "zh": "咔嚓咔嚓的…", "en": "Snip, snip…", "ja": "チョキチョキって…" },
+            { "zh": "不要过来!", "en": "Stay away!", "ja": "こないで!" },
+            { "zh": "追上来了!", "en": "She's catching up!", "ja": "おいついてきた!" }
+          ]
+        },
+        "runNow": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "快跑!", "en": "Run!", "ja": "にげて!" },
+            { "zh": "别回头!", "en": "Don't look back!", "ja": "ふりむかないで!" },
+            { "zh": "跑啊!", "en": "Go go go!", "ja": "はしって!" },
+            { "zh": "这边!", "en": "This way!", "ja": "こっち!" },
+            { "zh": "等等我!", "en": "Wait for me!", "ja": "まってぇ!" },
+            { "zh": "鞋要掉了!", "en": "My shoe!", "ja": "くつがぬげる!" }
+          ]
+        },
+        "hush": {
+          "lines": [
+            { "zh": "嘘…", "en": "Shh…", "ja": "しーっ…" },
+            { "zh": "别出声…", "en": "Not a sound…", "ja": "こえだしちゃだめ…" },
+            { "zh": "走开走开…", "en": "Go away, go away…", "ja": "あっちいって…" },
+            { "zh": "心跳好吵…", "en": "My heart's so loud…", "ja": "しんぞう、うるさい…" },
+            { "zh": "别发现…", "en": "Don't find us…", "ja": "みつからないで…" },
+            { "zh": "呜…", "en": "Nngh…", "ja": "うぅ…" }
+          ]
+        },
+        "trapHit": {
+          "lines": [
+            { "zh": "砸中了♡", "en": "Got her♡", "ja": "あたった♡" },
+            { "zh": "活该♡", "en": "Serves you right♡", "ja": "ざまぁ♡" },
+            { "zh": "压扁了♡", "en": "Flat♡", "ja": "ぺしゃんこ♡" },
+            { "zh": "就这样躺着♡", "en": "Stay down♡", "ja": "ねてて♡" },
+            { "zh": "好耶♡", "en": "Yay♡", "ja": "やった♡" },
+            { "zh": "压住了!", "en": "Pinned!", "ja": "おさえた!" }
+          ]
+        },
+        "grabbed": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "放开!", "en": "Let go!", "ja": "はなして!" },
+            { "zh": "不要!", "en": "No!", "ja": "やだぁ!" },
+            { "zh": "好痛!", "en": "Ow!", "ja": "いたいっ!" },
+            { "zh": "救命!", "en": "Help!", "ja": "たすけて!" },
+            { "zh": "别碰我!", "en": "Don't touch me!", "ja": "さわんないで!" },
+            { "zh": "头发要乱了!", "en": "My hair!", "ja": "かみがみだれる!" }
+          ]
+        },
+        "bell": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "敲响它!", "en": "Ring it!", "ja": "ならして!" },
+            { "zh": "再一下!", "en": "Once more!", "ja": "もういっかい!" },
+            { "zh": "好大声…!", "en": "So loud…!", "ja": "うるさっ…!" },
+            { "zh": "回去吧!", "en": "Go home!", "ja": "かえって!" },
+            { "zh": "拜拜♡", "en": "Bye-bye♡", "ja": "ばいばい♡" },
+            { "zh": "结束了…?", "en": "Is it over…?", "ja": "おわった…?" }
+          ]
         }
       },
       "cat": {
@@ -650,6 +713,69 @@
             { "zh": "呼喵…", "en": "Funya…", "ja": "ふにゃ…" },
             { "zh": "下次认真喵", "en": "Serious mode next time", "ja": "次は本気出すにゃ" },
             { "zh": "膝枕反省会喵", "en": "Lap-pillow debrief", "ja": "膝枕で反省会にゃ" }
+          ]
+        },
+        "sheSeen": {
+          "lines": [
+            { "zh": "…剪刀的声音", "en": "…Scissors", "ja": "…ハサミのおと" },
+            { "zh": "来了喵", "en": "Here she comes, nya", "ja": "きたにゃ" },
+            { "zh": "是那家伙", "en": "That thing", "ja": "あいつだ" },
+            { "zh": "甩不掉喵", "en": "Can't shake her, nya", "ja": "まけないにゃ" },
+            { "zh": "背后!", "en": "Behind us!", "ja": "うしろ!" },
+            { "zh": "…又是她", "en": "…Her again", "ja": "…またあいつ" }
+          ]
+        },
+        "runNow": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "跑喵!", "en": "Run, nya!", "ja": "はしるにゃ!" },
+            { "zh": "别停!", "en": "Don't stop!", "ja": "とまるな!" },
+            { "zh": "这边!", "en": "This way!", "ja": "こっち!" },
+            { "zh": "快!", "en": "Hurry!", "ja": "はやく!" },
+            { "zh": "回头打!", "en": "Turn and shoot!", "ja": "ふりむいてうて!" },
+            { "zh": "跟上", "en": "Keep up", "ja": "ついてこい" }
+          ]
+        },
+        "hush": {
+          "lines": [
+            { "zh": "嘘", "en": "Shh", "ja": "しっ" },
+            { "zh": "屏住气", "en": "Hold your breath", "ja": "いきをとめて" },
+            { "zh": "…别动", "en": "…Don't move", "ja": "…うごくな" },
+            { "zh": "她在找", "en": "She's looking", "ja": "さがしてる" },
+            { "zh": "…就在外面", "en": "…Right outside", "ja": "…すぐそと" },
+            { "zh": "忍着喵", "en": "Hang on, nya", "ja": "がまんにゃ" }
+          ]
+        },
+        "trapHit": {
+          "lines": [
+            { "zh": "中了!", "en": "Hit!", "ja": "あたり!" },
+            { "zh": "压住了喵", "en": "Squashed, nya", "ja": "つぶれたにゃ" },
+            { "zh": "趁现在", "en": "Now's our chance", "ja": "いまのうち" },
+            { "zh": "就在那躺着", "en": "Stay down there", "ja": "そこでねてろ" },
+            { "zh": "倒了喵", "en": "Down, nya", "ja": "たおれたにゃ" },
+            { "zh": "很好", "en": "Good", "ja": "よし" }
+          ]
+        },
+        "grabbed": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "放开喵!", "en": "Let go, nya!", "ja": "はなすにゃ!" },
+            { "zh": "可恶!", "en": "Damn!", "ja": "くっ!" },
+            { "zh": "臭剪刀!", "en": "Stupid scissors!", "ja": "このハサミ!" },
+            { "zh": "咬你喵!", "en": "I'll bite, nya!", "ja": "かむにゃ!" },
+            { "zh": "…动不了", "en": "…Can't move", "ja": "…うごけない" },
+            { "zh": "滚开!", "en": "Get off!", "ja": "どけ!" }
+          ]
+        },
+        "bell": {
+          "bubble": "shout",
+          "lines": [
+            { "zh": "敲!", "en": "Strike!", "ja": "つけ!" },
+            { "zh": "响吧!", "en": "Ring out!", "ja": "なれ!" },
+            { "zh": "送你走喵", "en": "Off you go, nya", "ja": "おくってやるにゃ" },
+            { "zh": "回去!", "en": "Go back!", "ja": "かえれ!" },
+            { "zh": "…结束了", "en": "…It's over", "ja": "…おわり" },
+            { "zh": "钟声!", "en": "The bell!", "ja": "かねのおと!" }
           ]
         }
       }

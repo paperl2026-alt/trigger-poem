@@ -14,7 +14,8 @@ import { Text, picture } from './glhud.js';
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, hurt: 6, fever: 6, join: 5, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, reload: 2, hit: 1, cover: 1,
-  scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5, idle: 1 };
+  scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5, idle: 1,
+  sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8 };   // (episode 2: she, src/battle/chase.js say)
 const TAG = { hit: 'HIT', crit: 'CRITICAL', kill: 'K.O.', combo: 'COMBO', hurt: 'OUCH', low: 'DANGER', reload: 'RELOAD', empty: 'NO AMMO', fever: 'FEVER',
   ready: 'SKILL OK', skill: 'SKILL', cover: 'COVER', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
 

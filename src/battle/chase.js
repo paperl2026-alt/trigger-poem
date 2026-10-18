@@ -195,7 +195,7 @@ export class Chase {
   music(on) {
     if (on === this.theme) return;
     this.theme = on;
-    if (on) { playMusic('ep2_she'); bed('clockTick', false); } else { stopMusic(1.5); if (this.g.world.set?.clocks !== false && this.g.ep?.id === 'ep2') bed('clockTick', true, 0.7); }
+    if (on) { playMusic('ep2_she'); bed('clockTick', false); this.say('sheSeen', 0.8); } else { stopMusic(1.5); if (this.g.world.set?.clocks !== false && this.g.ep?.id === 'ep2') bed('clockTick', true, 0.7); }
   }
   add(n, at = null) {
     const M = K().meter;
@@ -220,6 +220,12 @@ export class Chase {
     g.combat = true; g.setAll('cover'); g.settled = true;
     if (C.hint) g.hint(C.hint);
     this.drawMeter(true);
+    g.tweens.wait(0.6, () => this.say('runNow', 0.9));
+  }
+  // one of the girls says a line of this episode's (text/stickers.json heroines: sheSeen, runNow, hush, trapHit, grabbed, bell), voiced
+  say(kind, chance = 1, slot = null) {
+    const g = this.g, p = slot != null ? g.players[slot] : g.players[Math.random() < 0.5 || !g.p2on() ? 0 : 1];
+    if (p) g.hud.gl.stickers.say(p, kind, chance);
   }
   // the point of the run's path at distance s (metres from its start; before the start: on along its first direction)
   at(s, out) {
@@ -243,8 +249,8 @@ export class Chase {
   onKnock(she, how) {
     if (this.mode === 'dial' && !this.bellReady) { const next = this.nodes?.[this.lit]; if (next) { this.arm(next); next.g.mark = true; this.g.hint('sheNode'); } }
     this.add(how === 'trap' ? K().meter.trap : K().meter.knock, she.center());
-    const g = this.g, p = g.players[Math.random() < 0.5 || !g.p2on() ? 0 : 1];
-    if (p) g.hud.gl.stickers.say(p, 'stagger');
+    this.say(how === 'trap' ? 'trapHit' : 'stagger');
+    const g = this.g;
     if (this.mode === 'block' && this.facing === 'back') g.tweens.wait(0.8, () => this.mode === 'block' && this.turn('fwd'));
   }
 
@@ -293,7 +299,7 @@ export class Chase {
     const at = H.at ? { x: H.at[0], z: H.at[1] } : null, P = she.root.position;
     if (H.y != null) P.y = H.y;
     this.peek(true);
-    bed('heartbeat', true, 0.9); this.music(false); stopMusic(0.4);
+    bed('heartbeat', true, 0.9); this.music(false); stopMusic(0.4); g.tweens.wait(1.2, () => this.say('hush'));
     g.hud.gl.hold('hide');
     const n = H.stabs ?? HD.stabs, k = this.meter / M.max, blocked = Math.round(n * k);
     const tier = k >= HD.high ? 'high' : k >= HD.mid ? 'mid' : 'low';
@@ -356,7 +362,7 @@ export class Chase {
     if (this.grabbing) return;
     she.state = 'grab'; she.pose('grab'); she.endWindup();
     this.grabbing = { she, slot, n: 0, need: S.mash, t: S.mashTime, tick: 0, then };
-    sound('grab') || sfx.hurt(); sound('sheLaugh');
+    sound('grab') || sfx.hurt(); sound('sheLaugh'); this.say('grabbed', 1, slot);
     let el = document.createElement('div'); el.className = 'mash'; el.innerHTML = `<b>${t('mash')}</b><i></i>`; document.getElementById('ui').appendChild(el);
     this.grabbing.el = el;
     g.players.forEach((p) => g.hud.setFace(p.slot, 'scared', S.mashTime));
@@ -625,7 +631,7 @@ export class Chase {
   }
   toll(gm) {
     const g = this.g, she = this.she;
-    sound('bellToll') || sfx.slam(); g.post.flash(1.0, 0xfff2d0); g.post.shake(2.0); g.G.stop(0.2);
+    sound('bellToll') || sfx.slam(); g.post.flash(1.0, 0xfff2d0); g.post.shake(2.0); g.G.stop(0.2); g.tweens.wait(0.5, () => this.say('bell'));
     for (let i = 1; i < 4; i++) g.tweens.wait(i * 1.6, () => { sound('bellToll', { vol: 0.8 - i * 0.15 }); g.post.shake(1.2 - i * 0.25); });
     if (gm) g.tweens.run(5, (e) => { gm.root.rotation.z = Math.sin(e * 20) * 0.25 * (1 - e); });
     // the log striker beside it (a gimmick with striker: true) swings into it with every toll

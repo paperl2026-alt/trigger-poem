@@ -182,6 +182,7 @@
 - **表盘决战**（站点 `dial`，`Chase.dial`）：钟楼顶的地板是一面十二支和時計（`ep2/kane_diala`），十二块刻度（`ep2/zodiac_<名>`，`node` 序号）平放在圆周上；她每倒下一次，下一刻的刻度套红环、能打，打亮了时针走一格、镜头绕圆周走一格；每 `perForm` 刻换下一个形态（a 剪刀人偶 → c 千刃蜘蛛 → e 空振袖：放纸人、蓄力尖叫要躲）；她离得远时每个形态有自己的远程（`Chase.volley`，状态 `cast`，这时打她照样攒硬直）：a 踢木屐（`geta`）、c 扬起身扔一扇剪刀和针（`scissors` / `pins`，五发散开）、e 袖子里放纸鹤（`crane`，弧线飘过来），都是能打掉的飞行物；她总在镜头和表盘中心之间（贴到镜头旁边看不见的地方会被慢慢推回视野里），换形态时从表盘中心冒出来；十二刻全亮，两人必杀充满、钟（`bell: true`）能打，敲响三声把她震下钟楼，这一站结束。
 - **一个小关十个地方，不切画面**（`Game.passThrough`）：大关的小关步骤写 `places`（场景按顺序）和 `stations`（所有站点，站点 id 在各场景里不重复）；下一个站点在别的场景时，两人走进这个场景的出口门洞（场景 `exit`，或站点的 `leave: { exit, via, hole }`；`hole` = 她剪开的墙洞先爆开），一眨眼黑（`#ui .blackout`），换场景，从下一个场景的入口（`entry` / 站点的 `arrive: { at, look }`）走出来；门洞是 R63 在尽头墙 / 来路墙上画成洋红、导入时抠空的，`ep2_level.py` 从图里量出位置。重新搭的场景直接显示站点 `state` 说的样子（0 平静 / 1 停电后，翻板一下子翻完）。塌方（`collapse`）在多场景的小关里不结束小关，掉进下一个场景（它的第一个站点写 `enter` 从上面落下来）。
 - **关内检查点**：站点写 `cp: true` 就存进 `SAVE.eps[大关].cp = { step, station }`；全灭的「从检查点重来」从这个站点开始，下次从选关进这个小关也接着这里（`main.js startRun`），通关清掉。从中途开始的那个站点按 `state` 摆好场景（`Game.resumed`）。
+- 两人这一话的台词（`Chase.say`）：她出现 `sheSeen`、倒跑开始 `runNow`、躲着屏住气 `hush`、机关砸倒她 `trapHit`（别的打倒还是 `stagger`）、被抓 `grabbed`、敲钟 `bell`；台词在 `text/stickers.json`，读法在 sounds.json `voices.<who>.read`，语音照常 `tools/voice_aivis.py lines <who> <种类…>`。
 - 场景的音乐：set 写 `music`（null = 没有音乐，只有钟声）/ `bossMusic`；站点写 `music` 当场换；有录好的曲子（sounds.json `music`）放文件，没有就退回合成的 stage / boss。
 
 ## 图片按小关加载（`src/core/groups.js`、`src/core/assets.js`）
