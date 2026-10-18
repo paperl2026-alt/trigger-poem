@@ -290,7 +290,9 @@ export function showSelect(act) {
     const chips = CD.chips.map((ch) => {
       const cg = el('div', `chip c-${ch.id}`, g); cg.dataset.cur = 'hover';
       img(cg, ch.icon.img, ch.icon.box.map((v, i) => v + (i % 2 ? 0 : dx)), '', true);
-      text(cg, o(ch.text), ch.id === 'base' ? 'wh' : 'ink');
+      // the outfit chip (DESIGN「局外」服装): what she is wearing; a tap puts on the next one she has; with none yet it says how to get one
+      if (ch.id === 'base') { cg.tx = text(cg, o(ch.text), 'wh', () => cg.locked ? t('outfitLock') : t(SAVE.chars[SAVE.team[slot]]?.outfit === 'base' || !SAVE.chars[SAVE.team[slot]]?.outfit ? 'base' : SAVE.chars[SAVE.team[slot]].outfit)); cg.slot = slot; }
+      else text(cg, o(ch.text), 'ink');
       return cg;
     });
     return { g, fill, chips, slot };
@@ -351,7 +353,13 @@ export function showSelect(act) {
   }
   tap(goG, () => go());
   tap(swapG, (e) => { sfx.uiSwap(); pop(swapG, e); SAVE.team.reverse(); persist(); renderTeam(true); for (const l of lows) pop(l.g); });
-  for (const l of lows) for (const c of l.chips) tap(c, (e) => { pop(c, e); if (c.classList.contains('s-c-limit')) { shake(c); sfx.uiDeny(); } else sfx.ui(); });
+  const wear = (c) => {
+    const id = SAVE.team[c.slot], st = SAVE.chars[id], have = ['base', ...(SAVE.outfits || []).filter((o) => C.characters[id]?.rigs?.[o])];
+    if (have.length < 2) { shake(c); sfx.uiDeny(); c.locked = true; c.tx.say(); clearTimeout(c.lockT); c.lockT = setTimeout(() => { c.locked = false; c.tx.say(); }, 1800); return; }
+    st.outfit = have[(have.indexOf(st.outfit || 'base') + 1) % have.length]; persist(); sfx.uiToggle(); c.tx.say();
+    const n = arts[id]; if (n) { n.classList.remove('s-poke'); void n.offsetWidth; n.classList.add('s-poke'); }
+  };
+  for (const l of lows) for (const c of l.chips) tap(c, (e) => { pop(c, e); if (c.classList.contains('s-c-limit')) { shake(c); sfx.uiDeny(); } else if (c.tx) wear(c); else sfx.ui(); });
   for (const n of Object.values(arts)) n.addEventListener('pointerenter', (e) => { n.classList.remove('s-poke'); void n.offsetWidth; n.classList.add('s-poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 30, 3); });
   root.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth * 2 - 1; mouse.ty = e.clientY / window.innerHeight * 2 - 1; });
 

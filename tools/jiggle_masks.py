@@ -266,6 +266,8 @@ def build(pose, rig, overlay_dir=None):
 
 
 if __name__ == "__main__":
-    od = sys.argv[1] if len(sys.argv) > 1 else None
-    for pose, rig in RIGS.items():
-        build(pose, rig, od)
+    # --pose=<pose>[_<outfit>] (repeatable): only those; an outfit (tools/rounds/r62_yukata.py: cat_fire_yk) uses its pose's rig
+    only = [a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--pose=")]
+    od = next((a for a in sys.argv[1:] if not a.startswith("--")), None)
+    for pose in only or RIGS:
+        build(pose, RIGS["_".join(pose.split("_")[:2])], od)

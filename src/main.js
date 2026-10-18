@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
 import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex, loadLog } from './core/assets.js';
-import { coreKeys, stageKeys, stageFrom, stageAt } from './core/groups.js';
+import { coreKeys, stageKeys, stageFrom, stageAt, outfitKeys } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
 import { initAudio, sfx, preloadSounds } from './core/audio.js';
@@ -130,7 +130,7 @@ function needPics(keys, then) {
 }
 G.waits = [];   // ms the loading bar was shown before each stage (tools/node/playthrough.cjs)
 G.needPics = needPics;
-const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : [])]);
+const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : []), ...outfitKeys(SAVE.team, (id) => SAVE.chars[id]?.outfit)]);
 function startRun(epId = 'ep0', step = 0) {
   const ep0 = C.episodes[epId] || C.episodes.ep0;
   needPics(picsFor(ep0, stageAt(ep0, step)), () => beginRun(ep0, step));   // (the ending: the last stage's place)
@@ -269,6 +269,7 @@ async function boot() {
   if (q.has('auto')) G.auto = true;
   if (q.has('skip')) G.forceSkip = true;
   if (q.has('team')) SAVE.team = q.get('team').split(',');   // test runs: ?team=cat,pink (1P, 2P)
+  if (q.has('outfit')) for (const id of SAVE.team) if (SAVE.chars[id]) SAVE.chars[id].outfit = q.get('outfit');   // test runs: ?outfit=yk (both wear it)
   if (q.has('play') || q.has('ep') || q.has('step')) {
     if (q.has('skip')) DBG.skip = true;
     startRun(q.get('ep') || 'ep0', +(q.get('step') || 0));

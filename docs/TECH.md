@@ -148,6 +148,7 @@
   - 道具和书包都在 `src/battle/items.js`：`itemFxAt(id, lv)` 按 items.json "grow" 算某级效果（线性、exp 每级同倍数、pow 先慢后快），`itemPrice` / `capPrice` 升级 / 扩容价格（取整到 5 / 50 / 500），`buyItem` / `upgradeItem` / `upgradeCap` / `toggleEquip`（装备超过 cost 上限返回 'full'），`itemDesc` 把描述里的 {键} / {键%} 换成当前等级的数字；`bagFx(bag)` 合计效果给战斗用。
   - `screens`（结算 `showResults`：漫画杂志目录页，版式在 `style.css .res8`，条目按数据重复；数据来自 `Game.applyRewards`：`st.newItems` 只有首通的新道具、`st.unlocked` 只有新开的章节、`st.mulBy` 每个倍率道具一条；插画 `res/cover_<大关>`（没有就 `res/cover`）、`res/face_<角色>`、`res/item_<道具>`，没有就退回 Q 版脸 / 道具图标；全灭时同一个页面（`st.win` false：刊头 DOWN、残局报酬、`onRetry` 从检查点重来），插画在 `res/lose_<n>` 里随机挑一张）、`uifx`（菜单粒子）、`cursor`。
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
+- 服装（DESIGN「服装」）：`characters/<id>.json` 的 `rig` 是制服，`rigs.<服装>` 是同一套姿势换了衣服（同样的 cover / fire、骨架、软肉，只有图和部件权重图是新的）；`SAVE.chars[id].outfit` 是她穿的，`SAVE.outfits` 是已经有的（大关 `reward.outfits`，首通给，读档时补发已通关的）；`heroine.js` 按它挑 rig（图没读到就退回制服）。服装的图叫 `outfit/…`，不算核心，只在穿的时候读（`groups.js outfitKeys`，`main.js picsFor` 和 `Game.nextStep` 把它加进要读的图）。选关的服装牌（`select.js` chip base）：显示她穿的，点一下换下一套，没有别的服装时抖一下、提示怎么拿；结算的特集里新服装和新道具排在一起（`res/outfit_<id>` 图，没有就用衬衫图标）。测试：网址 `?outfit=yk` 两人都穿上。
 
 ## 怪怎么逼近、场景破坏（`src/battle/enemies.js`、`src/battle/panels.js`）
 - 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`，波次写 `far` 能更远；2026-10-18 拉近到 5.5～8.5 米），再逼过来；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。

@@ -57,6 +57,14 @@ export function showResults(st, onDone, onRetry) {
       <div class="lead"><span class="tag pop" style="--d:${(+dd + 0.25).toFixed(2)}">NEW!</span>${t('firstReward')}</div>
       <div class="ttl">${tr(it.name)}</div><div class="by"><span class="desc">${itemDesc(it)}</span><i class="dots"></i><b class="num lv">${it.grow ? `Lv ${itemLevel(id)}` : ''}</b></div></div></div>`;
   }).join('');
+  // a new outfit (a chapter's first clear: the yukata) in the same 特集
+  const outfits = (st.newOutfits || []).map((o) => {
+    const dd = at(0.1);
+    return `<div class="it in" style="--d:${dd}"><div class="tw">${thumb(`res/outfit_${o}`, 'ui/sel_icon_shirt')}</div><div class="ebody">
+      <div class="lead"><span class="tag pop" style="--d:${(+dd + 0.25).toFixed(2)}">NEW!</span>${t('newOutfit')}</div>
+      <div class="ttl">${t(o)}</div><div class="by"><span class="desc">${t('outfitHow')}</span><i class="dots"></i><b class="num lv"></b></div></div></div>`;
+  }).join('');
+  const nNew = ids.length + (st.newOutfits || []).length;
   // the numbers: the run on the left, the 伍德刀盾 on the right, the total under both, then the new chapters
   const ln = (k, v, cls = '') => `<div class="ln in ${cls}" style="--d:${at(0.06)}"><span>${k}</span><i class="dots"></i><b class="v">${v}</b></div>`;
   const left = [
@@ -79,8 +87,8 @@ export function showResults(st, onDone, onRetry) {
     <div class="cover tone">${cover}</div>
     <div class="main">
       ${girls}
-      ${ids.length ? `<div class="feat in" style="--d:${at()}"><b>${t('feature')}</b><span>${t('itemsHead')}</span></div>
-      <div class="items${ids.length >= 5 ? ' three' : ids.length >= 2 ? ' two' : ''}">${items}</div>` : ''}
+      ${nNew ? `<div class="feat in" style="--d:${at()}"><b>${t('feature')}</b><span>${t('itemsHead')}</span></div>
+      <div class="items${nNew >= 5 ? ' three' : nNew >= 2 ? ' two' : ''}">${items}${outfits}</div>` : ''}
       <div class="list">${rows.join('')}${tot}</div>
       <div class="foot"><span>${t('colophon')}</span>${onRetry ? `<button class="ok retry">${t('retry')}</button>` : ''}<button class="ok">${t('toSelect')}</button></div>
     </div>

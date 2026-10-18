@@ -118,6 +118,7 @@
   - R39：NIKKE 式 HUD 效果图、Q 版装填大头、街机字（RELOAD! 等）、裂屏、R39 艺术字；R40：HUD 拆解；R41：猫娘设计字三套（seal / catbrush / sigil，`fx/gl2_*`）、序章四页整页漫画（`tools/comic_panels.py` 自动切格）；
   - R36：装填特写、气泡贴纸、序章漫画候选、Boss 按镜头的部位；R37：符箓毛笔字（`fx/fu_*`），重出被拒的漫画格；
   - R35：HUD 拆解图层、图标、符咒弹药（3 套）、装填图（每人 3 张）、Q 版表情（每人 24 个）、准星（每人 3 套 × 8 态）、射击 / 命中特效原画（`tools/rounds/r35_import.py`）。
+  - R62：第 2 话第一轮（`tools/rounds/job_specs62.py`）：「她」五个方向（用 a 当主形态、e 当后半的真身、c 剪刀蜘蛛爬竖井；b、d 太像拿剪刀的美少女，不用）、お蚕様三个、六种杂鱼各五个、十个地方的概念图（玄关、走廊、客房带停电后的 `_x`）。浴衣测试：四张战斗立绘垫到 2:3 灰底给 Codex，只改衣服，姿势和身体几乎不动；`tools/rounds/r62_yukata.py` 按头和腿对齐回原图（重合度 96～98%）、猫爪那一圈贴回原图（标准咒印）、颜色渗进透明边、用原骨架重算部件权重（`tools/jiggle_masks.py --pose=<pose>_yk`），进内容包 `outfit/yk_*` 和 `characters/<id>.json rigs.yk`（用 cat a / a、pink b / b）。
   - R53：第 1 话腐蜜之家的怪物、概念图、Boss（`tools/rounds/job_specs53.py`，导入 `tools/rounds/r53_import.py`）。怪物每样 5 个候选挑 3 个：冰淇淋丧尸 a/b/d、威化蝙蝠 a/b/e、铠甲 a/c/e；吊灯骚灵、杯中人偶第一轮是美少女挂物件 / 不够诡异，重出后用 m2 的 a/b/c；咖啡机女妖和原作无关，不用。投掷物两张。六个地点的现实 / 腐化概念图（`sc_<地点>_<a|b>[_x]`，温室叫 fountain，画风基准用 a）。Boss 三形态各 5 个候选（一形态 e、二形态 d / e、三形态 d 最强，还没拆部件）。另外修了序章开场页第 4 格（猫娘缺了猫爪，`tools/rounds/r53_fix_intro.py`，页面换成 `r47/page_intro_c2.png`）。
   - R53b：名场面要的东西（`job_specs53b.py`，同一个导入脚本）：回头杀六帧（turn_a，放进冰淇淋丧尸 a 的画布）；半截丧尸 a/b/e、影子 a/b/e、两人的分身（地雷妹 b/c/e，猫娘 a/b/d）；七扇门（门框 + 门扇，用 a）；六幅画、四张蜡笔画（各带腐化版）；棺材冰柜和盖子、眼珠、四个封印、两种鬼手、照片 / 日记 / 小棺材、冥界远景和漂浮物；七页漫画（开场 a、扫玻璃 a、自拍 b、烧网 b、喷泉 a、Boss 出场 a、结尾 b；露出猫爪手背的格子已换标准咒印：`seal_fix.py r53_*`，自动找咒印时用 `within` 限定在那一格）。被安全过滤拒的：地雷妹设计稿当参考的两页（不发设计稿、把衣服写清楚后重出过了）。
   - R56 / R56b：第 1 话重做（`job_specs56.py`、`job_specs56b.py`，导入 `tools/rounds/r56_import.py`）：

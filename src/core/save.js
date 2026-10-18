@@ -38,6 +38,7 @@ export function initSave() {
     s.bag = (s.bag || []).filter((id) => C.items[id]);
   }
   Object.assign(SAVE, def, s || {}, s ? { eps: { ...def.eps, ...s.eps }, chars: { ...def.chars, ...s.chars } } : {});
+  if (!Array.isArray(SAVE.outfits)) SAVE.outfits = [];   // (outfits a chapter's first clear gave: the yukata)
   SAVE.cap = Math.max(SAVE.cap || 0, T.economy.bag.start);   // (the bag's capacity: battle/items.js)
   SAVE.v = SAVE_VERSION;
   // characters added by packs get a slot
@@ -48,6 +49,7 @@ export function initSave() {
   for (const ep of Object.values(C.episodes || {})) {
     if (!SAVE.eps[ep.id]?.cleared) continue;
     for (const id of [].concat(ep.reward?.items || ep.reward?.item || [])) if (C.items[id] && !SAVE.items.includes(id)) { SAVE.items.push(id); gave = true; }
+    for (const o of [].concat(ep.reward?.outfits || [])) if (!SAVE.outfits.includes(o)) { SAVE.outfits.push(o); gave = true; }
   }
   if (gave && s) persist();
 }

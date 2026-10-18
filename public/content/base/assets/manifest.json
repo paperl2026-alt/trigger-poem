@@ -15543,6 +15543,122 @@
   "src": "assets/neko/victory.webp",
   "w": 686
  },
+ "outfit/yk_cat_cover": {
+  "h": 1161,
+  "src": "assets/outfit/yk_cat_cover.png",
+  "w": 973
+ },
+ "outfit/yk_cat_cover_w0": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/outfit/yk_cat_cover_w0.png",
+  "w": 973
+ },
+ "outfit/yk_cat_cover_w1": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/outfit/yk_cat_cover_w1.png",
+  "w": 973
+ },
+ "outfit/yk_cat_cover_w2": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/outfit/yk_cat_cover_w2.png",
+  "w": 973
+ },
+ "outfit/yk_cat_cover_w3": {
+  "data": true,
+  "h": 1161,
+  "src": "assets/outfit/yk_cat_cover_w3.png",
+  "w": 973
+ },
+ "outfit/yk_cat_fire": {
+  "h": 1494,
+  "src": "assets/outfit/yk_cat_fire.png",
+  "w": 954
+ },
+ "outfit/yk_cat_fire_w0": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/outfit/yk_cat_fire_w0.png",
+  "w": 954
+ },
+ "outfit/yk_cat_fire_w1": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/outfit/yk_cat_fire_w1.png",
+  "w": 954
+ },
+ "outfit/yk_cat_fire_w2": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/outfit/yk_cat_fire_w2.png",
+  "w": 954
+ },
+ "outfit/yk_cat_fire_w3": {
+  "data": true,
+  "h": 1494,
+  "src": "assets/outfit/yk_cat_fire_w3.png",
+  "w": 954
+ },
+ "outfit/yk_pink_cover": {
+  "h": 1317,
+  "src": "assets/outfit/yk_pink_cover.png",
+  "w": 991
+ },
+ "outfit/yk_pink_cover_w0": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/outfit/yk_pink_cover_w0.png",
+  "w": 991
+ },
+ "outfit/yk_pink_cover_w1": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/outfit/yk_pink_cover_w1.png",
+  "w": 991
+ },
+ "outfit/yk_pink_cover_w2": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/outfit/yk_pink_cover_w2.png",
+  "w": 991
+ },
+ "outfit/yk_pink_cover_w3": {
+  "data": true,
+  "h": 1317,
+  "src": "assets/outfit/yk_pink_cover_w3.png",
+  "w": 991
+ },
+ "outfit/yk_pink_fire": {
+  "h": 1476,
+  "src": "assets/outfit/yk_pink_fire.png",
+  "w": 968
+ },
+ "outfit/yk_pink_fire_w0": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/outfit/yk_pink_fire_w0.png",
+  "w": 968
+ },
+ "outfit/yk_pink_fire_w1": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/outfit/yk_pink_fire_w1.png",
+  "w": 968
+ },
+ "outfit/yk_pink_fire_w2": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/outfit/yk_pink_fire_w2.png",
+  "w": 968
+ },
+ "outfit/yk_pink_fire_w3": {
+  "data": true,
+  "h": 1476,
+  "src": "assets/outfit/yk_pink_fire_w3.png",
+  "w": 968
+ },
  "pink/active": {
   "h": 1150,
   "rawH": 1147,

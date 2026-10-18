@@ -8,6 +8,7 @@
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { T } from '../core/content.js';
+import { SAVE } from '../core/save.js';
 import { rigMesh, Body } from '../jiggle/rig.js';
 import { Sweat } from '../jiggle/sweat.js';
 import { Breath } from '../jiggle/atmo.js';
@@ -17,7 +18,9 @@ const SUBSTEP = 1 / 240;
 export class Heroine {
   constructor(game, player) {
     this.game = game; this.p = player;
-    const R = this.R = player.c.rig;
+    // her outfit (the select screen's outfit chip, SAVE.chars[id].outfit): the same poses with other clothes (characters/<id>.json rigs)
+    const of = player.c.rigs?.[SAVE.chars[player.id]?.outfit];
+    const R = this.R = of && tex[of.cover?.img] && tex[of.fire?.img] ? of : player.c.rig;
     this.g = new THREE.Group();
     player.group.add(this.g);
     const r = game.G.renderer, clear = r.getClearColor(new THREE.Color()), clearA = r.getClearAlpha();

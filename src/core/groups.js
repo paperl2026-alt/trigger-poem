@@ -51,6 +51,13 @@ export function stageKeys(ep, st) {
   cache.set(id, keys);
   return keys;
 }
+// the pictures of the outfits the team is wearing (characters/<id>.json rigs, e.g. the yukata: user 2026-10-18): outfit/… pictures are
+// never core, they load only when worn. outfitOf(id) = the outfit a girl wears (SAVE.chars[id].outfit)
+export function outfitKeys(team, outfitOf) {
+  const keys = new Set();
+  for (const id of team || []) { const R = C.characters[id]?.rigs?.[outfitOf(id)]; if (R) for (const P of Object.values(R)) for (const k of [P.img, ...(P.w || [])]) add(k, keys); }
+  return keys;
+}
 // the next stage from step i on (a run starting on a comic page or a door starts loading the stage after it)
 export const stageFrom = (ep, i) => ep.steps.slice(Math.max(0, i)).find(isStage) || null;
 // the stage whose place a run starting at step i is in: the next one, or after the last one (the ending comic) the last one
@@ -61,7 +68,7 @@ export function coreKeys() {
   if (core) return core;
   const claimed = new Set();
   for (const ep of Object.values(C.episodes)) for (const st of ep.steps || []) if (isStage(st)) for (const k of stageKeys(ep, st)) claimed.add(k);
-  core = new Set(Object.keys(meta).filter((k) => !claimed.has(k) && !OWN.test(k) && !k.startsWith('comic/')));
+  core = new Set(Object.keys(meta).filter((k) => !claimed.has(k) && !OWN.test(k) && !k.startsWith('comic/') && !k.startsWith('outfit/')));
   // a chapter's own pictures that no stage of it uses yet stay out of the core too (OWN), and so does everything only old data uses
   const data = new Set();
   for (const cat of CATS) for (const id of Object.keys(C[cat] || {})) collect(id, data, new Set());

@@ -21,7 +21,7 @@ import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
 import { C, T, isStage } from '../core/content.js';
-import { coreKeys, stageKeys, stageFrom, stageAt } from '../core/groups.js';
+import { coreKeys, stageKeys, stageFrom, stageAt, outfitKeys } from '../core/groups.js';
 import { loadKeys } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
 
@@ -124,7 +124,7 @@ export class Game {
     // while a comic page or a door plays, the next stage's pictures load in the background (src/core/groups.js); a stage waits for its
     // pictures (a loading bar if they are not all there yet) and then the previous stage's are released
     if (!isStage(st)) { const nx = stageFrom(this.ep, this.stepIdx + 1); if (nx) loadKeys(stageKeys(this.ep, nx)); }
-    else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeys(this.ep, st)]), () => this.nextStep()); return; }
+    else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeys(this.ep, st), ...outfitKeys(this.run.team, (id) => SAVE.chars[id]?.outfit)]), () => this.nextStep()); return; }
     this.picsReady = false;
     // a door close-up between two places (src/ui/door.js): like a comic page, over the wipe
     // (they followed a monster through the hole it broke, Game.breakoutAt, or fell through the floor, collapse: not through this door)
@@ -588,6 +588,9 @@ export class Game {
       giveItem(id); st.newItems.push(id);
       if (!SAVE.bag.includes(id)) { SAVE.bag.push(id); this.run.bag = [...this.run.bag, id]; }
     }
+    // a chapter can give an outfit (episode 2: the yukata, user 2026-10-18): both girls can wear it from then on, in any chapter
+    st.newOutfits = [];
+    if (st.firstClear) for (const o of [].concat(this.ep.reward?.outfits || [])) if (!SAVE.outfits.includes(o)) { SAVE.outfits.push(o); st.newOutfits.push(o); }
     st.mul = bagFx(this.run.bag).dd;
     st.mulBy = this.run.bag.map((id) => ({ id, dd: bagFx([id]).dd })).filter((m) => m.dd !== 1);
     st.dd = Math.round((st.base + st.first + st.bonus) * st.mul);
