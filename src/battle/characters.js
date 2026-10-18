@@ -19,5 +19,5 @@ export function buildStats(id, xp, bag) {
   w.reload *= (1 - M.reloadPerLv * (lv - 1)) * fx.reload;
   w.mag = Math.round(w.mag * fx.mag);
   for (const k in a.charge) a.charge[k] *= fx.charge;
-  return { w, a, lv, limit: lv >= M.maxLv, hp: T.combat.playerHp + fx.hp };
+  return { w, a, lv, limit: lv >= M.maxLv, hp: Math.round((T.combat.playerHp + fx.hp) * fx.hpMul) };
 }

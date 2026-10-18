@@ -1,14 +1,15 @@
 // Backpack items (docs/DESIGN.md「书包」): bought once with 伍德刀盾 (or given as a reward), kept forever, levelled up with 伍德刀盾.
 // Each has a cost; what is equipped (SAVE.bag) may not cost more than the bag's capacity (SAVE.cap, expanded with 伍德刀盾 from 1 to 20).
 // They are plain stat modifiers applied to both girls (the team shares one bag). Data: content items.json, tuning/economy.json "bag".
-// effects (any mix): hp (+max HP), reload (x reload time), mag (x magazine), charge (x skill charge), feverDecay (x Fever drain),
-//                    feverStart (+start level), dd (x 刀盾 income), stageHeal (+HP after each small stage)
-// An item's "effects" are its Lv1 numbers; "grow" takes them to "to" at Lv "max" (straight, or "exp": the same factor every level)
+// effects (any mix): hp (+max HP), hpMul (x max HP), reload (x reload time), mag (x magazine), charge (x skill charge), feverDecay (x Fever
+//                    drain), feverStart (+start level), dd (x 刀盾 income), stageHeal (+HP after each small stage)
+// An item's "effects" are its Lv1 numbers; "grow" takes them to "to" at Lv "max" (straight, "exp": the same factor every level, or "pow":
+// slow at first and faster toward the top, the way there raised to the power "pow")
 // and prices each next level: price[0] x price[1]^(lv-1), rounded to a tidy number.
 import { C, T } from '../core/content.js';
 import { SAVE, persist } from '../core/save.js';
 
-const MULT = ['reload', 'mag', 'charge', 'feverDecay', 'dd'];
+const MULT = ['hpMul', 'reload', 'mag', 'charge', 'feverDecay', 'dd'];
 const INT = ['feverStart'];
 // prices end on 5 / 50 / 500 so they read cleanly
 export const tidy = (v) => { const s = v < 1000 ? 5 : v < 10000 ? 50 : 500; return Math.max(s, Math.round(v / s) * s); };
@@ -21,7 +22,7 @@ export function itemFxAt(id, lv = itemLevel(id)) {
   const k = g && g.max > 1 ? (Math.min(lv, g.max) - 1) / (g.max - 1) : 0;
   for (const [key, v0] of Object.entries(it.effects || {})) {
     const v1 = g?.to?.[key] ?? v0;
-    let v = g?.curve === 'exp' ? v0 * Math.pow(v1 / v0, k) : v0 + (v1 - v0) * k;
+    let v = g?.curve === 'exp' ? v0 * Math.pow(v1 / v0, k) : v0 + (v1 - v0) * (g?.curve === 'pow' ? Math.pow(k, g.pow ?? 2) : k);
     if (INT.includes(key)) v = Math.round(v);
     out[key] = v;
   }

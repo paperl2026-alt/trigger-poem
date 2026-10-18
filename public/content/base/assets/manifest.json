@@ -15239,6 +15239,12 @@
   "src": "assets/hud/spark.webp",
   "w": 360
  },
+ "item/cone": {
+  "dom": true,
+  "h": 512,
+  "src": "assets/item/cone.webp",
+  "w": 472
+ },
  "item/pig": {
   "dom": true,
   "h": 512,

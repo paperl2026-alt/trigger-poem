@@ -1,5 +1,5 @@
 {
-  "_doc": "书包道具（目前只有序章送的克系存钱罐；之后的道具、画法、效果等用户定。docs/DESIGN.md「书包」，代码 src/battle/items.js）。cost 占书包几格（装备的 cost 合计不能超过书包上限 SAVE.cap），price 用伍德刀盾买的价格（reward：不能买，是通关奖励，episodes.json 的 reward）。effects 是 Lv1 的效果（可以组合）：hp 加血上限，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 伍德刀盾收入倍率，stageHeal 每个小关结束回多少血。grow：用伍德刀盾升级，max 最高等级，to 最高级时的效果（curve exp = 每级乘同一个倍数，否则线性），price 升到下一级的价格 = price[0] × price[1]^(当前等级-1)。desc 一行效果，{键} 换成当前等级的数值、{键%} 换成变化的百分比。lore 三段说明（像黑魂 / 老头环的道具文本）：一段是它是什么、有什么用，二段是来历，三段是一句耐人寻味的话。",
+  "_doc": "书包道具（序章送克系存钱罐、第 1 话送诡谲甜筒，用户定的；之后的道具、画法、效果等用户定。docs/DESIGN.md「书包」，代码 src/battle/items.js）。cost 占书包几格（装备的 cost 合计不能超过书包上限 SAVE.cap），price 用伍德刀盾买的价格（reward：不能买，是通关奖励，episodes.json 的 reward）。effects 是 Lv1 的效果（可以组合）：hp 加血上限，hpMul 血上限倍率，reload 装填时间倍率，mag 弹匣倍率，charge 必杀充能倍率，feverDecay Fever 衰减倍率，feverStart Fever 起始等级，dd 伍德刀盾收入倍率，stageHeal 每个小关结束回多少血。grow：用伍德刀盾升级，max 最高等级，to 最高级时的效果（curve exp = 每级乘同一个倍数，pow = 先慢后快：进度的 pow 次方，否则线性），price 升到下一级的价格 = price[0] × price[1]^(当前等级-1)。desc 一行效果，{键} 换成当前等级的数值、{键%} 换成变化的百分比。lore 三段说明（像黑魂 / 老头环的道具文本）：一段是它是什么、有什么用，二段是来历，三段是一句耐人寻味的话。 名字和说明各语言不必一一对应：英文可以是独立的梗、似是而非的词（2026-10-18 用户）。",
   "pig": {
     "id": "pig",
     "icon": "item/pig",
@@ -12,9 +12,50 @@
     "effects": { "dd": 1.2 },
     "grow": { "max": 100, "to": { "dd": 16 }, "curve": "exp", "price": [80, 1.06] },
     "lore": [
-      { "zh": "眼睛多得过分的猪形存钱罐，嘴里永远咬着一枚硬币。结算时伍德刀盾成倍增加。", "en": "A piggy bank with far too many eyes, always biting a coin. Multiplies What Da Dog Doin' at the results.", "ja": "目がやたら多い豚の貯金箱。いつも硬貨を一枚くわえている。リザルトでワッダドッグドゥーインが増える。" },
-      { "zh": "那个东西破空坠落时洒下的碎片之一。它吞下的钱从不会消失，只会变多——没人知道多出来的是从哪里来的。", "en": "One of the shards scattered when that thing fell from the sky. Money it swallows never disappears, it only grows. No one knows where the extra comes from.", "ja": "あれが空を裂いて落ちた時に散った欠片のひとつ。飲み込んだ金は消えず、ただ増える。増えた分がどこから来るのかは誰も知らない。" },
-      { "zh": "喂得越多，它的眼睛就越多。半夜偶尔会轻轻地「哼」一声。", "en": "The more you feed it, the more eyes it has. Now and then, late at night, it softly grunts.", "ja": "餌をやるほど目が増える。真夜中、ときどき小さく「ブヒ」と鳴く。" }
+      {
+        "zh": "眼睛多得过分的猪形存钱罐，嘴里永远咬着一枚硬币。结算时伍德刀盾成倍增加。",
+        "en": "A piggy bank with far too many eyes, always biting a coin. Multiplies What Da Dog Doin' at the results.",
+        "ja": "目がやたら多い豚の貯金箱。いつも硬貨を一枚くわえている。リザルトでワッダドッグドゥーインが増える。"
+      },
+      {
+        "zh": "那个东西破空坠落时洒下的碎片之一。它吞下的钱从不会消失，只会变多——没人知道多出来的是从哪里来的。",
+        "en": "One of the shards scattered when that thing fell from the sky. Money it swallows never disappears, it only grows. No one knows where the extra comes from.",
+        "ja": "あれが空を裂いて落ちた時に散った欠片のひとつ。飲み込んだ金は消えず、ただ増える。増えた分がどこから来るのかは誰も知らない。"
+      },
+      {
+        "zh": "喂得越多，它的眼睛就越多。半夜偶尔会轻轻地「哼」一声。",
+        "en": "The more you feed it, the more eyes it has. Now and then, late at night, it softly grunts.",
+        "ja": "餌をやるほど目が増える。真夜中、ときどき小さく「ブヒ」と鳴く。"
+      }
+    ]
+  },
+  "cone": {
+    "id": "cone",
+    "icon": "item/cone",
+    "cost": 2,
+    "price": 0,
+    "reward": true,
+    "name": { "zh": "诡谲甜筒", "en": "Scream Cone", "ja": "おあずけコーン" },
+    "desc": { "zh": "血量上限 ×{hpMul}", "en": "Max HP ×{hpMul}", "ja": "最大HP ×{hpMul}" },
+    "order": 1,
+    "effects": { "hpMul": 1.1 },
+    "grow": { "max": 66, "to": { "hpMul": 6 }, "curve": "pow", "pow": 1.8, "price": [100, 1.06] },
+    "lore": [
+      {
+        "zh": "DOLCE CASA 的限定口味，盛在一支烤得有点焦的甜筒里，永远不会化。带着它，身体会变得耐打——像是被那栋房子留住了一样。",
+        "en": "DOLCE CASA's limited flavour, in a cone baked a shade too dark. It never melts. Carry it and you get harder to kill, as if the house would rather keep you.",
+        "ja": "ドルチェ・カーサの限定フレーバー。少し焦げたコーンに盛られ、決して溶けない。持っていると体が丈夫になる——あの家に引き留められているみたいに。"
+      },
+      {
+        "zh": "两人拼了命打穿那栋房子，最后连一口冰淇淋都没吃到。废墟里，只有这一支还立在柜台上，像是有人特意留给她们的。",
+        "en": "They fought through the whole mansion and never got a single lick. In the ruins this one cone still stood on the counter, as if someone had saved it for them.",
+        "ja": "命がけで屋敷を抜けたふたりは、結局ひと口も食べられなかった。瓦礫の中、カウンターにこの一本だけが立っていた。誰かが取っておいてくれたように。"
+      },
+      {
+        "zh": "舔一口，耳边会传来小女孩的笑声：「还要再来玩哦。」",
+        "en": "One lick, and a little girl giggles in your ear: \"Come back and play.\"",
+        "ja": "ひと舐めすると、女の子の笑い声がする。「また遊びに来てね」"
+      }
     ]
   }
 }
