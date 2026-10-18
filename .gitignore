@@ -22,3 +22,5 @@ tools/ffmpeg/
 tools/ktx/
 art/raw/bgm/*.wav
 art/raw/bgm/*.mp3
+art/raw/sfx_ai/**/*.wav
+art/raw/bgm_ai/**/*.wav

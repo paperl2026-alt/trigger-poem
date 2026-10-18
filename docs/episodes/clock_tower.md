@@ -1,6 +1,6 @@
 # 《クロックタワー》（钟楼 / 时钟塔，SFC）资料（致敬大关用）
 
-> 我们怎么改编：用户拍板前是 PLAN「等用户」里的草案，拍板后写进 `docs/DESIGN.md`「第 2 话」。
+> 我们的致敬章节暂名 **钟楼惊宿**，怎么改编见 `docs/DESIGN.md`「第 2 话」。
 
 ## 基本信息
 - 1995 年 9 月 14 日，Human Entertainment，Super Famicom，仅日本发售。导演河野一二三，致敬 Dario Argento，尤其是电影《Phenomena》（1985）：主角詹妮弗的造型来自片中 Jennifer Connelly 演的 Jennifer Corvino；还有神秘学、受难的少女、雾里的鲜艳色彩。
