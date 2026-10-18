@@ -47,6 +47,8 @@
   - **怪叫**最多同时 `CRY_MAX` 个，满了只有更重要的（死 > 蓄力 > 攻击 > 挨打）顶掉最不重要的那个，否则跳过；sounds.json 音效写 `gap` 的，两次之间至少隔这么久（命中声）。
   - 离屏测试听不到：`tools/node/playthrough.cjs` 开局就打开声音，结果里 `audio` 是计数（说了 / 没说 / 插嘴的台词、武器音节、她说话时停掉的音节、怪叫播了 / 跳过）。
 - 关卡外的音效：`tools/ui_sfx.py` 从零合成（纸片的拍、滑、翻页、盖章 + 玻璃小铃，48 kHz，一点房间混响，Ogg Opus），写到 `public/content/base/sfx/ui/` 并登记进 sounds.json；每种声音一个函数，改了重跑；`--wav <目录>` 另存 wav 试听。代码里每个界面动作用自己的键（`uiMove` 光标移到、`ui` 确定、`uiBack`、`uiDeny`、`uiPage`、`uiTab`、`uiToggle`、`uiSwap`、`uiStart`、`stamp`、`count`、`item`、`levelUp`、`comicPage`、`panel`、`victory`、`defeat`），合成的替身在 audio.js `sfx`。
+- 声音什么时候能响（2026-10-18 用户：刚进去点了常常没声音）：浏览器内核规定第一次点击前不能出声，以前第一次点击后才一口气解码 170 多个文件、界面音效排在后面。现在：桌面版 `electron/main.cjs` 开了 `autoplay-policy=no-user-gesture-required`，开机（读条时）就 `initAudio()`；网页版第一次点击 / 按键时 resume。`preloadSounds()` 先解码界面音效和菜单里说的台词（开机读条等它们，进度条占 15%），其余每次 4 个在后台慢慢解。实测（离屏）：音频一开机就是 running，41 个菜单声音约 0.95 秒解码完，早于片头结束；`playthrough.cjs` 的 `audio.menuReadyMs` 记着。
+- 读条片头 `src/ui/intro.js`（`startIntro(box)` 开机整段、`{ loop: true }` 关卡之间只放字形里切漫画）：漫画页从 comics.json 来，每张对准一个格子的中心放大；字形用 `background-clip: text`；时间点 `T`（全屏切到 1.3 秒、字落地 2.1、变红 2.45、logo 停到 2.9）；读完才结束，点击 / 按键跳到 logo。
 - 语音生成：`tools/voice_aivis.py`，用 AivisSpeech（免费、在本机跑的日语语音合成，Style-Bert-VITS2）。
   - 引擎和 ffmpeg 不进 git，手动解压：官方 Windows zip 解到 `tools/aivis/app/`（GitHub Aivis-Project/AivisSpeech，官网下载按钮给的那个版本），BtbN 的 ffmpeg Windows 构建解到 `tools/ffmpeg/`。
   - `start`：引擎没开就在后台开（`run.exe --port 10101`，日志 `tools/aivis/engine.log`），并从 AivisHub 装上 sounds.json 写的模型（引擎第一次启动还会自己装官方默认模型 コハク、まお；模型在 `%APPDATA%\AivisSpeech-Engine\Models`）。

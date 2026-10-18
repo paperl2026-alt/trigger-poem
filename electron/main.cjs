@@ -7,6 +7,8 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { Store } = require('./store.cjs');
 
+// sound from the start: no waiting for a first click before the audio may run (the menus' first clicks were silent)
+app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
 
 const DIST = path.join(__dirname, '..', 'dist');

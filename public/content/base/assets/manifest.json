@@ -18806,6 +18806,12 @@
   "src": "assets/ui/sel_card_ep0.webp",
   "w": 200
  },
+ "ui/sel_card_ep1": {
+  "dom": true,
+  "h": 562,
+  "src": "assets/ui/sel_card_ep1.webp",
+  "w": 200
+ },
  "ui/sel_card_pink": {
   "box": [
    1262,

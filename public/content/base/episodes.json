@@ -140,7 +140,7 @@
       },
       { "comic": "ep1_end" }
     ],
-    "cover": "ui/sel_next_ep1",
+    "cover": "ui/sel_card_ep1",
     "set": "ep1_shop",
     "par": 900,
     "reward": { "item": "cone" }

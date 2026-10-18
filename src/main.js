@@ -5,7 +5,8 @@ import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, te
 import { coreKeys, stageKeys, stageFrom, stageAt } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
-import { initAudio, sfx } from './core/audio.js';
+import { initAudio, sfx, preloadSounds } from './core/audio.js';
+import { startIntro } from './ui/intro.js';
 import { Game } from './battle/game.js';
 import { showResults } from './ui/screens.js';
 import { showSelect } from './ui/select.js';
@@ -122,10 +123,10 @@ function clearScreen() { if (screenApi && screenApi.dispose) screenApi.dispose()
 function needPics(keys, then) {
   const go = () => { releaseExcept(keys); then(); };
   if (isLoaded(keys)) { go(); return; }
-  const box = document.createElement('div'); box.id = 'loading'; box.innerHTML = '<div class="track"><div id="loadbar"></div></div>';
+  const box = document.createElement('div'); box.id = 'loading';
   document.body.appendChild(box);
-  const bar = box.querySelector('#loadbar'), t0 = performance.now();
-  loadKeys(keys, (p) => { bar.style.width = `${Math.round(p * 100)}%`; }).then(() => { box.remove(); G.waits.push(Math.round(performance.now() - t0)); go(); });
+  const intro = startIntro(box, { loop: true }), t0 = performance.now();   // (the title's letters flipping comic panels: src/ui/intro.js)
+  loadKeys(keys, (p) => intro.progress(p)).then(() => intro.finish()).then(() => { box.remove(); G.waits.push(Math.round(performance.now() - t0)); go(); });
 }
 G.waits = [];   // ms the loading bar was shown before each stage (tools/node/playthrough.cjs)
 G.needPics = needPics;
@@ -228,7 +229,6 @@ G.shot = async (name = 'shot') => {
 };
 
 async function boot() {
-  const bar = document.getElementById('loadbar');
   // 1) content packs (base + mods): every number, text, level and the image list; 2) everything that reads them
   await loadContent(import.meta.env.BASE_URL || './');
   initSettings(); initSave(); initLang(); initTheme();
@@ -237,8 +237,18 @@ async function boot() {
   G.ready = true;
   resize();
   setManifest();
-  await loadKeys(coreKeys(), (p) => { bar.style.width = `${Math.round(p * 100)}%`; });   // only the core: each stage loads its own (src/core/groups.js)
+  // sound from the start (the desktop build may; a browser waits for the first click or key, then resumes): the menus' own sounds are
+  // decoded behind the loading bar, the rest after
+  initAudio();
+  for (const ev of ['pointerdown', 'keydown']) window.addEventListener(ev, () => initAudio(), { capture: true });
+  const intro = startIntro(document.getElementById('loading'));
+  let pics = 0, snd = 0; const show = () => intro.progress(pics * 0.85 + snd * 0.15);
+  await Promise.all([
+    loadKeys(coreKeys(), (p) => { pics = p; show(); }),   // only the core: each stage loads its own (src/core/groups.js)
+    preloadSounds().then(() => { snd = 1; show(); }),
+  ]);
   await document.fonts?.ready;
+  await intro.finish();   // (the logo forms, then the title)
   document.getElementById('loading').remove();
   const q = new URLSearchParams(location.search);
   const act = {

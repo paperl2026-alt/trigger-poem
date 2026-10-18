@@ -12,6 +12,31 @@ button { font-family: var(--font); cursor: pointer; }
 #loading { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: var(--ink); z-index: 50; }
 #loading .track { width: min(60vw, 360px); height: 10px; background: #2a1430; overflow: hidden; outline: 3px solid var(--pink); outline-offset: 3px; transform: skewX(-12deg); }
 #loadbar { height: 100%; width: 0; background: linear-gradient(90deg, var(--pink), var(--lime)); transition: width .15s; }
+/* the loading intro (src/ui/intro.js): comic panels flipping full screen, then inside the title's letters, then the logo: white on red */
+#loading.intro { flex-direction: column; background: #070506; overflow: hidden; }
+#loading.intro.out { opacity: 0; transition: opacity .25s; }
+.intro .ifull { position: absolute; inset: -6%; background: #000 center / cover no-repeat; filter: contrast(1.12) saturate(1.15); transition: opacity .55s, transform .55s; }
+.intro .ifull::after { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 35%, #000d 100%), linear-gradient(#d8141e22, #d8141e22); }
+.intro .ifull.pop { animation: introPop .12s ease-out; }
+@keyframes introPop { from { transform: scale(1.12); filter: contrast(1.3) saturate(1.3) brightness(1.4); } }
+.intro .ifull.off { opacity: 0; transform: scale(0.9); }
+.intro .ilogo { position: relative; display: flex; flex-direction: column; align-items: center; gap: 1vh; font-family: "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  font-weight: 900; font-style: italic; line-height: .92; opacity: 0; transform: scale(3); }
+.intro .ilogo.on { opacity: 1; transform: none; transition: transform .8s cubic-bezier(.15, .9, .2, 1), opacity .25s; }
+.intro .ilogo b { position: relative; z-index: 1; white-space: nowrap; color: transparent; -webkit-background-clip: text; background-clip: text;
+  background-repeat: no-repeat; background-color: #fff; letter-spacing: .02em; padding: 0 .08em; }
+.intro .ilogo .islab { position: absolute; left: -4%; right: -4%; bottom: -3%; height: 62%; background: #d8141e; transform: skewX(-10deg) scaleX(0);
+  transform-origin: left; box-shadow: .6vh .6vh 0 #fff; }
+.intro .ilogo.red b { background-image: none !important; color: #fff; text-shadow: .5vh .5vh 0 #000; }
+.intro .ilogo.red .islab { transform: skewX(-10deg) scaleX(1); transition: transform .28s cubic-bezier(.2, 1.3, .4, 1); }
+.intro .isub { margin-top: 3vh; color: #fff; opacity: 0; font: 700 1.7vh/1 "Noto Sans SC", sans-serif; letter-spacing: .25em; transition: opacity .5s .15s; }
+.intro .isub.on { opacity: .8; }
+.intro .iflash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
+.intro .iflash.on { animation: introFlash .45s ease-out; }
+@keyframes introFlash { 0% { opacity: .9; } 100% { opacity: 0; } }
+#loading.intro .track { position: absolute; bottom: 7vh; left: 50%; translate: -50% 0; height: 6px; background: #ffffff22; outline: 2px solid #d8141e; outline-offset: 3px; }
+#loading.intro #loadbar { background: linear-gradient(90deg, #d8141e, #fff); }
+#loading.i-loop .ifull, #loading.i-loop .isub { display: none; }
 #rotate { position: fixed; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: var(--ink); z-index: 60; font-size: 20px; }
 #rotate .phone { width: 46px; height: 80px; border: 5px solid var(--pink); border-radius: 9px; animation: rot 1.8s ease-in-out infinite; }
 @keyframes rot { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }

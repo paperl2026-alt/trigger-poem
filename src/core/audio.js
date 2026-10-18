@@ -29,7 +29,7 @@ export function initAudio() {
   }
   verb.buffer = ir;
   const vg = ctx.createGain(); vg.gain.value = 0.3; verb.connect(vg); vg.connect(master);
-  setTimeout(() => preloadSounds(), 0);   // (recorded sounds: below)
+  preloadSounds();   // (recorded sounds: below; boot waits for the menus' own ones)
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const nd = noiseBuf.getChannelData(0);
   for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
@@ -270,14 +270,22 @@ function playOne(files, opt) {
   if (b === undefined) load(f);
   return false;
 }
+// decoding all of them at once kept the menus' own sounds waiting behind ~170 others (user 2026-10-18: the first clicks were silent):
+// first the menus' effects and the lines said there (boot waits for these, behind the loading bar), then the rest a few at a time
+const MENU_SFX = /^(ui|stamp|count|item|levelUp|comicPage|panel|victory|defeat|clear)/, MENU_LINES = /^(quit|poke|start|win|lose)_/;
+let preloading = null;
 export function preloadSounds() {
-  const S = C.sounds || {};
-  for (const e of Object.values(S.sfx || {})) for (const f of e.files || []) load(f);
-  for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) for (const f of m[a] || []) load(f);
+  if (preloading || !ctx) return preloading || Promise.resolve();
+  const S = C.sounds || {}, first = [], rest = [];
+  for (const [k, e] of Object.entries(S.sfx || {})) for (const f of e.files || []) (MENU_SFX.test(k) ? first : rest).push(f);
   for (const v of Object.values(S.voices || {})) {
-    for (const f of Object.values(v?.lines || {})) load(f);
-    for (const G of Object.values(v?.grains || {})) for (const f of G?.files || []) load(f);
+    for (const [k, f] of Object.entries(v?.lines || {})) (MENU_LINES.test(k) ? first : rest).push(f);
+    for (const G of Object.values(v?.grains || {})) rest.push(...(G?.files || []));
   }
+  for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) rest.push(...(m[a] || []));
+  preloading = Promise.all(first.map(load)).then(() => { STATS.menuReadyMs = Math.round(performance.now()); STATS.ctxState = ctx.state; STATS.menuSounds = first.length; });
+  preloading.then(async () => { for (let i = 0; i < rest.length; i += 4) await Promise.all(rest.slice(i, i + 4).map(load)); });
+  return preloading;
 }
 // every synthesized effect first looks for its recorded version; sounds.json "gap" = at most one every that many seconds (a fast gun's
 // hits would blur into one noise)
