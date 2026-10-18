@@ -227,7 +227,9 @@ export class Actor {
 //                    melts away; after shuffle x its HP lost they all fade and come back shuffled (it in a new place)
 //   dmg: n           what its bite / ram takes (else tuning combat.enemyHit; swarms bite less)
 // A wave's entry can also have: count: n (that many, spread out: a swarm), from: 'statue' (it stands as a grey statue, not a target,
-// until wake: seconds, or a wave event { kills / t, wake: true | n } wakes it: DESIGN「摆设活过来」)
+// until wake: seconds, or a wave event { kills / t, wake: true | n } wakes it: DESIGN「摆设活过来」), from: 'wall' | 'ceiling' (it
+// breaks in through the side wall / the ceiling, leaving a hole: DESIGN「演出」), breakout: 0.4 (at that share of its HP it smashes
+// through the far wall and is gone; the girls follow it through the hole: Game.breakoutAt)
 const enemyHit = () => T.combat.enemyHit;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const DEFAULT_MOVE = { walker: 'walk', flyer: 'float', thrower: 'step', crawler: 'crawl' };
@@ -253,7 +255,7 @@ export class Enemy extends Actor {
     this.bp = { ...B.common, ...B[def.beh], ...def.params };   // this enemy's behaviour numbers
     this.frames = def.frames;
     this.hp = s.hp ?? def.hp;   // (a wave can make one tougher: the turning-around ghoul)
-    this.maxHp = this.hp; this.invul = 0; this.aimT = 0; this.dodges = 0; this.tiredT = 0; this.lostRound = 0;
+    this.maxHp = this.hp; this.invul = 0; this.aimT = 0; this.dodges = 0; this.tiredT = 0; this.lostRound = 0; this.breakout = s.breakout;
     this.tough = !!(s.tough || def.tough);   // never staggered, not pushed back by hits
     this.state = 'enter';
     this.timer = 0;
@@ -338,6 +340,17 @@ export class Enemy extends Actor {
       this.inner.add(this.string);
       this.play('idle');
       tw.to(P, { y: 0 }, bp.dropTime, { ease: Ease.outBack, onDone: () => { this.game.fx.puff(P, 4); ready(); } });
+    } else if ((s.from === 'wall' || s.from === 'ceiling') && this.game.world.addHole) {
+      // it breaks in: a hole bursts open in the side wall (the side it stands on) or the ceiling, it leaps / drops down to its spot
+      const g = this.game, Hd = g.world.set.hall, ceil = s.from === 'ceiling', side = s.side ?? (s.x < g.world.camPos.x ? -1 : 1);
+      const sx = ceil ? s.x : side < 0 ? Hd.x0 + 0.25 : Hd.x1 - 0.25, sy = ceil ? Hd.h - 0.4 : 0.5;
+      g.world.addHole(ceil ? 'ceil' : side < 0 ? 'left' : 'right', new THREE.Vector3(sx, ceil ? Hd.h : 1.1, s.z), ceil ? 1.7 : 2.0);
+      P.set(sx, sy, s.z);
+      const at = new THREE.Vector3(sx, ceil ? Hd.h - 0.2 : 1.1, s.z);
+      g.fx.confetti(at, 26, 2.2, [COL.bone, COL.paper]); g.fx.puff(at, 8, COL.bone, 1.1); sfx.slam(); sfx.tear(0); g.post.shake(0.7);
+      this.play(walker ? 'leap' : 'rise');
+      tw.run(ceil ? 0.6 : 0.55, (e) => { P.x = sx + (s.x - sx) * e; P.y = ceil ? sy * (1 - e) : sy * (1 - e) + Math.sin(e * Math.PI) * 1.1; }, {
+        ease: ceil ? Ease.outBounce : Ease.outQuad, onDone: () => { g.fx.puff(P, 5, COL.bone, 0.7); sfx.thud(0); if (walker) this.play('walk', 7); ready(); } });
     } else if (s.from === 'pop') {
       P.set(s.x, s.y || 0, s.z);
       this.inner.rotation.x = -Math.PI / 2;
@@ -735,6 +748,7 @@ export class Enemy extends Actor {
     this.hp -= dmg;
     if (!dot) this.game.onHit(this, kind, info);
     if (this.hp <= 0) { this.die(kind, info); return; }
+    if (this.breakout && !this.fleeing && this.hp <= this.maxHp * this.breakout) { this.breakOut(); return; }
     if (this.def.dashAt && !this.dashed && this.hp <= this.maxHp * this.def.dashAt) { this.dashed = true; this.dashPending = true; }
     if (this.def.phantoms) { this.lostRound += dmg; if (this.lostRound >= this.maxHp * (this.def.phantoms.shuffle ?? 0.15)) { this.lostRound = 0; this.shuffle(); } }
   }
@@ -788,6 +802,26 @@ export class Enemy extends Actor {
       let t = 0;
       g.fx.add({ update: (dt) => { t += dt; U.opacity.value = 0.5 * (1 - t / 0.35); if (t >= 0.35) { m.parent && m.parent.remove(m); m.material.dispose(); return false; } return true; } });
     });
+  }
+  // 破墙而出 (a wave's breakout): hurt enough, it runs for the far wall, smashes through it and is gone (not a kill); the girls follow it
+  // through the hole when the fight here is over, and it is waiting in the next room (its wave there: hp, from)
+  breakOut() {
+    const g = this.game, P = this.root.position, Hd = g.world.set?.hall;
+    if (!Hd || !g.world.addHole) return;
+    this.fleeing = true; this.invul = 99; this.endWindup(); this.state = 'flee'; this.u.outlineOn.value = 0; this.moving = true;
+    g.etw.kill(P); g.etw.kill(this.inner.position);
+    const tx = clamp(P.x, Hd.x0 + 1.2, Hd.x1 - 1.2), tz = Hd.z1 + 0.4, x0 = P.x, z0 = P.z, dur = Math.max(0.7, Math.hypot(tx - x0, tz - z0) / 7);
+    sfx.roar(); cry(this.type, 'attack'); this.play(this.beh === 'walker' ? 'walk' : 'idle', 14);
+    g.hud.gl.stickers.say(g.players[0], 'scare');
+    g.etw.run(dur, (e) => { P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; this.inner.position.y = Math.abs(Math.sin(e * Math.PI * 4)) * 0.25; g.world.smashPropsNear?.(P, this.w * 0.4); }, {
+      ease: Ease.inQuad, onDone: () => {
+        const at = new THREE.Vector3(tx, Math.min(Hd.h * 0.42, 1.3), Hd.z1);
+        g.world.addHole('end', at, 2.6);
+        sfx.slam(); sfx.tear(0); sfx.thud(0); g.post.shake(1.4); g.post.flash(0.3, 0xffffff);
+        g.fx.confetti(at, 44, 2.8, [COL.bone, COL.paper]); g.fx.puff(at, 14, COL.bone, 1.4);
+        this.alive = false; this.dispose();
+        g.breakoutAt(tx, Hd.z1);
+      } });
   }
   // a statue comes to life: it cracks, shakes the dust off, takes its colour back and goes
   wake() {

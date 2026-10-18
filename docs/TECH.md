@@ -209,6 +209,12 @@
 - 序章三个场景在 `sets/ep0.json`：教室（平静 → 异变翻板；第二个停留点镜头转身看后墙）、走廊（沿用走廊验证，站点间转弯、折叠）、操场（Boss）。
 - 第 1 话在 `sets/ep1.json`，一条路线：店内 → 画廊 → 玻璃温室 / 骑士厅 → 冷库 → 儿童房 → 烤炉厨房 → 坑道（`ep1_pit`，三个点）→ 画室（四个影子，然后 Boss 在同一个地方的 `boss` 点）。只有店写 `turns`；其余一直是腐化的（有 `_x` 的板显示 `_x`，儿童房、画室只画了腐化版）。冥界、大舞厅不用了（图还在内容包里）。
 - 房间打完走到门前：小关最后一个站点写 `exit: { via, to, look }`，清场后两人收起掩体、走到 `to`，再进下一步（开门特写）。
+- 演出（DESIGN「演出」）：
+  - 破洞 `PanelWorld.addHole(on, p, size)`：程序画的破洞（几种参差的黑洞 + 浅色碎边 + 裂纹，`holeTex`），贴在左 / 右墙、尽头墙、后墙、天花板或地板上，弹出来；
+  - 怪破墙 / 破天花板闯进来：波次条目 `from: 'wall' | 'ceiling'`（`side` 可选，默认按它在镜头哪边），墙上 / 天花板上开洞、碎屑、震屏，它跳下来落到 `fit` 给的位置；
+  - 背后出怪：站点写 `whip: true`（镜头位置不动，`look` 朝后），清完上一站不走路，低吼 + 震屏 + 一个人说「后面…?」+ 提示 `holds.json behind`，0.9 秒后镜头甩过去（`Game.whip`）；朝后的那面墙是 set `hall.back`（true = 尽头墙的另一个版本）；这个站点自己的掩体朝后摆；
+  - 塌方：波次事件 `{ kills / t, collapse: true }` → `Game.collapse`：怪和两人一起掉下去（`PanelWorld.collapse`：她们周围的地砖从近到远掉落、镜头往下坠），这一小关到此结束，下一步如果是开门就跳过（`skipDoor`），下一小关的第一个站点用 `enter` 从上面掉进来；
+  - 破墙逃走：波次条目写 `breakout: 0.45`，血掉到这个比例就无敌、冲向尽头墙撞出大洞、消失（不算击杀，`Enemy.breakOut`）；这里打完后两人走进洞里（`Game.breakoutAt` 换掉 `exit`），跳过下一步的开门，下一小关的波次里它带着剩下的血（`hp`）再出现。
 - 名场面用到的东西（DESIGN「第 1 话」）：
   - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`；第 1 话现在改用单独一页漫画，这个演出留着备用）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；
   - **机关**（set `gimmicks`，`src/battle/gimmick.js`）：挂在墙上 / 站在地上 / 尽头墙上能打的画、铠甲、封印、棺材盖；带白描边，只在自己的站点能打，打够 `hp` 下就按顺序执行 `do`（`flash` 闪光、`flip` 翻成 `kx`、`turn` 翻地方、`spawn` 刷怪、`say` 台词、`sfx`、`gone` 消失）。`prop: true`：波次不等它，AI 队友不打它（`input.js`）。`shoot: false` 的不能打，由波次事件 `gimmick` 触发（画室的画像一幅幅走空）；从 Boss 点直接开局时，别的站点的这种机关当作已经触发过（`settle`，画像是空的）；

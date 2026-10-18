@@ -104,9 +104,9 @@
             { "t": 3, "type": "ghoul", "x": 0, "z": -12, "move": "charge", "from": "pop" }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -2, "z": -11, "from": "pop" },
+            { "t": 0, "type": "ghoul", "x": -2.0, "z": -11, "from": "wall" },
             { "t": 0.6, "type": "ghoul", "x": 2, "z": -11.5, "from": "pop" },
-            { "t": 1.5, "type": "crawler", "x": 0, "z": -11, "move": "burrow" }
+            { "t": 1.5, "type": "crawler", "x": 0, "z": -11, "move": "walk", "from": "ceiling" }
           ]
         ],
         "exit": { "to": [0, 1.1, -12.4], "look": [0, 1.0, -20] }
@@ -145,7 +145,8 @@
       "right": ["ep1/gallery_wallR1", "ep1/gallery_wallR2", "ep1/gallery_wallR3", "ep1/gallery_wallR4", "ep1/gallery_wallR5", "ep1/gallery_wallR6"],
       "floor": ["ep1/gallery_floor1", "ep1/gallery_floor2", "ep1/gallery_floor3"],
       "end": ["ep1/gallery_end1", "ep1/gallery_end2"],
-      "ceil": ["ep1/gallery_ceil1", "ep1/gallery_ceil2", "ep1/gallery_ceil3"]
+      "ceil": ["ep1/gallery_ceil1", "ep1/gallery_ceil2", "ep1/gallery_ceil3"],
+      "back": true
     },
     "gimmicks": [
       {
@@ -243,7 +244,7 @@
           [
             { "t": 0, "type": "doll", "x": -1, "z": -10, "from": "pop" },
             { "t": 0.6, "type": "doll", "x": 1, "z": -10.5, "from": "pop" },
-            { "t": 2, "type": "crawler", "x": 0, "z": -9, "move": "burrow" }
+            { "t": 2, "type": "crawler", "x": 0, "z": -9, "move": "walk", "from": "ceiling" }
           ],
           [
             { "t": 0, "type": "bat", "count": 8, "x": 0, "z": -10.5, "y": 2.6, "spread": 3.0 },
@@ -276,7 +277,24 @@
             { "t": 2, "type": "ghoul", "x": 0, "z": -16, "move": "burrow" }
           ]
         ],
-        "grab": "ep1/hands_a",
+        "grab": "ep1/hands_a"
+      },
+      "ga2b": {
+        "cam": [0, 1.1, -8],
+        "look": [0, 1.0, 6],
+        "whip": true,
+        "covers": [{ "k": "cover/ep1_gallery5", "side": -1 }, { "k": "cover/ep1_gallery6", "side": 1 }],
+        "waves": [
+          [
+            { "t": 0, "type": "ghoul", "x": -1.0, "z": -1.5, "from": "wall" },
+            { "t": 0.6, "type": "ghoul", "x": 1.0, "z": -1.0, "from": "pop", "move": "hop" },
+            { "t": 1.4, "type": "crawler", "x": 0, "z": -2, "from": "pop", "move": "zigzag" }
+          ],
+          [
+            { "t": 0, "type": "bat", "count": 6, "x": 0, "z": -1, "y": 2.6, "spread": 3.0 },
+            { "t": 2, "type": "doll", "x": 0, "z": -0.5, "from": "pop" }
+          ]
+        ],
         "exit": { "to": [0, 1.1, -17.6], "look": [0, 1.0, -26] }
       }
     }
@@ -374,7 +392,7 @@
           [
             { "t": 0, "type": "chandelier", "x": 0, "z": -10, "y": 2.4 },
             { "t": 0.6, "type": "ghoul", "x": -2, "z": -8, "from": "pop" },
-            { "t": 1.3, "type": "ghoul", "x": 2, "z": -8.5, "move": "hop", "from": "pop" }
+            { "t": 1.3, "type": "ghoul", "x": 3.0, "z": -8.5, "move": "walk", "from": "wall" }
           ],
           [
             { "t": 0, "type": "doll", "x": -3, "z": -9, "from": "pop" },
@@ -405,7 +423,8 @@
           [
             { "t": 0, "type": "shadow", "x": 0, "z": -13, "from": "pop" },
             { "t": 1, "type": "ghoul", "x": -2, "z": -10, "move": "hop", "from": "pop" },
-            { "t": 1.5, "type": "ghoul", "x": 2, "z": -10, "from": "pop" }
+            { "t": 1.5, "type": "ghoul", "x": 2, "z": -10, "from": "pop" },
+            { "kills": 3, "collapse": true }
           ]
         ],
         "via": [[0, 1.35, 1.5]],
@@ -506,7 +525,8 @@
             { "t": 0.6, "type": "ghoul", "x": 1, "z": -8, "move": "hop", "from": "pop" },
             { "t": 1.6, "type": "ghoul", "x": -0.6, "z": -8.5, "move": "charge", "from": "pop" }
           ]
-        ]
+        ],
+        "enter": { "from": [0, 6.5, 0], "dur": 0.9, "shake": 1.4 }
       },
       "co2": {
         "via": [[0, 1.35, 0]],
@@ -515,7 +535,7 @@
         "covers": [{ "k": "cover/ep1_cold3", "side": -1 }, { "k": "cover/ep1_cold4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "ghoul", "x": -1, "z": -9, "from": "pop" },
+            { "t": 0, "type": "ghoul", "x": -1.6, "z": -9, "from": "wall" },
             { "t": 0.6, "type": "ghoul", "x": 1, "z": -9.5, "move": "hop", "from": "pop" },
             { "t": 1.4, "type": "crawler", "x": 0, "z": -9, "move": "zigzag", "from": "pop" }
           ],
@@ -677,7 +697,9 @@
         "look": [0, 1.0, -12],
         "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
         "waves": [
-          [{ "t": 0, "type": "ghoul", "x": 0, "z": -7, "from": "pop" }],
+          [
+            { "t": 0, "type": "shadow", "x": 0, "z": -7.5, "hp": 360, "from": "pop" }
+          ],
           [
             { "t": 0, "type": "crawler", "x": -1, "z": -6.5, "move": "zigzag", "from": "pop" },
             { "t": 0.6, "type": "crawler", "x": 1, "z": -7, "move": "burrow" },
@@ -709,7 +731,7 @@
           ],
           [
             { "t": 0, "type": "ghoul", "x": -1.4, "z": -7.5, "move": "hop", "from": "pop" },
-            { "t": 0.6, "type": "ghoul", "x": 1.4, "z": -7.5, "from": "pop" },
+            { "t": 0.6, "type": "ghoul", "x": 1.4, "z": -7.5, "from": "ceiling" },
             { "t": 1.5, "type": "bat", "count": 8, "x": 0, "z": -8, "y": 2.3, "spread": 4.0 }
           ],
           [
@@ -912,8 +934,8 @@
           ],
           [
             { "t": 0, "type": "chandelier", "x": 0, "z": -8, "from": "statue", "y": 1.4, "wake": 1.0 },
-            { "t": 0.6, "type": "dollkin", "x": -1, "z": -7, "from": "pop" },
-            { "t": 1.2, "type": "dollkin", "x": 1, "z": -7.5, "from": "pop" },
+            { "t": 0.6, "type": "dollkin", "x": -1.8, "z": -7, "from": "wall" },
+            { "t": 1.2, "type": "dollkin", "x": 1.8, "z": -7.5, "from": "wall" },
             { "t": 1.8, "type": "doll", "x": 1.2, "z": -9, "from": "pop" }
           ]
         ]
@@ -942,7 +964,7 @@
             { "t": 1.5, "type": "bat", "count": 6, "x": 0, "z": -10, "y": 2.3, "spread": 3.6 }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -11, "from": "pop" },
+            { "t": 0, "type": "shadow", "x": 0, "z": -11, "from": "pop", "breakout": 0.45 },
             { "t": 1, "type": "dollkin", "x": -1.4, "z": -9, "from": "pop" },
             { "t": 1.4, "type": "dollkin", "x": 1.4, "z": -9, "from": "pop" }
           ]

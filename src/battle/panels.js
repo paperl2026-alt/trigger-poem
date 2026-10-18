@@ -55,6 +55,31 @@ void main(){
   gl_FragColor = vec4(c, 1.0);
 }`;
 
+// a hole broken through a wall / the ceiling (DESIGN「演出」: walls are not to be trusted): a jagged dark opening, a pale broken rim, cracks
+// running out; drawn by the program, a few versions
+const HOLES = [];
+function holeTex() {
+  if (HOLES.length < 3) {
+    const c = document.createElement('canvas'); c.width = c.height = 256;
+    const g = c.getContext('2d'), R = 128;
+    const jag = (r0, r1, n) => Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2, r = r0 + Math.random() * (r1 - r0); return [R + Math.cos(a) * r, R + Math.sin(a) * r]; });
+    const fill = (pts, style) => { g.beginPath(); pts.forEach(([x, y], i) => (i ? g.lineTo(x, y) : g.moveTo(x, y))); g.closePath(); g.fillStyle = style; g.fill(); };
+    g.strokeStyle = 'rgba(34,14,20,0.85)'; g.lineCap = 'round';
+    for (let i = 0; i < 10; i++) {
+      let a = Math.random() * Math.PI * 2, x = R + Math.cos(a) * 72, y = R + Math.sin(a) * 72;
+      g.lineWidth = 2 + Math.random() * 2; g.beginPath(); g.moveTo(x, y);
+      for (let k = 0; k < 5; k++) { a += (Math.random() - 0.5) * 0.9; x += Math.cos(a) * 11; y += Math.sin(a) * 11; g.lineTo(x, y); }
+      g.stroke();
+    }
+    fill(jag(80, 114, 28), 'rgba(238,218,196,0.96)');
+    fill(jag(70, 98, 32), 'rgb(118,68,58)');
+    const gr = g.createRadialGradient(R, R, 8, R, R, 92); gr.addColorStop(0, '#040108'); gr.addColorStop(1, '#22101a');
+    fill(jag(56, 86, 36), gr);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; HOLES.push(t);
+  }
+  return HOLES[Math.floor(Math.random() * HOLES.length)];
+}
+
 export class PanelWorld {
   constructor(game, setId) {
     this.game = game;
@@ -124,7 +149,14 @@ export class PanelWorld {
       if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
     }
     // the end wall, the void behind it, the outside seen through the windows
-    if (Hd.end) { const ek = order(Hd.end, 1, seed + 3)[0], e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); }
+    const ek = Hd.end ? order(Hd.end, 1, seed + 3)[0] : null;
+    if (ek) { const e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); }
+    // a wall behind where the girls came in too (a station that looks back: the view whips round, Game.whip); back: true = the other
+    // version of the end wall, or its own pictures
+    if (Hd.back) {
+      const bk = Hd.back === true ? ([].concat(Hd.end || []).find((k) => k !== ek) || ek) : order(Hd.back, 1, seed + 4)[0];
+      if (bk) { const b = board(bk, W, h, { alpha: true }); b.position.set((x0 + x1) / 2, h / 2, z0); b.rotation.y = Math.PI; R.add(b); flip(b, bk, 0); }
+    }
     if (Hd.outside) for (const o of (Hd.outsideAt || [{ x: x1 + 11, z: (z0 + z1) / 2, ry: -Math.PI / 2, w: 66 }, { x: 0, z: z1 - 14, ry: 0, w: 40 }])) {
       const m = board(Hd.outside, o.w, o.w / 1.5); m.material.fog = false; m.position.set(o.x, o.w / 1.5 * (o.yk ?? 0.3), o.z); m.rotation.y = o.ry || 0; o.ry ? R.add(m) : put(m, o.z);   // big enough for every window angle, horizon near eye height
       flip(m, Hd.outside, 0, Hd.outsideX);
@@ -288,6 +320,38 @@ export class PanelWorld {
       const hit = all.some((c) => Math.hypot(c.def.x - p.x, c.def.z - p.z) < c.w / 2 + p.w / 2 + 0.15);
       p.m.visible = p.sh.visible = !hit;
     }
+  }
+
+  // a hole broken through (on: left | right | end | back | ceil | floor, p: a world point on that surface, size in metres); it bursts open
+  addHole(on, p, size = 1.8) {
+    const Hd = this.set.hall, g = new THREE.Group();
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: holeTex(), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 }));
+    m.rotation.z = Math.random() * Math.PI * 2; m.renderOrder = 3; g.add(m);
+    if (on === 'left') { g.position.set(Hd.x0 + 0.03, p.y, p.z); g.rotation.y = Math.PI / 2; }
+    else if (on === 'right') { g.position.set(Hd.x1 - 0.03, p.y, p.z); g.rotation.y = -Math.PI / 2; }
+    else if (on === 'end') g.position.set(p.x, p.y, Hd.z1 + 0.03);
+    else if (on === 'back') { g.position.set(p.x, p.y, Hd.z0 - 0.03); g.rotation.y = Math.PI; }
+    else if (on === 'ceil') { g.position.set(p.x, Hd.h - 0.03, p.z); g.rotation.x = Math.PI / 2; }
+    else { g.position.set(p.x, 0.03, p.z); g.rotation.x = -Math.PI / 2; }
+    g.scale.setScalar(0.2); this.game.tweens.to(g.scale, { x: 1, y: 1, z: 1 }, 0.22, { ease: Ease.outBack });
+    this.root.add(g); (this.holes || (this.holes = [])).push(m);
+    return g;
+  }
+  // the floor gives way (DESIGN「演出」 塌方): the tiles round the girls drop, the nearest first, then the view falls through the gap
+  collapse(then) {
+    const g = this.game, tw = g.tweens, c = this.camPos, f = new THREE.Vector3().subVectors(this.lookAt, c).setY(0).normalize();
+    sfx.slam(); sfx.tear(0); g.post.shake(1.6); g.post.flash(0.35, 0xffe0c0);
+    for (const t of this.tiles) {
+      const dx = t.x - c.x, dz = t.z - c.z, along = dx * f.x + dz * f.z, side = Math.abs(dx * f.z - dz * f.x);
+      if (along < -3 || along > 8 || side > 4.5) continue;
+      const delay = Math.max(0, Math.hypot(along, side)) * 0.07 + rnd(0, 0.15);
+      tw.to(t.g.position, { y: -9 }, 1.0, { delay, ease: Ease.inQuad });
+      tw.to(t.g.rotation, { x: rnd(-0.9, 0.9), z: rnd(-0.7, 0.7) }, 1.0, { delay });
+      if (Math.random() < 0.2) tw.wait(delay, () => g.fx.puff(new THREE.Vector3(t.x, 0.1, t.z), 3, COL.bone, 0.8));
+    }
+    tw.wait(0.45, () => { sfx.thud(0); g.post.shake(1.2); });
+    tw.run(1.9, (k) => { this.fovKick = Math.sin(k * Math.PI) * 18; });
+    tw.wait(0.95, () => tw.to(c, { y: c.y - 7 }, 0.9, { ease: Ease.inQuad, onDone: () => { this.fovKick = 0; then && then(); } }));
   }
 
   // ---------------------------------------------------------------- folding (the "Inception" moves)
@@ -475,6 +539,7 @@ export class PanelWorld {
   }
   // the run moves on to another set: everything this one made goes (the pictures stay loaded, they belong to the asset cache)
   dispose() {
+    for (const m of this.holes || []) m.geometry.dispose();
     this.scene.traverse((o) => {
       if (o.geometry) o.geometry.dispose();
       if (o.material) [].concat(o.material).forEach((m) => m.dispose());

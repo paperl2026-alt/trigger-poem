@@ -64,7 +64,7 @@
       {
         "stage": "gallery",
         "set": "ep1_gallery",
-        "stations": ["ga1", "ga2"],
+        "stations": ["ga1", "ga2", "ga2b"],
         "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" },
         "thumb": "ui/sel_thumb_ep1_gallery"
       },
@@ -79,9 +79,6 @@
         "stations": ["gd1", "gd2"],
         "name": { "zh": "温室与骑士厅", "en": "GLASSHOUSE", "ja": "温室と騎士の間" },
         "thumb": "ui/sel_thumb_ep1_garden"
-      },
-      {
-        "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
       },
       {
         "stage": "cold",

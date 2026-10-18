@@ -16,6 +16,8 @@
   "boss": { "banner": true, "color": "#ff1a2a", "tape": "WARNING ⚠ HUGE REACTION", "sub": "WARNING", "lines": [
    { "zh": "巨大反应接近!", "en": "SOMETHING HUGE APPROACHES!", "ja": "巨大反応接近!" }, { "zh": "{name} 出现!", "en": "{name} APPEARS!", "ja": "{name} 出現!" }] },
   "phase": { "color": "#ff1a2a", "tape": "DANGER ⚠ TRANSFORMATION", "sub": "DANGER", "lines": [{ "zh": "形态变化!", "en": "SHE'S CHANGING!", "ja": "形態変化!" }] },
+  "behind": { "color": "#ff3a5a", "tape": "BEHIND YOU!", "sub": "BEHIND", "lines": [
+   { "zh": "后面!", "en": "BEHIND YOU!", "ja": "うしろ!" }, { "zh": "回头!", "en": "TURN AROUND!", "ja": "振り向いて!" }, { "zh": "有东西过来了!", "en": "INCOMING!", "ja": "何か来る!" }] },
   "info": { "color": "#ff2a3a", "tape": "NOTICE", "sub": "", "lines": [{ "zh": "", "en": "", "ja": "" }] }
  }
 }

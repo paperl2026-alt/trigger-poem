@@ -125,6 +125,8 @@ export class Game {
     else if (!this.picsReady) { this.picsReady = true; this.stepIdx--; this.G.needPics(new Set([...coreKeys(), ...stageKeys(this.ep, st)]), () => this.nextStep()); return; }
     this.picsReady = false;
     // a door close-up between two places (src/ui/door.js): like a comic page, over the wipe
+    // (they followed a monster through the hole it broke, Game.breakoutAt, or fell through the floor, collapse: not through this door)
+    if (st.door && this.skipDoor) { this.skipDoor = false; this.afterComic = true; this.nextStep(); return; }
     if (st.door) {
       if (this.G.skipComics || !meta[st.door.frame] || !meta[st.door.leaf]) { this.afterComic = true; this.nextStep(); return; }
       this.hud.show(false);
@@ -188,6 +190,8 @@ export class Game {
       this.arrive(S, boss);
       return;
     }
+    // something behind them: the view whips round where they stand (DESIGN「演出」 背后出现敌人)
+    if (S.whip) { this.post.u.wipe.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
     const pts = [this.world.camPos.toArray(), ...S.via, S.cam];
     this.post.u.wipe.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
@@ -262,6 +266,39 @@ export class Game {
       then();
     } }));
   }
+  // 背后 (station whip): a growl, a shake, one of them asks "behind…?", and the view whips round to the station's look
+  whip(S, then) {
+    const w = this.world, c = w.camPos.clone(), from = w.lookAt.clone(), to = new THREE.Vector3(...S.look);
+    sfx.roar(); this.post.shake(0.8); this.hud.gl.hold('behind');
+    this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.4); p.soft.kick(1.2); });
+    this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], 'scare');
+    const a0 = Math.atan2(from.x - c.x, from.z - c.z), d0 = Math.hypot(from.x - c.x, from.z - c.z), d1 = Math.hypot(to.x - c.x, to.z - c.z);
+    let a1 = Math.atan2(to.x - c.x, to.z - c.z);
+    while (a1 - a0 > Math.PI) a1 -= Math.PI * 2;
+    while (a1 - a0 < -Math.PI) a1 += Math.PI * 2;
+    this.tweens.wait(0.9, () => {
+      sfx.whoosh(0); this.post.flash(0.2, 0xffffff);
+      this.tweens.run(0.5, (e) => { const a = a0 + (a1 - a0) * e, d = d0 + (d1 - d0) * e; w.lookAt.set(c.x + Math.sin(a) * d, from.y + (to.y - from.y) * e, c.z + Math.cos(a) * d); w.fovKick = Math.sin(e * Math.PI) * 14; },
+        { ease: Ease.inOutCubic, onDone: () => { w.fovKick = 0; w.place(S.cam, S.look); then(); } });
+    });
+  }
+  // 塌方 (wave event collapse): mid-fight the floor gives way; everything falls; the stage ends here and the next one starts below
+  collapse() {
+    this.combat = false; this.waveLive = false; this.waveEvents = [];
+    this.clearProjectiles();
+    this.players.forEach((p) => { if (p.activeOn) p.endActive(false); this.hud.setFace(p.slot, 'scared', 2.5); p.soft.kick(1.6); });
+    this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], 'bridge');
+    for (const a of this.actors) if (a.alive && (a instanceof Enemy || a.phantom)) {
+      a.alive = false; a.endWindup?.(); this.etw.kill(a.root.position);
+      this.tweens.to(a.root.position, { y: -8 }, 1.2, { delay: 0.2 + Math.random() * 0.4, ease: Ease.inQuad, onDone: () => a.dispose() });
+    }
+    this.stationQ = [];
+    this.openNextStage();
+    const go = () => { this.skipDoor = true; this.tweens.to(this.post.u.wipe, { value: 1 }, 0.25, { onDone: () => { this.afterComic = true; this.nextStep(); } }); };
+    if (this.world.collapse) this.world.collapse(go); else go();
+  }
+  // a monster broke out through the far wall (Enemy.breakOut): when this room is done, the girls go through that hole, not the door
+  breakoutAt(x, z) { this.exitVia = { to: [x, 1.1, z + 1.4], look: [x, 1.0, z - 10], hole: true }; }
   // the ghost's hands: over the screen while the view is dragged away (grab = the hands picture, or true for the default one)
   grabbed(dur, pic) {
     const el = document.createElement('img');
@@ -363,6 +400,7 @@ export class Game {
     if (e.turn) this.turn(e.turn);
     if (e.mutate) this.mutateAll();
     if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
+    if (e.collapse) { this.collapse(); return; }
     if (e.wake) {   // statues come to life (all, or so many of them, nearest first)
       const st = this.actors.filter((a) => a.alive && a.state === 'statue').sort((a, b) => a.distToCam() - b.distToCam());
       st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => this.etw.wait(i * 0.5, () => a.wake()));
@@ -400,12 +438,17 @@ export class Game {
       const heal = bagFx(this.run.bag).stageHeal;
       if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });
       // the room is done: the girls walk up to its door before the next step (a door close-up) (station "exit": { via, to, look })
-      const X = this.S.exit;
+      // (or through the hole a monster broke in the far wall: they follow it, and the door after this room is skipped)
+      const X = this.exitVia || this.S.exit, hole = !!this.exitVia?.hole;
+      this.exitVia = null;
       if (X && this.world.travel) {
         this.tweens.wait(1.2, () => {
           this.world.dropCovers?.(); this.setAll('run');
           const pts = [this.world.camPos.toArray(), ...(X.via || []), X.to], len = pts.reduce((a, q, i) => a + (i ? Math.hypot(q[0] - pts[i - 1][0], q[2] - pts[i - 1][2]) : 0), 0);
-          this.world.travel(pts, X.look || [X.to[0], X.to[1], X.to[2] - 10], Math.max(1.4, len / 5.5), () => { this.setAll('cover'); this.tweens.wait(0.4, () => this.nextStep()); });
+          this.world.travel(pts, X.look || [X.to[0], X.to[1], X.to[2] - 10], Math.max(1.4, len / 5.5), () => {
+            if (hole) { this.skipDoor = true; this.tweens.to(this.post.u.wipe, { value: 1 }, 0.3, { onDone: () => { this.afterComic = true; this.nextStep(); } }); return; }
+            this.setAll('cover'); this.tweens.wait(0.4, () => this.nextStep());
+          });
         });
       } else this.tweens.wait(1.7, () => this.nextStep());
     }
