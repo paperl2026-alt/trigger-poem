@@ -212,7 +212,8 @@
 - 房间里的门（DESIGN「门和小关的衔接」）：set `hall.door = { frame, leaf, w, x }` 在尽头墙上立着这一关结束时要开的那扇门（从一开始就看得见）：`frame` 是 `tools/rounds/door_room.py` 从开门特写的门框图裁出来的一块（门洞透明、左右上三边淡出、`soft` 混合），`leaf` 门扇立在门洞后面；开门特写用同一扇门的 frame / leaf，`exit.to` 对准它。尽头墙原来画着别的门的，`hall.end` 只留不和它打架的那张。
 - 机关（DESIGN「地形和机关」）：
   - 黑屋子：set 写 `dark`（0..1）→ 描线后期（`INK_FRAG`）把整个场景压暗成夜蓝色，最多 4 盏灯（`inkU.lamps`：屏幕位置、半径、亮度）周围留出暖光；机关事件 `{ light: 步长 }` 把它换成 `kx`（`ep1/nb_candle_out` → `nb_candle`，`tools/rounds/candle_out.py` 去掉火苗做的灭蜡烛）、点亮这盏灯、整间亮一截（`PanelWorld.lamp / light`）；没点的蜡烛有个小光点，找得到；
-  - 堵出怪口：波次事件 `{ spawner: { id, type, side, z, every, holeY, holeSize } }`：侧墙开一个洞，每 `every` 秒从洞里跳出一只（`Game.updateSpawners`），这一波在它开着时不结束；机关 `{ topple: 弧度, seal: id }`（立着的东西顺着墙倒下去盖住洞）关掉它；这种机关写 `needs: id`，洞开着时才能打（之前没有描边，免得提前打倒卡关）；
+  - 刷怪源：波次事件 `{ spawner: { id, type, from: 'wall' | 'burrow', side, z, spreadZ, every, faster, min, first, until: 'gate', sealAfter, hint, remind } }`（`Game.updateSpawners`）：从侧墙的洞（洞由 set `hall.holes: [{ on, z, y, size }]` 一开始就画好）或从地里（`burrow`，房间里随机）不停出怪，每 `every` 秒一只、每次乘 `faster` 越来越快（最快 `min`），开着时这一波不结束；`until: 'gate'` 吊桥放下就停；否则机关 `{ topple: 弧度, seal: id }`（立着的东西顺着墙倒下去盖住洞）关掉它，这种机关写 `needs: id`，要等刷怪源 `sealAfter` 只被杀后才能打（那时出提示 `hint`；之前没有描边，免得提前打倒卡关）；`remind` 秒重复一次提示；
+  - 机关写 `mark: true`：能打的时候套着快打的红环（`fx.lock('kill')`），一眼看得到；
   - 吊桥：`hall.bridge = { z0, z1, seals }`：两者之间的地砖拿掉（露出底下的虚空），程序画的木板吊桥（`plankTex`）立在 z1，两根铁链拉到墙上；墙上的封印机关 `{ gate: true }` 全打掉后桥落下来（`PanelWorld.gateHit`）；桥没放下时最后一站打完也不结束（`checkWave`）；
   - 提示：站点 `hint` / 波次事件 `hint` / 吊桥没放下 → `Game.hint`：顶部正中半透明小标签（`holds.json hint`，`dur` 秒后自己消失），文字在 `text/ui.json`（`lampHint`、`sealHint`、`gateHint`）。
 - 只走不打的一段：站点没有 `waves`（也不写掩体）就是赶路段：到了不蹲、不打，`say` 一句、`sfx` 一声，`pause` 秒后接着走（`walkSpeed` 米 / 秒，默认 2.6，比平时慢）；画廊开头从门口慢慢走进去（`ga0`）。

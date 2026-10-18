@@ -307,12 +307,23 @@ export class Game {
     const s = (this.spawners || []).find((x) => x.id === id && x.live); if (!s) return;
     s.live = false; sfx.clear(); this.hud.gl.stickers.say(this.players[0], 'stagger');
   }
+  // a spawner (DESIGN「地形和机关」): monsters keep coming until it is stopped - from a hole in a side wall (from 'wall', the hole drawn by
+  // the set: hall.holes) or up out of the floor (from 'burrow', anywhere across the room about z); every s, times faster after each
+  // (down to min); until: 'gate' = it stops when the drawbridge comes down; else a topple { seal: id } stops it. sealAfter: kills before
+  // the thing that stops it can be shot (then the hint); remind: s between reminders of what to shoot
   updateSpawners(dt) {
     for (const s of this.spawners || []) {
-      if (!s.live || (s.timer -= dt) > 0) continue;
+      if (!s.live) continue;
+      if (s.until === 'gate' && this.world.gate?.open) { s.live = false; continue; }
+      if (s.remind && (s.remindT = (s.remindT ?? s.remind) - dt) <= 0) { s.remindT = s.remind; if (s.ready !== false) this.hint(s.hint || 'sealHint'); }
+      if ((s.timer -= dt) > 0) continue;
       s.timer = s.every ?? 3;
-      const Hd = this.world.set?.hall, x = Hd ? (s.side < 0 ? Hd.x0 + 1.2 : Hd.x1 - 1.2) : s.side * 1.5;
-      this.spawnEnemy({ type: pick([].concat(s.type)), x, z: s.z, from: 'wall', side: s.side, hole: s.n++ === 0, holeY: s.holeY, holeSize: s.holeSize, near: true });
+      if (s.faster) s.every = Math.max(s.min ?? 1, (s.every ?? 3) * s.faster);
+      const Hd = this.world.set?.hall, from = s.from || 'wall';
+      const x = from === 'wall' ? (Hd ? (s.side < 0 ? Hd.x0 + 1.2 : Hd.x1 - 1.2) : s.side * 1.5) : Hd ? Hd.x0 + 0.6 + Math.random() * (Hd.x1 - Hd.x0 - 1.2) : 0;
+      const z = s.z + (from === 'wall' ? 0 : (Math.random() - 0.5) * (s.spreadZ ?? 2));
+      this.spawnEnemy({ type: pick([].concat(s.type)), x, z, from, side: s.side, hole: !!s.hole && s.n === 0, holeY: s.holeY, holeSize: s.holeSize, near: true });
+      s.n++;
     }
   }
   // a monster broke out through the far wall (Enemy.breakOut): when this room is done, the girls go through that hole, not the door
@@ -433,7 +444,7 @@ export class Game {
     if (e.hint) this.hint(e.hint);
     // a hole in a side wall that keeps pouring monsters out until something is toppled onto it (DESIGN「地形和机关」 堵住出怪口):
     // { spawner: { id, type: [kinds], side, z, every } }; the wave does not end while it runs (checkWave)
-    if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: 0.4, n: 0 });
+    if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: e.spawner.first ?? 0.4, n: 0, kills: 0, ready: e.spawner.sealAfter ? false : true });
     if (e.wake) {   // statues come to life (all, or so many of them, nearest first)
       const st = this.actors.filter((a) => a.alive && a.state === 'statue').sort((a, b) => a.distToCam() - b.distToCam());
       st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => this.etw.wait(i * 0.5, () => a.wake()));
@@ -783,6 +794,8 @@ export class Game {
     const by = target.lastHitBy;
     if (target instanceof Projectile) return;
     this.kills++;
+    // a spawner whose stopper comes into play after so many kills (the cold store's shelf): from then on it can be shot, and the hint says so
+    for (const s of this.spawners || []) if (s.live && s.ready === false && ++s.kills >= s.sealAfter) { s.ready = true; this.hint(s.hint || 'sealHint'); }
     if (this.waveLive && this.waveEvents?.length) {   // wave events waiting for so many kills
       this.waveKills = (this.waveKills || 0) + 1;
       for (const e of this.waveEvents.filter((x) => this.waveKills >= x.kills)) { this.waveEvents.splice(this.waveEvents.indexOf(e), 1); this.waveEvent(e); }

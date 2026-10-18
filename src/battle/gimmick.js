@@ -34,7 +34,7 @@ export class Gimmick extends Actor {
   }
   // shootable only at its own stop, once
   // (needs: a spawner's id: only while that hole is pouring monsters out is it there to be shot: the shelf that blocks it)
-  live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat && (!this.g.needs || !!this.game.spawners?.some((s) => s.id === this.g.needs && s.live)); }
+  live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat && (!this.g.needs || !!this.game.spawners?.some((s) => s.id === this.g.needs && s.live && s.ready !== false)); }
   hitMeshes() { return this.alive && this.g.shoot !== false && this.live() ? [this.mesh] : []; }   // (shoot: false = only a wave event fires it)
   hit(info) {
     if (!this.live()) return;
@@ -78,5 +78,16 @@ export class Gimmick extends Actor {
     if (e.gate) g.world.gateHit?.();
     if (e.gone) g.tweens.run(0.6, (k) => { this.u.opacity.value = 1 - k; }, { onDone: () => { this.alive = false; this.dispose(); } });
   }
-  update(dt, t) { if (!this.alive) return; this.baseUpdate(dt, t); if (this.g.needs && !this.spent) this.u.outlineOn.value = this.live() ? 1 : 0; }
+  update(dt, t) {
+    if (!this.alive) return;
+    this.baseUpdate(dt, t);
+    if (this.g.needs && !this.spent) this.u.outlineOn.value = this.live() ? 1 : 0;
+    // mark: while it can be shot, the red "shoot this" ring round it (fx.lock, like a monster about to ram), so it can't be missed
+    if (this.g.mark) {
+      const on = this.live();
+      if (on && !this.lock) this.lock = this.game.fx.lock('kill', 0);
+      if (!on && this.lock) { this.lock.remove(); this.lock = null; }
+      if (this.lock) { const g = this.game, wc = this.center(), c = g.world.project(wc), b = this.screenBox(); this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.6), 1, t, 1, b, wc); }
+    }
+  }
 }

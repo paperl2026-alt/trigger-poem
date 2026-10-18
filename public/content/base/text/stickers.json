@@ -202,7 +202,11 @@
           "bubble": "cute",
           "lines": [
             { "zh": "不要走嘛…", "en": "Don't go…", "ja": "いかないで…" },
-            { "zh": "你要丢下我吗…?", "en": "You're leaving me…?", "ja": "置いてくの…?" }
+            { "zh": "你要丢下我吗…?", "en": "You're leaving me…?", "ja": "置いてくの…?" },
+            { "zh": "呐，再玩一会儿嘛?", "en": "One more round?", "ja": "ねぇ、まだ遊ぼ?" },
+            { "zh": "不要回去嘛", "en": "Don't go home", "ja": "帰っちゃやだ" },
+            { "zh": "我会一直等你的…", "en": "I'll be waiting forever…", "ja": "ずっと待ってるから…" },
+            { "zh": "不准出轨哦?", "en": "No cheating, okay?", "ja": "浮気しないでね?" }
           ]
         },
         "poke": {
@@ -210,7 +214,14 @@
           "lines": [
             { "zh": "呀♡ 你在摸哪里!", "en": "Kyaa♡ where are you touching!", "ja": "ひゃっ♡ どこ触ってるの!" },
             { "zh": "欸嘿嘿~", "en": "Ehehe~", "ja": "えへへ~" },
-            { "zh": "痒痒的啦~", "en": "That tickles~", "ja": "くすぐったいよぉ~" }
+            { "zh": "痒痒的啦~", "en": "That tickles~", "ja": "くすぐったいよぉ~" },
+            { "zh": "真是的~色色♡", "en": "Ugh~ pervert♡", "ja": "もう~ えっち♡" },
+            { "zh": "就这么想摸吗?", "en": "That desperate to touch me?", "ja": "そんなに触りたいの?" },
+            { "zh": "要负责的哦♡", "en": "You'll take responsibility, right♡", "ja": "ちゃんと責任とってね♡" },
+            { "zh": "只准看着我哦♡", "en": "Eyes on me only♡", "ja": "わたしだけ見ててね♡" },
+            { "zh": "呀嗯♡", "en": "Yan♡", "ja": "やんっ♡" },
+            { "zh": "别戳啦~", "en": "Stop poking~", "ja": "つんつんしないでぇ" },
+            { "zh": "下次陪我约会?", "en": "Date me next?", "ja": "次はデートしてくれる?" }
           ]
         },
         "idle": {
@@ -287,18 +298,36 @@
         },
         "start": {
           "bubble": "cute",
-          "lines": [{ "zh": "走吧♡", "en": "Let's go♡", "ja": "いこっ♡" }, { "zh": "约会吧♡", "en": "Date time♡", "ja": "デートしよ♡" }]
+          "lines": [
+            { "zh": "走吧♡", "en": "Let's go♡", "ja": "いこっ♡" },
+            { "zh": "约会吧♡", "en": "Date time♡", "ja": "デートしよ♡" },
+            { "zh": "准备好啦♡", "en": "Locked and loaded♡", "ja": "準備OK♡" },
+            { "zh": "我来保护你♡", "en": "I'll protect you♡", "ja": "守ってあげる♡" },
+            { "zh": "今天也要可爱地开枪♡", "en": "Cute and deadly♡", "ja": "今日もかわいく撃つよ♡" },
+            { "zh": "牵着手走吧", "en": "Hold my hand", "ja": "手、つないでいこ" }
+          ]
         },
         "win": {
           "bubble": "cute",
           "lines": [
             { "zh": "赢啦♡夸我♡", "en": "We won♡ praise me♡", "ja": "やったぁ♡ ほめて♡" },
-            { "zh": "轻松♡", "en": "Easy♡", "ja": "らくしょー♡" }
+            { "zh": "轻松♡", "en": "Easy♡", "ja": "らくしょー♡" },
+            { "zh": "看到了吗看到了吗♡", "en": "Did you see? Did you see♡", "ja": "見てた? 見てた?♡" },
+            { "zh": "给我奖励嘛♡", "en": "Reward me♡", "ja": "ご褒美ちょうだい♡" },
+            { "zh": "最强又可爱♡", "en": "Strongest & cutest♡", "ja": "最強かわいい♡" },
+            { "zh": "亲你一下♡", "en": "Here's a kiss♡", "ja": "ちゅーしてあげる♡" }
           ]
         },
         "lose": {
           "bubble": "cute",
-          "lines": [{ "zh": "不会吧…", "en": "No way…", "ja": "うそでしょ…" }, { "zh": "再来一次嘛?", "en": "Again? Okay?", "ja": "もっかい! ね?" }]
+          "lines": [
+            { "zh": "不会吧…", "en": "No way…", "ja": "うそでしょ…" },
+            { "zh": "再来一次嘛?", "en": "Again? Okay?", "ja": "もっかい! ね?" },
+            { "zh": "嘤…", "en": "Pien…", "ja": "ぴえん…" },
+            { "zh": "刚才不算!", "en": "That didn't count!", "ja": "今のなし!" },
+            { "zh": "安慰我嘛…", "en": "Comfort me…", "ja": "なぐさめて…" },
+            { "zh": "下次一定赢", "en": "Next time for sure", "ja": "次は勝つもん" }
+          ]
         }
       },
       "cat": {
@@ -496,7 +525,11 @@
           "bubble": "cute",
           "lines": [
             { "zh": "寂寞…", "en": "Lonely…", "ja": "さびしい…" },
-            { "zh": "真的要走了喵…?", "en": "You're really going, nya…?", "ja": "ほんとに行っちゃうにゃ…?" }
+            { "zh": "真的要走了喵…?", "en": "You're really going, nya…?", "ja": "ほんとに行っちゃうにゃ…?" },
+            { "zh": "…才不寂寞喵", "en": "…Not lonely. At all.", "ja": "…べつに寂しくないにゃ" },
+            { "zh": "还会来吧喵?", "en": "You'll come back, nya?", "ja": "また来るにゃ?" },
+            { "zh": "晚安喵", "en": "Night, nya", "ja": "おやすみにゃ" },
+            { "zh": "门给你留着喵", "en": "I'll leave the door open", "ja": "鍵は開けとくにゃ" }
           ]
         },
         "poke": {
@@ -504,7 +537,14 @@
           "lines": [
             { "zh": "喵?!", "en": "Nya?!", "ja": "にゃっ?!" },
             { "zh": "不准摸尾巴!", "en": "Not the tail!", "ja": "しっぽはダメ!" },
-            { "zh": "呼噜…再摸一下也可以", "en": "Purr… a little more is fine", "ja": "ゴロゴロ…もうちょっとなら" }
+            { "zh": "呼噜…再摸一下也可以", "en": "Purr… a little more is fine", "ja": "ゴロゴロ…もうちょっとなら" },
+            { "zh": "耳朵好痒喵", "en": "Ears tickle, nya", "ja": "耳はくすぐったいにゃ" },
+            { "zh": "…要摸就摸头喵", "en": "…Head pats only, nya", "ja": "…撫でるなら頭にゃ" },
+            { "zh": "肉球很贵的喵", "en": "Paw pads cost extra", "ja": "肉球は高いにゃ" },
+            { "zh": "好烦喵…", "en": "You're persistent, nya…", "ja": "しつこいにゃ…" },
+            { "zh": "别打扰我午睡喵", "en": "You're interrupting my nap", "ja": "昼寝の邪魔にゃ" },
+            { "zh": "喵~♡", "en": "Nyaaan♡", "ja": "にゃあ~ん♡" },
+            { "zh": "要不要把你净化掉?", "en": "Want an exorcism?", "ja": "祓ってやろうか?" }
           ]
         },
         "idle": {
@@ -581,17 +621,35 @@
         },
         "start": {
           "bubble": "cute",
-          "lines": [{ "zh": "走喵", "en": "Let's go, nya", "ja": "いくにゃ" }, { "zh": "没办法喵", "en": "Fine, nya", "ja": "しかたないにゃ" }]
+          "lines": [
+            { "zh": "走喵", "en": "Let's go, nya", "ja": "いくにゃ" },
+            { "zh": "没办法喵", "en": "Fine, nya", "ja": "しかたないにゃ" },
+            { "zh": "干活了喵", "en": "Work time, nya", "ja": "仕事にゃ" },
+            { "zh": "哈啊…走吧", "en": "*yawn*… let's go", "ja": "ふぁ…いくか" },
+            { "zh": "驱邪时间喵", "en": "Exorcism o'clock", "ja": "お祓いの時間にゃ" },
+            { "zh": "别掉队喵", "en": "Keep up, nya", "ja": "遅れるにゃよ" }
+          ]
         },
         "win": {
           "bubble": "cute",
-          "lines": [{ "zh": "轻松喵", "en": "Easy, nya", "ja": "楽勝にゃ" }, { "zh": "奖励呢?", "en": "Where's my treat?", "ja": "ごほうびは?" }]
+          "lines": [
+            { "zh": "轻松喵", "en": "Easy, nya", "ja": "楽勝にゃ" },
+            { "zh": "奖励呢?", "en": "Where's my treat?", "ja": "ごほうびは?" },
+            { "zh": "理所当然喵", "en": "Obviously, nya", "ja": "当然にゃ" },
+            { "zh": "可以摸摸头了喵", "en": "You may pet me", "ja": "撫でてもいいにゃ" },
+            { "zh": "想吃鱼喵", "en": "Fish, please", "ja": "魚が食べたいにゃ" },
+            { "zh": "…还行吧喵", "en": "…Not bad, nya", "ja": "…まあまあにゃ" }
+          ]
         },
         "lose": {
           "bubble": "cute",
           "lines": [
             { "zh": "…赌气睡觉", "en": "…Sulking to sleep", "ja": "…ふて寝する" },
-            { "zh": "再来喵", "en": "Once more, nya", "ja": "もう一回にゃ" }
+            { "zh": "再来喵", "en": "Once more, nya", "ja": "もう一回にゃ" },
+            { "zh": "…大意了喵", "en": "…Got careless", "ja": "…油断したにゃ" },
+            { "zh": "呼喵…", "en": "Funya…", "ja": "ふにゃ…" },
+            { "zh": "下次认真喵", "en": "Serious mode next time", "ja": "次は本気出すにゃ" },
+            { "zh": "膝枕反省会喵", "en": "Lap-pillow debrief", "ja": "膝枕で反省会にゃ" }
           ]
         }
       }

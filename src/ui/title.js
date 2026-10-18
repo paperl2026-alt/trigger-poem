@@ -206,16 +206,27 @@ export function showTitle(act) {
   function boxOf(n) { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; }
   function pop(n, e) { n.classList.remove('pop'); void n.offsetWidth; n.classList.add('pop'); if (e) { const [x, y] = toDesign(e.clientX, e.clientY); fx.click(x, y); } }
   for (const n of [startB, quitB]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === startB ? 8 : 4); sfx.uiMove(); });
-  girls.addEventListener('pointerenter', (e) => { girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3);
-    const [rx] = toDesign(e.clientX, e.clientY); bubble(rx / RS < L.speech.split ? 'cat' : 'pink', 'poke'); });
+  // touching either of them is a poke (user 2026-10-18: no need to tell which one was touched): one of them answers, the other one more often
+  // than not after a line of hers; touching again (moving over them, a click) pokes again after a little while
+  let lastPoke = -9, lastWho = Math.random() < 0.5 ? 'cat' : 'pink';
+  const poke = (e) => {
+    const now = performance.now() / 1000; if (now - lastPoke < 1.4) return; lastPoke = now;
+    girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3);
+    lastWho = Math.random() < 0.7 ? (lastWho === 'cat' ? 'pink' : 'cat') : lastWho;
+    bubble(lastWho, 'poke');
+  };
+  girls.addEventListener('pointerenter', poke); girls.addEventListener('pointermove', poke); girls.addEventListener('pointerdown', poke);
   const startLine = () => bubble(Math.random() < 0.5 ? 'pink' : 'cat', 'start');   // (one of them, as the game starts)
   // a speech bubble by one of the girls (text/stickers.json heroines.<id>.<kind>)
   const bub = el('div', 'tbub', U), bubJa = el('b', '', bub), bubTr = el('small', '', bub);
   let bubT = 0;
+  const said = {};   // (per girl and kind: the lines said lately, not said again for a while)
   function bubble(who, kind) {
     const set = C.text.stickers?.heroines?.[who]?.[kind]; if (!set) return;
-    const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], at = L.speech[who];
+    const n = set.lines.length, R = said[who + kind] || (said[who + kind] = []), free = [...Array(n).keys()].filter((j) => !R.slice(R.length - Math.floor(n * 0.6)).includes(j));
+    const li = free[Math.floor(Math.random() * free.length)] ?? 0, line = set.lines[li], at = L.speech[who];
     if (voice(who, kind, li, who === 'pink' ? 1 : 0, kind === 'quit' ? 7 : 3) === false) return;   // (one of them is still talking: no new line)
+    R.push(li); if (R.length > 12) R.shift();
     bubJa.textContent = line.ja; bubTr.textContent = lang === 'ja' ? '' : (line[lang] || line.en);
     bub.dataset.who = who; Object.assign(bub.style, { left: px(at[0]), top: px(at[1]) });
     bub.classList.remove('on'); void bub.offsetWidth; bub.classList.add('on');

@@ -205,8 +205,8 @@ export class PanelWorld {
       const B = Hd.bridge, L = B.z0 - B.z1, fk = [].concat(Hd.floor)[0];
       const g = new THREE.Group(); g.position.set((x0 + x1) / 2, 0, B.z1); void fk;
       const deck = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.2, L), new THREE.MeshBasicMaterial({ map: plankTex(), side: THREE.DoubleSide })); deck.position.y = L / 2; g.add(deck);
-      const top = Math.min(h - 0.2, L + 0.8);
-      this.chains = [-1, 1].map((sd) => { const m = rod(new THREE.Vector3((x0 + x1) / 2 + sd * (W / 2 - 0.3), L - 0.1, B.z1 + 0.02), new THREE.Vector3(sd < 0 ? x0 + 0.06 : x1 - 0.06, top, B.z1 + 0.3)); R.add(m); return m; });
+      const top = B.anchorY ?? Math.min(h - 0.2, L + 0.8), az = B.anchorZ ?? B.z1 + 0.3;
+      this.chains = [-1, 1].map((sd) => { const m = rod(new THREE.Vector3((x0 + x1) / 2 + sd * (W / 2 - 0.3), L - 0.1, B.z1 + 0.02), new THREE.Vector3(sd < 0 ? x0 + 0.06 : x1 - 0.06, top, az), 0.05); R.add(m); return m; });
       R.add(g); this.bridge = g;
       this.gate = { open: false, need: B.seals ?? 2, got: 0 };
     }
@@ -246,6 +246,8 @@ export class PanelWorld {
       if (tex[`${bk}_x`]) this.flips.push({ m: t, key: bk, alt: `${bk}_x`, side: 0, p: 0, d: 0, floor: true });
       this.tiles.push({ g, t, x: xa + tw / 2, z: za - tl / 2 });
     }
+    // holes there from the start (hall.holes: { on, z, y, size }: a spawner pours monsters out of one)
+    for (const o of Hd.holes || []) this.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z), o.size ?? 1.6);
     // (the drawbridge's gap: no floor there)
     if (Hd.bridge) for (const t of this.tiles) if (t.z < Hd.bridge.z0 - 0.05 && t.z > Hd.bridge.z1 + 0.05) t.g.visible = false;
     // under the floor: the void the folds open onto
