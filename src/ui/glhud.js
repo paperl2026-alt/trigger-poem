@@ -371,7 +371,8 @@ class Panel {
       if (f.icon) { f.icon.material.uniforms.time.value = t; f.icon.scale.multiplyScalar(1 + f.up * 0.35 + (lv >= max ? 0.06 * Math.sin(t * 8) : 0)); }
     });
     // combo-up reactions
-    if (g.combo > this.lastCombo && g.combo > 0 && g.combo % 10 === 0) this.react('combo', 1.2);
+    const step = T.combat.comboCall || 50;
+    if (g.combo > this.lastCombo && Math.floor(g.combo / step) > Math.floor(this.lastCombo / step)) this.react('combo', 1.2);
     this.lastCombo = g.combo;
     // the face: an event for a while, else what she is doing (and now and then another face of the same mood)
     this.faceHold -= dt; this.faceT -= dt;

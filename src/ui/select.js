@@ -34,6 +34,7 @@ export function showSelect(act) {
   const stage = el('div', 'sel-stage', root);
   const [DW, DH] = L.design, RS = DW / L.refSize[0];
   Object.assign(stage.style, { width: `${DW}px`, height: `${DH}px` });
+  stage.style.setProperty('--u', `${RS}px`);   // (one mockup px, for the CSS)
   const px = (v) => `${v * RS}px`;
   const box = (n, [x0, y0, x1, y1]) => Object.assign(n.style, { left: px(x0), top: px(y0), width: px(x1 - x0), height: px(y1 - y0) });
   // an image in its box: pieces fill it exactly (their boxes are their own pixels), icons are contained in it
@@ -222,23 +223,24 @@ export function showSelect(act) {
   }
   rowsG.addEventListener('wheel', (ev) => { ev.preventDefault(); turnPage(ev.deltaY > 0 ? 1 : -1); }, { passive: false });
 
-  // the chapter card between the arrows (user 2026-10-18): a placeholder picture, and while an arrow is hovered the card of the chapter
-  // it leads to (its number, name, and a padlock only when it is not open yet); switching happens on the arrows only
+  // the chapter card between the arrows (user 2026-10-18): the card of the chapter you are on (switched by clicking an arrow); while an
+  // arrow is hovered, the card of the chapter it leads to; a padlock only on one not open yet; the placeholder only for a chapter that
+  // has no card of its own
   const nextG = group('next');
   const N = L.next;
   let peek = 0;   // -1 / 1 = the arrow hovered, 0 = none
-  const peekEp = () => (peek ? eps[idx + peek] : null);
+  const peekEp = () => eps[idx + peek] || eps[idx];
   const nextImg = img(nextG, N.placeholder || N.img, N.box);
   text(nextG, N.no, 'lt', () => splitTitle(tr(peekEp()?.title || ''))[0]);
   text(nextG, N.title, 'lt nt', () => splitTitle(tr(peekEp()?.title || ''))[1]);
-  text(nextG, N.wip, 'lt', () => { const e = peekEp(); return !e ? '' : e.teaser ? t('soon') : open(e) ? '' : t('locked'); });
+  text(nextG, N.wip, 'lt', () => { const e = peekEp(); return e.teaser ? t('soon') : open(e) ? '' : t('locked'); });
   const nLock = img(nextG, N.lock.img, N.lock.box, 'nlock', true);
   nextG.style.transformOrigin = `${(N.box[0] + N.box[2]) / 2 * RS}px ${(N.box[1] + N.box[3]) / 2 * RS}px`;   // (it flips about its own middle)
   function renderCard() {
-    const e = peekEp(), key = e ? (has(e.cover) ? e.cover : N.img) : (N.placeholder || N.img);
+    const e = peekEp(), key = has(e.cover) ? e.cover : (N.placeholder || N.img);
     if (nextImg.dataset.key !== key) { nextImg.dataset.key = key; nextImg.src = url(key); nextG.classList.remove('s-flip'); void nextG.offsetWidth; nextG.classList.add('s-flip'); }
-    nLock.classList.toggle('s-none', !e || open(e));
-    nextG.classList.toggle('s-peek', !!e);
+    nLock.classList.toggle('s-none', open(e));
+    nextG.classList.toggle('s-peek', !!peek);
     say();
   }
   const arrows = {};

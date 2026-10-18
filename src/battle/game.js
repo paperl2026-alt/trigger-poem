@@ -677,7 +677,8 @@ export class Game {
     if (!by) return;
     const dealt = info.dealt || 0;
     if (dealt) { by.dealt += dealt; by.fever.hit(dealt); }
-    if (dealt && this.combo > 0) { this.comboT = Math.max(this.comboT, T.combat.comboTime); this.comboF = this.combo; }
+    // the combo counts every hit (user 2026-10-18: counting kills only, it sat at 0 most of the time with the tougher monsters)
+    if (dealt) { this.combo++; this.comboT = T.combat.comboTime; this.comboF = this.combo; this.maxCombo = Math.max(this.maxCombo, this.combo); }
     if (by.a.charge.hit) by.addCharge(by.a.charge.hit);
     if (by.gatling && dealt) by.heal(by.a.heal);
     // every hit shows: one counter per enemy above its head that keeps adding up
@@ -696,7 +697,7 @@ export class Game {
       for (const e of this.waveEvents.filter((x) => this.waveKills >= x.kills)) { this.waveEvents.splice(this.waveEvents.indexOf(e), 1); this.waveEvent(e); }
     }
     if (by) { by.kills++; by.fever.kill(); if (by.a.charge.kill) by.addCharge(by.a.charge.kill); }
-    this.combo++; this.comboT = T.combat.comboTime; this.comboF = this.combo;
+    this.combo += T.combat.comboKill; this.comboT = T.combat.comboTime; this.comboF = this.combo;   // (a kill: a few more)
     this.maxCombo = Math.max(this.maxCombo, this.combo);
     // every kill: a sound-effect sticker where it was (stickers.js), and now and then a line from the girl who got it
     { const s = this.world.project(target.center()); this.hud.gl.stickers.onoma(s.x, this.H - s.y, crit); }
@@ -741,7 +742,7 @@ export class Game {
       E.set(col.r, col.g, col.b, on ? Math.min(1.2, (p.edge || 0) + (p.edgePulse || 0) * 0.6) : 0);
     }
     if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp, this.boss.stage, this.boss.phases?.());
-    setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.12 + (active ? 0.4 : 0)) : 0.2);
+    setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.006 + (active ? 0.4 : 0)) : 0.2);
     this.hud.update(dt);
   }
 

@@ -7,7 +7,7 @@
 import { voice } from '../core/audio.js';
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
-import { C } from '../core/content.js';
+import { C, T } from '../core/content.js';
 import { lang } from '../core/i18n.js';
 import { Text, picture } from './glhud.js';
 
@@ -159,7 +159,9 @@ export class Stickers {
     // nobody has said anything for a while: a little cute nonsense (えへへ, にゃ~, やだよぉ ...: DESIGN「台词」)
     this.quiet = (this.quiet || 0) + dt;
     if (g.combat && this.quiet > 9 && Math.random() < dt * 0.25) { this.quiet = 0; this.say(pick(g.players.filter((p) => (p.slot === 0 || g.p2on()) && p.state !== 'down')), 'idle'); }
-    if (g.combo >= 10 && g.combo % 10 === 0 && g.combo !== this.lastCombo) { this.lastCombo = g.combo; this.say(pick(g.players.filter((p) => p.slot === 0 || g.p2on())), 'combo'); }
+    const step = T.combat.comboCall || 50;   // (a line every so many combo hits)
+    if (g.combo >= step && Math.floor(g.combo / step) > Math.floor((this.lastCombo || 0) / step)) this.say(pick(g.players.filter((p) => p.slot === 0 || g.p2on())), 'combo');
+    this.lastCombo = g.combo;
     for (const a of g.actors) {
       if (!a.def || !a.type) continue;
       const was = this.seen.get(a), now = !a.alive ? 'dead' : a.state;

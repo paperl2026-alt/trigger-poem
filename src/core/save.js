@@ -42,6 +42,14 @@ export function initSave() {
   SAVE.v = SAVE_VERSION;
   // characters added by packs get a slot
   for (const id of Object.keys(C.characters)) if (!SAVE.chars[id]) SAVE.chars[id] = { open: true, xp: 0, outfit: 'base' };
+  // the reward items of the chapters already cleared (a chapter cleared before its reward existed never got it: the reward is only given
+  // on the first clear; user 2026-10-18: the items showed as not got)
+  let gave = false;
+  for (const ep of Object.values(C.episodes || {})) {
+    if (!SAVE.eps[ep.id]?.cleared) continue;
+    for (const id of [].concat(ep.reward?.items || ep.reward?.item || [])) if (C.items[id] && !SAVE.items.includes(id)) { SAVE.items.push(id); gave = true; }
+  }
+  if (gave && s) persist();
 }
 export function persist() { writeStored('save', KEY, JSON.stringify(SAVE)); }
 export function resetSave() { for (const k of Object.keys(SAVE)) delete SAVE[k]; Object.assign(SAVE, fresh()); persist(); }
