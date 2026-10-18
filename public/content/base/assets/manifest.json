@@ -18800,6 +18800,12 @@
    584
   ]
  },
+ "ui/sel_card_ep0": {
+  "dom": true,
+  "h": 562,
+  "src": "assets/ui/sel_card_ep0.webp",
+  "w": 200
+ },
  "ui/sel_card_pink": {
   "box": [
    1262,
@@ -18817,6 +18823,12 @@
    1635,
    584
   ]
+ },
+ "ui/sel_card_soon": {
+  "dom": true,
+  "h": 562,
+  "src": "assets/ui/sel_card_soon.webp",
+  "w": 200
  },
  "ui/sel_chevrons": {
   "dom": true,

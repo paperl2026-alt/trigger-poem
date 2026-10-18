@@ -3,7 +3,7 @@
     "id": "ep0",
     "no": 0,
     "set": "ep0_classroom",
-    "cover": "ui/cover_ep0",
+    "cover": "ui/sel_card_ep0",
     "par": 300,
     "unlocks": ["ep1"],
     "reward": { "item": "pig" },

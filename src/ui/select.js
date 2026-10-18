@@ -47,6 +47,14 @@ export function showSelect(act) {
   }
   // a group: a piece of the mockup plus what the game puts on it; positions inside stay in mockup px of the whole screen
   function group(cls, parent = U) { const g = el('div', `grp ${cls}`, parent); return g; }
+  // the contrast layer of a piece (user 2026-10-18: hover / press / the picked stage must be obvious, not just a little bigger): the
+  // piece's own shape (its image as a mask) in one solid colour, right over it and under what is written on it; select.css shows it
+  function shade(piece, colour) {
+    const n = el('div', 'hl', piece.parentNode); piece.after(n);
+    for (const k of ['left', 'top', 'width', 'height']) n.style[k] = piece.style[k];
+    const m = `url("${piece.src}")`; n.style.maskImage = m; n.style.webkitMaskImage = m; n.style.setProperty('--hl', colour);
+    return n;
+  }
   // text at a measured place: centred on (x, y), or from its left end (align left); turned by deg; shrunk to maxW
   const texts = [];
   function text(parent, spec, cls = '', get = null, reg = texts) {
@@ -80,7 +88,7 @@ export function showSelect(act) {
 
   // ---- top bar: back to the title, coins, settings
   const back = group('back btn'); back.dataset.cur = 'hover';
-  img(back, P.back.img, P.back.box);
+  shade(img(back, P.back.img, P.back.box), 'var(--red)');
   const tri = el('div', 'tri', back);
   { const T = L.back.tri, xs = T.map((p) => p[0]), ys = T.map((p) => p[1]), b = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)];
     box(tri, b); tri.style.clipPath = `polygon(${T.map(([x, y]) => `${(x - b[0]) / (b[2] - b[0]) * 100}% ${(y - b[1]) / (b[3] - b[1]) * 100}%`).join(',')})`; }
@@ -90,7 +98,7 @@ export function showSelect(act) {
   img(coins, L.coins.icon.img, L.coins.icon.box, 'coin', true);
   text(coins, { ...L.coins.text, x: L.coins.text.x1, align: 'right' }, 'wh num', () => (SAVE.dd || 0).toLocaleString('en-US'));
   const gear = group('gear btn'); gear.dataset.cur = 'hover';
-  img(gear, P.gear.img, P.gear.box);
+  shade(img(gear, P.gear.img, P.gear.box), 'var(--red)');
   img(gear, L.gear.icon.img, L.gear.icon.box, 'gico', true);
 
   // ---- tabs (team / bag)
@@ -98,6 +106,7 @@ export function showSelect(act) {
   const tabs = L.tabs.map((T) => {
     const pc = P[`tab_${T.id}`], g = group(`tab btn t-${T.id}`); g.dataset.cur = 'hover';
     const face = img(g, pc.on, pc.box);
+    shade(face, 'var(--ink)');
     img(g, T.icon.img, T.icon.box, 'tico', true);
     const tx = text(g, T.text, 'ttx');
     return { T, g, face, tx, pc };
@@ -132,10 +141,11 @@ export function showSelect(act) {
   text(bestG, L.best.no, 'red', () => { const b = SAVE.eps[eps[idx].id]?.bestTime; return b == null ? '--:--' : `${Math.floor(b / 60)}:${String(Math.floor(b % 60)).padStart(2, '0')}`; });
   const goG = group('go btn'); goG.dataset.cur = 'hover';
   const goFace = img(goG, P.go.img, P.go.box, 'face');
+  shade(goFace, 'var(--ink)');
   el('div', 'sweep', goG).style.clipPath = 'inset(0)';
   img(goG, L.go.icon.img, L.go.icon.box, 'gtri', true);
   const goTx = text(goG, L.go.text, 'wh gtx', () => (open(eps[idx]) ? t('go') : eps[idx].teaser ? t('soon') : t('locked')));
-  void goFace;
+
 
   let pick = 99;   // the picked stage of this chapter (99 = the last open one)
   // a chapter with more stages than rows is shown a page at a time (docs/DESIGN.md 选关: the user picked pages of 3): the arrows above /
@@ -147,7 +157,7 @@ export function showSelect(act) {
     const e = eps[idx], R = L.rows, per = R.slots.length;
     if (!open(e)) { rowsG.classList.add('s-none'); return; }
     rowsG.classList.remove('s-none');
-    const all = (e.steps || []).filter(isStage), nOpen = stagesOpen(e.id), pages = Math.ceil(all.length / per);
+    const all = (e.steps || []).filter(isStage), nOpen = Math.min(stagesOpen(e.id), all.length), pages = Math.ceil(all.length / per);   // (a cleared chapter counts one past its last stage)
     if (pick >= nOpen) pick = nOpen - 1;
     if (pageFollows) page = Math.floor(Math.max(0, pick) / per);
     page = Math.max(0, Math.min(pages - 1, page)); pageFollows = true;
@@ -166,7 +176,8 @@ export function showSelect(act) {
       g.dataset.cur = 'hover';
       tap(g, (ev) => { if (locked) { shake(g); sfx.uiDeny(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
       if (!locked) g.addEventListener('pointerenter', () => sfx.uiMove());
-      img(g, pc.img, pc.box);
+      const plate = img(g, pc.img, pc.box);
+      if (!locked) shade(plate, 'var(--ink)');
       if (has(s.thumb)) { const th = img(g, s.thumb, [R.thumb.x0, R.slots[s.boss ? 2 : 1] + R.thumb.dy0, R.thumb.x1, R.slots[s.boss ? 2 : 1] + R.thumb.dy1], 'thumb'); th.style.objectFit = 'cover'; }
       const ys = R.slots[s.boss ? 2 : 1];
       img(g, R.chev.img, [R.chev.box[0], ys + R.chev.dy0, R.chev.box[2], ys + R.chev.dy1], 'chev', true);
@@ -211,28 +222,47 @@ export function showSelect(act) {
   }
   rowsG.addEventListener('wheel', (ev) => { ev.preventDefault(); turnPage(ev.deltaY > 0 ? 1 : -1); }, { passive: false });
 
-  // the next chapter waits behind, as a dark card
-  const nextG = group('next btn'); nextG.dataset.cur = 'hover';
+  // the chapter card between the arrows (user 2026-10-18): a placeholder picture, and while an arrow is hovered the card of the chapter
+  // it leads to (its number, name, and a padlock only when it is not open yet); switching happens on the arrows only
+  const nextG = group('next');
   const N = L.next;
-  const nextImg = img(nextG, N.img, N.box);
-  const nNo = text(nextG, N.no, 'lt', () => splitTitle(tr(eps[idx + 1]?.title || ''))[0]);
-  const nTitle = text(nextG, N.title, 'lt nt', () => splitTitle(tr(eps[idx + 1]?.title || ''))[1]);
-  text(nextG, N.wip, 'lt', () => (eps[idx + 1]?.teaser ? t('soon') : open(eps[idx + 1] || {}) ? '' : t('locked')));
-  img(nextG, N.lock.img, N.lock.box, 'nlock', true);
-  void nNo; void nTitle;
+  let peek = 0;   // -1 / 1 = the arrow hovered, 0 = none
+  const peekEp = () => (peek ? eps[idx + peek] : null);
+  const nextImg = img(nextG, N.placeholder || N.img, N.box);
+  text(nextG, N.no, 'lt', () => splitTitle(tr(peekEp()?.title || ''))[0]);
+  text(nextG, N.title, 'lt nt', () => splitTitle(tr(peekEp()?.title || ''))[1]);
+  text(nextG, N.wip, 'lt', () => { const e = peekEp(); return !e ? '' : e.teaser ? t('soon') : open(e) ? '' : t('locked'); });
+  const nLock = img(nextG, N.lock.img, N.lock.box, 'nlock', true);
+  nextG.style.transformOrigin = `${(N.box[0] + N.box[2]) / 2 * RS}px ${(N.box[1] + N.box[3]) / 2 * RS}px`;   // (it flips about its own middle)
+  function renderCard() {
+    const e = peekEp(), key = e ? (has(e.cover) ? e.cover : N.img) : (N.placeholder || N.img);
+    if (nextImg.dataset.key !== key) { nextImg.dataset.key = key; nextImg.src = url(key); nextG.classList.remove('s-flip'); void nextG.offsetWidth; nextG.classList.add('s-flip'); }
+    nLock.classList.toggle('s-none', !e || open(e));
+    nextG.classList.toggle('s-peek', !!e);
+    say();
+  }
   const arrows = {};
-  for (const k of ['l', 'r']) { const a = group(`arrow btn a-${k}`); a.dataset.cur = 'hover'; img(a, L.arrows[k].img, L.arrows[k].box, '', true); arrows[k] = a; }
+  for (const k of ['l', 'r']) {
+    const a = group(`arrow btn a-${k}`); a.dataset.cur = 'hover';
+    { const B = L.arrows[k].box; a.style.transformOrigin = `${(B[0] + B[2]) / 2 * RS}px ${(B[1] + B[3]) / 2 * RS}px`; }
+    shade(img(a, L.arrows[k].img, L.arrows[k].box, '', true), 'var(--red)');
+    a.addEventListener('pointerenter', () => { peek = k === 'l' ? -1 : 1; renderCard(); });
+    a.addEventListener('pointerleave', () => { peek = 0; renderCard(); });
+    arrows[k] = a;
+  }
 
   function renderChapter() {
     const e = eps[idx], nx = eps[idx + 1];
     renderRows();
     bestG.classList.toggle('s-none', !open(e));
     goG.classList.toggle('s-locked', !open(e));
-    nextG.classList.toggle('s-none', !nx);
-    if (nx) nextImg.src = url(has(nx.cover) ? nx.cover : N.img);
-    arrows.l.classList.toggle('s-off', idx === 0);
-    arrows.r.classList.toggle('s-off', idx === eps.length - 1);
-    say();
+    void nx;
+    // no arrow where there is no chapter (the prologue has no left one, the last chapter no right one)
+    arrows.l.classList.toggle('s-none', idx === 0);
+    arrows.r.classList.toggle('s-none', idx === eps.length - 1);
+    // the arrow still under the cursor after a switch shows the next chapter on from there
+    peek = !arrows.r.classList.contains('s-none') && arrows.r.matches(':hover') ? 1 : !arrows.l.classList.contains('s-none') && arrows.l.matches(':hover') ? -1 : 0;
+    renderCard();
   }
   function flip(dir) {
     const ni = idx + dir;
@@ -281,7 +311,7 @@ export function showSelect(act) {
   }
 
   const swapG = group('swap btn'); swapG.dataset.cur = 'hover';
-  img(swapG, P.swap.img, P.swap.box);
+  shade(img(swapG, P.swap.img, P.swap.box), 'var(--red)');
   img(swapG, L.swap.icon.img, L.swap.icon.box, 'sico', true);
   text(swapG, L.swap.text, 'wh');
   let bag = { show() {} };   // (made once the feedback helpers below exist)
@@ -292,8 +322,9 @@ export function showSelect(act) {
   function boxOf(n) { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; }
   function pop(n, e) { n.classList.remove('s-pop'); void n.offsetWidth; n.classList.add('s-pop'); if (e) { const [x, y] = toDesign(e.clientX, e.clientY); fx.click(x, y); } }
   function shake(n) { n.classList.remove('s-shake'); void n.offsetWidth; n.classList.add('s-shake'); }
-  const tap = (n, f) => { n.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); initAudio(); f(e); }; };
-  for (const n of [back, gear, ...tabs.map((k) => k.g), goG, nextG, arrows.l, arrows.r, swapG]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === goG ? 8 : 4); sfx.uiMove(); });
+  const tap = (n, f) => { n.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); initAudio(); press(n); f(e); }; };
+  function press(n) { n.classList.add('s-press'); clearTimeout(n.pressT); n.pressT = setTimeout(() => n.classList.remove('s-press'), 170); }
+  for (const n of [back, gear, ...tabs.map((k) => k.g), goG, arrows.l, arrows.r, swapG]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === goG ? 8 : 4); sfx.uiMove(); });
   tap(back, (e) => { sfx.uiBack(); pop(back, e); act.title(); });
   tap(gear, (e) => { sfx.ui(); pop(gear, e); act.settings(); });
   for (const k of tabs) tap(k.g, (e) => { pop(k.g, e); sfx.uiTab(); setTab(k.T.id); });
@@ -301,7 +332,6 @@ export function showSelect(act) {
   window.addEventListener('langchange', () => { if (tab === 'bag') bag.render(); });
   tap(arrows.l, (e) => { pop(arrows.l, e); flip(-1); });
   tap(arrows.r, (e) => { pop(arrows.r, e); flip(1); });
-  tap(nextG, (e) => { pop(nextG, e); flip(1); });
   let going = false;
   // the one leading the team says she is off (text/stickers.json start)
   const goLine = () => { const who = SAVE.team[0], n = C.text.stickers?.heroines?.[who]?.start?.lines?.length || 0; if (n) voice(who, 'start', Math.floor(Math.random() * n), 0, 6); };

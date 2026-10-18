@@ -38,11 +38,26 @@ def sos(kind, f, order=2): return signal.butter(order, f, kind, fs=SR, output="s
 def band(x, lo, hi, order=2): return signal.sosfilt(sos("bandpass", [lo, hi], order), x)
 def low(x, f, order=2): return signal.sosfilt(sos("lowpass", f, order), x)
 def high(x, f, order=2): return signal.sosfilt(sos("highpass", f, order), x)
-def fade(a, i=0.004, o=0.02):
+def fade(a, i=0.004, o=0.08):   # (a smooth, rounded fade out: a straight one, or a short one, sounds cut off)
     a = a.copy(); ni, no = min(len(a), int(i * SR)), min(len(a), int(o * SR))
     if ni: a[:ni] *= np.linspace(0, 1, ni)
-    if no: a[-no:] *= np.linspace(1, 0, no)
+    if no: a[-no:] *= 0.5 + 0.5 * np.cos(np.linspace(0, np.pi, no))
     return a
+
+
+def soft(x, sr):
+    """a voice clip for music (user 2026-10-18: the endings were cut off): the silence before it cut, but its own ending kept: the
+    vowel dying away, the breath after it, until it is really gone, then a long round fade; peak -1 dB"""
+    a = np.asarray(x, float); pk = np.abs(a).max()
+    if pk < 1e-6: return a
+    e = np.convolve(np.abs(a) / pk, np.ones(int(0.01 * sr)) / int(0.01 * sr), "same")   # (a 10 ms envelope)
+    on = np.flatnonzero(e > 10 ** (-40 / 20))
+    if not len(on): return a
+    end = min(len(a), np.flatnonzero(e > 10 ** (-58 / 20))[-1] + int(0.08 * sr))
+    a = a[max(0, on[0] - int(0.012 * sr)):end]
+    ni, no = int(0.004 * sr), min(len(a) // 3, int(0.1 * sr))
+    a[:ni] *= np.linspace(0, 1, ni); a[-no:] *= 0.5 + 0.5 * np.cos(np.linspace(0, np.pi, no))
+    return a * (10 ** (-1 / 20) / np.abs(a).max())
 
 
 def resample(a, k):   # played k times faster: pitch x k, length / k (the formants move too)
@@ -73,14 +88,18 @@ def f0(a):   # median pitch of the voiced parts
 
 # ================================================================ the voices
 _V = VA.voices(); _ids = {}; _raw = {}; _sung = {}
+def said(text):   # ~ read as a long vowel, hearts and notes not read; spaces stay as typed (VA.spoken turns them into pauses, which
+    # broke the chants up with gaps: user 2026-10-18)
+    for a, b in (("♡", ""), ("♪", ""), ("~", "ー"), ("～", "ー"), ("〜", "ー"), ("!!", "!")): text = text.replace(a, b)
+    return text
 def raw(who, text, style, speed, into):
-    """her clip, cut tight, at SR"""
+    """her clip (its ending kept: soft), at SR; ~ is read as a long vowel (said)"""
     key = (who, text, style, speed, into)
     if key not in _raw:
         if who not in _ids: _ids[who] = VA.styles(_V[who]["model"])
         sid = _ids[who][style]
-        x, sr = VA.synth(VA.query(text, sid, {"speed": speed, "intonation": into}), sid)
-        a = resample(VA.tight(x, sr), SR / sr)
+        x, sr = VA.synth(VA.query(said(text), sid, {"speed": speed, "intonation": into}), sid)
+        a = resample(soft(x, sr), SR / sr)
         _raw[key] = (a, f0(a))
     return _raw[key]
 
@@ -94,14 +113,17 @@ def moras(text):
     return out
 
 
-def sing(who, mora, midi, dur, style):
-    """one syllable of her voice on a note: said alone (with a long vowel when the note is long), moved onto the note, stretched to it"""
-    key = (who, mora, midi, round(dur, 3), style)
+def sing(who, mora, midi, dur, style, last=False):
+    """one syllable of her voice on a note: said alone (with a long vowel when the note is long), moved onto the note, stretched so
+    that it lasts the note and a little more (it runs on into the next one instead of stopping dead); the last of a line keeps its
+    whole natural ending"""
+    key = (who, mora, midi, round(dur, 3), style, last)
     if key not in _sung:
-        long = dur > 0.32 and not mora.endswith(("っ", "ッ"))
-        a, f = raw(who, mora + ("ー" * min(3, int(dur / 0.3)) if long else ""), style, 1.3, 0.0)
+        long = (dur > 0.32 or last) and not mora.endswith(("っ", "ッ"))
+        a, f = raw(who, mora + ("ー" * max(1, min(3, int(dur / 0.3))) if long else ""), style, 1.3, 0.0)
         b = resample(a, mtof(midi) / f)
-        _sung[key] = fade(atempo(b, len(b) / SR / dur))
+        want = dur + (0.12 if last else 0.06)
+        _sung[key] = fade(atempo(b, len(b) / SR / want) if len(b) / SR > want or long else b, 0.004, 0.12 if last else 0.06)
     return _sung[key]
 
 
@@ -110,7 +132,7 @@ def speak(who, text, style="Positive", speed=1.15, into=1.0, fit=None, tune=None
     a, f = raw(who, text, style, speed, into)
     if tune is not None: a = atempo(resample(a, mtof(tune) / f), mtof(tune) / f)
     if fit and len(a) / SR > fit: a = atempo(a, len(a) / SR / fit)
-    return fade(a, 0.002, 0.03)
+    return a
 
 
 def fit_notes(notes, n):
@@ -249,13 +271,13 @@ class Sec:
             for d, k, p in ((0.017, 1.006, -0.55), (0.029, 0.994, 0.55), (0.041, 1.003, 0.0)):
                 s.put(s.voice, resample(a, k), t + d, g * 0.45, max(-1, min(1, pan + p)), wet * 1.3)
         if deep: s.put(s.voice, atempo(resample(a, 0.5), 2.0), t, g * 0.55, pan, wet * 1.5)   # an octave down, formants too: not human
-    def line(s, who, text, notes, bar, beat=0.0, tr=0, g=1.0, pan=0.0, style=None, crowd=False, deep=False, stacc=0.92, hop=0.0):
+    def line(s, who, text, notes, bar, beat=0.0, tr=0, g=1.0, pan=0.0, style=None, crowd=False, deep=False, stacc=1.0, hop=0.0):
         """a sung line: the syllables of text on the notes [(midi, beats)] from (bar, beat); hop = each syllable jumps that far left / right"""
         style = style or ("Positive" if who == "pink" else "ノーマル")
         ms = moras(text); t = s.at(bar, beat)
         for i, (m, (midi, b)) in enumerate(zip(ms, fit_notes(notes, len(ms)))):
             p = max(-1, min(1, pan + (hop * (1 if i % 2 else -1) if hop else 0)))
-            s.vox(sing(who, m, midi + tr, b * s.B * stacc, style), t, g, p, crowd=crowd, deep=deep); t += b * s.B
+            s.vox(sing(who, m, midi + tr, b * s.B * stacc, style, last=(i == len(ms) - 1)), t, g, p, crowd=crowd, deep=deep); t += b * s.B
     def say(s, who, text, bar, beat=0.0, g=1.0, pan=None, beats=None, style=None, speed=1.15, into=1.0, crowd=False, deep=False, tune=None, wet=0.3):
         """a spoken line from (bar, beat), squeezed into that many beats when it is longer"""
         style = style or ("Positive" if who == "pink" else "ノーマル")
@@ -315,8 +337,8 @@ def intro():
     s = Sec("intro", 140, 8)
     march(s, ["Gm", "Gm", "Gm", "Gm", "Eb", "Eb", "D", "D"], taiko_only=True)
     s.mus(gong(1.0), 0, 0.7, 0, 0.4); s.mus(bell(2350, 0.8), s.at(3, 3.5), 0.2, 0.4, 0.5)
-    s.say(PINK, "ねぇ… はじまるよ", 2, 0, 0.8, style="ノーマル", speed=1.0, into=0.6)
-    s.say(CAT, "…にゃ", 3, 2, 0.8, style="ねむたい", speed=1.0)
+    s.say(PINK, "ねぇ… はじまるよ~", 2, 0, 0.8, style="ノーマル", speed=1.0, into=0.6)
+    s.say(CAT, "…にゃ~", 3, 2, 0.8, style="ねむたい", speed=1.0)
     for i, m in enumerate(["りん", "ぴょう", "とう", "しゃ", "かい", "じん", "れつ", "ざい", "ぜんっ"]):
         s.vox(speak(CAT, m, "ノーマル", 1.25, 0.0, tune=67), s.at(4, i * 0.5), 1.0, -0.15, crowd=(i == 8))
     for k, m in ((0, 62), (0.5, 67), (1, 67), (1.5, 70), (2, 74)): s.mus(brass_hold(m, s.B * 0.45), s.at(6, k), 0.12, 0, 0.3)
@@ -367,8 +389,8 @@ def anthem():
     march(s, CHORUS_CH, 28, brass_hits=(28, 30, 32, 34)); chorus(s, 28, brass_melody=True)
     march(s, ["Gm", "Eb", "D", "Gm"], 36, brass_hits=(36, 37, 38, 39))
     for who, pan in ((PINK, 0.3), (CAT, -0.3)):   # the wordless "aaah"
-        s.line(who, "あ", [(74, 8)], 36, g=0.75, pan=pan, crowd=True, deep=(who == CAT), stacc=0.97)
-        s.line(who, "あ", [(67, 8)], 38, g=0.75, pan=pan, crowd=True, stacc=0.97)
+        s.line(who, "あ", [(74, 8)], 36, g=0.75, pan=pan, crowd=True, deep=(who == CAT))
+        s.line(who, "あ", [(67, 8)], 38, g=0.75, pan=pan, crowd=True)
     s.mus(gong(0.9), s.at(39, 2), 0.6, 0, 0.4)
     return s
 
@@ -434,12 +456,12 @@ def jk():
     pop(s, 0, 4, full=False)
     s.say(PINK, "あっ チャイム!", 3, 2, 0.9)
     pop(s, 4, 40)
-    for (b, q, who, text, beats) in [(4, 0, PINK, "おはよー!", 3), (5, 0, CAT, "…ねむい", 3), (6, 0, PINK, "ちこく ちこくー!", 4), (7, 0, CAT, "はしれー!", 3),
-                                     (8, 0, PINK, "おはよー!", 2), (8, 2, CAT, "おはよー", 2), (9, 0, PINK, "まってー!", 3), (10, 0, CAT, "セーフ!", 3),
+    for (b, q, who, text, beats) in [(4, 0, PINK, "おはよー!", 3), (5, 0, CAT, "…ねむい~", 3), (6, 0, PINK, "ちこく ちこくー!", 4), (7, 0, CAT, "はしれー!", 3),
+                                     (8, 0, PINK, "おはよー!", 2), (8, 2, CAT, "おはよ~", 2), (9, 0, PINK, "まってー!", 3), (10, 0, CAT, "セーフ!", 3),
                                      (11, 0, PINK, "やったー!", 3),
                                      (12, 0, PINK, "こうばいの", 2), (12, 2, PINK, "メロンパン!", 2), (13, 0, CAT, "ラスいち!", 3), (14, 0, PINK, "じゃんけん…", 3),
                                      (16, 0, CAT, "かった!", 2), (16, 2, PINK, "まけたー!", 2), (17, 0, PINK, "わけて?", 3), (18, 0, CAT, "やだ", 3), (19, 0, PINK, "ケチー!", 3)]:
-        s.say(who, text, b, q, beats=beats, style=("ねむたい" if text == "…ねむい" else None))
+        s.say(who, text, b, q, beats=beats, style=("ねむたい" if text == "…ねむい~" else None))
     for who, pan in ((PINK, 0.3), (CAT, -0.3)): s.say(who, "ぽん!", 15, 0, 0.9, pan=pan, beats=2, crowd=True)
     s.vox(speak(PINK, "お", "Positive", 1.3, 1.0), s.at(6, 3.5), 0.0)   # (warm-up)
     for b in (20, 36):
@@ -448,17 +470,17 @@ def jk():
             else:
                 for w, pan in ((PINK, 0.3), (CAT, -0.3)): s.line(w, text, HOOK[i], b + 2 * i, g=0.8, pan=pan, crowd=(b == 36))
         s.line(PINK, "ほうかご", HOOK[0][:4], b + 6, 3.0, g=0.5, pan=0.5)   # (an echo)
-    talk = [(PINK, "テストはんい!"), (CAT, "しらなーい"), (PINK, "やばーい!"), (CAT, "それなー"), (PINK, "ノート みせて!"), (CAT, "やだー"),
+    talk = [(PINK, "テストはんい!"), (CAT, "しらな~い"), (PINK, "やばーい!"), (CAT, "それな~"), (PINK, "ノート みせて!"), (CAT, "やだ~"),
             (PINK, "おねがーい!"), (CAT, "…しかたないにゃ")]
     for i, (who, text) in enumerate(talk * 2): s.say(who, text, 28 + i // 2, (i % 2) * 2, beats=2)
     for k, ph in enumerate(WEST[2:]):
         for i, m in enumerate(ph): s.mus(chime(m), s.at(44 + k * 2, i * 2), 0.32, 0.15 * (1 if i % 2 else -1), 0.5)
-    s.say(PINK, "かえろっか", 44, 0, beats=3); s.say(CAT, "ん", 45, 0, beats=2, style="ねむたい")
-    for who, pan in ((PINK, 0.3), (CAT, -0.3)): s.say(who, "またあしたー!", 46, 0, pan=pan, beats=4, crowd=True)
+    s.say(PINK, "かえろっか~", 44, 0, beats=3); s.say(CAT, "ん", 45, 0, beats=2, style="ねむたい")
+    for who, pan in ((PINK, 0.3), (CAT, -0.3)): s.say(who, "またあした~!", 46, 0, pan=pan, beats=4, crowd=True)
     return s
 
 
-def chop(a, n=0.09): return fade(a[:int(n * SR)], 0.002, 0.015)
+def chop(a, n=0.09): return fade(a[:int(n * SR)], 0.002, 0.035)   # (a stutter is cut on purpose, but rounded)
 FLAT = [(67, 0.5)] * 12 + [(62, 1), (67, 1)]   # a deadpan line: one note, a drop at its end
 FLAT2 = [(67, 0.5)] * 8 + [(70, 0.5)] * 4 + [(67, 2)]
 DEADPAN = [(PINK, "そうたいてきに きぼうわ ひきがね", FLAT), (CAT, "ぜったいてきに ねこわ かわいい", FLAT2),
@@ -486,7 +508,7 @@ def remix():
     stut(PINK, "そうたい", 3, 0, reps=6, step=0.25, pan=0.5)
     # 4-11: the deadpan verse, every syllable jumping left / right
     for i, (who, text, notes) in enumerate(DEADPAN):
-        s.line(who, text, notes, 4 + 2 * i, pan=0.15 if who == PINK else -0.15, hop=0.6, stacc=0.85)
+        s.line(who, text, notes, 4 + 2 * i, pan=0.15 if who == PINK else -0.15, hop=0.6, stacc=0.95)
     # 12-15: the game's title chopped up
     stut(PINK, "そうたい", 12, 0, pan=0.3); stut(CAT, "きぼうの", 12, 2, pan=-0.3)
     s.say(PINK, "しょうじょ", 13, 0, beats=1.5); s.vox(resample(speak(CAT, "しょうじょ", "ノーマル", 1.25, 1.0), 2 ** (5 / 12)), s.at(13, 2), 0.9, -0.3)
@@ -495,7 +517,7 @@ def remix():
     pm = speak(CAT, "ポエム", "ノーマル", 1.25, 1.0); s.vox(pm[::-1].copy(), s.at(15, 2), 0.9, -0.2)
     # 16-19: the two together, deadpan, glitching
     for w, pan in ((PINK, 0.3), (CAT, -0.3)):
-        for k in (16, 18): s.line(w, "そうたい ぜったい かわいい ぜったい", [(67, 0.5)] * 14 + [(62, 1)], k, g=0.8, pan=pan, hop=0.4, stacc=0.85)
+        for k in (16, 18): s.line(w, "そうたい ぜったい かわいい ぜったい", [(67, 0.5)] * 14 + [(62, 1)], k, g=0.8, pan=pan, hop=0.4, stacc=0.95)
     s.glitches = [(17, 3, 0.25, 4), (19, 2, 0.125, 8)]
     # 20-22: her gun, the mantra, いあ; 23: the tape stops
     g = speak(PINK, "とぅっ!", "Positive", 1.4, 1.0)
@@ -526,12 +548,12 @@ def sweets():
         t = s.at(b0)
         for m, bt in MBOX * 2: s.mus(musicbox(m), t, 0.12, 0.3, 0.6); t += bt * s.B
     s.mus(vinyl(s.len + 3.5), 0, 0.5)
-    lines = [(2, CAT, "はふぅ…"), (4, PINK, "あまーい…"), (6, CAT, "ゴロゴロ…"), (8, PINK, "とろけるー…"), (10, CAT, "もうひとくち だけ…"),
-             (12, PINK, "ジェラート… たべたかったなー"), (14, CAT, "…また いこ"), (16, PINK, "うん… やくそく"), (20, CAT, "おいしい…"),
-             (22, PINK, "しあわせー…"), (26, CAT, "もぐもぐ…"), (28, PINK, "…ねむくなってきた"), (30, CAT, "おやすみ… にゃ")]
+    lines = [(2, CAT, "はふぅ~…"), (4, PINK, "あまーい~…"), (6, CAT, "ゴロゴロ~…"), (8, PINK, "とろける~~…"), (10, CAT, "もうひとくち だけ~…"),
+             (12, PINK, "ジェラート… たべたかったな~~"), (14, CAT, "…また いこ~"), (16, PINK, "うん… やくそく~"), (20, CAT, "おいしい~…"),
+             (22, PINK, "しあわせ~~…"), (26, CAT, "もぐもぐ~…"), (28, PINK, "…ねむくなってきた~"), (30, CAT, "おやすみ~… にゃ~")]
     for b, who, text in lines:
         s.say(who, text, b, 0.5, 0.95, style=("ねむたい" if who == CAT else "ノーマル"), speed=0.95, into=1.2, wet=0.55)
-    for w, pan in ((PINK, 0.3), (CAT, -0.3)): s.say(w, "いただきまーす", 24, 0.5, 0.85, pan=pan, style=("ねむたい" if w == CAT else "Positive"), speed=1.0)
+    for w, pan in ((PINK, 0.3), (CAT, -0.3)): s.say(w, "いただきま~す", 24, 0.5, 0.85, pan=pan, style=("ねむたい" if w == CAT else "Positive"), speed=1.0)
     s.line(PINK, "ふんふーんふん ふーん", tpl([75, 79, 82, 79, 77, 75], [1, 1, 1, 1, 2, 2]), 18, style="ノーマル", g=0.7, pan=0.3)
     return s
 
@@ -547,11 +569,11 @@ def horror():
     for rep in range(2):
         for m, bt in LULL: s.mus(musicbox(m, detune=rng.uniform(-40, 40)), t, 0.16, -0.3, 0.7); t += bt * s.B
     for b in (5, 11): s.mus(bell(1180, 0.8, 3.0), s.at(b, 3), 0.15, 0.4, 0.8)
-    s.say(CAT, "…だれ?", 2, 0, 0.8, into=0.5, speed=0.95, wet=0.6)
-    for b in (4, 6): s.say(PINK, "いあ…", b, 0, 0.9, style="ノーマル", speed=0.8, into=0.0, deep=True, wet=0.7)
+    s.say(CAT, "…だれ~?", 2, 0, 0.8, into=0.5, speed=0.95, wet=0.6)
+    for b in (4, 6): s.say(PINK, "いあ~…", b, 0, 0.9, style="ノーマル", speed=0.8, into=0.0, deep=True, wet=0.7)
     for i, m in enumerate(["りん…", "ぴょう…", "とう…", "しゃ…"]): s.vox(speak(CAT, m, "ノーマル", 0.9, 0.0, tune=67), s.at(8, i), 0.8, -0.3, wet=0.6)
     a = speak(PINK, "ふたぐん", "ノーマル", 1.0, 0.0); s.vox(a[::-1].copy(), s.at(10), 0.8, 0.3, wet=0.7)
-    s.say(PINK, "くとぅるふ…", 12, 0, 0.9, style="ノーマル", speed=0.85, into=0.0, deep=True, wet=0.7)
+    s.say(PINK, "くとぅるふ~…", 12, 0, 0.9, style="ノーマル", speed=0.85, into=0.0, deep=True, wet=0.7)
     s.say(CAT, "…きた", 13, 0, 0.9, wet=0.6)
     s.say(PINK, "いやーっ!", 14, 0, 1.0, style="Negative"); s.say(CAT, "シャーッ!", 14, 2, 1.0, beats=2)
     s.mus(riser(s.BAR * 2), s.at(14), 0.3)
@@ -567,7 +589,7 @@ def finale():
     # everything in a heap: the chant, her gun, いあ, the school, the sweets
     for i, m in enumerate(["おん", "ま", "に", "ぱ", "ど", "め", "ふむっ"]): s.vox(speak(CAT, m, "ノーマル", 1.25, 0.0, tune=67), s.at(8, i), 1.0, -0.25)
     for k in (7, 7.5): s.vox(speak(PINK, "とぅっ!", "Positive", 1.4, 0.0, tune=67), s.at(8, k), 0.9, 0.3)
-    s.say(PINK, "それなー!", 10, 0, beats=2); s.say(CAT, "あまーい…", 10, 2, beats=2, style="ねむたい")
+    s.say(PINK, "それな~!", 10, 0, beats=2); s.say(CAT, "あまーい~…", 10, 2, beats=2, style="ねむたい")
     s.say(PINK, "おはよー!", 11, 0, beats=2); s.say(CAT, "いあ!", 11, 2, beats=1); s.say(PINK, "いあ!", 11, 3, beats=1)
     a = speak(CAT, "ぎゃーてい ぎゃーてい", "ノーマル", 1.25, 0.0, tune=67); s.vox(atempo(a, len(a) / SR / (4 * s.B)), s.at(12), 1.0, -0.2, crowd=True)
     s.say(PINK, "りょーかいっ!", 13, 0, beats=2); s.say(CAT, "メロンパン!", 13, 2, beats=2)
@@ -578,8 +600,8 @@ def finale():
     march(s, up, 16, brass_hits=(16, 18, 20, 22), tr=2); chorus(s, 16, tr=2, brass_melody=True)
     march(s, ["Gm", "Eb", "D", "Gm"], 24, brass_hits=(24, 25, 26, 27), tr=2)
     for who, pan in ((PINK, 0.3), (CAT, -0.3)):
-        s.line(who, "あ", [(76, 8)], 24, g=0.75, pan=pan, crowd=True, deep=(who == CAT), stacc=0.97)
-        s.line(who, "あ", [(69, 8)], 26, g=0.75, pan=pan, crowd=True, stacc=0.97)
+        s.line(who, "あ", [(76, 8)], 24, g=0.75, pan=pan, crowd=True, deep=(who == CAT))
+        s.line(who, "あ", [(69, 8)], 26, g=0.75, pan=pan, crowd=True)
     s.mus(gong(1.0, 92), s.at(27, 2), 0.7, 0, 0.4)
     # back down to G minor, quietly, into the start again (the file loops)
     march(s, ["Gm", "Gm", "Eb", "D"], 28, taiko_only=True, g=0.8)

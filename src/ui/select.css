@@ -15,14 +15,36 @@
 .sel .s-tx.s-mast, .sel .s-chip .s-tx { font-weight: 700; }
 .sel .s-none { display: none !important; }
 
+/* the contrast layer (select.js shade): the piece's own shape in one colour. Hover = that colour, press = a white flash; the picked stage
+   red, a hovered stage black; what is written on the piece turns white over it */
+.sel .s-hl { position: absolute; pointer-events: none; background: var(--hl); opacity: 0; transition: opacity 0.1s, background 0.1s;
+  mask-size: 100% 100%; -webkit-mask-size: 100% 100%; mask-repeat: no-repeat; -webkit-mask-repeat: no-repeat; }
+.sel .s-btn:hover > .s-hl { opacity: 1; }
+.sel .s-btn.s-press > .s-hl { opacity: 1; background: #fff; transition: none; }
+.sel .s-back:hover .s-tx, .sel .s-gear:hover .s-tx, .sel .s-swap:hover .s-tx, .sel .s-tab:hover .s-ttx { color: #fff; }
+.sel .s-back.s-press .s-tx, .sel .s-swap.s-press .s-tx, .sel .s-tab.s-press .s-ttx, .sel .s-go.s-press .s-gtx { color: var(--red); }
+.sel .s-back.s-press .s-tri { background: var(--red); }
+.sel .s-btn:hover { filter: drop-shadow(0 0 0 #fff) drop-shadow(4px 4px 0 #fff) drop-shadow(0 0 14px #d8141e99); }
+.sel .s-go:hover { filter: drop-shadow(0 0 0 #fff) drop-shadow(6px 6px 0 #d8141e) drop-shadow(0 0 18px #ffffff88); }
+.sel .s-go:hover .s-gtx { text-shadow: 4px 4px 0 var(--red); }
+.sel .s-arrow:hover { scale: 1.25; filter: drop-shadow(0 0 10px #d8141e) drop-shadow(0 0 2px #fff); }
+.sel .s-row .s-hl { transition: opacity 0.08s, background 0.08s; }
+.sel .s-row.s-row-open:hover .s-hl { opacity: 1; }
+.sel .s-row.s-row-pick .s-hl { opacity: 1; background: var(--red); }
+.sel .s-row.s-row-open:hover .s-tx, .sel .s-row.s-row-pick .s-tx { color: #fff; }
+.sel .s-row.s-row-pick .s-tx { text-shadow: 3px 3px 0 var(--ink); }
+.sel .s-row.s-press .s-hl { background: #fff; transition: none; }
+.sel .s-row.s-press .s-tx { color: var(--red); }
+
 /* buttons: a little hop toward the cursor, a press */
 .sel .s-btn { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), filter 0.18s; }
-.sel .s-btn:hover { translate: 5px -3px; filter: drop-shadow(0 0 10px #ffffff55); }
+.sel .s-btn:hover { translate: 5px -3px; }
 .sel .s-btn.s-down { translate: 2px 2px; transition-duration: 0.05s; }
 .sel .s-back:hover .s-tri { translate: -5px 0; }
 .sel .s-back .s-tri { position: absolute; background: #fff; transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .sel .s-gear .s-gico { transition: rotate 0.6s cubic-bezier(0.2, 1.4, 0.4, 1); }
 .sel .s-gear:hover .s-gico { rotate: 120deg; }
+.sel .s-tab { z-index: 3; }   /* (above the team cards' pictures, whose clear top edges would take the clicks) */
 .sel .s-tab:hover { translate: 0 -4px; }
 .sel .s-tab.s-on { filter: drop-shadow(0 0 8px #d8141e66); }
 .sel .s-tab .s-ttx { color: var(--ink); }
@@ -41,7 +63,7 @@
 .sel .s-row .s-rlock { filter: drop-shadow(2px 2px 0 #000); }
 .sel .s-row.s-row-lock .s-chev { opacity: 0; }
 .sel .s-row .s-si:first-child { transition: filter 0.15s; }
-.sel .s-row:hover .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(4px 4px 0 #d8141e); }
+.sel .s-row.s-row-open:hover .s-si:first-child { filter: drop-shadow(0 0 0 #000) drop-shadow(6px 6px 0 #d8141e) drop-shadow(0 0 3px #fff); }
 .sel .s-row .s-chev { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .sel .s-row:hover .s-chev { translate: 8px 0; }
 .sel .s-row .s-thumb { -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 45%); mask-image: linear-gradient(90deg, transparent 0%, #000 45%); filter: grayscale(1) contrast(1.05); }
@@ -60,11 +82,13 @@
 .sel .s-go .s-gtri { transition: translate 0.2s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .sel .s-go.s-locked { filter: grayscale(1) brightness(0.8); }
 
-/* next chapter card + arrows */
-.sel .s-next:hover { translate: 4px -4px; }
+/* the chapter card (a placeholder; an arrow hovered: that chapter, the card flips in) + arrows */
+.sel .s-next.s-flip { animation: selCardFlip 0.26s cubic-bezier(0.2, 1.3, 0.4, 1); }
+@keyframes selCardFlip { 0% { transform: perspective(900px) rotateY(70deg); opacity: 0.4; } 100% { transform: none; opacity: 1; } }
+.sel .s-next.s-peek .s-si:first-child { filter: drop-shadow(0 0 0 #fff) drop-shadow(0 0 12px #d8141eaa); }
 .sel .s-next .s-nlock { animation: selSway 3s ease-in-out infinite; transform-origin: 50% 20%; }
 @keyframes selSway { 0%, 100% { rotate: -4deg; } 50% { rotate: 4deg; } }
-.sel .s-arrow { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.2s; }
+.sel .s-arrow { transition: translate 0.18s cubic-bezier(0.2, 1.6, 0.4, 1), opacity 0.2s, scale 0.15s cubic-bezier(0.2, 1.6, 0.4, 1); }
 .sel .s-a-l:hover { translate: -6px 0; }
 .sel .s-a-r:hover { translate: 6px 0; }
 .sel .s-arrow.s-off { opacity: 0.5; filter: grayscale(1); pointer-events: none; }
@@ -116,6 +140,11 @@ body:has(.screen.sel) #dbg-btn { display: none; }
 .sel .s-bcostup b { font-size: calc(20 * var(--u)); }
 .sel .s-bcostup small { font-size: calc(14 * var(--u)); font-weight: 700; }
 .sel .s-bcostup.s-off { background: #6a6264; color: #d8d2d4; }
+.sel .s-bcostup:not(.s-off):hover { background: var(--ink); color: #fff; }
+.sel .s-bcostup:active { background: #fff; color: var(--red); }
+.sel .s-bcell:not(.s-empty):not(.s-pick):hover { background: var(--ink); }
+.sel .s-bcell:not(.s-empty):hover .s-dots { color: #fff; }
+.sel .s-bpager i:hover { background: var(--red); }
 /* the item cards: white sticker cards, tilted, a black folder tab on the top edge, a hard black shadow; the picked one red; E badge, level
    tag, cost dots. A slot no item fills is a blank card */
 .sel .s-bcell { background: #fff; border: calc(4 * var(--u)) solid var(--ink); box-shadow: calc(7 * var(--u)) calc(7 * var(--u)) 0 var(--ink); cursor: pointer; }
@@ -185,7 +214,9 @@ body:has(.screen.sel) #dbg-btn { display: none; }
 .sel .s-bcard .s-btns { left: 0; right: 0; bottom: calc(8 * var(--u)); height: calc(74 * var(--u)); display: flex; gap: calc(10 * var(--u)); }
 .sel .s-bcard button { font: inherit; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; color: #fff;
   clip-path: polygon(7% 0, 100% 0, 93% 100%, 0 100%); transition: translate 0.15s cubic-bezier(0.2, 1.6, 0.4, 1), filter 0.15s; background: var(--red); }
-.sel .s-bcard button:hover { translate: 3px -2px; filter: brightness(1.15); }
+.sel .s-bcard button:hover { translate: 3px -2px; background: var(--ink); box-shadow: inset 0 0 0 calc(3 * var(--u)) var(--red); }
+.sel .s-bcard button:active { background: #fff; color: var(--red); }
+.sel .s-bcard .s-be.s-on:hover { background: var(--red); }
 .sel .s-bcard button svg { width: calc(34 * var(--u)); height: calc(30 * var(--u)); flex: none; }
 .sel .s-bcard button b { font-size: calc(16 * var(--u)); font-weight: 900; }
 .sel .s-bcard button small { font-size: calc(13 * var(--u)); font-weight: 700; }

@@ -91,7 +91,8 @@
       "no": { "x": 741, "y": 319, "size": 28, "deg": -8.25 },
       "title": { "x": 740, "y": 362, "size": 56, "deg": -7.25, "maxW": 165 },
       "wip": { "key": "soon", "x": 730, "y": 562, "size": 30, "deg": -2.2 },
-      "lock": { "img": "ui/sel_icon_lock_big", "box": [700, 445, 768, 525] }
+      "lock": { "img": "ui/sel_icon_lock_big", "box": [700, 445, 768, 525] },
+      "placeholder": "ui/sel_card_soon"
     },
     "arrows": { "l": { "img": "ui/sel_arrow_l", "box": [599, 440, 650, 530] }, "r": { "img": "ui/sel_arrow_r", "box": [824, 440, 879, 530] } },
     "cards": {

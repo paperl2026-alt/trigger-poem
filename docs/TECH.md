@@ -57,6 +57,7 @@
   - 音高（pitchScale）不调：AivisSpeech 一动音高音质就变差。
 - 主题曲 `tools/bgm_theme.py <名字> [--only <段>]` → `art/raw/bgm/<名字>.ogg`（游戏用）、`.mp3`（给人听）、`.wav`（不进 git）；语音引擎要开着（`voice_aivis.py start`）；整首渲染要十几分钟，`--only` 只出一段试听。
   - 结构：每段一个 `Sec`（自己的速度、小节数、伴奏 / 人声 / 混响送出三条轨），段落函数往里排东西，`mix()` 各自混（混响、人声频段给伴奏挖 5 dB、人声在时伴奏往下压、`glitches` 切片重复、`stop` 卡带减速），最后按顺序首尾接起来，超出结尾的混响尾巴绕回开头 = 文件本身无缝循环。
+  - **人声不能被掐断**（2026-10-18 用户：每句都戛然而止，好难受）：合成出来的片段只剪掉开头的空白，结尾留到真的没声音（包络低于峰值 -58 dB 再多 80 ms），再用 100 ms 的圆滑淡出（`soft`）；唱的音节拉到比音符长一点，压进下一个音，一句的最后一个音节留完整的尾音；`~` 交给引擎读成长音（にゃ / にゃ~ / にゃ~~ 长短不一样），该拖的台词写上 `~`。只有鬼畜段的口吃切片是故意切短的（也有 35 ms 的圆淡出）。武器的音节（`voice_aivis.py grains`）本来就要短，不受影响。
   - 人声的三种用法：`say` 照她自己的语调说一句（放进几拍，长了就压缩）；`speak(..., tune=67)` 平调念、移到某个音上（念经）；`line` 唱：歌词按假名拆成音节（小写假名、ー、っ并进前一个），每个音节单独合成（音符长就带长音），量出音高，重采样移到旋律音上，再用 ffmpeg atempo 拉成音符的长度（「人力ボカロ」的做法）；`fit_notes` 让旋律模板对上音节数（多了拆最长的音、少了并最短的两个）。`crowd` 叠几份 = 一群人，`deep` 叠低八度（不像人），`hop` 每个音节左右跳。
   - 两人平调念出来都在 G4 附近，所以进行曲段落定 G 小调；移调靠重采样（共振峰跟着移），旋律尽量在 G4 上下五个半音内，ffmpeg 没有 rubberband。
   - 伴奏全部 numpy / scipy 合成：太鼓、军鼓、木鱼、锣、铃、钟（下课铃是威斯敏斯特钟声，公有领域）、八音盒、低音、「哦」合唱（锯齿波过 o 的共振峰）、铜管、弦乐、电钢琴（FM）、芯片方波、摇摆低音、低鸣、风、黑胶底噪，以及勺子碰玻璃 / 铅笔 / 纸 / 快门拼的鼓。
@@ -139,6 +140,7 @@
   - `alerts`（街机式醒目提示：屏幕边缘只剩低血量；RELOAD! / NO AMMO! 半屏闪、被打裂屏 + OUCH!、倒地半屏 CONTINUE? + 倒计时、必须躲时全屏 DANGER!!；装填的 Q 版大头贴纸在她角落不规律叠）；
   - `space`（弹出物找空地：避开 HUD、Boss 条、教程提示、两人当前身形）、`hold`（不能射击时的警示覆盖，文字在 `text/holds.json`）、`stickers`（气泡贴纸，台词在 `text/stickers.json`）；
   - `hud.showBanner` 旧接口：战斗中变成气泡（`stickers.callout`），战斗外变成警示覆盖；
+  - 选关的对比色层（`select.js shade`）：用按钮自己的图当遮罩（mask-image），叠一层纯色，悬停 / 按下（`s-press`）/ 选中时显示，字变白；页签的 z-index 在两张立绘之上（立绘透明的上沿会挡住点击：用户点不开书包就是这个）。中间的大关小卡不是按钮：`peek` = 悬停的箭头方向，`renderCard` 换成那一章的 `cover`（没有就占位 `next.placeholder`）。
   - 书包页 `src/ui/bag.js`（选关的「书包」页签，盖在队伍卡片上；位置 `ui/select.json` bag，照效果图 art/raw/r52/bag_a.png 量的；样式 `select.css` .s-bag，--u = 参考图 1 像素）。右栏在 detail 框里按 --u 绝对定位；`fit()` 把放不下的字（英文长名字、长段落）一点点缩小到放得下；三段说明的小标签是 text/ui.json loreTabs（用 | 分开）。
   - 道具和书包都在 `src/battle/items.js`：`itemFxAt(id, lv)` 按 items.json "grow" 算某级效果（线性、exp 每级同倍数、pow 先慢后快），`itemPrice` / `capPrice` 升级 / 扩容价格（取整到 5 / 50 / 500），`buyItem` / `upgradeItem` / `upgradeCap` / `toggleEquip`（装备超过 cost 上限返回 'full'），`itemDesc` 把描述里的 {键} / {键%} 换成当前等级的数字；`bagFx(bag)` 合计效果给战斗用。
   - `screens`（结算 `showResults`：漫画杂志目录页，版式在 `style.css .res8`，条目按数据重复；数据来自 `Game.applyRewards`：`st.newItems` 只有首通的新道具、`st.unlocked` 只有新开的章节、`st.mulBy` 每个倍率道具一条；插画 `res/cover_<大关>`（没有就 `res/cover`）、`res/face_<角色>`、`res/item_<道具>`，没有就退回 Q 版脸 / 道具图标；全灭时同一个页面（`st.win` false：刊头 DOWN、残局报酬、`onRetry` 从检查点重来），插画在 `res/lose_<n>` 里随机挑一张）、`uifx`（菜单粒子）、`cursor`。
