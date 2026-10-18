@@ -134,7 +134,7 @@
   - `alerts`（街机式醒目提示：屏幕边缘只剩低血量；RELOAD! / NO AMMO! 半屏闪、被打裂屏 + OUCH!、倒地半屏 CONTINUE? + 倒计时、必须躲时全屏 DANGER!!；装填的 Q 版大头贴纸在她角落不规律叠）；
   - `space`（弹出物找空地：避开 HUD、Boss 条、教程提示、两人当前身形）、`hold`（不能射击时的警示覆盖，文字在 `text/holds.json`）、`stickers`（气泡贴纸，台词在 `text/stickers.json`）；
   - `hud.showBanner` 旧接口：战斗中变成气泡（`stickers.callout`），战斗外变成警示覆盖；
-  - 书包页 `src/ui/bag.js`（选关的「书包」页签，盖在队伍卡片上；位置 `ui/select.json` bag；样式 `select.css` .s-bag，--u = 参考图 1 像素）。
+  - 书包页 `src/ui/bag.js`（选关的「书包」页签，盖在队伍卡片上；位置 `ui/select.json` bag，照效果图 art/raw/r52/bag_a.png 量的；样式 `select.css` .s-bag，--u = 参考图 1 像素）。右栏在 detail 框里按 --u 绝对定位；`fit()` 把放不下的字（英文长名字、长段落）一点点缩小到放得下；三段说明的小标签是 text/ui.json loreTabs（用 | 分开）。
   - 道具和书包都在 `src/battle/items.js`：`itemFxAt(id, lv)` 按 items.json "grow" 算某级效果（线性或每级同倍数），`itemPrice` / `capPrice` 升级 / 扩容价格（取整到 5 / 50 / 500），`buyItem` / `upgradeItem` / `upgradeCap` / `toggleEquip`（装备超过 cost 上限返回 'full'），`itemDesc` 把描述里的 {键} / {键%} 换成当前等级的数字；`bagFx(bag)` 合计效果给战斗用。
   - `screens`（结算 `showResults`：漫画杂志目录页，版式在 `style.css .res8`，条目按数据重复；数据来自 `Game.applyRewards`：`st.newItems` 只有首通的新道具、`st.unlocked` 只有新开的章节、`st.mulBy` 每个倍率道具一条；插画 `res/cover`、`res/face_<角色>`、`res/item_<道具>`，没有就退回 Q 版脸 / 道具图标）、`uifx`（菜单粒子）、`cursor`。
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。

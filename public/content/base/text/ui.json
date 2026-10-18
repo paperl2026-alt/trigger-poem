@@ -41,7 +41,11 @@
     "notYetHint": { "zh": "还没拿到。会在某一话的第一次通关时得到。", "en": "Not yours yet. Some chapter's first clear gives it.", "ja": "まだ持っていない。どこかの話を初めてクリアすると手に入る。" },
     "bagFull": { "zh": "COST 不够了！先卸下别的，或者扩容", "en": "Not enough COST! Take something off, or expand", "ja": "COSTが足りない！何か外すか、拡張して" },
     "itemsHead": { "zh": "新获得的道具", "en": "NEW ITEMS", "ja": "新しいアイテム" },
-    "colophon": { "zh": "编集＝伍德刀盾编辑部　表纸＝两位主角　©2026 相对希望少女们的扣击诗", "en": "Edited by the What Da Dog Doin' desk · Cover: our two heroines · ©2026", "ja": "編集＝ワッダドッグ編集部　表紙＝ふたりの主人公　©2026" },
+    "colophon": {
+      "zh": "编集＝伍德刀盾编辑部　表纸＝两位主角　©2026 相对希望少女们的扣击诗",
+      "en": "Edited by the What Da Dog Doin' desk · Cover: our two heroines · ©2026",
+      "ja": "編集＝ワッダドッグ編集部　表紙＝ふたりの主人公　©2026"
+    },
     "acc": { "zh": "命中率", "en": "ACCURACY", "ja": "命中率" },
     "combo": { "zh": "最大连击", "en": "MAX COMBO", "ja": "最大コンボ" },
     "time": { "zh": "用时", "en": "TIME", "ja": "タイム" },
@@ -88,7 +92,8 @@
     "gotItem": { "zh": "获得道具!", "en": "NEW ITEM!", "ja": "アイテム入手!" },
     "upgrade": { "zh": "升级", "en": "UPGRADE", "ja": "強化" },
     "itemLv": { "zh": "Lv", "en": "Lv", "ja": "Lv" },
-    "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" }
+    "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" },
+    "loreTabs": { "zh": "说明|来历|低语", "en": "ABOUT|ORIGIN|WHISPER", "ja": "説明|由来|囁き" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望的少女", "big": "扣击诗" },

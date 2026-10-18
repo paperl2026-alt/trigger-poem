@@ -2,8 +2,10 @@
 // the select screen's own red / black / white language, items as tilted sticker cards); layout fixed by tools/rounds/bag_wireframe.py
 // (content ui/select.json "bag", mockup px). Everything is drawn here (no Codex lettering):
 //   the COST strip: the 20 slots (red = taken by what is equipped, white = free, dark = not bought yet), used / capacity, expand (+1, price)
-//   the item grid (3 x 3 a page): each item's picture, its level, its cost (◆), E when equipped, the picked one red; ??? = not got yet
-//   what is equipped now; the picked item's card: name, level, cost, effect now -> next level, its three paragraphs, E and upgrade
+//   the item grid (3 x 3 a page): white sticker cards, each tilted, a black folder tab on its top edge and a hard black shadow; its picture,
+//   its level, its cost (● dots), E when equipped, the picked one red; ??? = not got yet; the slots no item fills yet are blank cards
+//   the pager (always there, like the mockup), what is equipped now; the picked item: its picture on a tilted red card, name / level /
+//   effect now -> next on three bars, its three paragraphs in tabbed boxes (about / origin / whisper), upgrade and equip (shirt) buttons
 import { url, meta } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
 import { C, list } from '../core/content.js';
@@ -43,7 +45,13 @@ export function mountBag(x, parent) {
   let page = 0, pick = null;
   const items = () => list('items').slice().sort((a, b) => (a.order ?? 99) - (b.order ?? 99));
   const owned = (id) => SAVE.items.includes(id);
-  const diamonds = (n) => '◆'.repeat(n);
+  const dots = (n) => '●'.repeat(n);
+  // the next level in a few characters: only the words of its description that change ("×1.23"), not the whole sentence again
+  const delta = (now, next) => { const a = now.split(/\s+/), b = next.split(/\s+/); const d = b.filter((w, i) => w !== a[i]); return d.length && d.length < b.length ? d.join(' ') : next; };
+  // a text that has to fit its box: smaller until it does (long English names, long paragraphs)
+  const fit = (el, max, min) => { let f = max; el.style.fontSize = `calc(${f} * var(--u))`; while (f > min && (el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)) { f -= 0.5; el.style.fontSize = `calc(${f} * var(--u))`; } };
+  const SHIRT = '<svg viewBox="0 0 48 40"><path d="M16 2 L4 9 L9 19 L13 17 L13 38 L35 38 L35 17 L39 19 L44 9 L32 2 Q24 9 16 2 Z" fill="#fff"/><text x="24" y="31" text-anchor="middle" font-size="15" font-weight="900" font-style="italic" fill="#e0121e">E</text></svg>';
+  const UP = '<svg viewBox="0 0 40 40"><path d="M20 3 L36 19 L28 19 L20 11 L12 19 L4 19 Z M20 18 L36 34 L28 34 L20 26 L12 34 L4 34 Z" fill="#fff"/></svg>';
 
   function render() {
     const all = items(), used = bagCost(SAVE.bag), cap = SAVE.cap, price = capPrice();
@@ -60,17 +68,16 @@ export function mountBag(x, parent) {
       const it = all[page * per + i];
       c.className = x.pre('bcell btn');
       c.onpointerdown = null;
-      if (!it) { c.classList.add('s-empty'); c.innerHTML = ''; return; }
+      if (!it) { c.classList.add('s-empty'); c.innerHTML = ''; return; }   // (a blank card: the grid always looks full, like the mockup)
       const own = owned(it.id), on = SAVE.bag.includes(it.id);
       c.classList.toggle('s-pick', it.id === pick); c.classList.toggle('s-lockd', !own); c.classList.toggle('s-on', on);
       c.innerHTML = `<img src="${has(it.icon) ? url(it.icon) : ''}" draggable="false">`
         + (own && it.grow ? `<span class="s-lv">Lv${itemLevel(it.id)}</span>` : '')
-        + `<span class="s-dots">${diamonds(it.cost)}</span>`
+        + `<span class="s-dots">${dots(it.cost)}</span>`
         + (on ? '<span class="s-e">E</span>' : '') + (!own ? '<span class="s-q">???</span>' : '');
       x.tap(c, (e) => { x.pop(c, e); sfx.ui(); pick = it.id; render(); });
     });
-    pager.classList.toggle('s-none', pages < 2);
-    pager.innerHTML = `<i class="s-pl"></i>${Array.from({ length: pages }, (_, i) => `<b class="${i === page ? 's-on' : ''}"></b>`).join('')}<i class="s-pr"></i>`;
+    pager.innerHTML = `<i class="s-pl"></i><span>${Array.from({ length: pages }, (_, i) => `<b class="${i === page ? 's-on' : ''}"></b>`).join('')}</span><i class="s-pr"></i>`;
     const [pl, pr] = pager.querySelectorAll('i');
     if (pl) x.tap(pl, () => { if (page > 0) { page--; sfx.uiPage(); render(); } else sfx.uiDeny(); });
     if (pr) x.tap(pr, () => { if (page < pages - 1) { page++; sfx.uiPage(); render(); } else sfx.uiDeny(); });
@@ -84,18 +91,24 @@ export function mountBag(x, parent) {
     if (!it) { card.innerHTML = ''; return; }
     const own = owned(it.id), on = SAVE.bag.includes(it.id), lv = itemLevel(it.id), nx = own ? nextLevel(it.id) : null;
     const name = own || !it.reward ? tr(it.name) : '???';
-    const lore = (it.lore || []).map((p) => `<p>${esc(tr(p))}</p>`).join('');
+    const tabs = t('loreTabs').split('|'), known = own || !it.reward;
+    const lore = [0, 1, 2].map((i) => `<div class="s-box"><span class="s-tab">${esc(tabs[i] || '')}</span><p>${known && it.lore?.[i] ? esc(tr(it.lore[i])) : ''}</p></div>`).join('');
     let act2;
-    if (!own && it.reward) act2 = `<button class="s-bup s-off"><b>${t('notYet')}</b></button>`;
-    else if (!own) act2 = `<button class="s-bup s-buy${SAVE.dd < it.price ? ' s-off' : ''}"><b>${t('buy')}</b><small>${it.price.toLocaleString('en-US')} ${t('ddShort')}</small></button>`;
-    else if (!nx) act2 = `<button class="s-bup s-off"><b>${t('lvMax')}</b></button>`;
-    else act2 = `<button class="s-bup${SAVE.dd < nx.price ? ' s-off' : ''}"><b>${t('upgrade')} → Lv${nx.lv}</b><small>${nx.price.toLocaleString('en-US')} ${t('ddShort')}</small></button>`;
-    card.innerHTML = `<div class="s-ch"><div class="s-ci">${has(it.icon) ? `<img src="${url(it.icon)}" draggable="false"${own ? '' : ' class="s-sil"'}>` : ''}</div>
-        <div class="s-cn"><b>${esc(name)}</b><span>${own && it.grow ? `Lv ${lv} / ${itemMax(it.id)}` : own ? '' : t('notYet')}</span><em>${t('cost')} <i>${diamonds(it.cost)}</i></em></div></div>
-      <div class="s-cfx">${own || !it.reward ? `<b>${esc(itemDesc(it.id, lv, tr))}</b>${nx ? `<small>${t('nextLv')} ${esc(itemDesc(it.id, nx.lv, tr))}</small>` : ''}` : `<b>${t('notYetHint')}</b>`}</div>
-      <div class="s-lore">${own || !it.reward ? lore : ''}</div>
-      <div class="s-btns"><button class="s-be${on ? ' s-on' : ''}${own ? '' : ' s-off'}"><i>E</i><b>${on ? t('unequip') : t('equip')}</b></button>${act2}</div>`;
-    const [be, bu] = card.querySelectorAll('button');
+    if (!own && it.reward) act2 = `<button class="s-bup s-off">${UP}<b>${t('notYet')}</b></button>`;
+    else if (!own) act2 = `<button class="s-bup s-buy${SAVE.dd < it.price ? ' s-off' : ''}">${UP}<b>${t('buy')}</b><small>${it.price.toLocaleString('en-US')} ${t('ddShort')}</small></button>`;
+    else if (!nx) act2 = `<button class="s-bup s-off">${UP}<b>${t('lvMax')}</b></button>`;
+    else act2 = `<button class="s-bup${SAVE.dd < nx.price ? ' s-off' : ''}">${UP}<b>${t('upgrade')} → Lv${nx.lv}</b><small>${nx.price.toLocaleString('en-US')} ${t('ddShort')}</small></button>`;
+    // (the mockup: upgrade on the left, equip — a shirt — on the right)
+    card.innerHTML = `<div class="s-ci">${has(it.icon) ? `<img src="${url(it.icon)}" draggable="false"${own ? '' : ' class="s-sil"'}>` : ''}</div>
+      <b class="s-cname">${esc(name)}</b>
+      <span class="s-clv">${own && it.grow ? `Lv ${lv} <small>/ ${itemMax(it.id)}</small>` : own ? '' : t('notYet')}</span>
+      <i class="s-cdots">${dots(it.cost)}</i>
+      <div class="s-cfx">${known ? `<b>${esc(itemDesc(it.id, lv, tr))}</b>${nx ? `<small>${t('nextLv')} ${esc(delta(itemDesc(it.id, lv, tr), itemDesc(it.id, nx.lv, tr)))}</small>` : ''}` : `<b>${t('notYetHint')}</b>`}</div>
+      <div class="s-lore">${lore}</div>
+      <div class="s-btns">${act2}<button class="s-be${on ? ' s-on' : ''}${own ? '' : ' s-off'}">${SHIRT}<b>${on ? t('unequip') : t('equip')}</b></button></div>`;
+    fit(card.querySelector('.s-cname'), 24, 13); fit(card.querySelector('.s-cfx'), 17, 11);
+    card.querySelectorAll('.s-box p').forEach((q) => fit(q, 14.5, 10.5));
+    const bu = card.querySelector('.s-bup'), be = card.querySelector('.s-be');
     x.tap(be, (e) => {
       const r = toggleEquip(it.id);
       if (r === 'full') { x.shake(be); x.shake(cost); sfx.uiDeny(); flash(t('bagFull')); return; }
