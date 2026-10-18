@@ -218,7 +218,18 @@ export class Actor {
 // Spawns stand back (tuning layout.json monster spawnMin / spawnFar) so there is ground to cover; whatever drawn prop is in the way gets
 // smashed (PanelWorld.smashPropsNear).
 // armor = the states it can't be staggered in (super armour): leaps, dives, throws, pounces, entrances.
+// What else a kind can do (enemies.json, DESIGN「怪的行为要多样」, user 2026-10-18 "完全就是机械劳动"):
+//   dashAt: 0.5      at half its HP it suddenly zips aside and on, with afterimages, untouchable meanwhile (fragile things)
+//   enrage: k        the more it is hurt the faster it comes (speed x 1 + k at the end), reddening
+//   evade: { n, rest, react, dist }   a sight resting on it (react s) makes it sidestep, untouchable; after n dodges it is out of
+//                    breath for rest s; it never dodges while gathering an attack (that is when it can be caught)
+//   phantoms: { n, shuffle, hits }    it stands among n - 1 copies of itself; all take shots, only it loses HP; a copy hit hits times
+//                    melts away; after shuffle x its HP lost they all fade and come back shuffled (it in a new place)
+//   dmg: n           what its bite / ram takes (else tuning combat.enemyHit; swarms bite less)
+// A wave's entry can also have: count: n (that many, spread out: a swarm), from: 'statue' (it stands as a grey statue, not a target,
+// until wake: seconds, or a wave event { kills / t, wake: true | n } wakes it: DESIGN「摆设活过来」)
 const enemyHit = () => T.combat.enemyHit;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const DEFAULT_MOVE = { walker: 'walk', flyer: 'float', thrower: 'step', crawler: 'crawl' };
 
 export class Enemy extends Actor {
@@ -242,6 +253,7 @@ export class Enemy extends Actor {
     this.bp = { ...B.common, ...B[def.beh], ...def.params };   // this enemy's behaviour numbers
     this.frames = def.frames;
     this.hp = s.hp ?? def.hp;   // (a wave can make one tougher: the turning-around ghoul)
+    this.maxHp = this.hp; this.invul = 0; this.aimT = 0; this.dodges = 0; this.tiredT = 0; this.lostRound = 0;
     this.tough = !!(s.tough || def.tough);   // never staggered, not pushed back by hits
     this.state = 'enter';
     this.timer = 0;
@@ -260,7 +272,7 @@ export class Enemy extends Actor {
     world.scene.add(this.root);
     const P = this.root.position;
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
-    if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop') {   // (flyers: their hovering spot, below)
+    if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop' && s.from !== 'statue') {   // (flyers: their hovering spot, below)
       const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
@@ -304,9 +316,17 @@ export class Enemy extends Actor {
     const tw = this.game.etw, P = this.root.position, walker = this.beh === 'walker', bp = this.bp;
     const ready = () => {
       if (!this.alive || this.state !== 'enter') return;
+      if (this.def.phantoms && !this.phantoms) this.makePhantoms();
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
       this.timer = rr(bp.startDelay);
     };
+    // a statue: grey stone, no outline, not a target, until it wakes (wake: seconds, or a wave event)
+    if (s.from === 'statue') {
+      P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.idle || this.frames.walk || [this.def.first])[0]);
+      this.u.outlineOn.value = 0; this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; this.statueReady = ready;
+      if (s.wake != null) tw.wait(s.wake, () => this.wake());
+      return;
+    }
     // the turning-around scare (Game.scare): it waits, back turned, until turnAround()
     if (s.from === 'scare') { P.set(s.x, s.y || 0, s.z); this.state = 'scripted'; this.setFrame(this.prefix + (this.frames.scare || [this.def.first])[0]); return; }
     if (walker) this.play('walk', 7); else this.play('rise');
@@ -329,10 +349,15 @@ export class Enemy extends Actor {
     }
   }
 
+  hitMeshes() { return this.alive && this.state !== 'statue' ? [this.mesh] : []; }
   update(dt, t) {
     this.baseUpdate(dt, t);
-    if (!this.alive || this.state === 'scripted') return;
+    if (!this.alive || this.state === 'scripted' || this.state === 'statue') return;
     const g = this.game;
+    this.invul = Math.max(0, this.invul - dt);
+    if (this.def.evade) this.updateEvade(dt);
+    if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
+    if (this.dashPending && !this.moving && ['walk', 'stand', 'hover', 'hide'].includes(this.state)) { this.dashPending = false; this.dash(); }
     this.hurtT -= dt;
     this.poiseCD -= dt;
     this.poise = Math.max(0, this.poise - this.def.poise * this.bp.poiseDrain * dt);
@@ -425,7 +450,7 @@ export class Enemy extends Actor {
         if ((this.hopT -= dt) <= 0) M === 'burrow' && d > bp.burrowMin ? this.burrowTo() : this.hop(M === 'zigzag');
         return;
       }
-      const sp = this.def.speed * (M === 'charge' ? bp.chargeCreep : 1) * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
+      const sp = this.def.speed * this.rage() * (M === 'charge' ? bp.chargeCreep : 1) * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
       if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; g.world.smashPropsNear?.(P, this.w * 0.35); }
       this.walkPhase += dt * 7;
       this.inner.position.y = Math.abs(Math.sin(this.walkPhase)) * 0.1;
@@ -459,7 +484,7 @@ export class Enemy extends Actor {
             this.state = 'bite';
             this.play('bite');
             g.post.shake(0.6);
-            g.playerAttacked({ kind: this.rushes() ? 'ram' : 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides; a rush goes through)
+            g.playerAttacked({ kind: this.rushes() ? 'ram' : 'bite', dmg: this.def.dmg ?? enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides; a rush goes through)
             tw.wait(bp.biteHold, () => {
               if (!this.alive) return;
               this.state = 'recoil';
@@ -480,7 +505,7 @@ export class Enemy extends Actor {
     let tx = P.x + ux * step, tz = P.z + uz * step;
     if (zig) { this.zigSide = -this.zigSide; tx += -uz * bp.rollSide * this.zigSide; tz += ux * bp.rollSide * this.zigSide; }
     const H = g.world.set?.hall; if (H) { tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx)); }
-    const x0 = P.x, z0 = P.z, dur = zig ? bp.rollTime : bp.hopTime, arc = zig ? bp.rollArc : bp.hopArc, spin = zig ? this.zigSide * Math.PI * 2 : 0;
+    const x0 = P.x, z0 = P.z, dur = (zig ? bp.rollTime : bp.hopTime) / this.rage(), arc = zig ? bp.rollArc : bp.hopArc, spin = zig ? this.zigSide * Math.PI * 2 : 0;
     this.moving = true; this.play(zig ? 'walk' : 'leap');
     g.etw.run(dur, (e) => {
       if (!this.alive) return;
@@ -489,7 +514,7 @@ export class Enemy extends Actor {
     }, { ease: zig ? Ease.inOutQuad : Ease.outQuad, onDone: () => {
       this.moving = false; this.inner.rotation.z = 0; this.inner.position.y = 0;
       if (!this.alive || this.state !== 'walk') return;
-      this.play('crouch'); this.hopT = rr(zig ? bp.rollPause : bp.hopPause); g.post.shake(0.12);
+      this.play('crouch'); this.hopT = rr(zig ? bp.rollPause : bp.hopPause) / this.rage(); g.post.shake(0.12);
     } });
   }
   // into the floor and up again a few metres nearer (debris where it breaks out)
@@ -539,7 +564,7 @@ export class Enemy extends Actor {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
-            g.playerAttacked({ kind: 'ram', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (a ram: hiding does not help)
+            g.playerAttacked({ kind: 'ram', dmg: this.def.dmg ?? enemyHit(), from: this, slot: this.targetSlot });   // (a ram: hiding does not help)
             this.state = 'recoil';
             this.play('fly', 14);
             { // its next hover spot is a little nearer (never closer than near)
@@ -673,6 +698,11 @@ export class Enemy extends Actor {
   // info: { kind: rifle | mantra | beam, dmg (final, crit already applied), crit, stagger, stun, uv, by }
   hit(info) {
     if (!this.alive) return;
+    if (this.invul > 0) {   // (zipping aside: the shot glances off, nothing is lost)
+      info.dealt = 0; this.flash = Math.max(this.flash, 0.25);
+      this.game.fx.star(this.uvToWorld(info.uv.u, info.uv.v), 0.35, COL.white); sfx.miss(0);
+      return;
+    }
     let dmg = info.dmg;
     if (this.def.hides && this.state === 'hide') dmg *= this.bp.hiddenDmgMul ?? 0.5;
     // throwing: it shrugs most of it off (DESIGN: the volley gets out, the player turns to shoot the things flying at her)
@@ -704,10 +734,104 @@ export class Enemy extends Actor {
     if (!this.alive) return;
     this.hp -= dmg;
     if (!dot) this.game.onHit(this, kind, info);
-    if (this.hp <= 0) this.die(kind, info);
+    if (this.hp <= 0) { this.die(kind, info); return; }
+    if (this.def.dashAt && !this.dashed && this.hp <= this.maxHp * this.def.dashAt) { this.dashed = true; this.dashPending = true; }
+    if (this.def.phantoms) { this.lostRound += dmg; if (this.lostRound >= this.maxHp * (this.def.phantoms.shuffle ?? 0.15)) { this.lostRound = 0; this.shuffle(); } }
+  }
+
+  // ---- DESIGN「怪的行为要多样」 (the kinds' dashAt / enrage / evade / phantoms; statues)
+  rage() { const k = this.def.enrage; return k ? 1 + k * (1 - Math.max(0, this.hp) / this.maxHp) : 1; }
+  // a zip to (dx, dz) metres in the camera's frame (x across, z toward the camera), untouchable meanwhile, afterimages behind it
+  zip(lat, fw, dur, hop = 0.3) {
+    const g = this.game, P = this.root.position, f = this.fwd(), H = g.world.set?.hall;
+    let tx = P.x - f.z * lat - f.x * fw, tz = P.z + f.x * lat - f.z * fw;
+    if (H) { tx = clamp(tx, H.x0 + this.w * 0.5, H.x1 - this.w * 0.5); tz = clamp(tz, H.z1 + 0.5, H.z0 - 0.5); }
+    const c = g.world.camPos, dd = Math.hypot(tx - c.x, tz - c.z), near = T.layout.monster.near;
+    if (dd < near) { tx = c.x + (tx - c.x) * near / dd; tz = c.z + (tz - c.z) * near / dd; }   // (never through the covers)
+    const x0 = P.x, z0 = P.z, side = Math.sign(lat) || 1;
+    if (this.home) { this.home.x += tx - x0; this.home.z += tz - z0; }
+    this.invul = dur + 0.08; this.flash = 0.8; this.moving = true;
+    sfx.whoosh(0); this.trail(dur);
+    g.etw.run(dur, (e) => {
+      if (!this.alive) return;
+      P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; this.inner.position.y = Math.sin(e * Math.PI) * hop; this.inner.rotation.z = -side * Math.sin(e * Math.PI) * 0.35;
+      g.world.smashPropsNear?.(P, this.w * 0.35);
+    }, { ease: Ease.outCubic, onDone: () => { this.moving = false; this.inner.rotation.z = 0; this.inner.position.y = 0; } });
+  }
+  dash() {   // 残血爆冲: aside and on
+    this.zip((Math.random() < 0.5 ? -1 : 1) * rnd(1.6, 2.4), this.beh === 'walker' ? rnd(0.6, 1.4) : 0, 0.4, 0.45);
+    this.game.fx.star(this.center(), 0.9, COL.gold); sfx.dollScreech(0);
+  }
+  // 躲瞄准: a player's sight resting on it makes it sidestep; it tires after a few; never while gathering an attack
+  updateEvade(dt) {
+    const E = this.def.evade;
+    if (this.tiredT > 0) { this.tiredT -= dt; if (Math.random() < dt * 3) this.game.fx.star(this.uvToWorld(rnd(0.3, 0.7), 0.95), 0.3, COL.lime); if (this.tiredT <= 0) this.dodges = 0; return; }
+    if (this.moving || this.invul > 0 || !['walk', 'stand', 'hover', 'hide'].includes(this.state)) { this.aimT = 0; return; }
+    const g = this.game, b = g.box(this);
+    const aimed = g.players.some((p) => (p.state === 'out' || p.activeOn) && p.aimX > b.x0 && p.aimX < b.x1 && p.aimY > b.y0 && p.aimY < b.y1);
+    this.aimT = aimed ? this.aimT + dt : 0;
+    if (this.aimT < (E.react ?? 0.18)) return;
+    this.aimT = 0; this.dodges++;
+    this.zigSide = -this.zigSide;
+    this.zip(this.zigSide * (E.dist ?? 1.5) * rnd(0.8, 1.2), 0, 0.28, 0.2);
+    if (this.dodges >= (E.n ?? 3)) { this.tiredT = E.rest ?? 2.6; this.flash = 0.4; }
+  }
+  // afterimages of the drawing where it was, fading
+  trail(dur) {
+    const g = this.game, n = Math.max(2, Math.round(dur / 0.07));
+    for (let i = 0; i < n; i++) g.etw.wait(i * dur / n, () => {
+      if (!this.alive) return;
+      this.mesh.updateWorldMatrix(true, false);
+      const m = new THREE.Mesh(this.mesh.geometry, this.mesh.material.clone()), U = m.material.uniforms;
+      m.material.depthWrite = false; U.outlineOn.value = 0; U.flash.value = 0; U.tint.value.setRGB(1, 0.85, 0.45); U.tintAmt.value = 0.7; U.useDmg.value = 0;
+      m.matrixAutoUpdate = false; m.matrix.copy(this.mesh.matrixWorld); g.world.scene.add(m);
+      let t = 0;
+      g.fx.add({ update: (dt) => { t += dt; U.opacity.value = 0.5 * (1 - t / 0.35); if (t >= 0.35) { m.parent && m.parent.remove(m); m.material.dispose(); return false; } return true; } });
+    });
+  }
+  // a statue comes to life: it cracks, shakes the dust off, takes its colour back and goes
+  wake() {
+    if (!this.alive || this.state !== 'statue') return;
+    const g = this.game, P = this.root.position;
+    this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
+    sfx.tear(0); sfx.thud(0); g.post.shake(0.6); g.fx.puff(P, 10, COL.bone, 1.1); g.fx.confetti(this.center(), 16, 1.2, [COL.bone, COL.paper]);
+    g.tweens.to(this.u.tintAmt, { value: 0 }, 0.5);
+    this.inner.position.x = 0;
+    g.etw.run(0.45, (e) => { this.inner.position.x = Math.sin(e * 40) * 0.05 * (1 - e); }, { onDone: () => { this.inner.position.x = 0; this.statueReady?.(); } });
+  }
+  // 幻影洗牌: n figures, only this one real; spawned once it is up, reshuffled after it loses a share of its HP
+  makePhantoms() {
+    const F = this.def.phantoms, g = this.game;
+    this.phantoms = [];
+    const slots = this.slots(F.n ?? 3), me = Math.floor(Math.random() * slots.length);
+    this.root.position.x = slots[me].x; this.root.position.z = slots[me].z;
+    if (this.home) { this.home.x = slots[me].x; this.home.z = slots[me].z; }
+    slots.forEach((q, i) => { if (i !== me) { const ph = new Phantom(g, this, q.x - slots[me].x, q.z - slots[me].z); g.actors.push(ph); this.phantoms.push(ph); } });
+  }
+  slots(n) {   // n places across the room, at about its depth
+    const g = this.game, P = this.root.position, f = this.fwd(), H = g.world.set?.hall, gap = Math.max(this.w * 1.15, 1.7);
+    return Array.from({ length: n }, (_, i) => {
+      const lat = (i - (n - 1) / 2) * gap;
+      let x = P.x - f.z * lat, z = P.z + f.x * lat;
+      if (H) x = clamp(x, H.x0 + this.w * 0.5, H.x1 - this.w * 0.5);
+      return { x, z };
+    }).sort(() => Math.random() - 0.5);
+  }
+  shuffle() {
+    const g = this.game, all = [this, ...(this.phantoms || []).filter((p) => p.alive)];
+    this.invul = 1.4; sfx.whoosh(0); sfx.madness();
+    for (const a of all) { g.fx.ink(a.center(), 10, 1.2, COL.violet); g.tweens.to(a.u.opacity, { value: 0 }, 0.3); }
+    g.etw.wait(0.6, () => {
+      if (!this.alive) return;
+      for (const p of this.phantoms || []) if (!p.removed) { p.alive = false; p.dispose(); }
+      this.root.position.x = (g.world.camPos.x + this.root.position.x) / 2;   // (round the middle again, then spread)
+      this.makePhantoms();
+      for (const a of [this, ...this.phantoms]) { a.u.opacity.value = 0; g.tweens.to(a.u.opacity, { value: 1 }, 0.35); }
+    });
   }
   die(kind, info) {
     this.alive = false;
+    for (const p of this.phantoms || []) if (p.alive) p.melt();
     cry(this.type, 'die');
     this.u.outlineOn.value = 0;   // (the "can be shot" outline goes at once: DESIGN「怪物挨打的样子」)
     this.endWindup();
@@ -723,6 +847,48 @@ export class Enemy extends Actor {
     else this.dieKnock();
     if (how === 'burn') sfx.burnOut(0); else if (how === 'shatter') sfx.shatter(0); else sfx.paperRip(0);
     this.game.onKill(this, how, crit);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// One of the copies a phantoms kind stands among: the same drawing doing the same thing at another place; shots land on it (it flickers)
+// but take nothing from the real one; hit often enough it melts away. Not a monster of the wave (Game.checkWave skips it).
+export class Phantom extends Actor {
+  constructor(game, real, dx, dz) {
+    super(game, real.mesh.userData.texKey, real.def.h, real.pivot);
+    this.real = real; this.dx = dx; this.dz = dz; this.phantom = true; this.left = real.def.phantoms.hits ?? 10;
+    this.frames = real.frames; this.prefix = real.prefix;
+    if (real.shadowM) { this.shadowM = game.world.makeShadow(real.w * 0.4); game.world.scene.add(this.shadowM); }
+    game.world.scene.add(this.root);
+    this.sync();
+  }
+  sync() {
+    const r = this.real, P = this.root.position, R = r.root.position;
+    P.set(R.x + this.dx, R.y, R.z + this.dz);
+    this.inner.position.copy(r.inner.position); this.inner.rotation.copy(r.inner.rotation); this.inner.scale.copy(r.inner.scale);
+    this.setFrame(r.mesh.userData.texKey);
+    if (this.shadowM) this.shadowM.position.set(P.x, 0.02, P.z);
+  }
+  update(dt, t) {
+    this.baseUpdate(dt, t);
+    if (!this.alive) return;
+    if (!this.real.alive) { this.melt(); return; }
+    this.sync();
+    this.inner.position.x += (this.glitch = Math.max(0, (this.glitch || 0) - dt * 4)) * Math.sin(t * 90) * 0.06;
+  }
+  hit(info) {
+    if (!this.alive) return;
+    info.dealt = 0; this.lastHitBy = info.by;
+    this.flash = 0.7; this.glitch = 1;
+    this.game.fx.ink(this.uvToWorld(info.uv.u, info.uv.v), 3, 0.6, COL.violet); sfx.miss(0);
+    if (--this.left <= 0) this.melt();
+  }
+  melt() {
+    if (!this.alive) return;
+    this.alive = false; this.u.outlineOn.value = 0;
+    if (this.shadowM) this.shadowM.visible = false;
+    this.game.fx.ink(this.center(), 14, 1.4, COL.violet); sfx.burnOut(0);
+    this.dieBurn({ u: 0.5, v: 0.5 });
   }
 }
 

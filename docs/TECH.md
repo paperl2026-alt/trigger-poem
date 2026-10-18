@@ -157,6 +157,13 @@
   - 飞的：`float` 每一秒左右换个点飘，每俯冲一次悬停点往前靠 `homeStep` 米；
   - 扔东西的：`step` 扔完还远（深于 `stopDist`）就往前走几步（会躲的那种缩下去挪过去再冒出来）；蓄力和出手时只吃 `throwArmor` 倍伤害（霸体）；一次扔的个数 `burst`；写了 `summon`（刷怪列表，x / z 相对自己）的改成在身边叫出怪来，场上这些怪已有 `summonMax` 只时照常扔东西；
   - `recharge: true` 的冲撞怪（新娘之影）扑完退开后再蓄力冲一次。
+- 怪的花样（DESIGN「怪的行为要多样」，`enemies.json` 每种怪的字段，代码在 `Enemy` 里）：
+  - `dashAt: 0.5`：血掉到一半时（下一个能动的时机）`zip` 一下闪到旁边、往前冲一段，带残影（`trail`：当时那一帧的复制品变淡），期间 `invul`（打中只冒白星、不掉血）；
+  - `enrage: k`：越掉血越快（速度、跳的间隔 × `rage()`，最多 1 + k），越来越红、冒热气；
+  - `evade: { n, rest, react, dist }`：玩家的准星停在它身上 react 秒就横闪 dist 米（无敌），闪 n 次后喘 rest 秒（头上冒星），蓄力时不闪；
+  - `phantoms: { n, shuffle, hits }`：出场后站在 n - 1 个幻影（`Phantom`：同一张图、同样的动作、偏一个位置）中间；幻影挨打只闪不掉血，挨 hits 下化掉；真身每掉 shuffle 的血，所有人淡出、重新排位置淡入；真身死了幻影一起化掉；幻影不算这一波的怪（`checkWave`）；
+  - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
+- 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）。
 - 受伤的样子（`src/core/paper.js` 的 solid 分支，怪和 Boss）：伤害图 R 通道越重的地方越偏淡紫粉、越透明（最多剩 40%，`am`）、透明的边缘发粉光；G 通道（真言 / 镭射的灼烧）偏琥珀色、略透明，不再变黑。
 - 伤害：`characters.js buildStats` = 角色的枪 + 熟练度（每级 `economy.json mastery` dmgPerLv / critPerLv / critMulPerLv / reloadPerLv）+ 书包；暴击率 = Fever 准头 + `w.critAdd`，暴击倍率 = Fever + `w.critMulAdd`（`Game.critRate / critMul`）。
 - 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`，没血了往后倒、淡出；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`）。

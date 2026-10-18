@@ -349,7 +349,10 @@ export class Game {
     // a wave lists monsters, and may list things that happen at a time { t, ... } or once so many of this wave's monsters are dead
     // { kills: n, ... }: turn: {...} the place turns real / rotten; mutate: true every monster still standing becomes its full self
     // (enemies.json mutatesTo); gimmick: id fires that mechanism of the set (a portrait empties)
-    const spawns = wave.filter((s) => s.type);
+    // count: n = that many of it, spread across the room a beat apart (a swarm: DESIGN「怪的行为要多样」 成群飞的)
+    const spawns = wave.filter((s) => s.type).flatMap((s) => !s.count ? [s] : Array.from({ length: s.count }, (_, i) => ({ ...s, count: undefined,
+      t: (s.t || 0) + i * (s.every ?? 0.18), x: (s.x || 0) + (i - (s.count - 1) / 2) * (s.spread ?? 4.4) / Math.max(1, s.count - 1) + (Math.random() - 0.5) * 0.4,
+      y: s.y != null ? s.y + (Math.random() - 0.5) * 0.8 : undefined })));
     this.pendingSpawns = spawns.length;
     this.waveLive = true; this.waveKills = 0;
     for (const s of spawns) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
@@ -360,6 +363,10 @@ export class Game {
     if (e.turn) this.turn(e.turn);
     if (e.mutate) this.mutateAll();
     if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
+    if (e.wake) {   // statues come to life (all, or so many of them, nearest first)
+      const st = this.actors.filter((a) => a.alive && a.state === 'statue').sort((a, b) => a.distToCam() - b.distToCam());
+      st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => this.etw.wait(i * 0.5, () => a.wake()));
+    }
   }
   // the house turns and what is left of the small things turns with it: each becomes its full self where it stands (a flash, a puff)
   mutateAll() {
@@ -376,7 +383,7 @@ export class Game {
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
-    if (this.actors.some((a) => a.alive && !(a instanceof Projectile) && !a.prop)) return;
+    if (this.actors.some((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom)) return;
     this.waveLive = false;
     this.waveIndex++;
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
