@@ -4,7 +4,7 @@ seamless loop.  python -I tools/bgm_pick.py [track ...] [--dry]
   tools/rounds/bgm_specs.py): how closely its beats fall where the guide's do (onset correlation), how closely its harmony follows the
   written chords bar by bar (chroma correlation), how far it lags behind the guide, whether it fades out or drops out somewhere. The best
   one (or the one named in PICK, after the user has listened) becomes the track: the loop runs from the start of section `loopFrom` of the
-  spec (default: the second section, the first is an intro played once) to the end of the last section (one section earlier when the cover
+  spec (default: the second section when the first is a short intro of 8 bars or less, played once; else the whole piece) to the end of the last section (one section earlier when the cover
   fades out at the end), both points moved by the cover's own lag there; the last 80 ms of the loop are blended into the 80 ms just before
   its start so the jump back is seamless. Levelled to one loudness, written as Ogg Opus to public/content/base/bgm/<track>.ogg and
   registered in content audio/sounds.json (music.<track>: files, loopStart, loopEnd, vol). art/raw/bgm_ai/_look/<track>.png shows the
@@ -86,7 +86,7 @@ def measure(T, sr, x, og, gch, bar, edges):
 
 
 def loop_of(T, sr, x, og, oc, bar, edges, st):
-    i0 = T.get("loopFrom", 1 if len(edges) > 2 else 0)
+    i0 = T.get("loopFrom", 1 if len(edges) > 2 and T["sections"][0]["bars"] <= 8 else 0)   # (a short first section is an intro played once)
     s_bar = edges[i0]; e_bar = edges[-1] if not st["fade"] or len(edges) <= i0 + 2 else edges[-2]
     Ls = s_bar * bar + lag_at(og, oc, s_bar * bar, 4 * bar, bar / 4); Le = e_bar * bar + lag_at(og, oc, min(e_bar * bar, len(og) * 0.01 - 2 * bar), 4 * bar, bar / 4)
     Ls = max(Ls, CF + 0.01); a, b = int(round(Ls * sr)), int(round(Le * sr)); c = int(CF * sr)

@@ -4,7 +4,7 @@ rendered as a plain guide track with the synth instruments of tools/bgm_theme.py
 koto, a breathy flute, a temple bell, a ticking clock). Step 2 (tools/bgm_ace.py) has ACE-Step 1.5 play it again with real instruments
 (its "cover": the guide's melody, harmony and form, the caption's sound).
 After the last section the guide goes on into a tail: the first bars of the section the loop goes back to (spec loopFrom, default the
-second; `tail` bars, default 8). ACE-Step rounds a piece off a few bars before the end of what it is given: the ending falls in the tail,
+second when the first is a short intro, else the first; `tail` bars, default 8). ACE-Step rounds a piece off a few bars before the end of what it is given: the ending falls in the tail,
 the written sections stay whole, and the tail is the music as it goes on after the loop's jump (tools/bgm_pick.py).
 usage: python -I tools/bgm_guide.py [track ...]   -> art/raw/bgm_ai/<track>_guide.wav (48 kHz stereo, not in git)"""
 import sys, wave, pathlib, importlib.util, re
@@ -60,7 +60,7 @@ def lead(inst, m, d, v):
 class Track:
     def __init__(self, T):
         self.T = T; self.B = 60 / T["bpm"]; self.bar = T.get("meter", 4) * self.B
-        i0 = T.get("loopFrom", 1 if len(T["sections"]) > 1 else 0); L0 = T["sections"][i0]
+        i0 = T.get("loopFrom", 1 if len(T["sections"]) > 1 and T["sections"][0]["bars"] <= 8 else 0); L0 = T["sections"][i0]
         self.secs = T["sections"] + [dict(L0, bars=min(T.get("tail", 8), L0["bars"]))]
         self.bars = sum(s["bars"] for s in self.secs); self.N = int((self.bars * self.bar + 6) * SR)
         self.L = np.zeros(self.N); self.R = np.zeros(self.N)

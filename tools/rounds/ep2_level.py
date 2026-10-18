@@ -142,14 +142,16 @@ S["stations"] = {
 # ================================================================ 3'. the corridor in the dark: the run, the stuck door
 FURO_D0 = d0[0] if d0 else 0   # (out of the bath the way they came in: its curtain)
 S = SETS["ep2_rouka"]; H = S["hall"]
-for i, z in enumerate((-17.5, -10.5)):
-    gm(S, id=f"lan{i}", k="prop/ep2_lantern_hang", on="hang", x=0.3 * (1 - 2 * i), y=2.45, z=z, w=0.7, station="rc1", mark=True, do=[{"drop": {"t": 0.4}}, {"trap": {"r": 2.4, "down": 8}}])
+for i, z in enumerate((-17.5, -10.5, -4.8)):
+    gm(S, id=f"lan{i}", k="prop/ep2_lantern_hang", on="hang", x=0.3 * (1 - 2 * (i % 2)), y=2.45, z=z, w=0.7, station="rc1", mark=True, do=[{"drop": {"t": 0.4}}, {"trap": {"r": 2.4, "down": 8}}])
 gm(S, id="noren", k="prop/ep2_noren", on="hang", x=0, y=2.2, z=-14, w=1.6, station="rc1", mark=True, do=[{"drop": {"t": 0.35}}, {"door": {"hold": 3.5}}])
+gm(S, id="rclock", k="prop/ep2_clock_pillar", on="stand", x=round(H["x0"] + 0.35, 2), y=0, z=-8.4, w=0.7, ry=70, station="rc1", mark=True, do=[{"sound": "clockChime"}, {"lure": {"t": 4}}])
 gm(S, id="jam1", k="cover/ep2_rouka4", on="stand", x=-0.6, y=0, z=0.6, w=1.5, hp=36, station="rc2", block=True, do=[{"sound": "woodBreak"}, {"gone": True}])
 gm(S, id="jam2", k="cover/ep2_rouka1", on="stand", x=0.7, y=0, z=0.9, w=1.4, hp=36, station="rc2", block=True, do=[{"sound": "tear"}, {"gone": True}])
 S["stations"].update({
   "rc1": {"leave": {"exit": [FURO_D0, 1.15, SETS["ep2_furo"]["hall"]["z0"] + 0.6]}, "arrive": {"at": [0, 1.15, H["z1"] + 0.6], "look": [0, 1.1, H["z1"] - 3]}, "state": 1, "cam": [0, 1.15, -4.0], "look": [0, 1.1, H["z1"]],
-          "chase": {"path": [[0, 1.15, -20], [0.2, 1.15, -12]], "face": "back", "form": "a", "dist": 6.5, "speed": 1.7, "herSpeed": 2.6, "hint": "sheTrap"}},
+          "chase": {"path": [[0.3, 1.15, -21], [-0.35, 1.15, -16], [0.35, 1.15, -11], [-0.2, 1.15, -7]], "face": "back", "form": "a", "dist": 6.5, "speed": 1.25,
+                    "herSpeed": 2.4, "hint": "sheTrap"}},
   "rc2": {"cam": [0, 1.15, -4.0], "look": [0, 1.1, H["z0"]], "covers": cov("rouka", 2, 3), "cp": True, "state": 1,
           "block": {"form": "a", "dist": 11, "hint": "sheBlock"},
           "waves": [[{"t": 0, "type": "surippa", "count": 5, "x": 0, "z": 0, "spread": 2.4, "every": 0.35}], [kat(14, 0, 0.5, 2.3)],
@@ -188,9 +190,11 @@ S, H, d0, d1 = place("nakaniwa", True)
 for i, (x, z, a) in enumerate(((-1.3, -6.0, -1.3), (1.3, -13.0, 1.3))):
     gm(S, id=f"ishi{i}", k="prop/ep2_ishidoro", on="stand", x=x, y=0, z=z, w=0.9, station="nk1", mark=True, do=[{"topple": a}, {"sound": "stoneLantern"}, {"trap": {"r": 2.4, "down": 8}}])
 gm(S, id="amado", k="prop/ep2_amado", on="stand", x=0, y=0, z=-9.5, w=2.8, station="nk1", mark=True, shut=True, do=[{"sound": "amado"}, {"door": {"hold": 5}}])
+gm(S, id="amado2", k="prop/ep2_amado", on="stand", x=0, y=0, z=-15.8, w=2.8, station="nk1", mark=True, shut=True, do=[{"sound": "amado"}, {"door": {"hold": 4}}])
 gm(S, id="shishi", k="prop/ep2_shishi", on="stand", x=1.3, y=0, z=-18.5, w=0.9, station="nk1", mark=True, do=[{"sound": "shishiOdoshi"}, {"lure": {"t": 6}}])
 S["stations"] = {
-  "nk1": {"cam": [0, 1.15, -21.5], "look": [0, 1.1, 2], "cp": True, "chase": {"path": [[0, 1.15, 0.5], [0, 1.15, -10]], "face": "back", "form": "a", "dist": 8, "speed": 1.8, "herSpeed": 2.6, "hint": "sheDoor"}},
+  "nk1": {"cam": [0, 1.15, -21.5], "look": [0, 1.1, 2], "cp": True, "chase": {"path": [[0.2, 1.15, 0.0], [-0.3, 1.15, -5.5], [0.3, 1.15, -11.5], [0, 1.15, -17]], "face": "back", "form": "a", "dist": 8,
+                   "speed": 1.35, "herSpeed": 2.5, "hint": "sheDoor"}},
   "nk2": {"cam": [1.1, 0.95, -23.4], "look": [-0.4, 1.0, -12], "hide": {"form": "a", "from": [0, -11], "at": [0.1, -20.2], "stabs": 6}},
   # (out of hiding: the umbrellas come down the walkway in the rain, the lanterns with them, and she comes back from the storehouse's door)
   "nk3": {"cam": [0, 1.15, -13.0], "look": [0, 1.1, H["z1"]], "covers": cov("nakaniwa", 1, 2), "cp": True, "she": {"form": "a", "at": [1.4, H["z1"] + 1.2], "wake": 11},
@@ -207,25 +211,32 @@ for i, (x, z, a) in enumerate(((-1.25, -17.5, -1.3), (1.25, -21.0, 1.3))):
 S, H, d0, d1 = place("kura", True)
 gm(S, id="ledger", k="prop/ep2_ledger", on="stand", x=-2.2, y=0.8, z=-5.0, w=0.9, station="ku2", mark=True, do=[{"read": "ep2Ledger"}])
 gm(S, id="wadokei", k="prop/ep2_clock_wadokei", on="stand", x=2.3, y=0, z=-8.5, w=1.0, station="ku2", do=[{"read": "ep2Clocks"}, {"sound": "clocksAll"}])
-gm(S, id="hatch", k="prop/ep2_hatch", on="floor", x=0, z=-6.5, w=1.4, hp=14, station="ku3", mark=True, do=[{"sound": "woodBreak"}, {"collapse": True}])
+gm(S, id="hatch", k="prop/ep2_hatch", on="floor", x=0, z=-6.5, w=1.4, hp=30, station="ku3", mark=True, block=True, do=[{"sound": "woodBreak"}, {"collapse": True}])
 S["stations"] = {
   "ku1": {"cam": [0, 1.2, -2.0], "look": [0, 1.2, H["z1"]], "pause": 1.0, "sfx": "doorSlam", "say": "scare"},
   "ku2": {"cam": [0, 1.2, -1.8], "look": [0, 1.2, H["z1"]], "covers": cov("kura", 1, 2), "cp": True,
           "waves": [[{"t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "pop"}, {"t": 0.6, "type": "kokeshi", "x": 2, "z": -8.5, "from": "pop"}, {"t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "pop"}],
                     [{"t": 0, "sound": "clocksAll", "hint": "ep2Ushimitsu"}, kat(18, 0, -8, 2.6, 0.8), {"t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8}],
                     [{"t": 0, "type": "futon", "x": 0, "z": -9, "from": "pop"}, {"t": 1, "type": "karakasa", "x": -2, "z": -8.5, "from": "pop"}, {"t": 1.5, "type": "karakasa", "x": 2, "z": -8.5, "from": "pop"}]]},
-  "ku3": {"cam": [0, 1.2, -3.6], "look": [0, 0.2, -6.5], "covers": cov("kura", 3, 4), "hint": "ep2Hatch",
+  "ku3": {"cam": [0, 1.2, -3.6], "look": [0, 0.2, -6.5], "covers": cov("kura", 3, 4), "hint": "ep2Hatch", "block": {"form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch"},
           "waves": [[kat(16, 0, -8, 2.4)], [{"t": 0, "type": "kokeshi", "x": -2, "z": -9, "from": "pop"}, {"t": 0.5, "type": "kokeshi", "x": 2, "z": -9, "from": "pop"}], [kat(20, 0, -8.5, 2.6)]]},
 }
 # ================================================================ 8. the cave: the silkworm, the kerosene
 S, H, d0, d1 = place("chika", True)
+for i, (x, kk) in enumerate(((-1.5, "cover/ep2_chika3"), (0.05, "prop/ep2_cocoon"), (1.55, "cover/ep2_chika4"))):
+    gm(S, id=f"jam{i}", k=kk, on="stand", x=x, y=0, z=-6.6 - 0.25 * (i % 2), w=1.5 if i != 1 else 1.2, hp=34, station="ch2b", block=True,
+       do=[{"sound": "woodBreak" if i != 1 else "paperRip"}, {"gone": True}])
 gm(S, id="kero1", k="prop/ep2_kerosene", on="stand", x=1.7, y=0, z=-9.0, w=0.8, station="ch3", mark=True, do=[{"trap": {"r": 3.2, "kill": True}}])
 gm(S, id="kero2", k="prop/ep2_candles", on="stand", x=-1.8, y=0, z=-4.0, w=0.9, station="ch3", mark=True, do=[{"trap": {"r": 3.6, "kill": True}}])
 S["stations"] = {
   "ch1": {"cam": [0, 1.2, -1.0], "look": [0, 1.1, H["z1"]], "enter": {"from": [0, 5, 0], "dur": 0.9, "shake": 1.4}, "pause": 1.0, "say": "scare"},
   "ch2": {"cam": [0, 1.2, -13.5], "look": [0, 1.1, H["z1"]], "covers": cov("chika", 1, 2), "cp": True, "she": {"form": "kaiko", "at": [0, -25.0], "wake": 4.5},
           "waves": [[kat(14, 0, -18, 2.6, 0.5)], [{"t": 0, "type": "surippa", "count": 6, "x": 0, "z": -19, "spread": 5, "every": 0.3}]]},
-  "ch3": {"cam": [0, 1.2, -1.5], "look": [0, 1.1, H["z1"]], "chase": {"path": [[0, 1.2, -13]], "face": "back", "form": "kaiko", "dist": 7, "speed": 1.2, "herSpeed": 1.9, "hint": "sheKerosene"}},
+  "ch2b": {"cam": [0, 1.2, -10.8], "look": [0, 1.1, 2.0], "covers": cov("chika", 1, 2), "block": {"form": "kaiko", "dist": 13, "herSpeed": 0.45, "turnAt": 5.0, "hint": "sheBlock"},
+           "waves": [[{"t": 0, "type": "kokeshi", "x": -1.6, "z": -5.2, "from": "pop"}, {"t": 0.7, "type": "kokeshi", "x": 1.6, "z": -5.4, "from": "pop"}],
+                     [kat(16, 0, -5.5, 2.4), {"t": 1.5, "type": "surippa", "count": 5, "x": 0, "z": -5, "spread": 2.4, "every": 0.35}]]},
+  "ch3": {"cam": [0, 1.2, -1.5], "look": [0, 1.1, H["z1"]], "chase": {"path": [[0.3, 1.2, -9.5], [-0.3, 1.2, -6]], "face": "back", "form": "kaiko", "dist": 6.5, "speed": 0.95,
+                                                                       "herSpeed": 1.7, "hint": "sheKerosene"}},
   "ch4": {"cam": [2.4, 1.2, -25.6], "look": [3.6, 1.3, H["z1"]], "swap": {"ep2/chika_end1": "ep2/chika_end1_b"}, "pause": 1.4, "say": "real"},
 }
 # the burnt altar's picture shows where the lift is: the way on
@@ -233,11 +244,11 @@ db = door("ep2/chika_end1_b", J.PLACES["chika"]["W"], J.PLACES["chika"]["h"])
 if db: S["exit"] = [db[0], 1.15, round(H["z1"] - 0.6, 2)]
 # ================================================================ 9. the bell tower's shaft: the lift up, the scissor spider climbing after; the gear loft
 S, H, d0, d1 = place("shoro", True)
-for i, y in enumerate((5.5, 8.5)):
-    gm(S, id=f"wt{i}", k="prop/ep2_weight", on="hang", x=1.3 * (1 - 2 * i), y=y, z=-1.6, w=0.7, station="sh2", mark=True, do=[{"drop": {"t": 0.6}}, {"trap": {"r": 3.0, "down": 9}}])
+for i, y in enumerate((4.6, 6.8, 9.0)):
+    gm(S, id=f"wt{i}", k="prop/ep2_weight", on="hang", x=1.3 * (1 - 2 * (i % 2)), y=y, z=-1.6, w=0.7, station="sh2", mark=True, do=[{"drop": {"t": 0.6}}, {"trap": {"r": 3.0, "down": 9}}])
 S["stations"] = {
   "sh1": {"arrive": {"at": [0, 1.2, -1.0], "look": [0, 1.2, H["z1"]]}, "cam": [0, 1.2, -2.0], "look": [0, 1.2, H["z1"]], "pause": 1.0, "sfx": "ropeCreak"},
-  "sh2": {"cam": [0, 10.4, -2.0], "look": [0, 1.0, -2.6], "cp": True, "chase": {"path": [[0, 4.0, -2.0], [0, 7.5, -2.0]], "face": "down", "form": "c", "dist": 4.5, "speed": 0.5, "herSpeed": 0.95, "hint": "sheShaft"}},
+  "sh2": {"cam": [0, 10.4, -2.0], "look": [0, 1.0, -2.6], "cp": True, "chase": {"path": [[0, 3.2, -2.0], [0, 5.6, -2.0], [0, 8.0, -2.0]], "face": "down", "form": "c", "dist": 4.5, "speed": 0.4, "herSpeed": 0.85, "hint": "sheShaft"}},
   "sh3": {"cam": [1.5, 10.6, -4.6], "look": [-1.0, 10.4, 0.5], "hide": {"form": "c", "y": 9.6, "from": [-1.2, 1.0], "at": [-0.2, -2.0], "stabs": 7}},
 }
 S["exit"] = [0, 12.4, -2.0]
@@ -263,7 +274,7 @@ for k, nw, nf, fl, walls in (("genkan", 4, 3, ("slippers",), True), ("kyakushits
     marks(SETS[f"ep2_{k}"], k, nw, nf, fl, walls)
 
 ORDER = ["gk0", "gk1", "gk2", "ky0", "ky1", "ro0", "ro1", "fu0", "fu1", "rc1", "rc2", "kh1", "hr0", "hr1", "hr2", "nk1", "nk2", "nk3", "ku1", "ku2", "ku3",
-         "ch1", "ch2", "ch3", "ch4", "sh1", "sh2", "sh3", "kn1", "kn2"]
+         "ch1", "ch2", "ch2b", "ch3", "ch4", "sh1", "sh2", "sh3", "kn1", "kn2"]
 PLACES = ["ep2_genkan", "ep2_kyakushitsu", "ep2_rouka", "ep2_furo", "ep2_hiroma", "ep2_nakaniwa", "ep2_kura", "ep2_chika", "ep2_shoro", "ep2_kane"]
 allst = {k for s in SETS.values() for k in s["stations"]}
 assert set(ORDER) == allst, (set(ORDER) ^ allst)

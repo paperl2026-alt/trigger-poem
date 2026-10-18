@@ -256,6 +256,18 @@
         "do": [{ "drop": { "t": 0.4 } }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
+        "id": "lan2",
+        "k": "prop/ep2_lantern_hang",
+        "on": "hang",
+        "x": 0.3,
+        "y": 2.45,
+        "z": -4.8,
+        "w": 0.7,
+        "station": "rc1",
+        "mark": true,
+        "do": [{ "drop": { "t": 0.4 } }, { "trap": { "r": 2.4, "down": 8 } }]
+      },
+      {
         "id": "noren",
         "k": "prop/ep2_noren",
         "on": "hang",
@@ -266,6 +278,19 @@
         "station": "rc1",
         "mark": true,
         "do": [{ "drop": { "t": 0.35 } }, { "door": { "hold": 3.5 } }]
+      },
+      {
+        "id": "rclock",
+        "k": "prop/ep2_clock_pillar",
+        "on": "stand",
+        "x": -1.45,
+        "y": 0,
+        "z": -8.4,
+        "w": 0.7,
+        "ry": 70,
+        "station": "rc1",
+        "mark": true,
+        "do": [{ "sound": "clockChime" }, { "lure": { "t": 4 } }]
       },
       {
         "id": "jam1",
@@ -309,7 +334,15 @@
         "state": 1,
         "cam": [0, 1.15, -4.0],
         "look": [0, 1.1, -25.0],
-        "chase": { "path": [[0, 1.15, -20], [0.2, 1.15, -12]], "face": "back", "form": "a", "dist": 6.5, "speed": 1.7, "herSpeed": 2.6, "hint": "sheTrap" }
+        "chase": {
+          "path": [[0.3, 1.15, -21], [-0.35, 1.15, -16], [0.35, 1.15, -11], [-0.2, 1.15, -7]],
+          "face": "back",
+          "form": "a",
+          "dist": 6.5,
+          "speed": 1.25,
+          "herSpeed": 2.4,
+          "hint": "sheTrap"
+        }
       },
       "rc2": {
         "cam": [0, 1.15, -4.0],
@@ -713,6 +746,19 @@
         "do": [{ "sound": "amado" }, { "door": { "hold": 5 } }]
       },
       {
+        "id": "amado2",
+        "k": "prop/ep2_amado",
+        "on": "stand",
+        "x": 0,
+        "y": 0,
+        "z": -15.8,
+        "w": 2.8,
+        "station": "nk1",
+        "mark": true,
+        "shut": true,
+        "do": [{ "sound": "amado" }, { "door": { "hold": 4 } }]
+      },
+      {
         "id": "shishi",
         "k": "prop/ep2_shishi",
         "on": "stand",
@@ -754,7 +800,15 @@
         "cam": [0, 1.15, -21.5],
         "look": [0, 1.1, 2],
         "cp": true,
-        "chase": { "path": [[0, 1.15, 0.5], [0, 1.15, -10]], "face": "back", "form": "a", "dist": 8, "speed": 1.8, "herSpeed": 2.6, "hint": "sheDoor" }
+        "chase": {
+          "path": [[0.2, 1.15, 0.0], [-0.3, 1.15, -5.5], [0.3, 1.15, -11.5], [0, 1.15, -17]],
+          "face": "back",
+          "form": "a",
+          "dist": 8,
+          "speed": 1.35,
+          "herSpeed": 2.5,
+          "hint": "sheDoor"
+        }
       },
       "nk2": {
         "cam": [1.1, 0.95, -23.4],
@@ -860,9 +914,10 @@
         "x": 0,
         "z": -6.5,
         "w": 1.4,
-        "hp": 14,
+        "hp": 30,
         "station": "ku3",
         "mark": true,
+        "block": true,
         "do": [{ "sound": "woodBreak" }, { "collapse": true }]
       }
     ],
@@ -896,6 +951,7 @@
         "look": [0, 0.2, -6.5],
         "covers": [{ "k": "cover/ep2_kura3", "side": -1 }, { "k": "cover/ep2_kura4", "side": 1 }],
         "hint": "ep2Hatch",
+        "block": { "form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch" },
         "waves": [
           [
             { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -8, "y": 2.4, "spread": 3.0, "every": 0.12 }
@@ -954,6 +1010,45 @@
     },
     "gimmicks": [
       {
+        "id": "jam0",
+        "k": "cover/ep2_chika3",
+        "on": "stand",
+        "x": -1.5,
+        "y": 0,
+        "z": -6.6,
+        "w": 1.5,
+        "hp": 34,
+        "station": "ch2b",
+        "block": true,
+        "do": [{ "sound": "woodBreak" }, { "gone": true }]
+      },
+      {
+        "id": "jam1",
+        "k": "prop/ep2_cocoon",
+        "on": "stand",
+        "x": 0.05,
+        "y": 0,
+        "z": -6.85,
+        "w": 1.2,
+        "hp": 34,
+        "station": "ch2b",
+        "block": true,
+        "do": [{ "sound": "paperRip" }, { "gone": true }]
+      },
+      {
+        "id": "jam2",
+        "k": "cover/ep2_chika4",
+        "on": "stand",
+        "x": 1.55,
+        "y": 0,
+        "z": -6.6,
+        "w": 1.5,
+        "hp": 34,
+        "station": "ch2b",
+        "block": true,
+        "do": [{ "sound": "woodBreak" }, { "gone": true }]
+      },
+      {
         "id": "kero1",
         "k": "prop/ep2_kerosene",
         "on": "stand",
@@ -995,10 +1090,34 @@
           ]
         ]
       },
+      "ch2b": {
+        "cam": [0, 1.2, -10.8],
+        "look": [0, 1.1, 2.0],
+        "covers": [{ "k": "cover/ep2_chika1", "side": -1 }, { "k": "cover/ep2_chika2", "side": 1 }],
+        "block": { "form": "kaiko", "dist": 13, "herSpeed": 0.45, "turnAt": 5.0, "hint": "sheBlock" },
+        "waves": [
+          [
+            { "t": 0, "type": "kokeshi", "x": -1.6, "z": -5.2, "from": "pop" },
+            { "t": 0.7, "type": "kokeshi", "x": 1.6, "z": -5.4, "from": "pop" }
+          ],
+          [
+            { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -5.5, "y": 2.4, "spread": 3.0, "every": 0.12 },
+            { "t": 1.5, "type": "surippa", "count": 5, "x": 0, "z": -5, "spread": 2.4, "every": 0.35 }
+          ]
+        ]
+      },
       "ch3": {
         "cam": [0, 1.2, -1.5],
         "look": [0, 1.1, -28.0],
-        "chase": { "path": [[0, 1.2, -13]], "face": "back", "form": "kaiko", "dist": 7, "speed": 1.2, "herSpeed": 1.9, "hint": "sheKerosene" }
+        "chase": {
+          "path": [[0.3, 1.2, -9.5], [-0.3, 1.2, -6]],
+          "face": "back",
+          "form": "kaiko",
+          "dist": 6.5,
+          "speed": 0.95,
+          "herSpeed": 1.7,
+          "hint": "sheKerosene"
+        }
       },
       "ch4": { "cam": [2.4, 1.2, -25.6], "look": [3.6, 1.3, -28.0], "swap": { "ep2/chika_end1": "ep2/chika_end1_b" }, "pause": 1.4, "say": "real" }
     },
@@ -1052,7 +1171,7 @@
         "k": "prop/ep2_weight",
         "on": "hang",
         "x": 1.3,
-        "y": 5.5,
+        "y": 4.6,
         "z": -1.6,
         "w": 0.7,
         "station": "sh2",
@@ -1064,7 +1183,19 @@
         "k": "prop/ep2_weight",
         "on": "hang",
         "x": -1.3,
-        "y": 8.5,
+        "y": 6.8,
+        "z": -1.6,
+        "w": 0.7,
+        "station": "sh2",
+        "mark": true,
+        "do": [{ "drop": { "t": 0.6 } }, { "trap": { "r": 3.0, "down": 9 } }]
+      },
+      {
+        "id": "wt2",
+        "k": "prop/ep2_weight",
+        "on": "hang",
+        "x": 1.3,
+        "y": 9.0,
         "z": -1.6,
         "w": 0.7,
         "station": "sh2",
@@ -1078,7 +1209,15 @@
         "cam": [0, 10.4, -2.0],
         "look": [0, 1.0, -2.6],
         "cp": true,
-        "chase": { "path": [[0, 4.0, -2.0], [0, 7.5, -2.0]], "face": "down", "form": "c", "dist": 4.5, "speed": 0.5, "herSpeed": 0.95, "hint": "sheShaft" }
+        "chase": {
+          "path": [[0, 3.2, -2.0], [0, 5.6, -2.0], [0, 8.0, -2.0]],
+          "face": "down",
+          "form": "c",
+          "dist": 4.5,
+          "speed": 0.4,
+          "herSpeed": 0.85,
+          "hint": "sheShaft"
+        }
       },
       "sh3": {
         "cam": [1.5, 10.6, -4.6],

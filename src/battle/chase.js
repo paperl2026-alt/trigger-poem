@@ -117,7 +117,7 @@ export class Stalker extends Actor {
     else if (!this.busy()) g.chase?.shove(this, (info.stagger || 10) * S.shove);
   }
   // the silkworm cannot be knocked down: a full gauge only makes it rear and hold back a moment
-  flinch() { this.stag = 0; this.endWindup(); this.state = 'stuck'; this.after = this.after || 'follow'; this.timer = 1.2; this.pose('down'); sound('kaikoWail') || sfx.roar(); this.game.chase?.shove(this, 2.5); }
+  flinch() { this.stag = 0; this.endWindup(); this.state = 'stuck'; this.after = this.after || 'follow'; this.timer = 1.2; this.pose('down'); sound('kaikoWail') || sfx.roar(); this.game.chase?.shove(this, 2.5); this.game.chase?.onFlinch(this); }
   knockDown(len = null, how = 'shot') {
     const g = this.game, S = K().she;
     if (this.state === 'down') { this.timer = Math.max(this.timer, len || 0); return; }
@@ -248,6 +248,11 @@ export class Chase {
     if (this.mode === 'block' && this.facing === 'back') g.tweens.wait(0.8, () => this.mode === 'block' && this.turn('fwd'));
   }
 
+  // the silkworm cannot be knocked down: in a blocked stop a full gauge makes it rear back far enough for the view to turn to the way on
+  onFlinch(she) {
+    this.add(K().meter.knock * 0.5, she.center());
+    if (this.mode === 'block' && this.facing === 'back') { this.dist = Math.max(this.dist, this.turnAt + 4); this.g.tweens.wait(0.8, () => this.mode === 'block' && this.turn('fwd')); }
+  }
   // ---- the way on is blocked while she comes up behind (station block)
   block(S) {
     const g = this.g, B = S.block;
