@@ -5,7 +5,7 @@
     "winXpPerKill": 2,
     "lossXpPerKill": 1,
     "firstClearDd": 300,
-    "mastery": { "maxLv": 10, "xpAt": [0, 0, 120, 280, 480, 740, 1060, 1440, 1900, 2440, 3080], "dmgPerLv": 0.05, "critPerLv": 0.01, "critMulPerLv": 0.04, "reloadPerLv": 0.015 },
+    "mastery": { "maxLv": 10, "xpAt": [0, 0, 120, 280, 480, 740, 1060, 1440, 1900, 2440, 3080], "dmgPerLv": 0.02, "critPerLv": 0.005, "critMulPerLv": 0.02, "reloadPerLv": 0.01 },
     "bag": { "start": 1, "max": 20, "price": [150, 1.3] },
     "newSave": {
       "dd": 0,

@@ -466,7 +466,12 @@ export class Game {
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
     if (this.spawners?.some((s) => s.live)) return;
-    if (this.actors.some((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom)) return;
+    // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
+    // up; the last wave of a stop is fought to the end
+    const left = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom).length;
+    const last = this.waveIndex >= this.S.waves.length - 1;
+    if (left > (last ? 0 : T.combat.waveCarry ?? 0)) return;
+    if (!last && left && this.waveEvents?.length) return;   // (this wave's kill-events still to come: it finishes first)
     // the way on still shut (a drawbridge held by seals): the fight goes on until it is worked
     if (this.waveIndex >= this.S.waves.length - 1 && !this.stationQ.length && this.world.gate && !this.world.gate.open) {
       if (!this.gateHint) { this.gateHint = true; this.hint('gateHint'); }
@@ -474,7 +479,7 @@ export class Game {
     }
     this.waveLive = false;
     this.waveIndex++;
-    if (this.waveIndex < this.S.waves.length) { this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
+    if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();
     sfx.clear();

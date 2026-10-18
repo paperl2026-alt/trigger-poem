@@ -163,9 +163,10 @@
   - `evade: { n, rest, react, dist }`：玩家的准星停在它身上 react 秒就横闪 dist 米（无敌），闪 n 次后喘 rest 秒（头上冒星），蓄力时不闪；
   - `phantoms: { n, shuffle, hits }`：出场后站在 n - 1 个幻影（`Phantom`：同一张图、同样的动作、偏一个位置）中间；幻影挨打只闪不掉血，挨 hits 下化掉；真身每掉 shuffle 的血，所有人淡出、重新排位置淡入；真身死了幻影一起化掉；幻影不算这一波的怪（`checkWave`）；
   - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
+- 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
 - 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）。
 - 受伤的样子（`src/core/paper.js` 的 solid 分支，怪和 Boss）：伤害图 R 通道越重的地方越偏淡紫粉、越透明（最多剩 40%，`am`）、透明的边缘发粉光；G 通道（真言 / 镭射的灼烧）偏琥珀色、略透明，不再变黑。
-- 伤害：`characters.js buildStats` = 角色的枪 + 熟练度（每级 `economy.json mastery` dmgPerLv / critPerLv / critMulPerLv / reloadPerLv）+ 书包；暴击率 = Fever 准头 + `w.critAdd`，暴击倍率 = Fever + `w.critMulAdd`（`Game.critRate / critMul`）。
+- 伤害：`characters.js buildStats` = 角色的枪 + 熟练度（每级 `economy.json mastery` dmgPerLv / critPerLv / critMulPerLv / reloadPerLv，现在 2% / 0.5% / 0.02 / 1%，满级 +18% 伤害）+ 书包；暴击率 = Fever 准头 + `w.critAdd`，暴击倍率 = Fever + `w.critMulAdd`（`Game.critRate / critMul`）。
 - 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`，没血了往后倒、淡出；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`）。
 
 ## 图片按小关加载（`src/core/groups.js`、`src/core/assets.js`）
