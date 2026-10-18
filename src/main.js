@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
-import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex } from './core/assets.js';
+import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex, loadLog } from './core/assets.js';
 import { coreKeys, stageKeys, stageFrom } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
@@ -48,7 +48,7 @@ const G = {
 };
 G.p1ctrl = new HybridCtrl(G);
 window.__G = G; // debug handle for automated checks
-G.renderer = renderer; G.vramMB = vramMB; G.texCount = () => Object.keys(tex).length;   // (tools/node/playthrough.cjs: memory checks)
+G.renderer = renderer; G.vramMB = vramMB; G.texCount = () => Object.keys(tex).length; G.loadLog = loadLog;   // (tools/node/playthrough.cjs: memory checks)
 
 // Any window size / aspect: the 3D view widens (panorama), the HUD + characters stay inside the HUD frame.
 function resize() {
@@ -123,9 +123,10 @@ function needPics(keys, then) {
   if (isLoaded(keys)) { go(); return; }
   const box = document.createElement('div'); box.id = 'loading'; box.innerHTML = '<div class="track"><div id="loadbar"></div></div>';
   document.body.appendChild(box);
-  const bar = box.querySelector('#loadbar');
-  loadKeys(keys, (p) => { bar.style.width = `${Math.round(p * 100)}%`; }).then(() => { box.remove(); go(); });
+  const bar = box.querySelector('#loadbar'), t0 = performance.now();
+  loadKeys(keys, (p) => { bar.style.width = `${Math.round(p * 100)}%`; }).then(() => { box.remove(); G.waits.push(Math.round(performance.now() - t0)); go(); });
 }
+G.waits = [];   // ms the loading bar was shown before each stage (tools/node/playthrough.cjs)
 G.needPics = needPics;
 const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : [])]);
 function startRun(epId = 'ep0', step = 0) {

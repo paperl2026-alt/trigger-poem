@@ -66,10 +66,13 @@ function loadOne(k) {
   return p;
 }
 // load these pictures (the ones not loaded yet); onProgress(0..1)
+export const loadLog = [];   // { n pictures, ms } per batch (tools/node/playthrough.cjs: load times)
 export async function loadKeys(keys, onProgress) {
   const todo = [...keys].filter((k) => meta[k] && !tex[k]);
   let done = 0;
+  const t0 = performance.now();
   await Promise.all(todo.map((k) => loadOne(k).then(() => { done++; onProgress && onProgress(done / todo.length); })));
+  if (todo.length) loadLog.push({ n: todo.length, ms: Math.round(performance.now() - t0) });
   onProgress && onProgress(1);
 }
 export const isLoaded = (keys) => [...keys].every((k) => !meta[k] || meta[k].dom || tex[k]);

@@ -6,7 +6,9 @@
 //   screenshot <out>_<n>.png at every new station), PT_EVERY=<ms> (a screenshot that often instead, for watching a scene),
 //   PT_NOSKIP=1 (comic pages and door close-ups are played, not skipped), PT_JS=<js> (run in the page every tick, e.g. to shoot the
 //   place's mechanisms, which the auto-player leaves alone: see docs/TECH.md 自检)
-// <out.json>: { done, results, timeline: [{ t, step, station, wave, ..., mem }], peak, errs }; also <tmp>/playthrough.log while it runs.
+// <out.json>: { done, results, timeline: [{ t, step, station, wave, ..., mem }], peak, load, errs }; also <tmp>/playthrough.log while it runs.
+// load = { batches: [{ n pictures, ms }] (the first is the core at start-up), waits: [ms the loading bar showed before a stage],
+// jank: frames over 50 ms { n, max, sum } }.
 // mem = MB of the game's processes (Electron app.getAppMetrics working sets): gpu (textures live there), tab (the page: decoded images,
 // JS), all; plus tex = textures on the graphics card (three.js renderer.info.memory.textures), vram = their size in MB (estimated,
 // src/core/assets.js vramMB), loaded = pictures loaded (src/core/groups.js decides which).
@@ -54,6 +56,8 @@ app.whenReady().then(async () => {
   await win.loadURL(`app://game/index.html?${q}`);
   await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if (window.__G && __G.game) return ok(); setTimeout(poll, 100); })(); })`);
   await win.webContents.executeJavaScript(`__G.god = true; __G.slow = ${SLOW}; true`);
+  // frames longer than 50 ms (decoding / uploading pictures shows up here)
+  await win.webContents.executeJavaScript(`window.__jank = { n: 0, max: 0, sum: 0 }; (function f(a) { requestAnimationFrame((b) => { const d = b - a; if (d > 50) { __jank.n++; __jank.sum += Math.round(d); __jank.max = Math.max(__jank.max, Math.round(d)); } f(b); }); })(performance.now()); true`);
   const timeline = [], t0 = Date.now();
   let last = '', shots = 0, lastStation = null, st;
   const peak = {};
@@ -77,7 +81,8 @@ app.whenReady().then(async () => {
     if (st.done || t > TIME) break;
   }
   const errs = await win.webContents.executeJavaScript('window.__errs || []');
-  fs.writeFileSync(out, JSON.stringify({ done: !!st.done, results: !!st.results, seconds: Math.round((Date.now() - t0) / 1000), slow: SLOW, peak, timeline, errs }, null, 1));
+  const load = await win.webContents.executeJavaScript('({ batches: __G.loadLog, waits: __G.waits, jank: window.__jank })').catch(() => null);
+  fs.writeFileSync(out, JSON.stringify({ done: !!st.done, results: !!st.results, seconds: Math.round((Date.now() - t0) / 1000), slow: SLOW, peak, load, timeline, errs }, null, 1));
   log('end', st.done ? 'done' : 'timeout');
   app.quit();
 });
