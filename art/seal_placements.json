@@ -956,5 +956,75 @@
     ],
     "keep_frame": true,
     "png": "art/raw/r56/fixed/page_merge_b.png"
+  },
+  "r58_lose_ko_b": {
+    "src": "art/raw/r58/lose_ko_b.png",
+    "auto": true,
+    "within": [
+      620,
+      780,
+      960,
+      1120
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r58/fixed/lose_ko_b.png"
+  },
+  "r58_lose_dragged_b": {
+    "src": "art/raw/r58/lose_dragged_b.png",
+    "center": [
+      448,
+      1111
+    ],
+    "ring": 134,
+    "rot": -10.0,
+    "erase": [
+      322,
+      985,
+      572,
+      1228
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r58/fixed/lose_dragged_b.png"
+  },
+  "r58_lose_flag_a": {
+    "src": "art/raw/r58/lose_flag_a.png",
+    "auto": true,
+    "within": [
+      0,
+      380,
+      260,
+      680
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r58/fixed/lose_flag_a.png"
+  },
+  "r58_lose_loom_a": {
+    "src": "art/raw/r58/lose_loom_a.png",
+    "center": [
+      216,
+      1066
+    ],
+    "ring": 72,
+    "rot": 20.0,
+    "erase": [
+      156,
+      1008,
+      276,
+      1138
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r58/fixed/lose_loom_a.png"
+  },
+  "r58_cover_ep1_c": {
+    "src": "art/raw/r58/cover_ep1_c.png",
+    "auto": true,
+    "within": [
+      0,
+      480,
+      320,
+      860
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r58/fixed/cover_ep1_c.png"
   }
 }

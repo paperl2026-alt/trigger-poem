@@ -93,7 +93,8 @@
     "upgrade": { "zh": "升级", "en": "UPGRADE", "ja": "強化" },
     "itemLv": { "zh": "Lv", "en": "Lv", "ja": "Lv" },
     "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" },
-    "loreTabs": { "zh": "说明|来历|低语", "en": "ABOUT|ORIGIN|WHISPER", "ja": "説明|由来|囁き" }
+    "loreTabs": { "zh": "说明|来历|低语", "en": "ABOUT|ORIGIN|WHISPER", "ja": "説明|由来|囁き" },
+    "lossReward": { "zh": "残局报酬", "en": "SCRAP PAY", "ja": "敗走手当" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望的少女", "big": "扣击诗" },

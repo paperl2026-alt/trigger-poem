@@ -2,12 +2,12 @@ import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
 import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, tex, loadLog } from './core/assets.js';
-import { coreKeys, stageKeys, stageFrom } from './core/groups.js';
+import { coreKeys, stageKeys, stageFrom, stageAt } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
 import { initAudio, sfx } from './core/audio.js';
 import { Game } from './battle/game.js';
-import { showResults, showGameOver } from './ui/screens.js';
+import { showResults } from './ui/screens.js';
 import { showSelect } from './ui/select.js';
 import { mangaTurn } from './ui/manga.js';
 import { showTitle } from './ui/title.js';
@@ -132,7 +132,7 @@ G.needPics = needPics;
 const picsFor = (ep, st) => new Set([...coreKeys(), ...(st ? stageKeys(ep, st) : [])]);
 function startRun(epId = 'ep0', step = 0) {
   const ep0 = C.episodes[epId] || C.episodes.ep0;
-  needPics(picsFor(ep0, stageFrom(ep0, step)), () => beginRun(ep0, step));
+  needPics(picsFor(ep0, stageAt(ep0, step)), () => beginRun(ep0, step));   // (the ending: the last stage's place)
 }
 function beginRun(ep, step) {
   clearScreen();
@@ -162,12 +162,11 @@ function toSelect() {
 }
 // menu screens change like turning a manga page (src/ui/manga.js)
 const turnTo = (show) => mangaTurn(document.querySelector('#ui > .screen'), show);
-G.showResults = (st) => { G.game.hud.show(false); const done = () => toSelect(); endRun(); cursorScene('menu'); showResults(st, done); };
-G.showGameOver = (st) => {
+// the results page, won or lost (both girls down: the same page with a retry from the checkpoint)
+G.showResults = (st) => {
   G.game.hud.show(false);
-  const ep = G.game.ep.id;
-  cursorScene('menu');
-  showGameOver(st, () => startRun(ep, st.checkpoint), toSelect);
+  const ep = G.game.ep.id, retry = st.win ? null : () => startRun(ep, st.checkpoint);
+  endRun(); cursorScene('menu'); showResults(st, () => toSelect(), retry);
 };
 
 let settings = null, dbg = null;

@@ -21,7 +21,7 @@ import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
 import { C, T, isStage } from '../core/content.js';
-import { coreKeys, stageKeys, stageFrom } from '../core/groups.js';
+import { coreKeys, stageKeys, stageFrom, stageAt } from '../core/groups.js';
 import { loadKeys } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
 
@@ -60,10 +60,7 @@ export class Game {
     this.layout(G.W, G.H);
   }
   // which set a step plays in: its own, or the next stage's (a comic / door before a stage), or the episode's
-  setOf(i) {
-    for (let k = i; k < this.ep.steps.length; k++) { const st = this.ep.steps[k]; if (isStage(st)) return st.set || this.ep.set; }
-    return this.ep.set;
-  }
+  setOf(i) { const st = stageAt(this.ep, i); return st?.set || this.ep.set; }   // (the pictures loaded for the start are that stage's: main.js)
   makeWorld(id) { const d = C.sets[id]; return d?.panels ? new PanelWorld(this, id) : d?.plates ? new PlateWorld(this, id) : new World(this, id); }
   // build the set (first time), or swap to another one between stages: the heroines, the effects and the camera move over
   useSet(id) {
@@ -442,7 +439,7 @@ export class Game {
     this.players[0].state = 'down';
     const st = this.stats(false);
     this.applyRewards(st);
-    this.tweens.to(this.post.u.wipe, { value: 1 }, 1.2, { delay: 0.6, ease: Ease.inQuad, onDone: () => this.G.showGameOver(st) });
+    this.tweens.to(this.post.u.wipe, { value: 1 }, 1.2, { delay: 0.6, ease: Ease.inQuad, onDone: () => this.G.showResults(st) });
   }
   finish() {
     stopMusic();

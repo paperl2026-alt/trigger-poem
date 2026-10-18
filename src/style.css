@@ -366,11 +366,6 @@ body:has(.screen.select) #dbg-btn, body:has(.screen.title) #dbg-btn { display: n
 @keyframes figin { from { transform: translateY(40%); } }
 .rbtns { display: flex; gap: calc(2 * var(--u)); margin-top: calc(2 * var(--u)); }
 .rbtns button { font-size: calc(2.8 * var(--u)); background: #000; color: #fff; border: 3px solid #fff; padding: calc(1 * var(--u)) calc(2 * var(--u)); box-shadow: 4px 4px 0 var(--pink); }
-.over { background: #0a0a0a; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(2 * var(--u)); color: #fff; }
-.over .obust { height: 32%; filter: grayscale(1) contrast(1.4); }
-.over .otitle { font-size: calc(6.4 * var(--u)); color: #e8122d; text-shadow: 4px 4px 0 #000; animation: jolt .4s steps(2) infinite; }
-.over .odd { font-size: calc(2.6 * var(--u)); color: #ffd23a; }
-.over .ostatic { position: absolute; inset: 0; pointer-events: none; opacity: .12; background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px); animation: scan 0.3s steps(3) infinite; }
 @keyframes scan { 50% { transform: translateY(2px); } }
 
 /* ---------------- debug menu ---------------- */
@@ -484,6 +479,9 @@ body:has(.screen.select) #dbg-btn, body:has(.screen.title) #dbg-btn { display: n
 .res8 .ok { font: inherit; font-weight: 900; font-size: calc(2.4 * var(--u)); color: var(--paper); background: var(--ink); border: none; cursor: pointer; pointer-events: auto;
   padding: calc(0.6 * var(--u)) calc(3.4 * var(--u)) calc(0.6 * var(--u)) calc(2 * var(--u)); clip-path: polygon(0 0, 86% 0, 100% 50%, 86% 100%, 0 100%); }
 .res8 .ok:hover { background: var(--red); }
+.res8 .ok.retry { background: var(--red); margin-left: auto; margin-right: calc(1 * var(--u)); }
+.res8 .ok.retry:hover { background: var(--ink); }
+.res8 .issue.lost small { color: var(--red); }
 /* printing in: each row wipes in from the left, the tags stamp down */
 .res8 .in { animation: r8In 0.3s calc(var(--d, 0) * 1s) cubic-bezier(0.2, 0.8, 0.3, 1) backwards; }
 .res8 .pop { animation: r8Stamp 0.28s calc(var(--d, 0) * 1s) cubic-bezier(0.2, 1.6, 0.4, 1) backwards; }

@@ -16197,6 +16197,11 @@
   "src": "assets/res/cover.webp",
   "w": 733
  },
+ "res/cover_ep1": {
+  "h": 1100,
+  "src": "assets/res/cover_ep1.webp",
+  "w": 733
+ },
  "res/face_cat": {
   "h": 384,
   "src": "assets/res/face_cat.webp",
@@ -16211,6 +16216,26 @@
   "h": 384,
   "src": "assets/res/item_pig.webp",
   "w": 384
+ },
+ "res/lose_1": {
+  "h": 1100,
+  "src": "assets/res/lose_1.webp",
+  "w": 733
+ },
+ "res/lose_2": {
+  "h": 1100,
+  "src": "assets/res/lose_2.webp",
+  "w": 733
+ },
+ "res/lose_3": {
+  "h": 1100,
+  "src": "assets/res/lose_3.webp",
+  "w": 733
+ },
+ "res/lose_4": {
+  "h": 1100,
+  "src": "assets/res/lose_4.webp",
+  "w": 733
  },
  "sfx2/ba": {
   "h": 348,

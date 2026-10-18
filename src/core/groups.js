@@ -53,6 +53,8 @@ export function stageKeys(ep, st) {
 }
 // the next stage from step i on (a run starting on a comic page or a door starts loading the stage after it)
 export const stageFrom = (ep, i) => ep.steps.slice(Math.max(0, i)).find(isStage) || null;
+// the stage whose place a run starting at step i is in: the next one, or after the last one (the ending comic) the last one
+export const stageAt = (ep, i) => stageFrom(ep, i) || ep.steps.slice(0, Math.max(0, i)).reverse().find(isStage) || null;
 
 let core = null;
 export function coreKeys() {
