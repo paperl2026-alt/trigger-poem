@@ -80,7 +80,7 @@
     "weapon": {
       "kind": "rifle",
       "rate": 0.075,
-      "dmg": 4.5,
+      "dmg": 5.5,
       "mag": 40,
       "reload": 1.15,
       "spread": 0.006,
@@ -97,7 +97,7 @@
       "kind": "gatling",
       "dur": 6,
       "rate": 0.042,
-      "dmg": 1.2,
+      "dmg": 1.6,
       "stagger": 2.2,
       "heal": 0.4,
       "charge": { "sec": 0.015, "hit": 0.011, "kill": 0.05 },

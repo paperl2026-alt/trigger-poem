@@ -585,7 +585,7 @@ export class Game {
   }
 
   // One shot from player p at screen (sx, sy). Rifle rounds pierce; mantra hits ramp up on the same target.
-  // Crits only come from the accuracy Fever. Returns { n: targets hit, crit }.
+  // Crits come from the accuracy Fever plus her mastery (critRate / critMul). Returns { n: targets hit, crit }.
   shoot(p, sx, sy) {
     const w = p.w;
     const K = T.combat;
@@ -606,13 +606,15 @@ export class Game {
       let dmg = w.dmg * (i ? K.pierceDmgMul : 1) * p.fever.dmgMul;
       if (p.gatling) dmg *= p.a.dmg;
       if (w.ramp) dmg *= 1 + w.ramp * Math.min(n, w.rampMax);
-      const c = Math.random() < p.fever.critRate;
-      if (c) { dmg *= p.fever.critMul; crit = true; }
+      const c = Math.random() < this.critRate(p);
+      if (c) { dmg *= this.critMul(p); crit = true; }
       const stagger = w.stagger * (w.kind === 'rifle' ? 1 + K.rifleStaggerRamp * Math.min(n, K.rifleStaggerRampMax) : 1) * (p.gatling ? p.a.stagger : 1);
       tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, part: tg.part, by: p, crit: c, stagger, stun: w.stun });
     });
     return { n: hits.length, crit };
   }
+  critRate(p) { return p.fever.critRate + (p.w.critAdd || 0); }
+  critMul(p) { return p.fever.critMul + (p.w.critMulAdd || 0); }
   // Kaburu's beam tick: everything around the aim point along the line of sight takes damage (pierces all).
   beamHit(p, sx, sy, R, dmg) {
     let n = 0;
@@ -620,8 +622,8 @@ export class Game {
       if (!a.alive || !a.hitMeshes().length) continue;
       const uv = this.boxUV(a, sx, sy);
       if (!uv || uv.d > R) continue;
-      const c = Math.random() < p.fever.critRate;
-      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? p.fever.critMul : 1), uv, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
+      const c = Math.random() < this.critRate(p);
+      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? this.critMul(p) : 1), uv, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
       n++;
     }
     return n;

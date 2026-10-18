@@ -16,6 +16,8 @@ export function buildStats(id, xp, bag) {
   const w = { ...c.weapon }, a = { ...c.active, charge: { ...c.active.charge } };
   const lv = levelOf(xp);
   w.dmg *= 1 + M.dmgPerLv * (lv - 1);
+  // mastery also sharpens her crits (DESIGN「难度和局外成长」): added to the accuracy Fever's rate and multiplier
+  w.critAdd = (M.critPerLv || 0) * (lv - 1); w.critMulAdd = (M.critMulPerLv || 0) * (lv - 1);
   w.reload *= (1 - M.reloadPerLv * (lv - 1)) * fx.reload;
   w.mag = Math.round(w.mag * fx.mag);
   for (const k in a.charge) a.charge[k] *= fx.charge;

@@ -10,15 +10,15 @@
     "canvas": 0.45,
     "walk": { "zoom": 1.35, "knee": 0.27, "ease": 5 },
     "monster": {
-      "minShare": 0.18,
+      "minShare": 0.27,
       "near": 3.4,
       "feetMin": 0.12,
       "walkX": 0.45,
       "flyX": 0.72,
       "flyY": [0.5, 0.86],
-      "spawnMin": 8.5,
-      "spawnFar": 13,
-      "_spawn": "地上的怪和飞的怪出场至少 spawnMin 米远、最多 spawnFar 米（波次写 near: true 的除外），再逼过来"
+      "spawnMin": 5.5,
+      "spawnFar": 8.5,
+      "_spawn": "地上的怪和飞的怪出场至少 spawnMin 米远、最多 spawnFar 米（波次写 near: true 的除外），再逼过来（2026-10-18 用户第十七批：太远、比准星大不了多少 → 8.5～13 米拉近到 5.5～8.5 米，minShare 0.18 → 0.27）"
     },
     "cover": { "lift": 0.03, "top": 0.72, "maxTop": 0.92, "w": 1.3, "x": 0, "foldTime": 0.4 }
   }

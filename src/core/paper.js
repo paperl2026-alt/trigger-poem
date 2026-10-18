@@ -82,21 +82,27 @@ void main(){
   vec2 q = vec2(vUv.x * aspect, vUv.y);
   float n = fbm(q * 14.0 + seed);
   float n2 = vnoise(q * 60.0 + seed * 3.0);
+  float am = 1.0;   // (how much is left where it is hurt: monsters)
   if (useDmg > 0.5 && dmgSolid > 0.5) {
     // monsters and the boss (docs/DESIGN.md「Boss」): never holed — the shape and the hit area stay; where it is hurt, the material
     // changes, old-arcade style: the colour drains and bruises toward violet-black, cracks open and glow, burns char and smoulder
+    // (2026-10-18 user: not black, "半透明的适当变色和消失"): hurt spots turn a pale violet-pink (lighter, the drawing still shows), the
+    // worst ones thin out to semi-transparent with a glowing rim (never gone: the shape and the hit area stay); burns go amber
     vec3 d = texture2D(dmg, vUv).rgb;
     float hv = d.r + (n - 0.5) * 0.3 + (n2 - 0.5) * 0.1;
-    float k = smoothstep(0.15, 0.6, hv);
+    float k = smoothstep(0.15, 0.7, hv);
     float lum = dot(col, vec3(0.3, 0.5, 0.2));
-    vec3 bruise = mix(vec3(lum) * vec3(0.62, 0.42, 0.7), vec3(0.24, 0.05, 0.17), smoothstep(0.4, 0.9, hv));
-    col = mix(col, bruise, k * 0.9);
+    vec3 tintc = mix(col, vec3(lum) * vec3(1.05, 0.74, 1.12) + vec3(0.1, 0.03, 0.12), 0.7);
+    col = mix(col, tintc, k * 0.85);
     float vein = smoothstep(0.045, 0.0, abs(fbm(q * 7.0 + seed * 2.0) - 0.5)) * smoothstep(0.3, 0.75, hv);
-    col += vec3(1.0, 0.3, 0.68) * vein * (1.1 + 0.5 * n2);
-    col = mix(col, vec3(1.0, 0.85, 0.95), smoothstep(0.85, 1.1, hv) * 0.35);   // the worst spots blanch
+    col += vec3(1.0, 0.4, 0.75) * vein * (0.8 + 0.5 * n2);
+    float fade = smoothstep(0.4, 1.05, hv) * (0.6 + 0.4 * n);
+    am = 1.0 - 0.6 * fade;
+    col += vec3(1.0, 0.6, 0.9) * smoothstep(0.08, 0.0, abs(hv - 0.62)) * 0.55;   // the glowing rim where it thins
     float sc = d.g + (n - 0.5) * 0.35;
-    col = mix(col, col * vec3(0.18, 0.11, 0.1), smoothstep(0.12, 0.8, sc));
-    col += vec3(1.0, 0.42, 0.07) * d.b * smoothstep(0.2, 0.6, sc) * (0.6 + 1.1 * n2);
+    col = mix(col, col * vec3(1.12, 0.86, 0.62) + vec3(0.1, 0.04, 0.0), smoothstep(0.12, 0.8, sc) * 0.6);
+    am *= 1.0 - 0.35 * smoothstep(0.55, 1.0, sc);
+    col += vec3(1.0, 0.5, 0.12) * d.b * smoothstep(0.2, 0.6, sc) * (0.6 + 1.1 * n2);
   } else if (useDmg > 0.5) {
     vec3 d = texture2D(dmg, vUv).rgb;
     float hv = d.r + (n - 0.5) * 0.32 + (n2 - 0.5) * 0.12;
@@ -130,7 +136,7 @@ void main(){
   col = mix(col, vec3(1.0), flash);
   float fogF = useFog * (1.0 - exp(-fogDensity * fogDensity * vFogDepth * vFogDepth));
   col = mix(col, fogColor, fogF);
-  gl_FragColor = vec4(col, tx.a * opacity);
+  gl_FragColor = vec4(col, tx.a * opacity * am);
 }
 `;
 

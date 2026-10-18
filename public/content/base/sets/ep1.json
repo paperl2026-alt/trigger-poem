@@ -59,7 +59,7 @@
         "covers": [{ "k": "cover/ep1_shop1", "side": -1 }, { "k": "cover/ep1_shop2", "side": 1 }],
         "waves": [
           [
-            { "t": 0.6, "type": "ghoul", "x": 0, "z": -14, "from": "pop", "sprite": "ghoul", "hp": 900, "tough": true, "move": "walk", "far": 17 }
+            { "t": 0.6, "type": "ghoul", "x": 0, "z": -14, "from": "pop", "sprite": "ghoul", "hp": 1800, "tough": true, "move": "walk", "far": 17 }
           ],
           [
             { "t": 0, "type": "scoopling", "x": -1.6, "z": -8, "from": "pop" },
