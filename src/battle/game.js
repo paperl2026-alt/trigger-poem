@@ -25,6 +25,8 @@ import { coreKeys, stageKeys, stageFrom, stageAt } from '../core/groups.js';
 import { loadKeys } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
 
+const pick = (a) => a[Math.floor(Math.random() * a.length)];
+
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const EDGE_C = new THREE.Color();
 
@@ -144,6 +146,7 @@ export class Game {
       return;
     }
     this.stage = st;
+    this.skipDoor = false;   // (a door is skipped only right after the hole / the fall that leads past it)
     this.useSet(st.set || this.ep.set);
     this.hud.show(true);
     if (st.stage) {
@@ -297,6 +300,21 @@ export class Game {
     const go = () => { this.skipDoor = true; this.tweens.to(this.post.u.wipe, { value: 1 }, 0.25, { onDone: () => { this.afterComic = true; this.nextStep(); } }); };
     if (this.world.collapse) this.world.collapse(go); else go();
   }
+  // what to do with a mechanism: the small see-through tag at the top for a few seconds (never over the fight: DESIGN「不能射击的阶段的提示」)
+  hint(key) { this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }
+  // a spawner's hole got blocked (Gimmick topple)
+  sealSpawner(id) {
+    const s = (this.spawners || []).find((x) => x.id === id && x.live); if (!s) return;
+    s.live = false; sfx.clear(); this.hud.gl.stickers.say(this.players[0], 'stagger');
+  }
+  updateSpawners(dt) {
+    for (const s of this.spawners || []) {
+      if (!s.live || (s.timer -= dt) > 0) continue;
+      s.timer = s.every ?? 3;
+      const Hd = this.world.set?.hall, x = Hd ? (s.side < 0 ? Hd.x0 + 1.2 : Hd.x1 - 1.2) : s.side * 1.5;
+      this.spawnEnemy({ type: pick([].concat(s.type)), x, z: s.z, from: 'wall', side: s.side, hole: s.n++ === 0, holeY: s.holeY, holeSize: s.holeSize, near: true });
+    }
+  }
   // a monster broke out through the far wall (Enemy.breakOut): when this room is done, the girls go through that hole, not the door
   breakoutAt(x, z) { this.exitVia = { to: [x, 1.1, z + 1.4], look: [x, 1.0, z - 10], hole: true }; }
   // the ghost's hands: over the screen while the view is dragged away (grab = the hands picture, or true for the default one)
@@ -379,7 +397,8 @@ export class Game {
   }
   // the fight at a stop starts; a stop with a lesson (the prologue teaches: docs/DESIGN.md 序章) first shows its card, once
   beginStation() {
-    this.waveIndex = 0;
+    this.waveIndex = 0; this.spawners = []; this.gateHint = false;
+    if (this.S.hint) this.tweens.wait(1.2, () => this.hint(this.S.hint));   // (a dark room: light the lamps)
     this.teach(this.S.lesson, () => this.startWave());
   }
   teach(id, then) {
@@ -411,6 +430,10 @@ export class Game {
     if (e.mutate) this.mutateAll();
     if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
     if (e.collapse) { this.collapse(); return; }
+    if (e.hint) this.hint(e.hint);
+    // a hole in a side wall that keeps pouring monsters out until something is toppled onto it (DESIGN「地形和机关」 堵住出怪口):
+    // { spawner: { id, type: [kinds], side, z, every } }; the wave does not end while it runs (checkWave)
+    if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: 0.4, n: 0 });
     if (e.wake) {   // statues come to life (all, or so many of them, nearest first)
       const st = this.actors.filter((a) => a.alive && a.state === 'statue').sort((a, b) => a.distToCam() - b.distToCam());
       st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => this.etw.wait(i * 0.5, () => a.wake()));
@@ -431,7 +454,13 @@ export class Game {
   }
   checkWave() {
     if (!this.waveLive || this.pendingSpawns > 0) return;
+    if (this.spawners?.some((s) => s.live)) return;
     if (this.actors.some((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom)) return;
+    // the way on still shut (a drawbridge held by seals): the fight goes on until it is worked
+    if (this.waveIndex >= this.S.waves.length - 1 && !this.stationQ.length && this.world.gate && !this.world.gate.open) {
+      if (!this.gateHint) { this.gateHint = true; this.hint('gateHint'); }
+      return;
+    }
     this.waveLive = false;
     this.waveIndex++;
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }
@@ -785,7 +814,7 @@ export class Game {
     this.etw.update(edt);
     for (const a of this.actors) a.update(edt, now);
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
-    if (this.combat && !this.boss) this.checkWave();
+    if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }
     this.fx.update(dt, now);
     // the combo holds outside the fight (walks, comics); in it, after comboTime without a hit it slides down, faster and faster
     if (this.combat && this.combo > 0) {

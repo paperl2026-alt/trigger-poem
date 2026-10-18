@@ -344,7 +344,7 @@ export class Enemy extends Actor {
       // it breaks in: a hole bursts open in the side wall (the side it stands on) or the ceiling, it leaps / drops down to its spot
       const g = this.game, Hd = g.world.set.hall, ceil = s.from === 'ceiling', side = s.side ?? (s.x < g.world.camPos.x ? -1 : 1);
       const sx = ceil ? s.x : side < 0 ? Hd.x0 + 0.25 : Hd.x1 - 0.25, sy = ceil ? Hd.h - 0.4 : 0.5;
-      g.world.addHole(ceil ? 'ceil' : side < 0 ? 'left' : 'right', new THREE.Vector3(sx, ceil ? Hd.h : 1.1, s.z), ceil ? 1.7 : 2.0);
+      if (s.hole !== false) g.world.addHole(ceil ? 'ceil' : side < 0 ? 'left' : 'right', new THREE.Vector3(sx, ceil ? Hd.h : s.holeY ?? 1.1, s.z), s.holeSize ?? (ceil ? 1.7 : 2.0));
       P.set(sx, sy, s.z);
       const at = new THREE.Vector3(sx, ceil ? Hd.h - 0.2 : 1.1, s.z);
       g.fx.confetti(at, 26, 2.2, [COL.bone, COL.paper]); g.fx.puff(at, 8, COL.bone, 1.1); sfx.slam(); sfx.tear(0); g.post.shake(0.7);

@@ -30,6 +30,7 @@ function board(key, w, h, opts = {}) {
 const INK_FRAG = `
 uniform sampler2D tColor; uniform sampler2D tDepth; uniform vec2 texel; uniform float near; uniform float far; uniform float time; uniform vec3 ink; uniform float paper;
 uniform vec3 gTint; uniform float gK; uniform float gSat;
+uniform float dark; uniform vec4 lamps[4];   // (a dark room: how dark, and up to four lit lamps: screen x, y, radius, strength)
 varying vec2 vUv;
 ${NOISE_GLSL}
 float lin(vec2 uv) { float z = texture2D(tDepth, uv).x; return near * far / (far - z * (far - near)); }
@@ -53,6 +54,14 @@ void main(){
   // paper: a little fibre grain over everything
   float g = fbm(vUv * vec2(260.0, 150.0)) - 0.5;
   c *= 1.0 + g * paper;
+  // a dark room (DESIGN「地形和机关」 点灯): night-blue darkness, warm pools round the lamps the girls have lit
+  if (dark > 0.001) {
+    float pool = 0.0, asp = texel.y / texel.x;
+    for (int i = 0; i < 4; i++) { vec4 L = lamps[i]; if (L.w > 0.0) pool += L.w * smoothstep(L.z, 0.0, length((vUv - L.xy) * vec2(asp, 1.0))); }
+    pool = clamp(pool, 0.0, 1.0);
+    c = mix(c, c * vec3(0.16, 0.15, 0.25), dark * (1.0 - pool));
+    c += vec3(1.0, 0.62, 0.28) * 0.12 * pool * dark;
+  }
   gl_FragColor = vec4(c, 1.0);
 }`;
 
@@ -79,6 +88,32 @@ function holeTex() {
     const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; HOLES.push(t);
   }
   return HOLES[Math.floor(Math.random() * HOLES.length)];
+}
+
+// the drawbridge's deck: old planks side by side, two iron bands with rivets (drawn by the program)
+let PLANKS = null;
+function plankTex() {
+  if (PLANKS) return PLANKS;
+  const c = document.createElement('canvas'); c.width = 256; c.height = 512; const g = c.getContext('2d');
+  const n = 6, pw = 256 / n;
+  for (let i = 0; i < n; i++) {
+    g.fillStyle = ['#8a5a34', '#76492a', '#93623a'][i % 3]; g.fillRect(i * pw + 2, 0, pw - 4, 512);
+    g.strokeStyle = 'rgba(50,28,14,0.45)'; g.lineWidth = 1.5;
+    for (let k = 0; k < 7; k++) { const x = i * pw + 6 + Math.random() * (pw - 12); g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + 6, 170, x - 6, 340, x + 3, 512); g.stroke(); }
+    g.fillStyle = 'rgba(40,22,10,0.6)'; g.fillRect(i * pw, 0, 2, 512);
+  }
+  for (const y of [90, 400]) {
+    g.fillStyle = '#3a3a40'; g.fillRect(0, y, 256, 26); g.fillStyle = '#5a5a62'; g.fillRect(0, y + 3, 256, 5);
+    g.fillStyle = '#c8c0b0'; for (let i = 0; i < n; i++) { g.beginPath(); g.arc(i * pw + pw / 2, y + 13, 4, 0, Math.PI * 2); g.fill(); }
+  }
+  PLANKS = new THREE.CanvasTexture(c); PLANKS.colorSpace = THREE.SRGBColorSpace;
+  return PLANKS;
+}
+// an iron rod from a to b (a chain seen from afar)
+function rod(a, b, r = 0.035) {
+  const d = new THREE.Vector3().subVectors(b, a), m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d.length(), 6), new THREE.MeshBasicMaterial({ color: 0x2b211c }));
+  m.position.copy(a).addScaledVector(d, 0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize());
+  return m;
 }
 
 export class PanelWorld {
@@ -111,13 +146,15 @@ export class PanelWorld {
     this.covers = [];
     this.baseFov = 52;
     this.lit = new THREE.Color(...(set.lit || [1, 0.94, 0.9]));
+    this.dark = set.dark || 0; this.lampList = [];   // (a dark room: set "dark", lit up lamp by lamp: addLamp)
     this.build();
     // ink pass
     this.rt = new THREE.WebGLRenderTarget(4, 4);
     this.rt.depthTexture = new THREE.DepthTexture(4, 4);
     this.inkU = { tColor: { value: this.rt.texture }, tDepth: { value: this.rt.depthTexture }, texel: { value: new THREE.Vector2() }, near: { value: 0.05 }, far: { value: 120 },
       time: { value: 0 }, ink: { value: new THREE.Color(set.ink || '#2a1420') }, paper: { value: set.paper ?? 0.06 },
-      gTint: { value: new THREE.Color(1, 1, 1) }, gK: { value: 0 }, gSat: { value: 1 } };
+      gTint: { value: new THREE.Color(1, 1, 1) }, gK: { value: 0 }, gSat: { value: 1 },
+      dark: { value: this.dark }, lamps: { value: Array.from({ length: 4 }, () => new THREE.Vector4(0, 0, 0, 0)) } };   // (w = 0: no lamp)
     this.grade(this.anomaly);
     this.inkScene = new THREE.Scene();
     this.inkCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -162,6 +199,17 @@ export class PanelWorld {
         l.position.set(dx + dw * ((hole[0] + hole[2]) / 2 - 0.5), dh * (1 - (hole[1] + hole[3]) / 2), z1 + 0.05); put(l, z1);
       }
     }
+    // a drawbridge (hall.bridge = { z0, z1, seals }): a gap in the floor between z0 and z1, the bridge standing up on its far side (hinged
+    // on the floor at z1, its own floor picture, two chains up to the walls); it comes down when the seals holding it are shot (gateHit)
+    if (Hd.bridge) {
+      const B = Hd.bridge, L = B.z0 - B.z1, fk = [].concat(Hd.floor)[0];
+      const g = new THREE.Group(); g.position.set((x0 + x1) / 2, 0, B.z1); void fk;
+      const deck = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.2, L), new THREE.MeshBasicMaterial({ map: plankTex(), side: THREE.DoubleSide })); deck.position.y = L / 2; g.add(deck);
+      const top = Math.min(h - 0.2, L + 0.8);
+      this.chains = [-1, 1].map((sd) => { const m = rod(new THREE.Vector3((x0 + x1) / 2 + sd * (W / 2 - 0.3), L - 0.1, B.z1 + 0.02), new THREE.Vector3(sd < 0 ? x0 + 0.06 : x1 - 0.06, top, B.z1 + 0.3)); R.add(m); return m; });
+      R.add(g); this.bridge = g;
+      this.gate = { open: false, need: B.seals ?? 2, got: 0 };
+    }
     // a wall behind where the girls came in too (a station that looks back: the view whips round, Game.whip); back: true = the other
     // version of the end wall, or its own pictures
     if (Hd.back) {
@@ -198,6 +246,8 @@ export class PanelWorld {
       if (tex[`${bk}_x`]) this.flips.push({ m: t, key: bk, alt: `${bk}_x`, side: 0, p: 0, d: 0, floor: true });
       this.tiles.push({ g, t, x: xa + tw / 2, z: za - tl / 2 });
     }
+    // (the drawbridge's gap: no floor there)
+    if (Hd.bridge) for (const t of this.tiles) if (t.z < Hd.bridge.z0 - 0.05 && t.z > Hd.bridge.z1 + 0.05) t.g.visible = false;
     // under the floor: the void the folds open onto
     const v = new THREE.Mesh(new THREE.PlaneGeometry(W * 3, L * 2), new THREE.MeshBasicMaterial({ color: S.void || '#1a0820', fog: false }));
     v.rotation.x = -Math.PI / 2; v.position.set(0, -1.4, (z0 + z1) / 2); R.add(v);
@@ -347,6 +397,21 @@ export class PanelWorld {
     g.scale.setScalar(0.2); this.game.tweens.to(g.scale, { x: 1, y: 1, z: 1 }, 0.22, { ease: Ease.outBack });
     this.root.add(g); (this.holes || (this.holes = [])).push(m);
     return g;
+  }
+  // a seal holding the drawbridge was shot: when all are, it comes down across the gap (the way on opens: Game.checkWave waits for it)
+  gateHit() {
+    const G = this.gate; if (!G || G.open) return;
+    if (++G.got < G.need) return;
+    const g = this.game;
+    for (const c of this.chains || []) c.visible = false;
+    sfx.tear(0); sfx.whoosh(0);
+    g.tweens.to(this.bridge.rotation, { x: Math.PI / 2 }, 1.1, { ease: Ease.outBounce, onDone: () => { G.open = true; sfx.slam(); g.post.shake(1.0); g.fx.puff(new THREE.Vector3(0, 0.1, this.set.hall.bridge.z0), 10, COL.bone, 1.2); } });
+  }
+  // a candle in a dark room: unlit, a faint glint so it can be found (lamp(p)); lit (light), a warm pool round it and the room a step lighter
+  lamp(p) { const L = { p: p.clone(), k: 0, max: 0.75, r: 0.12 }; this.lampList.push(L); return L; }
+  light(L, step = 0.3) {
+    if (L) { L.max = 1; L.r = 0.3; }
+    this.dark = Math.max(0, this.dark - step);
   }
   // the floor gives way (DESIGN「演出」 塌方): the tiles round the girls drop, the nearest first, then the view falls through the gap
   collapse(then) {
@@ -579,6 +644,14 @@ export class PanelWorld {
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }
     this.inkU.time.value = t;
+    if (this.set.dark || this.inkU.dark.value > 0) {   // (darkness eases toward what is left of it; lamps light up into their pools)
+      const U = this.inkU; U.dark.value += (this.dark - U.dark.value) * Math.min(1, dt * 1.5);
+      this.lampList.slice(0, 4).forEach((L, i) => {
+        L.k += (L.max - L.k) * Math.min(1, dt * 3);
+        const v = tmpV.copy(L.p).project(cam), on = v.z < 1 && v.z > -1;
+        U.lamps.value[i].set((v.x + 1) / 2, (v.y + 1) / 2, L.r, on ? L.k * (0.9 + 0.1 * Math.sin(t * 9 + i * 2)) : 0);
+      });
+    }
   }
   // the world into its own target with depth, then the ink pass into whatever target was set (the post-processing one)
   render(r) {

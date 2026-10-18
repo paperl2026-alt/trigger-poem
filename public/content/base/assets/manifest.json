@@ -12728,6 +12728,12 @@
   "src": "assets/ep1/nb_candle.webp",
   "w": 203
  },
+ "ep1/nb_candle_out": {
+  "h": 328,
+  "hit": true,
+  "src": "assets/ep1/nb_candle_out.webp",
+  "w": 203
+ },
  "ep1/nb_cherry": {
   "h": 322,
   "hit": true,

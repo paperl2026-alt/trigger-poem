@@ -8,7 +8,9 @@
 //     shoot: false = not a target (a wave event fires it: Game.waveEvent gimmick) }
 //   events (each may wait { t: seconds }): { flash } a camera flash; { flip } turns into kx like a page; { turn: {...} } the place turns
 //   (Game.turn); { spawn: [enemy spawns] }; { say: kind } a girl's line (text/stickers.json); { sfx: name }; { gone } it fades away;
-//   { ritual: i } offered to the boss (thing.js offer)
+//   { ritual: i } offered to the boss (thing.js offer); (DESIGN「地形和机关」) { light: step } it becomes kx at once and lights the dark room
+//   a step (PanelWorld.addLamp); { topple: angle, seal: id } a standing thing tips over sideways (radians, + = to the left) onto the hole a
+//   spawner pours out of and stops it (Game.sealSpawner); { gate: true } one of the seals holding the drawbridge (PanelWorld.gateHit)
 import { Actor } from './enemies.js';
 import { tex } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
@@ -27,9 +29,12 @@ export class Gimmick extends Actor {
     else { P.set(g.x || 0, g.y || 0, g.z); this.root.rotation.y = (g.ry || 0) * Math.PI / 180; }
     game.world.scene.add(this.root);
     if (g.shoot === false) this.u.outlineOn.value = 0;
+    // a candle of a dark room: a faint glint where it is until it is lit (PanelWorld.lamp / light)
+    if ((g.do || []).some((e) => e.light) && game.world.lamp) { this.root.updateMatrixWorld(true); this.lamp = game.world.lamp(this.uvToWorld(0.5, 0.92)); }
   }
   // shootable only at its own stop, once
-  live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat; }
+  // (needs: a spawner's id: only while that hole is pouring monsters out is it there to be shot: the shelf that blocks it)
+  live() { return !this.spent && (!this.g.station || this.game.stationId === this.g.station) && this.game.combat && (!this.g.needs || !!this.game.spawners?.some((s) => s.id === this.g.needs && s.live)); }
   hitMeshes() { return this.alive && this.g.shoot !== false && this.live() ? [this.mesh] : []; }   // (shoot: false = only a wave event fires it)
   hit(info) {
     if (!this.live()) return;
@@ -59,7 +64,19 @@ export class Gimmick extends Actor {
     if (e.say) g.hud.gl.stickers.say(by || g.players.find((p) => p.state === 'out') || g.players[0], e.say);
     if (e.sfx && sfx[e.sfx]) sfx[e.sfx]();
     if (e.ritual !== undefined) g.boss?.offer?.(e.ritual, this);   // (the boss's offering: src/battle/thing.js ritual)
+    if (e.light) {
+      if (this.g.kx) this.setFrame(this.g.kx);
+      const p = this.uvToWorld(0.5, 0.92); g.fx.embers(p, 14, 0.3); g.fx.star(p, 0.6, 0xffc070); sfx.burnOut(0);
+      g.world.light?.(this.lamp, e.light);
+    }
+    if (e.topple) {
+      sfx.tear(0);
+      g.tweens.to(this.root.rotation, { z: e.topple }, 0.7, { ease: Ease.inQuad, onDone: () => {
+        sfx.slam(); g.post.shake(1.1); g.fx.puff(this.root.position, 12, 0xd8c8b0, 1.3); g.sealSpawner(e.seal);
+      } });
+    }
+    if (e.gate) g.world.gateHit?.();
     if (e.gone) g.tweens.run(0.6, (k) => { this.u.opacity.value = 1 - k; }, { onDone: () => { this.alive = false; this.dispose(); } });
   }
-  update(dt, t) { if (this.alive) this.baseUpdate(dt, t); }
+  update(dt, t) { if (!this.alive) return; this.baseUpdate(dt, t); if (this.g.needs && !this.spent) this.u.outlineOn.value = this.live() ? 1 : 0; }
 }

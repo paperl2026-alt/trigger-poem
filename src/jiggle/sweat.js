@@ -99,7 +99,7 @@ export class Sweat {
   }
   // wet: 0..1 how sweaty she is; kick: a jolt this step (shakes clinging beads loose, speeds runners up)
   step(dt, wet, kick) {
-    this.acc += dt * wet * 2.4;
+    this.acc = Math.min(4, this.acc + dt * wet * 2.4);
     while (this.acc > 1) { this.acc -= 1; this.spawn(); }
     this.boost = Math.max(0, this.boost - dt * 3) + kick * 2.5;
     for (const d of this.drops) {

@@ -208,6 +208,8 @@ export function duckMusic(v, t = 0.3) { if (musBus) musBus.gain.setTargetAtTime(
 function schedule() {
   if (!song || muted) { if (song) nextT = now() + 0.1; return; }
   const spb = 60 / song.bpm / 4;
+  if (!(spb > 0.01)) return;
+  if (nextT < now() - 0.5) nextT = now();   // (fallen far behind - the context was suspended, a long stall: never play the missed steps all at once)
   while (nextT < now() + 0.12) { playStep(step, nextT); nextT += spb; step++; }
 }
 function playStep(s, t) {

@@ -196,7 +196,7 @@ export class FeverGauge {
     this.litF = litF; this.lastV = v;
     this.burst = Math.max(0, this.burst - dt * 3);
     // ambient particles, more with the level
-    this.amb += dt * ((EMIT.rate[Math.min(lv, EMIT.rate.length - 1)] || 0) + (lv >= max ? EMIT.max : 0));
+    this.amb = Math.min(3, this.amb + dt * ((EMIT.rate[Math.min(lv, EMIT.rate.length - 1)] || 0) + (lv >= max ? EMIT.max : 0)));   // (capped: a long frame never spawns a flood)
     while (this.amb >= 1) { this.amb -= 1; if (litF > 0.3) this.spawn(rnd(0, Math.max(0, Math.min(1, tip))), false); }
     // segments
     this.segs.forEach((m, i) => {
