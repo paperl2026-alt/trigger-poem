@@ -1,6 +1,6 @@
 // The out-of-run scenes (DOM): results, game over. (Title + settings: title.js; chapter select, team and bag: select.js)
 import { url, meta } from '../core/assets.js';
-import { sfx } from '../core/audio.js';
+import { sfx, voice } from '../core/audio.js';
 import { t, tr } from '../core/i18n.js';
 import { itemLevel, nextLevel, upgradeItem, itemDesc as fxDesc } from '../battle/items.js';
 import { SAVE, levelProgress } from '../core/save.js';
@@ -79,9 +79,13 @@ export function showResults(st, onDone) {
   </div></div>`);
   el.appendChild(s);
   sfx.stamp();
+  cheer(st.team[Math.random() < 0.5 || st.team.length < 2 ? 0 : 1], 'win', 900);
   // the total counts up once its row is printed
   const num = s.querySelector('.rnum'), t0 = performance.now() + d * 1000 + 300, dur = 900;
-  const count = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); num.textContent = `+${Math.round(st.dd * (1 - Math.pow(1 - k, 3))).toLocaleString()}`; if (k < 1 && num.isConnected) requestAnimationFrame(count); else if (k >= 1) sfx.slam && sfx.slam(); };
+  let tick = 0;
+  const count = (now) => { const k = Math.min(1, Math.max(0, (now - t0) / dur)); num.textContent = `+${Math.round(st.dd * (1 - Math.pow(1 - k, 3))).toLocaleString()}`;
+    if (k > 0 && k < 1 && now - tick > 70) { tick = now; sfx.count(); }
+    if (k < 1 && num.isConnected) requestAnimationFrame(count); else if (k >= 1) sfx.stamp(); };
   requestAnimationFrame(count);
   // a levelled item: its upgrade tab on its row (the price in 伍德刀盾)
   const drawUp = (row) => {
@@ -92,12 +96,17 @@ export function showResults(st, onDone) {
     w.innerHTML = nx ? `<button class="up${SAVE.dd < nx.price ? ' poor' : ''}" title="Lv ${nx.lv} · ${nx.price.toLocaleString()} ${DD}">${t('upgrade')} <small>${nx.price.toLocaleString()}</small></button>` : '';
     const bt = w.querySelector('.up');
     if (bt) tap(bt, () => {
-      if (upgradeItem(id)) { sfx.stamp(); s.querySelectorAll('.it[data-id]').forEach(drawUp); }
-      else { bt.classList.remove('shake'); void bt.offsetWidth; bt.classList.add('shake'); }
+      if (upgradeItem(id)) { sfx.levelUp(); s.querySelectorAll('.it[data-id]').forEach(drawUp); }
+      else { bt.classList.remove('shake'); void bt.offsetWidth; bt.classList.add('shake'); sfx.uiDeny(); }
     });
   };
   s.querySelectorAll('.it[data-id]').forEach(drawUp);
   tap(s.querySelector('.ok'), () => { el.innerHTML = ''; onDone(); });
+}
+// one of the team says something about how it went (text/stickers.json win / lose), a moment after the screen is up
+function cheer(who, kind, wait) {
+  const n = C.text.stickers?.heroines?.[who]?.[kind]?.lines?.length || 0;
+  if (n) setTimeout(() => voice(who, kind, Math.floor(Math.random() * n), 0, 6), wait);
 }
 // an item's description with its current numbers ({dd} = its 伍德刀盾 multiplier at its level)
 function itemDesc(it) { return fxDesc(it.id, itemLevel(it.id), tr); }
@@ -114,6 +123,7 @@ export function showGameOver(st, onRetry, onSelect) {
     <div class="rbtns"><button class="retry">${t('retry')}</button><button class="home">${t('toSelect')}</button></div>
   </div>`);
   el.appendChild(s);
+  cheer(st.team[0], 'lose', 700);
   tap(s.querySelector('.retry'), () => { el.innerHTML = ''; onRetry(); });
   tap(s.querySelector('.home'), () => { el.innerHTML = ''; onSelect(); });
 }

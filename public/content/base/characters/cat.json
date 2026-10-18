@@ -118,7 +118,8 @@
       "rampMax": 6,
       "sfx": "mantra",
       "kick": 1.4,
-      "tracer": "#ffd86a"
+      "tracer": "#ffd86a",
+      "voice": { "grain": "shot", "len": 0.26 }
     },
     "active": { "kind": "beam", "dur": 4.5, "dps": 210, "aim": 16, "heal": 40, "charge": { "sec": 0.04, "hit": 0.012, "kill": 0.12 } },
     "order": 1,

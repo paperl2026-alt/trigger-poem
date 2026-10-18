@@ -13,7 +13,8 @@ import { Text, picture } from './glhud.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
-const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, hurt: 6, fever: 6, join: 5, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, reload: 2, hit: 1, cover: 1 };
+const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, hurt: 6, fever: 6, join: 5, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, reload: 2, hit: 1, cover: 1,
+  scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5, idle: 1 };
 const TAG = { hit: 'HIT', crit: 'CRITICAL', kill: 'K.O.', combo: 'COMBO', hurt: 'OUCH', low: 'DANGER', reload: 'RELOAD', empty: 'NO AMMO', fever: 'FEVER',
   ready: 'SKILL OK', skill: 'SKILL', cover: 'COVER', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
 
@@ -101,8 +102,10 @@ export class Stickers {
     if (pr < cur || (H.cd > 0 && pr <= cur)) return;
     const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], text = line[lang] || line.en;
     if (text === H.lastText && set.lines.length > 1) return this.say(p, kind, 1);
+    // her voice for this line (core/audio.js voice: one channel for both girls, by priority); small talk that cannot be said now is not
+    // shown either (fewer, clearer lines: docs/TECH.md「声音」)
+    if (voice(p.id, kind, li, p.slot, pr) === false && pr <= 4) return;
     H.lastText = text; this.quiet = 0;
-    voice(p.id, kind, li, p.slot);   // her voice for this line, when it has been recorded (core/audio.js)
     // from her head, on her OUTER side (toward her screen edge: her safe area), above her HUD panel; if that side is too narrow, above her head
     const L = this.hud.L, Hh = L.H, f0 = L.f, left = p.slot === 0 || !this.game.p2on(), dir = left ? -1 : 1, fig = this.hud.space.girl(p.slot);
     const h = Hh * 0.046, head = fig ? fig.y1 - (fig.y1 - fig.y0) * 0.1 : Hh * 0.5, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + dir * Hh * 0.12;

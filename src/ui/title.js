@@ -144,12 +144,12 @@ export function showTitle(act) {
       if (has(R.icon.off)) icon.src = url(on ? R.icon.img : R.icon.off);
     };
     apply();
-    tg.onpointerdown = (e) => { e.stopPropagation(); initAudio(); SET[onKey] = SET[onKey] === false; apply(); saveSettings(); sfx.ui(); pop(tg, e); };
+    tg.onpointerdown = (e) => { e.stopPropagation(); initAudio(); SET[onKey] = SET[onKey] === false; apply(); saveSettings(); sfx.uiToggle(); pop(tg, e); };
     const at = (e) => { const r = track.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)); };
     sl.onpointerdown = (e) => {
       e.stopPropagation(); initAudio(); sl.setPointerCapture(e.pointerId); sl.classList.add('drag');
-      SET[key] = Math.round(at(e) * 20) / 20; SET[onKey] = true; apply(); sfx.ui();
-      sl.onpointermove = (ev) => { const v = Math.round(at(ev) * 20) / 20; if (v !== SET[key]) { SET[key] = v; apply(); if (key === 'sfx') sfx.ui(); } };
+      SET[key] = Math.round(at(e) * 20) / 20; SET[onKey] = true; apply(); sfx.uiToggle();
+      sl.onpointermove = (ev) => { const v = Math.round(at(ev) * 20) / 20; if (v !== SET[key]) { SET[key] = v; apply(); if (key === 'sfx') sfx.uiToggle(); } };
       sl.onpointerup = () => { sl.onpointermove = null; sl.classList.remove('drag'); saveSettings(); };
     };
   }
@@ -198,23 +198,24 @@ export function showTitle(act) {
   startB.onpointerdown = (e) => { e.stopPropagation(); startB.classList.add('down'); sfx.ui(); };
   startB.onpointerup = () => { if (startB.classList.contains('down')) { startB.classList.remove('down'); go(); } };
   startB.onpointerleave = () => startB.classList.remove('down');
-  quitB.onpointerdown = (e) => { e.stopPropagation(); sfx.ui(); window.close(); };
+  quitB.onpointerdown = (e) => { e.stopPropagation(); sfx.uiBack(); window.close(); };
 
   // ---- feedback
   const fx = new UiFx(stage, DW, DH, shift);
   const toDesign = (cx, cy) => { const r = stage.getBoundingClientRect(); return [(cx - r.left) / r.width * DW, (cy - r.top) / r.height * DH]; };
   function boxOf(n) { const r = n.getBoundingClientRect(); const [x0, y0] = toDesign(r.left, r.top), [x1, y1] = toDesign(r.right, r.bottom); return [x0, y0, x1 - x0, y1 - y0]; }
   function pop(n, e) { n.classList.remove('pop'); void n.offsetWidth; n.classList.add('pop'); if (e) { const [x, y] = toDesign(e.clientX, e.clientY); fx.click(x, y); } }
-  for (const n of [startB, quitB]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === startB ? 8 : 4); });
+  for (const n of [startB, quitB]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === startB ? 8 : 4); sfx.uiMove(); });
   girls.addEventListener('pointerenter', (e) => { girls.classList.remove('poke'); void girls.offsetWidth; girls.classList.add('poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 40, 3);
     const [rx] = toDesign(e.clientX, e.clientY); bubble(rx / RS < L.speech.split ? 'cat' : 'pink', 'poke'); });
+  const startLine = () => bubble(Math.random() < 0.5 ? 'pink' : 'cat', 'start');   // (one of them, as the game starts)
   // a speech bubble by one of the girls (text/stickers.json heroines.<id>.<kind>)
   const bub = el('div', 'tbub', U), bubJa = el('b', '', bub), bubTr = el('small', '', bub);
   let bubT = 0;
   function bubble(who, kind) {
     const set = C.text.stickers?.heroines?.[who]?.[kind]; if (!set) return;
     const li = Math.floor(Math.random() * set.lines.length), line = set.lines[li], at = L.speech[who];
-    voice(who, kind, li, who === 'pink' ? 1 : 0);
+    if (voice(who, kind, li, who === 'pink' ? 1 : 0, kind === 'quit' ? 7 : 3) === false) return;   // (one of them is still talking: no new line)
     bubJa.textContent = line.ja; bubTr.textContent = lang === 'ja' ? '' : (line[lang] || line.en);
     bub.dataset.who = who; Object.assign(bub.style, { left: px(at[0]), top: px(at[1]) });
     bub.classList.remove('on'); void bub.offsetWidth; bub.classList.add('on');
@@ -226,7 +227,7 @@ export function showTitle(act) {
   let gone = false;
   function go() {
     if (gone) return;
-    gone = true; initAudio(); sfx.clear();
+    gone = true; initAudio(); sfx.uiStart(); startLine();
     const [x, y, w, h] = boxOf(startB); fx.click(x + w / 2, y + h / 2, true);
     setTimeout(() => act.start(), 180);   // the click burst shows, then the page turns (main.js -> manga.js)
   }

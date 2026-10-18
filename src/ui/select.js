@@ -3,7 +3,7 @@
 // keep the mockup's exact textures), the two character card pictures (they trade places on a 1P / 2P swap) and the icons.
 // The game writes its own text on top at the places, sizes and angles measured on the mockup.
 import { url, meta } from '../core/assets.js';
-import { sfx, initAudio } from '../core/audio.js';
+import { sfx, initAudio, voice } from '../core/audio.js';
 import { C, list, isStage } from '../core/content.js';
 import { t, tr } from '../core/i18n.js';
 import { SAVE, persist, levelProgress, maxLv, stagesOpen } from '../core/save.js';
@@ -164,7 +164,8 @@ export function showSelect(act) {
       g.style.translate = `${!locked && i === pick ? 14 : 0}px ${dy * RS}px`;
       g.classList.toggle('s-row-lock', locked); g.classList.toggle('s-row-open', !locked); g.classList.toggle('s-row-pick', i === pick);
       g.dataset.cur = 'hover';
-      tap(g, (ev) => { if (locked) { shake(g); sfx.ui(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
+      tap(g, (ev) => { if (locked) { shake(g); sfx.uiDeny(); return; } pick = i; sfx.ui(); pop(g, ev); renderRows(); });
+      if (!locked) g.addEventListener('pointerenter', () => sfx.uiMove());
       img(g, pc.img, pc.box);
       if (has(s.thumb)) { const th = img(g, s.thumb, [R.thumb.x0, R.slots[s.boss ? 2 : 1] + R.thumb.dy0, R.thumb.x1, R.slots[s.boss ? 2 : 1] + R.thumb.dy1], 'thumb'); th.style.objectFit = 'cover'; }
       const ys = R.slots[s.boss ? 2 : 1];
@@ -198,15 +199,15 @@ export function showSelect(act) {
   function turnPage(dir) {
     const e = eps[idx], per = L.rows.slots.length, pages = Math.ceil((e.steps || []).filter(isStage).length / per);
     const np = page + dir;
-    if (!open(e) || np < 0 || np >= pages) { sfx.ui(); return; }
-    page = np; pageFollows = false; sfx.panel(); renderRows();
+    if (!open(e) || np < 0 || np >= pages) { sfx.uiDeny(); return; }
+    page = np; pageFollows = false; sfx.uiPage(); renderRows();
   }
   // ↑ ↓: the stage before / after (the page turns with it)
   function step(dir) {
     const e = eps[idx]; if (!open(e)) return;
     const n = Math.min(stagesOpen(e.id), (e.steps || []).filter(isStage).length), np = Math.max(0, Math.min(n - 1, (pick >= n ? n - 1 : pick) + dir));
-    if (np === pick) { sfx.ui(); return; }
-    pick = np; sfx.ui(); renderRows();
+    if (np === pick) { sfx.uiDeny(); return; }
+    pick = np; sfx.uiMove(); renderRows();
   }
   rowsG.addEventListener('wheel', (ev) => { ev.preventDefault(); turnPage(ev.deltaY > 0 ? 1 : -1); }, { passive: false });
 
@@ -235,8 +236,8 @@ export function showSelect(act) {
   }
   function flip(dir) {
     const ni = idx + dir;
-    if (ni < 0 || ni >= eps.length) { sfx.ui(); return; }
-    sfx.panel();
+    if (ni < 0 || ni >= eps.length) { sfx.uiDeny(); return; }
+    sfx.uiPage();
     chap.classList.remove('s-in-l', 's-in-r'); void chap.offsetWidth;
     idx = ni; pick = 99; renderChapter();
     chap.classList.add(dir > 0 ? 's-in-r' : 's-in-l');
@@ -292,21 +293,23 @@ export function showSelect(act) {
   function pop(n, e) { n.classList.remove('s-pop'); void n.offsetWidth; n.classList.add('s-pop'); if (e) { const [x, y] = toDesign(e.clientX, e.clientY); fx.click(x, y); } }
   function shake(n) { n.classList.remove('s-shake'); void n.offsetWidth; n.classList.add('s-shake'); }
   const tap = (n, f) => { n.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); initAudio(); f(e); }; };
-  for (const n of [back, gear, ...tabs.map((k) => k.g), goG, nextG, arrows.l, arrows.r, swapG]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === goG ? 8 : 4); });
-  tap(back, (e) => { sfx.ui(); pop(back, e); act.title(); });
+  for (const n of [back, gear, ...tabs.map((k) => k.g), goG, nextG, arrows.l, arrows.r, swapG]) n.addEventListener('pointerenter', () => { const [x, y, w, h] = boxOf(n); fx.hover(x, y, w, h, n === goG ? 8 : 4); sfx.uiMove(); });
+  tap(back, (e) => { sfx.uiBack(); pop(back, e); act.title(); });
   tap(gear, (e) => { sfx.ui(); pop(gear, e); act.settings(); });
-  for (const k of tabs) tap(k.g, (e) => { pop(k.g, e); sfx.ui(); setTab(k.T.id); });
+  for (const k of tabs) tap(k.g, (e) => { pop(k.g, e); sfx.uiTab(); setTab(k.T.id); });
   bag = mountBag({ el, pre, box, px, RS, tap, pop, shake, say }, U);
   window.addEventListener('langchange', () => { if (tab === 'bag') bag.render(); });
   tap(arrows.l, (e) => { pop(arrows.l, e); flip(-1); });
   tap(arrows.r, (e) => { pop(arrows.r, e); flip(1); });
   tap(nextG, (e) => { pop(nextG, e); flip(1); });
   let going = false;
+  // the one leading the team says she is off (text/stickers.json start)
+  const goLine = () => { const who = SAVE.team[0], n = C.text.stickers?.heroines?.[who]?.start?.lines?.length || 0; if (n) voice(who, 'start', Math.floor(Math.random() * n), 0, 6); };
   function go() {
     const ep = eps[idx];
     if (going) return;
-    if (!open(ep)) { shake(goG); sfx.ui(); return; }
-    going = true; initAudio(); sfx.clear(); const [x, y, w, h] = boxOf(goG); fx.click(x + w / 2, y + h / 2, true); goG.classList.add('s-down');
+    if (!open(ep)) { shake(goG); sfx.uiDeny(); return; }
+    going = true; initAudio(); sfx.uiStart(); goLine(); const [x, y, w, h] = boxOf(goG); fx.click(x + w / 2, y + h / 2, true); goG.classList.add('s-down');
     SAVE.lastEp = ep.id; persist();
     // from the picked stage: its step, or the transitions just before it (comic pages, door close-ups)
     const stages = ep.steps.filter(isStage), si = ep.steps.indexOf(stages[Math.min(pick, stages.length - 1)]);
@@ -315,8 +318,8 @@ export function showSelect(act) {
     setTimeout(() => act.play(ep.id, from), 220);
   }
   tap(goG, () => go());
-  tap(swapG, (e) => { sfx.ui(); pop(swapG, e); SAVE.team.reverse(); persist(); renderTeam(true); for (const l of lows) pop(l.g); });
-  for (const l of lows) for (const c of l.chips) tap(c, (e) => { pop(c, e); if (c.classList.contains('s-c-limit')) shake(c); sfx.ui(); });
+  tap(swapG, (e) => { sfx.uiSwap(); pop(swapG, e); SAVE.team.reverse(); persist(); renderTeam(true); for (const l of lows) pop(l.g); });
+  for (const l of lows) for (const c of l.chips) tap(c, (e) => { pop(c, e); if (c.classList.contains('s-c-limit')) { shake(c); sfx.uiDeny(); } else sfx.ui(); });
   for (const n of Object.values(arts)) n.addEventListener('pointerenter', (e) => { n.classList.remove('s-poke'); void n.offsetWidth; n.classList.add('s-poke'); const [x, y] = toDesign(e.clientX, e.clientY); fx.hearts(x, y - 30, 3); });
   root.addEventListener('pointermove', (e) => { mouse.tx = e.clientX / window.innerWidth * 2 - 1; mouse.ty = e.clientY / window.innerHeight * 2 - 1; });
 

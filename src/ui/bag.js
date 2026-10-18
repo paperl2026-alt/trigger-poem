@@ -72,8 +72,8 @@ export function mountBag(x, parent) {
     pager.classList.toggle('s-none', pages < 2);
     pager.innerHTML = `<i class="s-pl"></i>${Array.from({ length: pages }, (_, i) => `<b class="${i === page ? 's-on' : ''}"></b>`).join('')}<i class="s-pr"></i>`;
     const [pl, pr] = pager.querySelectorAll('i');
-    if (pl) x.tap(pl, () => { if (page > 0) { page--; sfx.ui(); render(); } });
-    if (pr) x.tap(pr, () => { if (page < pages - 1) { page++; sfx.ui(); render(); } });
+    if (pl) x.tap(pl, () => { if (page > 0) { page--; sfx.uiPage(); render(); } else sfx.uiDeny(); });
+    if (pr) x.tap(pr, () => { if (page < pages - 1) { page++; sfx.uiPage(); render(); } else sfx.uiDeny(); });
     // equipped now
     worn.innerHTML = `<span class="s-wl">${t('equipped')}</span>` + Array.from({ length: L.wornSlots }, (_, i) => {
       const id = SAVE.bag[i], it = C.items[id];
@@ -98,17 +98,17 @@ export function mountBag(x, parent) {
     const [be, bu] = card.querySelectorAll('button');
     x.tap(be, (e) => {
       const r = toggleEquip(it.id);
-      if (r === 'full') { x.shake(be); x.shake(cost); sfx.miss && sfx.miss(0); flash(t('bagFull')); return; }
+      if (r === 'full') { x.shake(be); x.shake(cost); sfx.uiDeny(); flash(t('bagFull')); return; }
       if (r === 'locked') { x.shake(be); return; }
       x.pop(be, e); sfx.stamp(); render();
     });
     x.tap(bu, (e) => {
       const ok = !own ? buyItem(it.id) : upgradeItem(it.id);
       if (!ok) { x.shake(bu); return; }
-      x.pop(bu, e); sfx.clear(); render(); x.say();
+      x.pop(bu, e); sfx.item(); render(); x.say();
     });
   }
-  x.tap(up, (e) => { if (!upgradeCap()) { x.shake(up); return; } x.pop(up, e); sfx.clear(); render(); x.say(); });
+  x.tap(up, (e) => { if (!upgradeCap()) { x.shake(up); sfx.uiDeny(); return; } x.pop(up, e); sfx.levelUp(); render(); x.say(); });
   // a short note over the COST strip (the bag is full)
   const note = x.el('div', 'bnote', root);
   function flash(m) {

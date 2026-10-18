@@ -6,7 +6,7 @@
 import * as THREE from 'three';
 import { tex, meta } from '../core/assets.js';
 import { paperMesh } from '../core/paper.js';
-import { sfx } from '../core/audio.js';
+import { sfx, grain } from '../core/audio.js';
 import { buildStats } from './characters.js';
 import { Fever } from './fever.js';
 import { bagFx } from './items.js';
@@ -313,6 +313,7 @@ export class Player {
     if (res.n) this.hits++;
     this.recoilT = PL().recoilPose;
     const mz = this.muzzlePos();
+    const gi = this.glyphI;   // (the syllable this shot writes; her voice says the same one)
     if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit);   // each syllable its own colour and its own way in / out (glyphs.js)
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
     this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
@@ -321,7 +322,9 @@ export class Player {
     if (this.hero) this.hero.shoot(this.gatling);
     else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces
     const pan = (this.aimX / g.W - 0.5) * 0.6;
-    if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan);
+    // her weapon's sound is her own voice (DESIGN「声音」: 突突突 / 唵嘛呢叭咪吽); the old effect only when she has none
+    const V = (this.gatling && this.a.voice) || w.voice;
+    if (!(V && grain(this.id, V, pan, gi))) { if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan); }
     if (w.kind === 'rifle' && Math.random() < 0.5) sfx.shell();
     if (this.slot === 0) g.post.kick(w.kick > 1.2 ? 0.5 : 0.18);
   }

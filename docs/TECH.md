@@ -40,12 +40,20 @@
   - sounds.json 每种声音可选 `len`（只放前几秒，结尾 60ms 内淡出）、`rate`（变调）；怪物叫声按种类有 `rate` / `vol`。便携版声音也从内嵌表取（window.__NOA_CONTENT）。
   - 解码时 `level()` 量一次：峰值拉到 0.7、从第一声（裁掉开头静音）开始放；不同音效库的响度差别不用手调。
   - 挑素材的工具：`tools/node/sfx_scan.cjs`（ART「声音」）。
+- 台词和战斗声音的混编（`src/core/audio.js`，2026-10-18 查过别人的做法：DICE 的 HDR 音频把响度当优先级、只放最重要的几个声音（"播对的声音，不是所有声音"）；CRI ADX 的发声数上限组 + 优先级；常见的台词系统是优先级 + 冷却 + 说话时压低别的声音（ducking））：
+  - **说话通道** `talk()`：两人共用一个。有人在说时，新的一句只有优先级高出 2 级才插进来（旧的 50 ms 淡出），否则不播；优先级 4 以下的闲聊离上一句开始至少 `TALK_GAP` 秒，`setIntensity` 超过 0.85（打得最凶）时不说；`voice()` 返回 true / false（没说）/ null（没有语音文件）。优先级在 `src/ui/stickers.js` PRIO（倒地 9、必杀 8……命中 1），没说出口的闲聊气泡也不出；标题页戳她们 3、离开 7。
+  - **让开**：说话时效果总线 `fxBus` 降到 `DUCK_FX`、音乐 `musDuck` 降到 `DUCK_MUS`，说完慢慢回来；语音直接走 `sfxBus`（不被压）。
+  - **武器的声音是她自己的声音** `grain(who, V, pan, i)`：sounds.json `voices.<角色>.grains.<键>.files`，怎么播在角色的 `weapon.voice` / `active.voice`：`every` 至少隔几秒一个、`len` 只放前几秒、`rate`、`vol`；同一个人的新音节切掉上一个（一张嘴）；`seq` = 按第几发轮（猫娘的字）；她在说台词时不出武器声。没有音节文件时退回原来的枪声。
+  - **怪叫**最多同时 `CRY_MAX` 个，满了只有更重要的（死 > 蓄力 > 攻击 > 挨打）顶掉最不重要的那个，否则跳过；sounds.json 音效写 `gap` 的，两次之间至少隔这么久（命中声）。
+  - 离屏测试听不到：`tools/node/playthrough.cjs` 开局就打开声音，结果里 `audio` 是计数（说了 / 没说 / 插嘴的台词、武器音节、她说话时停掉的音节、怪叫播了 / 跳过）。
+- 关卡外的音效：`tools/ui_sfx.py` 从零合成（纸片的拍、滑、翻页、盖章 + 玻璃小铃，48 kHz，一点房间混响，Ogg Opus），写到 `public/content/base/sfx/ui/` 并登记进 sounds.json；每种声音一个函数，改了重跑；`--wav <目录>` 另存 wav 试听。代码里每个界面动作用自己的键（`uiMove` 光标移到、`ui` 确定、`uiBack`、`uiDeny`、`uiPage`、`uiTab`、`uiToggle`、`uiSwap`、`uiStart`、`stamp`、`count`、`item`、`levelUp`、`comicPage`、`panel`、`victory`、`defeat`），合成的替身在 audio.js `sfx`。
 - 语音生成：`tools/voice_aivis.py`，用 AivisSpeech（免费、在本机跑的日语语音合成，Style-Bert-VITS2）。
   - 引擎和 ffmpeg 不进 git，手动解压：官方 Windows zip 解到 `tools/aivis/app/`（GitHub Aivis-Project/AivisSpeech，官网下载按钮给的那个版本），BtbN 的 ffmpeg Windows 构建解到 `tools/ffmpeg/`。
   - `start`：引擎没开就在后台开（`run.exe --port 10101`，日志 `tools/aivis/engine.log`），并从 AivisHub 装上 sounds.json 写的模型（引擎第一次启动还会自己装官方默认模型 コハク、まお；模型在 `%APPDATA%\AivisSpeech-Engine\Models`）。
   - `read <角色>`：不出声音，列出每句用的风格和引擎实际的读法（假名）。汉字读错就在 `say` 里写假名。
   - `lines <角色> [场合 | 场合_第几句 …]`：读 text/stickers.json 的日语台词，♡ ♪ 不念、空格当停顿、~ 当长音，按 `read` 设好风格、语速、语气浓淡；生成后裁掉首尾静音、峰值拉到 -1 dB，用 ffmpeg 转 Ogg Opus 48k，写到 `public/content/base/voice/<角色>/<场合>_<第几句>.ogg` 并登记进 `lines`。不写场合就整个重做。
   - `say <角色> <风格> <输出> <文本>`：试一句。
+  - `grains <角色>`：武器的音节（sounds.json `voices.<角色>.grains`：`say` 每个音节、`style`、`speed` 可以每个音节一个），切得很紧（前面不留气、尾巴 30 ms），写到 `voice/<角色>/g_<键>_<n>.ogg`。
   - 音高（pitchScale）不调：AivisSpeech 一动音高音质就变差。
 - BGM 仿写的做法（待用户给参考曲、同意装工具）：用 basic-pitch 把参考曲转成 MIDI、librosa 测速度 / 调 / 段落，Claude 保留风格（配器、速度、和声走向、段落结构）重写旋律，渲染成导引音轨，再交给 Suno 的「用上传的音频改编」出成品；不照抄旋律（旋律有版权，和声走向和风格没有）。
 

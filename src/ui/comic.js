@@ -44,6 +44,7 @@ export class Comic {
       shown = false;
       const pageEl = document.createElement('div');
       pageEl.className = 'cpage';
+      sfx.comicPage();
       stage.appendChild(pageEl);
       let last = 0;
       // a whole drawn page (lettering in it): each panel = the page clipped to its polygon, appearing in turn, its own small move inside

@@ -49,6 +49,7 @@ const G = {
 G.p1ctrl = new HybridCtrl(G);
 window.__G = G; // debug handle for automated checks
 G.renderer = renderer; G.vramMB = vramMB; G.texCount = () => Object.keys(tex).length; G.loadLog = loadLog;   // (tools/node/playthrough.cjs: memory checks)
+G.audioOn = () => initAudio();   // (tools/node/playthrough.cjs: sound without a click)
 
 // Any window size / aspect: the 3D view widens (panorama), the HUD + characters stay inside the HUD frame.
 function resize() {

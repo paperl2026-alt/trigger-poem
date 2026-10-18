@@ -7,7 +7,10 @@ usage:
   python -I tools/voice_aivis.py read <who>                       how every line will be read (style, settings, kana), no sound files
   python -I tools/voice_aivis.py say <who> <style> <out> <text>   one clip (tests; out .wav or .ogg)
   python -I tools/voice_aivis.py lines <who> [<kind> | <kind>_<n> ...]   every line (or only these) -> voice/<who>/<kind>_<n>.ogg,
-                                                                  registered in sounds.json voices.<who>.lines"""
+                                                                  registered in sounds.json voices.<who>.lines
+  python -I tools/voice_aivis.py grains <who>                     her weapon's voice (sounds.json voices.<who>.grains: each key a list of
+                                                                  syllables "say", a style, a speed or one per syllable) -> voice/<who>/g_<key>_<n>.ogg,
+                                                                  cut tight (they are played back to back, one per shot), registered in grains.<key>.files"""
 import io, sys, json, time, wave, pathlib, subprocess, urllib.request, urllib.parse
 import numpy as np
 sys.stdout.reconfigure(encoding="utf-8")
@@ -102,6 +105,14 @@ def tidy(a, sr):   # trim the quiet ends, short fades, peak at -1 dBFS
     return a * (10 ** (-1 / 20) / max(1e-6, np.abs(a).max()))
 
 
+def tight(a, sr):   # a weapon syllable: no air before it, a short tail, a quick fade, peak at -1 dBFS
+    loud = np.flatnonzero(np.abs(a) > 10 ** (-36 / 20))
+    if len(loud): a = a[max(0, loud[0] - int(0.004 * sr)): loud[-1] + int(0.03 * sr)]
+    fi, fo = int(0.003 * sr), int(0.025 * sr)
+    a = a.copy(); a[:fi] *= np.linspace(0, 1, fi); a[-fo:] *= np.linspace(1, 0, fo)
+    return a * (10 ** (-1 / 20) / max(1e-6, np.abs(a).max()))
+
+
 def ffmpeg():
     f = sorted((ROOT / "tools" / "ffmpeg").glob("*/bin/ffmpeg.exe"))
     if not f: raise SystemExit("no ffmpeg: unzip an ffmpeg build into tools/ffmpeg")
@@ -161,3 +172,19 @@ if __name__ == "__main__":
         sp.write_bytes((txt.replace("\n", "\r\n") if crlf else txt).encode("utf-8"))
         subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(sp)], check=True, stdin=subprocess.DEVNULL)
         print(f"{len(V['lines'])} lines registered, {total / 1024:.0f} KB written")
+    elif a[0] == "grains":
+        who = a[1]; sp = PACK / "audio" / "sounds.json"; raw = sp.read_bytes(); crlf = b"\r\n" in raw
+        S = json.loads(raw.decode("utf-8")); V = S["voices"][who]; ids = styles(V["model"])
+        for key, G in V.get("grains", {}).items():
+            if key.startswith("_"): continue
+            G["files"] = []
+            for i, text in enumerate(G["say"]):
+                sp_ = G.get("speed", 1.3); speed = sp_[i % len(sp_)] if isinstance(sp_, list) else sp_
+                sid = ids[G.get("style", "ノーマル")]
+                x, sr = synth(query(spoken(text), sid, {"speed": speed, "intonation": G.get("intonation", 1.2)}), sid)
+                y = tight(x, sr); rel = f"voice/{who}/g_{key}_{i + 1}.ogg"
+                write(y, sr, PACK / rel); G["files"].append(rel)
+                print(f"{rel:<28} {text:<8} {len(y) / sr:.2f}s", flush=True)
+        txt = json.dumps(S, ensure_ascii=False, indent=2) + "\n"
+        sp.write_bytes((txt.replace("\n", "\r\n") if crlf else txt).encode("utf-8"))
+        subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(sp)], check=True, stdin=subprocess.DEVNULL)

@@ -90,9 +90,19 @@
       "ramp": 0,
       "sfx": "smg",
       "kick": 0.8,
-      "tracer": "#ff7ac0"
+      "tracer": "#ff7ac0",
+      "voice": { "grain": "shot", "every": 0.15, "len": 0.16 }
     },
-    "active": { "kind": "gatling", "dur": 6, "rate": 0.042, "dmg": 1.2, "stagger": 2.2, "heal": 0.4, "charge": { "sec": 0.015, "hit": 0.011, "kill": 0.05 } },
+    "active": {
+      "kind": "gatling",
+      "dur": 6,
+      "rate": 0.042,
+      "dmg": 1.2,
+      "stagger": 2.2,
+      "heal": 0.4,
+      "charge": { "sec": 0.015, "hit": 0.011, "kill": 0.05 },
+      "voice": { "grain": "shot", "every": 0.1, "len": 0.11, "rate": 1.1 }
+    },
     "order": 0,
     "rig": {
       "cover": {

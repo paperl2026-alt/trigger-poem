@@ -1,134 +1,84 @@
 {
-  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。",
+  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。",
   "stickers": {
     "heroines": {
       "pink": {
         "hit": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "砰砰♡", "en": "Bang bang♡", "ja": "バンバン♡" },
-            { "zh": "哒哒哒~", "en": "Ratatat~", "ja": "ダダダ~" },
-            { "zh": "打中了捏♡", "en": "Got you♡", "ja": "当たり♡" }
-          ]
+          "lines": [{ "zh": "嘿咻♡", "en": "Hup♡", "ja": "えいっ♡" }, { "zh": "呵呵♡", "en": "Hehe♡", "ja": "ふふっ" }, { "zh": "喏!", "en": "There!", "ja": "ほらっ" }]
         },
         "crit": {
           "bubble": "shout",
           "lines": [
-            { "zh": "正中红心♡", "en": "Right in the heart♡", "ja": "ど真ん中♡" },
-            { "zh": "你的心脏是我的了♡", "en": "Your heart is mine now♡", "ja": "ハート撃ち抜いちゃった♡" },
-            { "zh": "爆头了耶~夸夸我嘛", "en": "Headshot~ praise me, praise me", "ja": "ヘッショ♡ ほめてほめて~" }
+            { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
+            { "zh": "啾♡", "en": "Ba-dump♡", "ja": "ずきゅん♡" },
+            { "zh": "呀哈♡", "en": "Kyaha♡", "ja": "きゃはっ♡" }
           ]
         },
         "kill": {
           "bubble": "cute",
           "lines": [
-            { "zh": "掰掰~♡", "en": "Bye-bye♡", "ja": "バイバイ♡" },
-            { "zh": "欸嘿嘿~", "en": "Ehehe~", "ja": "えへへ~" },
-            { "zh": "乖乖消失嘛♡", "en": "Just vanish, okay♡", "ja": "おとなしく消えて♡" },
-            { "zh": "只准看着我哦~", "en": "Only look at me~", "ja": "あたしだけ見てて~" }
+            { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
+            { "zh": "掰掰♡", "en": "Bye-bye♡", "ja": "ばいばーい♡" },
+            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" }
           ]
         },
         "combo": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "停不下来了啦~♡", "en": "I can't stop~♡", "ja": "止まんないよ~♡" },
-            { "zh": "还要~再多一点嘛", "en": "More… just a little more~", "ja": "もっと、もっとぉ~" },
-            { "zh": "好舒服~♡", "en": "Feels so good~♡", "ja": "きもちいい~♡" }
-          ]
+          "lines": [{ "zh": "还要♡", "en": "More♡", "ja": "もっとぉ♡" }, { "zh": "嗯呼呼♡", "en": "Mhm-hm♡", "ja": "んふふ♡" }]
         },
         "hurt": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "好痛…你欺负我!", "en": "Ow… you meanie!", "ja": "いたっ…いじわる!" },
-            { "zh": "呜呜，妆花了啦", "en": "Waah, my makeup…", "ja": "メイク崩れたぁ…" },
-            { "zh": "讨厌啦!", "en": "Nooo!", "ja": "やだぁ!" }
-          ]
+          "lines": [{ "zh": "呀!", "en": "Kya!", "ja": "きゃっ!" }, { "zh": "好痛!", "en": "Ow!", "ja": "いたっ!" }, { "zh": "切", "en": "Tch", "ja": "ちぇっ" }]
         },
         "low": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "人家要坏掉了啦…", "en": "I'm gonna break…", "ja": "こわれちゃう…" },
-            { "zh": "不要丢下我…", "en": "Don't leave me…", "ja": "置いてかないで…" },
-            { "zh": "救救我嘛~", "en": "Save me~", "ja": "たすけてぇ~" }
-          ]
+          "lines": [{ "zh": "不要…", "en": "Nooo…", "ja": "やだぁ…" }, { "zh": "救我…", "en": "Help…", "ja": "たすけてぇ…" }]
         },
         "reload": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "等人家一下嘛~", "en": "Wait for me~", "ja": "ちょっと待ってて~" },
-            { "zh": "补个妆♡", "en": "Touching up♡", "ja": "メイク直し♡" },
-            { "zh": "不准偷看哦", "en": "No peeking♡", "ja": "見ちゃダメ♡" }
-          ]
+          "lines": [{ "zh": "切", "en": "Tch", "ja": "ちぇっ" }, { "zh": "嗯咻", "en": "Hngh", "ja": "んしょっ" }, { "zh": "等我♡", "en": "Wait♡", "ja": "まってて♡" }]
         },
         "empty": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "没子弹了…抱抱?", "en": "Out of ammo… hug me?", "ja": "弾切れ…ぎゅってして?" },
-            { "zh": "空空的~", "en": "All empty~", "ja": "からっぽ~" }
-          ]
+          "lines": [{ "zh": "切!", "en": "Tch!", "ja": "ちぇっ!" }, { "zh": "咦?", "en": "Huh?", "ja": "あれぇ?" }]
         },
         "fever": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "上头了啦♡", "en": "I'm getting hot♡", "ja": "アガってきた♡" },
-            { "zh": "心跳好快~♡", "en": "My heart's racing~♡", "ja": "ドキドキするぅ♡" },
-            { "zh": "最强的我♡", "en": "The strongest me♡", "ja": "最強のあたし♡" }
-          ]
+          "lines": [{ "zh": "来了来了♡", "en": "Here it comes♡", "ja": "きたきたぁ♡" }, { "zh": "上头♡", "en": "Hyped♡", "ja": "アガるぅ♡" }]
         },
         "ready": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "大招好了哦~要不要♡", "en": "My special's ready~ want it?♡", "ja": "必殺いけるよ♡ ねぇ、早く~" },
-            { "zh": "快点嘛~人家等不及了", "en": "Hurry~ I can't wait♡", "ja": "はやくぅ~待てない♡" }
-          ]
+          "lines": [{ "zh": "呐♡", "en": "Hey♡", "ja": "ねぇ♡" }, { "zh": "快嘛♡", "en": "Hurry♡", "ja": "はやくぅ♡" }]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
-            { "zh": "全部给我扫光光♡", "en": "Swiss cheese, all of you♡", "ja": "ぜーんぶ蜂の巣♡" },
-            { "zh": "加特林酱，上吧!", "en": "Gatling-chan, go!", "ja": "ガトリングちゃん、いっけー!" },
-            { "zh": "陪我玩到最后嘛!!", "en": "Play with me till the end!!", "ja": "最後まで遊んでよね!!" }
+            { "zh": "全部打成筛子♡", "en": "Swiss cheese♡", "ja": "ぜーんぶ蜂の巣♡" },
+            { "zh": "冲呀♡", "en": "Go go♡", "ja": "いっけー♡" }
           ]
         },
         "cover": {
           "bubble": "cute",
-          "lines": [{ "zh": "躲一下~", "en": "Hide and seek~", "ja": "かくれんぼ~" }, { "zh": "不要看人家~", "en": "Don't look~", "ja": "見ないでぇ~" }]
+          "lines": [{ "zh": "躲猫猫♡", "en": "Peekaboo♡", "ja": "かくれんぼ♡" }, { "zh": "呀", "en": "Eep", "ja": "ひゃっ" }]
         },
         "revive": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "复活啦♡ 想我了吧?", "en": "I'm back♡ missed me?", "ja": "復活♡ 会いたかった?" },
-            { "zh": "还没结束哦♡", "en": "It's not over yet♡", "ja": "まだ終わらないよ♡" }
-          ]
+          "lines": [{ "zh": "我回来了♡", "en": "I'm back♡", "ja": "ただいま♡" }, { "zh": "复活♡", "en": "Revived♡", "ja": "ふっかーつ♡" }]
         },
         "down": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "呜呜…都是你害的…", "en": "Uu… so mean…", "ja": "うぅ…ひどいよぉ…" },
-            { "zh": "骗子…", "en": "Liar…", "ja": "うそつき…" }
-          ]
+          "lines": [{ "zh": "呜…", "en": "Uu…", "ja": "うぅ…" }, { "zh": "过分…", "en": "Mean…", "ja": "ひどい…" }]
         },
         "coverBroken": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "掩体没了啦!?", "en": "My cover!?", "ja": "遮蔽物が!?" },
-            { "zh": "被看光光了!", "en": "They can see everything!", "ja": "丸見えだよぉ!" }
-          ]
+          "lines": [{ "zh": "喂!?", "en": "Hey!?", "ja": "ちょっ!?" }, { "zh": "呀嗯!", "en": "Yaan!", "ja": "やぁん!" }]
         },
         "stagger": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "定住了♡ 乖~", "en": "Frozen♡ good girl~", "ja": "止まった♡ いい子~" },
-            { "zh": "不准动哦♡", "en": "Don't you move♡", "ja": "動いちゃダメ♡" }
-          ]
+          "lines": [{ "zh": "定♡", "en": "Stop♡", "ja": "ストップ♡" }, { "zh": "乖♡", "en": "Good girl♡", "ja": "いい子♡" }]
         },
-        "join": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "我来啦♡", "en": "I'm here♡", "ja": "参戦♡" },
-            { "zh": "等很久了吗~?", "en": "Did you wait long~?", "ja": "待った~?" }
-          ]
-        },
+        "join": { "bubble": "cute", "lines": [{ "zh": "参战♡", "en": "Joining♡", "ja": "さんせーん♡" }] },
         "quit": {
           "bubble": "cute",
           "lines": [
@@ -147,167 +97,107 @@
         "idle": {
           "bubble": "cute",
           "lines": [
-            { "zh": "欸嘿嘿~", "en": "Ehehe~", "ja": "えへへ~" },
-            { "zh": "呀哒哟~", "en": "No way~", "ja": "やだよぉ~" },
-            { "zh": "嗯~哼哼♪", "en": "Hm-hmm♪", "ja": "ふんふ~ん♪" },
-            { "zh": "好无聊~陪我玩嘛", "en": "Bored~ play with me?", "ja": "ひまぁ~ 遊ぼ?" }
+            { "zh": "哼哼~♪", "en": "Hm-hmm♪", "ja": "ふんふーん♪" },
+            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" },
+            { "zh": "好闲~", "en": "Bored~", "ja": "ひまぁ~" }
           ]
         },
-        "scare": {
-          "lines": [
-            { "zh": "那个……你在排队吗？", "en": "Um… are you in line?", "ja": "あの…並んでます?" }
-          ]
-        },
+        "scare": { "lines": [{ "zh": "那个…?", "en": "Um…?", "ja": "あの…?" }] },
         "photo": {
-          "lines": [
-            { "zh": "拍到了♡", "en": "Got it♡", "ja": "撮れた♡" },
-            { "zh": "诶…脸呢？", "en": "Huh… where are their faces?", "ja": "え…顔は?" }
-          ]
+          "lines": [{ "zh": "咔嚓♡", "en": "Snap♡", "ja": "パシャッ♡" }, { "zh": "诶…?", "en": "Huh…?", "ja": "え…?" }]
         },
-        "bridge": {
-          "lines": [
-            { "zh": "呀——要断了！", "en": "Eek, it is breaking!", "ja": "やだ、折れる!" }
-          ]
-        },
+        "bridge": { "lines": [{ "zh": "咿!", "en": "Eek!", "ja": "ひっ!" }] },
         "rot": {
+          "lines": [{ "zh": "呕", "en": "Ew", "ja": "うぇっ" }, { "zh": "好臭", "en": "Stinky", "ja": "くさっ" }]
+        },
+        "real": { "lines": [{ "zh": "咦?", "en": "Huh?", "ja": "あれ?" }] },
+        "armor": { "lines": [{ "zh": "噢♡", "en": "Ooh♡", "ja": "おぉ~♡" }] },
+        "start": {
+          "bubble": "cute",
+          "lines": [{ "zh": "走吧♡", "en": "Let's go♡", "ja": "いこっ♡" }, { "zh": "约会吧♡", "en": "Date time♡", "ja": "デートしよ♡" }]
+        },
+        "win": {
+          "bubble": "cute",
           "lines": [
-            { "zh": "呜哇，全化掉了…", "en": "Ew, it's all melting…", "ja": "うわ、溶けてる…" },
-            { "zh": "甜甜的味道…好怪", "en": "That sweet smell… it's wrong", "ja": "甘い匂い…ヘン" },
-            { "zh": "我的冰淇淋——!", "en": "My gelato!!", "ja": "あたしのジェラート~!" }
+            { "zh": "赢啦♡夸我♡", "en": "We won♡ praise me♡", "ja": "やったぁ♡ ほめて♡" },
+            { "zh": "轻松♡", "en": "Easy♡", "ja": "らくしょー♡" }
           ]
         },
-        "real": {
-          "lines": [
-            { "zh": "咦？变回来了？", "en": "Huh? It's back?", "ja": "あれ? 戻った?" },
-            { "zh": "刚才是做梦吗…", "en": "Was that a dream…?", "ja": "夢だったの…?" }
-          ]
-        },
-        "armor": {
-          "lines": [{ "zh": "它…收下了？", "en": "It… took it?", "ja": "受け取った…?" }, { "zh": "乖孩子~", "en": "Good boy~", "ja": "いい子~" }]
+        "lose": {
+          "bubble": "cute",
+          "lines": [{ "zh": "不会吧…", "en": "No way…", "ja": "うそでしょ…" }, { "zh": "再来一次嘛?", "en": "Again? Okay?", "ja": "もっかい! ね?" }]
         }
       },
       "cat": {
         "hit": {
           "bubble": "shout",
-          "lines": [{ "zh": "喵!", "en": "Nya!", "ja": "にゃ!" }, { "zh": "唵!", "en": "Om!", "ja": "オン!" }, { "zh": "临!", "en": "Rin!", "ja": "臨!" }]
+          "lines": [{ "zh": "喵!", "en": "Nya!", "ja": "にゃ!" }, { "zh": "哼", "en": "Hmph", "ja": "ふっ" }]
         },
         "crit": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "急急如律令~喵!", "en": "Kyu-kyu-nyo-ritsuryo, nya!", "ja": "急急如律令にゃ!" },
-            { "zh": "猫猫拳!!", "en": "Cat punch!!", "ja": "ねこパンチ!!" },
-            { "zh": "被我看穿了喵♡", "en": "I saw right through you♡", "ja": "見えちゃったにゃ♡" }
-          ]
+          "lines": [{ "zh": "呔!", "en": "Tai!", "ja": "たいっ!" }, { "zh": "喝!", "en": "Ka!", "ja": "かっ!" }, { "zh": "喵哈", "en": "Nyaha", "ja": "にゃはっ" }]
         },
         "kill": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "成佛吧喵~", "en": "Rest in peace, nya~", "ja": "成仏するにゃ~" },
-            { "zh": "欸嘿~", "en": "Ehe~", "ja": "えへっ" },
-            { "zh": "收工收工~", "en": "All done~", "ja": "おしまいにゃ~" },
-            { "zh": "乖，睡吧♡", "en": "Sleep tight♡", "ja": "おやすみ♡" }
-          ]
+          "lines": [{ "zh": "南无~", "en": "Namu~", "ja": "なむ~" }, { "zh": "呼喵~", "en": "Funya~", "ja": "ふにゃ~" }, { "zh": "收工", "en": "Done", "ja": "おしまい" }]
         },
         "combo": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "喵喵喵喵喵!", "en": "Nyanyanyanya!", "ja": "にゃにゃにゃにゃ!" },
-            { "zh": "停不下来喵~♡", "en": "Can't stop, nya~♡", "ja": "とまらないにゃ~♡" }
-          ]
+          "lines": [{ "zh": "喵喵喵!", "en": "Nyanyanya!", "ja": "にゃにゃにゃ!" }, { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" }]
         },
         "hurt": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "喵呜!", "en": "Myah!", "ja": "みゃっ!" },
-            { "zh": "眼镜!眼镜!", "en": "My glasses! My glasses!", "ja": "メガネ!メガネ!" },
-            { "zh": "会痛的啦…", "en": "That hurts…", "ja": "いたいにゃ…" }
-          ]
+          "lines": [{ "zh": "咪呀!", "en": "Mya!", "ja": "みゃっ!" }, { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" }]
         },
         "low": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "九条命还剩几条喵…", "en": "How many lives left, nya…", "ja": "残機いくつにゃ…" },
-            { "zh": "摸摸头…就好了…", "en": "Pat my head… please…", "ja": "なでなでして…" }
-          ]
+          "lines": [{ "zh": "喵呜…", "en": "Nyau…", "ja": "にゃぅ…" }, { "zh": "摸摸…", "en": "Pet me…", "ja": "なでて…" }]
         },
         "reload": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "结印中…别闹喵", "en": "Making the seal… don't bother me", "ja": "印を結ぶにゃ…邪魔しないで" },
-            { "zh": "临兵斗者~", "en": "Rin-pyo-to-sha~", "ja": "臨兵闘者~" },
-            { "zh": "等我舔一下爪子", "en": "Grooming my paw, wait", "ja": "ちょっと毛づくろい" }
-          ]
+          "lines": [{ "zh": "临", "en": "Rin", "ja": "りんっ" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }, { "zh": "舔舔", "en": "Lick lick", "ja": "ぺろぺろ" }]
         },
         "empty": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "符没了喵!?", "en": "Out of charms, nya!?", "ja": "お札切れにゃ!?" },
-            { "zh": "可以摸鱼了吗~", "en": "Can I slack off now~?", "ja": "サボっていい?" }
-          ]
+          "lines": [{ "zh": "喵!?", "en": "Nya!?", "ja": "にゃ!?" }, { "zh": "摸鱼~", "en": "Slacking~", "ja": "サボり~" }]
         },
         "fever": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "灵力全开喵♡", "en": "Full spirit power, nya♡", "ja": "霊力全開にゃ♡" },
-            { "zh": "呼噜呼噜~♡", "en": "Purr purr~♡", "ja": "ゴロゴロ~♡" }
-          ]
+          "lines": [{ "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" }, { "zh": "喵~♡", "en": "Nyaan♡", "ja": "にゃーん♡" }]
         },
         "ready": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "真言好了喵~想要吗?", "en": "The mantra's ready~ want it?", "ja": "真言いけるにゃ~ほしい?" },
-            { "zh": "尾巴翘起来了♡", "en": "My tail's standing up♡", "ja": "しっぽ立っちゃった♡" }
-          ]
+          "lines": [{ "zh": "想要?", "en": "Want it?", "ja": "ほしい?" }, { "zh": "喵♡", "en": "Nyan♡", "ja": "にゃん♡" }]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
-            { "zh": "唵嘛呢叭咪吽!!", "en": "Om mani padme hum!!", "ja": "オンマニパドメフム!!" },
-            { "zh": "全部给我净化喵!!", "en": "Purify, all of you, nya!!", "ja": "まとめて浄化にゃ!!" }
+            { "zh": "大慈大悲观世音菩萨", "en": "Great Compassion, Kannon", "ja": "大慈大悲観世音菩薩" },
+            { "zh": "急急如律令!", "en": "Swiftly, by the law!", "ja": "急急如律令!" },
+            { "zh": "呼格鲁伊 姆格鲁纳弗", "en": "Ph'nglui mglw'nafh", "ja": "ふんぐるい むぐるうなふ" }
           ]
         },
         "cover": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "猫猫躲起来~", "en": "Kitty's hiding~", "ja": "ねこかくれ~" },
-            { "zh": "在纸箱里喵", "en": "In the box, nya", "ja": "ダンボールの中にゃ" }
-          ]
+          "lines": [{ "zh": "喵", "en": "Nya", "ja": "にゃっ" }, { "zh": "纸箱~", "en": "Box~", "ja": "ダンボール~" }]
         },
         "revive": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "还有八条命喵", "en": "Eight lives left, nya", "ja": "残り八つにゃ" },
-            { "zh": "嗯…睡饱了", "en": "Mm… good nap", "ja": "んー…よく寝た" }
-          ]
+          "lines": [{ "zh": "喵~", "en": "Nyaan~", "ja": "にゃ~ん" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }]
         },
         "down": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "喵…", "en": "Nya…", "ja": "にゃ…" },
-            { "zh": "不理你了…", "en": "I'm not talking to you…", "ja": "もう知らない…" }
-          ]
+          "lines": [{ "zh": "喵…", "en": "Nya…", "ja": "にゃ…" }, { "zh": "哼…", "en": "Hmph…", "ja": "ふん…" }]
         },
         "coverBroken": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "喵!掩体!", "en": "Nya! My cover!", "ja": "にゃ!遮蔽物!" },
-            { "zh": "被看光了喵…", "en": "They can see me, nya…", "ja": "丸見えにゃ…" }
-          ]
+          "lines": [{ "zh": "喵!?", "en": "Nya!?", "ja": "にゃっ!?" }, { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" }]
         },
         "stagger": {
           "bubble": "shout",
-          "lines": [
-            { "zh": "定!", "en": "Freeze!", "ja": "定!" },
-            { "zh": "不准动喵~", "en": "No moving, nya~", "ja": "動いちゃダメにゃ~" }
-          ]
+          "lines": [{ "zh": "定!", "en": "Freeze!", "ja": "定!" }, { "zh": "摄!", "en": "Seize!", "ja": "摂!" }]
         },
-        "join": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "参上喵", "en": "Here I am, nya", "ja": "参上にゃ" },
-            { "zh": "来陪你玩了♡", "en": "I came to play with you♡", "ja": "遊びに来たよ♡" }
-          ]
-        },
+        "join": { "bubble": "cute", "lines": [{ "zh": "参上喵", "en": "Here, nya", "ja": "参上にゃ" }] },
         "quit": {
           "bubble": "cute",
           "lines": [
@@ -325,46 +215,29 @@
         },
         "idle": {
           "bubble": "cute",
-          "lines": [
-            { "zh": "喵~", "en": "Nya~", "ja": "にゃ~" },
-            { "zh": "哈啊~好困", "en": "Yawn~ sleepy", "ja": "ふぁ~ねむい" },
-            { "zh": "呼噜呼噜~", "en": "Purr purr~", "ja": "ゴロゴロ~" },
-            { "zh": "呀哒哟~", "en": "No way~", "ja": "やだよぉ~" }
-          ]
+          "lines": [{ "zh": "喵~", "en": "Nya~", "ja": "にゃ~" }, { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" }, { "zh": "呼噜呼噜", "en": "Purr", "ja": "ゴロゴロ" }]
         },
-        "scare": {
-          "lines": [
-            { "zh": "……你在干什么？", "en": "...What are you doing?", "ja": "…なにしてるの?" }
-          ]
-        },
-        "photo": {
-          "lines": [
-            { "zh": "……画在动", "en": "...The painting moved.", "ja": "…絵が動いた" },
-            { "zh": "不要乱拍啦", "en": "Stop taking pictures.", "ja": "撮らないで" }
-          ]
-        },
-        "bridge": {
-          "lines": [
-            { "zh": "别往下看！", "en": "Do not look down!", "ja": "下見ないで!" }
-          ]
-        },
+        "scare": { "lines": [{ "zh": "…喵?", "en": "…Nya?", "ja": "…にゃ?" }] },
+        "photo": { "lines": [{ "zh": "喵…", "en": "Nya…", "ja": "にゃ…" }] },
+        "bridge": { "lines": [{ "zh": "喵!", "en": "Nya!", "ja": "にゃっ!" }] },
         "rot": {
-          "lines": [
-            { "zh": "……好臭", "en": "...It reeks.", "ja": "…くさい" },
-            { "zh": "房子在烂掉", "en": "The house is rotting.", "ja": "家が腐ってく" },
-            { "zh": "别碰那些糖浆", "en": "Don't touch the syrup.", "ja": "シロップ触らないで" }
-          ]
+          "lines": [{ "zh": "好臭", "en": "Stinks", "ja": "くさっ" }, { "zh": "呜喵…", "en": "Unya…", "ja": "うにゃ…" }]
         },
-        "real": {
-          "lines": [
-            { "zh": "……别放松", "en": "...Don't relax.", "ja": "…油断しないで" },
-            { "zh": "只是表面", "en": "It's only the surface.", "ja": "見た目だけ" }
-          ]
+        "real": { "lines": [{ "zh": "…哼", "en": "…Hmph", "ja": "…ふん" }] },
+        "armor": { "lines": [{ "zh": "…绅士", "en": "…Gentleman", "ja": "…紳士" }] },
+        "start": {
+          "bubble": "cute",
+          "lines": [{ "zh": "走喵", "en": "Let's go, nya", "ja": "いくにゃ" }, { "zh": "没办法喵", "en": "Fine, nya", "ja": "しかたないにゃ" }]
         },
-        "armor": {
+        "win": {
+          "bubble": "cute",
+          "lines": [{ "zh": "轻松喵", "en": "Easy, nya", "ja": "楽勝にゃ" }, { "zh": "奖励呢?", "en": "Where's my treat?", "ja": "ごほうびは?" }]
+        },
+        "lose": {
+          "bubble": "cute",
           "lines": [
-            { "zh": "它让路了", "en": "It is letting us pass.", "ja": "通してくれるって" },
-            { "zh": "……绅士", "en": "...What a gentleman.", "ja": "…紳士" }
+            { "zh": "…赌气睡觉", "en": "…Sulking to sleep", "ja": "…ふて寝する" },
+            { "zh": "再来喵", "en": "Once more, nya", "ja": "もう一回にゃ" }
           ]
         }
       }

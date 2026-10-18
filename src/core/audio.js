@@ -1,7 +1,7 @@
 // Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops; a sound with recorded files in content
 // audio/sounds.json plays those instead (at the end of this file).
 import { C } from './content.js';
-let ctx = null, master, sfxBus, musBus, verb, noiseBuf;
+let ctx = null, master, sfxBus, fxBus, musBus, musDuck, verb, noiseBuf;
 let muted = false;
 let volume = 0.8;
 let musicVol = 1, sfxVol = 1; // BGM / SFX sliders (0..1), on top of the master volume
@@ -17,7 +17,10 @@ export function initAudio() {
   master = ctx.createGain(); master.gain.value = muted ? 0 : 0.75 * volume;
   master.connect(comp); comp.connect(ctx.destination);
   sfxBus = ctx.createGain(); sfxBus.gain.value = 0.9 * sfxVol; sfxBus.connect(master);
-  musBus = ctx.createGain(); musBus.gain.value = 0.34 * musicVol; musBus.connect(master);
+  // effects go through fxBus, which steps back while one of the girls talks (talk()); her voice goes straight to sfxBus
+  fxBus = ctx.createGain(); fxBus.connect(sfxBus);
+  musBus = ctx.createGain(); musBus.gain.value = 0.34 * musicVol;
+  musDuck = ctx.createGain(); musBus.connect(musDuck); musDuck.connect(master);
   verb = ctx.createConvolver();
   const len = ctx.sampleRate * 2.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
@@ -48,7 +51,7 @@ function env(g, t, a, peak, d) {
 function out(node, bus, pan, verbAmt) {
   let n = node;
   if (pan && ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = Math.max(-1, Math.min(1, pan)); n.connect(p); n = p; }
-  n.connect(bus || sfxBus);
+  n.connect(bus || fxBus);
   if (verbAmt) { const vs = ctx.createGain(); vs.gain.value = verbAmt; n.connect(vs); vs.connect(verb); }
 }
 function tone({ f = 440, f2 = null, type = 'square', t = 0, a = 0.004, d = 0.15, v = 0.2, bus = null, pan = 0, verbAmt = 0.1, filter = null, q = 1, vib = 0, vibRate = 6 }) {
@@ -86,6 +89,20 @@ function noise({ t = 0, a = 0.002, d = 0.1, v = 0.2, f = 2000, f2 = null, type =
 
 export const sfx = {
   ui() { tone({ f: 880, type: 'square', d: 0.04, v: 0.06, filter: { f: 3000 } }); tone({ t: 0.04, f: 1320, type: 'square', d: 0.06, v: 0.06, filter: { f: 3000 } }); },
+  // out of a stage (tools/ui_sfx.py makes the real ones; these are stand-ins): move onto / back / can't / page / tab / toggle / swap / go,
+  // a number ticking, an item got, a level up, a comic page landing
+  uiMove() { tone({ f: 3136, type: 'sine', d: 0.05, v: 0.03 }); },
+  uiBack() { tone({ f: 1320, type: 'sine', d: 0.08, v: 0.06 }); tone({ t: 0.06, f: 880, type: 'sine', d: 0.1, v: 0.06 }); },
+  uiDeny() { tone({ f: 200, type: 'square', d: 0.07, v: 0.06, filter: { f: 800 } }); tone({ t: 0.1, f: 180, type: 'square', d: 0.07, v: 0.06, filter: { f: 800 } }); },
+  uiPage() { noise({ f: 1500, f2: 5000, a: 0.04, d: 0.18, v: 0.12, q: 0.8 }); },
+  uiTab() { noise({ f: 2500, f2: 7000, a: 0.02, d: 0.08, v: 0.1, q: 1 }); tone({ t: 0.08, f: 2637, type: 'sine', d: 0.08, v: 0.04 }); },
+  uiToggle() { tone({ f: 2093, type: 'sine', d: 0.05, v: 0.05 }); tone({ t: 0.035, f: 2637, type: 'sine', d: 0.05, v: 0.05 }); },
+  uiSwap() { noise({ f: 800, f2: 6000, a: 0.08, d: 0.2, v: 0.12 }); noise({ t: 0.07, f: 6000, f2: 800, a: 0.08, d: 0.2, v: 0.12 }); },
+  uiStart() { [72, 76, 79, 84, 88].forEach((m, i) => tone({ f: mtof(m), type: 'sine', t: 0.05 + i * 0.055, d: 0.5, v: 0.08, verbAmt: 0.4 })); tone({ f: 110, f2: 55, type: 'sine', d: 0.2, v: 0.3 }); },
+  count() { tone({ f: 2794, type: 'sine', d: 0.03, v: 0.03 }); },
+  item() { [79, 83, 86, 91].forEach((m, i) => tone({ f: mtof(m), type: 'sine', t: i * 0.045, d: 0.4, v: 0.06, verbAmt: 0.4 })); },
+  levelUp() { [72, 76, 79, 84].forEach((m, i) => tone({ f: mtof(m), type: 'sine', t: i * 0.1, d: 0.6, v: 0.07, verbAmt: 0.4 })); },
+  comicPage() { noise({ f: 1500, f2: 6000, a: 0.03, d: 0.15, v: 0.12 }); tone({ t: 0.15, f: 140, f2: 70, type: 'sine', d: 0.1, v: 0.15 }); },
   gun(pan = 0) {
     noise({ f: 2600, f2: 500, d: 0.07, v: 0.32, q: 0.6, pan, verbAmt: 0.12 });
     tone({ f: 180, f2: 50, type: 'sine', d: 0.08, v: 0.32, pan, verbAmt: 0 });
@@ -102,7 +119,8 @@ export const sfx = {
   slash(p = 1) { noise({ f: 7000, f2: 1200, d: 0.16, v: 0.24 * p, q: 1.2 }); tone({ f: 2400, f2: 700, type: 'sawtooth', d: 0.12, v: 0.04, filter: { f: 5000 } }); },
   paperRip(pan = 0) { for (let i = 0; i < 3; i++) noise({ t: i * 0.025, f: 2500 + Math.random() * 3000, d: 0.04, v: 0.12, q: 4, pan, verbAmt: 0.02 }); },
   tear(pan = 0) { noise({ f: 1500, f2: 6000, d: 0.22, v: 0.22, q: 2.5, pan }); noise({ t: 0.06, f: 4000, f2: 900, d: 0.18, v: 0.15, q: 3, pan }); },
-  hit(pan = 0, crit = false) { noise({ f: crit ? 3800 : 2200, d: 0.05, v: crit ? 0.26 : 0.18, q: 1.5, pan, verbAmt: 0.02 }); tone({ f: crit ? 700 : 300, f2: 120, type: 'triangle', d: 0.06, v: 0.12, pan }); },
+  hit(pan = 0, crit = false) {
+    noise({ f: crit ? 3800 : 2200, d: 0.05, v: crit ? 0.26 : 0.18, q: 1.5, pan, verbAmt: 0.02 }); tone({ f: crit ? 700 : 300, f2: 120, type: 'triangle', d: 0.06, v: 0.12, pan }); },
   thud(pan = 0) { tone({ f: 120, f2: 40, type: 'sine', d: 0.25, v: 0.4, pan, verbAmt: 0.1 }); noise({ f: 400, d: 0.15, v: 0.2, type: 'lowpass', pan }); },
   shatter(pan = 0) { for (let i = 0; i < 6; i++) noise({ t: i * 0.02, f: 3000 + i * 600, d: 0.08, v: 0.12, q: 5, pan, verbAmt: 0.2 }); tone({ f: 600, f2: 90, type: 'triangle', d: 0.3, v: 0.12, pan }); },
   burnOut(pan = 0) { noise({ f: 900, f2: 200, d: 0.7, a: 0.05, v: 0.25, type: 'lowpass', pan, verbAmt: 0.2 }); for (let i = 0; i < 8; i++) noise({ t: Math.random() * 0.6, f: 5000, d: 0.02, v: 0.08, q: 6, pan }); },
@@ -230,15 +248,17 @@ function level(b) {
   }
   b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.004)) / b.sampleRate;
 }
-function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = sfxBus } = {}) {
+function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = fxBus, fadeIn = 0 } = {}) {
   const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
   const g = ctx.createGain(); g.gain.value = vol * (b.gainK || 1);
   const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
   s.connect(g); if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
+  if (fadeIn) { const v = g.gain.value; g.gain.setValueAtTime(0.0001, ctx.currentTime); g.gain.linearRampToValueAtTime(v, ctx.currentTime + fadeIn); }
   s.start(0, b.startAt || 0);
+  s.g = g;
   if (len > 0) {   // only the first len seconds (of the sound as played), then a short fade
     const t = ctx.currentTime, end = t + len / rate, f = Math.min(0.06, len / rate * 0.4);
-    g.gain.setValueAtTime(g.gain.value, end - f); g.gain.linearRampToValueAtTime(0.0001, end); s.stop(end + 0.01);
+    g.gain.setValueAtTime(g.gain.value * 1, end - f); g.gain.linearRampToValueAtTime(0.0001, end); s.stop(end + 0.01);
   }
   return s;
 }
@@ -254,30 +274,100 @@ export function preloadSounds() {
   const S = C.sounds || {};
   for (const e of Object.values(S.sfx || {})) for (const f of e.files || []) load(f);
   for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) for (const f of m[a] || []) load(f);
-  for (const v of Object.values(S.voices || {})) for (const f of Object.values(v?.lines || {})) load(f);
+  for (const v of Object.values(S.voices || {})) {
+    for (const f of Object.values(v?.lines || {})) load(f);
+    for (const G of Object.values(v?.grains || {})) for (const f of G?.files || []) load(f);
+  }
 }
-// every synthesized effect first looks for its recorded version
+// every synthesized effect first looks for its recorded version; sounds.json "gap" = at most one every that many seconds (a fast gun's
+// hits would blur into one noise)
+const LAST = new Map();
 for (const k of Object.keys(sfx)) {
   const synth = sfx[k];
   sfx[k] = (...a) => {
     const e = C.sounds?.sfx?.[k];
+    if (e?.gap && ctx) { if (now() - (LAST.get(k) ?? -9) < e.gap) return; LAST.set(k, now()); }
     if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: (e.rate || 1) * (0.94 + Math.random() * 0.12), len: e.len || 0 })) return;
     return synth(...a);
   };
 }
-// a girl says the i-th line of a sticker kind (text/stickers.json), if that line has a voice file
-let voiceNow = [null, null];
-export function voice(who, kind, i, slot = 0) {
-  const f = C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`];
-  if (!ctx || !f) return;
-  const b = BUF.get(f);
-  if (!b || b instanceof Promise) { if (b === undefined) load(f); return; }
-  try { voiceNow[slot]?.stop(); } catch (e) { /* already over */ }
-  voiceNow[slot] = playBuf(b, { vol: 1, pan: slot ? 0.25 : -0.25 });
+// ---- the girls' voices (docs/TECH.md「声音」: how other games keep barks apart — one channel, priorities, gaps, ducking)
+// One channel for both girls: a line starts only when nobody is talking, or cuts in (the other fades out in 50 ms) when it matters
+// clearly more (2 priority steps); small talk (priority 4 and below) waits TALK_GAP after the last line and is dropped while the fight is
+// hot (setIntensity). While a line plays, the effects and the music step back.
+const TALK_GAP = 1.2, DUCK_FX = 0.55, DUCK_MUS = 0.5;
+// counts for tests (tools/node/playthrough.cjs writes them out: nobody can listen to an offscreen run)
+const STATS = { lines: 0, linesDropped: 0, linesCut: 0, grains: 0, grainsQuiet: 0, cries: 0, criesSkipped: 0 };
+window.__noaAudio = STATS;
+const TALK = { s: null, who: null, pr: 0, end: 0, start: -9 };
+export function talking(who) { return !!ctx && now() < TALK.end && (!who || TALK.who === who); }
+function duck(on) {
+  const t = now();
+  fxBus.gain.setTargetAtTime(on ? DUCK_FX : 1, t, on ? 0.02 : 0.12);
+  musDuck.gain.setTargetAtTime(on ? DUCK_MUS : 1, t, on ? 0.04 : 0.25);
 }
-// a monster's cry (windup / attack / hurt / die), its own or the default one
+function talk(who, b, pr, pan) {
+  const t = now(), busy = t < TALK.end;
+  if (busy && pr < TALK.pr + 2) { STATS.linesDropped++; return false; }
+  if (!busy && pr <= 4 && (t - TALK.start < TALK_GAP || intensity > 0.85)) { STATS.linesDropped++; return false; }
+  STATS.lines++; if (busy) STATS.linesCut++;
+  if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.015); TALK.s.stop(t + 0.06); } catch (e) { /* over */ } }
+  stopGrain(who);   // (one mouth: her weapon's syllable stops)
+  const s = playBuf(b, { vol: 1, pan, bus: sfxBus, fadeIn: busy ? 0.02 : 0 });
+  const end = t + (b.duration - (b.startAt || 0));
+  Object.assign(TALK, { s, who, pr, end, start: t });
+  duck(true);
+  setTimeout(() => { if (now() >= TALK.end - 0.01) duck(false); }, (end - t) * 1000 + 30);
+  return true;
+}
+// a girl says the i-th line of a sticker kind (text/stickers.json) with its priority (stickers.js PRIO): true = said, false = not now
+// (someone else is talking / too soon), null = that line has no voice (yet)
+export function voice(who, kind, i, slot = 0, pr = 5) {
+  const f = C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`];
+  if (!ctx || !f) return null;
+  const b = BUF.get(f);
+  if (!b || b instanceof Promise) { if (b === undefined) load(f); return null; }
+  return talk(who, b, pr, slot ? 0.25 : -0.25);
+}
+// her weapon's voice (sounds.json voices.<who>.grains, characters/*.json weapon.voice / active.voice): one syllable per shot at most
+// every V.every seconds, cut to V.len; each one cuts off her last (one mouth: 突突突…); seq = the i-th syllable (the mantra glyph her shot
+// writes). Nothing while she is saying a line. true = played (the caller's stand-in sound is not needed)
+const GRAIN = new Map();   // who -> { s, t }
+function stopGrain(who) { const G = GRAIN.get(who); if (G?.s) { try { G.s.g.gain.setTargetAtTime(0.0001, now(), 0.01); G.s.stop(now() + 0.04); } catch (e) { /* over */ } G.s = null; } }
+export function grain(who, V, pan = 0, i = 0) {
+  const files = C.sounds?.voices?.[who]?.grains?.[V.grain || 'shot']?.files;
+  if (!ctx || muted || !files?.length) return false;
+  if (talking(who)) { STATS.grainsQuiet++; return true; }
+  const G = GRAIN.get(who) || {}, t = now();
+  if (t - (G.t ?? -9) < (V.every || 0)) return true;
+  const seq = C.sounds.voices[who].grains[V.grain || 'shot'].seq;
+  let k = seq ? ((i % files.length) + files.length) % files.length : Math.floor(Math.random() * files.length);
+  if (!seq && files.length > 1 && k === G.k) k = (k + 1) % files.length;
+  const b = BUF.get(files[k]);
+  if (!b || b instanceof Promise) { if (b === undefined) load(files[k]); return false; }
+  stopGrain(who);
+  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate: (V.rate || 1) * (0.96 + Math.random() * 0.08), len: V.len || 0 });
+  GRAIN.set(who, { s, t, k }); STATS.grains++;
+  return true;
+}
+// a monster's cry (windup / attack / hurt / die), its own or the default one. At most CRY_MAX at once: a new one only takes a place
+// from a less important one (die > windup > attack > hurt), else it is skipped (the fight stays readable: "play the right sounds")
+const CRY_MAX = 2, CRY_PR = { die: 3, windup: 2, attack: 1, hurt: 0 };
+const CRIES = [];
 export function cry(type, act, pan = 0) {
   const M = C.sounds?.monsters || {}, own = M[type]?.[act]?.length;
   const files = own ? M[type][act] : M.default?.[act], rate = (M[type]?.rate || 1) * (0.92 + Math.random() * 0.16);
-  playOne(files, { pan, vol: M[type]?.vol ?? 0.9, rate });
+  if (!ctx || !files?.length) return;
+  const t = now(), pr = CRY_PR[act] ?? 0;
+  for (let k = CRIES.length - 1; k >= 0; k--) if (CRIES[k].end <= t) CRIES.splice(k, 1);
+  if (CRIES.length >= CRY_MAX) {
+    const low = CRIES.reduce((a, c) => (c.pr < a.pr ? c : a));
+    if (low.pr >= pr) { STATS.criesSkipped++; return; }
+    try { low.s.g.gain.setTargetAtTime(0.0001, t, 0.03); low.s.stop(t + 0.12); } catch (e) { /* over */ }
+    CRIES.splice(CRIES.indexOf(low), 1);
+  }
+  const f = files[Math.floor(Math.random() * files.length)], b = BUF.get(f);
+  if (!b || b instanceof Promise) { if (b === undefined) load(f); return; }
+  const s = playBuf(b, { pan, vol: M[type]?.vol ?? 0.9, rate });
+  CRIES.push({ s, pr, end: t + (b.duration - (b.startAt || 0)) / rate }); STATS.cries++;
 }

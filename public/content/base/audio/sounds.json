@@ -1,15 +1,9 @@
 {
   "_doc": "声音清单（sfx 音效，docs/DESIGN.md「声音」，代码 src/core/audio.js）。每种声音：when 什么时候响，want 想要什么样（参考日本游戏的感觉），src 打算从哪来（lib = 免费可商用音效库挑、tts = 语音合成念怪叫再后期处理、voice = 角色语音、synth = 程序合成就够了），署名和许可在 text/credits.json（新加素材先登记在那里）。files 声音文件（相对内容包，放在 sfx/<站名>/ 下，保留原文件名，ogg / mp3 / wav；有几个就每次随机挑一个，再随机变一点音高），vol 音量。files 空着 = 还用程序合成的临时声音。voices：角色语音，按 text/stickers.json 的台词一一对应（voice/<角色>/<场合>_<第几句>.ogg，从 1 数，登记在 voices.<角色>.lines），有文件就和气泡一起说。monsters：怪物叫声（TTS + 后期），按怪的种类和动作。",
   "sfx": {
-    "ui": { "when": "菜单按钮按下、悬停", "want": "清脆短促的「ポン」，像 P5 菜单那种干净的电子音", "src": "lib", "files": ["sfx/maou/maou_se_system45.mp3"], "vol": 0.6 },
-    "panel": {
-      "when": "选关翻页、切章节",
-      "want": "纸张翻动 + 一点点「シャッ」",
-      "src": "lib",
-      "files": ["sfx/otologic/Book02-1_Flip.mp3", "sfx/otologic/Book02-4_Flick_Through.mp3"],
-      "vol": 1
-    },
-    "stamp": { "when": "盖章、结算条目、书包装备", "want": "「ドン」的盖章声，有点闷有点重", "src": "lib", "files": ["sfx/maou/maou_se_battle07.mp3"], "vol": 0.8 },
+    "ui": { "when": "确定", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/ok.ogg"], "vol": 0.7 },
+    "panel": { "when": "漫画一格滑进来", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/comicpanel.ogg"], "vol": 0.5 },
+    "stamp": { "when": "盖章（结算、买东西）", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/stamp.ogg"], "vol": 0.85 },
     "popup": {
       "when": "她从掩体探身",
       "want": "很短的衣服摩擦「ササッ」",
@@ -32,8 +26,8 @@
       "vol": 0.8,
       "len": 1.8
     },
-    "victory": { "when": "通关", "want": "短小的胜利号角 jingle（2～3 秒）", "src": "lib", "files": ["sfx/maou/maou_se_jingle05.mp3"], "vol": 0.9 },
-    "defeat": { "when": "失败", "want": "可爱又丧的下行 jingle", "src": "lib", "files": ["sfx/maou/maou_se_onepoint06.mp3"], "vol": 0.9 },
+    "victory": { "when": "小关通过", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/victory.ogg"], "vol": 0.8 },
+    "defeat": { "when": "失败", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/defeat.ogg"], "vol": 0.75 },
     "gun": {
       "when": "地雷妹的加特林 / 冲锋枪每一发",
       "want": "轻快的小口径「パパパ」，不吵，连发 13 发 / 秒也不刺耳",
@@ -62,7 +56,8 @@
         "sfx/otologic/Hit-Punch02-3_Dry.mp3",
         "sfx/otologic/Hit-Punch02-4_Dry.mp3"
       ],
-      "vol": 0.5
+      "vol": 0.5,
+      "gap": 0.05
     },
     "thud": { "when": "重物落地、怪摔倒", "want": "「ドスン」", "src": "lib", "files": ["sfx/maou/maou_se_battle12.mp3"], "vol": 0.9 },
     "shatter": { "when": "飞行道具被打下来、玻璃碎", "want": "清脆的碎裂「パリーン」", "src": "lib", "files": ["sfx/maou/maou_se_magic_ice05.mp3"], "vol": 0.7, "len": 0.8 },
@@ -168,7 +163,20 @@
       "files": ["sfx/otologic/Horror-Laugh02-4_Dry.mp3", "sfx/otologic/Horror-Laugh02-5_Dry.mp3", "sfx/otologic/Horror-Laugh02-6_Dry.mp3"],
       "vol": 0.8
     },
-    "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": ["sfx/maou/maou_se_sound17.mp3"], "vol": 0.7 }
+    "mothFlap": { "when": "课本蛾扇翅膀", "want": "纸页扑扇「バサバサ」", "src": "lib", "files": ["sfx/maou/maou_se_sound17.mp3"], "vol": 0.7 },
+    "_doc": " gap = 两次之间至少隔几秒（连射的命中声不糊成一片）。",
+    "uiMove": { "when": "光标移到按钮 / 选项上", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/move.ogg"], "vol": 0.5 },
+    "uiBack": { "when": "返回", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/back.ogg"], "vol": 0.65 },
+    "uiDeny": { "when": "锁着 / 不行", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/deny.ogg"], "vol": 0.7 },
+    "uiPage": { "when": "翻页（选关的行、背包）", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/page.ogg"], "vol": 0.7 },
+    "uiTab": { "when": "切换标签", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/tab.ogg"], "vol": 0.6 },
+    "uiToggle": { "when": "开关 / 滑条一格", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/toggle.ogg"], "vol": 0.55 },
+    "uiSwap": { "when": "两人换位", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/swap.ogg"], "vol": 0.7 },
+    "uiStart": { "when": "开始游戏 / 出发", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/start.ogg"], "vol": 0.85 },
+    "count": { "when": "数字往上跳", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/count.ogg"], "vol": 0.4 },
+    "item": { "when": "拿到道具", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/item.ogg"], "vol": 0.75 },
+    "levelUp": { "when": "升级", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/levelup.ogg"], "vol": 0.8 },
+    "comicPage": { "when": "漫画翻到新的一页", "want": "统一的一套：纸（拍、滑、翻页、盖章）+ 玻璃小铃，配剪报风界面和卖萌", "src": "tools/ui_sfx.py", "files": ["sfx/ui/comicpage.ogg"], "vol": 0.7 }
   },
   "monsters": {
     "_doc": "怪物叫声（TTS 念一个词或拟声，再加变调 / 失真 / 倒放 / 混响，Claude 做后期）：按怪的种类（enemies.json 的 id）和动作（windup 蓄力 / attack 攻击 / hurt 挨打 / die 死），files 同上。 第 1 话重做的新怪借用相近的怪的叫声、改音高（小东西高、影子低）。",
@@ -346,7 +354,7 @@
     }
   },
   "voices": {
-    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",
+    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。 grains = 武器的声音（第十三批：武器声用主角自己的声音）：say 每个音节，style / speed（可以每个音节一个）；tools/voice_aivis.py grains <角色> 生成 voice/<角色>/g_<键>_<n>.ogg 写进 files；seq = 按顺序对着打出来的字（猫娘的真言 唵嘛呢叭咪吽）。怎么播见 characters/*.json weapon.voice。",
     "pink": {
       "model": "e4ee047d-3af4-4936-90eb-29a3c9104709",
       "voice": "火山夢_T2モデル",
@@ -356,7 +364,6 @@
         "hit": { "style": "Positive", "speed": 1.1 },
         "crit": { "style": "Positive", "intonation": 1.3 },
         "kill": { "style": "Positive" },
-        "kill_3": { "style": "Negative", "speed": 0.92 },
         "combo": { "style": "Positive", "intonation": 1.3 },
         "hurt": { "style": "Negative", "speed": 1.1 },
         "low": { "style": "Negative", "speed": 0.9 },
@@ -373,12 +380,15 @@
         "poke": { "style": "Positive", "speed": 1.08 },
         "scare": { "style": "ノーマル", "speed": 0.9, "intonation": 0.8 },
         "photo": { "style": "Positive" },
-        "photo_2": { "style": "Negative" },
         "bridge": { "style": "Negative", "speed": 1.15 },
         "rot": { "style": "Negative" },
-        "rot_3": { "style": "Negative", "speed": 1.1, "intonation": 1.4 },
         "real": { "style": "ノーマル" },
-        "armor": { "style": "Positive" }
+        "armor": { "style": "Positive" },
+        "kill_1": { "style": "Positive", "intonation": 1.4 },
+        "crit_1": { "style": "Positive", "intonation": 1.4 },
+        "start": { "style": "Positive" },
+        "win": { "style": "Positive", "intonation": 1.3 },
+        "lose": { "style": "Negative", "speed": 0.92 }
       },
       "say": {},
       "lines": {
@@ -391,16 +401,13 @@
         "kill_1": "voice/pink/kill_1.ogg",
         "kill_2": "voice/pink/kill_2.ogg",
         "kill_3": "voice/pink/kill_3.ogg",
-        "kill_4": "voice/pink/kill_4.ogg",
         "combo_1": "voice/pink/combo_1.ogg",
         "combo_2": "voice/pink/combo_2.ogg",
-        "combo_3": "voice/pink/combo_3.ogg",
         "hurt_1": "voice/pink/hurt_1.ogg",
         "hurt_2": "voice/pink/hurt_2.ogg",
         "hurt_3": "voice/pink/hurt_3.ogg",
         "low_1": "voice/pink/low_1.ogg",
         "low_2": "voice/pink/low_2.ogg",
-        "low_3": "voice/pink/low_3.ogg",
         "reload_1": "voice/pink/reload_1.ogg",
         "reload_2": "voice/pink/reload_2.ogg",
         "reload_3": "voice/pink/reload_3.ogg",
@@ -408,12 +415,10 @@
         "empty_2": "voice/pink/empty_2.ogg",
         "fever_1": "voice/pink/fever_1.ogg",
         "fever_2": "voice/pink/fever_2.ogg",
-        "fever_3": "voice/pink/fever_3.ogg",
         "ready_1": "voice/pink/ready_1.ogg",
         "ready_2": "voice/pink/ready_2.ogg",
         "skill_1": "voice/pink/skill_1.ogg",
         "skill_2": "voice/pink/skill_2.ogg",
-        "skill_3": "voice/pink/skill_3.ogg",
         "cover_1": "voice/pink/cover_1.ogg",
         "cover_2": "voice/pink/cover_2.ogg",
         "revive_1": "voice/pink/revive_1.ogg",
@@ -425,7 +430,6 @@
         "stagger_1": "voice/pink/stagger_1.ogg",
         "stagger_2": "voice/pink/stagger_2.ogg",
         "join_1": "voice/pink/join_1.ogg",
-        "join_2": "voice/pink/join_2.ogg",
         "quit_1": "voice/pink/quit_1.ogg",
         "quit_2": "voice/pink/quit_2.ogg",
         "poke_1": "voice/pink/poke_1.ogg",
@@ -434,18 +438,28 @@
         "idle_1": "voice/pink/idle_1.ogg",
         "idle_2": "voice/pink/idle_2.ogg",
         "idle_3": "voice/pink/idle_3.ogg",
-        "idle_4": "voice/pink/idle_4.ogg",
         "scare_1": "voice/pink/scare_1.ogg",
         "photo_1": "voice/pink/photo_1.ogg",
         "photo_2": "voice/pink/photo_2.ogg",
         "bridge_1": "voice/pink/bridge_1.ogg",
         "rot_1": "voice/pink/rot_1.ogg",
         "rot_2": "voice/pink/rot_2.ogg",
-        "rot_3": "voice/pink/rot_3.ogg",
         "real_1": "voice/pink/real_1.ogg",
-        "real_2": "voice/pink/real_2.ogg",
         "armor_1": "voice/pink/armor_1.ogg",
-        "armor_2": "voice/pink/armor_2.ogg"
+        "start_1": "voice/pink/start_1.ogg",
+        "start_2": "voice/pink/start_2.ogg",
+        "win_1": "voice/pink/win_1.ogg",
+        "win_2": "voice/pink/win_2.ogg",
+        "lose_1": "voice/pink/lose_1.ogg",
+        "lose_2": "voice/pink/lose_2.ogg"
+      },
+      "grains": {
+        "shot": {
+          "say": ["とぅっ", "トゥッ", "とぅっ", "トゥッ"],
+          "style": "Positive",
+          "speed": [1.3, 1.45, 1.55, 1.35],
+          "files": ["voice/pink/g_shot_1.ogg", "voice/pink/g_shot_2.ogg", "voice/pink/g_shot_3.ogg", "voice/pink/g_shot_4.ogg"]
+        }
       }
     },
     "cat": {
@@ -454,14 +468,11 @@
       "tone": "慵懒、傲娇、有点困的猫，句尾带「にゃ」，偶尔突然很凶",
       "read": {
         "default": { "style": "ノーマル" },
-        "crit_3": { "style": "あまあま" },
         "kill": { "style": "ねむたい" },
-        "kill_2": { "style": "あまあま" },
         "hurt": { "style": "せつなめ", "speed": 1.1 },
         "low": { "style": "せつなめ", "speed": 0.9 },
         "reload": { "style": "ねむたい" },
         "empty": { "style": "ねむたい" },
-        "empty_1": { "style": "ノーマル" },
         "fever": { "style": "あまあま", "intonation": 1.3 },
         "ready": { "style": "あまあま" },
         "skill": { "style": "ノーマル", "intonation": 1.5, "speed": 1.05 },
@@ -473,38 +484,40 @@
         "poke": { "style": "あまあま" },
         "poke_1": { "style": "ノーマル", "speed": 1.1 },
         "idle": { "style": "ねむたい" },
-        "idle_1": { "style": "あまあま", "speed": 0.7 },
         "scare": { "style": "ノーマル", "speed": 0.85 },
         "photo": { "style": "ねむたい" },
         "bridge": { "style": "ノーマル", "speed": 1.15 },
         "rot": { "style": "ねむたい" },
         "real": { "style": "ノーマル" },
-        "armor": { "style": "ノーマル" }
+        "armor": { "style": "ノーマル" },
+        "crit": { "style": "ノーマル", "speed": 1.1, "intonation": 1.4 },
+        "stagger": { "style": "ノーマル", "speed": 1.1, "intonation": 1.4 },
+        "start": { "style": "あまあま" },
+        "win": { "style": "あまあま" },
+        "lose": { "style": "せつなめ", "speed": 0.92 }
       },
       "say": {
-        "crit_1": "きゅうきゅうにょりつりょう、にゃ!",
-        "reload_1": "いんをむすぶにゃ…じゃましないで",
-        "reload_2": "りんぴょうとうしゃー",
-        "empty_1": "おふだぎれにゃ!?",
-        "ready_1": "しんごんいけるにゃー、ほしい?",
-        "stagger_1": "てい!"
+        "skill_1": "だいじだいひ、かんぜおんぼさつ",
+        "skill_2": "きゅうきゅうにょりつりょう!",
+        "stagger_1": "てい!",
+        "stagger_2": "せつ!",
+        "join_1": "さんじょうにゃ",
+        "cover_2": "ダンボール",
+        "win_1": "らくしょうにゃ"
       },
       "lines": {
         "hit_1": "voice/cat/hit_1.ogg",
         "hit_2": "voice/cat/hit_2.ogg",
-        "hit_3": "voice/cat/hit_3.ogg",
         "crit_1": "voice/cat/crit_1.ogg",
         "crit_2": "voice/cat/crit_2.ogg",
         "crit_3": "voice/cat/crit_3.ogg",
         "kill_1": "voice/cat/kill_1.ogg",
         "kill_2": "voice/cat/kill_2.ogg",
         "kill_3": "voice/cat/kill_3.ogg",
-        "kill_4": "voice/cat/kill_4.ogg",
         "combo_1": "voice/cat/combo_1.ogg",
         "combo_2": "voice/cat/combo_2.ogg",
         "hurt_1": "voice/cat/hurt_1.ogg",
         "hurt_2": "voice/cat/hurt_2.ogg",
-        "hurt_3": "voice/cat/hurt_3.ogg",
         "low_1": "voice/cat/low_1.ogg",
         "low_2": "voice/cat/low_2.ogg",
         "reload_1": "voice/cat/reload_1.ogg",
@@ -518,6 +531,7 @@
         "ready_2": "voice/cat/ready_2.ogg",
         "skill_1": "voice/cat/skill_1.ogg",
         "skill_2": "voice/cat/skill_2.ogg",
+        "skill_3": "voice/cat/skill_3.ogg",
         "cover_1": "voice/cat/cover_1.ogg",
         "cover_2": "voice/cat/cover_2.ogg",
         "revive_1": "voice/cat/revive_1.ogg",
@@ -529,7 +543,6 @@
         "stagger_1": "voice/cat/stagger_1.ogg",
         "stagger_2": "voice/cat/stagger_2.ogg",
         "join_1": "voice/cat/join_1.ogg",
-        "join_2": "voice/cat/join_2.ogg",
         "quit_1": "voice/cat/quit_1.ogg",
         "quit_2": "voice/cat/quit_2.ogg",
         "poke_1": "voice/cat/poke_1.ogg",
@@ -538,18 +551,35 @@
         "idle_1": "voice/cat/idle_1.ogg",
         "idle_2": "voice/cat/idle_2.ogg",
         "idle_3": "voice/cat/idle_3.ogg",
-        "idle_4": "voice/cat/idle_4.ogg",
         "scare_1": "voice/cat/scare_1.ogg",
         "photo_1": "voice/cat/photo_1.ogg",
-        "photo_2": "voice/cat/photo_2.ogg",
         "bridge_1": "voice/cat/bridge_1.ogg",
         "rot_1": "voice/cat/rot_1.ogg",
         "rot_2": "voice/cat/rot_2.ogg",
-        "rot_3": "voice/cat/rot_3.ogg",
         "real_1": "voice/cat/real_1.ogg",
-        "real_2": "voice/cat/real_2.ogg",
         "armor_1": "voice/cat/armor_1.ogg",
-        "armor_2": "voice/cat/armor_2.ogg"
+        "start_1": "voice/cat/start_1.ogg",
+        "start_2": "voice/cat/start_2.ogg",
+        "win_1": "voice/cat/win_1.ogg",
+        "win_2": "voice/cat/win_2.ogg",
+        "lose_1": "voice/cat/lose_1.ogg",
+        "lose_2": "voice/cat/lose_2.ogg"
+      },
+      "grains": {
+        "shot": {
+          "say": ["オンッ", "マッ", "ニッ", "ペッ", "メッ", "フンッ"],
+          "style": "ノーマル",
+          "speed": 1.2,
+          "seq": true,
+          "files": [
+            "voice/cat/g_shot_1.ogg",
+            "voice/cat/g_shot_2.ogg",
+            "voice/cat/g_shot_3.ogg",
+            "voice/cat/g_shot_4.ogg",
+            "voice/cat/g_shot_5.ogg",
+            "voice/cat/g_shot_6.ogg"
+          ]
+        }
       }
     }
   }
