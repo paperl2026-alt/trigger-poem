@@ -20,3 +20,4 @@ tools/aivis/
 tools/ffmpeg/
 # downloaded KTX tools (KTX2 was dropped: user 2026-10-18)
 tools/ktx/
+art/raw/bgm/*.wav

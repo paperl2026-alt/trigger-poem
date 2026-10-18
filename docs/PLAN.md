@@ -52,6 +52,7 @@
 - [ ] **HUD 方案**：准星（每人 a/b/c）、符咒（a/b/c）、装填图（每人 a/b/c），挑完改 `ui/battle.json`。
 - [ ] **结算页插画** a / b（效果图 `art/mock/results_a.png` / `results_b.png` / `results_replay.png`，现在用 a）。
 - [ ] **BGM**：用户给参考曲 + 同意装 basic-pitch / librosa → 仿写（TECH「声音」）。用户已给的参考：教学关 Boss 战 = 暗喻幻想 Warriors in Valour、FF7 闘う者達 / 片翼の天使；标题和书包 = 未来日记战斗主题。
+  - 2026-10-18 用户：标题和选关想要洗脑的、红警 3 苏联主题曲或暗喻幻想那种念诵感的；想看 TTS 念咒的潜力，两个声线交替，佛 / 道 / 克系的咒串烧。→ 做了小样 `art/raw/bgm/chant_demo_v2.ogg`（`tools/bgm_chant.py`：程序合成的进行曲 + 两人念咒交替），等用户听了定方向（TTS 只会说话、不会唱，BGM 本体要么 Claude 编曲渲染，要么 Suno 付费档；本机是 AMD 核显，ACE-Step / YuE 这类开源模型跑不动）。
 - [ ] **制作名单**：照 `text/credits.json` 写，先出效果图给用户挑。
 
 ## 待做（不等用户）
