@@ -7,7 +7,7 @@
 //   burst   a long wind-up nothing stops (the red edge: hide), then a blast over everyone
 //   summon  (later stages) a few small monsters of one kind
 //   move    it drifts somewhere else (the breather)
-// Weak while it winds up and attacks (the mouths and eyes open: the outline turns pink); its last stage, the core, is weak all the time.
+// Only its core takes damage (a ring marks it), and nothing gets through while it attacks (DESIGN「Boss」, 2026-10-18).
 // Hits change its colour, never hole it (paper.js solid damage). Between stages it convulses, splashes ooze and the next mutation grows out
 // (no comic: the fight keeps its rhythm).
 import * as THREE from 'three';
@@ -108,17 +108,31 @@ export class TheThing extends Actor {
   }
 
   // ---------------------------------------------------------------- hits
-  weakNow() { return this.S.core || this.state === 'windup' || this.state === 'attack'; }
+  // DESIGN「Boss」(2026-10-18): only its core takes damage (each form's "core": [u, v] on its drawing, radius r of its height; a ring
+  // marks it); everything else glances off. While it attacks nothing gets through; its wind-up is the opening (and hits on the core
+  // there can break a lunge off)
+  weakNow() { return !this.mutating && this.state !== 'attack'; }
+  onCore(uv) {
+    const c = this.S.core; if (!c) return true;
+    return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11);
+  }
+  glance(info) {   // a shot that does nothing: sparks and a tick
+    info.dealt = 0;
+    const p = this.uvToWorld(info.uv.u, info.uv.v), fx = this.game.fx;
+    fx.star(p, 0.5, COL.white); fx.confetti(p, 2, 0.8, [COL.white, COL.bone]);
+    if ((this.tickT || 0) <= 0) { sfx.clang(); this.tickT = 0.18; }
+  }
   hit(info) {
     if (!this.alive || this.mutating) return;
-    const D = this.def, weak = this.weakNow();
-    const dmg = info.dmg * (weak ? D.weakMul : D.bodyMul);
+    const D = this.def;
+    if (!this.weakNow() || !this.onCore(info.uv)) { this.glance(info); return; }
+    const dmg = info.dmg * (D.coreMul ?? 1);
     info.dealt = dmg; this.lastHitBy = info.by;
     this.paint(info);
-    this.flash = Math.max(this.flash, weak ? 0.7 : 0.3);
+    this.flash = Math.max(this.flash, 0.7);
     const p = this.uvToWorld(info.uv.u, info.uv.v), fx = this.game.fx;
-    if (weak) { fx.ink(p, 8, 2.6, COL.hot); fx.star(p, 2.5, COL.pink); } else fx.confetti(p, 3, 1.6);
-    // a lunge being gathered breaks off when hit enough
+    fx.ink(p, 8, 2.6, COL.hot); fx.star(p, 2.5, COL.pink);
+    // a lunge being gathered breaks off when its core is hit enough
     if (this.state === 'windup' && this.move === 'lunge' && info.stagger) { this.poise += info.stagger; if (this.poise >= D.lunge.poise) this.interrupt(); }
     this.hp -= dmg;
     this.game.onHit(this, info.kind, info);
@@ -137,6 +151,16 @@ export class TheThing extends Actor {
     this.timer = this.def.stunTime + 0.8;
   }
   endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
+  // where the AI partner aims (src/core/input.js): the core, on screen (y down like screenBox)
+  aimAt() { const c = this.S.core; if (!c) return null; const g = this.game, sc = g.world.project(this.uvToWorld(c[0], c[1])); return { x: sc.x, y: sc.y }; }
+  // the ring round the core (the small kill ring: shoot inside it), gone while it attacks or changes
+  markCore(on, t) {
+    const g = this.game;
+    if (!on) { if (this.coreMark) { this.coreMark.remove(); this.coreMark = null; } return; }
+    if (!this.coreMark) this.coreMark = g.fx.orbit('shot', -1);
+    const c = this.S.core, wc = this.uvToWorld(c[0], c[1]), sc = g.world.project(wc), top = g.world.project(this.uvToWorld(c[0], c[1] + (c[2] ?? 0.11)));
+    this.coreMark.set(sc.x, g.H - sc.y, Math.max(18, Math.abs(top.y - sc.y)), 0.2, t, 9, null, null);
+  }
   later(s, fn) { const q = this.seq; this.game.etw.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
 
   // ---------------------------------------------------------------- frame
@@ -147,9 +171,11 @@ export class TheThing extends Actor {
     this.root.rotation.y = Math.atan2(g.world.camPos.x - P.x, g.world.camPos.z - P.z);
     if (this.S.float) P.y = this.S.y + Math.sin(t * 1.3) * 0.18;
     this.shadowM.position.set(P.x, 0.03, P.z);
-    // weak: the outline glows pink and pulses; otherwise white
+    // attacking: the outline goes hard white (nothing gets through); otherwise its usual white, and the core is ringed
     const wk = this.weakNow();
-    this.u.outlineCol.value.setRGB(1, wk ? 0.35 + 0.25 * Math.sin(t * 9) : 1, wk ? 0.7 : 1);
+    this.u.outlineCol.value.setRGB(1, 1, 1);
+    this.tickT = (this.tickT || 0) - dt;
+    this.markCore(wk && this.S.core, t);
     // breathing
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
     if (this.lock) {
@@ -267,7 +293,7 @@ export class TheThing extends Actor {
 
   // ---------------------------------------------------------------- purified
   die() {
-    this.alive = false; this.seq++; this.endWindup();
+    this.alive = false; this.seq++; this.endWindup(); this.markCore(false);
     for (const o of this.ritualObjs || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
     sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6);

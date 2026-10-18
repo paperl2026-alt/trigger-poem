@@ -10,7 +10,7 @@ import { paperMesh, DamageMap, attachDamage, setRelief, FOG, NOISE_GLSL } from '
 import { Ease } from '../core/tween.js';
 import { sfx } from '../core/audio.js';
 import { C, T } from '../core/content.js';
-import { shadowTex } from './fx.js';
+import { shadowTex, COL } from './fx.js';
 
 const tmpV = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -242,7 +242,45 @@ export class PanelWorld {
     }
     this.clearProps();
   }
-  makeProp(p) { const r = this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3); (this.props || (this.props = [])).push({ ...r, x: p.x, z: p.z }); }
+  // props are breakable (DESIGN「敌人要逼上来」: what stands between the monsters and the girls can be shot to bits, and the monsters smash
+  // through it), unless the set marks one "solid" (a fountain, a statue): shots stop at it, it takes holes, it tips over and fades when
+  // spent (tuning combat.json prop)
+  makeProp(p) {
+    const r = this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3);
+    const q = { ...r, x: p.x, z: p.z, solid: !!p.solid, broken: false, hp: p.hp ?? T.combat.prop?.hp ?? 120 };
+    if (!q.solid) {
+      q.dm = new DamageMap(r.h / r.w, 256); attachDamage(r.m, q.dm);
+      const W = this;
+      r.m.userData.owner = { prop: true, get alive() { return !q.broken && q.m.visible; }, hitMeshes: () => (q.broken || !q.m.visible ? [] : [q.m]), hit: (info) => W.hitProp(q, info) };
+    }
+    (this.props || (this.props = [])).push(q);
+  }
+  breakableMeshes() { return (this.props || []).filter((q) => !q.solid && !q.broken && q.m.visible).map((q) => q.m); }
+  hitProp(q, info) {
+    if (q.broken) return;
+    info.dealt = 0;
+    q.hp -= info.dmg;
+    const k = 1 / q.w;
+    if (info.uv) q.dm.hole(info.uv.u, info.uv.v, (info.kind === 'mantra' ? 0.12 : 0.07) * k);
+    const g = this.game, pt = q.m.localToWorld(tmpV.set(((info.uv?.u ?? 0.5) - 0.5) * q.w, (info.uv?.v ?? 0.5) * q.h, 0.05).clone());
+    g.fx.confetti(pt, 3, 0.6, [COL.bone, 0xffffff]);
+    if (q.hp <= 0) this.breakProp(q);
+  }
+  // a prop goes: it tips over away from the camera with a burst of splinters, then fades out
+  breakProp(q) {
+    if (q.broken || q.solid) return;
+    q.broken = true;
+    const g = this.game, P = q.m.position;
+    sfx.shatter(0); g.post.shake(0.35);
+    g.fx.confetti(tmpV.set(P.x, q.h * 0.5, P.z).clone(), 26, 2.2, [COL.bone, 0xffffff]); g.fx.puff(P, 6, COL.bone, 0.9);
+    const c = this.camPos, away = Math.atan2(P.x - c.x, P.z - c.z) - q.m.rotation.y;
+    const tip = Math.cos(away) >= 0 ? -1.45 : 1.45;
+    g.tweens.to(q.m.rotation, { x: tip }, 0.45, { ease: Ease.inQuad, onDone: () => g.tweens.run(0.5, (e) => { q.m.material.uniforms.opacity.value = 1 - e; }, { onDone: () => { q.m.visible = false; q.sh.visible = false; } }) });
+  }
+  // a monster moving through here smashes whatever breakable prop it runs into
+  smashPropsNear(p, r) {
+    for (const q of this.props || []) if (!q.solid && !q.broken && q.m.visible && Math.hypot(q.x - p.x, q.z - p.z) < q.w * 0.5 + r) this.breakProp(q);
+  }
   // a prop standing where a station's cover goes (covers are placed from the heroines' screen layout) steps aside: it is not drawn
   clearProps() {
     const all = Object.values(this.coverSets || {}).flat();
@@ -387,7 +425,8 @@ export class PanelWorld {
   // above the bottom band (feetMin of the screen: HUD and the heroines' knees), inside the middle of the screen (walkX / flyX of the
   // half width: the heroines stand at the sides) and inside the walls. A flyer (fly) also keeps between flyY of the screen height.
   // Numbers: tuning/layout.json monster; a station's "monsterFar" (metres) keeps them nearer still. Works for any station direction.
-  fit(p, h, w, fly = false) {
+  // o: { far, min } = how deep a spawn may / must stand (monsters close in from there: DESIGN「敌人要逼上来」)
+  fit(p, h, w, fly = false, o = {}) {
     const M = T.layout.monster, c = this.camPos, f = FIT_F.copy(this.lookAt).sub(c);
     const pitch = Math.atan2(f.y, Math.hypot(f.x, f.z));
     f.y = 0; f.normalize();
@@ -396,9 +435,10 @@ export class PanelWorld {
     // screen height share s (0 = bottom) at depth D -> height in the world, and back
     const yAt = (s, D) => c.y + D * Math.tan(pitch + Math.atan((2 * s - 1) * tanV));
     let depth = d0.dot(f), lat = d0.dot(rt);
-    const far = Math.min(h / (2 * tanV * M.minShare), this.game.S?.monsterFar ?? 99);   // (a station can keep them nearer: in front of floor ridges)
+    const far = Math.min(o.far || h / (2 * tanV * M.minShare), this.game.S?.monsterFar ?? 99);   // (a station can keep them nearer: in front of floor ridges)
     let near = M.near;
     if (!fly) { const a = pitch + Math.atan((2 * M.feetMin - 1) * tanV); if (a < 0) near = Math.max(near, c.y / Math.tan(-a)); }
+    if (o.min) depth = Math.max(depth, Math.min(o.min, far));
     depth = Math.min(Math.max(depth, near), Math.max(far, near));
     const lim = Math.max(0, depth * tanH * (fly ? M.flyX : M.walkX) - w / 2);
     lat = Math.max(-lim, Math.min(lim, lat));

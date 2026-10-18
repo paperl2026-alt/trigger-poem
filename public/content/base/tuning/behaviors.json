@@ -16,7 +16,22 @@
       "recoilDist": 3,
       "recoilTime": 0.5,
       "staggerPush": 0.35,
-      "hitPush": { "rifle": 0.04, "mantra": 0.18 }
+      "hitPush": { "rifle": 0.04, "mantra": 0.18 },
+      "hopStep": 1.4,
+      "hopTime": 0.38,
+      "hopArc": 0.55,
+      "hopPause": [0.35, 0.8],
+      "rollStep": 1.1,
+      "rollSide": 1.3,
+      "rollTime": 0.42,
+      "rollArc": 0.12,
+      "rollPause": [0.25, 0.55],
+      "chargeCreep": 0.55,
+      "chargeDist": 7.5,
+      "burrowMin": 3,
+      "burrowStep": [2.2, 3.4],
+      "burrowUnder": [0.4, 0.9],
+      "_moves": "怎么逼近（enemies.js move）：hop 跳着走（一步 hopStep 米、hopTime 秒、停 hopPause），zigzag 左右翻滚（侧移 rollSide、前进 rollStep），charge 慢慢挪（chargeCreep 倍速），到 chargeDist 米内远远蓄力后扑过来，burrow 钻进地里、在 burrowStep 米外钻出来"
     },
     "flyer": {
       "threat": "ranged",
@@ -38,7 +53,13 @@
       "diveDrop": 0.3,
       "diveStop": 2.2,
       "returnTime": 0.9,
-      "staggerKnock": [0.6, 0.3]
+      "staggerKnock": [0.6, 0.3],
+      "wanderEvery": [0.6, 1.3],
+      "wanderZ": 0.6,
+      "wanderPull": 2.2,
+      "homeStep": 1.4,
+      "homeNear": 4.2,
+      "_wander": "飘忽：每 wanderEvery 秒换一个要飘去的点；每俯冲一次，悬停点往镜头靠近 homeStep 米，最近 homeNear 米"
     },
     "thrower": {
       "threat": "ranged",
@@ -50,7 +71,13 @@
       "standAfterThrow": [1.4, 2.4],
       "standAfterStun": [0.4, 0.8],
       "hiddenDmgMul": 0.5,
-      "throwFrom": [0.45, 0.8]
+      "throwFrom": [0.45, 0.8],
+      "throwArmor": 0.2,
+      "stopDist": 5.2,
+      "stepDist": [1.4, 2.4],
+      "stepSide": 0.9,
+      "stepTime": [0.8, 1.2],
+      "_step": "扔东西（蓄力 + 出手）时只吃 throwArmor 倍伤害（霸体，让飞行物扔得出来）；扔完还远（深于 stopDist 米）就往前走 stepDist 米"
     },
     "crawler": {
       "threat": "ranged",

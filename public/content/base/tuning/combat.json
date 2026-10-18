@@ -35,6 +35,7 @@
       "peekEvery": [2.2, 4.5],
       "peekHold": 0.7
     },
-    "cover": { "hp": 160, "hit": 12, "heavy": 55, "chip": 0.25 }
+    "cover": { "hp": 160, "hit": 12, "heavy": 55, "chip": 0.25 },
+    "prop": { "hp": 140, "_doc": "场景里能打坏的道具（PanelWorld makeProp，set 里写 solid 的不会坏）：血量；挡子弹，怪冲过去会撞碎" }
   }
 }

@@ -134,9 +134,10 @@ export class AICtrl {
     }
     let tx = me.baseX + (me.side < 0 ? 0.25 : -0.25) * game.W, ty = game.H * 0.45;
     if (this.target && this.reactT <= 0.25) {
-      const b = this.target.screenBox(), w = b.x1 - b.x0, h = b.y1 - b.y0;
-      tx = (b.x0 + b.x1) / 2 + this.off.x * w * (1 - s * 0.5) + this.miss * w * 0.9 * Math.sign(this.off.x || 1);   // (a miss: off to the side)
-      ty = b.y0 + h * (0.45 + this.off.y * 0.4 * (1 - s * 0.5));
+      const b = this.target.screenBox(), w = b.x1 - b.x0, h = b.y1 - b.y0, aim = this.target.aimAt?.();   // (a boss: its core, src/battle/thing.js)
+      const cx = aim ? aim.x : (b.x0 + b.x1) / 2, cy = aim ? aim.y : b.y0 + h * 0.45, k = aim ? 0.25 : 1;
+      tx = cx + this.off.x * w * k * (1 - s * 0.5) + this.miss * w * 0.9 * k * Math.sign(this.off.x || 1);   // (a miss: off to the side)
+      ty = cy + h * this.off.y * 0.4 * k * (1 - s * 0.5);
       this.off.x *= Math.exp(-dt * (0.4 + s * 0.6)); this.off.y *= Math.exp(-dt * (0.4 + s * 0.6));
     }
     const wob = game.H * 0.025 * (1.2 - s);

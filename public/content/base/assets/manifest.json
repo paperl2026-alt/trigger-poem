@@ -13519,6 +13519,7 @@
  "prop/arch": {
   "figH": 0.9233,
   "h": 574,
+  "hit": true,
   "pad": [
    22,
    22,
@@ -13537,6 +13538,7 @@
  "prop/cabinet": {
   "figH": 0.9336,
   "h": 964,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13555,6 +13557,7 @@
  "prop/chalkboard": {
   "figH": 0.9289,
   "h": 506,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13573,6 +13576,7 @@
  "prop/desk": {
   "figH": 0.929,
   "h": 507,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13586,6 +13590,7 @@
  "prop/desk1": {
   "figH": 0.9333,
   "h": 960,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13604,6 +13609,7 @@
  "prop/desk2": {
   "figH": 0.9286,
   "h": 896,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13622,6 +13628,7 @@
  "prop/desk3": {
   "figH": 0.8632,
   "h": 468,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13640,6 +13647,7 @@
  "prop/desk4": {
   "figH": 0.9035,
   "h": 663,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13663,6 +13671,7 @@
  "prop/deskcloth": {
   "figH": 0.9294,
   "h": 510,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13680,11 +13689,13 @@
  },
  "prop/ep1_armor_lance": {
   "h": 900,
+  "hit": true,
   "src": "assets/prop/ep1_armor_lance.webp",
   "w": 295
  },
  "prop/ep1_cold1": {
   "h": 528,
+  "hit": true,
   "relief": "prop/ep1_cold1_rd",
   "src": "assets/prop/ep1_cold1.webp",
   "w": 900
@@ -13696,6 +13707,7 @@
  },
  "prop/ep1_cold2": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_cold2_rd",
   "src": "assets/prop/ep1_cold2.webp",
   "w": 506
@@ -13707,6 +13719,7 @@
  },
  "prop/ep1_cold3": {
   "h": 713,
+  "hit": true,
   "relief": "prop/ep1_cold3_rd",
   "src": "assets/prop/ep1_cold3.webp",
   "w": 900
@@ -13718,6 +13731,7 @@
  },
  "prop/ep1_garden1": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_garden1_rd",
   "src": "assets/prop/ep1_garden1.webp",
   "w": 880
@@ -13729,6 +13743,7 @@
  },
  "prop/ep1_garden2": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_garden2_rd",
   "src": "assets/prop/ep1_garden2.webp",
   "w": 295
@@ -13740,6 +13755,7 @@
  },
  "prop/ep1_garden3": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_garden3_rd",
   "src": "assets/prop/ep1_garden3.webp",
   "w": 750
@@ -13751,6 +13767,7 @@
  },
  "prop/ep1_garden4": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_garden4_rd",
   "src": "assets/prop/ep1_garden4.webp",
   "w": 274
@@ -13762,6 +13779,7 @@
  },
  "prop/ep1_hall1": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_hall1_rd",
   "src": "assets/prop/ep1_hall1.webp",
   "w": 388
@@ -13773,6 +13791,7 @@
  },
  "prop/ep1_hall2": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_hall2_rd",
   "src": "assets/prop/ep1_hall2.webp",
   "w": 728
@@ -13784,6 +13803,7 @@
  },
  "prop/ep1_oven1": {
   "h": 655,
+  "hit": true,
   "relief": "prop/ep1_oven1_rd",
   "src": "assets/prop/ep1_oven1.webp",
   "w": 900
@@ -13795,6 +13815,7 @@
  },
  "prop/ep1_oven2": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_oven2_rd",
   "src": "assets/prop/ep1_oven2.webp",
   "w": 516
@@ -13806,6 +13827,7 @@
  },
  "prop/ep1_shop1": {
   "h": 672,
+  "hit": true,
   "relief": "prop/ep1_shop1_rd",
   "src": "assets/prop/ep1_shop1.webp",
   "w": 900
@@ -13817,6 +13839,7 @@
  },
  "prop/ep1_shop2": {
   "h": 899,
+  "hit": true,
   "relief": "prop/ep1_shop2_rd",
   "src": "assets/prop/ep1_shop2.webp",
   "w": 900
@@ -13828,6 +13851,7 @@
  },
  "prop/ep1_shop3": {
   "h": 442,
+  "hit": true,
   "relief": "prop/ep1_shop3_rd",
   "src": "assets/prop/ep1_shop3.webp",
   "w": 900
@@ -13839,6 +13863,7 @@
  },
  "prop/ep1_shop4": {
   "h": 900,
+  "hit": true,
   "relief": "prop/ep1_shop4_rd",
   "src": "assets/prop/ep1_shop4.webp",
   "w": 337
@@ -13851,6 +13876,7 @@
  "prop/lanternpole": {
   "figH": 0.9338,
   "h": 574,
+  "hit": true,
   "pad": [
    19,
    19,
@@ -13869,6 +13895,7 @@
  "prop/lectern": {
   "figH": 0.8978,
   "h": 626,
+  "hit": true,
   "pad": [
    32,
    32,
@@ -13887,6 +13914,7 @@
  "prop/locker": {
   "figH": 0.9347,
   "h": 551,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13905,6 +13933,7 @@
  "prop/mascothead": {
   "figH": 0.9279,
   "h": 499,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13923,6 +13952,7 @@
  "prop/plant": {
   "figH": 0.9309,
   "h": 521,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13941,6 +13971,7 @@
  "prop/shoebox": {
   "figH": 0.9277,
   "h": 498,
+  "hit": true,
   "pad": [
    18,
    18,
@@ -13959,6 +13990,7 @@
  "prop/stall": {
   "figH": 0.9221,
   "h": 488,
+  "hit": true,
   "pad": [
    19,
    19,
@@ -13977,6 +14009,7 @@
  "prop/tomb": {
   "figH": 0.9277,
   "h": 498,
+  "hit": true,
   "pad": [
    18,
    18,

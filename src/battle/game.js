@@ -495,7 +495,7 @@ export class Game {
 
   // ------------------------------------------------------------------ combat queries
   box(a) { let b = this.boxes.get(a); if (!b) { b = a.screenBox(); this.boxes.set(a, b); } return b; }
-  hitMeshes() { const out = []; for (const a of this.actors) if (a.alive) out.push(...a.hitMeshes()); return out; }
+  hitMeshes() { const out = []; for (const a of this.actors) if (a.alive) out.push(...a.hitMeshes()); if (this.world.breakableMeshes) out.push(...this.world.breakableMeshes()); return out; }   // (breakable props stop shots: PanelWorld)
   // for gamepad aim-assist: the enemy under (x, y), if any
   overTarget(x, y) {
     const m = this.H * 0.02;

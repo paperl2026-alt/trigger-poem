@@ -210,8 +210,16 @@ export class Actor {
 
 // ---------------------------------------------------------------------------
 // Behaviour templates: walker (melee leaper), flyer (diver), thrower (ranged), crawler (ceiling pouncer).
+// How it closes in (DESIGN「敌人要逼上来、要耐打、要多」, its "move": a wave's spawn, else the kind's "moves" per version, else "move"):
+//   walk    straight at you, bobbing          hop     in arcing jumps with a pause between     zigzag  rolling from side to side, Z-wise
+//   charge  slowly, then a red-ring rush from afar (kill it before it lands: it goes through cover)
+//   burrow  sinks into the floor and bursts up again nearer (also how it enters: from under the floor)
+//   float   (flyers) drifting every which way, a little nearer after every dive     step  (throwers) a few steps nearer after each throw
+// Spawns stand back (tuning layout.json monster spawnMin / spawnFar) so there is ground to cover; whatever drawn prop is in the way gets
+// smashed (PanelWorld.smashPropsNear).
 // armor = the states it can't be staggered in (super armour): leaps, dives, throws, pounces, entrances.
 const enemyHit = () => T.combat.enemyHit;
+const DEFAULT_MOVE = { walker: 'walk', flyer: 'float', thrower: 'step', crawler: 'crawl' };
 
 export class Enemy extends Actor {
   constructor(game, s) {
@@ -225,6 +233,8 @@ export class Enemy extends Actor {
     const sprite = s.sprite || vs.map((v) => [v, live.filter((x) => x === v).length + Math.random() * 0.5]).sort((x, y) => x[1] - y[1])[0][0];
     super(game, `enemy/${sprite}_${def.first}`, def.h, pivot);
     this.sprite = sprite;
+    this.move = s.move || def.moves?.[Math.max(0, vs.indexOf(sprite))] || def.move || DEFAULT_MOVE[def.beh];
+    this.hopT = 0.3; this.zigSide = Math.random() < 0.5 ? 1 : -1;
     this.type = s.type;
     this.def = def;
     this.beh = def.beh;
@@ -250,7 +260,8 @@ export class Enemy extends Actor {
     const P = this.root.position;
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
     if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop') {   // (flyers: their hovering spot, below)
-      const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8);
+      const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」)
+      const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
       if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
         const c = world.camPos, cd = cov.x !== undefined ? Math.hypot(cov.x - c.x, cov.z - c.z) : 2.8, qd = Math.hypot(q.x - c.x, q.z - c.z) || 1;
@@ -262,7 +273,7 @@ export class Enemy extends Actor {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
-      if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true);
+      if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true, { far: T.layout.monster.spawnFar, min: T.layout.monster.spawnMin });
       // a painted station: stay in front of the painted walls and inside the picture
       if (world.plates) {
         const d = Math.min(c.z - this.home.z, world.maxZ() * rnd(0.6, 0.9));
@@ -298,6 +309,7 @@ export class Enemy extends Actor {
     // the turning-around scare (Game.scare): it waits, back turned, until turnAround()
     if (s.from === 'scare') { P.set(s.x, s.y || 0, s.z); this.state = 'scripted'; this.setFrame(this.prefix + (this.frames.scare || [this.def.first])[0]); return; }
     if (walker) this.play('walk', 7); else this.play('rise');
+    if (s.from === 'burrow' || (this.move === 'burrow' && s.from !== 'drop')) { P.set(s.x, 0, s.z); this.burrowUp(ready); return; }
     if (s.from === 'drop') {
       P.set(s.x, lv.ceilAt(s.z) + 1, s.z);
       const pts = [new THREE.Vector3(0, this.h * 0.9, 0), new THREE.Vector3(0, 30, 0)];
@@ -361,7 +373,8 @@ export class Enemy extends Actor {
   // does not help: flyers' dives), 'hide' = a blast nothing stops (hide), null = an ordinary attack (a bite, a throw whose projectiles carry
   // their own marker): no marker
   // (a walker with "rush": its lunge is a ram, like the half-body ghoul crawling at you: kill it fast)
-  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.def.rush ? 'kill' : null; }
+  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.rushes() ? 'kill' : null; }
+  rushes() { return !!this.def.rush || this.move === 'charge'; }
   startWindup(time) {
     cry(this.type, 'windup');   // its cry, when recorded (content audio/sounds.json monsters)
     this.state = 'windup';
@@ -404,11 +417,20 @@ export class Enemy extends Actor {
   updateWalker(dt, t) {
     const g = this.game, P = this.root.position, tw = g.etw, bp = this.bp;
     if (this.state === 'walk') {
-      const dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz);
-      const sp = this.def.speed * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
-      if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; }
+      if (this.moving) return;   // (a hop / roll / burrow under way)
+      const dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz), M = this.move;
+      if ((M === 'hop' || M === 'zigzag' || M === 'burrow') && d > bp.windupDist + 0.4) {
+        this.inner.position.y = 0;
+        if ((this.hopT -= dt) <= 0) M === 'burrow' && d > bp.burrowMin ? this.burrowTo() : this.hop(M === 'zigzag');
+        return;
+      }
+      const sp = this.def.speed * (M === 'charge' ? bp.chargeCreep : 1) * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
+      if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; g.world.smashPropsNear?.(P, this.w * 0.35); }
       this.walkPhase += dt * 7;
       this.inner.position.y = Math.abs(Math.sin(this.walkPhase)) * 0.1;
+      if (M === 'charge' && !this.charged && d < bp.chargeDist) {   // the rush: winds up from afar (red ring), then leaps the whole way
+        this.charged = true; this.inner.position.y = 0; this.play('crouch'); this.startWindup(this.def.windup); sfx.dollScreech(0); return;
+      }
       if (d < bp.windupDist) {
         this.play('crouch');
         this.startWindup(this.def.windup);
@@ -428,14 +450,15 @@ export class Enemy extends Actor {
         let tx = P.x, tz = P.z;
         if (cov) { const dx = cov.x - c.x, dz = cov.z - c.z, d = Math.hypot(dx, dz) || 1; tx = cov.x + dx / d * bp.leapOntoCover; tz = cov.z + dz / d * bp.leapOntoCover; }
         else { const dx = c.x - P.x, dz = c.z - P.z, d = Math.hypot(dx, dz) || 1; tx = P.x + dx / d * 1.5; tz = P.z + dz / d * 1.5; }
-        const ty = cov ? cov.h * bp.leapHeight : 0.6, x0 = P.x, z0 = P.z, y0 = P.y;
-        tw.run(bp.leapTime, (e) => { P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * bp.leapArc; }, {
+        const ty = cov ? cov.h * bp.leapHeight : 0.6, x0 = P.x, z0 = P.z, y0 = P.y, far = Math.hypot(tx - x0, tz - z0);
+        const lt = bp.leapTime * Math.min(2.6, Math.max(1, far / 1.5));   // (a rush from afar takes longer: still shootable on the way)
+        tw.run(lt, (e) => { if (!this.alive) return; P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; P.y = y0 + (ty - y0) * e + Math.sin(e * Math.PI) * bp.leapArc * Math.min(2, far / 1.5); this.game.world.smashPropsNear?.(P, this.w * 0.35); }, {
           onDone: () => {
             if (!this.alive) return;
             this.state = 'bite';
             this.play('bite');
             g.post.shake(0.6);
-            g.playerAttacked({ kind: this.def.rush ? 'ram' : 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides; a rush goes through)
+            g.playerAttacked({ kind: this.rushes() ? 'ram' : 'bite', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (an ordinary bite: cover stops it if she hides; a rush goes through)
             tw.wait(bp.biteHold, () => {
               if (!this.alive) return;
               this.state = 'recoil';
@@ -449,12 +472,56 @@ export class Enemy extends Actor {
     }
   }
 
+  // one arcing hop toward its goal (zigzag: a sideways roll, the sprite turning a full circle, the next one the other way)
+  hop(zig) {
+    const g = this.game, P = this.root.position, bp = this.bp, dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz) || 1;
+    const ux = dx / d, uz = dz / d, step = Math.min(d - bp.windupDist * 0.6, zig ? bp.rollStep : bp.hopStep);
+    let tx = P.x + ux * step, tz = P.z + uz * step;
+    if (zig) { this.zigSide = -this.zigSide; tx += -uz * bp.rollSide * this.zigSide; tz += ux * bp.rollSide * this.zigSide; }
+    const H = g.world.set?.hall; if (H) { tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx)); }
+    const x0 = P.x, z0 = P.z, dur = zig ? bp.rollTime : bp.hopTime, arc = zig ? bp.rollArc : bp.hopArc, spin = zig ? this.zigSide * Math.PI * 2 : 0;
+    this.moving = true; this.play(zig ? 'walk' : 'leap');
+    g.etw.run(dur, (e) => {
+      if (!this.alive) return;
+      P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; this.inner.position.y = Math.sin(e * Math.PI) * arc; this.inner.rotation.z = spin * e;
+      g.world.smashPropsNear?.(P, this.w * 0.35);
+    }, { ease: zig ? Ease.inOutQuad : Ease.outQuad, onDone: () => {
+      this.moving = false; this.inner.rotation.z = 0; this.inner.position.y = 0;
+      if (!this.alive || this.state !== 'walk') return;
+      this.play('crouch'); this.hopT = rr(zig ? bp.rollPause : bp.hopPause); g.post.shake(0.12);
+    } });
+  }
+  // into the floor and up again a few metres nearer (debris where it breaks out)
+  burrowTo() {
+    const g = this.game, P = this.root.position, bp = this.bp, dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz) || 1;
+    const step = Math.min(d - bp.windupDist, rr(bp.burrowStep)), side = rnd(-0.8, 0.8);
+    this.moving = true; this.play('crouch'); g.fx.puff(P, 6, COL.bone, 0.8); sfx.thud(0);
+    g.etw.to(this.inner.position, { y: -this.h * 1.1 }, 0.35, { ease: Ease.inQuad, onDone: () => {
+      if (!this.alive) return;
+      P.x += dx / d * step - dz / d * side; P.z += dz / d * step + dx / d * side;
+      g.etw.wait(rr(bp.burrowUnder), () => { if (this.alive) this.burrowUp(() => { this.moving = false; if (this.alive) { this.play('walk', 7); this.hopT = rr(bp.hopPause); } }); });
+    } });
+  }
+  burrowUp(then) {
+    const g = this.game, P = this.root.position;
+    this.inner.position.y = -this.h * 1.1;
+    g.world.smashPropsNear?.(P, this.w * 0.6);
+    g.fx.puff(P, 10, COL.bone, 1.1); g.fx.confetti(P, 14, 1.6, [COL.bone, COL.paper]); g.post.shake(0.4); sfx.thud(0); sfx.popup();
+    this.play('leap');
+    g.etw.to(this.inner.position, { y: 0 }, 0.4, { ease: Ease.outBack, onDone: () => { if (this.alive) then(); } });
+  }
+
   updateFlyer(dt, t) {
     const g = this.game, P = this.root.position, bp = this.bp;
     if (this.state === 'hover') {
-      P.x += (this.home.x + Math.sin(t * 1.3 + this.seed) * bp.swayX - P.x) * dt * 2;
-      P.y += (this.home.y + Math.sin(t * 2.1 + this.seed) * bp.swayY - P.y) * dt * 2;
-      P.z += (this.home.z - P.z) * dt * 2;
+      if ((this.wanderT = (this.wanderT ?? 0) - dt) <= 0) {   // a new spot to drift to, every second or so
+        this.wanderT = rr(bp.wanderEvery);
+        this.wander = { x: rnd(-1, 1) * bp.swayX * 1.5, y: rnd(-1, 1) * bp.swayY * 1.6, z: rnd(-1, 1) * bp.wanderZ };
+      }
+      const W = this.wander || { x: 0, y: 0, z: 0 };
+      P.x += (this.home.x + W.x - P.x) * dt * bp.wanderPull;
+      P.y += (this.home.y + W.y + Math.sin(t * 2.1 + this.seed) * bp.swayY * 0.3 - P.y) * dt * bp.wanderPull;
+      P.z += (this.home.z + W.z - P.z) * dt * bp.wanderPull;
       if (this.lastStep % 4 === 0) sfx.mothFlap(0);
       this.timer -= dt;
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
@@ -474,6 +541,10 @@ export class Enemy extends Actor {
             g.playerAttacked({ kind: 'ram', dmg: enemyHit(), from: this, slot: this.targetSlot });   // (a ram: hiding does not help)
             this.state = 'recoil';
             this.play('fly', 14);
+            { // its next hover spot is a little nearer (never closer than near)
+              const c = g.world.camPos, f = this.fwd(), dep = (this.home.x - c.x) * f.x + (this.home.z - c.z) * f.z, k = Math.min(bp.homeStep, Math.max(0, dep - bp.homeNear));
+              this.home.x -= f.x * k; this.home.z -= f.z * k;
+            }
             g.etw.to(P, { x: this.home.x, y: this.home.y, z: this.home.z }, bp.returnTime, { ease: Ease.outCubic, onDone: () => { if (this.alive && this.state === 'recoil') { this.state = 'hover'; this.timer = rr(bp.hoverAgain); } } });
           },
         });
@@ -514,9 +585,30 @@ export class Enemy extends Actor {
       }
     } else if (this.state === 'thrown') {
       if (this.timer <= 0) {
+        if (this.stepIn()) return;
         if (this.def.hides) { this.state = 'hide'; this.play('hide'); this.timer = rr(bp.hideAfterThrow); } else { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterThrow); }
       }
+    } else if (this.state === 'advance') {
+      this.inner.rotation.z = Math.sin(t * 9 + this.seed) * 0.05;
     }
+  }
+  // after a throw, a few steps nearer while it is still far (a hider ducks, slides along under cover and rises somewhere else)
+  stepIn() {
+    const g = this.game, P = this.root.position, bp = this.bp, c = g.world.camPos, f = this.fwd();
+    const dep = (P.x - c.x) * f.x + (P.z - c.z) * f.z;
+    if (dep <= bp.stopDist) return false;
+    const step = Math.min(dep - bp.stopDist, rr(bp.stepDist)), side = rnd(-1, 1) * bp.stepSide, H = g.world.set?.hall;
+    let tx = P.x - f.x * step - f.z * side, tz = P.z - f.z * step + f.x * side;
+    if (H) tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx));
+    const x0 = P.x, z0 = P.z, hider = this.def.hides, dur = rr(bp.stepTime);
+    this.state = 'advance'; this.play(hider ? 'hide' : 'idle');
+    g.etw.run(dur, (e) => { if (!this.alive) return; P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; if (!hider) this.inner.position.y = Math.abs(Math.sin(e * Math.PI * 3)) * 0.12; g.world.smashPropsNear?.(P, this.w * 0.35); }, {
+      ease: Ease.inOutQuad, onDone: () => {
+        this.inner.position.y = 0; this.inner.rotation.z = 0;
+        if (!this.alive || this.state !== 'advance') return;
+        if (hider) { this.state = 'hide'; this.play('hide'); this.timer = rr(bp.hideAfterThrow) * 0.5; } else { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterThrow) * 0.7; }
+      } });
+    return true;
   }
 
   // a must-hide attack: everyone not behind cover is hit (cover takes it, and a little gets through)
@@ -576,9 +668,12 @@ export class Enemy extends Actor {
     if (!this.alive) return;
     let dmg = info.dmg;
     if (this.def.hides && this.state === 'hide') dmg *= this.bp.hiddenDmgMul ?? 0.5;
+    // throwing: it shrugs most of it off (DESIGN: the volley gets out, the player turns to shoot the things flying at her)
+    const braced = this.beh === 'thrower' && (this.state === 'windup' || this.state === 'thrown');
+    if (braced) dmg *= this.bp.throwArmor ?? 0.2;
     this.lastHitBy = info.by;
     this.paint(info);
-    this.flash = info.kind === 'beam' ? 0.45 : 0.85;
+    this.flash = braced ? 0.2 : info.kind === 'beam' ? 0.45 : 0.85;
     const heavy = info.crit || (info.stagger || 0) >= 10;
     if (heavy) this.hurtT = 0.12;
     const p = this.uvToWorld(info.uv.u, info.uv.v);
