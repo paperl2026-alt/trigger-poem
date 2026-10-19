@@ -52,6 +52,11 @@ def main():
     for name, n in (A.get("bgmNote") or {}).items():
         if n: print("BGM note", name, ":", n)
     for key, r, n in redo: print("SFX", key, "make again" if r else "", ":", n)
+    if A.get("hitsNote"): print("HITS note :", A["hitsNote"])
+    for k, n in (A.get("criesNote") or {}).items():
+        if n: print("CRY", k, ":", n)
+    for k, n in (A.get("chantNote") or {}).items():
+        if n: print("CHANT", k, ":", n)
     for k, v in (A.get("voice") or {}).items():
         if v.get("bad") or v.get("note"): print("LINE", k, "bad" if v.get("bad") else "", ":", v.get("note", ""))
 

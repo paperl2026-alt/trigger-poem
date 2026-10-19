@@ -1,10 +1,24 @@
 // Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops; a sound with recorded files in content
 // audio/sounds.json plays those instead (at the end of this file).
 import { C } from './content.js';
-let ctx = null, master, sfxBus, fxBus, musBus, musDuck, verb, noiseBuf;
+let ctx = null, master, sfxBus, fxBus, musBus, musDuck, voiceBus, verb, verbIn, wetSfx, wetVoice, noiseBuf;
 let muted = false;
-let volume = 0.8;
-let musicVol = 1, sfxVol = 1; // BGM / SFX sliders (0..1), on top of the master volume
+let volume = 0.7;
+let musicVol = 0.7, sfxVol = 0.7, voiceVol = 0.7; // the player's sliders (0..1): 0.7 is the mix as designed (docs/TECH.md「混音」)
+// ---------------- the mix (docs/TECH.md「混音」; user 2026-10-19: room above the player's 70%, groups that give way to each other instead
+// of sounds cut short, sound from where it happens). master -> limiter -> out:
+//   music (BGM slider) <- music duck (steps back while a girl talks and while the fight is busy)
+//   sfx (SFX slider)   <- ui | player (her gun, her weapon's syllables) | hit (impacts) | enemy (cries) | world (the place: doors, traps,
+//                         her steps; the synthesized effects by default) | amb (the beds: clocks, rain, fire)
+//   voice (voice slider): the girls' lines;  room (reverb send, per place: setRoom) -> master
+// A slider is heard in dB: 0.7 = 0 dB (the designed mix), 1 = +6 dB, 40 dB per unit below (0.1 = -24 dB), 0 = off
+export const sliderGain = (v) => (v <= 0.001 ? 0 : Math.pow(10, (v >= 0.7 ? (v - 0.7) * 20 : (v - 0.7) * 40) / 20));
+// each bus at the designed mix (sliders at 0.7). Set by measuring the output (2026-10-19, the dev build, a fight in episode 1): the music
+// about as loud as the fight (both near -21 dB RMS; it steps back a little while they talk or the fight is busy), the whole mix low
+// enough that every slider can still go 6 dB up before the limiter has to hold it (at 0.62 a slider at 100% only gained 0.9 dB)
+const NOM = { master: 0.45, music: 0.6, sfx: 0.8, voice: 1.0 };
+const GROUPS = ['ui', 'player', 'hit', 'enemy', 'world', 'amb'], GRP = {};
+let curGroup = null;   // (which group a synthesized effect plays in: set by its wrapper below)
 let flameNode = null;
 
 export function initAudio() {
@@ -12,14 +26,16 @@ export function initAudio() {
   const AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
   ctx = new AC();
+  // the limiter at the end: the room above the designed mix (a slider past 0.7) never clips, the loudest moments are held down softly
   const comp = ctx.createDynamicsCompressor();
-  comp.threshold.value = -12; comp.ratio.value = 5; comp.attack.value = 0.003; comp.release.value = 0.15;
-  master = ctx.createGain(); master.gain.value = muted ? 0 : 0.75 * volume;
+  comp.threshold.value = -6; comp.knee.value = 6; comp.ratio.value = 8; comp.attack.value = 0.003; comp.release.value = 0.2;
+  master = ctx.createGain(); master.gain.value = muted ? 0 : NOM.master * sliderGain(volume);
   master.connect(comp); comp.connect(ctx.destination);
-  sfxBus = ctx.createGain(); sfxBus.gain.value = 0.9 * sfxVol; sfxBus.connect(master);
-  // effects go through fxBus, which steps back while one of the girls talks (talk()); her voice goes straight to sfxBus
-  fxBus = ctx.createGain(); fxBus.connect(sfxBus);
-  musBus = ctx.createGain(); musBus.gain.value = 0.34 * musicVol;
+  sfxBus = ctx.createGain(); sfxBus.gain.value = NOM.sfx * sliderGain(sfxVol); sfxBus.connect(master);
+  for (const k of GROUPS) { GRP[k] = ctx.createGain(); GRP[k].connect(sfxBus); }
+  fxBus = GRP.world;   // (the default for everything that names no group)
+  voiceBus = ctx.createGain(); voiceBus.gain.value = NOM.voice * sliderGain(voiceVol); voiceBus.connect(master);
+  musBus = ctx.createGain(); musBus.gain.value = NOM.music * sliderGain(musicVol);
   musDuck = ctx.createGain(); musBus.connect(musDuck); musDuck.connect(master);
   verb = ctx.createConvolver();
   const len = ctx.sampleRate * 2.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
@@ -28,17 +44,23 @@ export function initAudio() {
     for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6);
   }
   verb.buffer = ir;
-  const vg = ctx.createGain(); vg.gain.value = 0.3; verb.connect(vg); vg.connect(master);
+  verbIn = ctx.createGain(); verbIn.gain.value = 1; verbIn.connect(verb);   // (the send: setRoom sets how much of it the place has)
+  wetSfx = ctx.createGain(); wetSfx.gain.value = sfxBus.gain.value; wetSfx.connect(verbIn);
+  wetVoice = ctx.createGain(); wetVoice.gain.value = voiceBus.gain.value; wetVoice.connect(verbIn);
+  const vg = ctx.createGain(); vg.gain.value = 0.3; verb.connect(vg); vg.connect(master); verb.out = vg;
+  setInterval(mixTick, 50);
   preloadSounds();   // (recorded sounds: below; boot waits for the menus' own ones)
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const nd = noiseBuf.getChannelData(0);
   for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
 }
-export function setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : 0.75 * volume; }
-export function setVolume(v) { volume = v; if (master) master.gain.value = muted ? 0 : 0.75 * volume; }
+export function setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : NOM.master * sliderGain(volume); }
+export function setVolume(v) { volume = v; if (master) master.gain.value = muted ? 0 : NOM.master * sliderGain(volume); }
 export function getVolume() { return volume; }
-export function setMusicVolume(v) { musicVol = v; if (musBus) musBus.gain.value = 0.34 * v; }
-export function setSfxVolume(v) { sfxVol = v; if (sfxBus) sfxBus.gain.value = 0.9 * v; }
+export function setMusicVolume(v) { musicVol = v; if (musBus) musBus.gain.value = NOM.music * sliderGain(v); }
+// (the reverb sends follow the sliders too: a muted group leaves no echo behind)
+export function setSfxVolume(v) { sfxVol = v; if (sfxBus) sfxBus.gain.value = wetSfx.gain.value = NOM.sfx * sliderGain(v); }
+export function setVoiceVolume(v) { voiceVol = v; if (voiceBus) voiceBus.gain.value = wetVoice.gain.value = NOM.voice * sliderGain(v); }
 export function isMuted() { return muted; }
 const now = () => ctx.currentTime;
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
@@ -51,8 +73,8 @@ function env(g, t, a, peak, d) {
 function out(node, bus, pan, verbAmt) {
   let n = node;
   if (pan && ctx.createStereoPanner) { const p = ctx.createStereoPanner(); p.pan.value = Math.max(-1, Math.min(1, pan)); n.connect(p); n = p; }
-  n.connect(bus || fxBus);
-  if (verbAmt) { const vs = ctx.createGain(); vs.gain.value = verbAmt; n.connect(vs); vs.connect(verb); }
+  n.connect(bus || GRP[curGroup] || fxBus);
+  if (verbAmt) { const vs = ctx.createGain(); vs.gain.value = verbAmt; n.connect(vs); vs.connect(wetSfx); }
 }
 function tone({ f = 440, f2 = null, type = 'square', t = 0, a = 0.004, d = 0.15, v = 0.2, bus = null, pan = 0, verbAmt = 0.1, filter = null, q = 1, vib = 0, vibRate = 6 }) {
   if (!ctx || muted) return;
@@ -212,7 +234,7 @@ export function playMusic(name) {
     const s = ctx.createBufferSource(); s.buffer = b; s.loop = M.loop !== false; if (M.loopStart != null) { s.loopStart = M.loopStart; s.loopEnd = M.loopEnd ?? b.duration; }
     const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, now()); g.gain.linearRampToValueAtTime((M.vol ?? 0.9), now() + (M.fadeIn ?? 0.8));
     s.connect(g); g.connect(musBus); s.start(0, 0);
-    track = { s, g }; trackName = name; wantMusic = name;
+    track = { s, g, t0: now() }; trackName = name; wantMusic = name;
     return;
   }
   stopMusic();
@@ -247,6 +269,93 @@ function playStep(s, t) {
   if (lead > 0 && intensity > 0.3) tone({ f: mtof(lead), type: 'square', t: dt, d: 0.18, v: 0.045, bus: B, filter: { f: 3200 }, vib: 5, verbAmt: 0.3 });
 }
 
+// ---- hits that play along (user 2026-10-19: like a danmaku shooter or a rhythm game, every hit a crisp note - "打拍子", not a metronome -
+// juicy, not an old monster-game thud). Synthesized here so they follow the music: a run of hits walks the pentatonic scale of the playing
+// track's key (sounds.json music.<track>.key; never a wrong note), a hit that falls just before the track's next sixteenth waits for it
+// (at most 30 ms: no lag felt). Each girl her own timbre: the twin-tail girl's gatling a bright little bell "pip", the cat girl's paw a
+// wooden "pon"; a crit an octave up with a glint; a kill a wet bubble pop and the chord rising after it
+const NOTE0 = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, PENTA = { minor: [0, 3, 5, 7, 10], major: [0, 2, 4, 7, 9] };
+const RUN = { pink: [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1], cat: [0, 2, 4, 2, 5, 4, 2, 0, 3, 5] };
+const HITS = { last: -9, step: 0, who: null, key: 'A minor' };
+function scaleNote(deg, base) {   // a degree of the playing key's pentatonic (deg may run past one octave) -> MIDI
+  const M = C.sounds?.music?.[trackName], key = M?.key || HITS.key; HITS.key = key;
+  const m = key.match(/^([A-G])([#b]?)\s*(major|minor)?/i) || [0, 'A', '', 'minor'];
+  const root = NOTE0[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0), sc = PENTA[(m[3] || 'minor').toLowerCase()] || PENTA.minor;
+  return base + root + 12 * Math.floor(deg / 5) + sc[((deg % 5) + 5) % 5];
+}
+function onGrid() {   // seconds to the playing track's next sixteenth, when that is close enough to wait for
+  const M = C.sounds?.music?.[trackName]; if (!track || !M?.bpm) return 0;
+  let pos = now() - track.t0; const Ls = M.loopStart || 0, Le = M.loopEnd || 0;
+  if (Le > Ls && pos > Le) pos = Ls + ((pos - Le) % (Le - Ls));
+  const s16 = 60 / M.bpm / 4, wait = s16 - (pos % s16);
+  return wait < 0.03 ? wait : 0;
+}
+function bell(f, t, v, pan, mod = 2.01, idx = 2.5, d = 0.14) {   // a small FM bell: bright at the strike, a clean tone after
+  const o = ctx.createOscillator(), m = ctx.createOscillator(), mg = ctx.createGain(), g = ctx.createGain();
+  o.frequency.value = f; m.frequency.value = f * mod;
+  mg.gain.setValueAtTime(f * idx, t); mg.gain.exponentialRampToValueAtTime(f * 0.02, t + 0.06);
+  m.connect(mg); mg.connect(o.frequency); o.connect(g); env(g, t, 0.002, v, d);
+  out(g, GRP.hit, pan, 0.06); o.start(t); m.start(t); o.stop(t + d + 0.05); m.stop(t + d + 0.05);
+}
+function wood(f, t, v, pan) {   // a wooden "pon": a short drop in pitch, a knock of filtered noise
+  tone({ f: f * 1.5, f2: f, type: 'sine', t: t - now(), a: 0.002, d: 0.12, v, bus: GRP.hit, pan, verbAmt: 0.05 });
+  tone({ f: f * 2, type: 'triangle', t: t - now(), a: 0.002, d: 0.07, v: v * 0.35, bus: GRP.hit, pan, verbAmt: 0 });
+  noise({ t: t - now(), f: 1800, d: 0.018, v: v * 0.6, q: 4, bus: GRP.hit, pan, verbAmt: 0 });
+}
+export function hitNote(who, crit = false, kill = false, pan = 0) {
+  if (!ctx || muted) return;
+  const t0 = now();
+  if (!kill && t0 - HITS.last < 0.055) return;   // (a gatling lands 20 a second: one note in 55 ms at most)
+  if (t0 - HITS.last > 0.7 || HITS.who !== who) HITS.step = 0;
+  HITS.last = t0; HITS.who = who; busy('hit');
+  const run = RUN[who] || RUN.pink, deg = run[HITS.step++ % run.length], t = t0 + onGrid();
+  const f = mtof(scaleNote(deg, who === 'cat' ? 60 : 72));
+  if (who === 'cat') wood(f, t, 0.2, pan); else { bell(f, t, 0.1, pan); noise({ t: t - t0, f: 8000, type: 'highpass', d: 0.006, v: 0.05, bus: GRP.hit, pan, verbAmt: 0 }); }
+  if (crit) { bell(f * 2, t + 0.012, 0.07, -pan * 0.5, 3.01, 3, 0.2); bell(f * 3, t + 0.03, 0.035, pan * 0.5, 2.01, 1.5, 0.25); }
+  if (kill) {   // a wet pop, then the chord rising (root, third, fifth, octave of the key)
+    const tk = t + 0.02, fp = mtof(scaleNote(0, 72));
+    tone({ f: fp * 0.55, f2: fp * 1.6, type: 'sine', t: tk - t0, a: 0.003, d: 0.07, v: 0.16, bus: GRP.hit, pan, verbAmt: 0.05 });
+    noise({ t: tk - t0, f: 1400, f2: 3200, d: 0.035, v: 0.12, q: 3, bus: GRP.hit, pan, verbAmt: 0.03 });
+    [0, 2, 3, 5].forEach((dg, k) => bell(mtof(scaleNote(dg, 72)), tk + 0.05 + k * 0.045, 0.06 - k * 0.008, pan + (k - 1.5) * 0.15, 2.01, 1.8, 0.22));
+  }
+}
+
+// ---- the mixer, every 50 ms: the groups give way to each other (docs/TECH.md「混音」)
+//   a girl talking: the music -5 dB, the beds -8, the place and the monsters -4, the hits and her gun -3 (UI never)
+//   a busy fight (the loudness of what has just happened, like an HDR window: hits, cries, crashes push it up, it falls off in a second):
+//   the beds up to -9 dB, the music up to -2.5 dB; in a lull they come back up. Attack fast, release slow (no pumping)
+const DUCK_V = { music: -5, amb: -8, world: -4, enemy: -4, hit: -3, player: -3, ui: 0 }, BUSY = { amb: -9, music: -2.5 };
+const VERB = { ui: 0, player: 0.05, hit: 0.08, enemy: 0.15, world: 0.2, amb: 0 };   // (how much of each group goes into the place's reverb)
+let act = 0;
+const LOUD = { hit: 0.05, enemy: 0.12, world: 0.06, player: 0.015 }, BIG = /^(slam|roar|shatter|beamFall|woodBreak|bellToll|doorSlam|kaikoWail|sheKnock)/;
+function busy(grp, key = '') { act = Math.min(1, act + (BIG.test(key) ? 0.35 : LOUD[grp] || 0)); }
+const UIK = /^(ui|stamp|count|item|levelUp|comicPage|panel|victory|defeat|clear)/, HITK = /^(hit|crit|kill|coverHit|clang|miss|pop|tick)/, PLAYERK = /^(shell|empty|reload|shot|gun|beam|laser|flame)/;
+function groupOf(key) { const g = C.sounds?.sfx?.[key]?.bus; return GRP[g] ? g : UIK.test(key) ? 'ui' : HITK.test(key) ? 'hit' : PLAYERK.test(key) ? 'player' : 'world'; }
+const db = (x) => Math.pow(10, x / 20);
+function mixTick() {
+  if (!ctx) return;
+  const t = now(), talk = talking(), k = act;
+  act *= 0.94;   // (about a second to fall away)
+  for (const g of GROUPS) {
+    const target = db((talk ? DUCK_V[g] : 0) + (BUSY[g] || 0) * k);
+    GRP[g].gain.setTargetAtTime(target, t, target < GRP[g].gain.value ? 0.03 : 0.3);
+  }
+  const m = db((talk ? DUCK_V.music : 0) + BUSY.music * k);
+  musDuck.gain.setTargetAtTime(m, t, m < musDuck.gain.value ? 0.06 : 0.6);
+}
+// where the camera is (Game every frame): the sounds given a point are heard from here
+const LISTEN = { on: false };
+export function setListener(cam) {
+  if (!ctx || !cam) return;
+  const L = ctx.listener, p = cam.position, m = cam.matrixWorld.elements, fx = -m[8], fy = -m[9], fz = -m[10];
+  if (L.positionX) { L.positionX.value = p.x; L.positionY.value = p.y; L.positionZ.value = p.z; L.forwardX.value = fx; L.forwardY.value = fy; L.forwardZ.value = fz; L.upX.value = 0; L.upY.value = 1; L.upZ.value = 0; }
+  else { L.setPosition(p.x, p.y, p.z); L.setOrientation(fx, fy, fz, 0, 1, 0); }
+  LISTEN.on = true;
+}
+export function listenerOff() { LISTEN.on = false; }
+// how much the place echoes (a set's "reverb", 0..1: a tiled bath or a cave a lot, an open bell tower little)
+export function setRoom(k = 0.3) { if (verb?.out) verb.out.gain.setTargetAtTime(Math.max(0, k), now(), 0.5); }
+
 // ---- recorded sounds (content audio/sounds.json, docs/DESIGN.md「声音」): a sound that has files plays one of them, with a slight change
 // of pitch each time, instead of its synthesized stand-in; the girls' voices and the monsters' cries the same way. Nothing is fetched
 // unless the list names it. Files decode the first time they are wanted (and on preloadSounds()).
@@ -269,19 +378,31 @@ function level(b) {
     const d = b.getChannelData(c);
     for (let i = 0; i < d.length; i++) { const v = Math.abs(d[i]); if (v > peak) peak = v; if (v > 0.003 && i < start) start = i; }
   }
-  // (the lead-in kept generous: soft consonants - fu, shi, hi - start quietly and were cut off: user 2026-10-18)
-  b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, start - Math.round(b.sampleRate * 0.02)) / b.sampleRate;
+  // (the lead-in kept generous: soft consonants - fu, shi, hi - start quietly and were cut off: user 2026-10-18; and the small swells before
+  // a hit are part of it: user 2026-10-19. Only true silence goes: under -50 dB of its peak, and 50 ms before the first sound stay)
+  let first = b.length;
+  for (let c = 0; c < b.numberOfChannels; c++) { const d = b.getChannelData(c), th = Math.max(0.0005, peak * 0.003); for (let i = 0; i < Math.min(first, d.length); i++) if (Math.abs(d[i]) > th) { first = i; break; } }
+  void start;
+  b.gainK = peak > 0.001 ? PEAK / peak : 1; b.startAt = Math.max(0, first - Math.round(b.sampleRate * 0.05)) / b.sampleRate;
 }
-function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = fxBus, fadeIn = 0 } = {}) {
+function playBuf(b, { pan = 0, vol = 1, rate = 1, len = 0, bus = fxBus, fadeIn = 0, pos = null, verbAmt = 0 } = {}) {
   const s = ctx.createBufferSource(); s.buffer = b; s.playbackRate.value = rate;
   const g = ctx.createGain(); g.gain.value = vol * (b.gainK || 1);
-  const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
-  s.connect(g); if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
+  s.connect(g);
+  if (pos && LISTEN.on) {   // a point in the place: heard from the camera (HRTF: left / right, in front / behind, near / far)
+    const p = ctx.createPanner(); p.panningModel = 'HRTF'; p.distanceModel = 'inverse'; p.refDistance = 2.5; p.rolloffFactor = 0.7; p.maxDistance = 60;
+    if (p.positionX) { p.positionX.value = pos.x; p.positionY.value = pos.y ?? 1; p.positionZ.value = pos.z; } else p.setPosition(pos.x, pos.y ?? 1, pos.z);
+    g.connect(p); p.connect(bus);
+  } else {
+    const pn = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+    if (pn) { pn.pan.value = Math.max(-1, Math.min(1, pan)); g.connect(pn); pn.connect(bus); } else g.connect(bus);
+  }
+  if (verbAmt) { const vs = ctx.createGain(); vs.gain.value = verbAmt; g.connect(vs); vs.connect(bus === voiceBus ? wetVoice : wetSfx); }
   if (fadeIn) { const v = g.gain.value; g.gain.setValueAtTime(0.0001, ctx.currentTime); g.gain.linearRampToValueAtTime(v, ctx.currentTime + fadeIn); }
   s.start(0, b.startAt || 0);
   s.g = g;
   if (len > 0) {   // only the first len seconds (of the sound as played), then a short fade
-    const t = ctx.currentTime, end = t + len / rate, f = Math.min(0.06, len / rate * 0.4);
+    const t = ctx.currentTime, end = t + len / rate, f = Math.min(0.15, len / rate * 0.4);   // (a long fade: a cut-off tail is heard)
     g.gain.setValueAtTime(g.gain.value * 1, end - f); g.gain.linearRampToValueAtTime(0.0001, end); s.stop(end + 0.01);
   }
   return s;
@@ -327,8 +448,9 @@ for (const k of Object.keys(sfx)) {
   sfx[k] = (...a) => {
     const e = C.sounds?.sfx?.[k];
     if (e?.gap && ctx) { if (now() - (LAST.get(k) ?? -9) < e.gap) return; LAST.set(k, now()); }
-    if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: (e.rate || 1) * (0.94 + Math.random() * 0.12), len: e.len || 0 })) return;
-    return synth(...a);
+    const grp = groupOf(k); busy(grp, k);
+    if (e?.files?.length && playOne(e.files, { pan: typeof a[0] === 'number' && Math.abs(a[0]) <= 1 ? a[0] : 0, vol: e.vol ?? 1, rate: (e.rate || 1) * (0.94 + Math.random() * 0.12), len: e.len || 0, bus: GRP[grp], verbAmt: VERB[grp] })) return;
+    curGroup = grp; try { return synth(...a); } finally { curGroup = null; }
   };
 }
 // a sound by its sounds.json key (the ones with no synthesized stand-in: episode 2's scissors, paper screens, clocks…); false = nothing
@@ -336,7 +458,8 @@ for (const k of Object.keys(sfx)) {
 export function sound(key, opt = {}) {
   const e = C.sounds?.sfx?.[key]; if (!ctx || muted || !e?.files?.length) return false;
   if (e.gap) { if (now() - (LAST.get(key) ?? -9) < e.gap) return true; LAST.set(key, now()); }
-  return playOne(e.files, { pan: opt.pan || 0, vol: (e.vol ?? 1) * (opt.vol ?? 1), rate: (e.rate || 1) * (opt.rate ?? (0.94 + Math.random() * 0.12)), len: e.len || 0 });
+  const grp = groupOf(key); busy(grp, key);
+  return playOne(e.files, { pan: opt.pan || 0, pos: opt.pos || null, vol: (e.vol ?? 1) * (opt.vol ?? 1), rate: (e.rate || 1) * (opt.rate ?? (0.94 + Math.random() * 0.12)), len: e.len || 0, bus: GRP[grp], verbAmt: VERB[grp] });
 }
 // a looping bed (sounds.json sfx entries with loop: true: the clocks ticking, the rain, the fire): on / off with a fade; vol can change
 const BEDS = new Map();
@@ -352,7 +475,7 @@ export function bed(key, on, vol = 1) {
   if (!b || b instanceof Promise) { if (b === undefined) load(f); Promise.resolve(BUF.get(f)).then((x) => { if (x && BEDS.get(key) === 'want') { BEDS.delete(key); bed(key, true, vol); } }); BEDS.set(key, 'want'); return; }
   const s = ctx.createBufferSource(); s.buffer = b; s.loop = true;
   const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, now()); g.gain.setTargetAtTime((e.vol ?? 1) * vol, now(), 0.4);
-  s.connect(g); g.connect(fxBus); s.start(0, Math.random() * b.duration);
+  s.connect(g); g.connect(GRP.amb); s.start(0, Math.random() * b.duration);
   BEDS.set(key, { s, g });
 }
 export function bedsOff() { for (const k of [...BEDS.keys()]) bed(k, false); }
@@ -360,29 +483,22 @@ export function bedsOff() { for (const k of [...BEDS.keys()]) bed(k, false); }
 // One channel for both girls: a line starts only when nobody is talking, or cuts in (the other fades out in 50 ms) when it matters
 // clearly more (2 priority steps); small talk (priority 4 and below) waits TALK_GAP after the last line and is dropped while the fight is
 // hot (setIntensity). While a line plays, the effects and the music step back.
-const TALK_GAP = 1.2, DUCK_FX = 0.55, DUCK_MUS = 0.5;
+const TALK_GAP = 1.2;
 // counts for tests (tools/node/playthrough.cjs writes them out: nobody can listen to an offscreen run)
 const STATS = { lines: 0, linesDropped: 0, linesCut: 0, grains: 0, grainsQuiet: 0, cries: 0, criesSkipped: 0 };
 window.__noaAudio = STATS;
 const TALK = { s: null, who: null, pr: 0, end: 0, start: -9 };
 export function talking(who) { return !!ctx && now() < TALK.end && (!who || TALK.who === who); }
-function duck(on) {
-  const t = now();
-  fxBus.gain.setTargetAtTime(on ? DUCK_FX : 1, t, on ? 0.02 : 0.12);
-  musDuck.gain.setTargetAtTime(on ? DUCK_MUS : 1, t, on ? 0.04 : 0.25);
-}
 function talk(who, b, pr, pan) {
   const t = now(), busy = t < TALK.end;
   if (busy && pr < TALK.pr + 2) { STATS.linesDropped++; return false; }
   if (!busy && pr <= 4 && (t - TALK.start < TALK_GAP || intensity > 0.85)) { STATS.linesDropped++; return false; }
   STATS.lines++; if (busy) STATS.linesCut++;
-  if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.015); TALK.s.stop(t + 0.06); } catch (e) { /* over */ } }
+  if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.04); TALK.s.stop(t + 0.2); } catch (e) { /* over */ } }
   stopGrain(who);   // (one mouth: her weapon's syllable stops)
-  const s = playBuf(b, { vol: 1, pan, bus: sfxBus, fadeIn: busy ? 0.02 : 0 });
+  const s = playBuf(b, { vol: 1, pan, bus: voiceBus, fadeIn: busy ? 0.04 : 0, verbAmt: 0.08 });
   const end = t + (b.duration - (b.startAt || 0));
   Object.assign(TALK, { s, who, pr, end, start: t });
-  duck(true);
-  setTimeout(() => { if (now() >= TALK.end - 0.01) duck(false); }, (end - t) * 1000 + 30);
   return true;
 }
 // a girl says the i-th line of a sticker kind (text/stickers.json) with its priority (stickers.js PRIO): true = said, false = not now
@@ -398,7 +514,7 @@ export function voice(who, kind, i, slot = 0, pr = 5) {
 // every V.every seconds, cut to V.len; each one cuts off her last (one mouth: 突突突…); seq = the i-th syllable (the mantra glyph her shot
 // writes). Nothing while she is saying a line. true = played (the caller's stand-in sound is not needed)
 const GRAIN = new Map();   // who -> { s, t }
-function stopGrain(who) { const G = GRAIN.get(who); if (G?.s) { try { G.s.g.gain.setTargetAtTime(0.0001, now(), 0.01); G.s.stop(now() + 0.04); } catch (e) { /* over */ } G.s = null; } }
+function stopGrain(who) { const G = GRAIN.get(who); if (G?.s) { try { G.s.g.gain.setTargetAtTime(0.0001, now(), 0.03); G.s.stop(now() + 0.15); } catch (e) { /* over */ } G.s = null; } }
 export function grain(who, V, pan = 0, i = 0) {
   const files = C.sounds?.voices?.[who]?.grains?.[V.grain || 'shot']?.files;
   if (!ctx || muted || !files?.length) return false;
@@ -416,17 +532,17 @@ export function grain(who, V, pan = 0, i = 0) {
   const b = BUF.get(files[k]);
   if (!b || b instanceof Promise) { if (b === undefined) load(files[k]); return false; }
   const rate = (V.rate || 1) * (0.96 + Math.random() * 0.08);
-  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate });
+  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate, bus: GRP.player });
   GRAIN.set(who, { s, t, k, k2: G.k, end: t + (b.duration - (b.startAt || 0)) / rate }); STATS.grains++;
   return true;
 }
 // a monster's cry (windup / attack / hurt / die), its own or the default one. At most CRY_MAX at once: a new one only takes a place
 // from a less important one (die > windup > attack > hurt), else it is skipped (the fight stays readable: "play the right sounds")
-const CRY_MAX = 2, CRY_PR = { die: 3, windup: 2, attack: 1, hurt: 0 };
+const CRY_MAX = 4, CRY_PR = { die: 3, windup: 2, attack: 1, hurt: 0 };
 const CRIES = [];
 // a monster's own files for that action, else its family's AI cries (sounds.json monsters.<type>.cry = girl / paper / wood / beast ->
 // sfx cry_<family>_<act>, tools/rounds/sfx_specs62.py), else the default
-export function cry(type, act, pan = 0) {
+export function cry(type, act, pan = 0, pos = null) {
   const M = C.sounds?.monsters || {}, own = M[type]?.[act]?.length, fam = C.sounds?.sfx?.[`cry_${M[type]?.cry}_${act}`]?.files;
   const files = own ? M[type][act] : fam?.length ? fam : M.default?.[act], rate = (M[type]?.rate || 1) * (0.92 + Math.random() * 0.16);
   if (!ctx || !files?.length) return;
@@ -435,11 +551,11 @@ export function cry(type, act, pan = 0) {
   if (CRIES.length >= CRY_MAX) {
     const low = CRIES.reduce((a, c) => (c.pr < a.pr ? c : a));
     if (low.pr >= pr) { STATS.criesSkipped++; return; }
-    try { low.s.g.gain.setTargetAtTime(0.0001, t, 0.03); low.s.stop(t + 0.12); } catch (e) { /* over */ }
+    try { low.s.g.gain.setTargetAtTime(0.0001, t, 0.08); low.s.stop(t + 0.4); } catch (e) { /* over */ }
     CRIES.splice(CRIES.indexOf(low), 1);
   }
   const f = files[Math.floor(Math.random() * files.length)], b = BUF.get(f);
   if (!b || b instanceof Promise) { if (b === undefined) load(f); return; }
-  const s = playBuf(b, { pan, vol: M[type]?.vol ?? 0.9, rate });
+  const s = playBuf(b, { pan, pos, vol: M[type]?.vol ?? 0.9, rate, bus: GRP.enemy, verbAmt: 0.15 }); busy('enemy');
   CRIES.push({ s, pr, end: t + (b.duration - (b.startAt || 0)) / rate }); STATS.cries++;
 }

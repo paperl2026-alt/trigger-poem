@@ -76,10 +76,14 @@ def trim(kind, sr, x, st):
         if len(x) < 3 * cf: return x
         a, b = x[:cf], x[-cf:]; w = np.linspace(0, 1, cf)[:, None]
         return np.concatenate([b * (1 - w) + a * w, x[cf:-cf]])
-    s0 = max(0, int((st["start"] - 0.01) * sr)); s1 = min(len(x), int((st["end"] + (0.06 if kind == "hit" else 0.15)) * sr))
+    # generous ends (user 2026-10-19: the small swells before a hit and its tail are part of it - the mixer keeps sounds from piling up,
+    # not the trimming): from 30 ms before it rises over -50 dB of its peak to 120 / 250 ms after it falls under -60 dB, long fades
+    e = env_db(x, sr); on = np.nonzero(e > -50)[0]; off = np.nonzero(e > -60)[0]
+    a0 = on[0] * 0.01 if len(on) else st["start"]; a1 = off[-1] * 0.01 if len(off) else st["end"]
+    s0 = max(0, int((a0 - 0.03) * sr)); s1 = min(len(x), int((a1 + (0.12 if kind == "hit" else 0.25)) * sr))
     y = x[s0:s1].copy()
-    fi = min(len(y), int(0.003 * sr)); y[:fi] *= np.linspace(0, 1, fi)[:, None]
-    fo = min(len(y), int((0.04 if kind == "hit" else 0.12) * sr)); y[-fo:] *= np.linspace(1, 0, fo)[:, None] ** 2
+    fi = min(len(y), int(0.006 * sr)); y[:fi] *= np.linspace(0, 1, fi)[:, None]
+    fo = min(len(y), int((0.08 if kind == "hit" else 0.2) * sr)); y[-fo:] *= np.linspace(1, 0, fo)[:, None] ** 2
     return y
 
 

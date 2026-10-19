@@ -32,3 +32,4 @@ art/raw/bgm_ai/_look/*.png
 art/raw/bgm_ai/_raw/
 # the cut-out check's overview sheets (tools/cutout_check.py)
 art/raw/_cutout/
+art/raw/monster_vo/**/*.wav

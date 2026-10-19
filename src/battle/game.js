@@ -3,7 +3,7 @@
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { alphaAt, meta, url } from '../core/assets.js';
-import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic } from '../core/audio.js';
+import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
@@ -85,6 +85,7 @@ export class Game {
     this.camPlaced = false;
     this.layout(this.W, this.H);
     if (this.stage?.places?.includes(id)) this.streamPlaces(id);
+    setRoom(this.world.set?.reverb ?? 0.3);   // (how much this place echoes)
   }
   // a stage through several places (src/core/groups.js stageKeysAt): the places behind are let go, the next one starts loading
   streamPlaces(id) {
@@ -693,6 +694,7 @@ export class Game {
   clearActors() { for (const a of this.actors) if (!a.removed) a.dispose(); this.actors.length = 0; }
   clearProjectiles() { for (const a of this.actors) if (a instanceof Projectile && a.alive) { a.alive = false; if (a.lock) { a.lock.remove(); a.lock = null; } a.dieShatter({ u: 0.5, v: 0.5 }, 0.6); } }
   dispose() {
+    listenerOff();
     this.chase.dispose();
     this.clearActors();
     this.fx.clear();
@@ -884,12 +886,14 @@ export class Game {
     if (dealt) {
       const b = this.box(target);
       this.hud.dmg(target, (b.x0 + b.x1) / 2, Math.max(this.H * 0.12, b.y0), dealt, !!info.crit, by.c.color);
+      hitNote(by.id, !!info.crit, false, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2);   // (a note that plays along: src/core/audio.js)
     }
   }
   onKill(target, how, crit) {
     const by = target.lastHitBy;
     if (target instanceof Projectile) return;
     this.kills++;
+    if (by) { const b = this.box(target); hitNote(by.id, !!crit, true, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2); }
     // a spawner whose stopper comes into play after so many kills (the cold store's shelf): from then on it can be shot, and the hint says so
     for (const s of this.spawners || []) if (s.live && s.ready === false && ++s.kills >= s.sealAfter) { s.ready = true; this.hint(s.hint || 'sealHint'); }
     if (this.waveLive && this.waveEvents?.length) {   // wave events waiting for so many kills
@@ -910,6 +914,7 @@ export class Game {
   // ------------------------------------------------------------------ frame
   update(dt, now, pads = []) {
     this.time = now;
+    setListener(this.world.camera);   // (the sounds given a point are heard from the camera: src/core/audio.js)
     if (this.combat) this.playT += dt;
     this.boxes.clear();
     this.world.update(dt, now);

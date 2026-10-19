@@ -1972,12 +1972,75 @@
     }
   },
   "music": {
-    "ep0_boss": { "files": ["bgm/ep0_boss.ogg"], "loopStart": 6.51, "loopEnd": 57.71, "src": "ace", "from": "ep0_boss_k0.80_2289551029", "vol": 1.4 },
-    "ep0_stage": { "files": ["bgm/ep0_stage.ogg"], "loopStart": 0.09, "loopEnd": 54.8571, "src": "ace", "from": "ep0_stage_k0.80_1537096230", "vol": 1.4 },
-    "ep1_boss": { "files": ["bgm/ep1_boss.ogg"], "loopStart": 0.09, "loopEnd": 54.8571, "src": "ace", "from": "ep1_boss_k0.80_2706038643", "vol": 1.4 },
-    "ep1_stage": { "files": ["bgm/ep1_stage.ogg"], "loopStart": 0.09, "loopEnd": 64.0, "src": "ace", "from": "ep1_stage_k0.55_3689891084", "vol": 1.4 },
-    "ep2_final": { "files": ["bgm/ep2_final.ogg"], "loopStart": 6.0, "loopEnd": 66.0, "src": "ace", "from": "ep2_final_k0.80_2187012721", "vol": 1.4 },
-    "ep2_inn": { "files": ["bgm/ep2_inn.ogg"], "loopStart": 0.09, "loopEnd": 50.5163, "src": "ace", "from": "ep2_inn_k0.55_451967191", "vol": 1.4 },
-    "ep2_she": { "files": ["bgm/ep2_she.ogg"], "loopStart": 13.913, "loopEnd": 83.4783, "src": "ace", "from": "ep2_she_k0.80_405652989", "vol": 1.4 }
+    "ep0_boss": {
+      "files": ["bgm/ep0_boss.ogg"],
+      "loopStart": 6.51,
+      "loopEnd": 57.71,
+      "src": "ace",
+      "from": "ep0_boss_k0.80_2289551029",
+      "vol": 1.4,
+      "bpm": 150,
+      "key": "E minor"
+    },
+    "ep0_stage": {
+      "files": ["bgm/ep0_stage.ogg"],
+      "loopStart": 0.09,
+      "loopEnd": 54.8571,
+      "src": "ace",
+      "from": "ep0_stage_k0.80_1537096230",
+      "vol": 1.4,
+      "bpm": 140,
+      "key": "A minor"
+    },
+    "ep1_boss": {
+      "files": ["bgm/ep1_boss.ogg"],
+      "loopStart": 0.09,
+      "loopEnd": 54.8571,
+      "src": "ace",
+      "from": "ep1_boss_k0.80_2706038643",
+      "vol": 1.4,
+      "bpm": 140,
+      "key": "C minor"
+    },
+    "ep1_stage": {
+      "files": ["bgm/ep1_stage.ogg"],
+      "loopStart": 0.09,
+      "loopEnd": 64.0,
+      "src": "ace",
+      "from": "ep1_stage_k0.55_3689891084",
+      "vol": 1.4,
+      "bpm": 120,
+      "key": "A minor"
+    },
+    "ep2_final": {
+      "files": ["bgm/ep2_final.ogg"],
+      "loopStart": 6.0,
+      "loopEnd": 66.0,
+      "src": "ace",
+      "from": "ep2_final_k0.80_2187012721",
+      "vol": 1.4,
+      "bpm": 160,
+      "key": "D minor"
+    },
+    "ep2_inn": {
+      "files": ["bgm/ep2_inn.ogg"],
+      "loopStart": 0.09,
+      "loopEnd": 50.5163,
+      "src": "ace",
+      "from": "ep2_inn_k0.55_451967191",
+      "vol": 1.4,
+      "bpm": 76,
+      "key": "D major"
+    },
+    "ep2_she": {
+      "files": ["bgm/ep2_she.ogg"],
+      "loopStart": 13.913,
+      "loopEnd": 83.4783,
+      "src": "ace",
+      "from": "ep2_she_k0.80_405652989",
+      "vol": 1.4,
+      "bpm": 138,
+      "key": "D minor"
+    }
   }
 }

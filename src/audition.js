@@ -12,7 +12,7 @@ const USE = {
 const EP2_LINES = ['sheSeen', 'runNow', 'hush', 'trapHit', 'grabbed', 'bell'];
 const getJson = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);
 
-let state = { bgm: {}, bgmNote: {}, sfx: {}, voice: {} };
+let state = { bgm: {}, bgmNote: {}, sfx: {}, voice: {}, hitsNote: '', criesNote: {}, chantNote: {} };
 try {
   const s = window.native?.read('audition')?.data || localStorage.getItem('audition');
   if (s) state = { ...state, ...JSON.parse(s) };
@@ -134,11 +134,81 @@ function voiceTab(S, T) {
   return out;
 }
 
+// ---- the hits that play along (src/core/audio.js hitNote): the game's own sound code, over a track of the game, fired like a fight would
+let gameAudio = null;
+async function gameSound() {
+  if (gameAudio) return gameAudio;
+  const [A, K] = await Promise.all([import('./core/audio.js'), import('./core/content.js')]);
+  const music = {};   // (the game's paths are from the pack folder)
+  for (const [k, m] of Object.entries(S.music || {})) music[k] = { ...m, files: (m.files || []).map((f) => BASE + f) };
+  K.C.sounds = { ...S, music, sfx: {}, voices: {}, monsters: {} };
+  A.initAudio(); A.setVolume(+vol.value);
+  gameAudio = A; return A;
+}
+let fireT = 0;
+function fire(who, secs, every, opt = {}) {
+  clearInterval(fireT); const t0 = performance.now(); let n = 0;
+  fireT = setInterval(() => {
+    const t = (performance.now() - t0) / 1000;
+    if (t > secs) { clearInterval(fireT); if (opt.kill !== false) gameAudio.hitNote(who, false, true, 0); return; }
+    gameAudio.hitNote(who, Math.random() < (opt.crit ?? 0.12), opt.kills && ++n % opt.kills === 0, (Math.random() - 0.5) * 0.8);
+  }, every);
+}
+function hitsTab() {
+  const out = [el('div', { cls: 'help' }, '打上去的声音：每打中一下一个清脆的音，连着打就顺着正在放的 BGM 的调走成一小段旋律，快到 BGM 的十六分音符时会等它一下（最多 30 毫秒，手感不会慢）。地雷妹（加特林）是小铃铛一样的「叮」，猫娘（猫爪）是木头的「咚」；暴击高八度带一点闪光，击杀是一个水润的「啵」再加一个往上走的和弦。先点一首 BGM，再点下面的按钮。')];
+  const it1 = el('div', { cls: 'item', 'data-q': 'bgm' }, el('h3', {}, '先放一首 BGM'));
+  const r1 = el('div', { cls: 'row' });
+  for (const name of Object.keys(S.music || {})) r1.append(btn(`▶ ${name}`, async () => { const A = await gameSound(); A.playMusic(name); }));
+  r1.append(btn('■ 停', async () => { const A = await gameSound(); A.stopMusic(0.3); clearInterval(fireT); }));
+  it1.append(r1); out.push(it1);
+  const it2 = el('div', { cls: 'item', 'data-q': 'hits' }, el('h3', {}, '打'));
+  it2.append(el('div', { cls: 'row' },
+    btn('地雷妹 连射 3 秒', async () => { await gameSound(); fire('pink', 3, 50); }),
+    btn('猫娘 连射 3 秒', async () => { await gameSound(); fire('cat', 3, 300); }),
+    btn('地雷妹 边打边杀', async () => { await gameSound(); fire('pink', 5, 50, { kills: 25 }); }),
+    btn('猫娘 边打边杀', async () => { await gameSound(); fire('cat', 5, 300, { kills: 5 }); }),
+    btn('暴击', async () => { const A = await gameSound(); A.hitNote('pink', true, false, 0); }),
+    btn('击杀', async () => { const A = await gameSound(); A.hitNote('cat', false, true, 0); })));
+  it2.append(el('div', { cls: 'row' }, note(state.hitsNote, (v) => { state.hitsNote = v; })));
+  out.push(it2);
+  return out;
+}
+// ---- the monster cries made from a speech voice (tools/monster_voice.py): a try-out with a stand-in voice, to choose the direction
+async function criesTab() {
+  const idx = await getJson('raw/monster_vo/_test/_index.json');
+  const out = [el('div', { cls: 'help' }, '怪叫的新做法试作：一句话让语音合成念出来，再按怪的种类魔改——少女类（人偶、影子）升调、开头卡顿重复、前面一段倒放的回声、底下压一个低八度的鬼影；纸类（纸人、试卷）变成悄悄话一样的气声；木头类（课桌、画框）降调加金属环形调制和木头共鸣；野兽类（丧尸、お蚕様）大幅降调、失真、低吼颤音。现在临时用的是猫娘的声线（只为了试效果，不会进游戏），方向定了以后换成怪物专用的声线批量出。'),
+    idx ? null : el('b', {}, '（还没有试作：要用 开始游戏.bat 的 [6] 打开）')];
+  const NAME = { girl: '少女类', paper: '纸类', wood: '木头类', beast: '野兽类' }, ACT = { windup: '蓄力', attack: '攻击', hurt: '挨打', die: '死' };
+  for (const [k, files] of Object.entries(idx || {})) {
+    const [fam, act] = k.split('_'), it = el('div', { cls: 'item', 'data-q': k });
+    it.append(el('h3', {}, `${NAME[fam] || fam}　${ACT[act] || act}`));
+    const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ ${i + 1}`, (b) => play(`raw/monster_vo/_test/${k}/${f}`, b)))); it.append(row);
+    it.append(el('div', { cls: 'row' }, note(state.criesNote?.[k], (v) => { (state.criesNote || (state.criesNote = {}))[k] = v; })));
+    out.push(it);
+  }
+  return out;
+}
+// ---- chanting BGM straight from ACE-Step (tools/bgm_chant.py)
+async function chantTab() {
+  const idx = await getJson('raw/bgm_ai/_chants.json');
+  const out = [el('div', { cls: 'help' }, 'BGM 模型自己唱的念咒（不用语音合成的声线）：歌词是九字真言、急急如律令和给这个游戏写的几句，用假名写让它念准。三种：民宿夜里一直不停的低声诵经（像九怨）、念咒推着走的战斗曲、洗脑的念咒歌（标题 / 选关用的方向）。每种两版，整首放。'),
+    idx ? null : el('b', {}, '（还在生成，或者要用 开始游戏.bat 的 [6] 打开）')];
+  const NAME = { inn: '民宿夜里的诵经', battle: '念咒战斗曲', hook: '洗脑念咒歌' };
+  for (const [name, files] of Object.entries(idx || {})) {
+    const it = el('div', { cls: 'item', 'data-q': name }, el('h3', {}, NAME[name] || name));
+    const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ 第 ${i + 1} 版`, (b) => play(`raw/bgm_ai/${f}`, b)))); it.append(row);
+    it.append(el('div', { cls: 'row' }, note(state.chantNote?.[name], (v) => { (state.chantNote || (state.chantNote = {}))[name] = v; })));
+    out.push(it);
+  }
+  return out;
+}
+
 let S = null, T = null, tab = localStorage.getItem('auditionTab') || 'bgm';
 async function render() {
   stopAll();
   const main = document.getElementById('main'); main.innerHTML = '';
-  const parts = tab === 'bgm' ? await bgmTab(S) : tab === 'sfx' ? sfxTab(S) : voiceTab(S, T);
+  const parts = tab === 'bgm' ? await bgmTab(S) : tab === 'sfx' ? sfxTab(S) : tab === 'voice' ? voiceTab(S, T) : tab === 'hits' ? hitsTab()
+    : tab === 'cries' ? await criesTab() : await chantTab();
   main.append(...parts.filter(Boolean));
   filter();
   for (const b of document.querySelectorAll('header .tabs button')) b.classList.toggle('on', b.dataset.tab === tab);

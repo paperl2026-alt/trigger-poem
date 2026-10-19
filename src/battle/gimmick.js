@@ -85,7 +85,7 @@ export class Gimmick extends Actor {
     if (e.door) g.chase?.door(this, e.door);
     if (e.lure) g.chase?.lure(this, e.lure);
     if (e.meter) g.chase?.add(e.meter, this.center());
-    if (e.sound) sound(e.sound);
+    if (e.sound) sound(e.sound, { pos: this.center() });   // (from where it is)
     if (e.read) g.chase?.read(e.read, this);   // (a note / a ledger: its text on a card)
     if (e.toll) g.chase?.toll(this);           // (the bell of the tower: the end of her)
     if (e.node) g.chase?.node(this);           // (a plate of the clock face lit)
@@ -96,7 +96,7 @@ export class Gimmick extends Actor {
   // a hanging thing comes down (its chain shot through): falls flat onto the floor with a crash
   drop(spec) {
     const g = this.game, P = this.root.position, y1 = this.pivot === 'center' ? this.h * 0.42 : 0, d = spec.t ?? 0.45;
-    sound('beamFall') || sfx.slam();
+    sound('beamFall', { pos: this.center() }) || sfx.slam();
     g.tweens.to(P, { y: y1 }, d, { ease: Ease.inQuad, onDone: () => { g.post.shake(1.0); g.fx.puff(P, 12, 0xd8c8b0, 1.3); sfx.thud(0); } });
     g.tweens.to(this.root.rotation, { z: (Math.random() - 0.5) * 0.7 }, d, { ease: Ease.inQuad });
   }

@@ -57,12 +57,15 @@ def door(key, W, h):
     return round(-W / 2 + u * W, 2), round(v * h, 2)
 
 SETS = {}
+# how much each place echoes (src/core/audio.js setRoom): the tiled bath and the cave a lot, the open walkway and bell chamber little
+REVERB = {"genkan": 0.3, "kyakushitsu": 0.18, "rouka": 0.3, "furo": 0.55, "hiroma": 0.45, "nakaniwa": 0.12, "kura": 0.4, "chika": 0.6, "shoro": 0.5, "kane": 0.15}
+
 def place(k, dark, **extra):
     P = J.PLACES[k]; H = hall(k)
     S = {"panels": True, "seed": 31 + len(SETS), "fogNear": 7, "fogFar": 32, "fogDensity": 0.012,
          "sky": "#05030a", "fog": "#1a1020", "void": "#05030a", "ink": "#140a10", "paper": 0.05,
          "lit": [0.95, 0.9, 0.86], "grade": {"tint": [1.02, 0.96, 0.92], "k": 0.12, "sat": 1.0}, "hall": H, "gimmicks": [], "stations": {},
-         "music": None, "clocks": True}
+         "music": None, "clocks": True, "reverb": REVERB.get(k, 0.3)}
     if P["calm"]:   # (a calm place that turns dark when she wakes: the boards flip to their _x versions)
         S.update({"turns": True, "start": 0, "anomalyFrom": [0, 1.5, H["z1"]], "anomalyLit": [0.82, 0.76, 0.86], "anomalyFog": "#120a18", "anomalySky": "#020104",
                   "anomalyGrade": {"tint": [0.9, 0.86, 1.04], "k": 0.3, "sat": 0.92}})

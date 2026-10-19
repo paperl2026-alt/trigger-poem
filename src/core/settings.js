@@ -2,7 +2,7 @@
 // Display: always landscape; any window size or aspect works (ultrawide shows more panorama, never black bars).
 // Fullscreen is borderless (browser / Electron fullscreen), render scale trades sharpness for speed,
 // HUD frame keeps the HUD and characters inside 16:9 or 21:9 on very wide screens.
-import { sfx, isMuted, setMuted, setVolume, getVolume, setMusicVolume, setSfxVolume } from './audio.js';
+import { sfx, isMuted, setMuted, setVolume, getVolume, setMusicVolume, setSfxVolume, setVoiceVolume } from './audio.js';
 import { lang, setLang, LANGS } from './i18n.js';
 import { T } from './content.js';
 import { readStored, writeStored } from './store.js';
@@ -15,6 +15,7 @@ export function initSettings() {
   try { saved = JSON.parse(readStored('settings', KEY)?.data || '{}'); } catch (e) { saved = {}; }
   Object.assign(SET, T.defaultSettings, saved);
   setVolume(SET.volume); setMusicVolume(SET.bgmOn === false ? 0 : SET.bgm); setSfxVolume(SET.sfxOn === false ? 0 : SET.sfx);
+  setVoiceVolume(SET.voiceOn === false ? 0 : SET.voice ?? 0.7);
 }
 export const saveSettings = () => writeStored('settings', KEY, JSON.stringify(SET));
 
@@ -58,9 +59,11 @@ export function mountSettings(G, act) {
     // volumes: the total, then the music and the sound effects on their own (the middle button mutes / unmutes)
     const step = (key, d, apply) => { SET[key] = Math.max(0, Math.min(1, +(SET[key] + d).toFixed(1))); apply(); };
     const music = () => setMusicVolume(SET.bgmOn === false ? 0 : SET.bgm), effects = () => setSfxVolume(SET.sfxOn === false ? 0 : SET.sfx);
+    const voices = () => setVoiceVolume(SET.voiceOn === false ? 0 : SET.voice ?? 0.7);
     row(L('总音量', 'Volume', '全体音量'), [['−', () => step('volume', -0.1, () => setVolume(SET.volume))], [`${Math.round(getVolume() * 100)}%`, () => setMuted(!isMuted()), !isMuted()], ['+', () => step('volume', 0.1, () => setVolume(SET.volume))]]);
     row(L('音乐', 'Music', 'BGM'), [['−', () => step('bgm', -0.1, music)], [`${Math.round(SET.bgm * 100)}%`, () => { SET.bgmOn = SET.bgmOn === false; music(); }, SET.bgmOn !== false], ['+', () => step('bgm', 0.1, music)]]);
     row(L('音效', 'Sound effects', '効果音'), [['−', () => step('sfx', -0.1, effects)], [`${Math.round(SET.sfx * 100)}%`, () => { SET.sfxOn = SET.sfxOn === false; effects(); }, SET.sfxOn !== false], ['+', () => step('sfx', 0.1, effects)]]);
+    row(L('语音', 'Voices', 'ボイス'), [['−', () => step('voice', -0.1, voices)], [`${Math.round((SET.voice ?? 0.7) * 100)}%`, () => { SET.voiceOn = SET.voiceOn === false; voices(); }, SET.voiceOn !== false], ['+', () => step('voice', 0.1, voices)]]);
     row(L('语言', 'Language', '言語'), LANGS.map(([k, n]) => [n, () => setLang(k), k === lang]));
     row('', [[L('▶ 继续', '▶ Resume', '▶ 再開'), close], ...(G.game ? [[L('放弃本话 · 回选关', 'Quit to chapters', '章選択へ戻る'), () => { close(); act.select(); }]] : []), [L('回到标题', 'Title', 'タイトル'), () => { close(); act.title(); }], [L('调试', 'Debug', 'デバッグ'), () => { close(); act.debug(); }]]);
     const info = document.createElement('div'); info.className = 'sinfo';

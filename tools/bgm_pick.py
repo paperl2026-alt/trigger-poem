@@ -132,7 +132,8 @@ def main():
         subprocess.run([spm.ffmpeg(), "-hide_banner", "-loglevel", "error", "-y", "-f", "s16le", "-ar", str(sr), "-ac", "2", "-i", "-",
                         "-c:a", "libopus", "-b:a", "128k", "-ar", "48000", str(OUT / f"{name}.ogg")], input=pcm, check=True)
         e = D.setdefault("music", {}).setdefault(name, {})
-        e.update({"files": [f"bgm/{name}.ogg"], "loopStart": round(ls, 4), "loopEnd": round(le, 4), "src": "ace", "from": pick[1].stem})
+        e.update({"files": [f"bgm/{name}.ogg"], "loopStart": round(ls, 4), "loopEnd": round(le, 4), "src": "ace", "from": pick[1].stem,
+                  "bpm": T["bpm"], "key": T["key"]})   # (the hits play along in its key, on its sixteenths: src/core/audio.js hitNote)
         e["vol"] = 1.4; changed = True
     rp.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     if changed:

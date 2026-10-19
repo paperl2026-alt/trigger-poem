@@ -415,7 +415,7 @@ export class Enemy extends Actor {
   markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.rushes() ? 'kill' : null; }
   rushes() { return !!this.def.rush || this.move === 'charge'; }
   startWindup(time) {
-    cry(this.type, 'windup');   // its cry, when recorded (content audio/sounds.json monsters)
+    cry(this.type, 'windup', 0, this.center());   // its cry, when recorded (content audio/sounds.json monsters), from where it is
     this.state = 'windup';
     this.timer = this.timer0 = time;
     if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
@@ -811,7 +811,7 @@ export class Enemy extends Actor {
     this.fleeing = true; this.invul = 99; this.endWindup(); this.state = 'flee'; this.u.outlineOn.value = 0; this.moving = true;
     g.etw.kill(P); g.etw.kill(this.inner.position);
     const tx = clamp(P.x, Hd.x0 + 1.2, Hd.x1 - 1.2), tz = Hd.z1 + 0.4, x0 = P.x, z0 = P.z, dur = Math.max(0.7, Math.hypot(tx - x0, tz - z0) / 7);
-    sfx.roar(); cry(this.type, 'attack'); this.play(this.beh === 'walker' ? 'walk' : 'idle', 14);
+    sfx.roar(); cry(this.type, 'attack', 0, this.center()); this.play(this.beh === 'walker' ? 'walk' : 'idle', 14);
     g.hud.gl.stickers.say(g.players[0], 'scare');
     g.etw.run(dur, (e) => { P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; this.inner.position.y = Math.abs(Math.sin(e * Math.PI * 4)) * 0.25; g.world.smashPropsNear?.(P, this.w * 0.4); }, {
       ease: Ease.inQuad, onDone: () => {
@@ -866,7 +866,7 @@ export class Enemy extends Actor {
   die(kind, info) {
     this.alive = false;
     for (const p of this.phantoms || []) if (p.alive) p.melt();
-    cry(this.type, 'die');
+    cry(this.type, 'die', 0, this.center());
     this.u.outlineOn.value = 0;   // (the "can be shot" outline goes at once: DESIGN「怪物挨打的样子」)
     this.endWindup();
     this.game.tweens.kill(this.root.position); this.game.etw.kill(this.root.position);

@@ -74,8 +74,10 @@ export class Stalker extends Actor {
       if ((this.snipT -= dt) <= 0) {
         this.snipT = 0.55 / Math.max(0.6, this.speedK);
         const d = this.dist(), s = g.world.project(this.root.position), pan = Math.max(-1, Math.min(1, (s.x / g.W - 0.5) * 2));
-        if (!this.kaiko) { if (d < 9) sound('snip', { pan, vol: Math.min(1, 1.6 - d / 9) }) || sfx.slash(0.5); else sound('snipFar', { pan, vol: Math.min(1, 2 - d / 16) }); }
-        else if (Math.random() < 0.5) sound('slurp', { pan, vol: 0.7 });
+        // (from where she is: behind them in a run, heard behind - src/core/audio.js setListener)
+        const at = this.center();
+        if (!this.kaiko) { if (d < 9) sound('snip', { pan, pos: at, vol: Math.min(1, 1.6 - d / 9) }) || sfx.slash(0.5); else sound('snipFar', { pan, pos: at, vol: Math.min(1, 2 - d / 16) }); }
+        else if (Math.random() < 0.5) sound('slurp', { pan, pos: at, vol: 0.7 });
       }
     }
     if (this.state === 'down') {
