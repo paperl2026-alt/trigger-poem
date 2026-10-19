@@ -847,13 +847,7 @@
         "sfx/ai/cry_girl_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_girl_windup_777567659",
-        "cry_girl_windup_1909554920",
-        "cry_girl_windup_201154164",
-        "cry_girl_windup_55333728",
-        "cry_girl_windup_1053232135"
-      ]
+      "from": ["tts_2", "tts_4", "tts_3", "tts_8", "tts_7"]
     },
     "cry_girl_attack": {
       "when": "怪叫（girl 类）attack",
@@ -867,13 +861,7 @@
         "sfx/ai/cry_girl_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_girl_attack_371988724",
-        "cry_girl_attack_1667129831",
-        "cry_girl_attack_1730057886",
-        "cry_girl_attack_1316892166",
-        "cry_girl_attack_900864820"
-      ]
+      "from": ["tts_2", "tts_7", "tts_6", "tts_8", "tts_1"]
     },
     "cry_girl_hurt": {
       "when": "怪叫（girl 类）hurt",
@@ -887,7 +875,7 @@
         "sfx/ai/cry_girl_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_girl_hurt_991406904", "cry_girl_hurt_2043983198", "cry_girl_hurt_499741016", "cry_girl_hurt_1638688353", "cry_girl_hurt_1683049780"]
+      "from": ["tts_7", "tts_4", "tts_1", "tts_6", "tts_8"]
     },
     "cry_girl_die": {
       "when": "怪叫（girl 类）die",
@@ -901,7 +889,7 @@
         "sfx/ai/cry_girl_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_girl_die_1808393170", "cry_girl_die_1051133197", "cry_girl_die_939778589", "cry_girl_die_1018769634", "cry_girl_die_1097578634"]
+      "from": ["tts_6", "tts_7", "tts_3", "tts_4", "tts_1"]
     },
     "cry_paper_windup": {
       "when": "怪叫（paper 类）windup",
@@ -915,13 +903,7 @@
         "sfx/ai/cry_paper_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_paper_windup_1764241811",
-        "cry_paper_windup_1712265950",
-        "cry_paper_windup_1937747676",
-        "cry_paper_windup_578915688",
-        "cry_paper_windup_1028431518"
-      ]
+      "from": ["tts_2", "tts_1", "tts_3", "tts_4", "tts_6"]
     },
     "cry_paper_attack": {
       "when": "怪叫（paper 类）attack",
@@ -935,13 +917,7 @@
         "sfx/ai/cry_paper_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_paper_attack_3137271",
-        "cry_paper_attack_1765558667",
-        "cry_paper_attack_359520148",
-        "cry_paper_attack_926985126",
-        "cry_paper_attack_628543641"
-      ]
+      "from": ["tts_6", "tts_7", "tts_2", "tts_8", "tts_4"]
     },
     "cry_paper_hurt": {
       "when": "怪叫（paper 类）hurt",
@@ -955,13 +931,7 @@
         "sfx/ai/cry_paper_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_paper_hurt_1133309730",
-        "cry_paper_hurt_1122831548",
-        "cry_paper_hurt_1680550368",
-        "cry_paper_hurt_1440151362",
-        "cry_paper_hurt_1084527776"
-      ]
+      "from": ["tts_4", "tts_8", "tts_6", "tts_3", "tts_1"]
     },
     "cry_paper_die": {
       "when": "怪叫（paper 类）die",
@@ -975,7 +945,7 @@
         "sfx/ai/cry_paper_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_paper_die_419174766", "cry_paper_die_995805151", "cry_paper_die_43616744", "cry_paper_die_1019460206", "cry_paper_die_1091065545"]
+      "from": ["tts_5", "tts_1", "tts_7", "tts_3", "tts_8"]
     },
     "cry_wood_windup": {
       "when": "怪叫（wood 类）windup",
@@ -989,13 +959,7 @@
         "sfx/ai/cry_wood_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_wood_windup_1080570757",
-        "cry_wood_windup_1306185030",
-        "cry_wood_windup_1446584641",
-        "cry_wood_windup_10877967",
-        "cry_wood_windup_109426573"
-      ]
+      "from": ["tts_5", "tts_2", "tts_8", "tts_3", "tts_4"]
     },
     "cry_wood_attack": {
       "when": "怪叫（wood 类）attack",
@@ -1009,13 +973,7 @@
         "sfx/ai/cry_wood_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_wood_attack_388054212",
-        "cry_wood_attack_482597168",
-        "cry_wood_attack_1703651963",
-        "cry_wood_attack_735168196",
-        "cry_wood_attack_1859228108"
-      ]
+      "from": ["tts_2", "tts_5", "tts_8", "tts_7", "tts_4"]
     },
     "cry_wood_hurt": {
       "when": "怪叫（wood 类）hurt",
@@ -1029,7 +987,7 @@
         "sfx/ai/cry_wood_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_wood_hurt_1873863882", "cry_wood_hurt_558865628", "cry_wood_hurt_55430624", "cry_wood_hurt_1339995908", "cry_wood_hurt_1865507996"]
+      "from": ["tts_2", "tts_6", "tts_7", "tts_3", "tts_4"]
     },
     "cry_wood_die": {
       "when": "怪叫（wood 类）die",
@@ -1043,7 +1001,7 @@
         "sfx/ai/cry_wood_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_wood_die_1879197706", "cry_wood_die_286342819", "cry_wood_die_254805883", "cry_wood_die_1192637214", "cry_wood_die_1106932190"]
+      "from": ["tts_4", "tts_6", "tts_8", "tts_2", "tts_7"]
     },
     "cry_beast_windup": {
       "when": "怪叫（beast 类）windup",
@@ -1057,13 +1015,7 @@
         "sfx/ai/cry_beast_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_beast_windup_479229853",
-        "cry_beast_windup_1441664247",
-        "cry_beast_windup_518357114",
-        "cry_beast_windup_148427267",
-        "cry_beast_windup_1608631055"
-      ]
+      "from": ["tts_6", "tts_5", "tts_3", "tts_8", "tts_2"]
     },
     "cry_beast_attack": {
       "when": "怪叫（beast 类）attack",
@@ -1077,13 +1029,7 @@
         "sfx/ai/cry_beast_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_beast_attack_1294397833",
-        "cry_beast_attack_24509244",
-        "cry_beast_attack_1297427644",
-        "cry_beast_attack_2017831259",
-        "cry_beast_attack_747696059"
-      ]
+      "from": ["tts_1", "tts_8", "tts_5", "tts_7", "tts_2"]
     },
     "cry_beast_hurt": {
       "when": "怪叫（beast 类）hurt",
@@ -1097,13 +1043,7 @@
         "sfx/ai/cry_beast_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": [
-        "cry_beast_hurt_1728089778",
-        "cry_beast_hurt_1198922881",
-        "cry_beast_hurt_825016101",
-        "cry_beast_hurt_1222223996",
-        "cry_beast_hurt_1460806951"
-      ]
+      "from": ["tts_2", "tts_3", "tts_1", "tts_5", "tts_8"]
     },
     "cry_beast_die": {
       "when": "怪叫（beast 类）die",
@@ -1117,7 +1057,7 @@
         "sfx/ai/cry_beast_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["cry_beast_die_160593018", "cry_beast_die_774330826", "cry_beast_die_591619670", "cry_beast_die_1374199147", "cry_beast_die_1072710709"]
+      "from": ["tts_4", "tts_6", "tts_8", "tts_2", "tts_3"]
     }
   },
   "monsters": {

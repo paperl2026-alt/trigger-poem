@@ -9,8 +9,9 @@ family of monsters has its own chain (numpy / scipy only):
 Every variant draws its own settings (seeded), the act decides the words (windup: a gathering laugh / taunt, attack: a shriek, hurt: a
 yelp, die: a long wail fading out). Output: art/raw/monster_vo/<family>_<act>/<n>.wav (not in git) + _look sheets; picked into the game
 with tools/sfx_pick.py-style keys later (sounds.json sfx cry_<family>_<act>, which src/core/audio.js cry() already falls back to).
-usage: python -I tools/monster_voice.py [--model <aivm uuid>] [--style <name>] [--n 6] [family ...]
-  The voice: --model (an installed AivisHub model). The heroines' own models are only for trying the chains out (never for the game)."""
+usage: python -I tools/monster_voice.py [--n 8] [family ...]   (--test: the chains tried with a heroine's voice, never for the game)
+The voices (user 2026-10-19: an ACML model): two of Aivis's own research voices on AivisHub, ACML 1.0, "free to use", no voice actor
+whose image a monster could harm - 花音 (female) for the girls and the paper things, にせ (young male) far down for the wood and the beasts."""
 import argparse, importlib.util, json, pathlib, sys, zlib
 import numpy as np
 from scipy import signal
@@ -19,6 +20,9 @@ from scipy.io import wavfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "art" / "raw" / "monster_vo"
 sp = importlib.util.spec_from_file_location("va", ROOT / "tools" / "voice_aivis.py"); VA = importlib.util.module_from_spec(sp); sp.loader.exec_module(VA)
+
+VOICE = {"girl": "a670e6b8-0852-45b2-8704-1bc9862f2fe6", "paper": "a670e6b8-0852-45b2-8704-1bc9862f2fe6",   # 花音
+         "wood": "6d11c6c2-f4a4-4435-887e-23dd60f8b8dd", "beast": "6d11c6c2-f4a4-4435-887e-23dd60f8b8dd"}   # にせ
 
 WORDS = {
     "girl":  {"windup": ["みーつけた", "あそぼ", "うふふふふ", "こっちおいで"], "attack": ["キャアアッ", "いっしょに!", "ちょうだい!", "シャアッ"],
@@ -134,13 +138,12 @@ def mangle(fam, act, x, sr, rng):
 
 def main():
     ap = argparse.ArgumentParser(); ap.add_argument("fams", nargs="*"); ap.add_argument("--model"); ap.add_argument("--style", default="ノーマル")
-    ap.add_argument("--n", type=int, default=6); ap.add_argument("--test", action="store_true")
+    ap.add_argument("--n", type=int, default=8); ap.add_argument("--test", action="store_true")
     a = ap.parse_args()
-    model = a.model or VA.voices()["cat"]["model"]   # (the heroine's model only to try the chains out: --test)
-    if not a.model and not a.test: sys.exit("give --model <the monsters' voice> (the heroines' voices are not for monsters; --test to try the chains with one)")
-    sid = VA.styles(model).get(a.style) or list(VA.styles(model).values())[0]
     out = OUT / ("_test" if a.test else "")
     for fam in a.fams or list(WORDS):
+        model = a.model or (VA.voices()["cat"]["model"] if a.test else VOICE[fam])
+        sid = VA.styles(model).get(a.style) or list(VA.styles(model).values())[0]
         for act, words in WORDS[fam].items():
             d = out / f"{fam}_{act}"; d.mkdir(parents=True, exist_ok=True)
             for i in range(a.n):
@@ -151,7 +154,7 @@ def main():
                 y = mangle(fam, act, x.astype(np.float64), sr, rng)
                 wavfile.write(str(d / f"{i + 1}.wav"), sr, (np.clip(y, -1, 1) * 32767).astype(np.int16))
             print(fam, act, a.n, flush=True)
-    (out / "_made.json").write_text(json.dumps({"model": model, "style": a.style, "test": a.test}, ensure_ascii=False), encoding="utf-8")
+    (out / "_made.json").write_text(json.dumps({"voices": VOICE, "test": a.test}, ensure_ascii=False), encoding="utf-8")
     # the listening page (sound.html) reads what there is from here
     idx = {d.name: sorted(f.name for f in d.glob("*.wav")) for d in sorted(out.iterdir()) if d.is_dir()}
     (out / "_index.json").write_text(json.dumps(idx, ensure_ascii=False, indent=1), encoding="utf-8")

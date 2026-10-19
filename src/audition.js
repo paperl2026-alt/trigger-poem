@@ -175,14 +175,14 @@ function hitsTab() {
 }
 // ---- the monster cries made from a speech voice (tools/monster_voice.py): a try-out with a stand-in voice, to choose the direction
 async function criesTab() {
-  const idx = await getJson('raw/monster_vo/_test/_index.json');
-  const out = [el('div', { cls: 'help' }, '怪叫的新做法试作：一句话让语音合成念出来，再按怪的种类魔改——少女类（人偶、影子）升调、开头卡顿重复、前面一段倒放的回声、底下压一个低八度的鬼影；纸类（纸人、试卷）变成悄悄话一样的气声；木头类（课桌、画框）降调加金属环形调制和木头共鸣；野兽类（丧尸、お蚕様）大幅降调、失真、低吼颤音。现在临时用的是猫娘的声线（只为了试效果，不会进游戏），方向定了以后换成怪物专用的声线批量出。'),
+  const idx = await getJson('raw/monster_vo/_index.json');
+  const out = [el('div', { cls: 'help' }, '怪叫的新做法试作：一句话让语音合成念出来，再按怪的种类魔改——少女类（人偶、影子）升调、开头卡顿重复、前面一段倒放的回声、底下压一个低八度的鬼影；纸类（纸人、试卷）变成悄悄话一样的气声；木头类（课桌、画框）降调加金属环形调制和木头共鸣；野兽类（丧尸、お蚕様）大幅降调、失真、低吼颤音。声线：少女类和纸类用「花音」、木头类和野兽类用「にせ」（AivisHub 上 Aivis 官方的研究用试作模型，ACML 1.0，没有声优，可商用）。这里是全部出的版本，游戏里用的是每种挑出来的 5 个（音效栏 cry_ 开头的那些）。'),
     idx ? null : el('b', {}, '（还没有试作：要用 开始游戏.bat 的 [6] 打开）')];
   const NAME = { girl: '少女类', paper: '纸类', wood: '木头类', beast: '野兽类' }, ACT = { windup: '蓄力', attack: '攻击', hurt: '挨打', die: '死' };
   for (const [k, files] of Object.entries(idx || {})) {
     const [fam, act] = k.split('_'), it = el('div', { cls: 'item', 'data-q': k });
     it.append(el('h3', {}, `${NAME[fam] || fam}　${ACT[act] || act}`));
-    const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ ${i + 1}`, (b) => play(`raw/monster_vo/_test/${k}/${f}`, b)))); it.append(row);
+    const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ ${i + 1}`, (b) => play(`raw/monster_vo/${k}/${f}`, b)))); it.append(row);
     it.append(el('div', { cls: 'row' }, note(state.criesNote?.[k], (v) => { (state.criesNote || (state.criesNote = {}))[k] = v; })));
     out.push(it);
   }
