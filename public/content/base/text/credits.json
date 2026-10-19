@@ -31,7 +31,7 @@
             "credit": "Powered by Stability AI",
             "required": true,
             "ship": true,
-            "license": "Stability AI Community License（年收入 100 万美元以下可免费商用；商用前要在 stability.ai 登记，只能用户本人去登记）",
+            "license": "Stability AI Community License（年收入 100 万美元以下可免费商用；已登记：2026-10-20 用户本人在 stability.ai 登记）",
             "licenseUrl": "https://stability.ai/community-license",
             "copyright": "This Stability AI Model is licensed under the Stability AI Community License, Copyright © Stability AI Ltd. All Rights Reserved",
             "source": "Stability AI 的 Stable Audio 3.0 Small-SFX 模型（本机 C:\\AI\\sa3\\small-sfx，Hugging Face 上不设门槛的同一份文件）",

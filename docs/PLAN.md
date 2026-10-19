@@ -162,7 +162,7 @@
 
 ## 等用户
 - [ ] **听第 2 话做的声音**（2026-10-19）：7 首 BGM（序章 / 第 1 话的关卡和 Boss、第 2 话的民宿 / 她的追逐 / 决战）和 81 种 AI 音效都是 Claude 看波形挑的，没人听过；哪个不行说一声，换另一版或改提示词 / 曲谱重出。
-- [ ] **Stability AI 登记**：AI 音效用的 Stable Audio 3 是 Stability 社区许可，年收入 100 万美元以下可以免费商用，但商用前要用户本人在 stability.ai 登记（Claude 不能代填）；游戏里要显示「Powered by Stability AI」（已写进 `text/credits.json`，制作名单做的时候放上）。
+- [x] **Stability AI 登记**（2026-10-20 用户：已经注册好了）：AI 音效用的 Stable Audio 3 是 Stability 社区许可，年收入 100 万美元以下可以免费商用，但商用前要用户本人在 stability.ai 登记（Claude 不能代填）；游戏里要显示「Powered by Stability AI」（已写进 `text/credits.json`，制作名单做的时候放上）。
   - 2026-10-20 用户问怎么登记：stability.ai/license → Community（Free）→ Get license → stability.ai/community-license 的表单，用户本人填；商用（上架卖）之前登记就行。游戏里现在还有 92 条它出的音效（`sfx/ai/`：第 2 话她的笑声、お蚕様的哀嚎、雨户等）。
   - 许可原文（stability.ai/community-license-agreement 第 III、IV 条）另外要求：分发时附一份许可协议和写着「This Stability AI Model is licensed under the Stability AI Community License, Copyright © Stability AI Ltd. All Rights Reserved」的 Notice 文件 → 打包时放进安装目录（做打包时加）。
 - [ ] **第 2 话的台词**（2026-10-19 加的，要用户听）：两人各 6 种 × 6 句（她出现、快跑、躲着屏住气、机关砸倒她、被抓、敲钟），AivisSpeech 生成了语音；口吻照两人的设定写的，不合适的告诉 Claude 改。
