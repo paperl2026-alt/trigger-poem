@@ -176,6 +176,7 @@ button { font-family: var(--font); cursor: pointer; }
    (stopped ones gold); held by her: mash the trigger (the bar fills); the time earned: a little wadokei clock top left */
 #ui .blackout { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 14; transition: opacity .24s ease-in; }
 #ui .blackout.on { opacity: 1; transition-duration: .24s; }
+#ui .flicker { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; z-index: 13; }
 #ui .note { position: fixed; left: 50%; top: 46%; width: min(64vh, 80vw); padding: 3vh 4vh; transform: translate(-50%, -50%) rotate(-2deg) scale(.9); opacity: 0;
   background: #f4ecd8 repeating-linear-gradient(0deg, transparent 0 3.2vh, rgba(120,90,60,.08) 3.2vh 3.3vh); color: #2a1a10; z-index: 12; pointer-events: none;
   font: 600 2.3vh/1.6 'Noto Sans SC', serif; box-shadow: 0 1vh 3vh rgba(0,0,0,.6); border-left: .8vh solid #b0281e; transition: opacity .5s, transform .5s; }

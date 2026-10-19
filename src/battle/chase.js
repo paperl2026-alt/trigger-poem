@@ -46,7 +46,7 @@ export class Stalker extends Actor {
     const first = [pre + F.frames.still[0], pre + 'still', pre + 'walk0'].find((k) => tex[k]);
     super(game, first, K().she.h[form] ?? 2.3, 'bottom');
     this.prefix = pre; this.frames = F.frames; this.form = form; this.kaiko = form === 'kaiko';
-    this.stalker = true; this.type = this.kaiko ? 'kaiko' : 'she';
+    this.stalker = true; this.type = this.kaiko ? 'kaiko' : 'she'; this.id = 'she'; this.tag = '???';   // (her lines: text/stickers.json bosses.she)
     this.stag = 0; this.downs = 0; this.timer = 0; this.state = 'still'; this.after = 'follow'; this.invul = 0;
     this.snipT = 0; this.step = 0; this.speedK = 1;
     game.world.scene.add(this.root);
@@ -534,10 +534,23 @@ export class Chase {
     if (H.burst) {   // (out of the bath water: up from below with a splash, the lights going out)
       const P = she.root.position, y0 = P.y; P.y = -2.4; sound('splash') || sfx.slam(); this.g.post.flash(0.6, 0xffffff); this.g.post.shake(1.4);
       this.g.tweens.to(P, { y: y0 }, 0.55, { ease: Ease.outBack }); she.pose('lunge'); sound('sheLaugh');
+      this.closeUp(she, 'intro', { in: 0.45, dist: 2.6, v: 0.75 });   // (the first time she is seen: up close, her first words)
     }
     this.music(true);
-    this.g.etw.wait(H.wake ?? 2.5, () => { if (she.alive && she.state === 'scripted') { if (she.kaiko) { she.pose('wake'); sound('kaikoWail') || sfx.roar(); this.g.post.shake(1); } she.state = 'stalk'; } });
+    this.g.etw.wait(H.wake ?? 2.5, () => {
+      if (!she.alive || she.state !== 'scripted') return;
+      if (!she.kaiko) { she.state = 'stalk'; return; }
+      // the silkworm wakes: up close while it rears and wails, then it comes
+      she.pose('wake'); sound('kaikoWail') || sfx.roar(); this.g.post.shake(1);
+      this.closeUp(she, null, { dist: 5.5, v: 0.6, min: 3.6 }, () => { if (she.alive) she.state = 'stalk'; });
+    });
     this.mode = 'prowl';
+  }
+  // a close look at her (Game.cine, DESIGN「要给玩家看的东西放慢、特写」): her line (text/stickers.json bosses.she.<kind>) held as long as it is said
+  closeUp(she, kind, o = {}, then) {
+    let n = 0;
+    this.g.cine({ on: she, v: 0.7, dist: 3, up: 0.1, in: 0.7, out: 0.7, lull: true, ...o,
+      during: () => { o.during?.(); if (kind) n = this.g.hud.gl.stickers.boss(she, kind) || 0; }, hold: () => Math.max(o.min ?? 2.6, n + 0.3) }, then);
   }
   // the time earned: a little clock beside the stage name (drawn by the program), the twelve hours filling up
   drawMeter(force) {
@@ -619,9 +632,13 @@ export class Chase {
     const g = this.g;
     this.formI = Math.min(this.forms.length - 1, this.formI + 1);
     g.lull = true; sound('roar') || sfx.roar(); sound('madness'); g.post.flash(0.8, 0xff3a5a); g.post.shake(1.4);
-    g.hud.gl.hold('boss', { name: t('sheForm' + this.formI) });
-    g.tweens.wait(1.6, () => { const n = this.ensure(this.forms[this.formI], { x: this.center.x, z: this.center.z }); n.state = 'stalk';   // (out of the clock's middle)
-      n.speedK = 1 + this.formI * 0.25; g.lull = false; });
+    g.hud.gl.hold('boss', { name: t('sheForm' + this.formI), dur: 1.5 });
+    // up close on the clock's middle: she comes out of it in her new form and says so; the fight again when the camera is back
+    let n = null, len = 0;
+    g.cine({ on: new THREE.Vector3(this.center.x, 1.4, this.center.z), dist: 3.4, up: 0.2, in: 0.7, out: 0.7,
+      during: () => g.tweens.wait(0.9, () => { n = this.ensure(this.forms[this.formI], { x: this.center.x, z: this.center.z }); n.state = 'scripted'; n.pose('stare');
+        g.post.flash(0.4, 0xffffff); len = g.hud.gl.stickers.boss(n, `form${this.formI}`) || 0; }),
+      hold: 5.2 }, () => { if (n?.alive) { n.state = 'stalk'; n.speedK = 1 + this.formI * 0.25; } g.lull = false; void len; });
   }
   // every plate lit: the bell (a gimmick with toll) can be struck; both specials come full for it
   bell() {
@@ -645,9 +662,14 @@ export class Chase {
       const P = she.root.position, x0 = P.x, z0 = P.z, c = g.world.camPos, dx = P.x - c.x, dz = P.z - c.z, d = Math.hypot(dx, dz) || 1;
       g.tweens.run(2.6, (e) => { P.x = x0 + dx / d * 14 * e; P.z = z0 + dz / d * 14 * e; P.y = Math.sin(e * Math.PI * 0.6) * 3 - e * e * 12; she.inner.rotation.z = e * 9; she.u.opacity.value = 1 - Math.max(0, e - 0.6) / 0.4; },
         { onDone: () => this.gone() });
+      // the camera stays on where she stood while she goes over the edge, her last words
+      let len = 0;
+      g.cine({ on: new THREE.Vector3(x0, 1.6, z0), dist: 4.6, up: 0.5, in: 0.6, out: 0.8, lull: true, during: () => { len = g.hud.gl.stickers.boss(she, 'end') || 0; },
+        hold: () => Math.max(4.2, len + 0.4) });
     }
     if (this.crow) g.tweens.wait(0.8, () => { sound('crow'); g.hud.gl.stickers.say(g.players[0], 'real'); });
-    g.tweens.wait(3.2, () => { g.waveLive = true; g.pendingSpawns = 0; g.waveIndex = (g.S.waves?.length || 1) - 1; });
+    const end = () => (g.cineOn ? g.tweens.wait(0.25, end) : (g.waveLive = true, g.pendingSpawns = 0, g.waveIndex = (g.S.waves?.length || 1) - 1));   // (after her last close look)
+    g.tweens.wait(3.2, end);
   }
   dispose() { this.free(false); this.peek(false); bed('heartbeat', false); this.ui?.remove(); this.ui = null; }
 }

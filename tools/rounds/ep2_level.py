@@ -110,8 +110,12 @@ def kat(n, x, z, y=2.4, t=0, spread=3.0, frm=None):
 # ================================================================ 1. the entrance hall (calm): arrive, the rules, the doll, the crow
 S, H, d0, d1 = place("genkan", False, music="ep2_inn")
 gm(S, id="note", k="prop/ep2_note", on="stand", x=2.6, y=0, z=-3.6, w=0.55, station="gk1", mark=True, do=[{"read": "ep2Rules"}, {"meter": 0}])
+# the doll in its case (user 2026-10-19 batch 23: it twitched in a blink nobody saw): shown up close for 7 s (gk2 focus) - it twitches,
+# again, harder; the lights flicker and when they come back the case is empty; a fusuma slides somewhere; the girls react
 gm(S, id="case", k="prop/ep2_case_doll", kx="prop/ep2_case_empty", on="stand", x=-2.7, y=0, z=-5.2, w=1.6, ry=60, shoot=False, solid=True,
-   do=[{"flip": True}, {"sound": "shoji"}, {"say": "scare"}])
+   do=[{"t": 0.5, "twitch": {"n": 1, "amp": 0.03, "creak": True}}, {"t": 1.7, "twitch": {"n": 2, "amp": 0.05, "every": 0.3}},
+       {"t": 3.0, "twitch": {"n": 4, "amp": 0.08, "every": 0.14}}, {"t": 3.1, "sfx": "dollScreech"}, {"t": 4.2, "flicker": 0.7}, {"t": 4.55, "swap": True},
+       {"t": 5.2, "sound": "shoji"}, {"t": 5.8, "say": "scare"}])
 gm(S, id="cage", k="prop/ep2_cage", kx="prop/ep2_cage_open", on="stand", x=2.9, y=0, z=-7.0, w=0.9, ry=-60, station="gk1", do=[{"free": True}, {"flip": True}])
 gm(S, id="bell", k="prop/ep2_bell_desk", on="stand", x=2.4, y=0.95, z=-2.6, w=0.3, station="gk1", do=[{"sound": "bellSmall"}, {"say": "real"}])
 S["stations"] = {
@@ -121,7 +125,8 @@ S["stations"] = {
                      {"t": 0, "type": "surippa", "x": 1.5, "z": -5.8, "from": "statue", "wake": 3.9}],
                     [kat(14, 0, -6.5), {"t": 2, "type": "surippa", "count": 4, "x": 0, "z": -7.5, "spread": 3, "every": 0.35}],
                     [{"t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "pop"}, {"t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "pop"}, kat(12, 0, -7, 2.6, 2.5)]]},
-  "gk2": {"via": [[0, 1.2, -5]], "cam": [0, 1.3, -7.4], "look": [-2.7, 1.3, -5.2], "pause": 1.6, "fire": ["case"], "sfx": "snipFar"},
+  "gk2": {"via": [[0, 1.2, -5]], "cam": [0, 1.3, -7.4], "look": [-2.7, 1.3, -5.2], "pause": 1.0, "focus": {"gimmick": "case", "dist": 2.3, "up": 0.05, "v": 0.55, "hold": 6.8},
+          "sfx": "snipFar"},
 }
 # ================================================================ 2. their room (calm): drop the bags
 S, H, d0, d1 = place("kyakushitsu", False, music="ep2_inn")

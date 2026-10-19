@@ -90,7 +90,7 @@ export class TheThing extends Actor {
     });
     this.guardT = rr(R.guard.every);
     sfx.clear(); g.post.flash(0.3, 0xfff0c8);
-    this.say('keep');
+    this.closeUp('keep', { lull: true, dist: this.S.h * 1.6, v: 0.5, min: 3.4 });   // (the three come out up close)
   }
   // one of them is shot: nothing happens to it but a knock (its count starts again) and her cry; once she is down, it is shown to her
   keepHit(k, info) {
@@ -113,7 +113,8 @@ export class TheThing extends Actor {
     sfx.roar(); g.post.flash(0.5, 0xffffff); g.post.shake(1);
     g.etw.kill(P); g.tweens.to(P, { y: -this.S.h * 0.15 }, 1.4, { ease: Ease.outQuad });
     for (const k of this.keeps) k.still();
-    this.stuck = 0; this.say('kneel');
+    this.stuck = 0;
+    this.closeUp('kneel', { lull: true, dist: this.S.h * 0.9, v: 0.45, min: 3.5 }, () => { this.stuck = 0; });   // (on her knees, up close)
   }
   offer(i, gm) {
     const g = this.game, R = this.def.ritual;
@@ -138,7 +139,8 @@ export class TheThing extends Actor {
   // the last one: a small light rises from where the coffin went into her arms - her child back with her - and she is at rest
   rest() {
     const g = this.game, to = this.uvToWorld(0.5, 0.6), from = to.clone().setY(0.3), q = new THREE.Vector3();
-    this.seq++; this.say('rest');
+    this.seq++;
+    this.closeUp('rest', { lull: true, dist: this.S.h * 0.8, v: 0.55, in: 1.0, out: 0.9, min: 6 });   // (her child back in her arms, up close)
     let k = 0;
     g.tweens.run(2.6, (e) => {
       if (e * 30 < k) return; k++;
@@ -146,7 +148,16 @@ export class TheThing extends Actor {
       g.fx.star(q, 0.9, COL.white); if (k % 3 === 0) g.fx.confetti(q, 3, 0.5, [COL.white, COL.pink]);
     }, { onDone: () => { if (this.alive) this.die(true); } });
   }
-  say(kind) { this.game.hud.gl.stickers.boss?.(this, kind); }
+  // her line (text/stickers.json bosses.<id>.<kind>, her voice): returns how long it is said
+  say(kind) { const n = this.game.hud.gl.stickers.boss?.(this, kind) || 0; this.talkT = Math.max(this.talkT || 0, n + 1); return n; }
+  // a close look at her (Game.cine) while she says a line: held as long as the line (at least min seconds); then()
+  closeUp(kind, o, then) {
+    let n = 0;
+    this.game.cine({ on: this, v: 0.62, dist: this.S.h * 1.15, up: 0.15, in: 0.8, out: 0.7, ...o, during: () => { o.during?.(); n = kind ? this.say(kind) : 0; },
+      hold: () => Math.max(o.min ?? 2.6, n + 0.3) }, then);
+  }
+  // her entrance (Game.arrive, after the warning): the camera goes up close and she says her first words
+  intro(then) { this.closeUp('intro', { lull: true, dist: this.S.h * 0.85, v: 0.7 }, then); }
 
   // ---------------------------------------------------------------- hits
   // DESIGN「Boss」(2026-10-18): only its core takes damage (each form's "core": [u, v] on its drawing, radius r of its height; a ring
@@ -219,7 +230,7 @@ export class TheThing extends Actor {
     const wk = this.weakNow();
     this.u.outlineCol.value.setRGB(1, 1, 1);
     this.tickT = (this.tickT || 0) - dt;
-    this.markCore(wk && this.S.core, t);
+    this.markCore(wk && this.S.core && !g.cineOn, t);
     if (this.keeps) this.keepTick(dt);
     // breathing
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
@@ -229,7 +240,7 @@ export class TheThing extends Actor {
       this.timer -= dt;
       return;
     }
-    if (this.busy || this.mutating || this.grief || this.state === 'hurt') return;
+    if (this.busy || this.mutating || this.grief || this.state === 'hurt' || g.cineOn) return;
     this.timer -= dt;
     if (this.timer > 0) return;
     const P2 = this.S.pattern, mv = P2[this.pi++ % P2.length];
@@ -332,6 +343,13 @@ export class TheThing extends Actor {
     this.state = 'hurt'; this.play('hurt');
     sfx.roar(); sfx.madness(); g.post.flash(0.8, 0xff3a8a); g.post.shake(1.4); g.G.stop(0.25);
     g.hud.gl.hold('phase', { text: tr(this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: M.shake + M.grow + 0.2 });
+    // up close the whole time (DESIGN「要给玩家看的东西放慢、特写」): her line as she convulses; the fight comes back with the camera
+    const big = Math.max(this.S.h, this.def.stages[n].h);
+    this.closeUp(`s${n + 1}`, { dist: big * 1.2, v: 0.55, in: 0.6, min: M.shake + M.grow + 0.6 }, () => {
+      if (!this.alive) return;
+      this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3);
+      if (this.def.ritual && n === this.def.stages.length - 1) this.ritual();
+    });
     let k = 0;
     tw.run(M.shake, (e) => {
       this.flash = Math.max(this.flash, e > 0.7 ? (e - 0.7) / 0.3 : 0.25 * Math.max(0, Math.sin(e * 30)));
@@ -344,8 +362,7 @@ export class TheThing extends Actor {
       this.inner.scale.set(0.45, 0.45, 1); this.flash = 1;
       g.post.flash(0.45, 0xffffff);
       for (let i = 0; i < 8; i++) { const q = this.uvToWorld(rnd(0.1, 0.9), rnd(0.1, 0.9)); g.fx.confetti(q, 14, 3.5, [COL.hot, 0x2a0a2a, COL.bone]); }
-      tw.to(this.inner.scale, { x: 1, y: 1 }, M.grow, { ease: Ease.outBack, onDone: () => { this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3); } });
-      if (this.def.ritual && n === this.def.stages.length - 1) tw.wait(M.grow + 1.2, () => this.alive && this.ritual());
+      tw.to(this.inner.scale, { x: 1, y: 1 }, M.grow, { ease: Ease.outBack });
       g.post.shake(1.2); sfx.slam();
       if (n === this.def.wreckAt && g.world.named?.school && tex[this.def.schoolAfter]) {   // it smashes the school: the building is damaged from now on
         const sc = g.world.named.school; sc.m.material.map = tex[this.def.schoolAfter]; sc.m.material.needsUpdate = true; sc.m.userData.texKey = this.def.schoolAfter;
@@ -366,6 +383,7 @@ export class TheThing extends Actor {
       this.u.dOrigin.value.set(0.5, 0.6);
       g.tweens.run(2.2, (e) => { this.u.dissolve.value = e; }, { onDone: () => this.dispose() });
     });
+    if (!calm && this.game.hud.gl.stickers.D.bosses?.[this.id]?.end) this.closeUp('end', { dist: this.S.h * 1.1, v: 0.6, min: 3.4 });   // (her last words, up close)
     g.onBossDead(this);
   }
 }
@@ -445,7 +463,7 @@ class Keepsake extends Gimmick {
     P.lerp(this.to, 1 - Math.exp(-dt * (this.mode === 'guard' ? 7 : 4)));
     this.inner.rotation.z = Math.cos(this.ph) * 0.18;   // (hanging, like a pendulum)
     // its count, at an uneven pace (the pace changes every second or so)
-    if (this.mode === 'still' || !g.combat || B.mutating || B.grief || !B.alive) { this.ringOff(); return; }
+    if (this.mode === 'still' || !g.combat || g.cineOn || B.mutating || B.grief || !B.alive) { this.ringOff(); return; }
     this.rateT -= dt; if (this.rateT <= 0) { this.rateT = rnd(0.7, 1.8); this.rate = rnd(R.pace[0], R.pace[1]); }
     this.fuse -= dt * this.rate;
     if (this.fuse <= 0) { this.strike(); return; }

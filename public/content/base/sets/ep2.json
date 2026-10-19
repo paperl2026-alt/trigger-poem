@@ -55,7 +55,16 @@
         "ry": 60,
         "shoot": false,
         "solid": true,
-        "do": [{ "flip": true }, { "sound": "shoji" }, { "say": "scare" }]
+        "do": [
+          { "t": 0.5, "twitch": { "n": 1, "amp": 0.03, "creak": true } },
+          { "t": 1.7, "twitch": { "n": 2, "amp": 0.05, "every": 0.3 } },
+          { "t": 3.0, "twitch": { "n": 4, "amp": 0.08, "every": 0.14 } },
+          { "t": 3.1, "sfx": "dollScreech" },
+          { "t": 4.2, "flicker": 0.7 },
+          { "t": 4.55, "swap": true },
+          { "t": 5.2, "sound": "shoji" },
+          { "t": 5.8, "say": "scare" }
+        ]
       },
       {
         "id": "cage",
@@ -107,7 +116,14 @@
           ]
         ]
       },
-      "gk2": { "via": [[0, 1.2, -5]], "cam": [0, 1.3, -7.4], "look": [-2.7, 1.3, -5.2], "pause": 1.6, "fire": ["case"], "sfx": "snipFar" }
+      "gk2": {
+        "via": [[0, 1.2, -5]],
+        "cam": [0, 1.3, -7.4],
+        "look": [-2.7, 1.3, -5.2],
+        "pause": 1.0,
+        "focus": { "gimmick": "case", "dist": 2.3, "up": 0.05, "v": 0.55, "hold": 6.8 },
+        "sfx": "snipFar"
+      }
     },
     "music": "ep2_inn",
     "clocks": true,

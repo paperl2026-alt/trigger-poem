@@ -639,7 +639,7 @@ export class PanelWorld {
   update(dt, t) {
     const g = this.game, cam = this.camera;
     this.updateAnomaly(dt);
-    const c1 = g.players[0]?.ctrl, on = c1 && c1.active;
+    const c1 = g.players[0]?.ctrl, on = c1 && c1.active && !g.cineOn;   // (a close look, Game.cine: held still)
     const lx = on ? c1.x / g.W - 0.5 : 0, ly = on ? c1.y / g.H - 0.5 : 0;
     this.look.x += (lx - this.look.x) * Math.min(1, dt * 4);
     this.look.y += (ly - this.look.y) * Math.min(1, dt * 4);
@@ -650,7 +650,7 @@ export class PanelWorld {
     cam.lookAt(this.lookAt);
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
-    const fov = this.baseFov + this.fovKick;
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0);
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }

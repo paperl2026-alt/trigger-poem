@@ -58,6 +58,7 @@ export class Game {
     this.addGimmicks();
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
+    this.cineOn = false; this.cineQ = 0;   // a close look (cine)
     this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
     this.time = 0; this.playT = 0;
     this.camPlaced = false;
@@ -270,6 +271,50 @@ export class Game {
     if (!name) { stopMusic(1.2); return; }
     playMusic(C.sounds?.music?.[name] ? name : boss ? 'boss' : 'stage');
   }
+  // ---------------------------------------------------------------- a close look (docs/DESIGN.md「要给玩家看的东西放慢、特写」, user 2026-10-19
+  // batch 23: what the player is meant to see is held and shown up close, not a blink; bosses get close-ups, their lines and camera
+  // moves when they come and when they change). The girls slide out of the picture, the HUD steps back (lines and warnings stay), black
+  // bars come in; the camera goes to o.cam looking at o.at over o.in seconds - or, o.on (an actor or a point): looks at it (its o.u / o.v
+  // on an actor's drawing) from o.dist metres in front (o.face: in front of the way it faces), o.up higher, o.side to the side, following it
+  // as it moves; o.zoom narrows the
+  // view (degrees); o.during() as it arrives; holds o.hold seconds; then back where it was over o.out seconds and then() - or, o.back
+  // false, stays there (then() at once: a walk between places carries on from there and calls cineEnd()).
+  cine(o, then) {
+    const w = this.world;
+    if (!w.camPos) { o.during?.(); this.tweens.wait(o.hold ?? 2, () => then && then()); return; }
+    const q = ++this.cineQ, tw = this.tweens, home = { cam: w.camPos.clone(), look: w.lookAt.clone() }, cam = new THREE.Vector3(), at = new THREE.Vector3();
+    this.cineOn = true; if (o.lull) this.lull = true;
+    const aim = () => {   // (where it is now: a moving boss is followed)
+      if (!o.on) { cam.set(...o.cam); at.set(...o.at); return; }
+      at.copy(o.on.uvToWorld ? o.on.uvToWorld(o.u ?? 0.5, o.v ?? 0.62) : o.on);
+      // (from where the camera was; o.face: straight in front of the thing, the way it faces)
+      const d = this.cineDir || (this.cineDir = o.face && o.on.root ? new THREE.Vector3(Math.sin(o.on.root.rotation.y), 0, Math.cos(o.on.root.rotation.y)) : new THREE.Vector3().subVectors(home.cam, at).setY(0).normalize());
+      cam.copy(at).addScaledVector(d, o.dist ?? 3); cam.x += -d.z * (o.side ?? 0); cam.z += d.x * (o.side ?? 0); cam.y = at.y + (o.up ?? 0);
+    };
+    this.cineDir = null; aim();
+    const c0 = w.camPos.clone(), l0 = w.lookAt.clone(), z0 = w.cineZoom || 0, inT = o.in ?? 0.8;
+    tw.run(inT, (e) => { if (q !== this.cineQ) return; aim(); w.camPos.lerpVectors(c0, cam, e); w.lookAt.lerpVectors(l0, at, e); w.cineZoom = z0 + ((o.zoom ?? 0) - z0) * e; },
+      { ease: Ease.inOutCubic, onDone: () => {
+        if (q !== this.cineQ) return;
+        o.during?.();
+        if (o.back === false) { then && then(); return; }
+        tw.run(typeof o.hold === 'function' ? o.hold() : o.hold ?? 2.5, () => { if (q !== this.cineQ) return; aim(); w.camPos.copy(cam); w.lookAt.copy(at); }, { onDone: () => {
+          if (q !== this.cineQ) return;
+          const c1 = w.camPos.clone(), l1 = w.lookAt.clone();
+          tw.run(o.out ?? 0.7, (e) => { w.camPos.lerpVectors(c1, home.cam, e); w.lookAt.lerpVectors(l1, home.look, e); w.cineZoom = (o.zoom ?? 0) * (1 - e); },
+            { ease: Ease.inOutCubic, onDone: () => { if (q === this.cineQ) this.cineEnd(); if (o.lull) this.lull = false; then && then(); } });
+        } });
+      } });
+  }
+  cineEnd() { this.cineOn = false; if (this.world.cineZoom) this.world.cineZoom = 0; }
+  // the lights go: hard flickers of black over s seconds (Gimmick flicker)
+  flicker(s) {
+    let el = document.querySelector('#ui .flicker');
+    if (!el) { el = document.createElement('div'); el.className = 'flicker'; document.getElementById('ui').appendChild(el); }
+    const n = Math.max(2, Math.round(s * 6));
+    for (let i = 0; i < n; i++) this.tweens.wait(i * s / n, () => { el.style.opacity = i % 2 ? '0.12' : '0.94'; });
+    this.tweens.wait(s, () => { el.style.opacity = '0'; });
+  }
   // a blink of black (through a doorway): in, then(), out
   blackout(on, then) {
     let el = document.querySelector('#ui .blackout');
@@ -369,7 +414,7 @@ export class Game {
     if (this.world.collapse) this.world.collapse(go); else go();
   }
   // what to do with a mechanism: the small see-through tag at the top for a few seconds (never over the fight: DESIGN「不能射击的阶段的提示」)
-  hint(key) { this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }
+  hint(key) { if (this.cineOn) { this.tweens.wait(0.3, () => this.hint(key)); return; } this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }   // (not over a close look: after it)
   // a spawner's hole got blocked (Gimmick topple)
   sealSpawner(id) {
     const s = (this.spawners || []).find((x) => x.id === id && x.live); if (!s) return;
@@ -418,6 +463,13 @@ export class Game {
 
   arrive(S, boss) {
     this.world.setCovers(S.covers);
+    // something here is shown up close first (station focus: { gimmick, dist, up, side, v, hold }: DESIGN「要给玩家看的东西放慢、特写」): the
+    // camera goes to it, it does its thing (its do list), held for the whole of it; then the stop carries on
+    if (S.focus) {
+      const F = S.focus, gm = this.actors.find((a) => a.g?.id === F.gimmick);
+      if (gm) { this.cine({ on: gm, face: true, v: F.v ?? 0.55, dist: F.dist ?? 2, up: F.up ?? 0, side: F.side ?? 0, in: F.in ?? 1.0, hold: F.hold ?? 7, out: F.out ?? 0.8, lull: true,
+        during: () => { if (!gm.spent) gm.fire(); } }, () => this.arrive({ ...S, focus: null }, boss)); return; }
+    }
     // episode 2: a hiding place (station hide): she comes, the forced stabs, then on (src/battle/chase.js)
     if (S.hide) { this.enterCover(null, true); this.tweens.wait(0.3, () => this.chase.hide(S, () => this.onward(S))); return; }
     // a stretch they only walk through (no waves: a corridor between two places, DESIGN「门和小关的衔接」): a line or a sound on the way, on
@@ -436,7 +488,13 @@ export class Game {
     // the place itself changes (panel stages): the corridor bends up, the floor folds into ridges, then the fight starts
     if (S.fold && this.world.fold) { this.hud.gl.hold('fold'); this.enterCover(null, true); this.world.fold(() => { this.combat = true; this.beginStation(); }); return; }
     // the boss: a warning while she shows herself, then the fight
-    if (boss) { this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '' }); this.enterCover(null, true); this.tweens.wait(2.2, () => this.teach(S.lesson, () => { this.combat = true; })); return; }
+    if (boss) {
+      const intro = !!this.boss?.intro;
+      this.hud.gl.hold('boss', { name: this.boss ? tr(this.boss.name) : '', dur: intro ? 2.4 : null }); this.enterCover(null, true);
+      const go = () => this.teach(S.lesson, () => { this.combat = true; });
+      this.tweens.wait(intro ? 2.6 : 2.2, () => (intro ? this.boss.intro(go) : go()));   // (the warning first, then her entrance up close: thing.js intro)
+      return;
+    }
     if (S.scare) { this.enterCover(null, true); this.scare(S.scare, () => this.beginStation()); return; }
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     if (S.turn) { this.enterCover(null, true); this.tweens.wait(S.turn.wait ?? 0.6, () => this.turn(S.turn, () => this.enterCover(() => this.beginStation()))); return; }
@@ -490,7 +548,9 @@ export class Game {
     if (this.S.block) this.chase.block(this.S);   // (episode 2: the way blocked while she comes up behind)
     if (this.S.dial) this.chase.dial(this.S);     // (episode 2: the bell tower's clock face, the last fight)
     if (this.S.she) this.chase.prowl(this.S);     // (episode 2: she prowls this fighting stop)
-    this.teach(this.S.lesson, () => this.startWave());
+    // (the first wave waits for a close look that opens the stop: her first appearance up close)
+    const go = () => (this.cineOn ? this.tweens.wait(0.25, go) : this.startWave());
+    this.teach(this.S.lesson, () => this.tweens.wait(0.05, go));
   }
   teach(id, then) {
     if (!id || SAVE.lessons?.[id] || this.G.auto) { then(); return; }
@@ -615,12 +675,13 @@ export class Game {
     this.hud.boss(null);
     this.clearProjectiles();
     this.players.forEach((p) => { if (p.activeOn) p.endActive(false); });
-    this.tweens.wait(3.4, () => {
+    const after = (fn) => (this.cineOn ? this.tweens.wait(0.25, () => after(fn)) : fn());   // (her last close look plays out first)
+    this.tweens.wait(3.4, () => after(() => {
       stopMusic();
       sfx.victory();
       this.setAll('victory');
       this.tweens.wait(1.4, () => this.nextStep());
-    });
+    }));
   }
   gameOver() {
     this.combat = false;

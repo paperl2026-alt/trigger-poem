@@ -1,5 +1,5 @@
 {
-  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-19 用户第二十三批：说话的场合少一点、每句长一点（只念一个字 / 词、两个音节都很怪）——每句都是完整的一句话；打中、暴击、受伤、换弹、没子弹、躲掩体、发呆不再说话；kill 只是偶尔一句（离她上一句隔一阵子），low 是血第一次掉到四分之一以下。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。 stickers.bosses：Boss 的台词（按 bosses.json 的 id，src/ui/stickers.js boss），每种场合几句，日语那句配成她的语音（sounds.json voices.<id>）；madame：keep 三样东西出来、photo / diary / coffin 打中那一样、kneel 跪下、offer1 / offer2 献上第一 / 第二样之后（提示下一样）、wrong 打错顺序、rest 安息。",
+  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-19 用户第二十三批：说话的场合少一点、每句长一点（只念一个字 / 词、两个音节都很怪）——每句都是完整的一句话；打中、暴击、受伤、换弹、没子弹、躲掩体、发呆不再说话；kill 只是偶尔一句（离她上一句隔一阵子），low 是血第一次掉到四分之一以下。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。 stickers.bosses：Boss 的台词（按 bosses.json 的 id，src/ui/stickers.js boss），每种场合几句，日语那句配成她的语音（sounds.json voices.<id>）；每个 Boss：intro 出场（镜头推近时说）、s2 / s3 / … 变成第几个形态时、end 消散时；madame：keep 三样东西出来、photo / diary / coffin 打中那一样、kneel 跪下、offer1 / offer2 献上第一 / 第二样之后（提示下一样）、wrong 打错顺序、rest 安息；she（第 2 话的她）：intro 第一次扑出来、form1 / form2 决战换形态、end 被钟声送下钟楼。",
   "stickers": {
     "heroines": {
       "pink": {
@@ -692,14 +692,37 @@
     },
     "bosses": {
       "madame": {
+        "intro": {
+          "lines": [
+            {
+              "zh": "欢迎来到我的家……你们，就是那孩子的新玩伴吧？",
+              "en": "Welcome to my home... so you're my little girl's new playmates?",
+              "ja": "ようこそ、わたしの家へ……あなたたちが、あの子の新しいお友だちね？"
+            },
+            {
+              "zh": "来，进来坐吧。冰淇淋要化了哦……永远都吃不完的那种。",
+              "en": "Come, sit down. The ice cream is melting... the kind you never finish.",
+              "ja": "さあ、どうぞ。アイスがとけちゃうわ……ずっと食べ終わらないアイスがね。"
+            }
+          ]
+        },
+        "s2": {
+          "lines": [
+            { "zh": "把孩子……还给我！那孩子一个人会寂寞的！", "en": "Give her... back to me! She gets so lonely on her own!", "ja": "あの子を……返して！あの子はひとりじゃさみしいの！" }
+          ]
+        },
+        "s3": {
+          "lines": [
+            {
+              "zh": "为什么……为什么只有我的孩子……要被那团火吞掉……",
+              "en": "Why... why was it only my child... that the fire took...",
+              "ja": "どうして……どうしてわたしの子だけが……あの火に……"
+            }
+          ]
+        },
         "keep": {
           "lines": [
-            { "zh": "这些都是那孩子的东西……谁也不许碰！", "en": "These are all my little girl's things... nobody touches them!", "ja": "これは全部あの子のものよ……誰にも触らせない！" },
-            {
-              "zh": "你看，她的照片、我的日记、她的小床……都在这里陪着我。",
-              "en": "Look - her photo, my diary, her little bed... they all stay here with me.",
-              "ja": "ほら、あの子の写真も、わたしの日記も、あの子のベッドも……みんなここにいるの。"
-            }
+            { "zh": "这些都是那孩子的东西……谁也不许碰！", "en": "These are all my little girl's things... nobody touches them!", "ja": "これは全部あの子のものよ……誰にも触らせない！" }
           ]
         },
         "photo": {
@@ -785,6 +808,77 @@
               "zh": "啊……你在这里啊。妈妈找了你好久……我们回家吧。",
               "en": "Ah... there you are. Mommy looked for you so long... let's go home.",
               "ja": "ああ……ここにいたのね。ママ、ずっと探してたのよ……おうちに帰りましょう。"
+            }
+          ]
+        }
+      },
+      "qq": {
+        "intro": {
+          "lines": [
+            { "zh": "……校则第一条。放学后，禁止在校园里逗留。", "en": "...School rule number one. No staying on campus after school.", "ja": "……校則第一条。放課後の居残りは、禁止です。" },
+            { "zh": "风纪检查。你们两个……裙子太短了。", "en": "Dress code inspection. You two... your skirts are too short.", "ja": "風紀検査です。あなたたち……スカートが短すぎます。" }
+          ]
+        },
+        "s2": {
+          "lines": [
+            {
+              "zh": "违反校规的学生……全部、全部、没收。",
+              "en": "Students who break the rules... are confiscated. All of them. All of them.",
+              "ja": "校則違反の生徒は……ぜんぶ、ぜんぶ、没収です。"
+            }
+          ]
+        },
+        "s3": {
+          "lines": [
+            { "zh": "好痛……谁来……把这个从我身上拿走……", "en": "It hurts... someone... take this thing off me...", "ja": "いたい……だれか……これを、わたしからとって……" }
+          ]
+        },
+        "s4": {
+          "lines": [
+            { "zh": "秩序、秩序、秩序……一个都不许跑！", "en": "Order, order, order... nobody leaves!", "ja": "秩序、秩序、秩序……ひとりも逃がしません！" }
+          ]
+        },
+        "s5": {
+          "lines": [
+            {
+              "zh": "……求求你们，打碎它……趁我还记得自己是谁……",
+              "en": "...Please, break it... while I still remember who I am...",
+              "ja": "……おねがい、壊して……わたしが、わたしでいられるうちに……"
+            }
+          ]
+        },
+        "end": {
+          "lines": [
+            { "zh": "……谢谢。明天……我会好好来上学的。", "en": "...Thank you. Tomorrow... I'll come to school properly.", "ja": "……ありがとう。あしたは……ちゃんと、学校にくるね。" }
+          ]
+        }
+      },
+      "she": {
+        "intro": {
+          "lines": [
+            { "zh": "找到你们了……一起来玩剪纸游戏吧？", "en": "Found you... want to play paper-cutting with me?", "ja": "みぃつけた……いっしょに、きりがみあそび、しよ？" }
+          ]
+        },
+        "form1": {
+          "lines": [
+            {
+              "zh": "咔嚓、咔嚓，剪成两半……就有两个人陪我玩了。",
+              "en": "Snip, snip, cut in two... then there are two of you to play with.",
+              "ja": "チョキチョキ、ふたつにわけたら……ふたりで遊べるね。"
+            }
+          ]
+        },
+        "form2": {
+          "lines": [
+            { "zh": "纸人们，都到我这里来……我要变得好大好大。", "en": "Paper dolls, come to me... I'm going to grow so big.", "ja": "かたしろさんたち、みんなおいで……わたし、おおきくなるの。" }
+          ]
+        },
+        "end": {
+          "lines": [
+            {
+              "zh": "钟声……好吵……妈妈，我想回柜子里去……",
+              "en": "The bell... it's so loud... Mother, I want to go back in my case...",
+              "ja": "かねのおと……うるさいよ……おかあさん、ケースにかえりたい……"
             }
           ]
         }

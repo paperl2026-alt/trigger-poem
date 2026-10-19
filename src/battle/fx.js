@@ -613,12 +613,13 @@ export class FX {
         const S = r * 2 / 0.8;   // the shader's ring sits at 0.4 of the quad
         g.position.set(x, y, 0);
         ring.scale.set(S, S, 1);
-        U.time.value = t; U.p.value = p; U.a.value = born * (urgent ? 0.85 + 0.15 * beat : 1);
+        const ck = 1 - (game.hud?.gl?.cine || 0);   // (a close look, Game.cine: the rings step back with the HUD)
+        U.time.value = t; U.p.value = p; U.a.value = born * ck * (urgent ? 0.85 + 0.15 * beat : 1);
         // the winged heart's quad is centred a little above the heart itself (marks.js markCanvas: the heart at 0.593 of its height)
         if (crest && !hide) {
           const img = crest.material.uniforms.map.value.image, w = Math.max(H * 0.15, r * 1.6), h = w * img.height / img.width;
           crest.scale.set(w, h, 1); crest.position.set(0, r + h * 0.093, 0); crest.rotation.z = 0;
-          const u = crest.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.25; u.a.value = born; u.flash.value = urgent && beat > 0.85 ? 0.5 : 0;
+          const u = crest.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.25; u.a.value = born * ck; u.flash.value = urgent && beat > 0.85 ? 0.5 : 0;
         }
         if (!hide) return;
         // the far half behind the monster: on the line from the camera through its centre, a little further away

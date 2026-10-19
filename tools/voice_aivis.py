@@ -115,6 +115,24 @@ def bend(name, a, sr, key):   # a boss's voice bent a little (voices.<who>.fx), 
         y = np.concatenate([y, np.zeros(len(wet) - len(y))]) + wet * 0.22 * np.abs(y).max()
         f = int(0.3 * sr); y[-f:] *= np.linspace(1, 0, f)
         return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
+    if name == "glitch":   # a possessed schoolgirl on a broken PA: a touch higher, the first syllable caught, a metallic ring, crushed, a short hall
+        y = MV.tape(a, 1.0)
+        y = MV.stutter(y, sr, rng)
+        y = y * 0.75 + MV.ring(y, sr, 90, 1.0) * 0.25
+        k = 2; y = np.repeat(y[::k], k)[:len(y)]
+        n = int(0.7 * sr); ir = rng.standard_normal(n) * np.exp(-np.linspace(0, 9, n))
+        wet = MV.signal.fftconvolve(y, ir); wet = wet / (np.abs(wet).max() + 1e-9)
+        y = np.concatenate([y, np.zeros(len(wet) - len(y))]) + wet * 0.15 * np.abs(y).max()
+        f = int(0.2 * sr); y[-f:] *= np.linspace(1, 0, f)
+        return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
+    if name == "doll":   # a doll whispering in your ear: higher, a faint metallic ring, a little crushed, a breathy whisper layer, close and dry
+        y = MV.tape(a, 2.0)
+        y = y * 0.85 + MV.ring(y, sr, 160, 1.0) * 0.15
+        k = 2; y = np.repeat(y[::k], k)[:len(y)]
+        wh = MV.vocoder(y, sr, rng.standard_normal(len(y)), bands=24, lo=500, hi=9000)
+        y = y + wh / (np.abs(wh).max() + 1e-9) * 0.3 * np.abs(y).max()
+        f = int(0.05 * sr); y[-f:] *= np.linspace(1, 0, f)
+        return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
     raise SystemExit(f"unknown fx {name}")
 
 

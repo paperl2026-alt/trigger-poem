@@ -743,6 +743,10 @@ export class HudGL {
     this.holdUI = new Hold(this);
     this.alerts = new Alerts(this);
     this.visible = true;
+    // a close look (Game.cine): black bars come in top and bottom; the HUD steps back but the lines (stickers) and the warning overlay
+    this.cine = 0; this.cineHid = null;
+    this.bars = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x050307, depthTest: false, depthWrite: false }));
+      m.renderOrder = 72; m.frustumCulled = false; m.visible = false; this.g.add(m); return m; });
   }
   show(v) { this.visible = v; this.g.visible = v; }
   react(slot, kind, hold) { this.panels[slot]?.react(kind, hold); }
@@ -769,6 +773,16 @@ export class HudGL {
     this.stickers.update(dt, t);
     this.alerts.update(dt, t);
     this.holdUI.update(dt, t);
+    this.cineUpdate(dt);
+  }
+  cineUpdate(dt) {
+    const g = this.game, k = this.cine = this.cine + ((g.cineOn ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H, bh = H * 0.11 * k;
+    this.bars.forEach((m, i) => { m.visible = k > 0.01; m.scale.set(W * 1.02, bh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0); });
+    const keep = [this.stickers.layer, this.holdUI.g, ...this.bars];
+    if (k > 0.3) {   // (what each part shows is its own business: hidden on top of it every frame, given back as it was at the end)
+      if (!this.cineHid) { this.cineHid = new Map(); for (const c of this.g.children) if (!keep.includes(c)) this.cineHid.set(c, c.visible); }
+      for (const c of this.cineHid.keys()) c.visible = false;
+    } else if (this.cineHid) { for (const [c, v] of this.cineHid) c.visible = v; this.cineHid = null; }
   }
   dispose() { this.game.overlay.remove(this.g); }
 }

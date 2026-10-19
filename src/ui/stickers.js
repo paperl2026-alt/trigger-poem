@@ -142,10 +142,11 @@ export class Stickers {
     const g = this.game, b = g.box(a), Hh = this.hud.L.H, h = Hh * 0.05, cx = (b.x0 + b.x1) / 2;
     voice(a.id, kind, li, 0, 7, Math.max(-0.6, Math.min(0.6, (cx / g.W - 0.5) * 1.2)));
     const f = this.bossF;
-    f.show(kind, text, 0, 0, h, 1, { tag: a.def.tag || 'BOSS', life: Math.max(2.4, voiceLen(a.id, kind, li) + 0.7, [...text].length * 0.14) });
+    f.show(kind, text, 0, 0, h, 1, { tag: a.tag || a.def?.tag || 'BOSS', life: Math.max(2.4, voiceLen(a.id, kind, li) + 0.7, [...text].length * 0.14) });
     const spot = this.hud.space.find(f.w * 1.1, h * 2.4, [{ x: cx, y: Hh - b.y0 + h * 1.6 }, { x: b.x1 + f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 },
       { x: b.x0 - f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 }, { x: this.hud.L.W / 2, y: Hh * 0.82 }]);
     f.x = spot.x; f.y = spot.y; f.dir = spot.x >= cx ? 1 : -1; f.spot = spot;
+    return voiceLen(a.id, kind, li) || [...text].length * 0.13;   // (how long it is said: a close look holds for it)
   }
   monster(a, kind) {
     if (this.hud.holdUI?.on || this.monCd > 0) return;

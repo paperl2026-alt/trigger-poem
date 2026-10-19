@@ -159,7 +159,7 @@ export class World {
     this.scene.fog.density += (want - this.scene.fog.density) * Math.min(1, dt * 2);
     FOG.density.value = this.scene.fog.density;
     // camera: rail position + look sway toward 1P's reticle
-    const c1 = g.players[0]?.ctrl, on = c1 && c1.active;
+    const c1 = g.players[0]?.ctrl, on = c1 && c1.active && !g.cineOn;   // (a close look, Game.cine: held still)
     const lx = on ? c1.x / g.W - 0.5 : 0, ly = on ? c1.y / g.H - 0.5 : 0;
     this.look.x += (lx - this.look.x) * Math.min(1, dt * 4);
     this.look.y += (ly - this.look.y) * Math.min(1, dt * 4);
@@ -170,7 +170,7 @@ export class World {
     cam.lookAt(this.lookAt);
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
-    const fov = this.baseFov + this.fovKick;
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0);
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     this.level.update(dt, t, cam);

@@ -10,7 +10,9 @@
 //   (Game.turn); { spawn: [enemy spawns] }; { say: kind } a girl's line (text/stickers.json); { sfx: name }; { gone } it fades away;
 //   { ritual: i } offered to the boss (thing.js offer); (DESIGN「地形和机关」) { light: step } it becomes kx at once and lights the dark room
 //   a step (PanelWorld.addLamp); { topple: angle, seal: id } a standing thing tips over sideways (radians, + = to the left) onto the hole a
-//   spawner pours out of and stops it (Game.sealSpawner); { gate: true } one of the seals holding the drawbridge (PanelWorld.gateHit)
+//   spawner pours out of and stops it (Game.sealSpawner); { gate: true } one of the seals holding the drawbridge (PanelWorld.gateHit);
+//   (shown up close, a station's focus: Game.arrive) { twitch: { n, amp, every, creak } } it jerks; { flicker: seconds } the lights flicker;
+//   { swap: true } it is kx at once (no page turn: it changed while the lights were out)
 import { Actor } from './enemies.js';
 import { tex } from '../core/assets.js';
 import { sfx, sound } from '../core/audio.js';
@@ -78,6 +80,9 @@ export class Gimmick extends Actor {
       } });
     }
     if (e.gate) g.world.gateHit?.();
+    if (e.twitch) this.twitch(e.twitch);
+    if (e.flicker) g.flicker(e.flicker);
+    if (e.swap && this.g.kx) this.setFrame(this.g.kx);
     // episode 2 (src/battle/chase.js): it falls from where it hangs (drop: { t }), onto her if she is under it (trap: { r, down, hold });
     // a door / shutters slammed between her and the girls (door: { hold }); a clock struck to draw her away (lure: { t }); meter: time earned
     if (e.drop) this.drop(e.drop);
@@ -92,6 +97,17 @@ export class Gimmick extends Actor {
     if (e.free) g.chase?.freeCrow(this);       // (the crow let out of its cage)
     if (e.collapse) g.collapse();              // (the storehouse's floor hatch: down into the cave)
     if (e.gone) g.tweens.run(0.6, (k) => { this.u.opacity.value = 1 - k; }, { onDone: () => { this.alive = false; this.dispose(); } });
+  }
+  // it jerks (a doll in its case twitching): n sudden little tilts and shoves, every s seconds
+  twitch(T) {
+    const g = this.game, amp = T.amp ?? 0.05;
+    if (T.creak) sfx.creak();
+    for (let i = 0; i < (T.n ?? 1); i++) g.tweens.wait(i * (T.every ?? 0.2), () => {
+      const s = Math.random() < 0.5 ? -1 : 1;
+      g.tweens.run(0.16, (e) => { const k = Math.sin(e * Math.PI) * (1 - e * 0.5); this.inner.rotation.z = s * amp * k; this.inner.position.x = s * amp * 0.5 * k; },
+        { onDone: () => { this.inner.rotation.z = 0; this.inner.position.x = 0; } });
+      sfx.thud?.(0);
+    });
   }
   // a hanging thing comes down (its chain shot through): falls flat onto the floor with a crash
   drop(spec) {
