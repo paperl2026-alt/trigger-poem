@@ -206,7 +206,7 @@ Codex 只出静态底子；好看、会动的部分由程序做，几种手段�
   - **魔王魂**（maou.audio）：CC BY 4.0，可商用，**含性描写在内的所有内容都能用**，游戏里加密打包也允许；署名「効果音：魔王魂」。有效果音整包下载（maou.audio/all/ → 効果音一括ダウンロード）。
   - **OtoLogic**（otologic.jp）：CC BY 4.0，可商用，**有年龄限制的表现也可以**；署名「OtoLogic」。每组音效一个 MP3 zip（几个变体）。
   - **効果音ラボ**：可商用、不用署名，但**禁止用在成人作品 / 有违公序良俗的作品**；本作擦边，尽量不用。
-  - 两站都挡程序下载（OtoLogic 是 Cloudflare 人机验证，魔王魂防盗链），不绕：由用户在浏览器里下载，放进 `art/raw/sfx_dl/<站名>/`（不进 git）。
+  - 两站都挡程序下载（OtoLogic 是 Cloudflare 人机验证，魔王魂防盗链），不绕：由用户在浏览器里下载，放进 `art/raw/sfx_dl/<站名>/`。
 - 挑选：`electron tools/node/sfx_scan.cjs <文件夹> <输出>` 把每个文件解码、量出时长 / 起音 / 余音 / 亮度 / 响度，画成声纹总览图（按亮度着色），Claude 照 content `audio/sounds.json` 每种声音写的 want 挑；挑中的复制进内容包 `sfx/<站名>/`，文件名保留原名（方便署名、查出处）。
 - 音量和开头静音不用手调：游戏加载时自动量峰值、拉到同一峰值、从第一声开始放（audio.js level），sounds.json 的 vol 是唯一的响度选择。
 - 用户下载的原始包在 `art/raw/sfx_dl/`（魔王魂效果音整包、9 个魔王魂 BGM 整包、OtoLogic 17 组），`python -I tools/sfx_unpack.py <输出> <zip...>` 解到 `art/raw/sfx_dl/se/<包名>/`（只取音频、防止解到外面），`sfx_scan` 的结果在 `art/raw/sfx_dl/scan/`。

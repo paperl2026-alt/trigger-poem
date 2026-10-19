@@ -84,6 +84,9 @@ git add -A
 git commit -q -m "备份前自动存档" >nul 2>&1
 git bundle create "%DEST%\trigger-poem_%TS%.bundle" --all
 if errorlevel 1 (echo 备份失败，把这个窗口截图发给 Claude。) else (echo 已备份到 %DEST%\trigger-poem_%TS%.bundle)
-echo 这一个文件就是全部存档历史；C 盘坏了也能从它完整恢复。旧的备份不会自动删。
+echo 原图不进存档（只在本机）：另外拷一份到 %DEST%\raw\（只拷新的和改过的）……
+robocopy "art\raw" "%DEST%\raw" /E /XO /R:1 /W:1 /NFL /NDL /NJH /NJS /NP >nul
+if errorlevel 8 (echo 原图备份失败，把这个窗口截图发给 Claude。) else (echo 原图已备份到 %DEST%\raw\)
+echo 存档历史 + 原图文件夹就是全部；C 盘坏了也能从它们完整恢复。旧的备份不会自动删。
 pause
 exit /b

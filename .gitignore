@@ -13,23 +13,13 @@ trigger-poem-portable.zip
 art/jobs/
 # the dev build's save files next to the project (electron/store.cjs)
 saves/
-# downloaded sound-effect sources (tools/rounds/sfx_import.py turns them into the content pack)
-art/raw/sfx_dl/
 # the voice-synthesis engine (official AivisSpeech zip) and ffmpeg, unpacked here by hand (tools/voice_aivis.py)
 tools/aivis/
 tools/ffmpeg/
 # downloaded KTX tools (KTX2 was dropped: user 2026-10-18)
 tools/ktx/
-art/raw/bgm/*.wav
-art/raw/bgm/*.mp3
-art/raw/sfx_ai/**/*.wav
-art/raw/bgm_ai/**/*.wav
 # ACE-Step's own cache when it runs from the project folder (tools/bgm_ace.py)
 .cache/
-# the sheets the sound / music pickers draw (tools/sfx_look.py, sfx_pick.py, bgm_pick.py): made again on every run
-art/raw/sfx_ai/_look/*.png
-art/raw/bgm_ai/_look/*.png
-art/raw/bgm_ai/_raw/
-# the cut-out check's overview sheets (tools/cutout_check.py)
-art/raw/_cutout/
-art/raw/monster_vo/**/*.wav
+# the raw art, Codex's pictures and every generated sound / music version: only on this machine, never on GitHub (user 2026-10-20);
+# 开始游戏.bat [5] copies it to the backup drive with the history bundle
+art/raw/
