@@ -983,7 +983,7 @@ export class Projectile extends Actor {
     const box = this.screenBox();
     // its sight: drawn on it and its hit zone (screen px, y down like the pointer): generous, it grows as it comes closer
     this.sightX = s.x; this.sightY = s.y; this.sightR = Math.max(this.game.H * T.combat.sightMin, (box.y1 - box.y0) * T.combat.sightK);
-    this.lock.set(s.x, this.game.H - s.y, this.sightR, k, tt);
+    this.lock.set(s.x, this.game.H - s.y, this.sightR, k, tt, undefined, box, this.root.position);
     if (k >= 1) {
       this.alive = false;
       this.lock.remove(); this.lock = null;

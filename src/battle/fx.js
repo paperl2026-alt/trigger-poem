@@ -140,7 +140,7 @@ const runeTex = () => canvasTex(256, 256, (g) => {
 // the orbit marker's ring (fx.orbit): drawn on a quad, the ring at 0.4 of it
 const ORBIT_FRAG = `
 uniform vec3 col; uniform float a; uniform float time; uniform float p; uniform float hide; uniform float tilt; uniform float squash;
-uniform float side; uniform float flare; uniform float flareA;
+uniform float side; uniform float flare; uniform float flareA; uniform float inner3;
 varying vec2 vUv;
 float h1(float n){ return fract(sin(n) * 43758.5453); }
 void main(){
@@ -191,7 +191,7 @@ void main(){
     float glow = exp(-d * 18.0);
     // the dashed inner ring, turning the other way
     float d2 = abs(R - 0.33);
-    float dash = smoothstep(0.012, 0.003, d2) * step(0.45, fract((ang + spin * 0.7) * 12.0 / 6.2832));
+    float dash = smoothstep(0.012, 0.003, d2) * step(0.45, fract((ang + spin * 0.7) * 12.0 / 6.2832)) * (1.0 - inner3);   // (inner3: a 3D ring is there instead)
     // four arrowheads on the ring pointing in, turning
     float tri = 0.0;
     for (int k = 0; k < 4; k++) {
@@ -216,7 +216,81 @@ void main(){
   }
   gl_FragColor = vec4(c, al * a);
 }`;
-const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3();
+
+// The orbit marker's rings that are really in the world (fx.orbit, docs/PLAN.md 技术验证「提醒环做成真 3D」; the user: R-Type's 3D frame
+// going round the ship): tori round the thing's centre, seen in perspective: a white-hot line along the middle of the tube, its colour,
+// ink at its edges (it reads on bright walls too), a soft halo. Each ring is drawn twice: its near half after everything (never hidden,
+// like the HUD rings), its far half in the world among the paper things, sorted as if it stood a little behind the thing (shift: its
+// mesh's origin is moved back that far and the vertex shader takes it off again), so the thing and whatever stands before it cover it.
+const RING3_VERT = `uniform float cz; uniform vec3 shift; varying vec3 vN; varying vec3 vV; varying vec2 vUv; varying float vS;
+void main(){ vUv = uv; vec4 wp = modelMatrix * vec4(position, 1.0); wp.xyz -= shift; vec4 mv = viewMatrix * wp;
+  vV = -mv.xyz; vN = normalize(mat3(viewMatrix) * mat3(modelMatrix) * normal); vS = -mv.z - cz;
+  gl_Position = projectionMatrix * mv; }`;
+const RING3_FRAG = `uniform vec3 col; uniform float a; uniform float spin; uniform float hot; uniform float side; uniform float rad;
+uniform float dash; uniform float halo;
+varying vec3 vN; varying vec3 vV; varying vec2 vUv; varying float vS;
+void main(){
+  if (side * vS < 0.0) discard;                                    // side 1: only the far half (behind the centre); -1: only the near half
+  if (dash > 0.5 && fract(vUv.x * dash - spin * 0.25) < 0.35) discard;
+  float f = 1.0 - abs(dot(normalize(vN), normalize(vV)));         // 0 where the tube faces you, 1 at its silhouette
+  float near = clamp(0.5 - 0.5 * vS / rad, 0.0, 1.0);
+  float run = 0.7 + 0.3 * sin(vUv.x * 6.2832 * 6.0 - spin * 3.0);  // light running round it
+  if (halo > 0.5) { float g = pow(1.0 - f, 2.0); gl_FragColor = vec4(mix(col, vec3(1.0), hot * 0.6), a * g * (0.45 + 0.4 * hot) * (0.5 + 0.5 * near) * run); return; }
+  float core = pow(1.0 - f, 9.0) * (0.6 + 0.4 * run);
+  vec3 c = mix(col * 1.15, vec3(1.0), clamp(core * 0.85 + hot * 0.7, 0.0, 1.0));
+  c = mix(c, vec3(0.06, 0.02, 0.1), smoothstep(0.55, 0.9, f) * (1.0 - hot));
+  gl_FragColor = vec4(c * (0.7 + 0.3 * near), a * (0.6 + 0.4 * near));
+}`;
+// kind 'belt' (hide: the tilted belt round the monster, a thin dashed belt inside it) / 'gyro' (kill / shot: a dashed ring inside the
+// facing ring, tumbling like a gyroscope)
+function ring3d(scene, col, kind) {
+  const g = new THREE.Group(), mats = [], far = [], geos = [];
+  const add = (rad, tube, o) => {
+    const geo = new THREE.TorusGeometry(rad, tube, 10, 128); geos.push(geo);
+    for (const side of [1, -1]) {
+      const m = new THREE.ShaderMaterial({ uniforms: { col: { value: col }, a: { value: 0 }, spin: { value: 0 }, hot: { value: 0 }, side: { value: side }, rad: { value: 1 },
+        cz: { value: 0 }, shift: { value: new THREE.Vector3() }, dash: { value: o.dash || 0 }, halo: { value: o.halo ? 1 : 0 } },
+        vertexShader: RING3_VERT, fragmentShader: RING3_FRAG, transparent: true, depthTest: side > 0, depthWrite: false,
+        blending: o.halo ? THREE.AdditiveBlending : THREE.NormalBlending });
+      const mesh = new THREE.Mesh(geo, m); mesh.renderOrder = side > 0 ? 0 : 60 + (o.halo ? 0 : 1); mesh.frustumCulled = false;
+      g.add(mesh); mats.push(m); if (side > 0) far.push(mesh);
+    }
+  };
+  if (kind === 'belt') { add(1, 0.12, { halo: true }); add(1, 0.04, {}); add(0.88, 0.014, { dash: 24 }); }
+  else { add(0.8, 0.09, { halo: true, dash: 6 }); add(0.8, 0.032, { dash: 6 }); }
+  scene.add(g);
+  const Q = new THREE.Quaternion(), E = new THREE.Euler(), V = new THREE.Vector3(), V2 = new THREE.Vector3(), S = new THREE.Vector3();
+  return {
+    g,
+    // c: the centre (world), R: the radius (world), cam: the world camera; tilt / squash: how the belt leans and how flat it looks
+    set(c, R, t, p, a, hot, cam, tilt, squash) {
+      g.position.copy(c); g.scale.setScalar(R);
+      const spin = t * (0.8 + p * 3.0);
+      if (kind === 'belt') {
+        // facing the camera, rolled by tilt, then laid back until it looks squash-flat (its upper half goes away from you), slowly wobbling
+        const lay = Math.acos(squash) + Math.sin(t * 0.9) * 0.12;
+        E.set(0, 0, tilt); Q.setFromEuler(E); g.quaternion.copy(cam.quaternion).multiply(Q);
+        E.set(-lay, Math.sin(t * 0.7) * 0.1, 0); Q.setFromEuler(E); g.quaternion.multiply(Q);
+        E.set(0, 0, -spin * 0.6); Q.setFromEuler(E); g.quaternion.multiply(Q);
+      } else {
+        // a gyroscope: it turns about two axes at once, so it keeps going from a circle to a thin ellipse and back
+        g.quaternion.copy(cam.quaternion);
+        E.set(t * (1.1 + p * 2.5), t * (0.7 + p * 1.6), 0); Q.setFromEuler(E); g.quaternion.multiply(Q);
+      }
+      // the far half sorts as if it stood 0.6 behind the centre (on the line from the camera)
+      S.copy(c).sub(cam.position).normalize().multiplyScalar(0.6);
+      Q.copy(g.quaternion).invert();
+      for (const m of far) m.position.copy(S).applyQuaternion(Q).divideScalar(R);
+      const cz = V.copy(c).applyMatrix4(cam.matrixWorldInverse).z;
+      for (const m of mats) { const u = m.uniforms; u.a.value = a; u.spin.value = spin; u.hot.value = hot; u.rad.value = R; u.cz.value = -cz; u.shift.value.copy(u.side.value > 0 ? S : V2.set(0, 0, 0)); }
+    },
+    // a point on the belt at angle ang (its own plane, before its spin): the world point, and whether it is on the far half
+    at(ang, out) { out.set(Math.cos(ang), Math.sin(ang), 0).applyQuaternion(g.quaternion).multiplyScalar(g.scale.x).add(g.position); return out; },
+    far(p, cam) { return V2.copy(p).applyMatrix4(cam.matrixWorldInverse).z < V.copy(g.position).applyMatrix4(cam.matrixWorldInverse).z; },
+    dispose() { scene.remove(g); for (const m of mats) m.dispose(); for (const geo of geos) geo.dispose(); },
+  };
+}
+const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3(), TV3 = new THREE.Vector3();
 const markTex = (k) => MT[k] || (MT[k] = (() => { const t = new THREE.CanvasTexture(markCanvas(k)); t.colorSpace = THREE.NoColorSpace; return t; })());
 const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
 const notchTex = () => canvasTex(64, 64, (g) => { g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = 6; g.beginPath(); g.moveTo(32, 58); g.lineTo(6, 10); g.lineTo(58, 10); g.closePath(); g.stroke(); g.fill(); });
@@ -581,7 +655,7 @@ export class FX {
     const game = this.game, fx = this, g = new THREE.Group(), hide = kind === 'hide', small = kind === 'shot';
     const col = new THREE.Color(hide ? 0xb04dff : 0xff2a4a);
     const U = { col: { value: col }, a: { value: 0 }, time: { value: 0 }, p: { value: 0 }, hide: { value: hide ? 1 : 0 }, tilt: { value: -0.35 }, squash: { value: 0.36 },
-      side: { value: 0 }, flare: { value: 0 }, flareA: { value: 0 } };
+      side: { value: 0 }, flare: { value: 0 }, flareA: { value: 0 }, inner3: { value: 0 } };
     const quad = (u, order, depth) => {
       const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: u, vertexShader: FXVERT, fragmentShader: ORBIT_FRAG, transparent: true, depthTest: depth, depthWrite: false }));
       m.renderOrder = order; m.frustumCulled = false; return m;
@@ -595,7 +669,7 @@ export class FX {
     // the moons riding the belt (hide): the winged heart first, then two small hearts
     const moons = hide ? [crest, pic(markTex('hideHeart'), 42.6, 0.5), pic(markTex('hideHeart'), 42.6, 0.8)] : [];
     this.overlay().add(g);
-    let born = 0, prevT = null, flareT = 0.5, flareK = 9;
+    let born = 0, prevT = null, flareT = 0.5, flareK = 9, R3 = null;
     const live = this.live, cam = game.world.camera;
     const L = {
       type: kind, slot, p: 0, left: 9, x: 0, y: 0, r: 0,
@@ -615,6 +689,16 @@ export class FX {
         ring.scale.set(S, S, 1);
         const ck = 1 - (game.hud?.gl?.cine || 0);   // (a close look, Game.cine: the rings step back with the HUD)
         U.time.value = t; U.p.value = p; U.a.value = born * ck * (urgent ? 0.85 + 0.15 * beat : 1);
+        // the rings really in the world (ring3d), where the thing's centre is known: one screen pixel at its depth is kw world units
+        let kw = 0;
+        if (wc) {
+          if (!R3) R3 = ring3d(game.world.scene, col, hide ? 'belt' : 'gyro');
+          const zv = TV2.set(0, 0, -1).applyQuaternion(cam.quaternion).dot(TV.copy(wc).sub(cam.position));
+          kw = 2 * zv * Math.tan(cam.fov * Math.PI / 360) / H;
+        }
+        if (R3) R3.g.visible = !!wc;
+        U.inner3.value = R3 && wc ? 1 : 0; ring.visible = !(hide && R3 && wc);
+        if (R3 && wc && !hide) R3.set(wc, r * kw, t, p, U.a.value, 0, cam);
         // the winged heart's quad is centred a little above the heart itself (marks.js markCanvas: the heart at 0.593 of its height)
         if (crest && !hide) {
           const img = crest.material.uniforms.map.value.image, w = Math.max(H * 0.15, r * 1.6), h = w * img.height / img.width;
@@ -623,8 +707,8 @@ export class FX {
         }
         if (!hide) return;
         // the far half behind the monster: on the line from the camera through its centre, a little further away
-        const inWorld = !!wc;
-        U.side.value = inWorld ? 1 : 0; back.visible = inWorld;
+        const inWorld = !!wc, real = inWorld && !!R3;
+        U.side.value = inWorld ? 1 : 0; back.visible = inWorld; ringB.visible = !real;
         if (inWorld) {
           const cp = cam.position, dir = TV.copy(wc).sub(cp), D = dir.length();
           back.position.copy(cp).addScaledVector(dir.divideScalar(D), D + 0.6);
@@ -638,11 +722,21 @@ export class FX {
         if (flareT <= 0) { flareT = 0.6 + Math.random() * (1.1 - 0.6 * p); flareK = 0; U.flareA.value = -Math.PI / 2 + (Math.random() - 0.5) * 2.2; }
         const f = flareK < 0.05 ? flareK / 0.05 : Math.max(0, 1 - (flareK - 0.05) / 0.45);
         U.flare.value = f * f * (3 - 2 * f);
+        if (real) {
+          R3.set(wc, r * kw, t, p, U.a.value, U.flare.value, cam, U.tilt.value, U.squash.value);
+          // the eruption: a glint where the belt is nearest you
+          if (flareK === 0) { const P = R3.at(U.flareA.value, TV3); if (R3.far(P, cam)) R3.at(U.flareA.value + Math.PI, P); fx.star(P, r * kw * 0.9, COL.white); fx.star(P, r * kw * 0.45, COL.white); }
+        }
         // the moons riding the tilted belt, bigger and brighter on the near half; on the far half they go behind the monster
         moons.forEach((m, k) => {
           const img = m.material.uniforms.map.value.image;
-          const ang = -t * (1.3 + p * 2.2) + k * 2.1, ex = Math.cos(ang) * r * 1.1, ey = Math.sin(ang) * r * 1.1 * U.squash.value;
-          const c = Math.cos(U.tilt.value), sn = Math.sin(U.tilt.value), near = 0.5 - 0.5 * Math.sin(ang);
+          const ang = -t * (1.3 + p * 2.2) + k * 2.1;
+          let ex = Math.cos(ang) * r * 1.1, ey = Math.sin(ang) * r * 1.1 * U.squash.value, near = 0.5 - 0.5 * Math.sin(ang), c = Math.cos(U.tilt.value), sn = Math.sin(U.tilt.value);
+          if (real) {
+            // on the real belt: where it is on the screen, and how near (its depth against the centre's)
+            const P = R3.at(ang, TV3), s = game.world.project(P), dz = TV.copy(P).applyMatrix4(cam.matrixWorldInverse).z - TV2.copy(wc).applyMatrix4(cam.matrixWorldInverse).z;
+            ex = s.x - x; ey = (H - s.y) - y; c = 1; sn = 0; near = Math.min(1, Math.max(0, 0.5 + 0.5 * dz / (r * kw)));
+          }
           const w = (k ? Math.max(H * 0.045, r * 0.28) : Math.max(H * 0.13, r * 1.0)) * (0.75 + 0.4 * near), h = w * img.height / img.width;
           const behind = inWorld && near < 0.5;
           if (behind && m.parent !== back) { back.add(m); m.renderOrder = 0; } else if (!behind && m.parent !== g) { g.add(m); m.renderOrder = k ? 42.6 : 42.5; }
@@ -655,7 +749,7 @@ export class FX {
         live.delete(L);
         if (broken && small) fx.ringPop(L.x, L.y, L.r, col);
         for (const o of [g, back]) if (o) { o.parent && o.parent.remove(o); o.traverse((m) => { if (m.material) m.material.dispose(); }); }
-        ring.geometry.dispose(); ringB?.geometry.dispose();
+        ring.geometry.dispose(); ringB?.geometry.dispose(); R3?.dispose();
       },
     };
     live.add(L);
