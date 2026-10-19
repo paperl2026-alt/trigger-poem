@@ -1397,6 +1397,11 @@
   "src": "assets/comic/ep2p_open.webp",
   "w": 1920
  },
+ "comic/ep2p_rules": {
+  "h": 1081,
+  "src": "assets/comic/ep2p_rules.webp",
+  "w": 1920
+ },
  "cover/bookcase": {
   "h": 617,
   "relief": "cover/bookcase_rd",
@@ -17574,6 +17579,21 @@
   "src": "assets/ep2/d_threadsb.webp",
   "w": 477
  },
+ "ep2/door_fusuma": {
+  "h": 870,
+  "src": "assets/ep2/door_fusuma.webp",
+  "w": 448
+ },
+ "ep2/door_kura_l": {
+  "h": 732,
+  "src": "assets/ep2/door_kura_l.webp",
+  "w": 265
+ },
+ "ep2/door_kura_r": {
+  "h": 732,
+  "src": "assets/ep2/door_kura_r.webp",
+  "w": 262
+ },
  "ep2/furo_back1": {
   "h": 1024,
   "keyed": true,
@@ -17976,6 +17996,12 @@
   "w": 1280
  },
  "ep2/kura_back1": {
+  "door": [
+   0.327,
+   0.67,
+   0.252,
+   0.967
+  ],
   "h": 1024,
   "keyed": true,
   "src": "assets/ep2/kura_back1.webp",
@@ -24607,10 +24633,64 @@
   "src": "assets/ui/sel_thumb_ep1_studio.webp",
   "w": 1200
  },
+ "ui/sel_thumb_ep2_chika": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_chika.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_genkan": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_genkan.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_hiroma": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_hiroma.webp",
+  "w": 1200
+ },
  "ui/sel_thumb_ep2_inn": {
   "dom": true,
   "h": 363,
   "src": "assets/ui/sel_thumb_ep2_inn.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_kane": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_kane.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_kura": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_kura.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_nakaniwa": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_nakaniwa.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_room": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_room.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_run": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_run.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep2_shoro": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep2_shoro.webp",
   "w": 1200
  },
  "ui/sh_duck": {

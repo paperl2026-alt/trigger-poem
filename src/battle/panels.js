@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import { tex, meta } from '../core/assets.js';
 import { paperMesh, DamageMap, attachDamage, setRelief, FOG, NOISE_GLSL } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { shadowTex, COL } from './fx.js';
 
@@ -16,6 +16,11 @@ const tmpV = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Ve
 const rnd = (a, b) => a + Math.random() * (b - a);
 
 // a flat board w x h (metres) showing texture key with the given uv scale; pivot at its centre
+// a rectangle (x a..b, z near c .. far d) without a square hole in it (hole: { x, z, size }): the four pieces round it
+function holeRects(a, b, c, d, hole) {
+  const r = (hole.size ?? 1.6) / 2, hx0 = hole.x - r, hx1 = hole.x + r, hz0 = hole.z + r, hz1 = hole.z - r;
+  return [[a, b, c, hz0], [a, b, hz1, d], [a, hx0, hz0, hz1], [hx1, b, hz0, hz1]].filter(([p, q, u, v]) => q - p > 0.01 && u - v > 0.01);
+}
 function board(key, w, h, opts = {}) {
   const geo = new THREE.PlaneGeometry(w, h);
   if (opts.uv) { const uv = geo.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * opts.uv[0] + (opts.uv0?.[0] || 0), uv.getY(i) * opts.uv[1] + (opts.uv0?.[1] || 0)); }
@@ -67,9 +72,10 @@ void main(){
 
 // a hole broken through a wall / the ceiling (DESIGN「演出」: walls are not to be trusted): a jagged dark opening, a pale broken rim, cracks
 // running out; drawn by the program, a few versions
-const HOLES = [];
-function holeTex() {
-  if (HOLES.length < 3) {
+const HOLES = [], HOLES_T = [];
+function holeTex(through = false) {   // (through: the middle see-through, only the torn rim - a hole cut right through, cutWall)
+  const HS = through ? HOLES_T : HOLES;
+  if (HS.length < 3) {
     const c = document.createElement('canvas'); c.width = c.height = 256;
     const g = c.getContext('2d'), R = 128;
     const jag = (r0, r1, n) => Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2, r = r0 + Math.random() * (r1 - r0); return [R + Math.cos(a) * r, R + Math.sin(a) * r]; });
@@ -85,9 +91,10 @@ function holeTex() {
     fill(jag(70, 98, 32), 'rgb(118,68,58)');
     const gr = g.createRadialGradient(R, R, 8, R, R, 92); gr.addColorStop(0, '#040108'); gr.addColorStop(1, '#22101a');
     fill(jag(56, 86, 36), gr);
-    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; HOLES.push(t);
+    if (through) { g.globalCompositeOperation = 'destination-out'; fill(jag(60, 80, 36), '#000'); g.globalCompositeOperation = 'source-over'; }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; HS.push(t);
   }
-  return HOLES[Math.floor(Math.random() * HOLES.length)];
+  return HS[Math.floor(Math.random() * HS.length)];
 }
 
 // the drawbridge's deck: old planks side by side, two iron bands with rivets (drawn by the program)
@@ -178,17 +185,22 @@ export class PanelWorld {
     this.flips = [];
     const flip = (m, key, side, alt = `${key}_x`) => { if (tex[alt]) this.flips.push({ m, key, alt, side, p: 0, d: 0 }); return m; };
     const keyed = (k) => !!(meta[k]?.keyed || /W$/.test(k));
+    this.wallB = [];   // (the side walls' boards: a hole can be cut through one, cutWall)
     const rows = Hd.rows || 1, rh = h / rows;   // (a tall place: its walls stacked in rows, each row a picture of its own)
     const KL2 = rows > 1 && KL ? order(Hd.left, bays * rows, seed + 5) : KL, KR2 = rows > 1 && KR ? order(Hd.right, bays * rows, seed + 6) : KR;
     for (let i = 0; i < bays; i++) {
       const zc = z0 - (i + 0.5) * bay;
       for (let r = 0; r < rows; r++) {
         const kl = KL2?.[i * rows + r], kr = KR2?.[i * rows + r], yc = (r + 0.5) * rh;
-        if (KL) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); }
-        if (KR) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); }
+        if (KL) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); this.wallB.push({ m: l, on: 'left', key: kl, zc, yc, rh }); }
+        if (KR) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); this.wallB.push({ m: rr, on: 'right', key: kr, zc, yc, rh }); }
       }
       // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
-      if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
+      const cut = (Hd.shafts || []).find((s) => s.at === 'ceil' && Math.abs(s.z - zc) < bay / 2);   // (a shaft above: the ceiling round its hole)
+      if (KC && cut) for (const [a, b, c2, d] of holeRects(x0, x1, zc + bay / 2, zc - bay / 2, cut)) {
+        const pc = board(KC[i], b - a, c2 - d, { uv: [(b - a) / Hd.tile, (c2 - d) / Hd.tile], uv0: [(a - x0) / Hd.tile, (i * bay + (zc + bay / 2 - c2)) / Hd.tile] });
+        pc.position.set((a + b) / 2, h, (c2 + d) / 2); pc.rotation.x = Math.PI / 2; put(pc, zc); flip(pc, KC[i], 0);
+      } else if (KC) { const c = board(KC[i], W, bay, { uv: [W / Hd.tile, bay / Hd.tile], uv0: [0, i * bay / Hd.tile] }); c.position.set((x0 + x1) / 2, h, zc); c.rotation.x = Math.PI / 2; put(c, zc); flip(c, KC[i], 0); }
     }
     // the end wall, the void behind it, the outside seen through the windows
     const ek = Hd.end ? order(Hd.end, 1, seed + 3)[0] : null;
@@ -268,6 +280,13 @@ export class PanelWorld {
       put(m, d.z);
       if (d.anomaly) { m.visible = false; (this.anomalyDecals || (this.anomalyDecals = [])).push(m); }
     }
+    // the ways between places (hall.ways / stairs / shafts, tools/rounds/ep2_level.py; DESIGN 第 2 话「场景之间怎么走」): a short passage
+    // behind a doorway the camera really walks into, a door in it that opens, stairs up to a doorway high in a wall, a shaft above a hole
+    // in the ceiling (a fall into the cave, a ladder up) or below one in the floor (a trapdoor)
+    this.ways = {};
+    for (const wy of Hd.ways || []) this.buildWay(wy);
+    for (const s of Hd.stairs || []) this.buildStairs(s);
+    for (const s of Hd.shafts || []) this.buildShaft(s);
     // props standing in the corridor (relief drawings), and every station's covers: placed in the level, there from the start
     this.coverSets = {};
     for (const [sid, st] of Object.entries(S.stations)) this.coverSets[sid] = (st.covers || []).map((c) => this.makeCover(c, st, sid));
@@ -389,10 +408,99 @@ export class PanelWorld {
     }
   }
 
+  // ---------------------------------------------------------------- the ways between places
+  // a passage behind a doorway (way: { id, wall: end | back, x0, x1, y0, y1 (metres), depth, door }): floor, walls and ceiling in the
+  // place's own pictures, darker, black at its far end
+  buildWay(wy) {
+    const Hd = this.set.hall, back = wy.wall === 'back', zw = back ? Hd.z0 : Hd.z1, dir = back ? 1 : -1, D = wy.depth ?? 2.6;
+    const w = wy.x1 - wy.x0, hh = wy.y1 - wy.y0, xc = (wy.x0 + wy.x1) / 2, g = new THREE.Group(); g.position.set(xc, wy.y0, zw); this.root.add(g);
+    const fk = [].concat(Hd.floor)[0], wk = [].concat(Hd.left || Hd.right || Hd.floor)[0], ck = [].concat(Hd.ceil || Hd.floor)[0];
+    const dim = (m, k) => { m.material.color.setScalar(k); return m; };
+    const fl = dim(board(fk, w, D, { uv: [w / Hd.tile, D / Hd.tile] }), 0.55); fl.rotation.x = -Math.PI / 2; fl.position.set(0, 0.01, dir * D / 2); g.add(fl);
+    const ce = dim(board(ck, w, D, { uv: [w / Hd.tile, D / Hd.tile] }), 0.3); ce.rotation.x = Math.PI / 2; ce.position.set(0, hh, dir * D / 2); g.add(ce);
+    for (const s of [-1, 1]) { const sw = dim(board(wk, D, hh, { uv: [D / (Hd.bay || 4), hh / Hd.h] }), 0.38); sw.rotation.y = -s * Math.PI / 2; sw.position.set(s * w / 2, hh / 2, dir * D / 2); g.add(sw); }
+    const cap = new THREE.Mesh(new THREE.PlaneGeometry(w + 0.4, hh + 0.4), new THREE.MeshBasicMaterial({ color: 0x050307, side: THREE.DoubleSide }));
+    cap.position.set(0, hh / 2, dir * D); g.add(cap);
+    const W = this.ways[wy.id] = { ...wy, g, zw, dir, D, xc, w, hh, leaves: [], k: 0 };
+    if (wy.door) this.buildDoor(W);
+  }
+  // a door in the doorway (door: { kind: slide | swing, k: [leaf pictures], side, open }): sliding fusuma, iron doors swinging on hinges
+  buildDoor(W) {
+    const d = W.door, keys = [].concat(d.k), n = keys.length, lw = W.w / n;
+    keys.forEach((k, i) => {
+      const m = board(k, lw, W.hh, {}), piv = new THREE.Group(), sx = n > 1 ? (i ? 1 : -1) : (d.side ?? 1);
+      if (W.dir > 0) m.rotation.y = Math.PI;   // (in a back wall: its painted side toward the room)
+      if (d.kind === 'swing') { piv.position.set(sx * W.w / 2, W.hh / 2, -W.dir * 0.03); m.position.set(-sx * lw / 2, 0, 0); }
+      else piv.position.set((i - (n - 1) / 2) * lw, W.hh / 2, -W.dir * 0.03);
+      piv.add(m); W.g.add(piv); W.leaves.push({ piv, i, sx, x0: piv.position.x, lw });
+    });
+    this.setDoor(W, d.open ? 1 : 0);
+  }
+  setDoor(W, k) {   // 0 shut .. 1 open: fusuma slide aside into the wall, iron doors swing into the room
+    W.k = k;
+    for (const L of W.leaves) {
+      if (W.door.kind === 'swing') L.piv.rotation.y = (L.sx < 0 ? 1 : -1) * W.dir * k * 1.7;
+      else L.piv.position.x = L.x0 + L.sx * L.lw * 0.96 * k;
+    }
+  }
+  // open / shut a way's door (dur seconds; slam: shut hard)
+  door(id, open, dur = 0.7, then) {
+    const W = this.ways?.[id], g = this.game;
+    if (!W || !W.leaves.length || (W.k > 0.5) === open) { then && then(); return; }
+    const from = W.k, to = open ? 1 : 0, swing = W.door.kind === 'swing';
+    sound(swing ? (open ? 'doorCreak' : 'doorSlam') : 'fusumaOpen', { pos: W.g.position }) || (swing ? (open ? sfx.creak() : sfx.slam()) : sfx.panel());
+    g.tweens.run(dur, (e) => this.setDoor(W, from + (to - from) * e), { ease: open ? Ease.inOutCubic : Ease.inQuad, onDone: () => {
+      if (!open && swing) { g.post.shake(1.0); sfx.thud(0); }
+      then && then();
+    } });
+  }
+  // where a way is, for walking through it: in front of it in the room (front, eye height), its doorway, deep in its passage (far)
+  wayPoints(id) {
+    const W = this.ways?.[id]; if (!W) return null;
+    const y = W.y0 + 1.15, z = W.zw;
+    return { front: [W.xc, y, z - W.dir * 1.1], door: [W.xc, y, z], far: [W.xc, y, z + W.dir * (W.D - 0.5)], W };
+  }
+  // stairs up to a doorway high in a wall (stairs: { x, w, z0: the foot, z1: the top, y1: the top's height, n: steps, tint }): solid
+  // steps (wood treads, darker risers), a stringer each side, banister rails
+  buildStairs(s) {
+    const Hd = this.set.hall, n = s.n, rise = s.y1 / n, run = (s.z0 - s.z1) / n, fk = [].concat(Hd.floor)[0], t = tex[fk];
+    const tread = new THREE.MeshBasicMaterial({ map: t || null, color: new THREE.Color(s.tint || '#ffffff') });
+    const riser = new THREE.MeshBasicMaterial({ map: t || null, color: new THREE.Color(s.tint || '#ffffff').multiplyScalar(0.55) });
+    const side = new THREE.MeshBasicMaterial({ map: t || null, color: new THREE.Color(0.35, 0.24, 0.18) });
+    for (let i = 0; i < n; i++) {
+      const top = rise * (i + 1), z = s.z0 - run * (i + 0.5);
+      const b = new THREE.Mesh(new THREE.BoxGeometry(s.w, top, run), [side, side, tread, side, riser, riser]);
+      b.position.set(s.x, top / 2, z); this.root.add(b);
+    }
+    for (const sd of [-1, 1]) {   // (the rails: up the slope at hand height, a post at the foot and the top)
+      const x = s.x + sd * (s.w / 2 + 0.04), a = new THREE.Vector3(x, 0.95, s.z0 - run * 0.5), b = new THREE.Vector3(x, s.y1 + 0.95, s.z1 + run * 0.5);
+      this.root.add(rod(a, b, 0.035), rod(new THREE.Vector3(x, 0, s.z0 - run * 0.5), a, 0.05), rod(new THREE.Vector3(x, s.y1, s.z1 + run * 0.5), b, 0.05));
+    }
+  }
+  // a shaft above a hole in the ceiling (at: ceil) or below one in the floor (at: floor): { x, z, size, h, ladder }; four walls in the
+  // place's own pictures, darker, black at its end; a ladder up one side
+  buildShaft(s) {
+    const Hd = this.set.hall, up = s.at !== 'floor', y0 = up ? Hd.h : 0, hh = s.h ?? 3, sz = s.size ?? 1.6, g = new THREE.Group();
+    g.position.set(s.x, up ? y0 + hh / 2 : -hh / 2, s.z); this.root.add(g);
+    const wk = [].concat(Hd.left || Hd.right || Hd.floor)[0];
+    for (let i = 0; i < 4; i++) {
+      const m = board(wk, sz, hh, { uv: [sz / (Hd.bay || 4), hh / Hd.h] }); m.material.color.setScalar(0.4);
+      const a = i * Math.PI / 2; m.position.set(Math.sin(a) * sz / 2, 0, Math.cos(a) * sz / 2); m.rotation.y = a + Math.PI; g.add(m);
+    }
+    const cap = new THREE.Mesh(new THREE.PlaneGeometry(sz, sz), new THREE.MeshBasicMaterial({ color: 0x050307, side: THREE.DoubleSide }));
+    cap.rotation.x = Math.PI / 2; cap.position.y = up ? hh / 2 : -hh / 2; g.add(cap);
+    if (!up) for (const t of this.tiles) if (Math.abs(t.x - s.x) < sz / 2 + 0.3 && Math.abs(t.z - s.z) < sz / 2 + 0.3) t.g.visible = false;   // (the trapdoor: no floor there)
+    if (s.ladder) {   // (two rails and rungs on the far side, from the floor below up through the shaft)
+      const z = s.z - sz / 2 + 0.12, ya = up ? (s.ladderFrom ?? y0 - 2.4) : -hh, yb = up ? y0 + hh : 0.9;
+      for (const sd of [-0.25, 0.25]) this.root.add(rod(new THREE.Vector3(s.x + sd, ya, z), new THREE.Vector3(s.x + sd, yb, z), 0.03));
+      for (let y = ya + 0.3; y < yb; y += 0.32) this.root.add(rod(new THREE.Vector3(s.x - 0.25, y, z), new THREE.Vector3(s.x + 0.25, y, z), 0.022));
+    }
+  }
   // a hole broken through (on: left | right | end | back | ceil | floor, p: a world point on that surface, size in metres); it bursts open
-  addHole(on, p, size = 1.8) {
+  addHole(on, p, size = 1.8, through = false) {   // (through: really cut through the wall - a way to walk on through: cutWall)
     const Hd = this.set.hall, g = new THREE.Group();
-    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: holeTex(), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 }));
+    if (through && (on === 'left' || on === 'right')) this.cutWall(on, p.z, p.y, size * 0.56);
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: holeTex(through), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4, side: through ? THREE.DoubleSide : THREE.FrontSide }));
     m.rotation.z = Math.random() * Math.PI * 2; m.renderOrder = 3; g.add(m);
     if (on === 'left') { g.position.set(Hd.x0 + 0.03, p.y, p.z); g.rotation.y = Math.PI / 2; }
     else if (on === 'right') { g.position.set(Hd.x1 - 0.03, p.y, p.z); g.rotation.y = -Math.PI / 2; }
@@ -403,6 +511,22 @@ export class PanelWorld {
     g.scale.setScalar(0.2); this.game.tweens.to(g.scale, { x: 1, y: 1, z: 1 }, 0.22, { ease: Ease.outBack });
     this.root.add(g); (this.holes || (this.holes = [])).push(m);
     return g;
+  }
+  // a hole right through a side wall at (z, y), an opening size metres across: the board there is replaced by the pieces round it
+  cutWall(on, z, y, size) {
+    const Hd = this.set.hall, bay = Hd.bay, r = size / 2, B = this.wallB.find((b) => b.on === on && Math.abs(b.zc - z) <= bay / 2 && Math.abs(b.yc - y) <= b.rh / 2);
+    if (!B) return;
+    B.m.visible = false;
+    const x = on === 'left' ? Hd.x0 : Hd.x1, s = on === 'left' ? -1 : 1;   // (u runs along the board toward -z on the left wall, +z on the right)
+    const za = B.zc - bay / 2, zb = B.zc + bay / 2, ya = B.yc - B.rh / 2, yb = B.yc + B.rh / 2;
+    for (const [z0, z1, y0, y1] of [[za, zb, y + r, yb], [za, zb, ya, y - r], [za, z - r, y - r, y + r], [z + r, zb, y - r, y + r]]) {
+      if (z1 - z0 < 0.01 || y1 - y0 < 0.01) continue;
+      const w = z1 - z0, hh = y1 - y0, u0 = s < 0 ? (zb - z1) / bay : (z0 - za) / bay, v0 = (y0 - ya) / B.rh;
+      const m = board(B.key, w, hh, { alpha: B.m.material.transparent, uv: [w / bay, hh / B.rh], uv0: [u0, v0] });
+      const t = B.m.material.map;   // (the picture it shows now: the dark version once the lights are out)
+      if (t) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; m.material.map = t; }
+      m.position.set(x, (y0 + y1) / 2, (z0 + z1) / 2); m.rotation.y = B.m.rotation.y; this.root.add(m);
+    }
   }
   // a seal holding the drawbridge was shot: when all are, it comes down across the gap (the way on opens: Game.checkWave waits for it)
   gateHit() {
@@ -463,7 +587,7 @@ export class PanelWorld {
     this.camera.aspect = a; this.camera.fov = this.baseFov; this.camera.updateProjectionMatrix();
   }
   place(cam, look) { this.camPos.set(...cam); this.lookAt.set(...look); }
-  travel(points, look, dur, onDone) {
+  travel(points, look, dur, onDone, o = {}) {   // (o.steps: climbing stairs / a ladder, a bob for every step)
     const curve = new THREE.CatmullRomCurve3(points.map((p) => new THREE.Vector3(...p)), false, 'centripetal');
     const fromLook = this.lookAt.clone(), toLook = new THREE.Vector3(...look);
     let step = 0;
@@ -475,7 +599,7 @@ export class PanelWorld {
       const w = Ease.inOutQuad(Math.max(0, (k - 0.55) / 0.45));
       this.lookAt.copy(ahead).lerp(toLook, w);
       if (k < 0.15) this.lookAt.lerp(fromLook, 1 - k / 0.15);
-      this.bob = Math.abs(Math.sin(k * dur * 9.5)) * 0.06 * Math.sin(k * Math.PI);
+      this.bob = o.steps ? -Math.abs(Math.sin(e * Math.PI * o.steps)) * 0.08 : Math.abs(Math.sin(k * dur * 9.5)) * 0.06 * Math.sin(k * Math.PI);
       this.fovKick = Math.sin(k * Math.PI) * 5;
       const s = Math.floor(k * dur * 4.75);
       if (s !== step) { step = s; this.game.onStep && this.game.onStep(s); }
@@ -602,6 +726,13 @@ export class PanelWorld {
     } else this.clearOfProps(p, w, f, rt, depth);
     return p;
   }
+  // how far off something h metres tall has to stand for its top to show at least at share s of the screen height (0 = bottom): the
+  // small monsters keep back that far, above the covers (Enemy)
+  minDepth(h, s) {
+    const c = this.camPos, f = FIT_F.copy(this.lookAt).sub(c), pitch = Math.atan2(f.y, Math.hypot(f.x, f.z)), tanV = Math.tan(THREE.MathUtils.degToRad(this.baseFov / 2));
+    const a = pitch + Math.atan((2 * s - 1) * tanV);
+    return a < 0 && h < c.y ? (c.y - h) / Math.tan(-a) : 0;
+  }
   // a monster on the floor never stands inside a prop or half hidden behind one (it would look like it clips through: DESIGN「怪不能站在
   // 遮挡物后面穿模」): if a drawn prop is in the way (its footprint on the line from the camera, nearer than the monster, or under it), the
   // monster moves sideways to the nearest clear spot (then nearer to the camera)
@@ -639,7 +770,7 @@ export class PanelWorld {
   update(dt, t) {
     const g = this.game, cam = this.camera;
     this.updateAnomaly(dt);
-    const c1 = g.players[0]?.ctrl, on = c1 && c1.active && !g.cineOn;   // (a close look, Game.cine: held still)
+    const c1 = g.players[0]?.ctrl, on = c1 && c1.active && !g.cineOn && !g.walkOn;   // (a close look, Game.cine / a walk between places: held still)
     const lx = on ? c1.x / g.W - 0.5 : 0, ly = on ? c1.y / g.H - 0.5 : 0;
     this.look.x += (lx - this.look.x) * Math.min(1, dt * 4);
     this.look.y += (ly - this.look.y) * Math.min(1, dt * 4);

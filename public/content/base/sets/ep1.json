@@ -60,28 +60,28 @@
         "covers": [{ "k": "cover/ep1_shop1", "side": -1 }, { "k": "cover/ep1_shop2", "side": 1 }],
         "waves": [
           [
-            { "t": 0.6, "type": "ghoul", "x": 0, "z": -14, "from": "pop", "sprite": "ghoul", "hp": 7200, "tough": true, "move": "walk", "far": 17 }
+            { "t": 0.6, "type": "ghoul", "x": 0, "z": -14, "from": "wall", "sprite": "ghoul", "hp": 7200, "tough": true, "move": "walk", "far": 17 }
           ],
           [
-            { "t": 0, "type": "scoopling", "x": -1.8, "z": -8, "from": "pop" },
-            { "t": 0.6, "type": "teacup", "x": 1.8, "z": -8.5, "from": "pop" },
-            { "t": 1.2, "type": "scoopling", "x": 0, "z": -9, "from": "pop" },
-            { "t": 2.0, "type": "doily", "count": 12, "x": 0, "z": -9, "y": 2.4, "spread": 4.4, "every": 0.12 },
-            { "t": 3.0, "type": "teacup", "x": -1.2, "z": -9, "from": "pop" },
-            { "t": 3.6, "type": "scoopling", "x": 1.2, "z": -8.5, "from": "pop" },
+            { "t": 0, "type": "scoopling", "x": -1.8, "z": -8, "from": "wall" },
+            { "t": 0.6, "type": "teacup", "x": 1.8, "z": -8.5, "from": "wall" },
+            { "t": 1.2, "type": "scoopling", "x": 0, "z": -9, "from": "wall" },
+            { "t": 2.0, "type": "doily", "count": 12, "x": 0, "z": -9, "y": 2.4, "spread": 4.4, "every": 0.12, "from": "ceiling" },
+            { "t": 3.0, "type": "teacup", "x": -1.2, "z": -9, "from": "wall" },
+            { "t": 3.6, "type": "scoopling", "x": 1.2, "z": -8.5, "from": "wall" },
             { "kills": 5, "turn": { "to": 1, "from": [0, 1.2, -6], "hit": true, "dur": 2.2 }, "mutate": true }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -1.8, "z": -8, "from": "pop" },
-            { "t": 1.0, "type": "ghoul", "x": 1.8, "z": -8.5, "from": "pop" }
+            { "t": 0, "type": "ghoul", "x": -1.8, "z": -8, "from": "wall" },
+            { "t": 1.0, "type": "ghoul", "x": 1.8, "z": -8.5, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -8.5, "y": 2.6, "spread": 4.6, "every": 0.12 }
+            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -8.5, "y": 2.6, "spread": 4.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": 2.0, "z": -8, "from": "pop" },
-            { "t": 0.8, "type": "crawler", "x": -1.6, "z": -8, "move": "zigzag", "from": "pop" },
-            { "t": 1.8, "type": "crawler", "x": 1.2, "z": -9, "move": "burrow" }
+            { "t": 0, "type": "doll", "x": 2.0, "z": -8, "from": "ceiling" },
+            { "t": 0.8, "type": "crawler", "x": -1.6, "z": -8, "move": "zigzag", "from": "wall" },
+            { "t": 1.8, "type": "crawler", "x": 1.2, "z": -9, "move": "burrow", "from": "wall" }
           ]
         ]
       },
@@ -93,20 +93,20 @@
         "waves": [
           [
             { "t": 0, "type": "chandelier", "x": 0, "z": -10.5, "from": "statue", "y": 1.5, "wake": 1.6 },
-            { "t": 0.6, "type": "ghoul", "x": -1.8, "z": -11, "from": "pop" }
+            { "t": 0.6, "type": "ghoul", "x": -1.8, "z": -11, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1.8, "z": -11, "from": "pop" },
-            { "t": 0.5, "type": "doll", "x": 1.8, "z": -11.5, "from": "pop" },
-            { "t": 1.5, "type": "crawler", "x": 0, "z": -11, "move": "zigzag", "from": "pop" }
+            { "t": 0, "type": "doll", "x": -1.8, "z": -11, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 1.8, "z": -11.5, "from": "ceiling" },
+            { "t": 1.5, "type": "crawler", "x": 0, "z": -11, "move": "zigzag", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -12, "y": 2.6, "spread": 4.8, "every": 0.12 },
-            { "t": 3, "type": "ghoul", "x": 0, "z": -12, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -12, "y": 2.6, "spread": 4.8, "every": 0.12, "from": "ceiling" },
+            { "t": 3, "type": "ghoul", "x": 0, "z": -12, "move": "charge", "from": "wall" }
           ],
           [
             { "t": 0, "type": "ghoul", "x": -2.0, "z": -11, "from": "wall" },
-            { "t": 0.6, "type": "ghoul", "x": 2, "z": -11.5, "from": "pop" },
+            { "t": 0.6, "type": "ghoul", "x": 2, "z": -11.5, "from": "wall" },
             { "t": 1.5, "type": "crawler", "x": 0, "z": -11, "move": "walk", "from": "ceiling" }
           ]
         ],
@@ -237,21 +237,21 @@
         "covers": [{ "k": "cover/ep1_gallery1", "side": -1 }, { "k": "cover/ep1_gallery2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "ghoul", "x": -1, "z": -9, "move": "hop", "from": "pop" },
-            { "t": 0.8, "type": "crawler", "x": 1, "z": -9.5, "move": "zigzag", "from": "pop" }
+            { "t": 0, "type": "ghoul", "x": -1, "z": -9, "move": "hop", "from": "wall" },
+            { "t": 0.8, "type": "crawler", "x": 1, "z": -9.5, "move": "zigzag", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": 0, "z": -11, "y": 1.5 },
-            { "t": 1, "type": "bat", "count": 12, "x": 0, "z": -10, "y": 2.6, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "chandelier", "x": 0, "z": -11, "y": 1.5, "from": "ceiling" },
+            { "t": 1, "type": "bat", "count": 12, "x": 0, "z": -10, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1, "z": -10, "from": "pop" },
-            { "t": 0.6, "type": "doll", "x": 1, "z": -10.5, "from": "pop" },
+            { "t": 0, "type": "doll", "x": -1, "z": -10, "from": "ceiling" },
+            { "t": 0.6, "type": "doll", "x": 1, "z": -10.5, "from": "ceiling" },
             { "t": 2, "type": "crawler", "x": 0, "z": -9, "move": "walk", "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -10.5, "y": 2.6, "spread": 3.0, "every": 0.12 },
-            { "t": 3, "type": "ghoul", "x": 0, "z": -11, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -10.5, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" },
+            { "t": 3, "type": "ghoul", "x": 0, "z": -11, "move": "charge", "from": "wall" }
           ]
         ]
       },
@@ -262,22 +262,22 @@
         "covers": [{ "k": "cover/ep1_gallery3", "side": -1 }, { "k": "cover/ep1_gallery4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -18, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -18, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -1, "z": -16, "from": "pop" },
-            { "t": 0.7, "type": "ghoul", "x": 1, "z": -16.5, "move": "hop", "from": "pop" },
-            { "t": 2, "type": "bat", "count": 12, "x": 0, "z": -17, "y": 2.6, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "ghoul", "x": -1, "z": -16, "from": "wall" },
+            { "t": 0.7, "type": "ghoul", "x": 1, "z": -16.5, "move": "hop", "from": "wall" },
+            { "t": 2, "type": "bat", "count": 12, "x": 0, "z": -17, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
             { "t": 0, "type": "chandelier", "x": -0.8, "z": -15, "from": "statue", "y": 1.6, "wake": 1.0 },
             { "t": 0, "type": "chandelier", "x": 0.8, "z": -15.5, "from": "statue", "y": 1.5, "wake": 3.0 },
-            { "t": 1, "type": "crawler", "x": 0, "z": -16, "move": "zigzag", "from": "pop" }
+            { "t": 1, "type": "crawler", "x": 0, "z": -16, "move": "zigzag", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1, "z": -16, "from": "pop" },
-            { "t": 0.6, "type": "doll", "x": 1, "z": -17, "from": "pop" },
-            { "t": 2, "type": "ghoul", "x": 0, "z": -16, "move": "burrow" }
+            { "t": 0, "type": "doll", "x": -1, "z": -16, "from": "ceiling" },
+            { "t": 0.6, "type": "doll", "x": 1, "z": -17, "from": "ceiling" },
+            { "t": 2, "type": "ghoul", "x": 0, "z": -16, "move": "burrow", "from": "wall" }
           ]
         ],
         "grab": "ep1/hands_a"
@@ -290,12 +290,12 @@
         "waves": [
           [
             { "t": 0, "type": "ghoul", "x": -1.0, "z": -1.5, "from": "wall" },
-            { "t": 0.6, "type": "ghoul", "x": 1.0, "z": -1.0, "from": "pop", "move": "hop" },
-            { "t": 1.4, "type": "crawler", "x": 0, "z": -2, "from": "pop", "move": "zigzag" }
+            { "t": 0.6, "type": "ghoul", "x": 1.0, "z": -1.0, "from": "wall", "move": "hop" },
+            { "t": 1.4, "type": "crawler", "x": 0, "z": -2, "from": "wall", "move": "zigzag" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 12, "x": 0, "z": -1, "y": 2.6, "spread": 3.0, "every": 0.12 },
-            { "t": 2, "type": "doll", "x": 0, "z": -0.5, "from": "pop" }
+            { "t": 0, "type": "bat", "count": 12, "x": 0, "z": -1, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" },
+            { "t": 2, "type": "doll", "x": 0, "z": -0.5, "from": "ceiling" }
           ]
         ],
         "exit": { "to": [0, 1.1, -17.6], "look": [0, 1.0, -26] }
@@ -384,23 +384,23 @@
           [
             { "t": 0, "type": "armor", "x": -3.6, "z": -1.5, "from": "statue" },
             { "t": 0, "type": "armor", "x": 3.6, "z": -2.5, "from": "statue" },
-            { "t": 0, "type": "crawler", "x": -1.5, "z": -7, "move": "zigzag", "from": "pop" },
-            { "t": 0.8, "type": "crawler", "x": 1.5, "z": -7.5, "move": "burrow" },
+            { "t": 0, "type": "crawler", "x": -1.5, "z": -7, "move": "zigzag", "from": "wall" },
+            { "t": 0.8, "type": "crawler", "x": 1.5, "z": -7.5, "move": "burrow", "from": "wall" },
             { "kills": 2, "wake": 1 },
             { "kills": 3, "wake": 1 }
           ],
           [
-            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -8.5, "y": 2.9, "spread": 7.0, "every": 0.12 }
+            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -8.5, "y": 2.9, "spread": 7.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": 0, "z": -10, "y": 2.4 },
-            { "t": 0.6, "type": "ghoul", "x": -2, "z": -8, "from": "pop" },
+            { "t": 0, "type": "chandelier", "x": 0, "z": -10, "y": 2.4, "from": "ceiling" },
+            { "t": 0.6, "type": "ghoul", "x": -2, "z": -8, "from": "wall" },
             { "t": 1.3, "type": "ghoul", "x": 3.0, "z": -8.5, "move": "walk", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -3, "z": -9, "from": "pop" },
-            { "t": 0.5, "type": "doll", "x": 3, "z": -9.5, "from": "pop" },
-            { "t": 2, "type": "ghoul", "x": 0, "z": -9, "move": "charge", "from": "pop" },
+            { "t": 0, "type": "doll", "x": -3, "z": -9, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 3, "z": -9.5, "from": "ceiling" },
+            { "t": 2, "type": "ghoul", "x": 0, "z": -9, "move": "charge", "from": "wall" },
             { "t": 0, "type": "armor", "x": 3.6, "z": -4, "from": "statue", "wake": 3.5 }
           ]
         ]
@@ -411,22 +411,22 @@
         "covers": [{ "k": "cover/ep1_garden3", "side": -1 }, { "k": "cover/ep1_garden4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -12, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "armor", "x": -1.4, "z": -11, "from": "pop" },
-            { "t": 0.8, "type": "crawler", "x": 1, "z": -10, "move": "zigzag", "from": "pop" },
-            { "t": 1.6, "type": "crawler", "x": -0.4, "z": -10, "move": "burrow" }
+            { "t": 0, "type": "armor", "x": -1.4, "z": -11, "from": "wall" },
+            { "t": 0.8, "type": "crawler", "x": 1, "z": -10, "move": "zigzag", "from": "wall" },
+            { "t": 1.6, "type": "crawler", "x": -0.4, "z": -10, "move": "burrow", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -12, "y": 2.9, "spread": 7.0, "every": 0.12 },
-            { "t": 2, "type": "doll", "x": -3, "z": -12, "from": "pop" },
-            { "t": 2.5, "type": "doll", "x": 3, "z": -12, "from": "pop" }
+            { "t": 0, "type": "bat", "count": 20, "x": 0, "z": -12, "y": 2.9, "spread": 7.0, "every": 0.12, "from": "ceiling" },
+            { "t": 2, "type": "doll", "x": -3, "z": -12, "from": "ceiling" },
+            { "t": 2.5, "type": "doll", "x": 3, "z": -12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -13, "from": "pop" },
-            { "t": 1, "type": "ghoul", "x": -2, "z": -10, "move": "hop", "from": "pop" },
-            { "t": 1.5, "type": "ghoul", "x": 2, "z": -10, "from": "pop" },
+            { "t": 0, "type": "shadow", "x": 0, "z": -13, "from": "ceiling" },
+            { "t": 1, "type": "ghoul", "x": -2, "z": -10, "move": "hop", "from": "wall" },
+            { "t": 1.5, "type": "ghoul", "x": 2, "z": -10, "from": "wall" },
             { "kills": 3, "collapse": true }
           ]
         ],
@@ -568,17 +568,17 @@
             { "kills": 2, "wake": 1 }
           ],
           [
-            { "t": 0, "type": "crawler", "x": 0, "z": -7, "move": "burrow" },
-            { "t": 0.8, "type": "crawler", "x": -1, "z": -7.5, "move": "zigzag", "from": "pop" },
-            { "t": 1.6, "type": "bat", "count": 12, "x": 0, "z": -8.5, "y": 2.2, "spread": 3.6, "every": 0.12 }
+            { "t": 0, "type": "crawler", "x": 0, "z": -7, "move": "burrow", "from": "wall" },
+            { "t": 0.8, "type": "crawler", "x": -1, "z": -7.5, "move": "zigzag", "from": "wall" },
+            { "t": 1.6, "type": "bat", "count": 12, "x": 0, "z": -8.5, "y": 2.2, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -9, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -9, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1.4, "z": -8, "from": "pop" },
-            { "t": 0.6, "type": "ghoul", "x": 1, "z": -8, "move": "hop", "from": "pop" },
-            { "t": 1.6, "type": "ghoul", "x": -0.6, "z": -8.5, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "doll", "x": -1.4, "z": -8, "from": "ceiling" },
+            { "t": 0.6, "type": "ghoul", "x": 1, "z": -8, "move": "hop", "from": "wall" },
+            { "t": 1.6, "type": "ghoul", "x": -0.6, "z": -8.5, "move": "charge", "from": "wall" }
           ]
         ],
         "enter": { "from": [0, 6.5, 0], "dur": 0.9, "shake": 1.4 },
@@ -605,9 +605,9 @@
                 "remind": 14
               }
             },
-            { "t": 0.4, "type": "doll", "x": -1.6, "z": -10, "from": "pop" },
-            { "t": 1.2, "type": "ghoul", "x": -1.0, "z": -9, "from": "pop", "move": "hop" },
-            { "t": 2.0, "type": "doll", "x": 1.6, "z": -10.5, "from": "pop" }
+            { "t": 0.4, "type": "doll", "x": -1.6, "z": -10, "from": "ceiling" },
+            { "t": 1.2, "type": "ghoul", "x": -1.0, "z": -9, "from": "wall", "move": "hop" },
+            { "t": 2.0, "type": "doll", "x": 1.6, "z": -10.5, "from": "ceiling" }
           ]
         ],
         "exit": { "to": [1.15, 1.1, -9.0], "look": [1.15, 1.0, -16] }
@@ -755,23 +755,23 @@
         "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -7.5, "hp": 1440, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -7.5, "hp": 1440, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -1, "z": -6.5, "move": "zigzag", "from": "pop" },
-            { "t": 0.6, "type": "crawler", "x": 1, "z": -7, "move": "burrow" },
-            { "t": 1.4, "type": "ghoul", "x": -1.4, "z": -7.5, "move": "hop", "from": "pop" },
-            { "t": 2, "type": "ghoul", "x": 1.4, "z": -7.5, "from": "pop" }
+            { "t": 0, "type": "crawler", "x": -1, "z": -6.5, "move": "zigzag", "from": "wall" },
+            { "t": 0.6, "type": "crawler", "x": 1, "z": -7, "move": "burrow", "from": "wall" },
+            { "t": 1.4, "type": "ghoul", "x": -1.4, "z": -7.5, "move": "hop", "from": "wall" },
+            { "t": 2, "type": "ghoul", "x": 1.4, "z": -7.5, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1.6, "z": -8, "from": "pop" },
-            { "t": 0.5, "type": "doll", "x": 1.6, "z": -8.5, "from": "pop" },
-            { "t": 1.5, "type": "bat", "count": 12, "x": 0, "z": -8, "y": 2.2, "spread": 4.0, "every": 0.12 }
+            { "t": 0, "type": "doll", "x": -1.6, "z": -8, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 1.6, "z": -8.5, "from": "ceiling" },
+            { "t": 1.5, "type": "bat", "count": 12, "x": 0, "z": -8, "y": 2.2, "spread": 4.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -8.5, "from": "pop" },
-            { "t": 1, "type": "ghoul", "x": -1, "z": -7, "from": "pop" },
-            { "t": 2, "type": "ghoul", "x": 1, "z": -7, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -8.5, "from": "ceiling" },
+            { "t": 1, "type": "ghoul", "x": -1, "z": -7, "from": "wall" },
+            { "t": 2, "type": "ghoul", "x": 1, "z": -7, "move": "charge", "from": "wall" }
           ]
         ]
       },
@@ -782,24 +782,24 @@
         "covers": [{ "k": "cover/ep1_oven3", "side": -1 }, { "k": "cover/ep1_oven4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "chandelier", "x": 0, "z": -8.5, "y": 1.4 },
-            { "t": 0.6, "type": "crawler", "x": -1, "z": -7, "move": "zigzag", "from": "pop" },
-            { "t": 1.2, "type": "crawler", "x": 1, "z": -7.5, "move": "zigzag", "from": "pop" }
+            { "t": 0, "type": "chandelier", "x": 0, "z": -8.5, "y": 1.4, "from": "ceiling" },
+            { "t": 0.6, "type": "crawler", "x": -1, "z": -7, "move": "zigzag", "from": "wall" },
+            { "t": 1.2, "type": "crawler", "x": 1, "z": -7.5, "move": "zigzag", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -1.4, "z": -7.5, "move": "hop", "from": "pop" },
+            { "t": 0, "type": "ghoul", "x": -1.4, "z": -7.5, "move": "hop", "from": "wall" },
             { "t": 0.6, "type": "ghoul", "x": 1.4, "z": -7.5, "from": "ceiling" },
-            { "t": 1.5, "type": "bat", "count": 16, "x": 0, "z": -8, "y": 2.3, "spread": 4.0, "every": 0.12 }
+            { "t": 1.5, "type": "bat", "count": 16, "x": 0, "z": -8, "y": 2.3, "spread": 4.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1.6, "z": -8.5, "from": "pop" },
-            { "t": 0.5, "type": "doll", "x": 1.6, "z": -8.5, "from": "pop" },
-            { "t": 1.2, "type": "crawler", "x": 0, "z": -7, "move": "burrow" }
+            { "t": 0, "type": "doll", "x": -1.6, "z": -8.5, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 1.6, "z": -8.5, "from": "ceiling" },
+            { "t": 1.2, "type": "crawler", "x": 0, "z": -7, "move": "burrow", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "armor", "x": 0, "z": -8.5, "move": "walk", "from": "pop" },
-            { "t": 1, "type": "ghoul", "x": -1.2, "z": -7.5, "from": "pop" },
-            { "t": 1.6, "type": "ghoul", "x": 1.2, "z": -7.5, "move": "hop", "from": "pop" }
+            { "t": 0, "type": "armor", "x": 0, "z": -8.5, "move": "walk", "from": "wall" },
+            { "t": 1, "type": "ghoul", "x": -1.2, "z": -7.5, "from": "wall" },
+            { "t": 1.6, "type": "ghoul", "x": 1.2, "z": -7.5, "move": "hop", "from": "wall" }
           ]
         ],
         "exit": { "to": [0, 1.1, -6.6], "look": [0, 1.0, -15] }
@@ -851,19 +851,19 @@
         "enter": { "from": [0, 6, 0.5], "dur": 0.75, "shake": 1.6, "sfx": "thud" },
         "waves": [
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -7, "y": 3.0, "spread": 2.6, "every": 0.12 }
+            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -7, "y": 3.0, "spread": 2.6, "every": 0.12, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -0.6, "z": -6, "move": "burrow" },
-            { "t": 0.6, "type": "crawler", "x": 0.6, "z": -6.5, "move": "burrow" },
-            { "t": 1.4, "type": "ghoul", "x": 0, "z": -8, "move": "hop", "from": "pop" }
+            { "t": 0, "type": "crawler", "x": -0.6, "z": -6, "move": "burrow", "from": "wall" },
+            { "t": 0.6, "type": "crawler", "x": 0.6, "z": -6.5, "move": "burrow", "from": "wall" },
+            { "t": 1.4, "type": "ghoul", "x": 0, "z": -8, "move": "hop", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -9, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -9, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -7, "y": 3.0, "spread": 2.6, "every": 0.12 },
-            { "t": 2, "type": "crawler", "x": 0, "z": -6, "move": "zigzag", "from": "pop" }
+            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -7, "y": 3.0, "spread": 2.6, "every": 0.12, "from": "wall" },
+            { "t": 2, "type": "crawler", "x": 0, "z": -6, "move": "zigzag", "from": "wall" }
           ]
         ]
       },
@@ -874,22 +874,22 @@
         "covers": [{ "k": "cover/ep1_tunnel3", "side": -1 }, { "k": "cover/ep1_tunnel4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "ghoul", "x": -0.6, "z": -14, "move": "hop", "from": "pop" },
-            { "t": 0.6, "type": "ghoul", "x": 0.6, "z": -14.5, "from": "pop" },
-            { "t": 1.2, "type": "ghoul", "x": 0, "z": -15, "move": "burrow" }
+            { "t": 0, "type": "ghoul", "x": -0.6, "z": -14, "move": "hop", "from": "wall" },
+            { "t": 0.6, "type": "ghoul", "x": 0.6, "z": -14.5, "from": "wall" },
+            { "t": 1.2, "type": "ghoul", "x": 0, "z": -15, "move": "burrow", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "double_cat", "x": 0, "z": -15, "from": "pop" }
+            { "t": 0, "type": "double_cat", "x": 0, "z": -15, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "double_pink", "x": 0, "z": -16, "from": "pop" },
-            { "t": 3, "type": "bat", "count": 12, "x": 0, "z": -15, "y": 2.5, "spread": 2.6, "every": 0.12 }
+            { "t": 0, "type": "double_pink", "x": 0, "z": -16, "from": "wall" },
+            { "t": 3, "type": "bat", "count": 12, "x": 0, "z": -15, "y": 2.5, "spread": 2.6, "every": 0.12, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -0.6, "z": -13, "move": "burrow" },
-            { "t": 0.5, "type": "crawler", "x": 0.6, "z": -13, "move": "burrow" },
-            { "t": 1, "type": "crawler", "x": 0, "z": -14, "move": "zigzag", "from": "pop" },
-            { "t": 1.8, "type": "ghoul", "x": 0, "z": -15, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "crawler", "x": -0.6, "z": -13, "move": "burrow", "from": "wall" },
+            { "t": 0.5, "type": "crawler", "x": 0.6, "z": -13, "move": "burrow", "from": "wall" },
+            { "t": 1, "type": "crawler", "x": 0, "z": -14, "move": "zigzag", "from": "wall" },
+            { "t": 1.8, "type": "ghoul", "x": 0, "z": -15, "move": "charge", "from": "wall" }
           ]
         ]
       },
@@ -900,8 +900,8 @@
         "covers": [{ "k": "cover/ep1_oven5", "side": -1 }, { "k": "cover/ep1_oven6", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "double_pink", "x": -0.6, "z": -20.5, "from": "pop" },
-            { "t": 0.8, "type": "double_cat", "x": 0.6, "z": -20, "from": "pop" },
+            { "t": 0, "type": "double_pink", "x": -0.6, "z": -20.5, "from": "wall" },
+            { "t": 0.8, "type": "double_cat", "x": 0.6, "z": -20, "from": "wall" },
             {
               "t": 2.5,
               "spawner": {
@@ -1003,27 +1003,27 @@
         "covers": [{ "k": "cover/ep1_nursery1", "side": -1 }, { "k": "cover/ep1_nursery2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "dollkin", "x": -1.6, "z": -7, "from": "pop" },
-            { "t": 0.4, "type": "dollkin", "x": 1.6, "z": -7.5, "from": "pop" },
-            { "t": 0.8, "type": "dollkin", "x": 0, "z": -8, "from": "pop" },
-            { "t": 1.2, "type": "dollkin", "x": -0.8, "z": -8.5, "from": "pop" }
+            { "t": 0, "type": "dollkin", "x": -1.6, "z": -7, "from": "wall" },
+            { "t": 0.4, "type": "dollkin", "x": 1.6, "z": -7.5, "from": "wall" },
+            { "t": 0.8, "type": "dollkin", "x": 0, "z": -8, "from": "wall" },
+            { "t": 1.2, "type": "dollkin", "x": -0.8, "z": -8.5, "from": "wall" }
           ],
           [
             { "t": 0, "type": "doll", "x": -1.8, "z": -3, "from": "statue" },
             { "t": 0, "type": "doll", "x": 1.8, "z": -3.5, "from": "statue" },
-            { "t": 0.5, "type": "dollkin", "x": 0, "z": -7, "from": "pop" },
-            { "t": 1, "type": "dollkin", "x": 0.8, "z": -7.5, "from": "pop" },
+            { "t": 0.5, "type": "dollkin", "x": 0, "z": -7, "from": "wall" },
+            { "t": 1, "type": "dollkin", "x": 0.8, "z": -7.5, "from": "wall" },
             { "kills": 1, "wake": 1 },
             { "kills": 2, "wake": 1 }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -8.5, "y": 2.3, "spread": 3.6, "every": 0.12 }
+            { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -8.5, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
             { "t": 0, "type": "chandelier", "x": 0, "z": -8, "from": "statue", "y": 1.4, "wake": 1.0 },
             { "t": 0.6, "type": "dollkin", "x": -1.8, "z": -7, "from": "wall" },
             { "t": 1.2, "type": "dollkin", "x": 1.8, "z": -7.5, "from": "wall" },
-            { "t": 1.8, "type": "doll", "x": 1.2, "z": -9, "from": "pop" }
+            { "t": 1.8, "type": "doll", "x": 1.2, "z": -9, "from": "ceiling" }
           ]
         ]
       },
@@ -1034,26 +1034,26 @@
         "covers": [{ "k": "cover/ep1_nursery3", "side": -1 }, { "k": "cover/ep1_nursery4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "dollkin", "x": -1.6, "z": -9, "from": "pop" },
-            { "t": 0.3, "type": "dollkin", "x": 1.6, "z": -9, "from": "pop" },
-            { "t": 0.6, "type": "dollkin", "x": 0, "z": -9.5, "from": "pop" },
-            { "t": 0.9, "type": "dollkin", "x": -0.8, "z": -10, "from": "pop" },
-            { "t": 1.2, "type": "dollkin", "x": 0.8, "z": -10, "from": "pop" }
+            { "t": 0, "type": "dollkin", "x": -1.6, "z": -9, "from": "wall" },
+            { "t": 0.3, "type": "dollkin", "x": 1.6, "z": -9, "from": "wall" },
+            { "t": 0.6, "type": "dollkin", "x": 0, "z": -9.5, "from": "wall" },
+            { "t": 0.9, "type": "dollkin", "x": -0.8, "z": -10, "from": "wall" },
+            { "t": 1.2, "type": "dollkin", "x": 0.8, "z": -10, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -1.6, "z": -10, "from": "pop" },
-            { "t": 0.6, "type": "doll", "x": 1.6, "z": -10.5, "from": "pop" },
+            { "t": 0, "type": "doll", "x": -1.6, "z": -10, "from": "ceiling" },
+            { "t": 0.6, "type": "doll", "x": 1.6, "z": -10.5, "from": "ceiling" },
             { "t": 0, "type": "doll", "x": 0, "z": -9.5, "from": "statue", "wake": 2.0 }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -0.8, "z": -9, "move": "zigzag", "from": "pop" },
-            { "t": 0.8, "type": "crawler", "x": 0.8, "z": -9, "move": "burrow" },
-            { "t": 1.5, "type": "bat", "count": 12, "x": 0, "z": -10, "y": 2.3, "spread": 3.6, "every": 0.12 }
+            { "t": 0, "type": "crawler", "x": -0.8, "z": -9, "move": "zigzag", "from": "wall" },
+            { "t": 0.8, "type": "crawler", "x": 0.8, "z": -9, "move": "burrow", "from": "wall" },
+            { "t": 1.5, "type": "bat", "count": 12, "x": 0, "z": -10, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0, "z": -11, "from": "pop", "breakout": 0.45 },
-            { "t": 1, "type": "dollkin", "x": -1.4, "z": -9, "from": "pop" },
-            { "t": 1.4, "type": "dollkin", "x": 1.4, "z": -9, "from": "pop" }
+            { "t": 0, "type": "shadow", "x": 0, "z": -11, "from": "ceiling", "breakout": 0.45 },
+            { "t": 1, "type": "dollkin", "x": -1.4, "z": -9, "from": "wall" },
+            { "t": 1.4, "type": "dollkin", "x": 1.4, "z": -9, "from": "wall" }
           ]
         ],
         "exit": { "to": [0, 1.1, -8.8], "look": [0, 1.0, -16] }
@@ -1158,24 +1158,24 @@
         "waves": [
           [
             { "t": 0, "gimmick": "p1" },
-            { "t": 0, "type": "shade_hostess", "x": -2.6, "z": -4, "from": "pop" },
-            { "t": 2, "type": "ghoul", "x": 1.4, "z": -8, "move": "hop", "from": "pop" },
-            { "t": 4, "type": "bat", "count": 12, "x": 0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12 }
+            { "t": 0, "type": "shade_hostess", "x": -2.6, "z": -4, "from": "ceiling" },
+            { "t": 2, "type": "ghoul", "x": 1.4, "z": -8, "move": "hop", "from": "wall" },
+            { "t": 4, "type": "bat", "count": 12, "x": 0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12, "from": "ceiling" }
           ],
           [
             { "t": 0, "gimmick": "p2" },
-            { "t": 0, "type": "shade_mourner", "x": 0, "z": -7, "from": "pop" }
+            { "t": 0, "type": "shade_mourner", "x": 0, "z": -7, "from": "ceiling" }
           ],
           [
             { "t": 0, "gimmick": "p3" },
-            { "t": 0, "type": "shade_mother", "x": -2.6, "z": -10, "from": "pop" },
-            { "t": 3, "type": "ghoul", "x": 1.2, "z": -9, "move": "charge", "from": "pop" }
+            { "t": 0, "type": "shade_mother", "x": -2.6, "z": -10, "from": "ceiling" },
+            { "t": 3, "type": "ghoul", "x": 1.2, "z": -9, "move": "charge", "from": "wall" }
           ],
           [
             { "t": 0, "gimmick": "p4" },
-            { "t": 0, "type": "shade_bride", "x": 2.6, "z": -13, "from": "pop" },
-            { "t": 2, "type": "bat", "count": 12, "x": 0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12 },
-            { "t": 3, "type": "crawler", "x": 0, "z": -8, "move": "zigzag", "from": "pop" }
+            { "t": 0, "type": "shade_bride", "x": 2.6, "z": -13, "from": "wall" },
+            { "t": 2, "type": "bat", "count": 12, "x": 0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12, "from": "ceiling" },
+            { "t": 3, "type": "crawler", "x": 0, "z": -8, "move": "zigzag", "from": "wall" }
           ]
         ]
       },

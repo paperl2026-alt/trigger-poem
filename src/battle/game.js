@@ -59,6 +59,7 @@ export class Game {
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
     this.cineOn = false; this.cineQ = 0;   // a close look (cine)
+    this.walkOn = false;   // the camera walking on alone between places (passThrough): the girls out of the picture, the HUD away
     this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
     this.time = 0; this.playT = 0;
     this.camPlaced = false;
@@ -160,9 +161,13 @@ export class Game {
     }
     this.stage = st;
     this.skipDoor = false;   // (a door is skipped only right after the hole / the fall that leads past it)
-    this.useSet(st.places ? placeOf(st, this.run.station) : st.set || this.ep.set);
+    // (a stage straight after a stage in another place, episode 2's small stages: the camera walks there, the place changes on the way)
+    const walkIn = !!st.places && this.camPlaced && !this.afterComic && !!this.setId && placeOf(st, this.run.station) !== this.setId;
+    if (!walkIn) this.useSet(st.places ? placeOf(st, this.run.station) : st.set || this.ep.set);
     this.hud.show(true);
     if (st.stage) {
+      // (a new stage: she who chased them through the last one is gone - each stage brings her back itself: src/battle/chase.js)
+      if (this.chase.she || this.chase.mode) { this.chase.mode = null; this.chase.gone(); }
       // a stage through several places (episode 2): which place each stop is in (the step's "places": [set ids]; a stop's id is looked up in them)
       this.setOfStation = null;
       if (st.places) { this.setOfStation = {}; for (const s of st.places) for (const k of Object.keys(C.sets[s]?.stations || {})) this.setOfStation[k] = s; }
@@ -213,6 +218,8 @@ export class Game {
       this.post.u.wipe.value = 0;
       this.settleAnomaly(S);
       this.music(boss);
+      // (a stage that starts with a run, episode 2: from where it comes in, along the run's path)
+      if (S.chase) { const A = S.arrive || {}; this.world.place(A.at || S.chase.path?.[0] || S.cam, A.look || S.look); this.chase.run(S, () => this.arrive(S, boss)); return; }
       this.world.place(S.cam, S.look);
       this.setAll('cover'); this.settled = true;
       if (S.enter) { this.enterFrom(S.enter, () => this.arrive(S, boss)); return; }
@@ -243,25 +250,55 @@ export class Game {
       this.hud.gl.stickers.say(this.players[Math.random() < 0.5 || !this.p2on() ? 0 : 1], 'bridge');
     });
   }
-  // into the next place without a cut (DESIGN 第 2 话): the girls walk into the way on (the far wall's doorway: the set's "exit", a point
-  // just inside its darkness; "exitVia" on the way), a blink of black there, and they come out of the next place's doorway (its "entry":
-  // { at, look }) and walk on to the stop. Whatever she was doing carries on (src/battle/chase.js keeps her state, not her drawing)
+  // into the next place without a cut (DESIGN 第 2 话「场景之间怎么走」; user 2026-10-19 batch 23: no jumping out of windows, no
+  // teleporting): the girls step out of the picture and the camera walks on alone - it turns to the way on, the door there opens, it
+  // walks into the passage behind the doorway (up the stairs first, or a ladder; or through the hole she cut), and in the dark of the
+  // passage the place changes: it comes out of the next place's passage (its door opening), hole or trapdoor, and the girls are back as
+  // it walks on to the stop. Whatever she was doing carries on (src/battle/chase.js keeps her state, not her drawing).
+  //   station leave: { way (a hall.ways id: out through it), via (points before it), steps (stairs / a ladder on the way: a bob a step),
+  //     exit (a point, no way), hole: { on, x, y, z, size } (she cut it: it bursts open first) }
+  //   station arrive: { way (in through its passage), at, look (where it comes out to), from (a point to start at instead: behind a
+  //     hole, down a trapdoor), hole: { on, x, y, z, size } (the hole on this side), steps }
   passThrough(sid, id, boss) {
-    const w = this.world, H = w.set.hall || {}, L = this.station(id)?.leave || {}, X = L.exit || w.set.exit || [w.camPos.x, 1.1, (H.z1 ?? -10) - 0.5];
-    const pts = [w.camPos.toArray(), ...(L.via || w.set.exitVia || []), X];
+    const w = this.world, H = w.set.hall || {}, L = this.station(id)?.leave || {}, out = L.way ? w.wayPoints?.(L.way) : null;
+    const X = out ? out.far : L.exit || w.set.exit || [w.camPos.x, 1.1, (H.z1 ?? -10) - 0.5];
     if (L.hole) {   // (the way on is a hole she cut through the wall: it bursts open first)
-      const o = L.hole; w.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z ?? 0), o.size ?? 2.4);
+      const o = L.hole; w.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z ?? 0), o.size ?? 2.4, true);
       sound('woodBreak') || sfx.slam(); sound('shoji'); this.post.shake(1.2); this.fx.confetti(new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z ?? 0), 30, 2.2);
     }
-    let len = 0; for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
-    this.setAll('run'); this.combat = false;
-    const go = () => this.blackout(true, () => {
+    this.setAll('run'); this.combat = false; this.walkOn = true;   // (the camera alone: the girls out of the picture)
+    const len = (p) => { let n = 0; for (let k = 1; k < p.length; k++) n += Math.hypot(p[k][0] - p[k - 1][0], (p[k][1] - p[k - 1][1]) * 1.6, p[k][2] - p[k - 1][2]); return n; };
+    // the other side: in the dark of the passage the place changes; out of the next one's passage / hole / trapdoor to the stop
+    const come = () => this.blackout(true, () => {
       this.useSet(sid);
       const N = this.world.set, NH = N.hall || {}, E = this.station(id)?.arrive || N.entry || { at: [0, 1.1, (NH.z0 ?? 5) - 0.2], look: [0, 1.0, (NH.z1 ?? -10)] };
-      this.world.place(E.at, E.look); this.camPlaced = true; this.afterComic = false;
-      this.blackout(false); this.goStation(id, boss);
+      const inw = E.way ? this.world.wayPoints?.(E.way) : null, start = E.from || inw?.far;
+      if (E.hole) this.world.addHole(E.hole.on, new THREE.Vector3(E.hole.x ?? 0, E.hole.y ?? 1.1, E.hole.z ?? 0), E.hole.size ?? 2.4, true);
+      this.camPlaced = true; this.afterComic = false;
+      if (!start) { this.world.place(E.at, E.look); this.blackout(false); this.walkOn = false; this.goStation(id, boss); return; }
+      this.world.place(start, inw ? inw.door : E.at); this.blackout(false);
+      const p2 = [start, ...(inw ? [inw.door] : []), E.at];
+      const walk = () => this.world.travel(p2, E.look, Math.max(1.2, len(p2) / 2.3), () => { this.walkOn = false; this.goStation(id, boss); }, { steps: E.steps });
+      if (inw?.W.leaves.length) this.tweens.wait(0.3, () => this.world.door(E.way, true, 0.75, walk)); else this.tweens.wait(0.2, walk);
     });
-    if (len < 0.1) go(); else w.travel(pts, [X[0], X[1], X[2] - 6], Math.max(1.1, len / 3.2), go);
+    // this side: (turn round to it if it is behind), up to the way on, its door opens, into the passage (or the hole, the exit point)
+    const p1 = [w.camPos.toArray(), ...(L.via || w.set.exitVia || []), ...(out ? [out.front] : [])], p3 = out ? [out.front, out.door, out.far] : null;
+    const through = () => (p3 ? w.door(L.way, true, 0.7, () => w.travel(p3, [X[0], X[1], X[2] + out.W.dir * 4], Math.max(1.0, len(p3) / 2.2), come)) : come());
+    const walk1 = () => {
+      const pts = p3 ? p1 : [...p1, X];
+      if (pts.length < 2 || len(pts) < 0.1) { through(); return; }
+      w.travel(pts, p3 ? out.door : [X[0], X[1], X[2] - 6], Math.max(1.1, len(pts) / 3.0), p3 ? through : come, { steps: L.steps });
+    };
+    const first = new THREE.Vector3(...(L.via?.[0] || (out ? out.front : X)));
+    this.turnTo(first, walk1);
+  }
+  // the camera turns where it stands to look toward p (a look round before walking off that way; no turn when it already faces it)
+  turnTo(p, then) {
+    const w = this.world, c = w.camPos, a0 = Math.atan2(w.lookAt.x - c.x, w.lookAt.z - c.z), a1 = Math.atan2(p.x - c.x, p.z - c.z);
+    let d = a1 - a0; while (d > Math.PI) d -= Math.PI * 2; while (d < -Math.PI) d += Math.PI * 2;
+    if (Math.abs(d) < 1.1) { then(); return; }
+    const y0 = w.lookAt.y, y1 = c.y - 0.1;
+    this.tweens.run(0.35 + Math.abs(d) * 0.3, (e) => { const a = a0 + d * e; w.lookAt.set(c.x + Math.sin(a) * 6, y0 + (y1 - y0) * e, c.z + Math.cos(a) * 6); }, { ease: Ease.inOutCubic, onDone: then });
   }
   // the recorded tracks (content audio/sounds.json music) are named <episode>_stage / <episode>_boss unless the set names its own (music,
   // bossMusic; music null = only the clocks); without a recording, the synthesized loops
@@ -363,8 +400,10 @@ export class Game {
   // a stage that starts with the view arriving from somewhere (station "enter": { from: [dx, dy, dz] offset the camera starts at, dur,
   // shake, overlay: a picture over the screen meanwhile, e.g. a paw hauling the view up out of a pit; docs/DESIGN.md 第 1 话 ⑦)
   enterFrom(E, then) {
-    const w = this.world, to = w.camPos.clone(), d = E.from || [0, 4, 0], dur = E.dur ?? 0.8;
+    const w = this.world, to = w.camPos.clone(), d = E.from || [0, 4, 0], dur = E.dur ?? 0.8, look = w.lookAt.clone();
     w.camPos.set(to.x + d[0], to.y + d[1], to.z + d[2]);
+    // (falling in: the girls out of the picture until they land, the camera looking down the shaft, then up as it lands)
+    if (d[1] > 0) { this.walkOn = true; w.lookAt.set(look.x, to.y - 4, look.z); }
     let el = null;
     if (E.overlay) {
       el = document.createElement('img'); el.className = d[1] < 0 ? 'haul' : 'grab'; el.src = url(E.overlay);
@@ -372,6 +411,7 @@ export class Game {
     }
     if (E.sfx && sfx[E.sfx]) sfx[E.sfx](0); else sfx.whoosh(0);
     this.tweens.wait(E.overlay ? 0.6 : 0, () => this.tweens.to(w.camPos, { x: to.x, y: to.y, z: to.z }, dur, { ease: d[1] > 0 ? Ease.inQuad : Ease.outCubic, onDone: () => {
+      if (d[1] > 0) { this.walkOn = false; this.tweens.to(w.lookAt, { x: look.x, y: look.y, z: look.z }, 0.6, { ease: Ease.outCubic }); }
       if (E.shake) { this.post.shake(E.shake); sfx.thud(0); this.players.forEach((p) => p.soft.kick(1.4)); }
       if (el) el.remove();
       then();
@@ -463,6 +503,13 @@ export class Game {
 
   arrive(S, boss) {
     this.world.setCovers(S.covers);
+    // a door slams shut behind them (station slam: a way's id, its door): the camera turns to see it, then the stop carries on
+    if (S.slam && this.world.ways?.[S.slam]) {
+      const Wy = this.world.ways[S.slam], c = new THREE.Vector3(Wy.xc, Wy.y0 + Wy.hh * 0.45, Wy.zw);
+      this.cine({ on: c, dist: 3.4, up: 0.15, in: 0.8, hold: 2.2, out: 0.8, lull: true, during: () => this.tweens.wait(0.45, () => this.world.door(S.slam, false, 0.3)) },
+        () => this.arrive({ ...S, slam: null }, boss));
+      return;
+    }
     // something here is shown up close first (station focus: { gimmick, dist, up, side, v, hold }: DESIGN「要给玩家看的东西放慢、特写」): the
     // camera goes to it, it does its thing (its do list), held for the whole of it; then the stop carries on
     if (S.focus) {
@@ -567,7 +614,7 @@ export class Game {
     // { kills: n, ... }: turn: {...} the place turns real / rotten; mutate: true every monster still standing becomes its full self
     // (enemies.json mutatesTo); gimmick: id fires that mechanism of the set (a portrait empties)
     // count: n = that many of it, spread across the room a beat apart (a swarm: DESIGN「怪的行为要多样」 成群飞的)
-    const spawns = wave.filter((s) => s.type).flatMap((s) => !s.count ? [s] : Array.from({ length: s.count }, (_, i) => ({ ...s, count: undefined,
+    const spawns = wave.filter((s) => s.type).flatMap((s) => !s.count ? [s] : Array.from({ length: s.count }, (_, i) => ({ ...s, count: undefined, hole: i ? false : s.hole,   // (a swarm through one hole)
       t: (s.t || 0) + i * (s.every ?? 0.18), x: (s.x || 0) + (i - (s.count - 1) / 2) * (s.spread ?? 4.4) / Math.max(1, s.count - 1) + (Math.random() - 0.5) * 0.4,
       y: s.y != null ? s.y + (Math.random() - 0.5) * 0.8 : undefined })));
     this.pendingSpawns = spawns.length;
@@ -586,9 +633,10 @@ export class Game {
     // a hole in a side wall that keeps pouring monsters out until something is toppled onto it (DESIGN「地形和机关」 堵住出怪口):
     // { spawner: { id, type: [kinds], side, z, every } }; the wave does not end while it runs (checkWave)
     if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: e.spawner.first ?? 0.4, n: 0, kills: 0, ready: e.spawner.sealAfter ? false : true });
-    if (e.wake) {   // statues come to life (all, or so many of them, nearest first)
-      const st = this.actors.filter((a) => a.alive && a.state === 'statue').sort((a, b) => a.distToCam() - b.distToCam());
-      st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => this.etw.wait(i * 0.5, () => a.wake()));
+    if (e.wake) {   // statues come to life (all, or so many of them, nearest first; not one an event just before picked: two kill-events
+      // can go off on the same shot)
+      const st = this.actors.filter((a) => a.alive && a.state === 'statue' && !a.waking).sort((a, b) => a.distToCam() - b.distToCam());
+      st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => { a.waking = true; this.etw.wait(i * 0.5, () => a.wake()); });
     }
   }
   // the house turns and what is left of the small things turns with it: each becomes its full self where it stands (a flash, a puff)
@@ -612,8 +660,10 @@ export class Game {
     if (this.S.dial && !this.chase.sentOff) return;   // (the last fight: over when the bell has sent her off)
     // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
     // up; the last wave of a stop is fought to the end
-    const left = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker).length;
+    const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker), left = alive.length;
     const last = this.waveIndex >= this.S.waves.length - 1;
+    // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared)
+    if (last && left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });
     if (left > (last ? 0 : T.combat.waveCarry ?? 0)) return;
     if (!last && left && this.waveEvents?.length) return;   // (this wave's kill-events still to come: it finishes first)
     // the way on still shut (a drawbridge held by seals): the fight goes on until it is worked

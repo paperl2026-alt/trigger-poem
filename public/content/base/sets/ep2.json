@@ -1,5 +1,5 @@
 {
-  "_doc": "第 2 话「钟楼惊宿」一个很长的小关（docs/DESIGN.md「第 2 话」，src/battle/chase.js；由 tools/rounds/ep2_level.py 生成，不要手改）：十个地方连成一条路，走进尽头墙的门洞（exit）一眨眼的黑，从下一个地方的门洞（entry / 站点的 arrive）走出来（Game.passThrough）。站点多了：chase 倒跑、block 路障、hide 躲藏点、she 她在这一站巡游、dial 钟楼表盘决战；leave 怎么离开上一个地方（hole 她剪开的墙洞）；state 这个地方这时停没停电；cp 检查点；fire 到了就触发的机关；swap 换掉一块墙的图。机关多了 drop / trap / door / lure / read / node / toll / free / collapse，block: true 是挡路的东西，on: floor 平放在地上。",
+  "_doc": "第 2 话「钟楼惊宿」九个小关（docs/DESIGN.md「第 2 话」，src/battle/chase.js；由 tools/rounds/ep2_level.py 生成，不要手改）：十个地方连成一条路，镜头自己走过去（Game.passThrough：两人退出画面，转向出口，开门，走进门洞后面的过道 hall.ways，或上楼梯 hall.stairs、爬梯子、钻她剪开的洞，在过道的黑暗里换成下一个地方，从那边的过道 / 洞 / 天窗走出来）；站点 leave 怎么离开上一个地方（way、via、steps、hole、exit），arrive 怎么进来（way、from、hole、at、look）；hall.shafts 天花板 / 地板上的竖井。站点多了：chase 倒跑、block 路障、hide 躲藏点、she 她在这一站巡游、dial 钟楼表盘决战；leave 怎么离开上一个地方（hole 她剪开的墙洞）；state 这个地方这时停没停电；cp 检查点；fire 到了就触发的机关；swap 换掉一块墙的图。机关多了 drop / trap / door / lure / read / node / toll / free / collapse，block: true 是挡路的东西，on: floor 平放在地上。",
   "ep2_genkan": {
     "panels": true,
     "seed": 31,
@@ -28,21 +28,17 @@
       "ceil": ["ep2/genkan_ceil1", "ep2/genkan_ceil2"],
       "floor": ["ep2/genkan_floor1", "ep2/genkan_floor2"],
       "end": ["ep2/genkan_end1"],
-      "back": ["ep2/genkan_back1"]
+      "back": ["ep2/genkan_back1"],
+      "ways": [
+        { "id": "end", "wall": "end", "x0": -0.41, "x1": 0.4, "y0": 2.83, "y1": 3.93 },
+        { "id": "back", "wall": "back", "x0": 1.48, "x1": 2.11, "y0": 1.62, "y1": 2.94 }
+      ],
+      "stairs": [
+        { "x": -0.0, "w": 1.7, "z0": -7.7, "z1": -10.58, "y1": 2.83, "n": 13, "tint": "#e09090" }
+      ]
     },
     "gimmicks": [
-      {
-        "id": "note",
-        "k": "prop/ep2_note",
-        "on": "stand",
-        "x": 2.6,
-        "y": 0,
-        "z": -3.6,
-        "w": 0.55,
-        "station": "gk1",
-        "mark": true,
-        "do": [{ "read": "ep2Rules" }, { "meter": 0 }]
-      },
+      { "id": "note", "k": "prop/ep2_note", "on": "stand", "x": 2.6, "y": 0, "z": -3.6, "w": 0.55, "shoot": false },
       {
         "id": "case",
         "k": "prop/ep2_case_doll",
@@ -98,7 +94,6 @@
         "look": [1.2, 1.15, -9],
         "covers": [{ "k": "cover/ep2_genkan1", "side": -1 }, { "k": "cover/ep2_genkan2", "side": 1 }],
         "cp": true,
-        "hint": "ep2RulesHint",
         "waves": [
           [
             { "t": 0, "type": "surippa", "x": -1.6, "z": -5.5, "from": "statue", "wake": 2.5 },
@@ -106,19 +101,19 @@
             { "t": 0, "type": "surippa", "x": 1.5, "z": -5.8, "from": "statue", "wake": 3.9 }
           ],
           [
-            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": -6.5, "y": 2.4, "spread": 3.0, "every": 0.12 },
-            { "t": 2, "type": "surippa", "count": 4, "x": 0, "z": -7.5, "spread": 3, "every": 0.35 }
+            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": -6.5, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "door" },
+            { "t": 2, "type": "surippa", "count": 4, "x": 0, "z": -7.5, "spread": 3, "every": 0.35, "from": "stairs" }
           ],
           [
-            { "t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "pop" },
-            { "t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "pop" },
-            { "t": 2.5, "type": "katashiro", "count": 12, "x": 0, "z": -7, "y": 2.6, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "stairs" },
+            { "t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "stairs" },
+            { "t": 2.5, "type": "katashiro", "count": 12, "x": 0, "z": -7, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door" }
           ]
         ]
       },
       "gk2": {
         "via": [[0, 1.2, -5]],
-        "cam": [0, 1.3, -7.4],
+        "cam": [0, 1.3, -6.6],
         "look": [-2.7, 1.3, -5.2],
         "pause": 1.0,
         "focus": { "gimmick": "case", "dist": 2.3, "up": 0.05, "v": 0.55, "hold": 6.8 },
@@ -136,7 +131,7 @@
     "anomalySky": "#020104",
     "anomalyGrade": { "tint": [0.9, 0.86, 1.04], "k": 0.3, "sat": 0.92 },
     "exit": [-0.01, 3.38, -11.2],
-    "entry": { "at": [-1.8, 1.15, 1.75], "look": [0, 1.1, -10.6] },
+    "entry": { "at": [1.8, 1.15, 1.75], "look": [0, 1.1, -10.6] },
     "decals": [
       { "k": "ep2/d_slasha", "on": "right", "z": -0.61, "y": 0.99, "w": 0.83, "anomaly": true },
       { "k": "ep2/d_threadsb", "on": "right", "z": -2.61, "y": 2.02, "w": 0.92, "anomaly": true },
@@ -175,12 +170,24 @@
       "ceil": ["ep2/kyakushitsu_ceil1", "ep2/kyakushitsu_ceil2"],
       "floor": ["ep2/kyakushitsu_floor1", "ep2/kyakushitsu_floor2"],
       "end": ["ep2/kyakushitsu_end1"],
-      "back": ["ep2/kyakushitsu_back1"]
+      "back": ["ep2/kyakushitsu_back1"],
+      "ways": [
+        {
+          "id": "end",
+          "wall": "end",
+          "x0": -1.5,
+          "x1": -0.1,
+          "y0": 0.0,
+          "y1": 2.25,
+          "door": { "kind": "slide", "k": ["ep2/door_fusuma"], "side": 1 }
+        }
+      ]
     },
     "gimmicks": [],
     "stations": {
       "ky0": {
-        "arrive": { "at": [-0.8, 1.15, -6.7], "look": [0, 1.1, 2.0] },
+        "leave": { "way": "end", "via": [[-0.0, 1.15, -7.1]], "steps": 13 },
+        "arrive": { "way": "end", "at": [-0.8, 1.15, -5.7], "look": [0, 1.1, 2.0] },
         "cam": [0.3, 1.15, -3.2],
         "look": [-2.7, 1.25, -2.4],
         "pause": 1.4,
@@ -189,8 +196,8 @@
       },
       "ky1": { "cam": [0.6, 1.15, -1.4], "look": [-1.0, 1.5, 2.0], "pause": 1.4, "say": "photo" },
       "kh1": {
-        "leave": { "exit": [0.38, 1.15, 2.6] },
-        "arrive": { "at": [-0.8, 1.15, -6.65], "look": [0, 1.1, 2.0] },
+        "leave": { "way": "back" },
+        "arrive": { "way": "end", "at": [-0.8, 1.15, -6.1], "look": [0, 1.1, 2.0] },
         "state": 1,
         "cam": [-1.9, 1.0, -2.6],
         "look": [2.7, 1.0, -3.0],
@@ -208,7 +215,7 @@
     "anomalySky": "#020104",
     "anomalyGrade": { "tint": [0.9, 0.86, 1.04], "k": 0.3, "sat": 0.92 },
     "exit": [-0.8, 1.15, -7.6],
-    "entry": { "at": [-0.0, 1.15, 1.75], "look": [0, 1.1, -7.0] },
+    "entry": { "at": [0.0, 1.15, 1.75], "look": [0, 1.1, -7.0] },
     "decals": [
       { "k": "ep2/d_slashb", "on": "right", "z": 0.21, "y": 2.29, "w": 1.14, "anomaly": true },
       { "k": "ep2/d_threadsa", "on": "right", "z": -1.41, "y": 1.55, "w": 0.77, "anomaly": true },
@@ -246,7 +253,11 @@
       "ceil": ["ep2/rouka_ceil1", "ep2/rouka_ceil2", "ep2/rouka_ceil3"],
       "floor": ["ep2/rouka_floor1", "ep2/rouka_floor2", "ep2/rouka_floor3"],
       "end": ["ep2/rouka_end1"],
-      "back": ["ep2/rouka_back1"]
+      "back": ["ep2/rouka_back1"],
+      "ways": [
+        { "id": "end", "wall": "end", "x0": -0.54, "x1": 0.54, "y0": 0.17, "y1": 1.66 },
+        { "id": "back", "wall": "back", "x0": -0.77, "x1": 0.01, "y0": 0.17, "y1": 2.21 }
+      ]
     },
     "gimmicks": [
       {
@@ -321,6 +332,7 @@
         "hp": 36,
         "station": "rc2",
         "block": true,
+        "appear": true,
         "do": [{ "sound": "woodBreak" }, { "gone": true }]
       },
       {
@@ -334,12 +346,14 @@
         "hp": 36,
         "station": "rc2",
         "block": true,
+        "appear": true,
         "do": [{ "sound": "tear" }, { "gone": true }]
       }
     ],
     "stations": {
       "ro0": {
-        "arrive": { "at": [0.38, 1.15, 1.75], "look": [0, 1.1, -25.0] },
+        "leave": { "way": "end" },
+        "arrive": { "way": "back", "at": [-0.38, 1.15, 0.7], "look": [0, 1.1, -25.0] },
         "cam": [0, 1.15, -8],
         "look": [0, 1.1, -25.0],
         "pause": 0.8,
@@ -347,8 +361,8 @@
       },
       "ro1": { "cam": [0, 1.15, -20.5], "look": [0, 1.1, -25.0], "pause": 1.0, "sfx": "clockChime" },
       "rc1": {
-        "leave": { "exit": [0.39, 1.15, 2.6] },
-        "arrive": { "at": [0, 1.15, -24.4], "look": [0, 1.1, -28.0] },
+        "leave": { "way": "back" },
+        "arrive": { "way": "end", "at": [0, 1.15, -24.0], "look": [0, 1.1, -28.0] },
         "state": 1,
         "cam": [0, 1.15, -4.0],
         "look": [0, 1.1, -25.0],
@@ -371,14 +385,14 @@
         "block": { "form": "a", "dist": 11, "hint": "sheBlock" },
         "waves": [
           [
-            { "t": 0, "type": "surippa", "count": 5, "x": 0, "z": 0, "spread": 2.4, "every": 0.35 }
+            { "t": 0, "type": "surippa", "count": 5, "x": 0, "z": 0, "spread": 2.4, "every": 0.35, "from": "door", "way": "back" }
           ],
           [
-            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": 0.5, "y": 2.3, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": 0.5, "y": 2.3, "spread": 3.0, "every": 0.12, "from": "door", "way": "back" }
           ],
           [
-            { "t": 0, "type": "karakasa", "x": -0.6, "z": 0.8, "from": "pop" },
-            { "t": 1.2, "type": "surippa", "count": 4, "x": 0, "z": 0.5, "spread": 2, "every": 0.4 }
+            { "t": 0, "type": "karakasa", "x": -0.6, "z": 0.8, "from": "wall" },
+            { "t": 1.2, "type": "surippa", "count": 4, "x": 0, "z": 0.5, "spread": 2, "every": 0.4, "from": "door", "way": "back" }
           ]
         ]
       }
@@ -394,7 +408,7 @@
     "anomalySky": "#020104",
     "anomalyGrade": { "tint": [0.9, 0.86, 1.04], "k": 0.3, "sat": 0.92 },
     "exit": [0.0, 1.15, -25.6],
-    "entry": { "at": [0.38, 1.15, 1.75], "look": [0, 1.1, -25.0] },
+    "entry": { "at": [-0.38, 1.15, 1.75], "look": [0, 1.1, -25.0] },
     "decals": [
       { "k": "ep2/d_slasha", "on": "left", "z": -2.45, "y": 2.2, "w": 0.81, "anomaly": true },
       { "k": "ep2/d_threadsb", "on": "left", "z": -4.29, "y": 2.24, "w": 1.12, "anomaly": true },
@@ -438,11 +452,24 @@
       "ceil": ["ep2/furo_ceil1", "ep2/furo_ceil2"],
       "floor": ["ep2/furo_floor1", "ep2/furo_floor2"],
       "end": ["ep2/furo_end1"],
-      "back": ["ep2/furo_back1"]
+      "back": ["ep2/furo_back1"],
+      "ways": [
+        { "id": "end", "wall": "end", "x0": -1.36, "x1": -0.94, "y0": 2.61, "y1": 3.04 },
+        { "id": "back", "wall": "back", "x0": -1.05, "x1": 0.27, "y0": 0.18, "y1": 2.66 }
+      ]
     },
     "gimmicks": [],
     "stations": {
-      "fu0": { "cam": [0, 1.15, -2.8], "look": [0, 0.9, -7.9], "pause": 2.0, "sfx": "bathLid", "say": "scare", "music": null },
+      "fu0": {
+        "leave": { "way": "end" },
+        "arrive": { "way": "back", "at": [-0.39, 1.15, 0.8], "look": [0, 1.0, -7.9] },
+        "cam": [0, 1.15, -2.8],
+        "look": [0, 0.9, -7.9],
+        "pause": 2.0,
+        "sfx": "bathLid",
+        "say": "scare",
+        "music": null
+      },
       "fu1": {
         "cam": [0, 1.15, -1.8],
         "look": [0, 1.0, -7.9],
@@ -454,13 +481,13 @@
         "hint": "sheRun",
         "waves": [
           [
-            { "t": 1.0, "type": "katashiro", "count": 10, "x": 0, "z": -5.5, "y": 2.2, "spread": 3.0, "every": 0.12 }
+            { "t": 1.0, "type": "katashiro", "count": 10, "x": 0, "z": -5.5, "y": 2.2, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": -5.8, "y": 2.4, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": -5.8, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "surippa", "count": 3, "x": 0, "z": -6.2, "spread": 2.5, "every": 0.4 }
+            { "t": 0, "type": "surippa", "count": 3, "x": 0, "z": -6.2, "spread": 2.5, "every": 0.4, "from": "wall" }
           ]
         ]
       }
@@ -476,7 +503,7 @@
     "anomalySky": "#020104",
     "anomalyGrade": { "tint": [0.9, 0.86, 1.04], "k": 0.3, "sat": 0.92 },
     "exit": [-1.15, 1.15, -8.5],
-    "entry": { "at": [0.39, 1.15, 1.75], "look": [0, 1.1, -7.9] },
+    "entry": { "at": [-0.39, 1.15, 1.75], "look": [0, 1.1, -7.9] },
     "decals": [
       { "k": "ep2/d_slashb", "on": "right", "z": -0.5, "y": 1.67, "w": 0.91, "anomaly": true },
       { "k": "ep2/d_threadsa", "on": "left", "z": -2.21, "y": 2.0, "w": 0.8, "anomaly": true },
@@ -513,7 +540,11 @@
       "ceil": ["ep2/hiroma_ceil1", "ep2/hiroma_ceil2"],
       "floor": ["ep2/hiroma_floor1", "ep2/hiroma_floor2"],
       "end": ["ep2/hiroma_end1"],
-      "back": ["ep2/hiroma_back1"]
+      "back": ["ep2/hiroma_back1"],
+      "ways": [
+        { "id": "end", "wall": "end", "x0": -2.18, "x1": 2.13, "y0": 0.0, "y1": 2.68 },
+        { "id": "back", "wall": "back", "x0": 5.05, "x1": 5.97, "y0": 2.48, "y1": 3.27 }
+      ]
     },
     "gimmicks": [
       {
@@ -621,9 +652,9 @@
       "hr0": {
         "leave": {
           "hole": { "on": "right", "x": 2.7, "z": -3.0, "y": 1.2, "size": 2.6 },
-          "exit": [3.4, 1.15, -3.0]
+          "exit": [3.6, 1.15, -3.0]
         },
-        "arrive": { "at": [-5.4, 1.2, 1.2], "look": [0, 1.2, -16] },
+        "arrive": { "hole": { "on": "left", "z": 0.6, "y": 1.3, "size": 2.6 }, "from": [-6.9, 1.2, 0.6], "at": [-4.8, 1.2, 0.4], "look": [0, 1.2, -16] },
         "cam": [-1.0, 1.2, -1.2],
         "look": [0, 1.2, -16],
         "pause": 1.2,
@@ -641,20 +672,20 @@
             { "t": 0, "type": "katashiro", "count": 18, "x": 0, "z": -9, "y": 3.2, "spread": 6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "chochin", "x": -2.5, "z": -11, "y": 1.2 },
-            { "t": 0.8, "type": "chochin", "x": 2.5, "z": -11.5, "y": 1.2 },
-            { "t": 1.6, "type": "karakasa", "x": 0, "z": -12, "from": "pop" }
+            { "t": 0, "type": "chochin", "x": -2.5, "z": -11, "y": 1.2, "from": "drop" },
+            { "t": 0.8, "type": "chochin", "x": 2.5, "z": -11.5, "y": 1.2, "from": "drop" },
+            { "t": 1.6, "type": "karakasa", "x": 0, "z": -12, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "futon", "x": -1.8, "z": -12, "from": "pop" },
-            { "t": 0.6, "type": "kokeshi", "x": 2.2, "z": -13, "from": "pop" },
+            { "t": 0, "type": "futon", "x": -1.8, "z": -12, "from": "wall" },
+            { "t": 0.6, "type": "kokeshi", "x": 2.2, "z": -13, "from": "door" },
             { "t": 2, "type": "katashiro", "count": 16, "x": 0, "z": -10, "y": 3.0, "spread": 6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "karakasa", "x": -2, "z": -12, "from": "pop" },
-            { "t": 0.6, "type": "karakasa", "x": 2, "z": -12.5, "from": "pop" },
-            { "t": 1.4, "type": "chochin", "x": 0, "z": -13, "y": 1.8 },
-            { "t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3 }
+            { "t": 0, "type": "karakasa", "x": -2, "z": -12, "from": "wall" },
+            { "t": 0.6, "type": "karakasa", "x": 2, "z": -12.5, "from": "wall" },
+            { "t": 1.4, "type": "chochin", "x": 0, "z": -13, "y": 1.8, "from": "drop" },
+            { "t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3, "from": "door" }
           ]
         ]
       },
@@ -666,12 +697,12 @@
         "block": { "form": "a", "dist": 13, "hint": "sheBlock" },
         "waves": [
           [
-            { "t": 0, "type": "futon", "x": -2.4, "z": -15, "from": "pop" },
-            { "t": 0.8, "type": "futon", "x": 2.4, "z": -15.2, "from": "pop" }
+            { "t": 0, "type": "futon", "x": -2.4, "z": -15, "from": "wall" },
+            { "t": 0.8, "type": "futon", "x": 2.4, "z": -15.2, "from": "wall" }
           ],
           [
             { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -14, "y": 3.0, "spread": 6, "every": 0.12, "from": "ceiling" },
-            { "t": 2, "type": "surippa", "count": 5, "x": 0, "z": -15, "spread": 5, "every": 0.3 }
+            { "t": 2, "type": "surippa", "count": 5, "x": 0, "z": -15, "spread": 5, "every": 0.3, "from": "door" }
           ]
         ]
       }
@@ -680,7 +711,7 @@
     "clocks": true,
     "reverb": 0.45,
     "exit": [-0.02, 1.15, -18.85],
-    "entry": { "at": [-5.51, 1.15, 1.75], "look": [0, 1.1, -18.25] },
+    "entry": { "at": [5.51, 1.15, 1.75], "look": [0, 1.1, -18.25] },
     "decals": [
       { "k": "ep2/d_slasha", "on": "left", "z": -1.38, "y": 1.08, "w": 1.03 },
       { "k": "ep2/d_threadsb", "on": "left", "z": -3.51, "y": 2.03, "w": 0.96 },
@@ -726,6 +757,10 @@
       "outsideAt": [
         { "k": "ep2/nakaniwa_outside1", "x": -15.6, "z": -11.5, "ry": 1.5707963267948966, "w": 64, "yk": 0.32 },
         { "k": "ep2/nakaniwa_outside2", "x": 15.6, "z": -11.5, "ry": -1.5707963267948966, "w": 64, "yk": 0.32 }
+      ],
+      "ways": [
+        { "id": "end", "wall": "end", "x0": -0.59, "x1": 0.59, "y0": 0.59, "y1": 2.07 },
+        { "id": "back", "wall": "back", "x0": -0.65, "x1": 0.65, "y0": 0.24, "y1": 2.08 }
       ]
     },
     "gimmicks": [
@@ -818,6 +853,8 @@
     ],
     "stations": {
       "nk1": {
+        "leave": { "way": "end" },
+        "arrive": { "way": "back", "at": [0, 1.15, 1.0], "look": [0, 1.1, 5.0] },
         "cam": [0, 1.15, -21.5],
         "look": [0, 1.1, 2],
         "cp": true,
@@ -845,20 +882,20 @@
         "hint": "sheStone",
         "waves": [
           [
-            { "t": 0, "type": "karakasa", "x": -1.2, "z": -19, "from": "pop" },
-            { "t": 0.7, "type": "karakasa", "x": 1.2, "z": -20, "from": "pop" },
-            { "t": 1.5, "type": "katashiro", "count": 12, "x": 0, "z": -19, "y": 2.4, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "karakasa", "x": -1.2, "z": -19, "from": "door" },
+            { "t": 0.7, "type": "karakasa", "x": 1.2, "z": -20, "from": "door" },
+            { "t": 1.5, "type": "katashiro", "count": 12, "x": 0, "z": -19, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "door" }
           ],
           [
-            { "t": 0, "type": "chochin", "x": -1.0, "z": -21, "y": 1.3 },
-            { "t": 0.8, "type": "chochin", "x": 1.0, "z": -21.5, "y": 1.6 },
-            { "t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -20, "spread": 2.2, "every": 0.3 }
+            { "t": 0, "type": "chochin", "x": -1.0, "z": -21, "y": 1.3, "from": "drop" },
+            { "t": 0.8, "type": "chochin", "x": 1.0, "z": -21.5, "y": 1.6, "from": "drop" },
+            { "t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -20, "spread": 2.2, "every": 0.3, "from": "door" }
           ],
           [
-            { "t": 0, "type": "futon", "x": 0, "z": -21, "from": "pop" },
-            { "t": 0.8, "type": "karakasa", "x": -1.3, "z": -20.5, "from": "pop" },
-            { "t": 1.4, "type": "karakasa", "x": 1.3, "z": -20.5, "from": "pop" },
-            { "t": 3, "type": "katashiro", "count": 14, "x": 0, "z": -20, "y": 2.5, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "futon", "x": 0, "z": -21, "from": "door" },
+            { "t": 0.8, "type": "karakasa", "x": -1.3, "z": -20.5, "from": "door" },
+            { "t": 1.4, "type": "karakasa", "x": 1.3, "z": -20.5, "from": "door" },
+            { "t": 3, "type": "katashiro", "count": 14, "x": 0, "z": -20, "y": 2.5, "spread": 3.0, "every": 0.12, "from": "door" }
           ]
         ]
       }
@@ -903,7 +940,18 @@
       "ceil": ["ep2/kura_ceil1", "ep2/kura_ceil2"],
       "floor": ["ep2/kura_floor1", "ep2/kura_floor2"],
       "end": ["ep2/kura_end1"],
-      "back": ["ep2/kura_back1"]
+      "back": ["ep2/kura_back1"],
+      "ways": [
+        {
+          "id": "back",
+          "wall": "back",
+          "x0": -1.02,
+          "x1": 1.04,
+          "y0": 0.15,
+          "y1": 3.37,
+          "door": { "kind": "swing", "k": ["ep2/door_kura_r", "ep2/door_kura_l"] }
+        }
+      ]
     },
     "gimmicks": [
       {
@@ -944,7 +992,15 @@
       }
     ],
     "stations": {
-      "ku1": { "cam": [0, 1.2, -2.0], "look": [0, 1.2, -11.5], "pause": 1.0, "sfx": "doorSlam", "say": "scare" },
+      "ku1": {
+        "leave": { "way": "end", "steps": 4 },
+        "arrive": { "way": "back", "at": [0.01, 1.2, 0.7], "look": [0, 1.2, -11.5] },
+        "cam": [0, 1.2, -2.0],
+        "look": [0, 1.2, -11.5],
+        "pause": 1.0,
+        "say": "scare",
+        "slam": "back"
+      },
       "ku2": {
         "cam": [0, 1.2, -1.8],
         "look": [0, 1.2, -11.5],
@@ -952,19 +1008,19 @@
         "cp": true,
         "waves": [
           [
-            { "t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "pop" },
-            { "t": 0.6, "type": "kokeshi", "x": 2, "z": -8.5, "from": "pop" },
-            { "t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "pop" }
+            { "t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "statue", "wake": 0.8 },
+            { "t": 0.6, "type": "kokeshi", "x": 2, "z": -8.5, "from": "statue", "wake": 0.8 },
+            { "t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "statue", "wake": 0.8 }
           ],
           [
             { "t": 0, "sound": "clocksAll", "hint": "ep2Ushimitsu" },
-            { "t": 0.8, "type": "katashiro", "count": 18, "x": 0, "z": -8, "y": 2.6, "spread": 3.0, "every": 0.12 },
-            { "t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8 }
+            { "t": 0.8, "type": "katashiro", "count": 18, "x": 0, "z": -8, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" },
+            { "t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8, "from": "drop" }
           ],
           [
-            { "t": 0, "type": "futon", "x": 0, "z": -9, "from": "pop" },
-            { "t": 1, "type": "karakasa", "x": -2, "z": -8.5, "from": "pop" },
-            { "t": 1.5, "type": "karakasa", "x": 2, "z": -8.5, "from": "pop" }
+            { "t": 0, "type": "futon", "x": 0, "z": -9, "from": "wall" },
+            { "t": 1, "type": "karakasa", "x": -2, "z": -8.5, "from": "wall" },
+            { "t": 1.5, "type": "karakasa", "x": 2, "z": -8.5, "from": "wall" }
           ]
         ]
       },
@@ -976,14 +1032,14 @@
         "block": { "form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch" },
         "waves": [
           [
-            { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -8, "y": 2.4, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -8, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "kokeshi", "x": -2, "z": -9, "from": "pop" },
-            { "t": 0.5, "type": "kokeshi", "x": 2, "z": -9, "from": "pop" }
+            { "t": 0, "type": "kokeshi", "x": -2, "z": -9, "from": "statue", "wake": 0.6 },
+            { "t": 0.5, "type": "kokeshi", "x": 2, "z": -9, "from": "statue", "wake": 0.6 }
           ],
           [
-            { "t": 0, "type": "katashiro", "count": 20, "x": 0, "z": -8.5, "y": 2.6, "spread": 3.0, "every": 0.12 }
+            { "t": 0, "type": "katashiro", "count": 20, "x": 0, "z": -8.5, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ]
         ]
       }
@@ -991,7 +1047,7 @@
     "music": null,
     "clocks": true,
     "reverb": 0.4,
-    "entry": { "at": [2.41, 1.15, 1.75], "look": [0, 1.1, -11.5] },
+    "entry": { "at": [0.01, 1.15, 1.75], "look": [0, 1.1, -11.5] },
     "decals": [
       { "k": "ep2/d_slashb", "on": "right", "z": -0.3, "y": 2.2, "w": 1.04 },
       { "k": "ep2/d_threadsa", "on": "left", "z": -3.82, "y": 1.16, "w": 1.25 },
@@ -1029,7 +1085,15 @@
       "ceil": ["ep2/chika_ceil1", "ep2/chika_ceil2", "ep2/chika_ceil3"],
       "floor": ["ep2/chika_floor1", "ep2/chika_floor2", "ep2/chika_floor3"],
       "end": ["ep2/chika_end1"],
-      "back": ["ep2/chika_back1"]
+      "back": ["ep2/chika_back1"],
+      "ways": [
+        { "id": "back", "wall": "back", "x0": -2.11, "x1": -1.6, "y0": 3.35, "y1": 4.31 },
+        { "id": "end", "wall": "end", "x0": 2.7, "x1": 3.41, "y0": 3.27, "y1": 4.25, "depth": 2.0 }
+      ],
+      "shafts": [{ "at": "ceil", "x": 0, "z": -1.0, "size": 1.8, "h": 3.5 }],
+      "stairs": [
+        { "x": 3.06, "w": 0.95, "z0": -24.4, "z1": -27.98, "y1": 3.27, "n": 14, "tint": "#8a7a70" }
+      ]
     },
     "gimmicks": [
       {
@@ -1097,7 +1161,7 @@
       }
     ],
     "stations": {
-      "ch1": { "cam": [0, 1.2, -1.0], "look": [0, 1.1, -28.0], "enter": { "from": [0, 5, 0], "dur": 0.9, "shake": 1.4 }, "pause": 1.0, "say": "scare" },
+      "ch1": { "cam": [0, 1.2, -1.0], "look": [0, 1.1, -28.0], "enter": { "from": [0, 5.4, 0], "dur": 1.0, "shake": 1.4 }, "pause": 1.0, "say": "scare" },
       "ch2": {
         "cam": [0, 1.2, -13.5],
         "look": [0, 1.1, -28.0],
@@ -1106,10 +1170,10 @@
         "she": { "form": "kaiko", "at": [0, -25.0], "wake": 4.5 },
         "waves": [
           [
-            { "t": 0.5, "type": "katashiro", "count": 14, "x": 0, "z": -18, "y": 2.6, "spread": 3.0, "every": 0.12 }
+            { "t": 0.5, "type": "katashiro", "count": 14, "x": 0, "z": -18, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "surippa", "count": 6, "x": 0, "z": -19, "spread": 5, "every": 0.3 }
+            { "t": 0, "type": "surippa", "count": 6, "x": 0, "z": -19, "spread": 5, "every": 0.3, "from": "wall" }
           ]
         ]
       },
@@ -1120,12 +1184,12 @@
         "block": { "form": "kaiko", "dist": 13, "herSpeed": 0.45, "turnAt": 5.0, "hint": "sheBlock" },
         "waves": [
           [
-            { "t": 0, "type": "kokeshi", "x": -1.6, "z": -5.2, "from": "pop" },
-            { "t": 0.7, "type": "kokeshi", "x": 1.6, "z": -5.4, "from": "pop" }
+            { "t": 0, "type": "kokeshi", "x": -1.6, "z": -5.2, "from": "wall" },
+            { "t": 0.7, "type": "kokeshi", "x": 1.6, "z": -5.4, "from": "wall" }
           ],
           [
-            { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -5.5, "y": 2.4, "spread": 3.0, "every": 0.12 },
-            { "t": 1.5, "type": "surippa", "count": 5, "x": 0, "z": -5, "spread": 2.4, "every": 0.35 }
+            { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -5.5, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "ceiling" },
+            { "t": 1.5, "type": "surippa", "count": 5, "x": 0, "z": -5, "spread": 2.4, "every": 0.35, "from": "wall" }
           ]
         ]
       },
@@ -1142,12 +1206,12 @@
           "hint": "sheKerosene"
         }
       },
-      "ch4": { "cam": [2.4, 1.2, -25.6], "look": [3.6, 1.3, -28.0], "swap": { "ep2/chika_end1": "ep2/chika_end1_b" }, "pause": 1.4, "say": "real" }
+      "ch4": { "cam": [0.6, 1.2, -23.0], "look": [2.6, 2.6, -28.0], "swap": { "ep2/chika_end1": "ep2/chika_end1_b" }, "pause": 1.4, "say": "real" }
     },
     "music": null,
     "clocks": true,
     "reverb": 0.6,
-    "entry": { "at": [1.85, 1.15, 1.75], "look": [0, 1.1, -28.0] },
+    "entry": { "at": [-1.85, 1.15, 1.75], "look": [0, 1.1, -28.0] },
     "exit": [3.05, 1.15, -28.6],
     "decals": [
       { "k": "ep2/d_slashb", "on": "left", "z": -3.29, "y": 1.4, "w": 0.92 },
@@ -1187,7 +1251,10 @@
       "right": ["ep2/shoro_wallR1", "ep2/shoro_wallR2", "ep2/shoro_wallR3", "ep2/shoro_wallR4"],
       "ceil": ["ep2/shoro_ceil1", "ep2/shoro_ceil2", "ep2/shoro_ceil3"],
       "rows": 2,
-      "floor": ["ep2/shoro_floor1", "ep2/shoro_floor2", "ep2/shoro_floor3"]
+      "floor": ["ep2/shoro_floor1", "ep2/shoro_floor2", "ep2/shoro_floor3"],
+      "shafts": [
+        { "at": "ceil", "x": 0, "z": -2.0, "size": 1.4, "h": 2.6, "ladder": true, "ladderFrom": 9.4 }
+      ]
     },
     "gimmicks": [
       {
@@ -1228,7 +1295,14 @@
       }
     ],
     "stations": {
-      "sh1": { "arrive": { "at": [0, 1.2, -1.0], "look": [0, 1.2, -6.0] }, "cam": [0, 1.2, -2.0], "look": [0, 1.2, -6.0], "pause": 1.0, "sfx": "ropeCreak" },
+      "sh1": {
+        "leave": { "way": "end", "via": [[3.06, 1.2, -23.8]], "steps": 14 },
+        "arrive": { "from": [0, 1.2, 1.7], "at": [0, 1.2, -1.0], "look": [0, 1.2, -6.0] },
+        "cam": [0, 1.2, -2.0],
+        "look": [0, 1.2, -6.0],
+        "pause": 1.0,
+        "sfx": "ropeCreak"
+      },
       "sh2": {
         "cam": [0, 10.4, -2.0],
         "look": [0, 1.0, -2.6],
@@ -1252,7 +1326,7 @@
     "music": null,
     "clocks": true,
     "reverb": 0.5,
-    "exit": [0, 12.4, -2.0],
+    "exit": [0, 13.6, -2.0],
     "decals": [
       { "k": "ep2/d_slasha", "on": "right", "z": 0.12, "y": 1.7, "w": 0.88 },
       { "k": "ep2/d_threadsb", "on": "right", "z": -1.27, "y": 1.09, "w": 1.11 },
@@ -1295,6 +1369,10 @@
         { "k": "ep2/kane_outside2", "x": 20.0, "z": 0.0, "ry": -1.5707963267948966, "w": 64, "yk": 0.32 },
         { "k": "ep2/kane_outside1", "x": 0, "z": -20.0, "ry": 0, "w": 64, "yk": 0.32 },
         { "k": "ep2/kane_outside2", "x": 0, "z": 20.0, "ry": 3.141592653589793, "w": 64, "yk": 0.32 }
+      ],
+      "ways": [],
+      "shafts": [
+        { "at": "floor", "x": 0, "z": 5.0, "size": 1.4, "h": 2.6, "ladder": true }
       ]
     },
     "gimmicks": [
@@ -1484,7 +1562,8 @@
     ],
     "stations": {
       "kn1": {
-        "arrive": { "at": [0, 1.4, 5.6], "look": [0, 1.3, 0] },
+        "leave": { "via": [[0, 10.6, -1.5]], "steps": 9 },
+        "arrive": { "from": [0, -1.4, 5.0], "at": [0, 1.4, 4.3], "look": [0, 1.3, 0], "steps": 6 },
         "cam": [0, 1.4, 4.6],
         "look": [0, 1.3, 0],
         "pause": 1.4,
@@ -1498,14 +1577,17 @@
         "dial": { "center": [0, 0, 0], "r": 4.6, "forms": ["a", "c", "e"], "perForm": 4 },
         "waves": [
           [
-            { "t": 4, "type": "katashiro", "count": 12, "x": 0, "z": -2, "y": 2.6, "spread": 5, "every": 0.12 }
+            { "t": 4, "type": "katashiro", "count": 12, "x": 0, "z": -2, "y": 2.6, "spread": 5, "every": 0.12, "from": "outside" }
           ],
           [
-            { "t": 6, "type": "katashiro", "count": 14, "x": 0, "z": -2, "y": 2.8, "spread": 6, "every": 0.12 }
+            { "t": 6, "type": "katashiro", "count": 14, "x": 0, "z": -2, "y": 2.8, "spread": 6, "every": 0.12, "from": "outside" }
           ],
-          [{ "t": 0, "type": "chochin", "x": -2, "z": -2, "y": 2.0 }, { "t": 1, "type": "chochin", "x": 2, "z": -2, "y": 2.2 }],
           [
-            { "t": 8, "type": "katashiro", "count": 16, "x": 0, "z": -1, "y": 2.8, "spread": 6, "every": 0.12 }
+            { "t": 0, "type": "chochin", "x": -2, "z": -2, "y": 2.0, "from": "outside" },
+            { "t": 1, "type": "chochin", "x": 2, "z": -2, "y": 2.2, "from": "outside" }
+          ],
+          [
+            { "t": 8, "type": "katashiro", "count": 16, "x": 0, "z": -1, "y": 2.8, "spread": 6, "every": 0.12, "from": "outside" }
           ]
         ]
       }
@@ -1513,6 +1595,6 @@
     "music": "ep2_final",
     "clocks": true,
     "reverb": 0.15,
-    "entry": { "at": [0.02, 1.15, 5.75], "look": [0, 1.1, -6.0] }
+    "entry": { "at": [-0.02, 1.15, 5.75], "look": [0, 1.1, -6.0] }
   }
 }

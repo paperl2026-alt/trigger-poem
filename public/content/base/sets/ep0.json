@@ -78,34 +78,34 @@
         "covers": [{ "k": "cover/lockers", "side": -1 }, { "k": "cover/desks", "side": 1, "flip": true }],
         "waves": [
           [
-            { "t": 0.4, "type": "desk", "x": -1.2, "z": -3, "move": "walk", "from": "pop" },
-            { "t": 1.6, "type": "desk", "x": 1.4, "z": -3.5, "move": "walk", "from": "pop" }
+            { "t": 0.4, "type": "desk", "x": -1.2, "z": -3, "move": "walk", "from": "wall" },
+            { "t": 1.6, "type": "desk", "x": 1.4, "z": -3.5, "move": "walk", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -2, "z": -3, "move": "walk", "from": "pop" },
-            { "t": 0.9, "type": "chair", "x": 1.8, "z": -3.5, "move": "walk", "from": "pop" },
-            { "t": 2.0, "type": "desk", "x": 0, "z": -4, "move": "hop", "from": "pop" }
+            { "t": 0, "type": "desk", "x": -2, "z": -3, "move": "walk", "from": "wall" },
+            { "t": 0.9, "type": "chair", "x": 1.8, "z": -3.5, "move": "walk", "from": "wall" },
+            { "t": 2.0, "type": "desk", "x": 0, "z": -4, "move": "hop", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "chair", "x": -1.5, "z": -3.5, "move": "zigzag", "from": "pop" },
-            { "t": 1.2, "type": "chair", "x": 1.5, "z": -4, "move": "zigzag", "from": "pop" },
-            { "t": 2.4, "type": "desk", "x": 0, "z": -4, "move": "hop", "from": "pop" }
+            { "t": 0, "type": "chair", "x": -1.5, "z": -3.5, "move": "zigzag", "from": "wall" },
+            { "t": 1.2, "type": "chair", "x": 1.5, "z": -4, "move": "zigzag", "from": "wall" },
+            { "t": 2.4, "type": "desk", "x": 0, "z": -4, "move": "hop", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "shoe", "x": 0, "z": -2.5, "move": "burrow" }
+            { "t": 0, "type": "shoe", "x": 0, "z": -2.5, "move": "burrow", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -2.4, "z": -3, "move": "walk", "from": "pop" },
-            { "t": 0.6, "type": "desk", "x": 2.4, "z": -3.2, "move": "walk", "from": "pop" },
-            { "t": 1.4, "type": "chair", "x": 0, "z": -4, "move": "zigzag", "from": "pop" },
-            { "t": 2.4, "type": "shoe", "x": -1, "z": -3, "move": "burrow" }
+            { "t": 0, "type": "desk", "x": -2.4, "z": -3, "move": "walk", "from": "wall" },
+            { "t": 0.6, "type": "desk", "x": 2.4, "z": -3.2, "move": "walk", "from": "wall" },
+            { "t": 1.4, "type": "chair", "x": 0, "z": -4, "move": "zigzag", "from": "wall" },
+            { "t": 2.4, "type": "shoe", "x": -1, "z": -3, "move": "burrow", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "chair", "x": -2, "z": -4, "move": "zigzag", "from": "pop" },
-            { "t": 0.5, "type": "chair", "x": 2, "z": -4, "move": "zigzag", "from": "pop" },
-            { "t": 1.2, "type": "desk", "x": 0, "z": -4.2, "move": "hop", "from": "pop" },
-            { "t": 2.0, "type": "desk", "x": -1.2, "z": -3.5, "move": "hop", "from": "pop" },
-            { "t": 2.8, "type": "shoe", "x": 1.2, "z": -3, "move": "burrow" }
+            { "t": 0, "type": "chair", "x": -2, "z": -4, "move": "zigzag", "from": "wall" },
+            { "t": 0.5, "type": "chair", "x": 2, "z": -4, "move": "zigzag", "from": "wall" },
+            { "t": 1.2, "type": "desk", "x": 0, "z": -4.2, "move": "hop", "from": "wall" },
+            { "t": 2.0, "type": "desk", "x": -1.2, "z": -3.5, "move": "hop", "from": "wall" },
+            { "t": 2.8, "type": "shoe", "x": 1.2, "z": -3, "move": "burrow", "from": "wall" }
           ]
         ]
       },
@@ -117,33 +117,35 @@
         "covers": [{ "k": "cover/lectern", "side": -1 }, { "k": "cover/desks", "side": 1 }],
         "waves": [
           [
-            { "t": 0.4, "type": "board", "x": 0, "z": 5.5, "from": "pop" },
-            { "t": 1.6, "type": "desk", "x": -1.6, "z": 5, "move": "walk", "from": "pop" }
+            { "t": 0.4, "type": "board", "x": 0, "z": 5.5, "from": "ceiling" },
+            { "t": 1.6, "type": "desk", "x": -1.6, "z": 5, "move": "walk", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "board", "x": -2, "z": 5.5, "from": "pop" },
-            { "t": 0.8, "type": "board", "x": 2.2, "z": 5.8, "from": "pop" }
+            { "t": 0, "type": "board", "x": -2, "z": 5.5, "from": "ceiling" },
+            { "t": 0.8, "type": "board", "x": 2.2, "z": 5.8, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -1.8, "z": 5, "move": "hop", "from": "pop" },
-            { "t": 0.7, "type": "chair", "x": 1.6, "z": 5.5, "move": "zigzag", "from": "pop" },
-            { "t": 1.6, "type": "desk", "x": 0, "z": 5.8, "move": "walk", "from": "pop" }
-          ],
-          [{ "t": 0, "type": "horn", "x": 0, "z": 5.5, "from": "pop" }],
-          [
-            { "t": 0, "type": "clock", "x": -1.8, "z": 5.8, "from": "pop" },
-            { "t": 1.0, "type": "board", "x": 1.8, "z": 5.5, "from": "pop" },
-            { "t": 2.2, "type": "chair", "x": 0, "z": 5, "move": "walk", "from": "pop" }
+            { "t": 0, "type": "desk", "x": -1.8, "z": 5, "move": "hop", "from": "wall" },
+            { "t": 0.7, "type": "chair", "x": 1.6, "z": 5.5, "move": "zigzag", "from": "wall" },
+            { "t": 1.6, "type": "desk", "x": 0, "z": 5.8, "move": "walk", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -2.2, "z": 5, "move": "hop", "from": "pop" },
-            { "t": 0.6, "type": "desk", "x": 2.2, "z": 5.2, "move": "walk", "from": "pop" },
-            { "t": 1.3, "type": "chair", "x": 0, "z": 5.8, "move": "zigzag", "from": "pop" },
-            { "t": 2.0, "type": "shoe", "x": -1, "z": 4.5, "move": "burrow" },
-            { "t": 2.8, "type": "board", "x": 1.2, "z": 6, "from": "pop" }
+            { "t": 0, "type": "horn", "x": 0, "z": 5.5, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "horn", "x": -0.6, "z": 5.8, "from": "pop" }
+            { "t": 0, "type": "clock", "x": -1.8, "z": 5.8, "from": "ceiling" },
+            { "t": 1.0, "type": "board", "x": 1.8, "z": 5.5, "from": "ceiling" },
+            { "t": 2.2, "type": "chair", "x": 0, "z": 5, "move": "walk", "from": "wall" }
+          ],
+          [
+            { "t": 0, "type": "desk", "x": -2.2, "z": 5, "move": "hop", "from": "wall" },
+            { "t": 0.6, "type": "desk", "x": 2.2, "z": 5.2, "move": "walk", "from": "wall" },
+            { "t": 1.3, "type": "chair", "x": 0, "z": 5.8, "move": "zigzag", "from": "wall" },
+            { "t": 2.0, "type": "shoe", "x": -1, "z": 4.5, "move": "burrow", "from": "wall" },
+            { "t": 2.8, "type": "board", "x": 1.2, "z": 6, "from": "ceiling" }
+          ],
+          [
+            { "t": 0, "type": "horn", "x": -0.6, "z": 5.8, "from": "ceiling" }
           ]
         ]
       }
@@ -209,36 +211,40 @@
         "covers": [{ "k": "cover/lockers", "side": -1 }, { "k": "cover/desks", "side": 1 }],
         "waves": [
           [
-            { "t": 0.4, "type": "shoe", "x": -0.6, "z": -10, "move": "walk", "from": "pop" },
-            { "t": 1.4, "type": "shoe", "x": 0.6, "z": -11, "move": "walk", "from": "pop" }
-          ],
-          [{ "t": 0, "type": "book", "x": 0.4, "z": -11, "y": 2.2 }],
-          [
-            { "t": 0, "type": "desk", "x": 0, "z": -11, "move": "charge", "from": "pop" }
+            { "t": 0.4, "type": "shoe", "x": -0.6, "z": -10, "move": "walk", "from": "wall" },
+            { "t": 1.4, "type": "shoe", "x": 0.6, "z": -11, "move": "walk", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "book", "x": -0.6, "z": -11, "y": 2.0 },
-            { "t": 0.8, "type": "paper", "x": 0.6, "z": -12, "y": 2.4 },
-            { "t": 1.8, "type": "shoe", "x": 0, "z": -10, "move": "burrow" }
+            { "t": 0, "type": "book", "x": 0.4, "z": -11, "y": 2.2, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "frame", "x": -0.6, "z": -12, "from": "pop" },
-            { "t": 1.0, "type": "shoe", "x": 0.6, "z": -10, "move": "walk", "from": "pop" },
-            { "t": 1.8, "type": "chair", "x": -0.4, "z": -11, "move": "zigzag", "from": "pop" }
-          ],
-          [{ "t": 0, "type": "horn", "x": 0, "z": -11, "from": "pop" }],
-          [
-            { "t": 0, "type": "chair", "x": -0.6, "z": -11, "move": "zigzag", "from": "pop" },
-            { "t": 0.6, "type": "chair", "x": 0.6, "z": -11.5, "move": "zigzag", "from": "pop" },
-            { "t": 1.4, "type": "desk", "x": 0, "z": -12, "move": "charge", "from": "pop" },
-            { "t": 2.4, "type": "book", "x": 0.4, "z": -11.5, "y": 2.2 }
+            { "t": 0, "type": "desk", "x": 0, "z": -11, "move": "charge", "from": "wall" }
           ],
           [
-            { "t": 0, "type": "clock", "x": -0.6, "z": -12, "from": "pop" },
-            { "t": 0.8, "type": "frame", "x": 0.6, "z": -12.5, "from": "pop" },
-            { "t": 1.6, "type": "shoe", "x": 0, "z": -10, "move": "burrow" },
-            { "t": 2.4, "type": "shoe", "x": -0.5, "z": -10.5, "move": "burrow" },
-            { "t": 3.2, "type": "paper", "x": 0, "z": -11, "y": 2.3 }
+            { "t": 0, "type": "book", "x": -0.6, "z": -11, "y": 2.0, "from": "ceiling" },
+            { "t": 0.8, "type": "paper", "x": 0.6, "z": -12, "y": 2.4, "from": "ceiling" },
+            { "t": 1.8, "type": "shoe", "x": 0, "z": -10, "move": "burrow", "from": "wall" }
+          ],
+          [
+            { "t": 0, "type": "frame", "x": -0.6, "z": -12, "from": "ceiling" },
+            { "t": 1.0, "type": "shoe", "x": 0.6, "z": -10, "move": "walk", "from": "wall" },
+            { "t": 1.8, "type": "chair", "x": -0.4, "z": -11, "move": "zigzag", "from": "wall" }
+          ],
+          [
+            { "t": 0, "type": "horn", "x": 0, "z": -11, "from": "ceiling" }
+          ],
+          [
+            { "t": 0, "type": "chair", "x": -0.6, "z": -11, "move": "zigzag", "from": "wall" },
+            { "t": 0.6, "type": "chair", "x": 0.6, "z": -11.5, "move": "zigzag", "from": "wall" },
+            { "t": 1.4, "type": "desk", "x": 0, "z": -12, "move": "charge", "from": "wall" },
+            { "t": 2.4, "type": "book", "x": 0.4, "z": -11.5, "y": 2.2, "from": "ceiling" }
+          ],
+          [
+            { "t": 0, "type": "clock", "x": -0.6, "z": -12, "from": "ceiling" },
+            { "t": 0.8, "type": "frame", "x": 0.6, "z": -12.5, "from": "ceiling" },
+            { "t": 1.6, "type": "shoe", "x": 0, "z": -10, "move": "burrow", "from": "wall" },
+            { "t": 2.4, "type": "shoe", "x": -0.5, "z": -10.5, "move": "burrow", "from": "wall" },
+            { "t": 3.2, "type": "paper", "x": 0, "z": -11, "y": 2.3, "from": "ceiling" }
           ]
         ],
         "lesson": "interrupt"
@@ -251,39 +257,43 @@
         "covers": [{ "k": "cover/cart", "side": -1 }, { "k": "cover/bookcase", "side": 1 }],
         "waves": [
           [
-            { "t": 0.3, "type": "chair", "x": -0.6, "z": -15, "move": "zigzag", "from": "pop" },
-            { "t": 0.9, "type": "shoe", "x": 0.6, "z": -15.5, "move": "walk", "from": "pop" },
-            { "t": 1.5, "type": "chair", "x": 0, "z": -16, "from": "pop" },
-            { "t": 2.1, "type": "desk", "x": -0.4, "z": -15, "move": "hop", "from": "pop" },
-            { "t": 2.7, "type": "paper", "x": 0.5, "z": -16, "y": 2.2 }
+            { "t": 0.3, "type": "chair", "x": -0.6, "z": -15, "move": "zigzag", "from": "wall" },
+            { "t": 0.9, "type": "shoe", "x": 0.6, "z": -15.5, "move": "walk", "from": "wall" },
+            { "t": 1.5, "type": "chair", "x": 0, "z": -16, "from": "wall" },
+            { "t": 2.1, "type": "desk", "x": -0.4, "z": -15, "move": "hop", "from": "wall" },
+            { "t": 2.7, "type": "paper", "x": 0.5, "z": -16, "y": 2.2, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "clock", "x": 0, "z": -16, "from": "pop" },
-            { "t": 0.8, "type": "paper", "x": -0.6, "z": -16, "y": 2.0 },
-            { "t": 1.4, "type": "paper", "x": 0.6, "z": -16.5, "y": 2.4 }
-          ],
-          [{ "t": 0, "type": "ext", "x": 0, "z": -16, "from": "pop" }],
-          [
-            { "t": 0, "type": "frame", "x": -0.5, "z": -16.5, "from": "pop" },
-            { "t": 1.0, "type": "book", "x": 0.5, "z": -16, "y": 2.2 },
-            { "t": 1.6, "type": "book", "x": -0.5, "z": -16, "y": 2.6 },
-            { "t": 2.4, "type": "shoe", "x": 0, "z": -15, "move": "burrow" }
+            { "t": 0, "type": "clock", "x": 0, "z": -16, "from": "ceiling" },
+            { "t": 0.8, "type": "paper", "x": -0.6, "z": -16, "y": 2.0, "from": "ceiling" },
+            { "t": 1.4, "type": "paper", "x": 0.6, "z": -16.5, "y": 2.4, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -0.6, "z": -15, "from": "pop" },
-            { "t": 0.4, "type": "desk", "x": 0.6, "z": -15.5, "from": "pop" },
-            { "t": 0.9, "type": "chair", "x": 0, "z": -16, "from": "pop" },
-            { "t": 1.4, "type": "chair", "x": -0.5, "z": -16, "from": "pop" },
-            { "t": 1.9, "type": "shoe", "x": 0.5, "z": -15, "from": "pop" },
-            { "t": 2.4, "type": "shoe", "x": -0.4, "z": -15.5, "move": "burrow" }
+            { "t": 0, "type": "ext", "x": 0, "z": -16, "from": "ceiling" }
           ],
-          [{ "t": 0, "type": "horn", "x": 0, "z": -16, "from": "pop" }],
           [
-            { "t": 0, "type": "desk", "x": 0, "z": -16, "move": "charge", "from": "pop" },
-            { "t": 0.8, "type": "chair", "x": -0.6, "z": -15.5, "move": "zigzag", "from": "pop" },
-            { "t": 1.6, "type": "book", "x": 0.5, "z": -16, "y": 2.2 },
-            { "t": 2.4, "type": "clock", "x": 0, "z": -16.5, "from": "pop" },
-            { "t": 3.2, "type": "book", "x": -0.5, "z": -16, "y": 2.6 }
+            { "t": 0, "type": "frame", "x": -0.5, "z": -16.5, "from": "ceiling" },
+            { "t": 1.0, "type": "book", "x": 0.5, "z": -16, "y": 2.2, "from": "ceiling" },
+            { "t": 1.6, "type": "book", "x": -0.5, "z": -16, "y": 2.6, "from": "ceiling" },
+            { "t": 2.4, "type": "shoe", "x": 0, "z": -15, "move": "burrow", "from": "wall" }
+          ],
+          [
+            { "t": 0, "type": "desk", "x": -0.6, "z": -15, "from": "wall" },
+            { "t": 0.4, "type": "desk", "x": 0.6, "z": -15.5, "from": "wall" },
+            { "t": 0.9, "type": "chair", "x": 0, "z": -16, "from": "wall" },
+            { "t": 1.4, "type": "chair", "x": -0.5, "z": -16, "from": "wall" },
+            { "t": 1.9, "type": "shoe", "x": 0.5, "z": -15, "from": "wall" },
+            { "t": 2.4, "type": "shoe", "x": -0.4, "z": -15.5, "move": "burrow", "from": "wall" }
+          ],
+          [
+            { "t": 0, "type": "horn", "x": 0, "z": -16, "from": "ceiling" }
+          ],
+          [
+            { "t": 0, "type": "desk", "x": 0, "z": -16, "move": "charge", "from": "wall" },
+            { "t": 0.8, "type": "chair", "x": -0.6, "z": -15.5, "move": "zigzag", "from": "wall" },
+            { "t": 1.6, "type": "book", "x": 0.5, "z": -16, "y": 2.2, "from": "ceiling" },
+            { "t": 2.4, "type": "clock", "x": 0, "z": -16.5, "from": "ceiling" },
+            { "t": 3.2, "type": "book", "x": -0.5, "z": -16, "y": 2.6, "from": "ceiling" }
           ]
         ],
         "monsterFar": 4.8,

@@ -228,7 +228,10 @@ export class Actor {
 //   dmg: n           what its bite / ram takes (else tuning combat.enemyHit; swarms bite less)
 // A wave's entry can also have: count: n (that many, spread out: a swarm), from: 'statue' (it stands as a grey statue, not a target,
 // until wake: seconds, or a wave event { kills / t, wake: true | n } wakes it: DESIGN「摆设活过来」), from: 'wall' | 'ceiling' (it
-// breaks in through the side wall / the ceiling, leaving a hole: DESIGN「演出」), breakout: 0.4 (at that share of its HP it smashes
+// breaks in through the side wall / the ceiling, leaving a hole: DESIGN「演出」), from: 'door' (way: end | back: it comes out of the dark
+// passage behind that doorway, PanelWorld.ways), from: 'stairs' (down the place's stairs from the doorway at their top), from: 'outside'
+// (a flyer: in from beyond the open side of the place) - every monster comes in from somewhere (DESIGN「怪要有合理的入场」: user 2026-10-19
+// batch 23, never out of thin air on a flat floor), breakout: 0.4 (at that share of its HP it smashes
 // through the far wall and is gone; the girls follow it through the hole: Game.breakoutAt)
 const enemyHit = () => T.combat.enemyHit;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -283,9 +286,18 @@ export class Enemy extends Actor {
         const k = Math.min(1, (cd + (bp.goalBeforeCover ?? 1.1)) / qd);
         this.goal.set(c.x + (q.x - c.x) * k, 0, c.z + (q.z - c.z) * k);
       }
+      // a small one never comes so close that the covers and the HUD at the bottom hide it (user 2026-10-19 batch 23: too small, mostly
+      // unseen and unhittable): its goal stays where its top still shows above layout.json monster.smallTop of the screen
+      if (world.minDepth && def.h < (ML.smallH ?? 1)) {
+        const c = world.camPos, D = world.minDepth(def.h, ML.smallTop ?? 0.36), gd = Math.hypot(this.goal.x - c.x, this.goal.z - c.z) || 1;
+        if (gd < D) this.goal.set(c.x + (this.goal.x - c.x) * D / gd, 0, c.z + (this.goal.z - c.z) * D / gd);
+      }
     }
     if (this.beh === 'flyer') {
       P.set(s.x ?? rnd(-2, 2), s.y ?? 3, s.z);
+      const Wd = s.from === 'door' && world.wayPoints?.(s.way || 'end'), Hd0 = world.set?.hall;
+      if (Wd) P.set(Wd.far[0] + rnd(-0.3, 0.3) * Wd.W.w, Wd.far[1] + rnd(-0.2, 0.5), Wd.far[2]);
+      else if (s.from === 'outside' && Hd0) P.set((s.x ?? 0) < 0 ? Hd0.x0 - 4 : Hd0.x1 + 4, s.y ?? 2.6, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
       if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true, { far: T.layout.monster.spawnFar, min: T.layout.monster.spawnMin });
@@ -351,6 +363,16 @@ export class Enemy extends Actor {
       this.play(walker ? 'leap' : 'rise');
       tw.run(ceil ? 0.6 : 0.55, (e) => { P.x = sx + (s.x - sx) * e; P.y = ceil ? sy * (1 - e) : sy * (1 - e) + Math.sin(e * Math.PI) * 1.1; }, {
         ease: ceil ? Ease.outBounce : Ease.outQuad, onDone: () => { g.fx.puff(P, 5, COL.bone, 0.7); sfx.thud(0); if (walker) this.play('walk', 7); ready(); } });
+    } else if ((s.from === 'door' || s.from === 'stairs') && this.game.world.wayPoints?.(s.way || 'end')) {
+      // out of the dark of the passage behind a doorway, into the room to its spot; down the stairs first when the doorway is at their top
+      const g = this.game, W = g.world.wayPoints(s.way || 'end'), j = rnd(-0.25, 0.25) * W.W.w, y0 = W.W.y0;
+      const pts = [new THREE.Vector3(W.far[0] + j, y0, W.far[2]), new THREE.Vector3(W.door[0] + j, y0, W.door[2])];
+      const st = g.world.set.hall.stairs?.[0];
+      if (y0 > 0.3 && st) pts.push(new THREE.Vector3(st.x + j * 0.5, 0, st.z0 + 0.2));
+      pts.push(new THREE.Vector3(s.x, s.y || 0, s.z));
+      const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), len = curve.getLength();
+      curve.getPointAt(0, P); this.play(walker ? 'walk' : 'rise', 8);
+      tw.run(Math.max(0.8, len / (bp.enterSpeed ?? 2.6)), (e) => curve.getPointAt(e, P), { onDone: ready });
     } else if (s.from === 'pop') {
       P.set(s.x, s.y || 0, s.z);
       this.inner.rotation.x = -Math.PI / 2;

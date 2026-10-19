@@ -32,6 +32,7 @@ export class Gimmick extends Actor {
     else { P.set(g.x || 0, g.y || 0, g.z); this.root.rotation.y = (g.ry || 0) * Math.PI / 180; }
     game.world.scene.add(this.root);
     if (g.shoot === false) this.u.outlineOn.value = 0;
+    if (g.appear) this.root.visible = false;   // (appear: not there until its stop - then it comes crashing down into the way)
     // a candle of a dark room: a faint glint where it is until it is lit (PanelWorld.lamp / light)
     if ((g.do || []).some((e) => e.light) && game.world.lamp) { this.root.updateMatrixWorld(true); this.lamp = game.world.lamp(this.uvToWorld(0.5, 0.92)); }
   }
@@ -119,6 +120,10 @@ export class Gimmick extends Actor {
   update(dt, t) {
     if (!this.alive) return;
     this.baseUpdate(dt, t);
+    if (this.g.appear && !this.root.visible && this.game.stationId === this.g.station) {
+      const g = this.game, P = this.root.position, y0 = P.y; this.root.visible = true; P.y = y0 + 2.2;
+      g.tweens.to(P, { y: y0 }, 0.45, { ease: Ease.inQuad, onDone: () => { sfx.slam(); g.post.shake(0.9); g.fx.puff(P, 10, 0xd8c8b0, 1.2); } });
+    }
     if (this.g.needs && !this.spent) this.u.outlineOn.value = this.live() ? 1 : 0;
     // mark: while it can be shot, the red "shoot this" ring round it (fx.lock, like a monster about to ram), so it can't be missed
     if (this.g.mark) {

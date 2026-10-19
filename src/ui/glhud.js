@@ -776,8 +776,9 @@ export class HudGL {
     this.cineUpdate(dt);
   }
   cineUpdate(dt) {
-    const g = this.game, k = this.cine = this.cine + ((g.cineOn ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H, bh = H * 0.11 * k;
-    this.bars.forEach((m, i) => { m.visible = k > 0.01; m.scale.set(W * 1.02, bh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0); });
+    const g = this.game, k = this.cine = this.cine + ((g.cineOn || g.walkOn ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H;
+    this.barK = (this.barK || 0) + ((g.cineOn ? 1 : 0) - (this.barK || 0)) * Math.min(1, dt * 5); const bh = H * 0.11 * this.barK;   // (bars: close-ups only)
+    this.bars.forEach((m, i) => { m.visible = this.barK > 0.01; m.scale.set(W * 1.02, bh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0); });
     const keep = [this.stickers.layer, this.holdUI.g, ...this.bars];
     if (k > 0.3) {   // (what each part shows is its own business: hidden on top of it every frame, given back as it was at the end)
       if (!this.cineHid) { this.cineHid = new Map(); for (const c of this.g.children) if (!keep.includes(c)) this.cineHid.set(c, c.visible); }

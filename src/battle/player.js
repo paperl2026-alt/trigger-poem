@@ -240,7 +240,7 @@ export class Player {
     this.kick = Math.max(0, this.kick - dt * 10);
     this.pop += (1 - this.pop) * Math.min(1, dt * 18);
     // a close look (Game.cine) or a walk between places with the camera alone: she slides down out of the picture and back
-    this.cineK = (this.cineK || 0) + ((g.cineOn ? 1 : 0) - (this.cineK || 0)) * Math.min(1, dt * 5);
+    this.cineK = (this.cineK || 0) + ((g.cineOn || g.walkOn ? 1 : 0) - (this.cineK || 0)) * Math.min(1, dt * 5);
     const out = this.cineK * this.cineK * (3 - 2 * this.cineK) * this.H * 1.05;
     if (this.hero) {
       // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze

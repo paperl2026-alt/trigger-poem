@@ -426,18 +426,22 @@ export class Chase {
       // the HUD: how close she is (the portraits' colour, the original's) and her music
       const d = she.dist(), P = K().panic;
       this.panic += ((d < P.far ? Math.min(1, (P.far - d) / (P.far - P.near)) : 0) - this.panic) * Math.min(1, dt * 3);
-    } else this.panic = Math.max(0, this.panic - dt);
+    } else {
+      // (she burned up halfway down the run, under the house: they still run on to its end)
+      if (this.mode === 'run') this.updateRun(dt);
+      this.panic = Math.max(0, this.panic - dt);
+    }
     bed('heartbeat', this.panic > 0.75 || this.mode === 'hide', 0.4 + this.panic * 0.6);
     this.drawMeter(false);
   }
   updateRun(dt) {
-    const g = this.g, w = g.world, she = this.she, R = K().run;
+    const g = this.g, w = g.world, she = this.she?.alive ? this.she : null, R = K().run;
     if (g.lull) return;
-    const down = she.busy() && she.state !== 'lunge';
+    const down = !she || (she.busy() && she.state !== 'lunge');
     const k = this.grabbing ? 0 : 1;
     this.s = Math.min(this.len, this.s + this.speed * dt * k);
     if (!down && !this.grabbing && she.state !== 'windup') this.dist = Math.max(0.6, this.dist - (this.herSpeed * she.speedK - this.speed) * dt);
-    else if (down && she.state !== 'lured') this.dist += this.speed * dt * k;
+    else if (down && she?.state !== 'lured') this.dist += this.speed * dt * k;
     // the camera on the path, looking back at her (or sideways, or down the shaft)
     this.curve.getPointAt(Math.min(1, this.s / this.len), w.camPos);
     const tg = this.curve.getTangentAt(Math.min(0.999, this.s / this.len)), f = V2.set(tg.x, 0, tg.z);
@@ -449,16 +453,17 @@ export class Chase {
     else w.lookAt.set(w.camPos.x - f.x * 12, w.camPos.y - 0.2, w.camPos.z - f.z * 12);
     w.bob = Math.abs(Math.sin(this.s * 2.1)) * 0.045 * k;
     const st = Math.floor(this.s * 1.6); if (st !== this.stepI) { this.stepI = st; g.onStep(st); }
-    if (!she.busy() && she.state !== 'windup') { she.state = 'follow'; this.placeShe(); }
-    // the shaft (face down): she climbs up below the camera; her drawing lies facing up at it, the shadow gone
-    const up = face === 'down'; she.billboard = !up; if (up) { she.root.rotation.set(-Math.PI / 2, 0, 0); if (she.shadowM) she.shadowM.visible = false; }
-    else if (she.state === 'down' || she.state === 'stuck' || she.state === 'rising' || she.state === 'lured') { /* she stays where she fell */ }
-    // close enough: the blades go up (the red ring) and she lunges
-    if (she.state === 'follow' && this.dist <= R.reach && !this.grabbing) she.windup();
+    if (she) {
+      if (!she.busy() && she.state !== 'windup') { she.state = 'follow'; this.placeShe(); }
+      // the shaft (face down): she climbs up below the camera; her drawing lies facing up at it, the shadow gone
+      const up = face === 'down'; she.billboard = !up; if (up) { she.root.rotation.set(-Math.PI / 2, 0, 0); if (she.shadowM) she.shadowM.visible = false; }
+      // close enough: the blades go up (the red ring) and she lunges
+      if (she.state === 'follow' && this.dist <= R.reach && !this.grabbing) she.windup();
+    }
     if (this.s >= this.len - 0.01) {
       this.mode = null;
       const then = this.then; this.then = null;
-      she.state = she.busy() ? she.state : 'follow';
+      if (she) she.state = she.busy() ? she.state : 'follow';
       this.nextDist = Math.max(this.dist, 2.5);
       then && then();
     }
