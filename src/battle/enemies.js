@@ -92,7 +92,7 @@ export class Actor {
     this.flash = Math.max(0, this.flash - rdt * 6);
     this.u.flash.value = this.flash;
     this.dm.update(rdt);
-    this.tickAnim(rdt);
+    this.tickAnim(this.kick?.freeze > 0 ? 0 : rdt);   // (held still by a hit: Enemy.feel)
     if (this.billboard) {
       const c = this.game.world.camera.position, p = this.root.position;
       this.root.rotation.y = Math.atan2(c.x - p.x, c.z - p.z);
@@ -100,9 +100,39 @@ export class Actor {
     this.game.world.lightAt(this.root.position, this.litC);
     this.u.lit.value.lerp(this.litC, Math.min(1, dt * 8));
     if (this.stepped(t)) { // stop-motion "boil"
-      this.mesh.rotation.z = rnd(-0.014, 0.014);
-      this.mesh.position.x = rnd(-0.012, 0.012) * this.w;
+      this.boilZ = rnd(-0.014, 0.014);
+      this.boilX = rnd(-0.012, 0.012) * this.w;
     }
+    // a hit (feel): squashed, leaning back and away, springing back; a judder while it is held still
+    const k = this.kick;
+    let jit = 0;
+    if (k) {
+      const sp = (x, v, w, z) => v + (-x * w * w - v * 2 * z * w) * rdt;
+      k.sqV = sp(k.sq, k.sqV, 26, 0.32); k.sq += k.sqV * rdt;
+      k.leanV = sp(k.lean, k.leanV, 15, 0.45); k.lean += k.leanV * rdt;
+      k.tiltV = sp(k.tilt, k.tiltV, 17, 0.4); k.tilt += k.tiltV * rdt;
+      k.sq = Math.max(-0.2, Math.min(0.22, k.sq)); k.lean = Math.max(-0.25, Math.min(0.55, k.lean)); k.tilt = Math.max(-0.3, Math.min(0.3, k.tilt));   // (a hail of shots: it stays a judder)
+      if (k.freeze > 0) { k.freeze -= rdt; jit = Math.sin(k.freeze * 190) * 0.018 * this.w * Math.min(1, k.w); }
+      this.mesh.scale.set(1 + k.sq, 1 - k.sq, 1);
+      this.mesh.rotation.x = -k.lean;
+      if (k.freeze <= 0 && Math.abs(k.sq) + Math.abs(k.lean) + Math.abs(k.tilt) < 0.002 && Math.abs(k.sqV) + Math.abs(k.leanV) + Math.abs(k.tiltV) < 0.02) {
+        this.kick = null; this.mesh.scale.set(1, 1, 1); this.mesh.rotation.x = 0;
+      }
+    }
+    this.mesh.rotation.z = (this.boilZ || 0) + (k ? k.tilt : 0);
+    this.mesh.position.x = (this.boilX || 0) + jit;
+  }
+  // how a hit lands on it (docs/PLAN.md 打击感; tuning combat.feel): by how heavy the hit is (the gunner's shots light, the cat's mantra
+  // heavy, crits heavier): squashed, kicked back (it really leans back, in 3D) and away from where it was hit, held still for a moment
+  // while it judders (only it: Game.update gives it almost no time), then it springs back. Returns the hit's weight.
+  feel(info) {
+    const F = T.combat.feel, by = info.by;
+    const w = (F.weight[by?.gatling ? 'gatling' : info.kind] ?? 0.4) * (info.crit ? F.critMul : 1);
+    const k = this.kick || (this.kick = { sq: 0, sqV: 0, lean: 0, leanV: 0, tilt: 0, tiltV: 0, freeze: 0, w: 0 });
+    const side = (info.uv?.u ?? 0.5) < 0.5 ? -1 : 1;
+    k.sqV += F.squash * w * 26; k.leanV += F.lean * w * 15; k.tiltV += -side * F.tilt * w * 17;
+    k.freeze = Math.max(k.freeze, F.freeze * w); k.w = w;
+    return w;
   }
   paint(info) {
     const { u, v } = info.uv;
@@ -746,6 +776,7 @@ export class Enemy extends Actor {
     this.lastHitBy = info.by;
     this.paint(info);
     this.flash = braced ? 0.2 : info.kind === 'beam' ? 0.45 : 0.85;
+    info.weight = this.feel(info) * (braced ? 0.5 : 1);
     const heavy = info.crit || (info.stagger || 0) >= 10;
     if (heavy) this.hurtT = 0.12;
     const p = this.uvToWorld(info.uv.u, info.uv.v);

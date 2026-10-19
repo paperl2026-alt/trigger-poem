@@ -997,14 +997,26 @@ export class Game {
     if (dealt) {
       const b = this.box(target);
       this.hud.dmg(target, (b.x0 + b.x1) / 2, Math.max(this.H * 0.12, b.y0), dealt, !!info.crit, by.c.color);
-      hitNote(by.id, !!info.crit, false, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2);   // (a note that plays along: src/core/audio.js)
+      hitNote(by.id, !!info.crit, false, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2, this.comboRate());   // (a note that plays along: src/core/audio.js)
+      // a heavy hit (the cat's mantra, a crit) stops the whole picture for a blink and shakes it (tuning combat.feel; the gunner's light
+      // shots only make the monster itself judder: Enemy.feel)
+      const F = T.combat.feel, w = info.weight || 0;
+      if (w >= 0.9 && !by.activeOn) { this.feelStop(info.crit ? F.stop.crit : F.stop.heavy); this.post.shake(info.crit ? F.shake.crit : F.shake.heavy); }
     }
   }
+  // the whole picture held for s seconds (G.stop), not more often than every combat.feel.stop.gap (a hail of shots must not stutter)
+  feelStop(s, force = false) {
+    const now = performance.now() / 1000;
+    if (!force && now - (this.stopAt ?? -9) < T.combat.feel.stop.gap) return;
+    this.stopAt = now; this.G.stop(s);
+  }
+  // the hit sounds go up a semitone every combat.feel.comboPitch.per hits of the combo (up to max)
+  comboRate() { const P = T.combat.feel.comboPitch; return Math.pow(2, Math.min(P.max, Math.floor(this.combo / P.per)) / 12); }
   onKill(target, how, crit) {
     const by = target.lastHitBy;
     if (target instanceof Projectile) return;
     this.kills++;
-    if (by) { const b = this.box(target); hitNote(by.id, !!crit, true, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2); }
+    if (by) { const b = this.box(target); hitNote(by.id, !!crit, true, ((b.x0 + b.x1) / 2 / this.W - 0.5) * 1.2, this.comboRate()); }
     // a spawner whose stopper comes into play after so many kills (the cold store's shelf): from then on it can be shot, and the hint says so
     for (const s of this.spawners || []) if (s.live && s.ready === false && ++s.kills >= s.sealAfter) { s.ready = true; this.hint(s.hint || 'sealHint'); }
     if (this.waveLive && this.waveEvents?.length) {   // wave events waiting for so many kills
@@ -1017,7 +1029,11 @@ export class Game {
     // every kill: a sound-effect sticker where it was (stickers.js), and now and then a line from the girl who got it
     { const s = this.world.project(target.center()); this.hud.gl.stickers.onoma(s.x, this.H - s.y, crit); }
     if (by) this.hud.gl.stickers.kill(by);
-    if (crit && !(by && by.activeOn)) this.G.stop(0.05);
+    // the kill lands: a blink of stop and a shake; a tough one (or a crit on a fairly tough one) gets the impact frame too (tuning combat.feel)
+    const F = T.combat.feel, tough = (target.maxHp || 0) >= F.impact.hp * (crit ? 0.5 : 1);
+    if (!(by && by.activeOn)) this.feelStop(tough ? F.stop.killHeavy : F.stop.kill, tough);
+    this.post.shake(tough ? F.shake.killHeavy : F.shake.kill);
+    if (tough && !this.cineOn) { const now = performance.now() / 1000; if (now - (this.impactAt ?? -9) > F.impact.gap) { this.impactAt = now; this.post.impact(F.impact.time); } }
     if (this.combo >= T.combat.tauntCombo && by && by.state === 'cover') by.tauntT = 0.7;
     sfx.viewer();
   }
@@ -1038,7 +1054,7 @@ export class Game {
     this.rdt = dt;
     this.etw.update(edt);
     this.chase.update(dt);
-    for (const a of this.actors) a.update(edt, now);
+    for (const a of this.actors) a.update(a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }
     this.fx.update(dt, now);

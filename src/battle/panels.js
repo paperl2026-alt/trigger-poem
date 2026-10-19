@@ -781,6 +781,7 @@ export class PanelWorld {
     cam.lookAt(this.lookAt);
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
+    cam.rotateZ(g.post.shakeR);
     const fov = this.baseFov + this.fovKick - (this.cineZoom || 0);
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();

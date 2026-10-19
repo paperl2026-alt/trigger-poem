@@ -297,6 +297,7 @@ export class PlateWorld {
       cam.position.y += g.post.shakeY * 0.05;
       cam.rotateY(-this.look.x * 0.035);
       cam.rotateX(-this.look.y * 0.025);
+      cam.rotateZ(g.post.shakeR);
     }
     const fov = this.baseFov + this.fovKick;
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }

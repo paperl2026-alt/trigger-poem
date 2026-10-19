@@ -276,9 +276,9 @@ function playStep(s, t) {
 // ---- hits (user 2026-10-19: a toy's short sound on every hit, again and again like an old game - not a phrase going up and down; plain,
 // clear, short, plainly apart from the music and the voices): the cartoon set's hitPink / hitCat, a crit's slot-machine "ding ding", a
 // kill's coin (tools/toy_sfx.py; sounds.json gap keeps a gatling's 20 a second from blurring)
-export function hitNote(who, crit = false, kill = false, pan = 0) {
+export function hitNote(who, crit = false, kill = false, pan = 0, rate = 1) {
   if (!ctx || muted) return;
-  sound(kill ? 'kill' : crit ? 'crit' : who === 'cat' ? 'hitCat' : 'hitPink', { pan });
+  sound(kill ? 'kill' : crit ? 'crit' : who === 'cat' ? 'hitCat' : 'hitPink', { pan, rate: rate * (0.97 + Math.random() * 0.06) });   // (rate: up with the combo, Game.comboRate)
 }
 
 // ---- the mixer, every 50 ms: the groups give way to each other (docs/TECH.md「混音」)
