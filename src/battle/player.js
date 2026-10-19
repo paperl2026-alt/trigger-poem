@@ -328,7 +328,9 @@ export class Player {
     const pan = (this.aimX / g.W - 0.5) * 0.6;
     // her weapon's sound is her own voice (DESIGN「声音」: 突突突 / 唵嘛呢叭咪吽); the old effect only when she has none
     const V = (this.gatling && this.a.voice) || w.voice;
-    if (!(V && grain(this.id, V, pan, gi))) { if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan); }
+    // every shot its toy gun's short sound (user 2026-10-19: like an old game, again and again), her syllable over it
+    if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan);
+    if (V) grain(this.id, V, pan, gi);
     if (w.kind === 'rifle' && Math.random() < 0.5) sfx.shell();
     if (this.slot === 0) g.post.kick(w.kick > 1.2 ? 0.5 : 0.18);
   }

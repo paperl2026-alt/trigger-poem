@@ -101,17 +101,7 @@
             "license": "ACML 1.0",
             "licenseUrl": "https://github.com/Aivis-Project/ACML/blob/master/ACML-1.0.md",
             "source": "https://hub.aivis-project.com/aivm-models/a670e6b8-0852-45b2-8704-1bc9862f2fe6",
-            "use": "少女类、纸类怪物的叫声（tools/monster_voice.py 合成后魔改：变调、卡顿、倒放回声、环形调制、声码器、失真），sfx/ai/cry_*",
-            "changes": "大幅变声、加效果、修剪、统一音量"
-          },
-          {
-            "name": "にせ（AivisSpeech，Aivis Project 的研究开发用试作模型）",
-            "credit": "AivisSpeech: にせ",
-            "required": false,
-            "license": "ACML 1.0",
-            "licenseUrl": "https://github.com/Aivis-Project/ACML/blob/master/ACML-1.0.md",
-            "source": "https://hub.aivis-project.com/aivm-models/6d11c6c2-f4a4-4435-887e-23dd60f8b8dd",
-            "use": "木头类、野兽类怪物的叫声（tools/monster_voice.py 合成后魔改：变调、卡顿、倒放回声、环形调制、声码器、失真），sfx/ai/cry_*",
+            "use": "所有怪物的叫声，还有她的笑声和お蚕様的哀嚎（tools/monster_voice.py 合成后魔改：变调、卡顿、倒放回声、环形调制、声码器、失真；用户 2026-10-19：只要女声），sfx/ai/cry_*、sheLaugh、kaikoWail",
             "changes": "大幅变声、加效果、修剪、统一音量"
           }
         ]

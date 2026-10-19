@@ -10,8 +10,8 @@ Every variant draws its own settings (seeded), the act decides the words (windup
 yelp, die: a long wail fading out). Output: art/raw/monster_vo/<family>_<act>/<n>.wav (not in git) + _look sheets; picked into the game
 with tools/sfx_pick.py-style keys later (sounds.json sfx cry_<family>_<act>, which src/core/audio.js cry() already falls back to).
 usage: python -I tools/monster_voice.py [--n 8] [family ...]   (--test: the chains tried with a heroine's voice, never for the game)
-The voices (user 2026-10-19: an ACML model): two of Aivis's own research voices on AivisHub, ACML 1.0, "free to use", no voice actor
-whose image a monster could harm - 花音 (female) for the girls and the paper things, にせ (young male) far down for the wood and the beasts."""
+The voice (user 2026-10-19: an ACML model; girls only): Aivis's own research voice 花音 on AivisHub, ACML 1.0, "free to use", no voice actor
+whose image a monster could harm, bent per family: a cute-creepy girl, a whispering girl, a wound-up doll-girl, a gritty monster-girl."""
 import argparse, importlib.util, json, pathlib, sys, zlib
 import numpy as np
 from scipy import signal
@@ -21,18 +21,23 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "art" / "raw" / "monster_vo"
 sp = importlib.util.spec_from_file_location("va", ROOT / "tools" / "voice_aivis.py"); VA = importlib.util.module_from_spec(sp); sp.loader.exec_module(VA)
 
-VOICE = {"girl": "a670e6b8-0852-45b2-8704-1bc9862f2fe6", "paper": "a670e6b8-0852-45b2-8704-1bc9862f2fe6",   # 花音
-         "wood": "6d11c6c2-f4a4-4435-887e-23dd60f8b8dd", "beast": "6d11c6c2-f4a4-4435-887e-23dd60f8b8dd"}   # にせ
-
-WORDS = {
-    "girl":  {"windup": ["みーつけた", "あそぼ", "うふふふふ", "こっちおいで"], "attack": ["キャアアッ", "いっしょに!", "ちょうだい!", "シャアッ"],
-              "hurt": ["いたい", "ぎゃっ", "いやっ"], "die": ["かえりたい", "あああぁぁぁ", "どうして"]},
-    "paper": {"windup": ["さらさらさら", "くすくすくす", "ひらひら"], "attack": ["シャッ", "キリッ", "サッ"], "hurt": ["くしゃっ", "ぴっ"],
-              "die": ["ひらひらひら", "さよなら"]},
-    "wood":  {"windup": ["ギギギギ", "カタカタカタ", "コトコト"], "attack": ["ガッ!", "バキッ", "ドンッ"], "hurt": ["ゴッ", "ギッ"],
-              "die": ["ギイィィィ", "おわり"]},
-    "beast": {"windup": ["グルルルル", "おなかすいた", "ハァ ハァ"], "attack": ["ガアアッ!", "たべる!", "グアッ"], "hurt": ["グッ", "ギャッ"],
-              "die": ["グオオオオ", "アアアア"]},
+# user 2026-10-19: no beasts, no wood, no men, no old voices - girls' voices bent; and the words short: two syllables, three at most
+VOICE = {f: "a670e6b8-0852-45b2-8704-1bc9862f2fe6" for f in ("girl", "paper", "wood", "beast", "she", "kaiko")}   # 花音 for all of them
+WORDS = {   # (the families keep their keys - sounds.json monsters.<type>.cry - but every one is a girl now)
+    "girl":  {"windup": ["うふふ", "あそぼ", "みつけ", "ふふっ"], "attack": ["キャッ", "えいっ", "やあっ", "シャッ"],
+              "hurt": ["いたっ", "ひっ", "やっ"], "die": ["いやぁ", "あぁぁ", "やだぁ"]},
+    # paper things: a whispering girl
+    "paper": {"windup": ["くすくす", "ひそひそ", "さらさら"], "attack": ["シュッ", "サッ", "ひゅっ"], "hurt": ["ぴっ", "くしゃ"],
+              "die": ["ひらり", "ふわぁ"]},
+    # what was "wood": a doll-girl, glitchy and wound-up (the desks, the frames, the kokeshi)
+    "wood":  {"windup": ["カタカタ", "ケケケ", "ギギ"], "attack": ["ガッ", "バンッ", "えいっ"], "hurt": ["ぎっ", "かっ"],
+              "die": ["ギィィ", "こわれ"]},
+    # what was "beast": a monster-girl, gritty and a little lower, still a girl (the zombies, the crawlers, the slippers)
+    "beast": {"windup": ["ぐるる", "ふーっ", "がるる"], "attack": ["ガァッ", "シャーッ", "がうっ"], "hurt": ["ぎゃっ", "ぐっ"],
+              "die": ["あ゛ぁぁ", "ぐぁぁ"]},
+    # her laugh, and the silkworm's wail (sounds.json sfx sheLaugh / kaikoWail)
+    "she":   {"laugh": ["うふふ", "あはは", "くすくす", "ふふふ"]},
+    "kaiko": {"wail": ["ぎゃぁぁ", "あ゛ぁぁ", "おぎゃぁ"]},
 }
 
 
@@ -102,34 +107,38 @@ def pad_mix(*layers):
 
 # ---------------------------------------------------------------- the families
 def mangle(fam, act, x, sr, rng):
-    if fam == "girl":
-        y = tape(x, rng.uniform(2, 5) if act != "die" else rng.uniform(-1, 2))
-        if act in ("windup", "attack") and rng.random() < 0.7: y = stutter(y, sr, rng)
-        ghost = tape(y, -12) * 0.35
-        y = pad_mix(y, ghost)
-        y = ring(y, sr, rng.uniform(25, 60), 0.25)
-        if act in ("windup", "die"): y = rev_swell(y, sr, rng, 0.8 if act == "windup" else 1.4)
-        if act == "attack": y = drive(y * 1.5, 2.2)
-    elif fam == "paper":
-        y0 = tape(x, rng.uniform(1, 4)); noise = rng.standard_normal(len(y0))
+    if fam in ("girl", "she"):   # cute and creepy: a little higher, the first syllable caught, a reversed echo, a ghost an octave down
+        y = tape(x, rng.uniform(2, 5) if act != "die" else rng.uniform(0, 2))
+        if act in ("windup", "attack", "laugh") and rng.random() < 0.7: y = stutter(y, sr, rng)
+        y = pad_mix(y, tape(y, -12) * 0.25)
+        y = ring(y, sr, rng.uniform(25, 60), 0.2)
+        if act in ("windup", "die", "laugh"): y = rev_swell(y, sr, rng, 0.6 if act != "die" else 1.2)
+        if act == "attack": y = drive(y * 1.5, 2.0)
+    elif fam == "paper":   # a whispering girl
+        y0 = tape(x, rng.uniform(2, 5)); noise = rng.standard_normal(len(y0))
         whisper = vocoder(y0, sr, noise, bands=26, lo=400, hi=9000)
-        y = pad_mix(whisper / (np.abs(whisper).max() + 1e-9), hp(y0, sr, 1800) * 0.35)
-        y = tremolo(y, sr, rng.uniform(12, 22), 0.5)
+        y = pad_mix(whisper / (np.abs(whisper).max() + 1e-9), hp(y0, sr, 1500) * 0.45)
+        y = tremolo(y, sr, rng.uniform(12, 22), 0.4)
+        if act == "die": y = rev_swell(y, sr, rng, 1.0)
+    elif fam == "wood":   # a doll-girl: higher, wound-up stutter, a robotic ring, a little bit-crushed
+        y = tape(x, rng.uniform(3, 6))
+        y = stutter(y, sr, rng) if act != "die" else y
+        y = ring(y, sr, rng.uniform(140, 260), 0.45)
+        k = int(rng.integers(3, 6)); y = np.repeat(y[::k], k)[:len(y)]   # (fewer samples: a toy's tinny voice)
+        y = drive(y / (np.abs(y).max() + 1e-9) * 1.2, 1.8)
+        if act == "windup": y = tremolo(y, sr, rng.uniform(10, 16), 0.5)
+    elif fam == "kaiko":   # the silkworm: a wailing girl, wobbling and swollen (a little lower, never a man's)
+        y = tape(x, rng.uniform(-3, -1))
+        y = tremolo(drive(y / (np.abs(y).max() + 1e-9) * 1.3, 2.2), sr, rng.uniform(5, 8), 0.5)
+        y = pad_mix(y, tape(y, 12) * 0.2)
+        y = rev_swell(y, sr, rng, 1.0)
+    else:   # "beast": a monster-girl - a touch lower (never past -4: past that she stops being a girl), gritty, growling tremolo
+        y = tape(x, rng.uniform(-4, -1))
+        y = drive(y / (np.abs(y).max() + 1e-9) * 1.5, 2.6)
+        y = tremolo(y, sr, rng.uniform(28, 40), 0.35)
+        voc = vocoder(y, sr, saw_chord(len(y), sr, rng.uniform(180, 240), rng), bands=18, lo=150, hi=6000)
+        y = pad_mix(y, voc / (np.abs(voc).max() + 1e-9) * 0.35)
         if act == "die": y = rev_swell(y, sr, rng, 1.2)
-    elif fam == "wood":
-        y = tape(x, rng.uniform(-5, -2))
-        y = ring(y, sr, rng.uniform(70, 120), 0.6)
-        y = comb(y / (np.abs(y).max() + 1e-9), sr, rng.uniform(6, 12), 0.65)
-        y = drive(y / (np.abs(y).max() + 1e-9), 2.5)
-        if act == "windup": y = tremolo(y, sr, rng.uniform(8, 14), 0.6)
-    else:   # beast
-        y0 = tape(x, rng.uniform(-12, -8))
-        y0 = drive(y0 / (np.abs(y0).max() + 1e-9) * 1.4, 3.0)
-        y0 = tremolo(y0, sr, rng.uniform(24, 36), 0.45)
-        sub = tape(y0, -7) * 0.5
-        voc = vocoder(y0, sr, saw_chord(len(y0), sr, rng.uniform(40, 60), rng), bands=18, lo=60, hi=5000)
-        y = pad_mix(y0, sub, voc / (np.abs(voc).max() + 1e-9) * 0.4)
-        if act == "die": y = rev_swell(y, sr, rng, 1.6)
     # a soft start, a long natural tail (the reverb tails are part of it: nothing cut short), -1 dBFS
     y = y.astype(np.float64); fi = int(0.004 * sr); y[:fi] *= np.linspace(0, 1, fi)
     fo = int(min(len(y) * 0.2, 0.15 * sr)); y[-fo:] *= np.linspace(1, 0, fo) ** 2
@@ -156,7 +165,7 @@ def main():
             print(fam, act, a.n, flush=True)
     (out / "_made.json").write_text(json.dumps({"voices": VOICE, "test": a.test}, ensure_ascii=False), encoding="utf-8")
     # the listening page (sound.html) reads what there is from here
-    idx = {d.name: sorted(f.name for f in d.glob("*.wav")) for d in sorted(out.iterdir()) if d.is_dir()}
+    idx = {d.name: sorted(f.name for f in d.glob("*.wav")) for d in sorted(out.iterdir()) if d.is_dir() and not d.name.startswith("_")}
     (out / "_index.json").write_text(json.dumps(idx, ensure_ascii=False, indent=1), encoding="utf-8")
 
 

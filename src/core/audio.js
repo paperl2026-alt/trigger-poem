@@ -273,55 +273,12 @@ function playStep(s, t) {
   if (lead > 0 && intensity > 0.3) tone({ f: mtof(lead), type: 'square', t: dt, d: 0.18, v: 0.045, bus: B, filter: { f: 3200 }, vib: 5, verbAmt: 0.3 });
 }
 
-// ---- hits that play along (user 2026-10-19: like a danmaku shooter or a rhythm game, every hit a crisp note - "打拍子", not a metronome -
-// juicy, not an old monster-game thud). Synthesized here so they follow the music: a run of hits walks the pentatonic scale of the playing
-// track's key (sounds.json music.<track>.key; never a wrong note), a hit that falls just before the track's next sixteenth waits for it
-// (at most 30 ms: no lag felt). Each girl her own timbre: the twin-tail girl's gatling a bright little bell "pip", the cat girl's paw a
-// wooden "pon"; a crit an octave up with a glint; a kill a wet bubble pop and the chord rising after it
-const NOTE0 = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }, PENTA = { minor: [0, 3, 5, 7, 10], major: [0, 2, 4, 7, 9] };
-const RUN = { pink: [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1], cat: [0, 2, 4, 2, 5, 4, 2, 0, 3, 5] };
-const HITS = { last: -9, step: 0, who: null, key: 'A minor' };
-function scaleNote(deg, base) {   // a degree of the playing key's pentatonic (deg may run past one octave) -> MIDI
-  const M = C.sounds?.music?.[trackName], key = M?.key || HITS.key; HITS.key = key;
-  const m = key.match(/^([A-G])([#b]?)\s*(major|minor)?/i) || [0, 'A', '', 'minor'];
-  const root = NOTE0[m[1].toUpperCase()] + (m[2] === '#' ? 1 : m[2] === 'b' ? -1 : 0), sc = PENTA[(m[3] || 'minor').toLowerCase()] || PENTA.minor;
-  return base + root + 12 * Math.floor(deg / 5) + sc[((deg % 5) + 5) % 5];
-}
-function onGrid() {   // seconds to the playing track's next sixteenth, when that is close enough to wait for
-  const M = C.sounds?.music?.[trackName]; if (!track || !M?.bpm) return 0;
-  let pos = now() - track.t0; const Ls = M.loopStart || 0, Le = M.loopEnd || 0;
-  if (Le > Ls && pos > Le) pos = Ls + ((pos - Le) % (Le - Ls));
-  const s16 = 60 / M.bpm / 4, wait = s16 - (pos % s16);
-  return wait < 0.03 ? wait : 0;
-}
-function bell(f, t, v, pan, mod = 2.01, idx = 2.5, d = 0.14) {   // a small FM bell: bright at the strike, a clean tone after
-  const o = ctx.createOscillator(), m = ctx.createOscillator(), mg = ctx.createGain(), g = ctx.createGain();
-  o.frequency.value = f; m.frequency.value = f * mod;
-  mg.gain.setValueAtTime(f * idx, t); mg.gain.exponentialRampToValueAtTime(f * 0.02, t + 0.06);
-  m.connect(mg); mg.connect(o.frequency); o.connect(g); env(g, t, 0.002, v, d);
-  out(g, GRP.hit, pan, 0.06); o.start(t); m.start(t); o.stop(t + d + 0.05); m.stop(t + d + 0.05);
-}
-function wood(f, t, v, pan) {   // a wooden "pon": a short drop in pitch, a knock of filtered noise
-  tone({ f: f * 1.5, f2: f, type: 'sine', t: t - now(), a: 0.002, d: 0.12, v, bus: GRP.hit, pan, verbAmt: 0.05 });
-  tone({ f: f * 2, type: 'triangle', t: t - now(), a: 0.002, d: 0.07, v: v * 0.35, bus: GRP.hit, pan, verbAmt: 0 });
-  noise({ t: t - now(), f: 1800, d: 0.018, v: v * 0.6, q: 4, bus: GRP.hit, pan, verbAmt: 0 });
-}
+// ---- hits (user 2026-10-19: a toy's short sound on every hit, again and again like an old game - not a phrase going up and down; plain,
+// clear, short, plainly apart from the music and the voices): the cartoon set's hitPink / hitCat, a crit's slot-machine "ding ding", a
+// kill's coin (tools/toy_sfx.py; sounds.json gap keeps a gatling's 20 a second from blurring)
 export function hitNote(who, crit = false, kill = false, pan = 0) {
   if (!ctx || muted) return;
-  const t0 = now();
-  if (!kill && t0 - HITS.last < 0.055) return;   // (a gatling lands 20 a second: one note in 55 ms at most)
-  if (t0 - HITS.last > 0.7 || HITS.who !== who) HITS.step = 0;
-  HITS.last = t0; HITS.who = who; busy('hit');
-  const run = RUN[who] || RUN.pink, deg = run[HITS.step++ % run.length], t = t0 + onGrid();
-  const f = mtof(scaleNote(deg, who === 'cat' ? 60 : 72));
-  if (who === 'cat') wood(f, t, 0.2, pan); else { bell(f, t, 0.1, pan); noise({ t: t - t0, f: 8000, type: 'highpass', d: 0.006, v: 0.05, bus: GRP.hit, pan, verbAmt: 0 }); }
-  if (crit) { bell(f * 2, t + 0.012, 0.07, -pan * 0.5, 3.01, 3, 0.2); bell(f * 3, t + 0.03, 0.035, pan * 0.5, 2.01, 1.5, 0.25); }
-  if (kill) {   // a wet pop, then the chord rising (root, third, fifth, octave of the key)
-    const tk = t + 0.02, fp = mtof(scaleNote(0, 72));
-    tone({ f: fp * 0.55, f2: fp * 1.6, type: 'sine', t: tk - t0, a: 0.003, d: 0.07, v: 0.16, bus: GRP.hit, pan, verbAmt: 0.05 });
-    noise({ t: tk - t0, f: 1400, f2: 3200, d: 0.035, v: 0.12, q: 3, bus: GRP.hit, pan, verbAmt: 0.03 });
-    [0, 2, 3, 5].forEach((dg, k) => bell(mtof(scaleNote(dg, 72)), tk + 0.05 + k * 0.045, 0.06 - k * 0.008, pan + (k - 1.5) * 0.15, 2.01, 1.8, 0.22));
-  }
+  sound(kill ? 'kill' : crit ? 'crit' : who === 'cat' ? 'hitCat' : 'hitPink', { pan });
 }
 
 // ---- the mixer, every 50 ms: the groups give way to each other (docs/TECH.md「混音」)

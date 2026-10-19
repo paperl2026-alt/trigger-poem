@@ -141,7 +141,9 @@ async function gameSound() {
   const [A, K] = await Promise.all([import('./core/audio.js'), import('./core/content.js')]);
   const music = {};   // (the game's paths are from the pack folder)
   for (const [k, m] of Object.entries(S.music || {})) music[k] = { ...m, files: (m.files || []).map((f) => BASE + f) };
-  K.C.sounds = { ...S, music, sfx: {}, voices: {}, monsters: {} };
+  const sfx = {};
+  for (const [k, e] of Object.entries(S.sfx || {})) sfx[k] = { ...e, files: (e.files || []).map((f) => BASE + f) };
+  K.C.sounds = { ...S, music, sfx, voices: {}, monsters: {} };
   A.initAudio(); A.setVolume(+vol.value);
   gameAudio = A; return A;
 }
@@ -155,7 +157,7 @@ function fire(who, secs, every, opt = {}) {
   }, every);
 }
 function hitsTab() {
-  const out = [el('div', { cls: 'help' }, '打上去的声音：每打中一下一个清脆的音，连着打就顺着正在放的 BGM 的调走成一小段旋律，快到 BGM 的十六分音符时会等它一下（最多 30 毫秒，手感不会慢）。地雷妹（加特林）是小铃铛一样的「叮」，猫娘（猫爪）是木头的「咚」；暴击高八度带一点闪光，击杀是一个水润的「啵」再加一个往上走的和弦。先点一首 BGM，再点下面的按钮。')];
+  const out = [el('div', { cls: 'help' }, '打上去的声音（卡通 / 街机风，tools/toy_sfx.py）：每打中一下一个玩具的短音，连着打就一下一下地响，像老游戏。地雷妹打中是泡泡「啵」，猫娘是木鱼「咚」，暴击是老虎机「叮叮」，打倒一只是金币「叮——」。先点一首 BGM，再点下面的按钮。')];
   const it1 = el('div', { cls: 'item', 'data-q': 'bgm' }, el('h3', {}, '先放一首 BGM'));
   const r1 = el('div', { cls: 'row' });
   for (const name of Object.keys(S.music || {})) r1.append(btn(`▶ ${name}`, async () => { const A = await gameSound(); A.playMusic(name); }));
@@ -176,9 +178,10 @@ function hitsTab() {
 // ---- the monster cries made from a speech voice (tools/monster_voice.py): a try-out with a stand-in voice, to choose the direction
 async function criesTab() {
   const idx = await getJson('raw/monster_vo/_index.json');
-  const out = [el('div', { cls: 'help' }, '怪叫的新做法试作：一句话让语音合成念出来，再按怪的种类魔改——少女类（人偶、影子）升调、开头卡顿重复、前面一段倒放的回声、底下压一个低八度的鬼影；纸类（纸人、试卷）变成悄悄话一样的气声；木头类（课桌、画框）降调加金属环形调制和木头共鸣；野兽类（丧尸、お蚕様）大幅降调、失真、低吼颤音。声线：少女类和纸类用「花音」、木头类和野兽类用「にせ」（AivisHub 上 Aivis 官方的研究用试作模型，ACML 1.0，没有声优，可商用）。这里是全部出的版本，游戏里用的是每种挑出来的 5 个（音效栏 cry_ 开头的那些）。'),
+  const out = [el('div', { cls: 'help' }, '怪叫：全部是女声变声（用户 2026-10-19：不要野兽、木头、男的、老的），声线「花音」（AivisHub 上 Aivis 官方的研究用试作模型，ACML 1.0，没有声优），每句只有两三个音节。四类：可爱又瘆人的少女、悄悄话少女、发条人偶少女（升调、卡顿、机械感）、凶一点的怪物少女；还有她的笑声、お蚕様的哀嚎。这里是全部出的版本，游戏里用的是每种挑出来的几个（音效栏 cry_ 开头的、sheLaugh、kaikoWail）。'),,
     idx ? null : el('b', {}, '（还没有试作：要用 开始游戏.bat 的 [6] 打开）')];
-  const NAME = { girl: '少女类', paper: '纸类', wood: '木头类', beast: '野兽类' }, ACT = { windup: '蓄力', attack: '攻击', hurt: '挨打', die: '死' };
+  const NAME = { girl: '少女（人偶、影子…）', paper: '悄悄话少女（纸人、试卷…）', wood: '发条人偶少女（课桌、画框、小芥子…）', beast: '怪物少女（丧尸、爬行的、拖鞋…）', she: '她', kaiko: 'お蚕様' },
+    ACT = { windup: '蓄力', attack: '攻击', hurt: '挨打', die: '死', laugh: '笑', wail: '哀嚎' };
   for (const [k, files] of Object.entries(idx || {})) {
     const [fam, act] = k.split('_'), it = el('div', { cls: 'item', 'data-q': k });
     it.append(el('h3', {}, `${NAME[fam] || fam}　${ACT[act] || act}`));
@@ -191,9 +194,9 @@ async function criesTab() {
 // ---- chanting BGM straight from ACE-Step (tools/bgm_chant.py)
 async function chantTab() {
   const idx = await getJson('raw/bgm_ai/_chants.json');
-  const out = [el('div', { cls: 'help' }, 'BGM 模型自己唱的念咒（不用语音合成的声线）：歌词是九字真言、急急如律令和给这个游戏写的几句，用假名写让它念准。三种：民宿夜里一直不停的低声诵经（像九怨）、念咒推着走的战斗曲、洗脑的念咒歌（标题 / 选关用的方向）。每种两版，整首放。'),
+  const out = [el('div', { cls: 'help' }, 'BGM 模型自己唱的念咒：只要女声、更快，歌词拆成两三个音节的小块反复念（九字真言、急急如律令、剪刀「チョキ チョキ」、钟「カチ カチ」……）。第一批里只有洗脑念咒歌勉强合格，留着对比；新的三首每首两版。'),
     idx ? null : el('b', {}, '（还在生成，或者要用 开始游戏.bat 的 [6] 打开）')];
-  const NAME = { inn: '民宿夜里的诵经', battle: '念咒战斗曲', hook: '洗脑念咒歌' };
+  const NAME = { hook: '洗脑念咒歌（第一批，勉强合格的那首）', hook2: '洗脑念咒歌 · 快一点', battle2: '念咒战斗曲 · 女声、快', night2: '民宿夜里 · 女声、悄悄地念' };
   for (const [name, files] of Object.entries(idx || {})) {
     const it = el('div', { cls: 'item', 'data-q': name }, el('h3', {}, NAME[name] || name));
     const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ 第 ${i + 1} 版`, (b) => play(`raw/bgm_ai/${f}`, b)))); it.append(row);
