@@ -203,11 +203,59 @@ async function chantTab() {
   return out;
 }
 
-let S = null, T = null, tab = localStorage.getItem('auditionTab') || 'bgm';
+// ---- the sound sandbox's setup (src/ui/sandbox.js plays it: index.html?sandbox): a place, the music, the monsters and how many, the
+// beds, her; who plays. Saved as "sandbox" (the desktop build's save files, or localStorage)
+async function sandboxTab() {
+  const pack = await getJson(`${BASE}pack.json`);
+  const sets = {}, enemies = await getJson(`${BASE}enemies.json`) || {};
+  for (const f of pack?.data?.sets || []) { const d = await getJson(BASE + f); for (const [k, v] of Object.entries(d || {})) if (!k.startsWith('_') && v?.stations) sets[k] = { file: f, v }; }
+  let cfg = { set: 'ep2_hiroma', music: 'ep2_she', monsters: [], beds: [], she: '', auto: true, god: true, p2: 'ai', dark: true };
+  try { const s = window.native?.read('sandbox')?.data || localStorage.getItem('sandbox'); if (s) cfg = { ...cfg, ...JSON.parse(s) }; } catch (e) { /* defaults */ }
+  const saveCfg = () => { const s = JSON.stringify(cfg); try { if (window.native) window.native.write('sandbox', s); localStorage.setItem('sandbox', s); } catch (e) { /* the page still goes */ } };
+  const sel = (opts, val, on) => { const s = el('select'); for (const [v, t] of opts) { const o = el('option', { value: v }, t); if (v === val) o.selected = true; s.append(o); } s.onchange = () => on(s.value); return s; };
+  const out = [el('div', { cls: 'help' }, '自己搭一个场景来听：选地方、BGM、上哪些怪各几只、要不要她在场、环境声，点「开始」就进游戏打（怪打完会一直重新刷）。游戏里右上角是调音台：每组声音的量能实时拉、每种怪的叫声能单独点、能换 BGM、能写意见（和这里的意见存在一起）。')];
+  const it1 = el('div', { cls: 'item' }, el('h3', {}, '地方和音乐'));
+  const label = (k) => `${k}${sets[k].v.dark || /ep2_(hiroma|nakaniwa|kura|chika|shoro|kane)/.test(k) ? '' : ''}`;
+  it1.append(el('div', { cls: 'row' }, '地方', sel(Object.keys(sets).map((k) => [k, label(k)]), cfg.set, (v) => { cfg.set = v; saveCfg(); }),
+    'BGM', sel([['none', '没有（只有环境声）'], ['synth', '旧的合成音乐'], ...Object.keys(S.music || {}).map((k) => [k, `${k}　${USE[k] || ''}`])], cfg.music, (v) => { cfg.music = v; saveCfg(); })));
+  const dark = el('label', {}, el('input', { type: 'checkbox' }), ' 停电后的样子（第 2 话前四个地方）'); dark.firstChild.checked = !!cfg.dark; dark.firstChild.onchange = () => { cfg.dark = dark.firstChild.checked; saveCfg(); };
+  it1.append(el('div', { cls: 'row' }, dark));
+  out.push(it1);
+  const it2 = el('div', { cls: 'item' }, el('h3', {}, '上哪些怪（几只，0 = 不上）'));
+  const row2 = el('div', { cls: 'row' });
+  for (const [k, e] of Object.entries(enemies)) {
+    if (k.startsWith('_') || !e?.sprite || k === 'she' || k === 'kaiko') continue;
+    const m = cfg.monsters.find((x) => x.type === k) || { type: k, n: 0 };
+    const n = el('input', { type: 'number', min: 0, max: 30, cls: 'num' }); n.value = m.n;
+    const box = el('span', { cls: `mon${m.n ? ' on' : ''}` }, `${e.name?.zh || k}`, n);
+    n.oninput = () => { const v = Math.max(0, Math.min(30, +n.value || 0)); cfg.monsters = cfg.monsters.filter((x) => x.type !== k); if (v) cfg.monsters.push({ type: k, n: v }); box.classList.toggle('on', !!v); saveCfg(); };
+    row2.append(box);
+  }
+  it2.append(row2); out.push(it2);
+  const it3 = el('div', { cls: 'item' }, el('h3', {}, '她和环境声'));
+  it3.append(el('div', { cls: 'row' }, '她', sel([['', '不在'], ['a', '剪刀人偶（巡游）'], ['c', '千刃蜘蛛'], ['e', '空振袖'], ['kaiko', 'お蚕様']], cfg.she, (v) => { cfg.she = v; saveCfg(); })));
+  const beds = el('div', { cls: 'row' }, '环境声');
+  for (const [k, e] of Object.entries(S.sfx || {})) {
+    if (!e.loop || !e.files?.length) continue;
+    const c = el('label', { cls: 'mon' }, el('input', { type: 'checkbox' }), ` ${k}`); c.firstChild.checked = cfg.beds.includes(k);
+    c.firstChild.onchange = () => { cfg.beds = cfg.beds.filter((x) => x !== k); if (c.firstChild.checked) cfg.beds.push(k); saveCfg(); };
+    beds.append(c);
+  }
+  it3.append(beds); out.push(it3);
+  const it4 = el('div', { cls: 'item' }, el('h3', {}, '谁来打'));
+  const chk = (key, text) => { const c = el('label', { cls: 'mon' }, el('input', { type: 'checkbox' }), ` ${text}`); c.firstChild.checked = !!cfg[key]; c.firstChild.onchange = () => { cfg[key] = c.firstChild.checked; saveCfg(); }; return c; };
+  it4.append(el('div', { cls: 'row' }, chk('auto', 'AI 替我打（不勾 = 我自己用鼠标打）'), chk('god', '不会死'), '2P', sel([['ai', 'AI'], ['off', '不要']], cfg.p2, (v) => { cfg.p2 = v; saveCfg(); })));
+  out.push(it4);
+  const go = el('button', { cls: 'go' }, '开始'); go.onclick = () => { saveCfg(); stopAll(); location.href = 'index.html?sandbox'; };
+  out.push(el('div', { cls: 'row' }, go));
+  return out;
+}
+
+let S = null, T = null, tab = localStorage.getItem('auditionTab') || 'sandbox';
 async function render() {
   stopAll();
   const main = document.getElementById('main'); main.innerHTML = '';
-  const parts = tab === 'bgm' ? await bgmTab(S) : tab === 'sfx' ? sfxTab(S) : tab === 'voice' ? voiceTab(S, T) : tab === 'hits' ? hitsTab()
+  const parts = tab === 'sandbox' ? await sandboxTab() : tab === 'bgm' ? await bgmTab(S) : tab === 'sfx' ? sfxTab(S) : tab === 'voice' ? voiceTab(S, T) : tab === 'hits' ? hitsTab()
     : tab === 'cries' ? await criesTab() : await chantTab();
   main.append(...parts.filter(Boolean));
   filter();

@@ -18,6 +18,10 @@ export const sliderGain = (v) => (v <= 0.001 ? 0 : Math.pow(10, (v >= 0.7 ? (v -
 // enough that every slider can still go 6 dB up before the limiter has to hold it (at 0.62 a slider at 100% only gained 0.9 dB)
 const NOM = { master: 0.45, music: 0.6, sfx: 0.8, voice: 1.0 };
 const GROUPS = ['ui', 'player', 'hit', 'enemy', 'world', 'amb'], GRP = {};
+// each group's own level on top of the mix (the sound sandbox's mixer, src/ui/sandbox.js; 1 = as designed): music, voice and the groups
+const GRPU = { music: 1, voice: 1, ui: 1, player: 1, hit: 1, enemy: 1, world: 1, amb: 1 };
+export const groupGain = (g) => GRPU[g] ?? 1;
+export function setGroupGain(g, v) { GRPU[g] = v; if (g === 'voice') setVoiceVolume(voiceVol); }
 let curGroup = null;   // (which group a synthesized effect plays in: set by its wrapper below)
 let flameNode = null;
 
@@ -60,7 +64,7 @@ export function getVolume() { return volume; }
 export function setMusicVolume(v) { musicVol = v; if (musBus) musBus.gain.value = NOM.music * sliderGain(v); }
 // (the reverb sends follow the sliders too: a muted group leaves no echo behind)
 export function setSfxVolume(v) { sfxVol = v; if (sfxBus) sfxBus.gain.value = wetSfx.gain.value = NOM.sfx * sliderGain(v); }
-export function setVoiceVolume(v) { voiceVol = v; if (voiceBus) voiceBus.gain.value = wetVoice.gain.value = NOM.voice * sliderGain(v); }
+export function setVoiceVolume(v) { voiceVol = v; if (voiceBus) voiceBus.gain.value = wetVoice.gain.value = NOM.voice * sliderGain(v) * GRPU.voice; }
 export function isMuted() { return muted; }
 const now = () => ctx.currentTime;
 const mtof = (m) => 440 * Math.pow(2, (m - 69) / 12);
@@ -337,10 +341,10 @@ function mixTick() {
   const t = now(), talk = talking(), k = act;
   act *= 0.94;   // (about a second to fall away)
   for (const g of GROUPS) {
-    const target = db((talk ? DUCK_V[g] : 0) + (BUSY[g] || 0) * k);
+    const target = db((talk ? DUCK_V[g] : 0) + (BUSY[g] || 0) * k) * GRPU[g];
     GRP[g].gain.setTargetAtTime(target, t, target < GRP[g].gain.value ? 0.03 : 0.3);
   }
-  const m = db((talk ? DUCK_V.music : 0) + BUSY.music * k);
+  const m = db((talk ? DUCK_V.music : 0) + BUSY.music * k) * GRPU.music;
   musDuck.gain.setTargetAtTime(m, t, m < musDuck.gain.value ? 0.06 : 0.6);
 }
 // where the camera is (Game every frame): the sounds given a point are heard from here

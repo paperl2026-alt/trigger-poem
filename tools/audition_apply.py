@@ -53,6 +53,7 @@ def main():
         if n: print("BGM note", name, ":", n)
     for key, r, n in redo: print("SFX", key, "make again" if r else "", ":", n)
     if A.get("hitsNote"): print("HITS note :", A["hitsNote"])
+    for n in A.get("sandboxNotes") or []: print("SANDBOX", n.get("set"), n.get("music"), ",".join(n.get("monsters") or []), ":", n.get("note"))
     for k, n in (A.get("criesNote") or {}).items():
         if n: print("CRY", k, ":", n)
     for k, n in (A.get("chantNote") or {}).items():

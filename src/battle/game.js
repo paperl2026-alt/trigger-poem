@@ -563,6 +563,7 @@ export class Game {
     }
     this.waveLive = false;
     this.waveIndex++;
+    if (this.ep.sandbox && this.waveIndex >= this.S.waves.length) { this.waveIndex = 0; this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }   // (the sound sandbox: they keep coming)
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();

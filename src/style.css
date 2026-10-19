@@ -541,3 +541,17 @@ body:has(.screen.select) #dbg-btn, body:has(.screen.title) #dbg-btn { display: n
 @keyframes r8In { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
 @keyframes r8Stamp { from { scale: 2.4; opacity: 0; } }
 @keyframes r8Shake { 25% { translate: -6px 0; } 75% { translate: 6px 0; } }
+
+/* the sound sandbox's mixer over the game (src/ui/sandbox.js) */
+#sbx { position: fixed; right: 12px; top: 12px; z-index: 90; width: 360px; max-height: calc(100vh - 24px); overflow: auto; background: #0c0710e8; color: #eee;
+  border: 2px solid #ff4fa8; padding: 8px 10px; font: 12px "Microsoft YaHei", sans-serif; cursor: default; }
+#sbx h3 { margin: 0 0 6px; font-size: 14px; color: #ff7ac0; display: flex; justify-content: space-between; }
+#sbx.min .body { display: none; }
+#sbx .r { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 3px 0; }
+#sbx .r > span { width: 64px; color: #ccc; }
+#sbx .r input[type=range] { flex: 1; min-width: 120px; }
+#sbx .r b { width: 44px; text-align: right; color: #ffd27a; font-weight: normal; }
+#sbx .sub { color: #999; margin: 6px 0 2px; }
+#sbx button { font: 12px "Microsoft YaHei", sans-serif; background: #2a1f30; color: #fff; border: 1px solid #77608a; padding: 2px 7px; cursor: pointer; }
+#sbx button.mini { padding: 0 6px; }
+#sbx textarea { width: 100%; height: 48px; margin-top: 6px; background: #000; color: #fff; border: 1px solid #555; font: 12px "Microsoft YaHei", sans-serif; box-sizing: border-box; }

@@ -32,12 +32,17 @@
     .cand .tag { font-size: 12px; color: #9ad; }
     .cand.cur .tag { color: #8fdc9a; }
     .vol { display: flex; gap: 6px; align-items: center; color: #bbb; }
+    select, .num { font: 13px "Microsoft YaHei", sans-serif; background: #000; color: #fff; border: 1px solid #555; padding: 3px 6px; }
+    .num { width: 52px; }
+    .mon { display: inline-flex; gap: 4px; align-items: center; margin: 2px 10px 2px 0; padding: 2px 6px; border: 1px solid #3a2a40; }
+    .mon.on { border-color: #ff7ac0; }
+    button.go { font: 18px "Microsoft YaHei", sans-serif; background: #ff4fa8; color: #fff; border: none; padding: 8px 28px; cursor: pointer; }
   </style>
 </head>
 <body>
   <header>
     <h1>声音试听</h1>
-    <span class="tabs"><button data-tab="bgm">BGM</button><button data-tab="sfx">音效</button><button data-tab="voice">台词</button><button data-tab="hits">打击音</button><button data-tab="cries">怪叫</button><button data-tab="chant">念咒 BGM</button></span>
+    <span class="tabs"><button data-tab="sandbox">沙盒</button><button data-tab="bgm">BGM</button><button data-tab="sfx">音效</button><button data-tab="voice">台词</button><button data-tab="hits">打击音</button><button data-tab="cries">怪叫</button><button data-tab="chant">念咒 BGM</button></span>
     <input id="q" placeholder="筛选（名字 / 用在哪）" />
     <span class="vol">音量 <input id="vol" type="range" min="0" max="1" step="0.05" value="0.8" /></span>
     <span class="saved" id="saved"></span>

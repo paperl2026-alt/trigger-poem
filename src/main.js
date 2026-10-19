@@ -1,3 +1,4 @@
+import { sandboxConfig, buildSandbox, mountSandboxMixer } from './ui/sandbox.js';
 import * as THREE from 'three';
 import './fonts/fonts.css';
 import { loadContent, C, T } from './core/content.js';
@@ -273,7 +274,14 @@ async function boot() {
   if (q.has('skip')) G.forceSkip = true;
   if (q.has('team')) SAVE.team = q.get('team').split(',');   // test runs: ?team=cat,pink (1P, 2P)
   if (q.has('outfit')) for (const id of SAVE.team) if (SAVE.chars[id]) SAVE.chars[id].outfit = q.get('outfit');   // test runs: ?outfit=yk (both wear it)
-  if (q.has('play') || q.has('ep') || q.has('step')) {
+  if (q.has('sandbox')) {   // the sound sandbox (src/ui/sandbox.js): set up on the listening page
+    const cfg = sandboxConfig();
+    if (cfg && buildSandbox(cfg)) {
+      if (cfg.auto) G.auto = true; if (cfg.god) G.god = true; DBG.skip = true;
+      if (cfg.p2) SET.p2 = cfg.p2;
+      startRun('__sandbox', 0); mountSandboxMixer(G, cfg);
+    } else toTitle();
+  } else if (q.has('play') || q.has('ep') || q.has('step')) {
     if (q.has('skip')) DBG.skip = true;
     startRun(q.get('ep') || 'ep0', +(q.get('step') || 0), q.get('station'));   // (test runs: &station= a stop inside a long stage)
   } else if (q.has('select')) toSelect();
