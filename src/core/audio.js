@@ -394,7 +394,6 @@ export function preloadSounds() {
   for (const [k, e] of Object.entries(S.sfx || {})) for (const f of e.files || []) (MENU_SFX.test(k) ? first : rest).push(f);
   for (const v of Object.values(S.voices || {})) {
     for (const [k, f] of Object.entries(v?.lines || {})) (MENU_LINES.test(k) ? first : rest).push(f);
-    for (const G of Object.values(v?.grains || {})) rest.push(...(G?.files || []));
   }
   for (const [k, m] of Object.entries(S.monsters || {})) if (!k.startsWith('_')) for (const a of ['windup', 'attack', 'hurt', 'die']) rest.push(...(m[a] || []));
   preloading = Promise.all(first.map(load)).then(() => { STATS.menuReadyMs = Math.round(performance.now()); STATS.ctxState = ctx.state; STATS.menuSounds = first.length; });
@@ -446,7 +445,7 @@ export function bedsOff() { for (const k of [...BEDS.keys()]) bed(k, false); }
 // hot (setIntensity). While a line plays, the effects and the music step back.
 const TALK_GAP = 1.2;
 // counts for tests (tools/node/playthrough.cjs writes them out: nobody can listen to an offscreen run)
-const STATS = { lines: 0, linesDropped: 0, linesCut: 0, grains: 0, grainsQuiet: 0, cries: 0, criesSkipped: 0 };
+const STATS = { lines: 0, linesDropped: 0, linesCut: 0, cries: 0, criesSkipped: 0 };
 window.__noaAudio = STATS;
 const TALK = { s: null, who: null, pr: 0, end: 0, start: -9 };
 export function talking(who) { return !!ctx && now() < TALK.end && (!who || TALK.who === who); }
@@ -456,7 +455,6 @@ function talk(who, b, pr, pan) {
   if (!busy && pr <= 4 && (t - TALK.start < TALK_GAP || intensity > 0.85)) { STATS.linesDropped++; return false; }
   STATS.lines++; if (busy) STATS.linesCut++;
   if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.04); TALK.s.stop(t + 0.2); } catch (e) { /* over */ } }
-  stopGrain(who);   // (one mouth: her weapon's syllable stops)
   const s = playBuf(b, { vol: 1, pan, bus: voiceBus, fadeIn: busy ? 0.04 : 0, verbAmt: 0.08 });
   const end = t + (b.duration - (b.startAt || 0));
   Object.assign(TALK, { s, who, pr, end, start: t });
@@ -475,32 +473,6 @@ export function voice(who, kind, i, slot = 0, pr = 5, pan) {
 export function voiceLen(who, kind, i) {
   const b = BUF.get(C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`]);
   return b && !(b instanceof Promise) ? b.duration - (b.startAt || 0) : 0;
-}
-// her weapon's voice (sounds.json voices.<who>.grains, characters/*.json weapon.voice / active.voice): one syllable per shot at most
-// every V.every seconds, cut to V.len; each one cuts off her last (one mouth: 突突突…); seq = the i-th syllable (the mantra glyph her shot
-// writes). Nothing while she is saying a line. true = played (the caller's stand-in sound is not needed)
-const GRAIN = new Map();   // who -> { s, t }
-function stopGrain(who) { const G = GRAIN.get(who); if (G?.s) { try { G.s.g.gain.setTargetAtTime(0.0001, now(), 0.03); G.s.stop(now() + 0.15); } catch (e) { /* over */ } G.s = null; } }
-export function grain(who, V, pan = 0, i = 0) {
-  const files = C.sounds?.voices?.[who]?.grains?.[V.grain || 'shot']?.files;
-  if (!ctx || muted || !files?.length) return false;
-  if (talking(who)) { STATS.grainsQuiet++; return true; }
-  const G = GRAIN.get(who) || {}, t = now();
-  // one mouth, and every word said whole (user 2026-10-18: cut short they sounded strange): while her last word is still being said, this
-  // shot says nothing; the next word starts as the last one ends
-  if (t < (G.end ?? -9) - 0.03 || t - (G.t ?? -9) < (V.every || 0)) return true;
-  // seq: the syllable of the glyph she shoots, one of its takes at random (sounds.json grains takes); otherwise any of them but the last
-  // two (user 2026-10-18: 突突突 alone was dull)
-  const GR = C.sounds.voices[who].grains[V.grain || 'shot'], n = GR.say?.length || files.length;
-  let k;
-  if (GR.seq) k = (((i % n) + n) % n) + n * Math.floor(Math.random() * Math.max(1, Math.floor(files.length / n)));
-  else { const free = files.map((_, j) => j).filter((j) => files.length < 4 || (j !== G.k && j !== G.k2)); k = free[Math.floor(Math.random() * free.length)]; }
-  const b = BUF.get(files[k]);
-  if (!b || b instanceof Promise) { if (b === undefined) load(files[k]); return false; }
-  const rate = (V.rate || 1) * (0.96 + Math.random() * 0.08);
-  const s = playBuf(b, { vol: V.vol ?? 0.85, pan, rate, bus: GRP.player });
-  GRAIN.set(who, { s, t, k, k2: G.k, end: t + (b.duration - (b.startAt || 0)) / rate }); STATS.grains++;
-  return true;
 }
 // a monster's cry (windup / attack / hurt / die), its own or the default one. At most CRY_MAX at once: a new one only takes a place
 // from a less important one (die > windup > attack > hurt), else it is skipped (the fight stays readable: "play the right sounds")

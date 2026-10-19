@@ -18,12 +18,13 @@ from acestep.inference import GenerationConfig, GenerationParams, generate_music
 from acestep.llm_inference import LLMHandler  # noqa: E402
 import torch  # noqa: E402
 
-# the chant: kana in units of two or three syllables, said over and over (user 2026-10-19: two syllables, three at most - long phrases
-# never get into your head; the first takes were too slow, too solemn, and the men's voices were wrong: girls only, faster, playful-eerie)
-U_KUJI = "りん ぴょう とう しゃ\nかい じん れつ ざい ぜん\nりん ぴょう とう しゃ\nかい じん れつ ざい ぜん"
-U_SPELL = "きゅう きゅう\nにょ りつ りょう\nきゅう きゅう\nにょ りつ りょう"
-U_SNIP = "チョキ チョキ\nカチ カチ\nチョキ チョキ\nゴーン"
-U_ON = "オン ソワカ\nオン ソワカ\nねむれ ねむれ\nねむれ ねむれ"
+# the chant: whole lines in kana (user 2026-10-19 batch 23: a single word or two syllables sounds strange - the first hook, the only take
+# that passed, was sung in lines); girls only, quick, playful-eerie (batch 22: the men's voices and the slow solemn takes were wrong)
+U_TOKI = "ときを きざめ はりの おと\nねむれ ねむれ かねの こえ"
+U_KUJI = "りん ぴょう とう しゃ かい じん れつ ざい ぜん\nりん ぴょう とう しゃ かい じん れつ ざい ぜん"
+U_SPELL = "きゅうきゅう にょりつりょう\nあくりょう たいさん はらいたまえ"
+U_SNIP = "チョキチョキ はさみが あるいてくる\nカチカチ とけいが わらってる"
+U_ON = "オン アビラウンケン ソワカ\nおやすみ おやすみ もう かえれない"
 GIRLS = "female vocals only, two cute high-pitched girls' voices, absolutely no male voice, no deep voice"
 CHANTS = {
     # the first takes the user judged (2026-10-19): only the hook passed, barely; kept so the page still has them
@@ -31,22 +32,34 @@ CHANTS = {
         caption="hypnotic catchy chant song, two female voices chanting a mantra-like hook in Japanese, call and response, groovy "
                 "electronic beat with taiko and handclaps, koto and synth arpeggios, playful and slightly eerie, catchy",
         lyrics="[intro]\n\n[verse]\nときを きざめ はりの おと\nねむれ ねむれ かねの こえ\n\n[chorus]\nりん ぴょう とう しゃ\nかい じん れつ ざい ぜん\nきゅうきゅう にょりつりょう\n\n[outro]\nきゅうきゅう にょりつりょう"),
-    # the hook again, faster, in short units
-    "hook2": dict(bpm=142, key="A minor", dur=96,
-        caption=f"hypnotic catchy chant pop song, {GIRLS}, chanting short repeated syllables in Japanese like a playground chant, call and "
-                "response, bouncy electronic beat with taiko and handclaps, koto plucks, chiptune arpeggios, playful, cute and a little eerie, very catchy",
-        lyrics=f"[intro]\n\n[verse]\n{U_KUJI}\n\n[chorus]\n{U_SPELL}\n{U_ON}\n\n[verse]\n{U_SNIP}\n\n[chorus]\n{U_SPELL}\n{U_ON}\n\n[outro]\n{U_SPELL}"),
-    # a fight driven by the chant: fast, the girls spitting the syllables on the beat
-    "battle2": dict(bpm=172, key="E minor", dur=96,
-        caption=f"fast energetic Japanese battle song, {GIRLS}, rapid rhythmic chanting of short syllables on every beat, glitchy "
-                "stutter vocal chops, pounding taiko and electronic drums, distorted shamisen riffs, synth bass, intense, cute and crazy",
-        lyrics=f"[intro]\n\n[verse]\n{U_KUJI}\n{U_SNIP}\n\n[chorus]\n{U_SPELL}\n{U_SPELL}\n\n[verse]\n{U_ON}\n{U_KUJI}\n\n[chorus]\n{U_SPELL}\n{U_SNIP}\n\n[outro]\n{U_SPELL}"),
-    # the inn at night: still the girls, still quick, whispered and sing-song instead of solemn
-    "night2": dict(bpm=128, key="D minor", dur=100,
-        caption=f"eerie cute Japanese horror pop, {GIRLS}, whispered sing-song chanting of short repeated syllables, music box melody, "
-                "ticking clock percussion, soft taiko, koto, dark synth pads, hypnotic and creepy-cute, steady groove, not slow",
-        lyrics=f"[intro]\n\n[verse]\n{U_ON}\n{U_SNIP}\n\n[chorus]\n{U_KUJI}\n\n[verse]\n{U_SPELL}\n{U_ON}\n\n[chorus]\n{U_KUJI}\n{U_SNIP}\n\n[outro]\n{U_ON}"),
+    # the second takes (batch 22, short units): replaced by the ones below, kept on the page to compare
+    "hook2": dict(bpm=142, key="A minor", dur=96, old=True, caption="", lyrics=""),
+    "battle2": dict(bpm=172, key="E minor", dur=96, old=True, caption="", lyrics=""),
+    "night2": dict(bpm=128, key="D minor", dur=100, old=True, caption="", lyrics=""),
+    # the hook again, faster, sung in lines
+    "hook3": dict(bpm=140, key="A minor", dur=96,
+        caption=f"hypnotic catchy chant pop song, {GIRLS}, singing a mantra-like hook in Japanese in full lines, call and response, bouncy "
+                "electronic beat with taiko and handclaps, koto plucks, chiptune arpeggios, playful, cute and a little eerie, very catchy",
+        lyrics=f"[intro]\n\n[verse]\n{U_TOKI}\n\n[chorus]\n{U_KUJI}\n{U_SPELL}\n\n[verse]\n{U_SNIP}\n\n[chorus]\n{U_KUJI}\n{U_SPELL}\n\n[outro]\n{U_ON}"),
+    # a fight driven by the chant: fast, the girls chanting whole lines on the beat
+    "battle3": dict(bpm=168, key="E minor", dur=96,
+        caption=f"fast energetic Japanese battle song, {GIRLS}, rapid rhythmic chanting of mantras in full lines on the beat, pounding taiko "
+                "and electronic drums, distorted shamisen riffs, synth bass, intense, cute and crazy",
+        lyrics=f"[intro]\n\n[verse]\n{U_KUJI}\n{U_SNIP}\n\n[chorus]\n{U_SPELL}\n{U_TOKI}\n\n[verse]\n{U_ON}\n{U_KUJI}\n\n[chorus]\n{U_SPELL}\n{U_SNIP}\n\n[outro]\n{U_SPELL}"),
+    # the inn at night: still the girls, still quick, whispered sing-song lines instead of solemn chanting
+    "night3": dict(bpm=126, key="D minor", dur=100,
+        caption=f"eerie cute Japanese horror pop, {GIRLS}, whispered sing-song chanting in full lines, music box melody, ticking clock "
+                "percussion, soft taiko, koto, dark synth pads, hypnotic and creepy-cute, steady groove, not slow",
+        lyrics=f"[intro]\n\n[verse]\n{U_TOKI}\n{U_SNIP}\n\n[chorus]\n{U_ON}\n\n[verse]\n{U_SPELL}\n{U_TOKI}\n\n[chorus]\n{U_ON}\n{U_SNIP}\n\n[outro]\n{U_TOKI}"),
 }
+
+
+def index():   # the listening page's list (sound.html 念咒 BGM): every chant take by name, the newest batch first
+    by = {}
+    for f in OUT.glob("chant_*.wav"): by.setdefault(f.stem.rsplit("_", 1)[0][6:], []).append(f)
+    names = sorted(by, key=lambda n: -max(f.stat().st_mtime for f in by[n]))
+    (OUT / "_chants.json").write_text(json.dumps({n: sorted(f.name for f in by[n]) for n in names}, ensure_ascii=False, indent=1) + "
+", encoding="utf-8")
 
 
 def main():
@@ -74,6 +87,7 @@ def main():
                                                                ensure_ascii=False, indent=1), encoding="utf-8")
                 print(f"[{name}] {dst.name} {time.time() - t1:.0f}s", flush=True)
     print(f"[done] {time.time() - t0:.0f}s", flush=True)
+    index()
 
 
 if __name__ == "__main__":

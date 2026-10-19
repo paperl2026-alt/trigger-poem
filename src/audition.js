@@ -178,7 +178,7 @@ function hitsTab() {
 // ---- the monster cries made from a speech voice (tools/monster_voice.py): a try-out with a stand-in voice, to choose the direction
 async function criesTab() {
   const idx = await getJson('raw/monster_vo/_index.json');
-  const out = [el('div', { cls: 'help' }, '怪叫：全部是女声变声（用户 2026-10-19：不要野兽、木头、男的、老的），声线「花音」（AivisHub 上 Aivis 官方的研究用试作模型，ACML 1.0，没有声优），每句只有两三个音节。四类：可爱又瘆人的少女、悄悄话少女、发条人偶少女（升调、卡顿、机械感）、凶一点的怪物少女；还有她的笑声、お蚕様的哀嚎。这里是全部出的版本，游戏里用的是每种挑出来的几个（音效栏 cry_ 开头的、sheLaugh、kaikoWail）。'),,
+  const out = [el('div', { cls: 'help' }, '怪叫：全部是女声变声（用户 2026-10-19：不要野兽、木头、男的、老的），声线「花音」（AivisHub 上 Aivis 官方的研究用试作模型，ACML 1.0，没有声优），每句是一小句话（2026-10-19 第二十三批：只念一个字 / 两个音节很怪）。四类：可爱又瘆人的少女、悄悄话少女、发条人偶少女（升调、卡顿、机械感）、凶一点的怪物少女；还有她的笑声、お蚕様的哀嚎。这里是全部出的版本，游戏里用的是每种挑出来的几个（音效栏 cry_ 开头的、sheLaugh、kaikoWail）。'),,
     idx ? null : el('b', {}, '（还没有试作：要用 开始游戏.bat 的 [6] 打开）')];
   const NAME = { girl: '少女（人偶、影子…）', paper: '悄悄话少女（纸人、试卷…）', wood: '发条人偶少女（课桌、画框、小芥子…）', beast: '怪物少女（丧尸、爬行的、拖鞋…）', she: '她', kaiko: 'お蚕様' },
     ACT = { windup: '蓄力', attack: '攻击', hurt: '挨打', die: '死', laugh: '笑', wail: '哀嚎' };
@@ -194,9 +194,10 @@ async function criesTab() {
 // ---- chanting BGM straight from ACE-Step (tools/bgm_chant.py)
 async function chantTab() {
   const idx = await getJson('raw/bgm_ai/_chants.json');
-  const out = [el('div', { cls: 'help' }, 'BGM 模型自己唱的念咒：只要女声、更快，歌词拆成两三个音节的小块反复念（九字真言、急急如律令、剪刀「チョキ チョキ」、钟「カチ カチ」……）。第一批里只有洗脑念咒歌勉强合格，留着对比；新的三首每首两版。'),
+  const out = [el('div', { cls: 'help' }, 'BGM 模型自己唱的念咒：只要女声、更快，歌词是整句（2026-10-19 第二十三批：两个音节的小块很怪；第一批唯一勉强合格的洗脑念咒歌就是整句唱的）：九字真言、急急如律令、「ときを きざめ はりの おと」、剪刀和钟的句子……。第一批、第二批留着对比；第三批三首每首两版。'),
     idx ? null : el('b', {}, '（还在生成，或者要用 开始游戏.bat 的 [6] 打开）')];
-  const NAME = { hook: '洗脑念咒歌（第一批，勉强合格的那首）', hook2: '洗脑念咒歌 · 快一点', battle2: '念咒战斗曲 · 女声、快', night2: '民宿夜里 · 女声、悄悄地念' };
+  const NAME = { hook: '洗脑念咒歌（第一批，勉强合格的那首）', hook2: '洗脑念咒歌 · 快一点（第二批，短词）', battle2: '念咒战斗曲（第二批，短词）', night2: '民宿夜里（第二批，短词）',
+    hook3: '洗脑念咒歌 · 快一点、整句', battle3: '念咒战斗曲 · 女声、快、整句', night3: '民宿夜里 · 女声、悄悄地念整句' };
   for (const [name, files] of Object.entries(idx || {})) {
     const it = el('div', { cls: 'item', 'data-q': name }, el('h3', {}, NAME[name] || name));
     const row = el('div', { cls: 'row' }); files.forEach((f, i) => row.append(btn(`▶ 第 ${i + 1} 版`, (b) => play(`raw/bgm_ai/${f}`, b)))); it.append(row);

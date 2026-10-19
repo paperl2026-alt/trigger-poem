@@ -13,11 +13,13 @@ import { Text, picture } from './glhud.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
-const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, hurt: 6, fever: 6, join: 5, ready: 5, empty: 5, crit: 4, combo: 4, kill: 3, reload: 2, hit: 1, cover: 1,
-  scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5, idle: 1,
+const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, fever: 6, join: 5, ready: 5, combo: 4, kill: 3,
+  scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5,
   sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8 };   // (episode 2: she, src/battle/chase.js say)
-const TAG = { hit: 'HIT', crit: 'CRITICAL', kill: 'K.O.', combo: 'COMBO', hurt: 'OUCH', low: 'DANGER', reload: 'RELOAD', empty: 'NO AMMO', fever: 'FEVER',
-  ready: 'SKILL OK', skill: 'SKILL', cover: 'COVER', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
+const TAG = { kill: 'K.O.', combo: 'COMBO', low: 'DANGER', fever: 'FEVER',
+  ready: 'SKILL OK', skill: 'SKILL', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
+// fewer, longer lines (user 2026-10-19 batch 23): small talk waits this long after her last line (by priority: <= 4 / 5)
+const GAP = { 4: 14, 5: 8 };
 
 // a slab: a skewed quad (black or white) with a thin offset edge and its words
 function shear(geo, k) { const p = geo.attributes.position; for (let i = 0; i < p.count; i++) p.setX(i, p.getX(i) + p.getY(i) * k); p.needsUpdate = true; return geo; }
@@ -87,8 +89,7 @@ export class Stickers {
     this.oi = 0; this.mi = 0; this.seen = new Map(); this.monCd = 0;
   }
   get D() { return C.text.stickers; }
-  hit(p, crit) { this.say(p, crit ? 'crit' : 'hit', crit ? 0.35 : 0.04); }
-  kill(p) { this.say(p, 'kill', 0.55); }
+  kill(p) { this.say(p, 'kill', 0.3); }   // (now and then; small talk waits GAP after her last line)
   // a sound-effect sticker where a monster died (screen px, y up)
   onoma(x, y, big) {
     const keys = Object.keys(tex).filter((k) => k.startsWith('fx/ono_'));
@@ -102,6 +103,7 @@ export class Stickers {
     if (!H || !set) return;
     const pr = PRIO[kind] || 1, cur = H.f.on ? PRIO[H.f.kind] || 1 : -1;
     if (pr < cur || (H.cd > 0 && pr <= cur)) return;
+    if (pr <= 5 && this.t - (H.at ?? -99) < GAP[Math.max(4, pr)]) return;
     // which line: not one of the last half of this kind she said (user 2026-10-18: too repetitive; every kind has at least six)
     const n = set.lines.length, R = H.recent[kind] || (H.recent[kind] = []), keep = Math.min(n - 1, Math.floor(n / 2));
     const free = [...Array(n).keys()].filter((j) => !R.slice(R.length - keep).includes(j));
@@ -109,13 +111,13 @@ export class Stickers {
     // her voice for this line (core/audio.js voice: one channel for both girls, by priority); small talk that cannot be said now is not
     // shown either (fewer, clearer lines: docs/TECH.md「声音」)
     if (voice(p.id, kind, li, p.slot, pr) === false && pr <= 4) return;
-    H.lastText = text; this.quiet = 0; R.push(li); if (R.length > 8) R.shift();
+    H.lastText = text; H.at = this.t; R.push(li); if (R.length > 8) R.shift();
     // from her head, on her OUTER side (toward her screen edge: her safe area), above her HUD panel; if that side is too narrow, above her head
     const L = this.hud.L, Hh = L.H, f0 = L.f, left = p.slot === 0 || !this.game.p2on(), dir = left ? -1 : 1, fig = this.hud.space.girl(p.slot);
     const h = Hh * 0.046, head = fig ? fig.y1 - (fig.y1 - fig.y0) * 0.1 : Hh * 0.5, outer = fig ? (left ? fig.x0 : fig.x1) : p.baseX + dir * Hh * 0.12;
     if (H.f.on) H.f.knock();
     const f = H.f; H.f = H.g || new Fan(this.layer, 75); H.g = f;
-    H.f.show(kind, text, 0, 0, h, dir);
+    H.f.show(kind, text, 0, 0, h, dir, { life: Math.max(1.6, voiceLen(p.id, kind, li) + 0.5, [...text].length * 0.11) });   // (up as long as it is said)
     const w = H.f.w, room = left ? outer - f0.x : f0.x + f0.w - outer;
     let x = outer + dir * w * 0.42, y = Math.max(Hh * 0.36, head);
     if (room < w * 0.75) { x = (fig ? (fig.x0 + fig.x1) / 2 : p.baseX) + dir * w * 0.2; y = Math.max(y, (fig ? fig.y1 : Hh * 0.5) + h * 1.6); }
@@ -157,28 +159,26 @@ export class Stickers {
   }
   update(dt, time) {
     const g = this.game;
-    this.monCd -= dt;
+    this.monCd -= dt; this.t = (this.t || 0) + dt;
     g.players.forEach((p, i) => {
       const H = this.her[i], L = H.last;
       H.cd -= dt;
       if (H.f.on && H.f.spot) this.hud.space.claim(H.f.spot);
       H.f.update(dt); if (H.g) H.g.update(dt);
       if (!(p.slot === 0 || g.p2on()) || !g.combat && p.state !== 'down') { L.state = p.state; return; }
-      if (L.hp !== undefined && p.hp < L.hp - 0.5) this.say(p, p.hp < p.maxHp * 0.25 ? 'low' : 'hurt', 0.7);
+      // (once as it drops under a quarter, not again for a while: healing and hurt again would repeat it)
+      if (L.hp !== undefined && p.hp < p.maxHp * 0.25 && L.hp >= p.maxHp * 0.25 && p.state !== 'down' && this.t - (H.lowAt ?? -99) > 20) { H.lowAt = this.t; this.say(p, 'low'); }
       if (p.state !== L.state) {
-        if (p.state === 'reload') this.say(p, 'reload', 0.35);
         if (p.state === 'down') this.say(p, 'down');
         if (L.state === 'down') this.say(p, 'revive');
       }
-      if (L.ammo > 0 && p.ammo <= 0 && !p.gatling) this.say(p, 'empty', 0.6);
       if (p.activeOn && !L.active) this.say(p, 'skill');
-      if (p.charge >= 1 && L.charge < 1 && !p.activeOn) this.say(p, 'ready');
+      // skill charged: said a moment later, and not if she used it at once (the skill's own line says it)
+      if (p.charge >= 1 && L.charge < 1 && !p.activeOn) H.readyT = 1.5;
+      if (H.readyT > 0 && (H.readyT -= dt) <= 0 && p.charge >= 1 && !p.activeOn) this.say(p, 'ready');
       if (p.fever.full && !L.full) this.say(p, 'fever');
-      L.hp = p.hp; L.state = p.state; L.ammo = p.ammo; L.active = p.activeOn; L.charge = p.charge; L.full = p.fever.full;
+      L.hp = p.hp; L.state = p.state; L.active = p.activeOn; L.charge = p.charge; L.full = p.fever.full;
     });
-    // nobody has said anything for a while: a little cute nonsense (えへへ, にゃ~, やだよぉ ...: DESIGN「台词」)
-    this.quiet = (this.quiet || 0) + dt;
-    if (g.combat && this.quiet > 9 && Math.random() < dt * 0.25) { this.quiet = 0; this.say(pick(g.players.filter((p) => (p.slot === 0 || g.p2on()) && p.state !== 'down')), 'idle'); }
     const step = T.combat.comboCall || 50;   // (a line every so many combo hits)
     if (g.combo >= step && Math.floor(g.combo / step) > Math.floor((this.lastCombo || 0) / step)) this.say(pick(g.players.filter((p) => p.slot === 0 || g.p2on())), 'combo');
     this.lastCombo = g.combo;

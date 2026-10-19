@@ -259,10 +259,7 @@
       "ramp": 0,
       "sfx": "smg",
       "kick": 0.8,
-      "tracer": "#ff7ac0",
-      "voice": {
-        "grain": "shot"
-      }
+      "tracer": "#ff7ac0"
     },
     "active": {
       "kind": "gatling",
@@ -275,10 +272,6 @@
         "sec": 0.015,
         "hit": 0.011,
         "kill": 0.05
-      },
-      "voice": {
-        "grain": "shot",
-        "rate": 1.1
       }
     },
     "order": 0,

@@ -6,8 +6,8 @@ family of monsters has its own chain (numpy / scipy only):
   paper (paper dolls, exam sheets, wafers, doilies): whispered - a noise-carrier vocoder - over a thin high-passed voice, fluttering
   wood  (desks, frames, chandeliers, kokeshi): a little lower, ring modulation, a wooden comb resonance, driven
   beast (zombies, crawlers, the slippers, the silkworm): far lower, driven, a growl tremolo, a sub layer, a saw-carrier vocoder layer
-Every variant draws its own settings (seeded), the act decides the words (windup: a gathering laugh / taunt, attack: a shriek, hurt: a
-yelp, die: a long wail fading out). Output: art/raw/monster_vo/<family>_<act>/<n>.wav (not in git) + _look sheets; picked into the game
+Every variant draws its own settings (seeded), the act decides the words - a little sentence each (windup: a teasing invitation, attack: a
+threat as it lunges, hurt: a whine, die: a last wish fading out). Output: art/raw/monster_vo/<family>_<act>/<n>.wav (not in git) + _look sheets; picked into the game
 with tools/sfx_pick.py-style keys later (sounds.json sfx cry_<family>_<act>, which src/core/audio.js cry() already falls back to).
 usage: python -I tools/monster_voice.py [--n 8] [family ...]   (--test: the chains tried with a heroine's voice, never for the game)
 The voice (user 2026-10-19: an ACML model; girls only): Aivis's own research voice 花音 on AivisHub, ACML 1.0, "free to use", no voice actor
@@ -21,23 +21,25 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 OUT = ROOT / "art" / "raw" / "monster_vo"
 sp = importlib.util.spec_from_file_location("va", ROOT / "tools" / "voice_aivis.py"); VA = importlib.util.module_from_spec(sp); sp.loader.exec_module(VA)
 
-# user 2026-10-19: no beasts, no wood, no men, no old voices - girls' voices bent; and the words short: two syllables, three at most
+# user 2026-10-19: no beasts, no wood, no men, no old voices - girls' voices bent; and (batch 23) a single word or two syllables
+# sounds strange: every cry is a little sentence
 VOICE = {f: "a670e6b8-0852-45b2-8704-1bc9862f2fe6" for f in ("girl", "paper", "wood", "beast", "she", "kaiko")}   # 花音 for all of them
 WORDS = {   # (the families keep their keys - sounds.json monsters.<type>.cry - but every one is a girl now)
-    "girl":  {"windup": ["うふふ", "あそぼ", "みつけ", "ふふっ"], "attack": ["キャッ", "えいっ", "やあっ", "シャッ"],
-              "hurt": ["いたっ", "ひっ", "やっ"], "die": ["いやぁ", "あぁぁ", "やだぁ"]},
+    "girl":  {"windup": ["うふふ、あそぼ？", "みぃつけた", "どこにいくの？", "いっしょにいよ？"],
+              "attack": ["つかまえた！", "こっちにきて！", "にがさないよ！", "いっしょにおいで！"],
+              "hurt": ["いたいよぉ", "やめてよぉ", "ひどいよぉ"], "die": ["まだあそびたいのに", "おうちにかえりたい", "ひとりにしないで"]},
     # paper things: a whispering girl
-    "paper": {"windup": ["くすくす", "ひそひそ", "さらさら"], "attack": ["シュッ", "サッ", "ひゅっ"], "hurt": ["ぴっ", "くしゃ"],
-              "die": ["ひらり", "ふわぁ"]},
+    "paper": {"windup": ["ねえ、きこえる？", "うしろにいるよ", "くすくす、みてるよ"], "attack": ["きっちゃうよ", "ひらりとまうよ", "すきまからいくよ"],
+              "hurt": ["やぶれちゃう", "くしゃってしないで"], "die": ["ひらひら、きえちゃう", "ちりになっちゃう"]},
     # what was "wood": a doll-girl, glitchy and wound-up (the desks, the frames, the kokeshi)
-    "wood":  {"windup": ["カタカタ", "ケケケ", "ギギ"], "attack": ["ガッ", "バンッ", "えいっ"], "hurt": ["ぎっ", "かっ"],
-              "die": ["ギィィ", "こわれ"]},
+    "wood":  {"windup": ["ねじをまいて", "カタカタ、あそぼ", "おにんぎょうごっこ"], "attack": ["こわしてあげる", "いっしょにこわれよ", "バラバラにしちゃう"],
+              "hurt": ["ひびがはいった", "うでがとれちゃう"], "die": ["ねじがきれちゃった", "もう、うごけない"]},
     # what was "beast": a monster-girl, gritty and a little lower, still a girl (the zombies, the crawlers, the slippers)
-    "beast": {"windup": ["ぐるる", "ふーっ", "がるる"], "attack": ["ガァッ", "シャーッ", "がうっ"], "hurt": ["ぎゃっ", "ぐっ"],
-              "die": ["あ゛ぁぁ", "ぐぁぁ"]},
+    "beast": {"windup": ["おなかすいたぁ", "いいにおいがする", "たべちゃおうかな"], "attack": ["たべちゃうぞ！", "かみついてやる！", "まるのみにしてやる！"],
+              "hurt": ["いたいっ、このぉ", "よくもやったなぁ"], "die": ["おなか、すいたまま", "まだたりないのに"]},
     # her laugh, and the silkworm's wail (sounds.json sfx sheLaugh / kaikoWail)
-    "she":   {"laugh": ["うふふ", "あはは", "くすくす", "ふふふ"]},
-    "kaiko": {"wail": ["ぎゃぁぁ", "あ゛ぁぁ", "おぎゃぁ"]},
+    "she":   {"laugh": ["うふふふ、みぃつけた", "あはは、にげてもむだよ", "くすくす、つぎはだれ？", "ふふふ、チョキチョキしよ"]},
+    "kaiko": {"wail": ["おかあさぁん", "さむいよぉ、くらいよぉ", "ここからだしてぇ"]},
 }
 
 

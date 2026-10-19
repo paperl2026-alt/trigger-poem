@@ -148,11 +148,11 @@ CRY = {
     "wood": "a wooden doll creature",
     "beast": "a big soft monster",
 }
-CRY_ACT = {
-    "windup": ("long", 1.4, "growling and hissing as it gathers itself to attack, rising tension"),
-    "attack": ("hit", 1.0, "a sharp shriek as it lunges"),
-    "hurt": ("hit", 0.8, "a short pained squeal"),
-    "die": ("long", 1.6, "a dying wail that fades into a whisper"),
+CRY_ACT = {   # (now little sentences in a girl's bent voice, tools/monster_voice.py: user 2026-10-19 batch 23 - one word sounds strange)
+    "windup": ("long", 1.4, "a teasing invitation as it gathers itself to attack"),
+    "attack": ("long", 1.0, "a threat as it lunges"),
+    "hurt": ("long", 0.8, "a short whine"),
+    "die": ("long", 1.6, "a last wish fading into a whisper"),
 }
 for v, who in CRY.items():
     for act, (kind, dur, how) in CRY_ACT.items():

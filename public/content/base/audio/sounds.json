@@ -311,7 +311,7 @@
         "sfx/ai/sheLaugh_6.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_4", "tts_2", "tts_5", "tts_7", "tts_8", "tts_3"]
+      "from": ["tts_2", "tts_5", "tts_7", "tts_4", "tts_3", "tts_6"]
     },
     "grab": {
       "when": "被抓住（「咕叽」）",
@@ -543,11 +543,11 @@
         "sfx/ai/kaikoWail_6.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_3", "tts_8", "tts_6", "tts_4", "tts_2", "tts_1"]
+      "from": ["tts_7", "tts_4", "tts_3", "tts_1", "tts_6", "tts_2"]
     },
     "cry_girl_windup": {
       "when": "怪叫（girl 类）windup",
-      "want": "a creepy monster girl：growling and hissing as it gathers itself to attack, rising tension",
+      "want": "a creepy monster girl：a teasing invitation as it gathers itself to attack",
       "src": "ai",
       "files": [
         "sfx/ai/cry_girl_windup_1.ogg",
@@ -557,11 +557,11 @@
         "sfx/ai/cry_girl_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_2", "tts_3", "tts_7", "tts_6", "tts_8"]
+      "from": ["tts_4", "tts_2", "tts_3", "tts_7", "tts_5"]
     },
     "cry_girl_attack": {
       "when": "怪叫（girl 类）attack",
-      "want": "a creepy monster girl：a sharp shriek as it lunges",
+      "want": "a creepy monster girl：a threat as it lunges",
       "src": "ai",
       "files": [
         "sfx/ai/cry_girl_attack_1.ogg",
@@ -571,11 +571,11 @@
         "sfx/ai/cry_girl_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_5", "tts_4", "tts_8", "tts_2", "tts_1"]
+      "from": ["tts_2", "tts_4", "tts_1", "tts_8", "tts_7"]
     },
     "cry_girl_hurt": {
       "when": "怪叫（girl 类）hurt",
-      "want": "a creepy monster girl：a short pained squeal",
+      "want": "a creepy monster girl：a short whine",
       "src": "ai",
       "files": [
         "sfx/ai/cry_girl_hurt_1.ogg",
@@ -585,11 +585,11 @@
         "sfx/ai/cry_girl_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_2", "tts_5", "tts_8", "tts_4", "tts_3"]
+      "from": ["tts_4", "tts_2", "tts_3", "tts_7", "tts_8"]
     },
     "cry_girl_die": {
       "when": "怪叫（girl 类）die",
-      "want": "a creepy monster girl：a dying wail that fades into a whisper",
+      "want": "a creepy monster girl：a last wish fading into a whisper",
       "src": "ai",
       "files": [
         "sfx/ai/cry_girl_die_1.ogg",
@@ -599,11 +599,11 @@
         "sfx/ai/cry_girl_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_6", "tts_7", "tts_3", "tts_4", "tts_1"]
+      "from": ["tts_2", "tts_6", "tts_7", "tts_5", "tts_4"]
     },
     "cry_paper_windup": {
       "when": "怪叫（paper 类）windup",
-      "want": "a creature made of paper：growling and hissing as it gathers itself to attack, rising tension",
+      "want": "a creature made of paper：a teasing invitation as it gathers itself to attack",
       "src": "ai",
       "files": [
         "sfx/ai/cry_paper_windup_1.ogg",
@@ -613,11 +613,11 @@
         "sfx/ai/cry_paper_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_8", "tts_2", "tts_3", "tts_1", "tts_7"]
+      "from": ["tts_3", "tts_6", "tts_4", "tts_2", "tts_7"]
     },
     "cry_paper_attack": {
       "when": "怪叫（paper 类）attack",
-      "want": "a creature made of paper：a sharp shriek as it lunges",
+      "want": "a creature made of paper：a threat as it lunges",
       "src": "ai",
       "files": [
         "sfx/ai/cry_paper_attack_1.ogg",
@@ -627,11 +627,11 @@
         "sfx/ai/cry_paper_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_6", "tts_4", "tts_1", "tts_3", "tts_2"]
+      "from": ["tts_1", "tts_7", "tts_2", "tts_8", "tts_3"]
     },
     "cry_paper_hurt": {
       "when": "怪叫（paper 类）hurt",
-      "want": "a creature made of paper：a short pained squeal",
+      "want": "a creature made of paper：a short whine",
       "src": "ai",
       "files": [
         "sfx/ai/cry_paper_hurt_1.ogg",
@@ -641,11 +641,11 @@
         "sfx/ai/cry_paper_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_8", "tts_6", "tts_2", "tts_7", "tts_3"]
+      "from": ["tts_2", "tts_4", "tts_6", "tts_8", "tts_1"]
     },
     "cry_paper_die": {
       "when": "怪叫（paper 类）die",
-      "want": "a creature made of paper：a dying wail that fades into a whisper",
+      "want": "a creature made of paper：a last wish fading into a whisper",
       "src": "ai",
       "files": [
         "sfx/ai/cry_paper_die_1.ogg",
@@ -655,11 +655,11 @@
         "sfx/ai/cry_paper_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_7", "tts_3", "tts_8", "tts_4", "tts_2"]
+      "from": ["tts_2", "tts_7", "tts_6", "tts_8", "tts_1"]
     },
     "cry_wood_windup": {
       "when": "怪叫（wood 类）windup",
-      "want": "a wooden doll creature：growling and hissing as it gathers itself to attack, rising tension",
+      "want": "a wooden doll creature：a teasing invitation as it gathers itself to attack",
       "src": "ai",
       "files": [
         "sfx/ai/cry_wood_windup_1.ogg",
@@ -669,11 +669,11 @@
         "sfx/ai/cry_wood_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_3", "tts_2", "tts_1", "tts_6", "tts_4"]
+      "from": ["tts_2", "tts_1", "tts_7", "tts_4", "tts_8"]
     },
     "cry_wood_attack": {
       "when": "怪叫（wood 类）attack",
-      "want": "a wooden doll creature：a sharp shriek as it lunges",
+      "want": "a wooden doll creature：a threat as it lunges",
       "src": "ai",
       "files": [
         "sfx/ai/cry_wood_attack_1.ogg",
@@ -683,11 +683,11 @@
         "sfx/ai/cry_wood_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_5", "tts_7", "tts_1", "tts_4", "tts_8"]
+      "from": ["tts_4", "tts_1", "tts_3", "tts_5", "tts_8"]
     },
     "cry_wood_hurt": {
       "when": "怪叫（wood 类）hurt",
-      "want": "a wooden doll creature：a short pained squeal",
+      "want": "a wooden doll creature：a short whine",
       "src": "ai",
       "files": [
         "sfx/ai/cry_wood_hurt_1.ogg",
@@ -697,11 +697,11 @@
         "sfx/ai/cry_wood_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_4", "tts_2", "tts_6", "tts_5", "tts_3"]
+      "from": ["tts_8", "tts_6", "tts_4", "tts_7", "tts_2"]
     },
     "cry_wood_die": {
       "when": "怪叫（wood 类）die",
-      "want": "a wooden doll creature：a dying wail that fades into a whisper",
+      "want": "a wooden doll creature：a last wish fading into a whisper",
       "src": "ai",
       "files": [
         "sfx/ai/cry_wood_die_1.ogg",
@@ -711,11 +711,11 @@
         "sfx/ai/cry_wood_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_4", "tts_6", "tts_8", "tts_1", "tts_3"]
+      "from": ["tts_2", "tts_8", "tts_6", "tts_7", "tts_5"]
     },
     "cry_beast_windup": {
       "when": "怪叫（beast 类）windup",
-      "want": "a big soft monster：growling and hissing as it gathers itself to attack, rising tension",
+      "want": "a big soft monster：a teasing invitation as it gathers itself to attack",
       "src": "ai",
       "files": [
         "sfx/ai/cry_beast_windup_1.ogg",
@@ -725,11 +725,11 @@
         "sfx/ai/cry_beast_windup_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_6", "tts_7", "tts_1", "tts_3", "tts_4"]
+      "from": ["tts_7", "tts_8", "tts_4", "tts_6", "tts_1"]
     },
     "cry_beast_attack": {
       "when": "怪叫（beast 类）attack",
-      "want": "a big soft monster：a sharp shriek as it lunges",
+      "want": "a big soft monster：a threat as it lunges",
       "src": "ai",
       "files": [
         "sfx/ai/cry_beast_attack_1.ogg",
@@ -739,11 +739,11 @@
         "sfx/ai/cry_beast_attack_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_3", "tts_1", "tts_5", "tts_4", "tts_7"]
+      "from": ["tts_1", "tts_8", "tts_7", "tts_5", "tts_3"]
     },
     "cry_beast_hurt": {
       "when": "怪叫（beast 类）hurt",
-      "want": "a big soft monster：a short pained squeal",
+      "want": "a big soft monster：a short whine",
       "src": "ai",
       "files": [
         "sfx/ai/cry_beast_hurt_1.ogg",
@@ -753,11 +753,11 @@
         "sfx/ai/cry_beast_hurt_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_7", "tts_1", "tts_5", "tts_3", "tts_4"]
+      "from": ["tts_3", "tts_5", "tts_1", "tts_7", "tts_2"]
     },
     "cry_beast_die": {
       "when": "怪叫（beast 类）die",
-      "want": "a big soft monster：a dying wail that fades into a whisper",
+      "want": "a big soft monster：a last wish fading into a whisper",
       "src": "ai",
       "files": [
         "sfx/ai/cry_beast_die_1.ogg",
@@ -767,7 +767,7 @@
         "sfx/ai/cry_beast_die_5.ogg"
       ],
       "vol": 0.8,
-      "from": ["tts_5", "tts_4", "tts_3", "tts_1", "tts_6"]
+      "from": ["tts_8", "tts_3", "tts_4", "tts_5", "tts_1"]
     },
     "hitPink": {
       "when": "地雷妹打中（泡泡「啵」）",
@@ -835,20 +835,16 @@
     "kokeshi": { "cry": "wood", "rate": 1.1 }
   },
   "voices": {
-    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。 grains = 武器的声音（第十三批：武器声用主角自己的声音）：say 每个音节，style / speed（可以每个音节一个）；tools/voice_aivis.py grains <角色> 生成 voice/<角色>/g_<键>_<n>.ogg 写进 files；seq = 按顺序对着打出来的字（猫娘的真言 唵嘛呢叭咪吽）；takes = 整串换几种语气再念几遍（文件一遍接一遍排），seq 时每发从这个字的几遍里随机挑一个；不是 seq 的随机挑、不连着重复最近两个（2026-10-18 用户：重复度太高）。怎么播见 characters/*.json weapon.voice。",
+    "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。",
     "pink": {
       "model": "e4ee047d-3af4-4936-90eb-29a3c9104709",
       "voice": "火山夢_T2モデル",
       "tone": "甜腻、黏人、有点病娇的地雷系，撒娇时拖长音，偶尔压低声音说狠话",
       "read": {
         "default": { "style": "ノーマル" },
-        "hit": { "style": "Positive", "speed": 1.1 },
-        "crit": { "style": "Positive", "intonation": 1.3 },
         "kill": { "style": "Positive" },
         "combo": { "style": "Positive", "intonation": 1.3 },
-        "hurt": { "style": "Negative", "speed": 1.1 },
         "low": { "style": "Negative", "speed": 0.9 },
-        "empty": { "style": "Negative" },
         "fever": { "style": "Positive", "intonation": 1.3 },
         "ready": { "style": "Positive" },
         "skill": { "style": "Positive", "intonation": 1.5, "speed": 1.05 },
@@ -865,8 +861,6 @@
         "rot": { "style": "Negative" },
         "real": { "style": "ノーマル" },
         "armor": { "style": "Positive" },
-        "kill_1": { "style": "Positive", "intonation": 1.4 },
-        "crit_1": { "style": "Positive", "intonation": 1.4 },
         "start": { "style": "Positive" },
         "win": { "style": "Positive", "intonation": 1.3 },
         "lose": { "style": "Negative", "speed": 0.92 },
@@ -878,87 +872,37 @@
         "bell": { "style": "Positive", "intonation": 1.2 }
       },
       "say": {
-        "skill_3": "わたしだけみて",
-        "skill_4": "あいのだんがん",
-        "skill_5": "よそみきんし",
-        "skill_6": "ぜったいにがさない",
-        "revive_5": "いきかえったぁ",
-        "photo_4": "ばえー",
-        "photo_6": "もれた",
         "poke_5": "そんなにさわりたいの?",
         "poke_6": "ちゃんとせきにんとってね",
         "poke_7": "わたしだけみててね",
         "poke_10": "つぎはデートしてくれる?",
-        "quit_4": "かえっちゃやだ",
         "quit_5": "ずっとまってるから…",
         "quit_6": "うわきしないでね?",
-        "start_3": "じゅんびオッケー",
-        "start_4": "まもってあげる",
-        "start_5": "きょうもかわいくうつよ",
-        "start_6": "て、つないでいこ",
-        "win_3": "みてた? みてた?",
-        "win_4": "ごほうびちょうだい",
-        "win_5": "さいきょうかわいい",
-        "lose_4": "いまのなし!",
-        "lose_6": "つぎはかつもん"
+        "photo_2": "パシャッ♡ きょうのわたしももれてる……あれ?",
+        "photo_3": "ばえー♡ ……まって、うしろのそれ、なに?",
+        "revive_2": "さいきどうかんりょう♡ あたらしいわたしも、あなただけがすきだよ。",
+        "quit_4": "かえっちゃやだ、こんやはここにとまっていこ?",
+        "win_2": "らくしょー♡ さいきょうでいちばんかわいいのはわたし。"
       },
       "lines": {
-        "hit_1": "voice/pink/hit_1.ogg",
-        "hit_2": "voice/pink/hit_2.ogg",
-        "hit_3": "voice/pink/hit_3.ogg",
-        "hit_4": "voice/pink/hit_4.ogg",
-        "hit_5": "voice/pink/hit_5.ogg",
-        "hit_6": "voice/pink/hit_6.ogg",
-        "hit_7": "voice/pink/hit_7.ogg",
-        "hit_8": "voice/pink/hit_8.ogg",
-        "crit_1": "voice/pink/crit_1.ogg",
-        "crit_2": "voice/pink/crit_2.ogg",
-        "crit_3": "voice/pink/crit_3.ogg",
-        "crit_4": "voice/pink/crit_4.ogg",
-        "crit_5": "voice/pink/crit_5.ogg",
-        "crit_6": "voice/pink/crit_6.ogg",
-        "crit_7": "voice/pink/crit_7.ogg",
         "kill_1": "voice/pink/kill_1.ogg",
         "kill_2": "voice/pink/kill_2.ogg",
         "kill_3": "voice/pink/kill_3.ogg",
         "kill_4": "voice/pink/kill_4.ogg",
         "kill_5": "voice/pink/kill_5.ogg",
         "kill_6": "voice/pink/kill_6.ogg",
-        "kill_7": "voice/pink/kill_7.ogg",
-        "kill_8": "voice/pink/kill_8.ogg",
         "combo_1": "voice/pink/combo_1.ogg",
         "combo_2": "voice/pink/combo_2.ogg",
         "combo_3": "voice/pink/combo_3.ogg",
         "combo_4": "voice/pink/combo_4.ogg",
         "combo_5": "voice/pink/combo_5.ogg",
         "combo_6": "voice/pink/combo_6.ogg",
-        "combo_7": "voice/pink/combo_7.ogg",
-        "hurt_1": "voice/pink/hurt_1.ogg",
-        "hurt_2": "voice/pink/hurt_2.ogg",
-        "hurt_3": "voice/pink/hurt_3.ogg",
-        "hurt_4": "voice/pink/hurt_4.ogg",
-        "hurt_5": "voice/pink/hurt_5.ogg",
-        "hurt_6": "voice/pink/hurt_6.ogg",
-        "hurt_7": "voice/pink/hurt_7.ogg",
         "low_1": "voice/pink/low_1.ogg",
         "low_2": "voice/pink/low_2.ogg",
         "low_3": "voice/pink/low_3.ogg",
         "low_4": "voice/pink/low_4.ogg",
         "low_5": "voice/pink/low_5.ogg",
         "low_6": "voice/pink/low_6.ogg",
-        "reload_1": "voice/pink/reload_1.ogg",
-        "reload_2": "voice/pink/reload_2.ogg",
-        "reload_3": "voice/pink/reload_3.ogg",
-        "reload_4": "voice/pink/reload_4.ogg",
-        "reload_5": "voice/pink/reload_5.ogg",
-        "reload_6": "voice/pink/reload_6.ogg",
-        "reload_7": "voice/pink/reload_7.ogg",
-        "empty_1": "voice/pink/empty_1.ogg",
-        "empty_2": "voice/pink/empty_2.ogg",
-        "empty_3": "voice/pink/empty_3.ogg",
-        "empty_4": "voice/pink/empty_4.ogg",
-        "empty_5": "voice/pink/empty_5.ogg",
-        "empty_6": "voice/pink/empty_6.ogg",
         "fever_1": "voice/pink/fever_1.ogg",
         "fever_2": "voice/pink/fever_2.ogg",
         "fever_3": "voice/pink/fever_3.ogg",
@@ -977,12 +921,6 @@
         "skill_4": "voice/pink/skill_4.ogg",
         "skill_5": "voice/pink/skill_5.ogg",
         "skill_6": "voice/pink/skill_6.ogg",
-        "cover_1": "voice/pink/cover_1.ogg",
-        "cover_2": "voice/pink/cover_2.ogg",
-        "cover_3": "voice/pink/cover_3.ogg",
-        "cover_4": "voice/pink/cover_4.ogg",
-        "cover_5": "voice/pink/cover_5.ogg",
-        "cover_6": "voice/pink/cover_6.ogg",
         "revive_1": "voice/pink/revive_1.ogg",
         "revive_2": "voice/pink/revive_2.ogg",
         "revive_3": "voice/pink/revive_3.ogg",
@@ -1029,13 +967,6 @@
         "poke_8": "voice/pink/poke_8.ogg",
         "poke_9": "voice/pink/poke_9.ogg",
         "poke_10": "voice/pink/poke_10.ogg",
-        "idle_1": "voice/pink/idle_1.ogg",
-        "idle_2": "voice/pink/idle_2.ogg",
-        "idle_3": "voice/pink/idle_3.ogg",
-        "idle_4": "voice/pink/idle_4.ogg",
-        "idle_5": "voice/pink/idle_5.ogg",
-        "idle_6": "voice/pink/idle_6.ogg",
-        "idle_7": "voice/pink/idle_7.ogg",
         "scare_1": "voice/pink/scare_1.ogg",
         "scare_2": "voice/pink/scare_2.ogg",
         "scare_3": "voice/pink/scare_3.ogg",
@@ -1126,25 +1057,6 @@
         "bell_4": "voice/pink/bell_4.ogg",
         "bell_5": "voice/pink/bell_5.ogg",
         "bell_6": "voice/pink/bell_6.ogg"
-      },
-      "grains": {
-        "shot": {
-          "say": ["とぅっ", "ぱんっ", "ぽんっ", "ひゅっ", "ちゅっ", "ばんっ", "ぴゅっ", "きゅんっ", "どぅっ", "トゥッ"],
-          "style": "Positive",
-          "speed": [1.3, 1.45, 1.55, 1.35, 1.4],
-          "files": [
-            "voice/pink/g_shot_1.ogg",
-            "voice/pink/g_shot_2.ogg",
-            "voice/pink/g_shot_3.ogg",
-            "voice/pink/g_shot_4.ogg",
-            "voice/pink/g_shot_5.ogg",
-            "voice/pink/g_shot_6.ogg",
-            "voice/pink/g_shot_7.ogg",
-            "voice/pink/g_shot_8.ogg",
-            "voice/pink/g_shot_9.ogg",
-            "voice/pink/g_shot_10.ogg"
-          ]
-        }
       }
     },
     "cat": {
@@ -1154,28 +1066,22 @@
       "read": {
         "default": { "style": "ノーマル" },
         "kill": { "style": "ねむたい" },
-        "hurt": { "style": "せつなめ", "speed": 1.1 },
         "low": { "style": "せつなめ", "speed": 0.9 },
-        "reload": { "style": "ねむたい" },
-        "empty": { "style": "ねむたい" },
         "fever": { "style": "あまあま", "intonation": 1.3 },
         "ready": { "style": "あまあま" },
         "skill": { "style": "ノーマル", "intonation": 1.5, "speed": 1.05 },
-        "cover": { "style": "ねむたい" },
         "revive": { "style": "ねむたい" },
         "down": { "style": "せつなめ", "speed": 0.88 },
         "join": { "style": "あまあま" },
         "quit": { "style": "せつなめ", "speed": 0.85 },
         "poke": { "style": "あまあま" },
         "poke_1": { "style": "ノーマル", "speed": 1.1 },
-        "idle": { "style": "ねむたい" },
         "scare": { "style": "ノーマル", "speed": 0.85 },
         "photo": { "style": "ねむたい" },
         "bridge": { "style": "ノーマル", "speed": 1.15 },
         "rot": { "style": "ねむたい" },
         "real": { "style": "ノーマル" },
         "armor": { "style": "ノーマル" },
-        "crit": { "style": "ノーマル", "speed": 1.1, "intonation": 1.4 },
         "stagger": { "style": "ノーマル", "speed": 1.1, "intonation": 1.4 },
         "start": { "style": "あまあま" },
         "win": { "style": "あまあま" },
@@ -1188,32 +1094,6 @@
         "bell": { "style": "ノーマル", "intonation": 1.4 }
       },
       "say": {
-        "skill_1": "だいじだいひ、かんぜおんぼさつ",
-        "skill_2": "きゅうきゅうにょりつりょう!",
-        "stagger_1": "てい!",
-        "stagger_2": "せつ!",
-        "join_1": "さんじょうにゃ",
-        "cover_2": "ダンボール",
-        "win_1": "らくしょうにゃ",
-        "crit_4": "はっ!",
-        "crit_5": "めつ!",
-        "crit_7": "ざん!",
-        "kill_4": "じょうぶつしにゃ",
-        "reload_4": "ぴょうっ",
-        "reload_5": "とうっ",
-        "empty_6": "おふだぎれ",
-        "skill_4": "りん ぴょう とう しゃ かい じん れつ ざい ぜん",
-        "skill_5": "なむあみだぶつ",
-        "skill_6": "しきそくぜくう!",
-        "revive_4": "ここのつあるにゃ",
-        "stagger_3": "ふう!",
-        "stagger_4": "ばく!",
-        "stagger_5": "とまれ!",
-        "stagger_6": "まて!",
-        "join_6": "ねこのてにゃ",
-        "photo_2": "うつってるにゃ",
-        "photo_6": "ねんしゃ?",
-        "armor_5": "なかみはないにゃ",
         "poke_4": "みみはくすぐったいにゃ",
         "poke_5": "…なでるならあたまにゃ",
         "poke_6": "にくきゅうはたかいにゃ",
@@ -1222,68 +1102,54 @@
         "quit_3": "…べつにさびしくないにゃ",
         "quit_4": "またくるにゃ?",
         "quit_6": "かぎはあけとくにゃ",
-        "start_3": "しごとにゃ",
-        "start_5": "おはらいのじかんにゃ",
-        "start_6": "おくれるにゃよ",
-        "win_3": "とうぜんにゃ",
-        "win_4": "なでてもいいにゃ",
-        "win_5": "さかながたべたいにゃ",
-        "lose_3": "…ゆだんしたにゃ",
-        "lose_5": "つぎはほんきだすにゃ",
-        "lose_6": "ひざまくらではんせいかいにゃ"
+        "skill_1": "だいじだいひ、かんぜおんぼさつ、このへやのけがれを、ぜんぶつれていくにゃ!",
+        "skill_2": "きゅうきゅうにょりつりょう! てんちのかみがみ、ねこのてをかすにゃ!",
+        "skill_4": "りん ぴょう とう しゃ かい じん れつ ざい ぜん! みんなまとめてたいさんにゃ!",
+        "skill_5": "なむあみだぶつ……らいせはいいねこにうまれるにゃ。",
+        "skill_6": "しきそくぜくう、くうそくぜしき! くらうにゃ、ねこのひかり!",
+        "stagger_1": "てい! おとなしくしてるにゃ、うごくにゃよ。",
+        "stagger_2": "せつ! たましい、つかまえたにゃ、いまのうちにうつにゃ!",
+        "stagger_3": "ふう! これでしばらくいきもできないにゃ。",
+        "stagger_4": "ばく! おふだがからみついたにゃ、ほどけないにゃよ。",
+        "stagger_5": "まて! ねこのつめは、いっかいじゃすまないにゃ。",
+        "revive_1": "にゃーん、さいりんにゃ。にんぎょうのからだは、そうかんたんにこわれないにゃ。",
+        "revive_4": "じゅいんがとけたにゃ……いま、なきながらなまえよんだのはだれにゃ?",
+        "down_5": "じゅいんが……あつい……さわっちゃだめにゃ……",
+        "combo_5": "ふふん、よくみとくにゃ、これがつくもがみのほんきにゃ。",
+        "grabbed_6": "にんぎょうどうし……つくもがみをなめるにゃよ!",
+        "win_3": "とうぜんにゃ。つくもがみはだてじゃないにゃ。",
+        "kill_1": "なむー、ちゃんとじょうぶつするにゃ、もうもどってくるにゃよ。",
+        "kill_5": "ふん、このていどでねこさまのじゃまするにゃんて。",
+        "kill_6": "ふにゃー、おはらいかんりょうにゃ、にぼしふやしてにゃ。",
+        "ready_1": "ほしいにゃ? ねこさまのおおわざ、たまったにゃ。",
+        "trapHit_5": "いまのうちにゃ! ねこさまがかせいだじかん、むだにするにゃよ!",
+        "bell_1": "つくにゃ! かねのおと、あいつのあたまにたたきこむにゃ!",
+        "photo_3": "ねんしゃかにゃ……このいえ、わたしたちになにをみせたいにゃ?",
+        "armor_1": "……しんしにゃ? でもなかみはからっぽにゃ。",
+        "armor_4": "なかみはいないにゃ、ふるいしゅうねんだけにゃ。",
+        "join_1": "さんじょうにゃ。ひとりじゃかわいそうだから、ねこのてをかすにゃ。",
+        "lose_4": "ふにゃ……ひざまくらではんせいかい、はじめるにゃ。",
+        "start_1": "いくにゃ。おはらいのじかんにゃ、かえったらにぼしにゃ。"
       },
       "lines": {
-        "hit_1": "voice/cat/hit_1.ogg",
-        "hit_2": "voice/cat/hit_2.ogg",
-        "hit_3": "voice/cat/hit_3.ogg",
-        "hit_4": "voice/cat/hit_4.ogg",
-        "hit_5": "voice/cat/hit_5.ogg",
-        "hit_6": "voice/cat/hit_6.ogg",
-        "hit_7": "voice/cat/hit_7.ogg",
-        "crit_1": "voice/cat/crit_1.ogg",
-        "crit_2": "voice/cat/crit_2.ogg",
-        "crit_3": "voice/cat/crit_3.ogg",
-        "crit_4": "voice/cat/crit_4.ogg",
-        "crit_5": "voice/cat/crit_5.ogg",
-        "crit_6": "voice/cat/crit_6.ogg",
-        "crit_7": "voice/cat/crit_7.ogg",
         "kill_1": "voice/cat/kill_1.ogg",
         "kill_2": "voice/cat/kill_2.ogg",
         "kill_3": "voice/cat/kill_3.ogg",
         "kill_4": "voice/cat/kill_4.ogg",
         "kill_5": "voice/cat/kill_5.ogg",
         "kill_6": "voice/cat/kill_6.ogg",
-        "kill_7": "voice/cat/kill_7.ogg",
         "combo_1": "voice/cat/combo_1.ogg",
         "combo_2": "voice/cat/combo_2.ogg",
         "combo_3": "voice/cat/combo_3.ogg",
         "combo_4": "voice/cat/combo_4.ogg",
         "combo_5": "voice/cat/combo_5.ogg",
         "combo_6": "voice/cat/combo_6.ogg",
-        "hurt_1": "voice/cat/hurt_1.ogg",
-        "hurt_2": "voice/cat/hurt_2.ogg",
-        "hurt_3": "voice/cat/hurt_3.ogg",
-        "hurt_4": "voice/cat/hurt_4.ogg",
-        "hurt_5": "voice/cat/hurt_5.ogg",
-        "hurt_6": "voice/cat/hurt_6.ogg",
         "low_1": "voice/cat/low_1.ogg",
         "low_2": "voice/cat/low_2.ogg",
         "low_3": "voice/cat/low_3.ogg",
         "low_4": "voice/cat/low_4.ogg",
         "low_5": "voice/cat/low_5.ogg",
         "low_6": "voice/cat/low_6.ogg",
-        "reload_1": "voice/cat/reload_1.ogg",
-        "reload_2": "voice/cat/reload_2.ogg",
-        "reload_3": "voice/cat/reload_3.ogg",
-        "reload_4": "voice/cat/reload_4.ogg",
-        "reload_5": "voice/cat/reload_5.ogg",
-        "reload_6": "voice/cat/reload_6.ogg",
-        "empty_1": "voice/cat/empty_1.ogg",
-        "empty_2": "voice/cat/empty_2.ogg",
-        "empty_3": "voice/cat/empty_3.ogg",
-        "empty_4": "voice/cat/empty_4.ogg",
-        "empty_5": "voice/cat/empty_5.ogg",
-        "empty_6": "voice/cat/empty_6.ogg",
         "fever_1": "voice/cat/fever_1.ogg",
         "fever_2": "voice/cat/fever_2.ogg",
         "fever_3": "voice/cat/fever_3.ogg",
@@ -1302,12 +1168,6 @@
         "skill_4": "voice/cat/skill_4.ogg",
         "skill_5": "voice/cat/skill_5.ogg",
         "skill_6": "voice/cat/skill_6.ogg",
-        "cover_1": "voice/cat/cover_1.ogg",
-        "cover_2": "voice/cat/cover_2.ogg",
-        "cover_3": "voice/cat/cover_3.ogg",
-        "cover_4": "voice/cat/cover_4.ogg",
-        "cover_5": "voice/cat/cover_5.ogg",
-        "cover_6": "voice/cat/cover_6.ogg",
         "revive_1": "voice/cat/revive_1.ogg",
         "revive_2": "voice/cat/revive_2.ogg",
         "revive_3": "voice/cat/revive_3.ogg",
@@ -1354,13 +1214,6 @@
         "poke_8": "voice/cat/poke_8.ogg",
         "poke_9": "voice/cat/poke_9.ogg",
         "poke_10": "voice/cat/poke_10.ogg",
-        "idle_1": "voice/cat/idle_1.ogg",
-        "idle_2": "voice/cat/idle_2.ogg",
-        "idle_3": "voice/cat/idle_3.ogg",
-        "idle_4": "voice/cat/idle_4.ogg",
-        "idle_5": "voice/cat/idle_5.ogg",
-        "idle_6": "voice/cat/idle_6.ogg",
-        "idle_7": "voice/cat/idle_7.ogg",
         "scare_1": "voice/cat/scare_1.ogg",
         "scare_2": "voice/cat/scare_2.ogg",
         "scare_3": "voice/cat/scare_3.ogg",
@@ -1451,35 +1304,6 @@
         "bell_4": "voice/cat/bell_4.ogg",
         "bell_5": "voice/cat/bell_5.ogg",
         "bell_6": "voice/cat/bell_6.ogg"
-      },
-      "grains": {
-        "shot": {
-          "say": ["オンッ", "マッ", "ニッ", "ペッ", "メッ", "フンッ"],
-          "style": "ノーマル",
-          "speed": 1.2,
-          "seq": true,
-          "files": [
-            "voice/cat/g_shot_1.ogg",
-            "voice/cat/g_shot_2.ogg",
-            "voice/cat/g_shot_3.ogg",
-            "voice/cat/g_shot_4.ogg",
-            "voice/cat/g_shot_5.ogg",
-            "voice/cat/g_shot_6.ogg",
-            "voice/cat/g_shot_7.ogg",
-            "voice/cat/g_shot_8.ogg",
-            "voice/cat/g_shot_9.ogg",
-            "voice/cat/g_shot_10.ogg",
-            "voice/cat/g_shot_11.ogg",
-            "voice/cat/g_shot_12.ogg",
-            "voice/cat/g_shot_13.ogg",
-            "voice/cat/g_shot_14.ogg",
-            "voice/cat/g_shot_15.ogg",
-            "voice/cat/g_shot_16.ogg",
-            "voice/cat/g_shot_17.ogg",
-            "voice/cat/g_shot_18.ogg"
-          ],
-          "takes": [{ "style": "ノーマル", "speed": 1.2 }, { "style": "あまあま", "speed": 1.3 }, { "style": "ねむたい", "speed": 1.25, "intonation": 1.4 }]
-        }
       }
     },
     "madame": {

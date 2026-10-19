@@ -1,210 +1,140 @@
 {
-  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。 stickers.bosses：Boss 的台词（按 bosses.json 的 id，src/ui/stickers.js boss），每种场合几句，日语那句配成她的语音（sounds.json voices.<id>）；madame：keep 三样东西出来、photo / diary / coffin 打中那一样、kneel 跪下、offer1 / offer2 献上第一 / 第二样之后（提示下一样）、wrong 打错顺序、rest 安息。",
+  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-19 用户第二十三批：说话的场合少一点、每句长一点（只念一个字 / 词、两个音节都很怪）——每句都是完整的一句话；打中、暴击、受伤、换弹、没子弹、躲掩体、发呆不再说话；kill 只是偶尔一句（离她上一句隔一阵子），low 是血第一次掉到四分之一以下。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。 stickers.bosses：Boss 的台词（按 bosses.json 的 id，src/ui/stickers.js boss），每种场合几句，日语那句配成她的语音（sounds.json voices.<id>）；madame：keep 三样东西出来、photo / diary / coffin 打中那一样、kneel 跪下、offer1 / offer2 献上第一 / 第二样之后（提示下一样）、wrong 打错顺序、rest 安息。",
   "stickers": {
     "heroines": {
       "pink": {
-        "hit": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "嘿咻♡", "en": "Hup♡", "ja": "えいっ♡" },
-            { "zh": "呵呵♡", "en": "Hehe♡", "ja": "ふふっ" },
-            { "zh": "喏!", "en": "There!", "ja": "ほらっ" },
-            { "zh": "看招♡", "en": "Yoink♡", "ja": "それっ♡" },
-            { "zh": "嘭♡", "en": "Boop♡", "ja": "ぽんっ♡" },
-            { "zh": "嗯♡", "en": "Mm♡", "ja": "んっ♡" },
-            { "zh": "中了♡", "en": "Bingo♡", "ja": "あたり♡" },
-            { "zh": "哼哼~", "en": "Heh-heh", "ja": "へへんっ" }
-          ]
-        },
-        "crit": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
-            { "zh": "啾♡", "en": "Ba-dump♡", "ja": "ずきゅん♡" },
-            { "zh": "呀哈♡", "en": "Kyaha♡", "ja": "きゃはっ♡" },
-            { "zh": "biu♡", "en": "Pew-pew♡", "ja": "ばきゅーん♡" },
-            { "zh": "狙击♡", "en": "No-scope♡", "ja": "ねらいうち♡" },
-            { "zh": "么么哒♡", "en": "Smooch♡", "ja": "むちゅー♡" },
-            { "zh": "心动♡", "en": "Doki♡", "ja": "きゅんっ♡" }
-          ]
-        },
         "kill": {
           "bubble": "cute",
           "lines": [
-            { "zh": "mua♡", "en": "Mwah♡", "ja": "ちゅっ♡" },
-            { "zh": "掰掰♡", "en": "Bye-bye♡", "ja": "ばいばーい♡" },
-            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" },
-            { "zh": "晚安♡", "en": "Nighty-night♡", "ja": "おやすみ♡" },
-            { "zh": "下一个♡", "en": "Next♡", "ja": "つぎー♡" },
-            { "zh": "杂鱼♡", "en": "Git gud♡", "ja": "ざぁこ♡" },
-            { "zh": "啪叽♡", "en": "Squish♡", "ja": "ぷちっ♡" },
-            { "zh": "好弱♡", "en": "Weak♡", "ja": "よわーい♡" }
+            { "zh": "嘿嘿，又一个乖乖睡着了♡ 下一个是谁呀？", "en": "Ehehe, another one tucked in♡ Who's next?", "ja": "えへへ、またひとりおやすみ♡ つぎはだぁれ？" },
+            { "zh": "掰掰~ 下次见到我，记得绕远一点哦♡", "en": "Bye-bye~ Next time you see me, steer clear♡", "ja": "ばいばーい♡ 次に会ったら、ちゃんとよけてね♡" },
+            { "zh": "杂鱼杂鱼~ 这样就倒下了，好弱哦♡", "en": "Small fry, small fry~ Down already? So weak♡", "ja": "ざぁこ♡ ざぁこ♡ もう倒れちゃうの？よわーい♡" },
+            { "zh": "看到了吗？是我打中的哦，要夸我才行♡", "en": "Did you see? That was me, so praise me♡", "ja": "見てた？今のわたしだよ、ちゃんとほめてね♡" },
+            { "zh": "啪叽~ 碎掉了。不过还是你比较可爱哦♡", "en": "Squish~ It popped. You're still cuter, though♡", "ja": "ぷちっ♡ つぶれちゃった。でもあなたのほうがかわいいよ♡" },
+            { "zh": "晚安♡ 做个只梦见我的梦吧。", "en": "Nighty-night♡ Dream only of me.", "ja": "おやすみ♡ わたしの夢だけ見ててね。" }
           ]
         },
         "combo": {
           "bubble": "shout",
           "lines": [
-            { "zh": "还要♡", "en": "More♡", "ja": "もっとぉ♡" },
-            { "zh": "嗯呼呼♡", "en": "Mhm-hm♡", "ja": "んふふ♡" },
-            { "zh": "停不下来♡", "en": "Can't stop♡", "ja": "とまんない♡" },
-            { "zh": "还早呢♡", "en": "Not done yet♡", "ja": "まだまだぁ♡" },
-            { "zh": "好爽♡", "en": "So good♡", "ja": "きもちいー♡" },
-            { "zh": "看我看我♡", "en": "Look at me♡", "ja": "みてみて♡" },
-            { "zh": "全是我的♡", "en": "Mine mine♡", "ja": "ぜんぶわたしの♡" }
-          ]
-        },
-        "hurt": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "呀!", "en": "Kya!", "ja": "きゃっ!" },
-            { "zh": "好痛!", "en": "Ow!", "ja": "いたっ!" },
-            { "zh": "切", "en": "Tch", "ja": "ちぇっ" },
-            { "zh": "过分!", "en": "Rude!", "ja": "ひどっ!" },
-            { "zh": "嘤", "en": "Sadge", "ja": "ぴえん" },
-            { "zh": "呜哇", "en": "Oof", "ja": "んぎゃっ" },
-            { "zh": "住手啦!", "en": "Stahp!", "ja": "やめてよっ!" }
+            { "zh": "还要还要♡ 再多一点嘛，人家停不下来了！", "en": "More, more♡ I can't stop now!", "ja": "もっともっと♡ もうとまんないよぉ！" },
+            { "zh": "好厉害好厉害，全部都是我的猎物哦♡", "en": "Amazing♡ Every last one is my prey♡", "ja": "すごいすごい♡ ぜーんぶわたしの獲物だよ♡" },
+            { "zh": "只准看着我，这些连击都是为你打的♡", "en": "Eyes on me♡ This whole combo is for you♡", "ja": "わたしだけ見てて♡ このコンボ、あなたのためだよ♡" },
+            { "zh": "嗯呼呼，身体越来越热了……还早呢♡", "en": "Mhm-hm, I'm heating up... we've only just started♡", "ja": "んふふ、体があつくなってきた……まだまだだよ♡" },
+            { "zh": "数不清了吧？我可是一枪都没有浪费哦♡", "en": "Lost count yet? I haven't wasted a single shot♡", "ja": "もう数えきれないでしょ？一発もムダにしてないよ♡" },
+            { "zh": "好爽♡ 再来再来，一个都别想逃！", "en": "So good♡ Come on, more - nobody gets away!", "ja": "きもちいー♡ もっと来て、ひとりも逃がさないから！" }
           ]
         },
         "low": {
           "bubble": "shout",
           "lines": [
-            { "zh": "不要…", "en": "Nooo…", "ja": "やだぁ…" },
-            { "zh": "救我…", "en": "Help…", "ja": "たすけてぇ…" },
-            { "zh": "嘤到不行…", "en": "Ultra sadge…", "ja": "ぱおん…" },
-            { "zh": "抱抱我…", "en": "Hug me…", "ja": "ぎゅってして…" },
-            { "zh": "要死掉了…", "en": "I'm dying…", "ja": "しんじゃう…" },
-            { "zh": "别丢下我…", "en": "Don't leave me…", "ja": "みすてないで…" }
-          ]
-        },
-        "reload": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "切", "en": "Tch", "ja": "ちぇっ" },
-            { "zh": "嗯咻", "en": "Hngh", "ja": "んしょっ" },
-            { "zh": "等我♡", "en": "Wait♡", "ja": "まってて♡" },
-            { "zh": "嘿哟♡", "en": "Heave-ho♡", "ja": "よいしょ♡" },
-            { "zh": "等一下", "en": "Brb", "ja": "ちょっとまって" },
-            { "zh": "咔嚓♡", "en": "Click-clack♡", "ja": "カシャッ♡" },
-            { "zh": "续杯♡", "en": "Refill♡", "ja": "おかわり♡" }
-          ]
-        },
-        "empty": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "切!", "en": "Tch!", "ja": "ちぇっ!" },
-            { "zh": "咦?", "en": "Huh?", "ja": "あれぇ?" },
-            { "zh": "空了…", "en": "Empty…", "ja": "からっぽ…" },
-            { "zh": "诶，骗人", "en": "Bruh", "ja": "えっ、うそ" },
-            { "zh": "唔…", "en": "Mou…", "ja": "むぅ…" },
-            { "zh": "没啦没啦", "en": "All gone", "ja": "ないないー" }
+            { "zh": "好痛……不要丢下我一个人好不好……", "en": "It hurts... please don't leave me alone...", "ja": "いたいよぉ……ひとりにしないで……おねがい……" },
+            { "zh": "要坏掉了……抱抱我嘛，抱一下就好……", "en": "I'm going to break... hold me, just for a bit...", "ja": "こわれちゃう……ぎゅってして、少しだけでいいから……" },
+            { "zh": "呜……这样下去人家真的会死掉的啦……", "en": "Ugh... at this rate I'm really going to die...", "ja": "うぅ……このままじゃ、ほんとにしんじゃうよぉ……" },
+            { "zh": "救救我……你会来救我的吧？会的吧？", "en": "Save me... you'll come for me, right? Right?", "ja": "たすけて……助けにきてくれるよね？ね？" },
+            { "zh": "嘤……妆都花掉了，不许看我现在的样子……", "en": "Sob... my makeup's ruined, don't look at me now...", "ja": "ぴえん……メイクくずれちゃった、今の顔見ないで……" },
+            { "zh": "好冷……手好冰，快牵着我……", "en": "So cold... my hands are freezing, hold them...", "ja": "さむい……手がつめたいの、はやく握って……" }
           ]
         },
         "fever": {
           "bubble": "shout",
           "lines": [
-            { "zh": "来了来了♡", "en": "Here it comes♡", "ja": "きたきたぁ♡" },
-            { "zh": "上头♡", "en": "Hyped♡", "ja": "アガるぅ♡" },
-            { "zh": "嗨翻♡", "en": "Let's gooo♡", "ja": "ぶちあげ♡" },
-            { "zh": "好热♡", "en": "So hot♡", "ja": "あつーい♡" },
-            { "zh": "要飞了♡", "en": "Sugar rush♡", "ja": "ハイになっちゃう♡" },
-            { "zh": "要融化了♡", "en": "Melting♡", "ja": "とろけそう♡" }
+            { "zh": "来了来了♡ 整个人都要飘起来了！", "en": "Here it comes♡ I'm floating!", "ja": "きたきたぁ♡ からだがふわふわしてきた！" },
+            { "zh": "好热好热♡ 子弹都在冒爱心了哦！", "en": "So hot♡ My bullets are shooting hearts!", "ja": "あつーい♡ 弾からハートが出ちゃってる！" },
+            { "zh": "上头了♡ 现在的我谁都挡不住！", "en": "I'm so hyped♡ Nobody can stop me now!", "ja": "アガってきたぁ♡ 今のわたし、だれにも止められないよ！" },
+            { "zh": "甜得要融化了♡ 再多给我一点嘛！", "en": "Sweet enough to melt♡ Give me more!", "ja": "あまくてとろけそう♡ もっとちょうだい！" },
+            { "zh": "嗨翻天♡ 这才是约会该有的样子嘛！", "en": "Let's gooo♡ Now THIS is a date!", "ja": "ぶちあげ♡ デートってこうでなくっちゃ！" },
+            { "zh": "心跳好快……是因为你在看我吗♡", "en": "My heart's racing... is it because you're watching me♡", "ja": "ドキドキがとまらない……あなたが見てるからかな♡" }
           ]
         },
         "ready": {
           "bubble": "cute",
           "lines": [
-            { "zh": "呐♡", "en": "Hey♡", "ja": "ねぇ♡" },
-            { "zh": "快嘛♡", "en": "Hurry♡", "ja": "はやくぅ♡" },
-            { "zh": "可以了♡", "en": "Ready♡", "ja": "いける♡" },
-            { "zh": "手痒痒♡", "en": "Itchy finger♡", "ja": "うずうず♡" },
-            { "zh": "看好了♡", "en": "Watch me♡", "ja": "みてて♡" },
-            { "zh": "攒好了♡", "en": "Charged♡", "ja": "ためたよ♡" }
+            { "zh": "呐呐，攒好了哦♡ 想看我的大招吗？", "en": "Hey hey, it's charged♡ Wanna see me get serious?", "ja": "ねぇねぇ、たまったよ♡ わたしの本気、見たい？" },
+            { "zh": "手好痒……快让我全部打成筛子嘛♡", "en": "My finger's itching... let me turn them all into Swiss cheese♡", "ja": "うずうずしちゃう……はやく全部蜂の巣にさせて♡" },
+            { "zh": "准备好了♡ 只要你一句话，我就开枪。", "en": "Ready♡ One word from you and I fire.", "ja": "準備OK♡ あなたのひとことで撃つからね。" },
+            { "zh": "快点快点♡ 人家已经等不及了啦！", "en": "Hurry, hurry♡ I can't wait any longer!", "ja": "はやくはやくぅ♡ もう待ちきれないよ！" },
+            { "zh": "看好了哦，接下来的我会很可怕的♡", "en": "Watch closely - the next me is scary♡", "ja": "ちゃんと見ててね、ここからのわたし、こわいよ♡" },
+            { "zh": "爱的子弹装满了♡ 要用在谁身上好呢？", "en": "Love bullets fully loaded♡ Who gets them?", "ja": "愛の弾丸、満タンだよ♡ だれに使おっかな？" }
           ]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
-            { "zh": "全部打成筛子♡", "en": "Swiss cheese♡", "ja": "ぜーんぶ蜂の巣♡" },
-            { "zh": "冲呀♡", "en": "Go go♡", "ja": "いっけー♡" },
-            { "zh": "只准看着我♡", "en": "Eyes on me♡", "ja": "わたしだけ見て♡" },
-            { "zh": "爱之子弹♡", "en": "Love bullets♡", "ja": "愛の弾丸♡" },
-            { "zh": "不准看别人♡", "en": "No cheating♡", "ja": "よそ見禁止♡" },
-            { "zh": "绝对不放过♡", "en": "You can't escape♡", "ja": "ぜったい逃がさない♡" }
-          ]
-        },
-        "cover": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "躲猫猫♡", "en": "Peekaboo♡", "ja": "かくれんぼ♡" },
-            { "zh": "呀", "en": "Eep", "ja": "ひゃっ" },
-            { "zh": "好可怕", "en": "Scary~", "ja": "こわーい" },
-            { "zh": "秘密♡", "en": "Secret♡", "ja": "ひみつ♡" },
-            { "zh": "不许偷看♡", "en": "No peeking♡", "ja": "のぞかないで♡" },
-            { "zh": "呼…", "en": "Phew…", "ja": "ふぅ…" }
+            { "zh": "全部打成筛子吧♡ 一个都不许逃！", "en": "Swiss cheese, all of you♡ Nobody escapes!", "ja": "ぜーんぶ蜂の巣にしてあげる♡ ひとりも逃がさない！" },
+            { "zh": "只准看着我！其他的都给我消失吧♡", "en": "Eyes on me! Everything else, disappear♡", "ja": "わたしだけ見て！ほかは全部消えちゃえ♡" },
+            { "zh": "这是爱的子弹哦♡ 好好收下吧！", "en": "These are love bullets♡ Take every one!", "ja": "これが愛の弾丸だよ♡ ちゃんと受け取ってね！" },
+            { "zh": "不准看别人！你的眼里只能有我♡", "en": "No looking away! Your eyes are for me alone♡", "ja": "よそ見禁止！あなたの目にはわたしだけ♡" },
+            { "zh": "绝对绝对不放过你们♡ 冲呀！", "en": "Never, ever letting you go♡ Go go!", "ja": "ぜったいぜったい逃がさないんだから♡ いっけー！" },
+            { "zh": "突突突突突♡ 全都给我躺下吧！", "en": "Ratatatata♡ Everybody lie down!", "ja": "とぅとぅとぅとぅ♡ みーんな寝ちゃえ！" }
           ]
         },
         "revive": {
           "bubble": "cute",
           "lines": [
-            { "zh": "我回来了♡", "en": "I'm back♡", "ja": "ただいま♡" },
-            { "zh": "复活♡", "en": "Revived♡", "ja": "ふっかーつ♡" },
-            { "zh": "想我了吗?", "en": "Miss me?", "ja": "さびしかった?" },
-            { "zh": "还能打♡", "en": "Still going♡", "ja": "まだいける♡" },
-            { "zh": "活过来了", "en": "Respawned", "ja": "生きかえったぁ" },
-            { "zh": "久等了♡", "en": "Sorry for the wait♡", "ja": "おまたせ♡" }
+            { "zh": "我回来了♡ 刚才有没有很想我？", "en": "I'm back♡ Did you miss me just now?", "ja": "ただいま♡ さっき、さびしかった？" },
+            { "zh": "重生完毕♡ 新的我，也只喜欢你哦。", "en": "Reboot complete♡ The new me only loves you, too.", "ja": "再起動かんりょう♡ 新しいわたしも、あなただけが好きだよ。" },
+            { "zh": "久等了♡ 下次可要好好保护我哦。", "en": "Sorry for the wait♡ Protect me properly next time.", "ja": "おまたせ♡ 次はちゃんと守ってよね。" },
+            { "zh": "还能打♡ 这点伤，亲一下就好了。", "en": "Still going♡ A kiss will fix a scratch like this.", "ja": "まだいけるよ♡ こんな傷、ちゅーしたら治るもん。" },
+            { "zh": "活过来了……抓住我的手，别再放开了。", "en": "I'm alive again... take my hand. Don't let go this time.", "ja": "生きかえったぁ……手、つかんで。もう離さないで。" },
+            {
+              "zh": "复活♡ 那边太无聊了，还是你身边好。",
+              "en": "Revived♡ It was boring over there - I'd rather be next to you.",
+              "ja": "ふっかーつ♡ あっちはつまんないし、あなたの隣がいいの。"
+            }
           ]
         },
         "down": {
           "bubble": "shout",
           "lines": [
-            { "zh": "呜…", "en": "Uu…", "ja": "うぅ…" },
-            { "zh": "过分…", "en": "Mean…", "ja": "ひどい…" },
-            { "zh": "嘤…", "en": "Pien…", "ja": "ぴえん…" },
-            { "zh": "等等…", "en": "Wait…", "ja": "まって…" },
-            { "zh": "别忘了我…", "en": "Remember me…", "ja": "わすれないで…" },
-            { "zh": "好痛…", "en": "It hurts…", "ja": "いたいよぉ…" }
+            { "zh": "呜……好过分……要记得来接我哦……", "en": "Uu... so mean... come and get me, okay...", "ja": "うぅ……ひどいよ……ちゃんと迎えにきてね……" },
+            { "zh": "等等……我还没说完……喜欢你……", "en": "Wait... I haven't said it yet... I love...", "ja": "まって……まだ言ってない……すき……" },
+            { "zh": "别忘了我……就算只剩衣服也要记得……", "en": "Don't forget me... even if only my clothes are left...", "ja": "わすれないで……服だけになっても、おぼえててね……" },
+            { "zh": "好痛……这次真的不行了……", "en": "It hurts... I really can't this time...", "ja": "いたいよぉ……今度はほんとにダメかも……" },
+            { "zh": "嘤……替我把仇报了，好不好……", "en": "Sob... avenge me, okay...", "ja": "ぴえん……かたき、とってね……" },
+            { "zh": "对不起……先睡一下……马上回来……", "en": "Sorry... I'll sleep a little... I'll be right back...", "ja": "ごめんね……ちょっとだけ寝るね……すぐもどるから……" }
           ]
         },
         "coverBroken": {
           "bubble": "shout",
           "lines": [
-            { "zh": "喂!?", "en": "Hey!?", "ja": "ちょっ!?" },
-            { "zh": "呀嗯!", "en": "Yaan!", "ja": "やぁん!" },
-            { "zh": "不会吧!", "en": "No way!", "ja": "ありえない!" },
-            { "zh": "呀——!", "en": "Kyaa!", "ja": "きゃー!" },
-            { "zh": "要被看光了!", "en": "Wardrobe malfunction!", "ja": "みえちゃう!" },
-            { "zh": "色狼!", "en": "Lewd!", "ja": "えっち!" }
+            { "zh": "喂喂喂!? 掩体没了，要被看光了啦！", "en": "Hey hey hey!? My cover's gone - you'll see everything!", "ja": "ちょっとちょっと!? 隠れるとこなくなった、見えちゃう！" },
+            { "zh": "呀嗯！讨厌，衣服要被打破了啦！", "en": "Yaan! No, my clothes are gonna tear!", "ja": "やぁん！やだ、服がやぶれちゃう！" },
+            { "zh": "不会吧！这下只能靠你保护我了哦！", "en": "No way! Now you'll just have to protect me!", "ja": "ありえない！もうあなたに守ってもらうしかないよ！" },
+            { "zh": "色狼！是故意瞄准那里的吧！", "en": "Pervert! You aimed there on purpose!", "ja": "えっち！わざとそこ狙ったでしょ！" },
+            { "zh": "好过分！人家可爱的小窝被打烂了！", "en": "So mean! My cute little hideout is wrecked!", "ja": "ひどーい！わたしのかわいい隠れ家がこわれた！" },
+            { "zh": "呀——！不要看过来，转过去啦！", "en": "Kyaa! Don't look over here, turn around!", "ja": "きゃー！こっち見ないで、あっち向いてて！" }
           ]
         },
         "stagger": {
           "bubble": "shout",
           "lines": [
-            { "zh": "定♡", "en": "Stop♡", "ja": "ストップ♡" },
-            { "zh": "乖♡", "en": "Good girl♡", "ja": "いい子♡" },
-            { "zh": "等着♡", "en": "Stay♡", "ja": "まて♡" },
-            { "zh": "别动♡", "en": "Freeze♡", "ja": "うごかないで♡" },
-            { "zh": "坐下♡", "en": "Sit♡", "ja": "おすわり♡" },
-            { "zh": "抓到了♡", "en": "Gotcha♡", "ja": "つかまえた♡" }
+            { "zh": "乖♡ 就这样坐好，不许乱动哦。", "en": "Good girl♡ Sit just like that. No moving.", "ja": "いい子♡ そのままおすわり、うごいちゃダメ。" },
+            { "zh": "抓到了♡ 现在轮到我好好疼爱你了。", "en": "Gotcha♡ Now it's my turn to spoil you.", "ja": "つかまえた♡ 今度はわたしがかわいがってあげる。" },
+            { "zh": "定住了♡ 趁现在，全部打进去！", "en": "It froze♡ Now - pour everything in!", "ja": "止まった♡ 今のうちに、ぜんぶ撃ちこんで！" },
+            { "zh": "别动♡ 乖乖让我打完嘛。", "en": "Don't move♡ Be good and let me finish.", "ja": "うごかないで♡ いい子にして、撃たせてね。" },
+            { "zh": "等着哦♡ 我马上就把你变成筛子。", "en": "Wait right there♡ I'll make you Swiss cheese in a sec.", "ja": "まっててね♡ すぐ蜂の巣にしてあげるから。" },
+            { "zh": "倒下了倒下了♡ 快快，机会来了！", "en": "It's down, it's down♡ Quick, here's our chance!", "ja": "たおれたたおれた♡ はやく、チャンスだよ！" }
           ]
         },
         "join": {
           "bubble": "cute",
           "lines": [
-            { "zh": "参战♡", "en": "Joining♡", "ja": "さんせーん♡" },
-            { "zh": "我来啦♡", "en": "I'm here♡", "ja": "きたよ♡" },
-            { "zh": "带我一个♡", "en": "Let me in♡", "ja": "まぜて♡" },
-            { "zh": "登场♡", "en": "Enter♡", "ja": "とうじょう♡" },
-            { "zh": "一起吧♡", "en": "Together♡", "ja": "いっしょにね♡" },
-            { "zh": "别丢下我一个♡", "en": "Don't go solo♡", "ja": "ひとりにしないで♡" }
+            { "zh": "我来啦♡ 不准一个人玩，带我一个！", "en": "I'm here♡ No playing alone - let me in!", "ja": "きたよ♡ ひとりで遊ぶのずるい、まぜて！" },
+            { "zh": "参战♡ 从现在开始，你只能看着我哦。", "en": "Joining♡ From now on, eyes only on me.", "ja": "さんせーん♡ ここからは、わたしだけ見ててね。" },
+            { "zh": "别丢下我一个人嘛，我们一起打！", "en": "Don't leave me out - let's fight together!", "ja": "ひとりにしないで、いっしょに戦お！" },
+            { "zh": "登场♡ 最可爱的援军来了哦！", "en": "Enter♡ The cutest backup has arrived!", "ja": "とうじょう♡ いちばんかわいい援軍だよ！" },
+            { "zh": "一起吧♡ 这样就是两个人的约会了。", "en": "Together♡ Now it's a date for two.", "ja": "いっしょにね♡ これでふたりのデートだね。" },
+            { "zh": "等很久了吧？现在开始换我保护你♡", "en": "Kept you waiting? From here on, I'll protect you♡", "ja": "待たせちゃった？ここからはわたしが守ってあげる♡" }
           ]
         },
         "quit": {
           "bubble": "cute",
           "lines": [
-            { "zh": "不要走嘛…", "en": "Don't go…", "ja": "いかないで…" },
+            { "zh": "不要走嘛……再陪我一会儿就好……", "en": "Don't go... stay with me a little longer...", "ja": "いかないで……もうちょっとだけ、いっしょにいて……" },
             { "zh": "你要丢下我吗…?", "en": "You're leaving me…?", "ja": "置いてくの…?" },
             { "zh": "呐，再玩一会儿嘛?", "en": "One more round?", "ja": "ねぇ、まだ遊ぼ?" },
-            { "zh": "不要回去嘛", "en": "Don't go home", "ja": "帰っちゃやだ" },
+            { "zh": "不要回去嘛，今晚就住在这里吧？", "en": "Don't go home - stay over tonight?", "ja": "帰っちゃやだ、今夜はここに泊まっていこ？" },
             { "zh": "我会一直等你的…", "en": "I'll be waiting forever…", "ja": "ずっと待ってるから…" },
             { "zh": "不准出轨哦?", "en": "No cheating, okay?", "ja": "浮気しないでね?" }
           ]
@@ -213,569 +143,540 @@
           "bubble": "cute",
           "lines": [
             { "zh": "呀♡ 你在摸哪里!", "en": "Kyaa♡ where are you touching!", "ja": "ひゃっ♡ どこ触ってるの!" },
-            { "zh": "欸嘿嘿~", "en": "Ehehe~", "ja": "えへへ~" },
-            { "zh": "痒痒的啦~", "en": "That tickles~", "ja": "くすぐったいよぉ~" },
+            { "zh": "欸嘿嘿~ 突然戳我，是想我了吗？", "en": "Ehehe~ Poking me out of nowhere - did you miss me?", "ja": "えへへ~ いきなりつつくなんて、さみしかったの？" },
+            { "zh": "痒痒的啦~ 再戳我就要咬你了哦♡", "en": "That tickles~ Poke me again and I'll bite♡", "ja": "くすぐったいよぉ~ これ以上つついたら噛んじゃうぞ♡" },
             { "zh": "真是的~色色♡", "en": "Ugh~ pervert♡", "ja": "もう~ えっち♡" },
             { "zh": "就这么想摸吗?", "en": "That desperate to touch me?", "ja": "そんなに触りたいの?" },
             { "zh": "要负责的哦♡", "en": "You'll take responsibility, right♡", "ja": "ちゃんと責任とってね♡" },
             { "zh": "只准看着我哦♡", "en": "Eyes on me only♡", "ja": "わたしだけ見ててね♡" },
-            { "zh": "呀嗯♡", "en": "Yan♡", "ja": "やんっ♡" },
+            { "zh": "呀嗯♡ 那里不可以啦，好痒……", "en": "Yan♡ Not there, it tickles...", "ja": "やんっ♡ そこはダメ、くすぐったい……" },
             { "zh": "别戳啦~", "en": "Stop poking~", "ja": "つんつんしないでぇ" },
             { "zh": "下次陪我约会?", "en": "Date me next?", "ja": "次はデートしてくれる?" }
           ]
         },
-        "idle": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "哼哼~♪", "en": "Hm-hmm♪", "ja": "ふんふーん♪" },
-            { "zh": "欸嘿嘿", "en": "Ehehe", "ja": "えへへ" },
-            { "zh": "好闲~", "en": "Bored~", "ja": "ひまぁ~" },
-            { "zh": "呐呐", "en": "Hey hey", "ja": "ねぇねぇ" },
-            { "zh": "啦啦♪", "en": "La-la♪", "ja": "るんるん♪" },
-            { "zh": "哈~", "en": "*yawn*", "ja": "ふわぁ" },
-            { "zh": "理理我~", "en": "Notice me~", "ja": "かまって~" }
-          ]
-        },
         "scare": {
           "lines": [
-            { "zh": "那个…?", "en": "Um…?", "ja": "あの…?" },
-            { "zh": "谁…?", "en": "Who…?", "ja": "だれ…?" },
-            { "zh": "喂…", "en": "Hello…?", "ja": "ねぇ…" },
-            { "zh": "后面…?", "en": "Behind…?", "ja": "うしろ…?" },
-            { "zh": "醒着吗…?", "en": "You awake…?", "ja": "おきてる…?" },
-            { "zh": "喂喂…?", "en": "Hellooo…?", "ja": "もしもし…?" }
+            { "zh": "那个……刚才是不是有人在叫我们？", "en": "Um... did someone just call us?", "ja": "あの……今、だれかに呼ばれなかった？" },
+            { "zh": "喂……后面，后面好像有什么东西……", "en": "Hey... behind us, something's behind us...", "ja": "ねぇ……うしろ、うしろに何かいる気がする……" },
+            { "zh": "谁……？不要躲着，出来呀……", "en": "Who...? Stop hiding, come out...", "ja": "だれ……？かくれてないで、出てきてよ……" },
+            { "zh": "好安静……安静得好可怕……", "en": "So quiet... so quiet it's scary...", "ja": "しずかすぎる……しずかすぎて、こわいよ……" },
+            { "zh": "刚才那个……你也看到了吧？不是我的错觉吧？", "en": "That just now... you saw it too, right? It wasn't just me?", "ja": "今の……見たよね？わたしの気のせいじゃないよね？" },
+            { "zh": "喂喂……这里的人都去哪里了……", "en": "Hellooo... where did everyone here go...", "ja": "もしもし……ここの人たち、どこ行っちゃったの……" }
           ]
         },
         "photo": {
           "lines": [
-            { "zh": "咔嚓♡", "en": "Snap♡", "ja": "パシャッ♡" },
-            { "zh": "诶…?", "en": "Huh…?", "ja": "え…?" },
-            { "zh": "茄子♡", "en": "Say cheese♡", "ja": "はい、チーズ♡" },
-            { "zh": "出片♡", "en": "So aesthetic♡", "ja": "映えー♡" },
-            { "zh": "诶，拍进去了…?", "en": "Is that… in the shot?", "ja": "あれ、うつってる…?" },
-            { "zh": "好上镜♡", "en": "Filter on♡", "ja": "盛れた♡" }
+            { "zh": "茄子♡ ……诶？照片里多了一个人？", "en": "Say cheese♡ ...Huh? Is there one extra person in the shot?", "ja": "はい、チーズ♡ ……え？写真にひとり多くない？" },
+            { "zh": "咔嚓♡ 今天的我也很上镜呢……咦？", "en": "Snap♡ I look great today too... huh?", "ja": "パシャッ♡ 今日のわたしも盛れてる……あれ？" },
+            { "zh": "出片了♡ ……等等，背景里那个是什么？", "en": "So aesthetic♡ ...Wait, what's that in the background?", "ja": "映えー♡ ……まって、うしろのそれ、なに？" },
+            { "zh": "拍到了……画里的人在冲我们笑……", "en": "I caught it... the person in the painting is smiling at us...", "ja": "撮れちゃった……絵の中の人、こっち見て笑ってる……" },
+            { "zh": "闪光灯一开，画就变了……好恶心……", "en": "The flash went off and the painting changed... gross...", "ja": "フラッシュたいたら絵が変わった……きもちわるい……" },
+            {
+              "zh": "这张不能发出去吧……会被诅咒的那种……",
+              "en": "I shouldn't post this one, right... it's the cursed kind...",
+              "ja": "この写真、アップしちゃダメなやつだよね……呪われるやつ……"
+            }
           ]
         },
         "bridge": {
           "lines": [
-            { "zh": "咿!", "en": "Eek!", "ja": "ひっ!" },
-            { "zh": "要掉了!", "en": "Falling!", "ja": "おちるっ!" },
-            { "zh": "在晃!", "en": "It's shaking!", "ja": "ゆれてる!" },
-            { "zh": "不要不要!", "en": "Nope nope!", "ja": "やだやだ!" },
-            { "zh": "骗人吧!", "en": "No way!", "ja": "うそぉ!" },
-            { "zh": "呀啊啊!", "en": "Aaah!", "ja": "きゃああっ!" }
+            { "zh": "咿！地板在晃，要掉下去了啦！", "en": "Eek! The floor's shaking, we're gonna fall!", "ja": "ひっ！床がゆれてる、落ちちゃう！" },
+            { "zh": "不要不要！快抓住我，别松手！", "en": "No no no! Grab me, don't let go!", "ja": "やだやだ！はやくつかまえて、離さないで！" },
+            { "zh": "骗人的吧！这里塌了要怎么办啦！", "en": "You're kidding! What do we do if this collapses!", "ja": "うそでしょ！ここ崩れたらどうするの！" },
+            { "zh": "呀啊啊！下面是什么，黑漆漆的！", "en": "Aaah! What's down there? It's pitch black!", "ja": "きゃああっ！下、まっくらでなにも見えない！" },
+            { "zh": "慢一点，慢一点走……我腿软了……", "en": "Slowly, slowly... my legs are jelly...", "ja": "ゆっくり、ゆっくりね……足がすくんじゃう……" },
+            { "zh": "掉下去的话，你要接住我哦！", "en": "If I fall, you'd better catch me!", "ja": "落ちたら、ちゃんと受け止めてよね！" }
           ]
         },
         "rot": {
           "lines": [
-            { "zh": "呕", "en": "Ew", "ja": "うぇっ" },
-            { "zh": "好臭", "en": "Stinky", "ja": "くさっ" },
-            { "zh": "好恶心", "en": "Gross", "ja": "きもっ" },
-            { "zh": "不行不行", "en": "Nope", "ja": "むりむり" },
-            { "zh": "黏糊糊…", "en": "Sticky…", "ja": "ベタベタ…" },
-            { "zh": "甜得发腻…", "en": "Too sweet…", "ja": "あまったるい…" }
+            { "zh": "呕……好臭，甜得发腻的那种臭……", "en": "Ew... it stinks, that sickly-sweet kind of stink...", "ja": "うぇっ……くさい、あまったるいにおい……" },
+            { "zh": "好恶心，墙上在流黏糊糊的东西……", "en": "Gross, something sticky is dripping down the walls...", "ja": "きもっ、壁からベタベタしたのが垂れてる……" },
+            { "zh": "不行不行，这里绝对不能待了……", "en": "Nope nope, we definitely can't stay here...", "ja": "むりむり、ここ絶対いちゃダメなとこ……" },
+            { "zh": "冰淇淋……全都烂掉了……我的下午茶……", "en": "The ice cream... all rotten... my afternoon snack...", "ja": "アイス……ぜんぶ腐っちゃった……わたしのおやつ……" },
+            { "zh": "黏到鞋子上了……这双是新买的啦……", "en": "It's stuck to my shoes... these are brand new...", "ja": "くつにくっついた……これ新しいのに……" },
+            { "zh": "整间店都变了……刚才明明还那么可爱……", "en": "The whole shop changed... it was so cute a second ago...", "ja": "お店ぜんぶ変わっちゃった……さっきまでかわいかったのに……" }
           ]
         },
         "real": {
           "lines": [
-            { "zh": "咦?", "en": "Huh?", "ja": "あれ?" },
-            { "zh": "变回来了?", "en": "Back to normal?", "ja": "もどった?" },
-            { "zh": "是梦…?", "en": "A dream…?", "ja": "ゆめ…?" },
-            { "zh": "呼", "en": "Phew", "ja": "ほっ" },
-            { "zh": "错觉?", "en": "Just me?", "ja": "きのせい?" },
-            { "zh": "好怪", "en": "Weird", "ja": "へんなの" }
+            { "zh": "咦？变回来了？刚才的是梦吗……", "en": "Huh? It's back to normal? Was that a dream...?", "ja": "あれ？もどった？さっきのは夢……？" },
+            { "zh": "呼……吓死我了，还以为回不来了。", "en": "Phew... that scared me, I thought we'd never get back.", "ja": "ほっ……びっくりした、もどれないかと思った。" },
+            { "zh": "是错觉吗？可是我的手还在抖……", "en": "Was it just me? But my hands are still shaking...", "ja": "気のせい？でも、まだ手がふるえてる……" },
+            {
+              "zh": "好怪……明明什么都没变，却觉得有人在看。",
+              "en": "Weird... nothing's changed, but it feels like someone's watching.",
+              "ja": "へんなの……なにも変わってないのに、見られてる気がする。"
+            },
+            { "zh": "安全了……吧？你先走，我跟在后面。", "en": "We're safe... right? You go first, I'll follow.", "ja": "もう大丈夫……だよね？先に行って、うしろついてくから。" },
+            {
+              "zh": "刚才那些……别跟别人说，会被当成怪人的。",
+              "en": "What happened just now... don't tell anyone, they'll think I'm weird.",
+              "ja": "さっきのこと……だれにも言わないでね、へんな子って思われる。"
+            }
           ]
         },
         "armor": {
           "lines": [
-            { "zh": "噢♡", "en": "Ooh♡", "ja": "おぉ~♡" },
-            { "zh": "好帅♡", "en": "So cool♡", "ja": "かっこいー♡" },
-            { "zh": "动了!?", "en": "It moved!?", "ja": "うごいた!?" },
-            { "zh": "里面有人?", "en": "Anyone in there?", "ja": "なかのひと?" },
-            { "zh": "看着好硬", "en": "Looks tanky", "ja": "かたそう" },
-            { "zh": "哐当?", "en": "Clank?", "ja": "ガシャン?" }
+            { "zh": "噢♡ 好帅的盔甲，里面会是王子吗？", "en": "Ooh♡ What a cool suit of armour - is there a prince inside?", "ja": "おぉ~♡ かっこいい鎧、中は王子さまかな？" },
+            { "zh": "动了！？它刚才是不是动了一下！", "en": "It moved!? It moved just now, didn't it!", "ja": "うごいた!? 今ちょっとうごいたよね！" },
+            { "zh": "里面有人吗？有的话就出来打个招呼嘛。", "en": "Anyone in there? If so, come out and say hi.", "ja": "中のひと、いる？いるならあいさつしてよ。" },
+            { "zh": "看起来好硬……子弹会被弹回来吧？", "en": "Looks tough... my bullets might bounce right off?", "ja": "かたそう……弾、はねかえされちゃうかも？" },
+            { "zh": "它手里握着甜筒……是在请我吃吗♡", "en": "It's holding a cone... is that for me♡", "ja": "手にコーン持ってる……わたしにくれるの？♡" },
+            { "zh": "哐当哐当的……别过来，我会害羞的。", "en": "Clank, clank... don't come closer, I'll get shy.", "ja": "ガシャンガシャンって……こっち来ないで、照れちゃう。" }
           ]
         },
         "start": {
           "bubble": "cute",
           "lines": [
-            { "zh": "走吧♡", "en": "Let's go♡", "ja": "いこっ♡" },
-            { "zh": "约会吧♡", "en": "Date time♡", "ja": "デートしよ♡" },
-            { "zh": "准备好啦♡", "en": "Locked and loaded♡", "ja": "準備OK♡" },
-            { "zh": "我来保护你♡", "en": "I'll protect you♡", "ja": "守ってあげる♡" },
-            { "zh": "今天也要可爱地开枪♡", "en": "Cute and deadly♡", "ja": "今日もかわいく撃つよ♡" },
-            { "zh": "牵着手走吧", "en": "Hold my hand", "ja": "手、つないでいこ" }
+            { "zh": "走吧♡ 今天也要可爱地开枪哦！", "en": "Let's go♡ Cute and deadly again today!", "ja": "いこっ♡ 今日もかわいく撃っちゃうよ！" },
+            { "zh": "约会吧♡ 地点是鬼屋也没关系。", "en": "Date time♡ Even if it's at a haunted house.", "ja": "デートしよ♡ 行き先がおばけ屋敷でもいいよ。" },
+            { "zh": "准备好了♡ 我会好好保护你的。", "en": "Locked and loaded♡ I'll protect you, promise.", "ja": "準備OK♡ ちゃんと守ってあげるからね。" },
+            { "zh": "牵着手走吧，走散了我会哭的哦。", "en": "Hold my hand. If we get separated, I'll cry.", "ja": "手、つないでいこ。はぐれたら泣いちゃうからね。" },
+            { "zh": "出发♡ 回来的时候要请我吃甜点哦。", "en": "Let's head out♡ You're buying me dessert on the way back.", "ja": "出発♡ 帰りにスイーツおごってね。" },
+            { "zh": "子弹装满了，妆也化好了，走吧♡", "en": "Ammo's full, makeup's perfect - let's go♡", "ja": "弾もメイクもばっちり、いこっか♡" }
           ]
         },
         "win": {
           "bubble": "cute",
           "lines": [
-            { "zh": "赢啦♡夸我♡", "en": "We won♡ praise me♡", "ja": "やったぁ♡ ほめて♡" },
-            { "zh": "轻松♡", "en": "Easy♡", "ja": "らくしょー♡" },
-            { "zh": "看到了吗看到了吗♡", "en": "Did you see? Did you see♡", "ja": "見てた? 見てた?♡" },
-            { "zh": "给我奖励嘛♡", "en": "Reward me♡", "ja": "ご褒美ちょうだい♡" },
-            { "zh": "最强又可爱♡", "en": "Strongest & cutest♡", "ja": "最強かわいい♡" },
-            { "zh": "亲你一下♡", "en": "Here's a kiss♡", "ja": "ちゅーしてあげる♡" }
+            { "zh": "赢啦♡ 快夸我，夸到我满意为止！", "en": "We won♡ Praise me - until I'm satisfied!", "ja": "やったぁ♡ ほめて、わたしが満足するまでほめて！" },
+            { "zh": "轻松轻松♡ 最强又最可爱的就是我啦。", "en": "Easy-peasy♡ Strongest and cutest, that's me.", "ja": "らくしょー♡ 最強でいちばんかわいいのはわたし。" },
+            { "zh": "看到了吗看到了吗？我刚才超帅的吧♡", "en": "Did you see? Did you see? I was super cool just now♡", "ja": "見てた？見てた？さっきのわたし、超かっこよかったでしょ♡" },
+            { "zh": "给我奖励嘛♡ 亲一下也可以哦。", "en": "Reward me♡ A kiss is fine too.", "ja": "ご褒美ちょうだい♡ ちゅーでもいいよ。" },
+            { "zh": "赢了♡ 这样就可以一直待在你身边了吧？", "en": "We won♡ So I can stay by your side forever, right?", "ja": "勝った♡ これでずっとそばにいていいよね？" },
+            { "zh": "呼……好累，背我回去嘛♡", "en": "Phew... I'm tired, carry me home♡", "ja": "ふぅ……つかれた、おんぶして帰ろ♡" }
           ]
         },
         "lose": {
           "bubble": "cute",
           "lines": [
-            { "zh": "不会吧…", "en": "No way…", "ja": "うそでしょ…" },
-            { "zh": "再来一次嘛?", "en": "Again? Okay?", "ja": "もっかい! ね?" },
-            { "zh": "嘤…", "en": "Pien…", "ja": "ぴえん…" },
-            { "zh": "刚才不算!", "en": "That didn't count!", "ja": "今のなし!" },
-            { "zh": "安慰我嘛…", "en": "Comfort me…", "ja": "なぐさめて…" },
-            { "zh": "下次一定赢", "en": "Next time for sure", "ja": "次は勝つもん" }
+            { "zh": "不会吧……刚才那个不算，再来一次嘛？", "en": "No way... that didn't count, one more time? Okay?", "ja": "うそでしょ……今のはなし、もっかいやろ？ね？" },
+            { "zh": "嘤……安慰我嘛，抱抱我就好……", "en": "Sob... comfort me, just a hug is enough...", "ja": "ぴえん……なぐさめて、ぎゅってするだけでいいから……" },
+            { "zh": "下次一定会赢的……你会陪我吧？", "en": "We'll win next time for sure... you'll stay with me, right?", "ja": "次はぜったい勝つもん……いっしょにいてくれるよね？" },
+            { "zh": "好不甘心……妆都哭花了……", "en": "So frustrating... I cried my makeup off...", "ja": "くやしい……泣いてメイクぐちゃぐちゃ……" },
+            { "zh": "都怪那些怪物太坏了，不是我的错哦。", "en": "The monsters cheated. It's not my fault.", "ja": "おばけがズルいんだもん、わたしのせいじゃないよ。" },
+            { "zh": "输了也没关系……只要你别讨厌我。", "en": "I don't mind losing... as long as you don't hate me.", "ja": "負けてもいい……あなたに嫌われなければ。" }
           ]
         },
         "sheSeen": {
           "lines": [
-            { "zh": "剪刀声…!", "en": "Scissors…!", "ja": "ハサミのおと…!" },
-            { "zh": "是她!", "en": "It's her!", "ja": "あのこだ!" },
-            { "zh": "又来了!", "en": "Not again!", "ja": "またきた!" },
-            { "zh": "咔嚓咔嚓的…", "en": "Snip, snip…", "ja": "チョキチョキって…" },
-            { "zh": "不要过来!", "en": "Stay away!", "ja": "こないで!" },
-            { "zh": "追上来了!", "en": "She's catching up!", "ja": "おいついてきた!" }
+            { "zh": "剪刀的声音……她来了，她又来了！", "en": "Scissors... she's here, she's here again!", "ja": "ハサミのおと……あの子がきた、またきたよ！" },
+            { "zh": "是她！那个人偶，正往这边走过来！", "en": "It's her! That doll is walking this way!", "ja": "あの子だ！あの人形、こっちに歩いてくる！" },
+            { "zh": "咔嚓咔嚓的……越来越近了……", "en": "Snip, snip... it's getting closer and closer...", "ja": "チョキチョキって……どんどん近づいてくる……" },
+            { "zh": "不要过来！我们什么坏事都没做啊！", "en": "Stay away! We didn't do anything wrong!", "ja": "こないで！わたしたち、なにも悪いことしてないのに！" },
+            { "zh": "又追上来了！她到底要追到哪里！", "en": "She caught up again! How far is she going to chase us!", "ja": "また追いついてきた！どこまで追ってくるの！" },
+            { "zh": "那双眼睛……在看我，一直在看我……", "en": "Those eyes... they're watching me, always watching me...", "ja": "あの目……わたしを見てる、ずっと見てる……" }
           ]
         },
         "runNow": {
           "bubble": "shout",
           "lines": [
-            { "zh": "快跑!", "en": "Run!", "ja": "にげて!" },
-            { "zh": "别回头!", "en": "Don't look back!", "ja": "ふりむかないで!" },
-            { "zh": "跑啊!", "en": "Go go go!", "ja": "はしって!" },
-            { "zh": "这边!", "en": "This way!", "ja": "こっち!" },
-            { "zh": "等等我!", "en": "Wait for me!", "ja": "まってぇ!" },
-            { "zh": "鞋要掉了!", "en": "My shoe!", "ja": "くつがぬげる!" }
+            { "zh": "快跑！别回头，跟紧我！", "en": "Run! Don't look back, stay with me!", "ja": "にげて！ふりむかないで、ついてきて！" },
+            { "zh": "这边这边！快点，她要追上来了！", "en": "This way, this way! Hurry, she's catching up!", "ja": "こっちこっち！はやく、追いつかれちゃう！" },
+            { "zh": "跑啊！鞋子掉了也不要停！", "en": "Run! Don't stop even if you lose a shoe!", "ja": "はしって！くつがぬげても止まっちゃダメ！" },
+            { "zh": "等等我！别丢下我一个人跑啊！", "en": "Wait for me! Don't run off without me!", "ja": "まってぇ！ひとりで逃げないでよ！" },
+            { "zh": "往前跑！只要钟没响就还来得及！", "en": "Keep going! We can make it before the bell rings!", "ja": "前に走って！鐘が鳴るまでなら間に合う！" },
+            { "zh": "拉住我的手，我们一起跑出去！", "en": "Take my hand - we'll get out together!", "ja": "手をつかんで、いっしょに逃げよう！" }
           ]
         },
         "hush": {
           "lines": [
-            { "zh": "嘘…", "en": "Shh…", "ja": "しーっ…" },
-            { "zh": "别出声…", "en": "Not a sound…", "ja": "こえだしちゃだめ…" },
-            { "zh": "走开走开…", "en": "Go away, go away…", "ja": "あっちいって…" },
-            { "zh": "心跳好吵…", "en": "My heart's so loud…", "ja": "しんぞう、うるさい…" },
-            { "zh": "别发现…", "en": "Don't find us…", "ja": "みつからないで…" },
-            { "zh": "呜…", "en": "Nngh…", "ja": "うぅ…" }
+            { "zh": "嘘……别出声，她就在门外……", "en": "Shh... not a sound, she's right outside the door...", "ja": "しーっ……声出しちゃダメ、ドアのすぐそと……" },
+            { "zh": "心跳好吵……拜托，别被她听见……", "en": "My heart's so loud... please, don't let her hear...", "ja": "心臓がうるさい……おねがい、聞こえないで……" },
+            { "zh": "走开走开……这里什么都没有……", "en": "Go away, go away... there's nothing in here...", "ja": "あっちいって……ここにはなにもいないから……" },
+            { "zh": "不要找到我们……求求你……", "en": "Don't find us... please...", "ja": "みつけないで……おねがいだから……" },
+            { "zh": "抓紧我……要是叫出来就完蛋了……", "en": "Hold me tight... if I scream, it's over...", "ja": "ぎゅってして……声が出たらおしまいだから……" },
+            { "zh": "剪刀声停了……她在听，她在听……", "en": "The snipping stopped... she's listening, she's listening...", "ja": "ハサミのおとが止まった……聞いてる、聞いてるよ……" }
           ]
         },
         "trapHit": {
           "lines": [
-            { "zh": "砸中了♡", "en": "Got her♡", "ja": "あたった♡" },
-            { "zh": "活该♡", "en": "Serves you right♡", "ja": "ざまぁ♡" },
-            { "zh": "压扁了♡", "en": "Flat♡", "ja": "ぺしゃんこ♡" },
-            { "zh": "就这样躺着♡", "en": "Stay down♡", "ja": "ねてて♡" },
-            { "zh": "好耶♡", "en": "Yay♡", "ja": "やった♡" },
-            { "zh": "压住了!", "en": "Pinned!", "ja": "おさえた!" }
+            { "zh": "砸中了♡ 活该，就这样躺着吧！", "en": "Got her♡ Serves you right - stay down!", "ja": "あたった♡ ざまぁ、そのまま寝てて！" },
+            { "zh": "压扁了♡ 趁现在快点跑！", "en": "Flattened♡ Let's run while we can!", "ja": "ぺしゃんこ♡ 今のうちにはやく逃げよ！" },
+            { "zh": "好耶♡ 这下她一时半会儿起不来了！", "en": "Yay♡ She won't be getting up for a while!", "ja": "やった♡ これでしばらく起きてこれないね！" },
+            { "zh": "压住了！别让她爬出来！", "en": "Pinned! Don't let her crawl out!", "ja": "おさえた！はい出てこないように見てて！" },
+            { "zh": "哼哼♡ 敢追我，就是这个下场哦。", "en": "Hmph♡ That's what you get for chasing me.", "ja": "ふふん♡ わたしを追いかけるから、こうなるの。" },
+            { "zh": "咚的一声♡ 好响，好解气！", "en": "Boom♡ What a sound - that felt great!", "ja": "ドーンって♡ いい音、すっきりした！" }
           ]
         },
         "grabbed": {
           "bubble": "shout",
           "lines": [
-            { "zh": "放开!", "en": "Let go!", "ja": "はなして!" },
-            { "zh": "不要!", "en": "No!", "ja": "やだぁ!" },
-            { "zh": "好痛!", "en": "Ow!", "ja": "いたいっ!" },
-            { "zh": "救命!", "en": "Help!", "ja": "たすけて!" },
-            { "zh": "别碰我!", "en": "Don't touch me!", "ja": "さわんないで!" },
-            { "zh": "头发要乱了!", "en": "My hair!", "ja": "かみがみだれる!" }
+            { "zh": "放开我！好痛，头发要被扯掉了！", "en": "Let me go! Ow, you're pulling my hair out!", "ja": "はなして！いたい、髪がぬけちゃう！" },
+            { "zh": "不要！别碰我，快把她打开啊！", "en": "No! Don't touch me - get her off me!", "ja": "やだぁ！さわらないで、はやく引きはがして！" },
+            { "zh": "救命！快开枪，往她身上打！", "en": "Help! Shoot, shoot her!", "ja": "たすけて！はやく撃って、あの子に撃って！" },
+            { "zh": "好冷的手……放开，放开我！", "en": "Such cold hands... let go, let me go!", "ja": "つめたい手……はなして、はなしてよ！" },
+            { "zh": "剪刀贴着我的脖子……别、别乱动……", "en": "The scissors are on my neck... d-don't move...", "ja": "ハサミが首にあたってる……う、うごかないで……" },
+            { "zh": "才不要变成你的玩伴！放手！", "en": "I won't be your playmate! Let go!", "ja": "あなたの遊び相手になんかならない！はなして！" }
           ]
         },
         "bell": {
           "bubble": "shout",
           "lines": [
-            { "zh": "敲响它!", "en": "Ring it!", "ja": "ならして!" },
-            { "zh": "再一下!", "en": "Once more!", "ja": "もういっかい!" },
-            { "zh": "好大声…!", "en": "So loud…!", "ja": "うるさっ…!" },
-            { "zh": "回去吧!", "en": "Go home!", "ja": "かえって!" },
-            { "zh": "拜拜♡", "en": "Bye-bye♡", "ja": "ばいばい♡" },
-            { "zh": "结束了…?", "en": "Is it over…?", "ja": "おわった…?" }
+            { "zh": "敲响它！把她送回去！", "en": "Ring it! Send her back!", "ja": "鳴らして！あの子をかえしてあげて！" },
+            { "zh": "再一下！还差一点点！", "en": "Once more! Just a little more!", "ja": "もういっかい！あとちょっとだよ！" },
+            { "zh": "好大声……耳朵要聋了，可是不能停！", "en": "So loud... my ears are dying, but we can't stop!", "ja": "うるさっ……耳がこわれそう、でも止めちゃダメ！" },
+            { "zh": "回去吧！这里不是你该待的地方！", "en": "Go home! This isn't where you belong!", "ja": "かえって！ここはあなたのいる場所じゃないよ！" },
+            { "zh": "拜拜♡ 下次就当个普通的人偶陪我玩吧。", "en": "Bye-bye♡ Next time, just be an ordinary doll and play with me.", "ja": "ばいばい♡ 今度はふつうのお人形として遊ぼうね。" },
+            { "zh": "结束了……吗？剪刀声，听不见了……", "en": "Is it... over? I can't hear the scissors anymore...", "ja": "おわった……の？ハサミのおと、聞こえない……" }
           ]
         }
       },
       "cat": {
-        "hit": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "喵!", "en": "Nya!", "ja": "にゃ!" },
-            { "zh": "哼", "en": "Hmph", "ja": "ふっ" },
-            { "zh": "嘿", "en": "Hai", "ja": "えいっ" },
-            { "zh": "啪", "en": "Bonk", "ja": "ぺしっ" },
-            { "zh": "喵", "en": "Mew", "ja": "にゃっ" },
-            { "zh": "嗨", "en": "Hoi", "ja": "ほい" },
-            { "zh": "咻", "en": "Swish", "ja": "しゅっ" }
-          ]
-        },
-        "crit": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "呔!", "en": "Tai!", "ja": "たいっ!" },
-            { "zh": "喝!", "en": "Ka!", "ja": "かっ!" },
-            { "zh": "喵哈", "en": "Nyaha", "ja": "にゃはっ" },
-            { "zh": "破!", "en": "Ha!", "ja": "破っ!" },
-            { "zh": "灭!", "en": "Begone!", "ja": "滅!" },
-            { "zh": "呀!", "en": "Sei!", "ja": "せいっ!" },
-            { "zh": "斩!", "en": "Slash!", "ja": "斬!" }
-          ]
-        },
         "kill": {
           "bubble": "cute",
           "lines": [
-            { "zh": "南无~", "en": "Namu~", "ja": "なむ~" },
-            { "zh": "呼喵~", "en": "Funya~", "ja": "ふにゃ~" },
-            { "zh": "收工", "en": "Done", "ja": "おしまい" },
-            { "zh": "成佛吧喵", "en": "Rest in peace, nya", "ja": "成仏しにゃ" },
-            { "zh": "多谢款待", "en": "GG", "ja": "ごちそうさま" },
-            { "zh": "叮~", "en": "*ding*", "ja": "ちーん" },
-            { "zh": "阿门喵?", "en": "Amen, nya?", "ja": "あーめんにゃ?" }
+            { "zh": "南无~ 好好成佛吧喵，别再回来了。", "en": "Namu~ Rest in peace, nya. Don't come back.", "ja": "なむ~ ちゃんと成仏するにゃ、もう戻ってくるにゃよ。" },
+            { "zh": "收工喵。下一只快点来，我想睡午觉了。", "en": "Done, nya. Hurry up, next one - I want my nap.", "ja": "おしまいにゃ。次ははやく来るにゃ、昼寝したいにゃ。" },
+            { "zh": "多谢款待喵……不过一点也不好吃。", "en": "Thanks for the meal, nya... it wasn't tasty at all.", "ja": "ごちそうさまにゃ……でも、ちっともおいしくないにゃ。" },
+            { "zh": "叮~ 一只送走了。还剩多少只喵？", "en": "Ding~ One sent off. How many are left, nya?", "ja": "ちーん~ 一匹おくったにゃ。あと何匹いるにゃ？" },
+            { "zh": "哼，这种程度也敢挡猫大人的路喵？", "en": "Hmph, getting in a cat's way with that, nya?", "ja": "ふん、この程度で猫さまの邪魔するにゃんて。" },
+            { "zh": "呼喵~ 净化完毕，记得给我加小鱼干。", "en": "Funya~ Purified. I'll take extra dried fish.", "ja": "ふにゃ~ お祓い完了にゃ、煮干しふやしてにゃ。" }
           ]
         },
         "combo": {
           "bubble": "shout",
           "lines": [
-            { "zh": "喵喵喵!", "en": "Nyanyanya!", "ja": "にゃにゃにゃ!" },
-            { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" },
-            { "zh": "来劲了", "en": "In the zone", "ja": "のってきた" },
-            { "zh": "喵呼~", "en": "Nyahoo", "ja": "にゃっふー" },
-            { "zh": "还没完喵", "en": "Not done, nya", "ja": "まだまだにゃ" },
-            { "zh": "哼哼", "en": "Hmph-hmph", "ja": "ふふん" }
-          ]
-        },
-        "hurt": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "咪呀!", "en": "Mya!", "ja": "みゃっ!" },
-            { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" },
-            { "zh": "痛", "en": "Ow", "ja": "いたっ" },
-            { "zh": "呼喵!?", "en": "Funya!?", "ja": "ふにゃっ!?" },
-            { "zh": "唔", "en": "Hmph!", "ja": "むっ" },
-            { "zh": "咪呜!", "en": "Myau!", "ja": "みゃう!" }
+            { "zh": "喵喵喵！来劲了，全都排好队等着被净化喵！", "en": "Nyanyanya! I'm in the zone - line up to be purified!", "ja": "にゃにゃにゃ！のってきたにゃ、みんな並んでお祓いされるにゃ！" },
+            { "zh": "呼噜呼噜……今天的手感，好得吓人喵。", "en": "Purr... my aim today is scary good, nya.", "ja": "ゴロゴロ……今日の手ごたえ、こわいくらいいいにゃ。" },
+            { "zh": "还没完喵，猫的狩猎可是很执着的。", "en": "Not done yet, nya. A cat's hunt never lets up.", "ja": "まだまだにゃ、猫の狩りはしつこいにゃよ。" },
+            { "zh": "喵呼~ 这么多只，够我玩一整天了。", "en": "Nyahoo~ With this many, I can play all day.", "ja": "にゃっふー~ こんなにいたら、一日中遊べるにゃ。" },
+            { "zh": "哼哼，看好了，这就是付丧神的本事喵。", "en": "Heh, watch closely - this is what a tsukumogami can do.", "ja": "ふふん、よく見とくにゃ、これが付喪神の本気にゃ。" },
+            {
+              "zh": "一只接一只……停不下来了喵，都怪你们太好抓。",
+              "en": "One after another... I can't stop, you're too easy to catch.",
+              "ja": "次から次へと……止まらないにゃ、つかまえやすすぎるにゃ。"
+            }
           ]
         },
         "low": {
           "bubble": "shout",
           "lines": [
-            { "zh": "喵呜…", "en": "Nyau…", "ja": "にゃぅ…" },
-            { "zh": "摸摸…", "en": "Pet me…", "ja": "なでて…" },
-            { "zh": "困…", "en": "Sleepy…", "ja": "ねむい…" },
-            { "zh": "不妙喵…", "en": "Uh-oh, nya…", "ja": "まずいにゃ…" },
-            { "zh": "好冷…", "en": "Cold…", "ja": "さむい…" },
-            { "zh": "膝枕…", "en": "Lap pillow…", "ja": "ひざまくら…" }
-          ]
-        },
-        "reload": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "临", "en": "Rin", "ja": "りんっ" },
-            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
-            { "zh": "舔舔", "en": "Lick lick", "ja": "ぺろぺろ" },
-            { "zh": "兵", "en": "Pyo", "ja": "兵っ" },
-            { "zh": "斗", "en": "Tou", "ja": "闘っ" },
-            { "zh": "画符", "en": "Scribble", "ja": "かきかき" }
-          ]
-        },
-        "empty": {
-          "bubble": "shout",
-          "lines": [
-            { "zh": "喵!?", "en": "Nya!?", "ja": "にゃ!?" },
-            { "zh": "摸鱼~", "en": "Slacking~", "ja": "サボり~" },
-            { "zh": "没了喵", "en": "Out, nya", "ja": "ないにゃ" },
-            { "zh": "呼喵…", "en": "Funya…", "ja": "ふにゃ…" },
-            { "zh": "嗯?", "en": "Hm?", "ja": "あれ?" },
-            { "zh": "符用完了", "en": "Out of talismans", "ja": "お札ぎれ" }
+            { "zh": "喵呜……有点不妙，摸摸我的头再走嘛……", "en": "Nyau... this is bad. Pet my head before you go...", "ja": "にゃぅ……ちょっとまずいにゃ、頭なでてから行くにゃ……" },
+            { "zh": "好冷……借我膝盖躺一下就好……", "en": "So cold... lend me your lap, just for a bit...", "ja": "さむい……ひざ、ちょっとだけ貸すにゃ……" },
+            { "zh": "九条命……好像用掉好几条了喵……", "en": "Nine lives... I think I've used a few already...", "ja": "九つの命……もういくつか使っちゃったにゃ……" },
+            { "zh": "困了……这时候睡着的话，就醒不过来了吧……", "en": "Sleepy... if I nod off now, I won't wake up...", "ja": "ねむい……今寝たら、もう起きられない気がするにゃ……" },
+            { "zh": "护身符……碎掉了。你可别也跟着碎掉喵。", "en": "My charm... it cracked. Don't you crack too, nya.", "ja": "お守り……割れちゃったにゃ。おまえまで割れるにゃよ。" },
+            {
+              "zh": "才、才没有很痛……只是尾巴有点抖而已……",
+              "en": "I-it doesn't hurt... my tail's just shaking a little...",
+              "ja": "べ、べつに痛くないにゃ……しっぽがちょっと震えてるだけにゃ……"
+            }
           ]
         },
         "fever": {
           "bubble": "shout",
           "lines": [
-            { "zh": "呼噜呼噜♡", "en": "Purr♡", "ja": "ゴロゴロ♡" },
-            { "zh": "喵~♡", "en": "Nyaan♡", "ja": "にゃーん♡" },
-            { "zh": "暖洋洋♡", "en": "Toasty♡", "ja": "ほかほか♡" },
-            { "zh": "喵哈~♡", "en": "Nyahaa♡", "ja": "にゃっはー♡" },
-            { "zh": "心情好♡", "en": "Good mood♡", "ja": "ごきげん♡" },
-            { "zh": "木天蓼♡", "en": "Catnip♡", "ja": "またたび♡" }
+            { "zh": "呼噜呼噜♡ 心情超好，像晒到太阳一样喵。", "en": "Purr♡ Great mood - like napping in the sun, nya.", "ja": "ゴロゴロ♡ ごきげんにゃ、ひなたぼっこしてるみたいにゃ。" },
+            { "zh": "喵~♡ 木天蓼的味道……整个人都飘起来了。", "en": "Nyaan♡ Smells like catnip... I'm floating.", "ja": "にゃーん♡ またたびのにおい……ふわふわするにゃ。" },
+            { "zh": "暖洋洋的♡ 现在的我，什么妖怪都不怕喵！", "en": "Toasty♡ Right now no yokai can scare me, nya!", "ja": "ほかほかにゃ♡ 今のわたし、どんな妖怪もこわくないにゃ！" },
+            { "zh": "喵哈~♡ 符咒自己在发光了，好厉害喵！", "en": "Nyahaa♡ My talismans are glowing on their own!", "ja": "にゃっはー♡ お札がかってに光ってるにゃ、すごいにゃ！" },
+            { "zh": "尾巴竖起来了♡ 这可是猫最开心的时候喵。", "en": "Tail's straight up♡ That's a cat at her happiest.", "ja": "しっぽがピンってなったにゃ♡ 猫がいちばんごきげんな時にゃ。" },
+            { "zh": "好热好热……毛都要炸起来了喵！", "en": "Hot, hot... my fur's puffing up, nya!", "ja": "あつい、あつい……毛がぶわってなるにゃ！" }
           ]
         },
         "ready": {
           "bubble": "cute",
           "lines": [
-            { "zh": "想要?", "en": "Want it?", "ja": "ほしい?" },
-            { "zh": "喵♡", "en": "Nyan♡", "ja": "にゃん♡" },
-            { "zh": "随时", "en": "Anytime", "ja": "いつでも" },
-            { "zh": "要看吗?", "en": "Wanna see?", "ja": "みる?" },
-            { "zh": "哼哼", "en": "Heh", "ja": "ふふん" },
-            { "zh": "攒好了喵", "en": "Charged, nya", "ja": "ためたにゃ" }
+            { "zh": "想要吗？猫大人的大招，攒好了喵。", "en": "Want it? This cat's big move is charged, nya.", "ja": "ほしいにゃ？猫さまの大技、たまったにゃ。" },
+            { "zh": "随时都可以喵……不过你得先摸摸我的头。", "en": "Anytime, nya... but pet my head first.", "ja": "いつでもいいにゃ……でも先に頭なでるにゃ。" },
+            { "zh": "要看吗？这次的经文，会念得很长哦。", "en": "Wanna see? This sutra's going to be a long one.", "ja": "見るにゃ？今度のお経は、ちょっと長いにゃよ。" },
+            { "zh": "哼哼，攒好了喵。准备好捂住耳朵吧。", "en": "Heh, charged. Get ready to cover your ears.", "ja": "ふふん、たまったにゃ。耳ふさぐ準備しとくにゃ。" },
+            { "zh": "符咒画好了喵，就等你一句话。", "en": "The talisman's written, nya. Just say the word.", "ja": "お札、書きあがったにゃ。あとはおまえのひとことにゃ。" },
+            { "zh": "喵♡ 现在的我，可以把这一屋子都净化掉。", "en": "Nyan♡ Right now I could purify this whole room.", "ja": "にゃん♡ 今なら、この部屋まるごとお祓いできるにゃ。" }
           ]
         },
         "skill": {
           "bubble": "shout",
           "lines": [
-            { "zh": "大慈大悲观世音菩萨", "en": "Great Compassion, Kannon", "ja": "大慈大悲観世音菩薩" },
-            { "zh": "急急如律令!", "en": "Swiftly, by the law!", "ja": "急急如律令!" },
-            { "zh": "呼格鲁伊 姆格鲁纳弗", "en": "Ph'nglui mglw'nafh", "ja": "ふんぐるい むぐるうなふ" },
-            { "zh": "临兵斗者皆阵列在前", "en": "Rin pyo to sha kai jin retsu zai zen", "ja": "臨兵闘者皆陣列在前" },
-            { "zh": "南无阿弥陀佛", "en": "Namu Amida Butsu", "ja": "南無阿弥陀仏" },
-            { "zh": "色即是空!", "en": "Form is emptiness!", "ja": "色即是空!" }
-          ]
-        },
-        "cover": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "喵", "en": "Nya", "ja": "にゃっ" },
-            { "zh": "纸箱~", "en": "Box~", "ja": "ダンボール~" },
-            { "zh": "歇会儿", "en": "Break time", "ja": "ひとやすみ" },
-            { "zh": "缩成一团", "en": "Loaf mode", "ja": "まるくなる" },
-            { "zh": "这里暖和", "en": "Cozy spot", "ja": "ここ、あったかい" },
-            { "zh": "嘘——", "en": "Shh", "ja": "しーっ" }
+            {
+              "zh": "大慈大悲观世音菩萨，把这一屋子的秽气都带走吧！",
+              "en": "Great Compassion, Kannon - take away every stain in this room!",
+              "ja": "大慈大悲観世音菩薩、この部屋のけがれをぜんぶ連れていくにゃ！"
+            },
+            { "zh": "急急如律令！天地神明，借我猫爪一用！", "en": "Swiftly, by the law! Gods of heaven and earth, lend me a paw!", "ja": "急急如律令！天地の神々、猫の手を貸すにゃ！" },
+            {
+              "zh": "呼格鲁伊 姆格鲁纳弗……咳，念错了，算了照样有效喵！",
+              "en": "Ph'nglui mglw'nafh... ahem, wrong one - it still works, nya!",
+              "ja": "ふんぐるい むぐるうなふ……こほん、まちがえたにゃ、でも効くにゃ！"
+            },
+            { "zh": "临兵斗者皆阵列在前！统统给我退散！", "en": "Rin pyo to sha kai jin retsu zai zen! Begone, all of you!", "ja": "臨兵闘者皆陣列在前！みんなまとめて退散にゃ！" },
+            { "zh": "南无阿弥陀佛……下辈子做只好猫吧。", "en": "Namu Amida Butsu... be born a good cat next time.", "ja": "南無阿弥陀仏……来世はいい猫に生まれるにゃ。" },
+            { "zh": "色即是空，空即是色！看招，猫之光！", "en": "Form is emptiness, emptiness is form! Take this - cat light!", "ja": "色即是空、空即是色！くらうにゃ、猫の光！" }
           ]
         },
         "revive": {
           "bubble": "cute",
           "lines": [
-            { "zh": "喵~", "en": "Nyaan~", "ja": "にゃ~ん" },
-            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
-            { "zh": "早", "en": "Morning", "ja": "おはよ" },
-            { "zh": "有九条命喵", "en": "Nine lives, nya", "ja": "九つあるにゃ" },
-            { "zh": "复活喵", "en": "Back, nya", "ja": "ふっかつにゃ" },
-            { "zh": "才没睡", "en": "Wasn't sleeping", "ja": "ねてないし" }
+            { "zh": "喵~ 再临。人偶的身体，摔不坏的喵。", "en": "Nyaan~ I return. A doll's body doesn't break that easily.", "ja": "にゃ~ん、再臨にゃ。人形の体は、そう簡単にこわれないにゃ。" },
+            { "zh": "有九条命喵，这才用掉一条而已。", "en": "I've got nine lives, nya. That was only one.", "ja": "命は九つあるにゃ、まだひとつ使っただけにゃ。" },
+            { "zh": "早……才没睡着，只是闭目养神喵。", "en": "Morning... I wasn't asleep, just resting my eyes.", "ja": "おはよ……寝てないにゃ、目をとじてただけにゃ。" },
+            { "zh": "咒印解开了……刚才是谁哭着叫我的名字？", "en": "The seal's undone... who was crying my name just now?", "ja": "呪印がとけたにゃ……今、泣きながら名前呼んだのはだれにゃ？" },
+            {
+              "zh": "哈啊~ 回来了。刚才那只，我要亲手送走。",
+              "en": "Yawn~ I'm back. That one just now - I'm sending it off myself.",
+              "ja": "ふぁ~ もどったにゃ。さっきのやつは、わたしがおくるにゃ。"
+            },
+            {
+              "zh": "复活喵。让你担心了……才、才不是道歉。",
+              "en": "Revived, nya. Sorry I worried you... n-not that I'm apologising.",
+              "ja": "ふっかつにゃ。心配かけた……べ、べつにあやまってないにゃ。"
+            }
           ]
         },
         "down": {
           "bubble": "shout",
           "lines": [
-            { "zh": "喵…", "en": "Nya…", "ja": "にゃ…" },
-            { "zh": "哼…", "en": "Hmph…", "ja": "ふん…" },
-            { "zh": "睡…一下", "en": "Nap time…", "ja": "ちょっと…ねる" },
-            { "zh": "南无…", "en": "Namu…", "ja": "なむ…" },
-            { "zh": "累了…", "en": "Tired…", "ja": "つかれた…" },
-            { "zh": "交给你了…", "en": "Your turn…", "ja": "あとはまかせた…" }
+            { "zh": "喵……先睡一下……交给你了……", "en": "Nya... I'll nap a bit... it's up to you now...", "ja": "にゃ……ちょっと寝るにゃ……あとはまかせたにゃ……" },
+            { "zh": "哼……这次是大意了……别哭喵……", "en": "Hmph... I got careless... don't cry, nya...", "ja": "ふん……油断したにゃ……泣くにゃよ……" },
+            { "zh": "南无……要变回人偶了……记得来捡我……", "en": "Namu... I'm turning back into a doll... come pick me up...", "ja": "なむ……人形にもどっちゃうにゃ……ひろいにくるにゃ……" },
+            { "zh": "累了……把我抱回神社……就好……", "en": "Tired... just carry me... back to the shrine...", "ja": "つかれたにゃ……神社までだっこして……くれればいいにゃ……" },
+            { "zh": "咒印……发烫了……不要碰它……", "en": "The seal... it's burning... don't touch it...", "ja": "呪印が……あつい……さわっちゃダメにゃ……" },
+            { "zh": "九条命……再借我一条……", "en": "Nine lives... lend me... one more...", "ja": "九つの命……もうひとつ……貸すにゃ……" }
           ]
         },
         "coverBroken": {
           "bubble": "shout",
           "lines": [
-            { "zh": "喵!?", "en": "Nya!?", "ja": "にゃっ!?" },
-            { "zh": "嘶——!", "en": "Hiss!", "ja": "シャーッ!" },
-            { "zh": "咪!?", "en": "Mya!?", "ja": "みゃっ!?" },
-            { "zh": "被发现了!?", "en": "Busted!?", "ja": "ばれた!?" },
-            { "zh": "尾巴!", "en": "My tail!", "ja": "しっぽ!" },
-            { "zh": "碍事!", "en": "Rude!", "ja": "じゃま!" }
+            { "zh": "喵!? 我的纸箱！谁准你弄坏的！", "en": "Nya!? My box! Who said you could break it!", "ja": "にゃっ!? わたしの段ボール！だれがこわしていいって言ったにゃ！" },
+            { "zh": "嘶——！藏身的地方没了，被发现了喵！", "en": "Hiss! My hiding spot's gone - they've spotted me!", "ja": "シャーッ！かくれるところがなくなったにゃ、ばれたにゃ！" },
+            { "zh": "尾巴！尾巴露出来了，不许看！", "en": "My tail! My tail's showing - don't look!", "ja": "しっぽ！しっぽが出ちゃったにゃ、見るにゃ！" },
+            { "zh": "碍事！好不容易才找到这么暖和的角落……", "en": "Rude! I finally found such a warm corner...", "ja": "じゃまにゃ！せっかくあったかい場所見つけたのに……" },
+            { "zh": "咪!? 这下只能站着打了，真麻烦喵。", "en": "Mya!? Now I have to shoot standing up. What a pain.", "ja": "みゃっ!? これじゃ立って撃つしかないにゃ、めんどくさいにゃ。" },
+            { "zh": "可恶，我的结界被打穿了喵！", "en": "Damn, they blew right through my barrier, nya!", "ja": "くっ、わたしの結界、ぶちぬかれたにゃ！" }
           ]
         },
         "stagger": {
           "bubble": "shout",
           "lines": [
-            { "zh": "定!", "en": "Freeze!", "ja": "定!" },
-            { "zh": "摄!", "en": "Seize!", "ja": "摂!" },
-            { "zh": "封!", "en": "Seal!", "ja": "封!" },
-            { "zh": "缚!", "en": "Bind!", "ja": "縛!" },
-            { "zh": "止!", "en": "Halt!", "ja": "止まれ!" },
-            { "zh": "等着!", "en": "Stay!", "ja": "待て!" }
+            { "zh": "定！给我老老实实待着，不许动喵。", "en": "Freeze! Stay put and don't move, nya.", "ja": "定！おとなしくしてるにゃ、うごくにゃよ。" },
+            { "zh": "摄！魂魄抓住了，趁现在快打！", "en": "Seize! I've got its soul - shoot it now!", "ja": "摂！たましい、つかまえたにゃ、今のうちに撃つにゃ！" },
+            { "zh": "封！这一下，够你喘一会儿了喵。", "en": "Seal! That'll leave you gasping for a while.", "ja": "封！これでしばらく息もできないにゃ。" },
+            { "zh": "缚！符咒缠上了，挣不开的喵。", "en": "Bind! The talismans have you - you can't shake them off.", "ja": "縛！お札がからみついたにゃ、ほどけないにゃよ。" },
+            { "zh": "等着！猫的爪子，可不会只抓一下。", "en": "Stay! A cat's claws never stop at one swipe.", "ja": "待て！猫の爪は、一回じゃすまないにゃ。" },
+            { "zh": "倒了喵！快上，别让它爬起来！", "en": "It's down, nya! Quick, don't let it get up!", "ja": "たおれたにゃ！はやく、起きあがらせるにゃ！" }
           ]
         },
         "join": {
           "bubble": "cute",
           "lines": [
-            { "zh": "参上喵", "en": "Here, nya", "ja": "参上にゃ" },
-            { "zh": "哟", "en": "Yo", "ja": "よっ" },
-            { "zh": "来帮忙喵", "en": "Helping, nya", "ja": "てつだうにゃ" },
-            { "zh": "打扰了", "en": "Pardon the intrusion", "ja": "おじゃまします" },
-            { "zh": "哈…来了", "en": "*yawn* here", "ja": "ふぁ…きたよ" },
-            { "zh": "借你猫爪喵", "en": "Lending a paw", "ja": "猫の手にゃ" }
+            { "zh": "参上喵。看你一个人太可怜，借你猫爪。", "en": "Here, nya. You looked pitiful alone, so I'll lend a paw.", "ja": "参上にゃ。ひとりじゃかわいそうだから、猫の手を貸すにゃ。" },
+            { "zh": "哟。打扰了，这里的妖怪归我了喵。", "en": "Yo. Pardon me - the yokai here are mine now.", "ja": "よっ。おじゃまするにゃ、ここの妖怪はわたしがもらうにゃ。" },
+            { "zh": "哈啊……来了来了，别吵醒我第二次哦。", "en": "Yawn... I'm here, I'm here. Don't wake me twice.", "ja": "ふぁ……きたにゃ、二回も起こすにゃよ。" },
+            { "zh": "来帮忙喵。报酬是一个月的小鱼干。", "en": "I'll help, nya. The fee is a month of dried fish.", "ja": "てつだうにゃ。報酬は煮干し一か月分にゃ。" },
+            { "zh": "哼，又不是担心你才来的喵。", "en": "Hmph, it's not like I came because I was worried.", "ja": "ふん、べつに心配して来たわけじゃないにゃ。" },
+            { "zh": "两个人的话，驱邪会快一倍喵。走吧。", "en": "With two of us, the exorcism goes twice as fast. Let's go.", "ja": "ふたりなら、お祓いも倍の速さにゃ。いくにゃ。" }
           ]
         },
         "quit": {
           "bubble": "cute",
           "lines": [
-            { "zh": "寂寞…", "en": "Lonely…", "ja": "さびしい…" },
+            { "zh": "寂寞……你走了，这里就只剩我一只猫了。", "en": "Lonely... if you go, it's just one cat here.", "ja": "さびしい……おまえが行ったら、ここには猫一匹だけにゃ。" },
             { "zh": "真的要走了喵…?", "en": "You're really going, nya…?", "ja": "ほんとに行っちゃうにゃ…?" },
             { "zh": "…才不寂寞喵", "en": "…Not lonely. At all.", "ja": "…べつに寂しくないにゃ" },
             { "zh": "还会来吧喵?", "en": "You'll come back, nya?", "ja": "また来るにゃ?" },
-            { "zh": "晚安喵", "en": "Night, nya", "ja": "おやすみにゃ" },
+            { "zh": "晚安喵。明天也要来摸我的头哦。", "en": "Night, nya. Come pet my head tomorrow too.", "ja": "おやすみにゃ。明日も頭なでにくるにゃよ。" },
             { "zh": "门给你留着喵", "en": "I'll leave the door open", "ja": "鍵は開けとくにゃ" }
           ]
         },
         "poke": {
           "bubble": "cute",
           "lines": [
-            { "zh": "喵?!", "en": "Nya?!", "ja": "にゃっ?!" },
+            { "zh": "喵?! 突然戳我，吓我一跳！", "en": "Nya?! Don't poke me out of nowhere, you startled me!", "ja": "にゃっ?! いきなりつつくにゃ、びっくりしたにゃ！" },
             { "zh": "不准摸尾巴!", "en": "Not the tail!", "ja": "しっぽはダメ!" },
             { "zh": "呼噜…再摸一下也可以", "en": "Purr… a little more is fine", "ja": "ゴロゴロ…もうちょっとなら" },
             { "zh": "耳朵好痒喵", "en": "Ears tickle, nya", "ja": "耳はくすぐったいにゃ" },
             { "zh": "…要摸就摸头喵", "en": "…Head pats only, nya", "ja": "…撫でるなら頭にゃ" },
             { "zh": "肉球很贵的喵", "en": "Paw pads cost extra", "ja": "肉球は高いにゃ" },
-            { "zh": "好烦喵…", "en": "You're persistent, nya…", "ja": "しつこいにゃ…" },
+            {
+              "zh": "好烦喵……要戳就戳到我满意为止。",
+              "en": "So persistent... if you're poking, keep going till I'm satisfied.",
+              "ja": "しつこいにゃ……つつくなら、満足するまでつつくにゃ。"
+            },
             { "zh": "别打扰我午睡喵", "en": "You're interrupting my nap", "ja": "昼寝の邪魔にゃ" },
-            { "zh": "喵~♡", "en": "Nyaaan♡", "ja": "にゃあ~ん♡" },
+            { "zh": "喵~♡ ……再戳一下的话，就要收费了喵。", "en": "Nyaan♡ ...one more poke and I start charging.", "ja": "にゃあ~ん♡ ……もう一回つついたら、有料にゃ。" },
             { "zh": "要不要把你净化掉?", "en": "Want an exorcism?", "ja": "祓ってやろうか?" }
-          ]
-        },
-        "idle": {
-          "bubble": "cute",
-          "lines": [
-            { "zh": "喵~", "en": "Nya~", "ja": "にゃ~" },
-            { "zh": "哈啊~", "en": "Yawn~", "ja": "ふぁ~" },
-            { "zh": "呼噜呼噜", "en": "Purr", "ja": "ゴロゴロ" },
-            { "zh": "困…", "en": "Zzz…", "ja": "ねむ…" },
-            { "zh": "好无聊", "en": "Bored", "ja": "ひま" },
-            { "zh": "喵呜~", "en": "Meow~", "ja": "にゃーご" },
-            { "zh": "鲣鱼干…", "en": "Bonito flakes…", "ja": "かつおぶし…" }
           ]
         },
         "scare": {
           "lines": [
-            { "zh": "…喵?", "en": "…Nya?", "ja": "…にゃ?" },
-            { "zh": "…谁?", "en": "…Who?", "ja": "…だれ?" },
-            { "zh": "嘘", "en": "Shh", "ja": "しっ" },
-            { "zh": "…有味道", "en": "…Smells", "ja": "…におう" },
-            { "zh": "有动静", "en": "Something's here", "ja": "けはいがする" },
-            { "zh": "…会回头喵", "en": "…It'll turn, nya", "ja": "…ふりむくにゃ" }
+            { "zh": "……喵？刚才那个声音，你也听到了吧。", "en": "...Nya? You heard that sound too, didn't you.", "ja": "……にゃ？今の音、おまえも聞こえたにゃ？" },
+            { "zh": "嘘……有东西在看着我们，别回头。", "en": "Shh... something's watching us. Don't turn around.", "ja": "しっ……なにかが見てるにゃ、ふりむくにゃよ。" },
+            { "zh": "……有味道。死掉很久的东西的味道。", "en": "...Something smells. Something that died long ago.", "ja": "……におうにゃ。ずっと前に死んだもののにおいにゃ。" },
+            { "zh": "有动静……胡子都竖起来了喵。", "en": "Something's here... my whiskers are tingling.", "ja": "けはいがするにゃ……ひげがピリピリするにゃ。" },
+            { "zh": "它会回头的喵……做好准备。", "en": "It's going to turn around, nya... get ready.", "ja": "あれ、ふりむくにゃ……かまえとくにゃ。" },
+            { "zh": "……谁？躲在那里的，出来让我看看。", "en": "...Who's there? Whoever's hiding, come out where I can see you.", "ja": "……だれにゃ？そこにかくれてるの、出てくるにゃ。" }
           ]
         },
         "photo": {
           "lines": [
-            { "zh": "喵…", "en": "Nya…", "ja": "にゃ…" },
-            { "zh": "拍进去了喵", "en": "It's in the shot", "ja": "写ってるにゃ" },
-            { "zh": "好晃", "en": "Bright", "ja": "まぶし" },
-            { "zh": "…瘆人", "en": "…Creepy", "ja": "…きみわるい" },
-            { "zh": "咔", "en": "Snap", "ja": "ぱしゃ" },
-            { "zh": "念写?", "en": "Psychic photo?", "ja": "念写?" }
+            {
+              "zh": "……拍进去了喵。画里的那个，不是画。",
+              "en": "...It's in the shot. That thing in the painting isn't a painting.",
+              "ja": "……写ってるにゃ。絵の中のあれ、絵じゃないにゃ。"
+            },
+            { "zh": "好晃眼……闪光一照，它就醒了喵。", "en": "So bright... the flash woke it up, nya.", "ja": "まぶしいにゃ……光があたったら、目をさましたにゃ。" },
+            { "zh": "念写吗……这间屋子想让我们看到什么？", "en": "A psychic photo...? What does this house want us to see?", "ja": "念写かにゃ……この家、わたしたちに何を見せたいにゃ？" },
+            { "zh": "……瘆人。笑脸底下全是腐烂的颜色。", "en": "...Creepy. Under the smile, it's all the colour of rot.", "ja": "……きみわるいにゃ。笑顔の下、ぜんぶ腐った色にゃ。" },
+            { "zh": "别再拍了喵，每拍一张，它就靠近一步。", "en": "Stop taking pictures - every shot, it comes a step closer.", "ja": "もう撮るにゃ、一枚撮るたびに近づいてくるにゃ。" },
+            { "zh": "喵……这张照片，记得烧掉。", "en": "Nya... remember to burn this photo later.", "ja": "にゃ……この写真、あとで燃やしとくにゃ。" }
           ]
         },
         "bridge": {
           "lines": [
-            { "zh": "喵!", "en": "Nya!", "ja": "にゃっ!" },
-            { "zh": "要掉了!", "en": "Falling!", "ja": "おちる!" },
-            { "zh": "呼喵!", "en": "Funya!", "ja": "ふにゃっ!" },
-            { "zh": "猫才不会掉喵", "en": "Cats land on their feet", "ja": "ねこはおちないにゃ" },
-            { "zh": "在晃!", "en": "Shaky!", "ja": "ゆれる!" },
-            { "zh": "哇", "en": "Whoa", "ja": "わっ" }
+            { "zh": "喵！地板在晃，小心脚下！", "en": "Nya! The floor's shaking - watch your step!", "ja": "にゃっ！床がゆれてるにゃ、足もと気をつけるにゃ！" },
+            { "zh": "哼，猫才不会掉下去……大概不会喵。", "en": "Hmph, cats don't fall... probably don't, nya.", "ja": "ふん、猫は落ちないにゃ……たぶん落ちないにゃ。" },
+            { "zh": "要塌了！快，抓住我的尾巴……不对，抓手！", "en": "It's collapsing! Quick, grab my tail - no, my hand!", "ja": "崩れるにゃ！はやく、しっぽにつかまる……ちがう、手にゃ！" },
+            {
+              "zh": "呼喵！下面黑漆漆的，掉下去就上不来了。",
+              "en": "Funya! It's pitch black down there - fall in and you won't get out.",
+              "ja": "ふにゃっ！下はまっくらにゃ、落ちたら上がれないにゃ。"
+            },
+            { "zh": "一步一步走喵，别往下看。", "en": "One step at a time, nya. Don't look down.", "ja": "一歩ずつ行くにゃ、下は見るにゃよ。" },
+            { "zh": "哇……这块板子，撑不了多久了喵。", "en": "Whoa... this plank won't hold much longer.", "ja": "わっ……この板、もう長くはもたないにゃ。" }
           ]
         },
         "rot": {
           "lines": [
-            { "zh": "好臭", "en": "Stinks", "ja": "くさっ" },
-            { "zh": "呜喵…", "en": "Unya…", "ja": "うにゃ…" },
-            { "zh": "甜得发臭", "en": "Sweet stench", "ja": "あまくさい" },
-            { "zh": "黏糊糊", "en": "Sticky", "ja": "べたべた" },
-            { "zh": "秽气…", "en": "Impure…", "ja": "けがれ…" },
-            { "zh": "鼻子…", "en": "My nose…", "ja": "はなが…" }
+            { "zh": "好臭……甜得发臭，鼻子要坏掉了喵。", "en": "Stinks... sweet and rotten, my nose is going to break.", "ja": "くさいにゃ……あまくさくて、鼻がまがるにゃ。" },
+            { "zh": "秽气……整间屋子都被染脏了。", "en": "Impurity... the whole house has been stained.", "ja": "けがれにゃ……家まるごと、よごれちゃったにゃ。" },
+            { "zh": "呜喵……黏糊糊的，粘到我的毛上了。", "en": "Unya... the sticky stuff got in my fur.", "ja": "うにゃ……ベタベタが、毛にくっついたにゃ。" },
+            { "zh": "这不是普通的腐烂喵，是怨念在发酵。", "en": "This isn't ordinary rot, nya. It's a grudge fermenting.", "ja": "ただ腐ってるんじゃないにゃ、怨念が発酵してるにゃ。" },
+            { "zh": "鼻子……我的鼻子受不了了喵……", "en": "My nose... my nose can't take it anymore...", "ja": "はなが……わたしの鼻がもうダメにゃ……" },
+            { "zh": "这种地方，连老鼠都不愿意待喵。", "en": "Not even a mouse would stay in a place like this.", "ja": "こんなところ、ネズミだっていたくないにゃ。" }
           ]
         },
         "real": {
           "lines": [
-            { "zh": "…哼", "en": "…Hmph", "ja": "…ふん" },
-            { "zh": "恢复原样", "en": "Back to normal", "ja": "もとどおり" },
-            { "zh": "…幻觉", "en": "…Illusion", "ja": "…まぼろし" },
-            { "zh": "呼", "en": "Phew", "ja": "ふぅ" },
-            { "zh": "别大意喵", "en": "Stay sharp, nya", "ja": "ゆだんしないにゃ" },
-            { "zh": "…还在", "en": "…Still here", "ja": "…まだいる" }
+            { "zh": "……哼，恢复原样了。但是别大意喵。", "en": "...Hmph, back to normal. But don't let your guard down.", "ja": "……ふん、もとどおりにゃ。でも油断するにゃよ。" },
+            { "zh": "幻觉……不对，它只是藏起来了。", "en": "An illusion... no. It's only hiding.", "ja": "まぼろし……ちがうにゃ、かくれただけにゃ。" },
+            { "zh": "呼……暂时安全了喵。它还在附近。", "en": "Phew... safe for now, nya. It's still close by.", "ja": "ふぅ……とりあえず安全にゃ。まだ近くにいるにゃ。" },
+            { "zh": "看起来很正常喵，就是这样才可怕。", "en": "It looks normal, nya. That's what makes it scary.", "ja": "ふつうに見えるにゃ、だからこわいにゃ。" },
+            { "zh": "刚才那个，记住了吗？这间屋子在骗我们。", "en": "Did you catch that? This house is lying to us.", "ja": "今の、おぼえたにゃ？この家、わたしたちをだましてるにゃ。" },
+            { "zh": "……好像有什么东西，在给我们指路喵。", "en": "...It's like something is showing us the way, nya.", "ja": "……なにかが、道を教えてくれてるみたいにゃ。" }
           ]
         },
         "armor": {
           "lines": [
-            { "zh": "…绅士", "en": "…Gentleman", "ja": "…紳士" },
-            { "zh": "好硬", "en": "Tanky", "ja": "かたそう" },
-            { "zh": "空的?", "en": "Empty?", "ja": "からっぽ?" },
-            { "zh": "哐哐", "en": "Clank clank", "ja": "ガシャガシャ" },
-            { "zh": "里面没人喵", "en": "Nobody home, nya", "ja": "中身はないにゃ" },
-            { "zh": "麻烦", "en": "Ugh", "ja": "めんどくさ" }
+            { "zh": "……绅士吗？可惜里面是空的喵。", "en": "...A gentleman? Too bad it's empty inside.", "ja": "……紳士にゃ？でも中身はからっぽにゃ。" },
+            { "zh": "好硬的样子，爪子会磨坏的喵。", "en": "Looks hard. It'll wear my claws down, nya.", "ja": "かたそうにゃ、爪がすりへるにゃ。" },
+            { "zh": "哐哐哐的……有东西附在上面了。", "en": "Clank clank... something's possessing it.", "ja": "ガシャガシャって……なにかがとりついてるにゃ。" },
+            { "zh": "里面没人喵，只有一股很旧的执念。", "en": "Nobody home, nya. Just an old obsession.", "ja": "中身はいないにゃ、古い執念だけにゃ。" },
+            {
+              "zh": "麻烦……这种铁壳子最难驱了喵。",
+              "en": "Ugh... iron shells like this are the hardest to exorcise.",
+              "ja": "めんどくさいにゃ……こういう鉄のからが、いちばんお祓いしにくいにゃ。"
+            },
+            { "zh": "它拿着甜筒……是在守着什么东西吗？", "en": "It's holding a cone... is it guarding something?", "ja": "コーン持ってるにゃ……なにか守ってるのかにゃ？" }
           ]
         },
         "start": {
           "bubble": "cute",
           "lines": [
-            { "zh": "走喵", "en": "Let's go, nya", "ja": "いくにゃ" },
-            { "zh": "没办法喵", "en": "Fine, nya", "ja": "しかたないにゃ" },
-            { "zh": "干活了喵", "en": "Work time, nya", "ja": "仕事にゃ" },
-            { "zh": "哈啊…走吧", "en": "*yawn*… let's go", "ja": "ふぁ…いくか" },
-            { "zh": "驱邪时间喵", "en": "Exorcism o'clock", "ja": "お祓いの時間にゃ" },
-            { "zh": "别掉队喵", "en": "Keep up, nya", "ja": "遅れるにゃよ" }
+            { "zh": "走喵。驱邪时间到了，回来要给我小鱼干。", "en": "Let's go, nya. Exorcism time - dried fish when we're back.", "ja": "いくにゃ。お祓いの時間にゃ、帰ったら煮干しにゃ。" },
+            { "zh": "没办法喵，让你一个人去我可不放心。", "en": "Fine, nya. I'm not letting you go alone.", "ja": "しかたないにゃ、ひとりで行かせるのは心配にゃ。" },
+            { "zh": "哈啊……走吧，早点打完早点睡觉。", "en": "Yawn... let's go. Finish early, sleep early.", "ja": "ふぁ……いくか。はやく終わらせて、はやく寝るにゃ。" },
+            { "zh": "别掉队喵。走丢的话，我可不负责找。", "en": "Keep up, nya. If you get lost, I'm not looking for you.", "ja": "遅れるにゃよ。迷子になっても探さないにゃ。" },
+            { "zh": "干活了喵。符咒带够了，经文也背好了。", "en": "Work time, nya. Plenty of talismans, sutras memorised.", "ja": "仕事にゃ。お札もたっぷり、お経もおぼえたにゃ。" },
+            { "zh": "今天的妖怪，好像比平时多一点喵。走吧。", "en": "Looks like more yokai than usual today. Let's go.", "ja": "今日の妖怪は、いつもよりちょっと多そうにゃ。いくにゃ。" }
           ]
         },
         "win": {
           "bubble": "cute",
           "lines": [
-            { "zh": "轻松喵", "en": "Easy, nya", "ja": "楽勝にゃ" },
-            { "zh": "奖励呢?", "en": "Where's my treat?", "ja": "ごほうびは?" },
-            { "zh": "理所当然喵", "en": "Obviously, nya", "ja": "当然にゃ" },
-            { "zh": "可以摸摸头了喵", "en": "You may pet me", "ja": "撫でてもいいにゃ" },
-            { "zh": "想吃鱼喵", "en": "Fish, please", "ja": "魚が食べたいにゃ" },
-            { "zh": "…还行吧喵", "en": "…Not bad, nya", "ja": "…まあまあにゃ" }
+            { "zh": "轻松喵。好了，可以摸摸我的头了。", "en": "Easy, nya. There - you may pet my head.", "ja": "楽勝にゃ。ほら、頭なでていいにゃよ。" },
+            { "zh": "奖励呢？我要吃鱼，要很大的那种。", "en": "Where's my treat? I want fish - a big one.", "ja": "ごほうびは？魚が食べたいにゃ、おっきいやつにゃ。" },
+            { "zh": "理所当然喵。付丧神可不是白当的。", "en": "Obviously, nya. I'm not a tsukumogami for nothing.", "ja": "当然にゃ。付喪神はだてじゃないにゃ。" },
+            { "zh": "……还行吧喵。你也稍微有点用。", "en": "...Not bad, nya. You were a little useful too.", "ja": "……まあまあにゃ。おまえもちょっとは役に立ったにゃ。" },
+            { "zh": "净化完毕。现在，我要找个暖和的地方睡觉。", "en": "Purification complete. Now, a warm spot for a nap.", "ja": "お祓い完了にゃ。さて、あったかいところで寝るにゃ。" },
+            { "zh": "呼噜呼噜……今天就特别允许你抱抱我喵。", "en": "Purr... just for today, you may hold me.", "ja": "ゴロゴロ……今日だけ、とくべつにだっこしていいにゃ。" }
           ]
         },
         "lose": {
           "bubble": "cute",
           "lines": [
-            { "zh": "…赌气睡觉", "en": "…Sulking to sleep", "ja": "…ふて寝する" },
-            { "zh": "再来喵", "en": "Once more, nya", "ja": "もう一回にゃ" },
-            { "zh": "…大意了喵", "en": "…Got careless", "ja": "…油断したにゃ" },
-            { "zh": "呼喵…", "en": "Funya…", "ja": "ふにゃ…" },
-            { "zh": "下次认真喵", "en": "Serious mode next time", "ja": "次は本気出すにゃ" },
-            { "zh": "膝枕反省会喵", "en": "Lap-pillow debrief", "ja": "膝枕で反省会にゃ" }
+            { "zh": "……我要赌气睡觉了，别叫我喵。", "en": "...I'm going to sulk and sleep. Don't wake me.", "ja": "……ふて寝するにゃ、起こすにゃよ。" },
+            { "zh": "再来喵。刚才只是没睡醒而已。", "en": "Again, nya. I was only half awake just now.", "ja": "もう一回にゃ。さっきは寝ぼけてただけにゃ。" },
+            { "zh": "……大意了喵。下次我会认真的。", "en": "...I got careless. Next time I'll be serious.", "ja": "……油断したにゃ。次は本気出すにゃ。" },
+            { "zh": "呼喵……膝枕反省会，现在开始。", "en": "Funya... lap-pillow debrief, starting now.", "ja": "ふにゃ……膝枕で反省会、はじめるにゃ。" },
+            { "zh": "才没有不甘心……尾巴在抖只是因为冷喵。", "en": "I'm not upset... my tail's only shaking because it's cold.", "ja": "くやしくないにゃ……しっぽが震えてるのは寒いからにゃ。" },
+            { "zh": "哼，妖怪们今天运气好而已喵。", "en": "Hmph, the yokai just got lucky today.", "ja": "ふん、今日は妖怪たちの運がよかっただけにゃ。" }
           ]
         },
         "sheSeen": {
           "lines": [
-            { "zh": "…剪刀的声音", "en": "…Scissors", "ja": "…ハサミのおと" },
-            { "zh": "来了喵", "en": "Here she comes, nya", "ja": "きたにゃ" },
-            { "zh": "是那家伙", "en": "That thing", "ja": "あいつだ" },
-            { "zh": "甩不掉喵", "en": "Can't shake her, nya", "ja": "まけないにゃ" },
-            { "zh": "背后!", "en": "Behind us!", "ja": "うしろ!" },
-            { "zh": "…又是她", "en": "…Her again", "ja": "…またあいつ" }
+            { "zh": "……剪刀的声音。来了喵，别出声。", "en": "...Scissors. She's coming, nya. Not a sound.", "ja": "……ハサミのおとにゃ。きたにゃ、声出すにゃよ。" },
+            { "zh": "是那家伙……附在人偶身上的东西。", "en": "It's that thing... the one possessing the doll.", "ja": "あいつにゃ……人形にとりついてるやつにゃ。" },
+            { "zh": "背后！她从背后过来了喵！", "en": "Behind us! She's coming from behind, nya!", "ja": "うしろにゃ！うしろから来てるにゃ！" },
+            { "zh": "甩不掉喵……她一直记着我们的味道。", "en": "Can't shake her... she remembers our scent.", "ja": "まけないにゃ……わたしたちのにおい、ずっとおぼえてるにゃ。" },
+            { "zh": "……又是她。同为人偶，真是丢脸喵。", "en": "...Her again. As a fellow doll, how embarrassing.", "ja": "……またあいつにゃ。おなじ人形として、はずかしいにゃ。" },
+            {
+              "zh": "咔嚓咔嚓……数着步子过来的，她在玩喵。",
+              "en": "Snip, snip... she's counting her steps. She's playing with us.",
+              "ja": "チョキチョキ……歩数をかぞえながら来てるにゃ、遊んでるにゃ。"
+            }
           ]
         },
         "runNow": {
           "bubble": "shout",
           "lines": [
-            { "zh": "跑喵!", "en": "Run, nya!", "ja": "はしるにゃ!" },
-            { "zh": "别停!", "en": "Don't stop!", "ja": "とまるな!" },
-            { "zh": "这边!", "en": "This way!", "ja": "こっち!" },
-            { "zh": "快!", "en": "Hurry!", "ja": "はやく!" },
-            { "zh": "回头打!", "en": "Turn and shoot!", "ja": "ふりむいてうて!" },
-            { "zh": "跟上", "en": "Keep up", "ja": "ついてこい" }
+            { "zh": "跑喵！别回头，回头就会被追上！", "en": "Run, nya! Don't look back - look back and she'll catch us!", "ja": "はしるにゃ！ふりむくにゃ、ふりむいたら追いつかれるにゃ！" },
+            { "zh": "这边！跟着我的尾巴跑！", "en": "This way! Follow my tail!", "ja": "こっちにゃ！わたしのしっぽについてくるにゃ！" },
+            { "zh": "快！门在前面，冲过去喵！", "en": "Hurry! The door's right ahead - charge through!", "ja": "はやく！ドアはすぐそこにゃ、つっこむにゃ！" },
+            { "zh": "别停！边跑边回头打她！", "en": "Don't stop! Turn and shoot while you run!", "ja": "とまるにゃ！走りながらふりむいて撃つにゃ！" },
+            { "zh": "跟上，跟丢了我可不会回来找你喵！", "en": "Keep up - if you get lost, I'm not coming back for you!", "ja": "ついてくるにゃ、はぐれても探しにもどらないにゃよ！" },
+            { "zh": "猫跑得可快了，你别拖后腿喵！", "en": "Cats are fast, nya - don't slow me down!", "ja": "猫は足がはやいにゃ、足をひっぱるにゃよ！" }
           ]
         },
         "hush": {
           "lines": [
-            { "zh": "嘘", "en": "Shh", "ja": "しっ" },
-            { "zh": "屏住气", "en": "Hold your breath", "ja": "いきをとめて" },
-            { "zh": "…别动", "en": "…Don't move", "ja": "…うごくな" },
-            { "zh": "她在找", "en": "She's looking", "ja": "さがしてる" },
-            { "zh": "…就在外面", "en": "…Right outside", "ja": "…すぐそと" },
-            { "zh": "忍着喵", "en": "Hang on, nya", "ja": "がまんにゃ" }
+            { "zh": "嘘……屏住气，她就在外面。", "en": "Shh... hold your breath. She's right outside.", "ja": "しっ……息をとめるにゃ、すぐそとにいるにゃ。" },
+            { "zh": "……别动。猫最会躲了，学着点。", "en": "...Don't move. Cats are hide-and-seek geniuses. Copy me.", "ja": "……うごくにゃ。猫はかくれんぼの天才にゃ、まねするにゃ。" },
+            {
+              "zh": "她在找喵……听，剪刀在一下一下地开合。",
+              "en": "She's searching... listen, the scissors opening and closing.",
+              "ja": "さがしてるにゃ……聞くにゃ、ハサミがひらいたり閉じたりしてるにゃ。"
+            },
+            { "zh": "忍着喵……等脚步声走远再出去。", "en": "Hang on, nya... wait till the footsteps fade before we move.", "ja": "がまんにゃ……足音が遠くなってから出るにゃ。" },
+            { "zh": "心跳声太大了……捂住胸口喵。", "en": "Your heartbeat's too loud... press on your chest.", "ja": "心臓の音がうるさいにゃ……胸をおさえるにゃ。" },
+            {
+              "zh": "……就在门缝外面。千万别看她的眼睛。",
+              "en": "...She's right outside the crack in the door. Don't meet her eyes.",
+              "ja": "……ドアのすきまのすぐそとにゃ。目を合わせるにゃよ。"
+            }
           ]
         },
         "trapHit": {
           "lines": [
-            { "zh": "中了!", "en": "Hit!", "ja": "あたり!" },
-            { "zh": "压住了喵", "en": "Squashed, nya", "ja": "つぶれたにゃ" },
-            { "zh": "趁现在", "en": "Now's our chance", "ja": "いまのうち" },
-            { "zh": "就在那躺着", "en": "Stay down there", "ja": "そこでねてろ" },
-            { "zh": "倒了喵", "en": "Down, nya", "ja": "たおれたにゃ" },
-            { "zh": "很好", "en": "Good", "ja": "よし" }
+            { "zh": "中了！压住了喵，趁现在快走！", "en": "Hit! She's pinned, nya - move while we can!", "ja": "あたりにゃ！つぶれたにゃ、今のうちに行くにゃ！" },
+            { "zh": "就在那里躺着吧，别起来了喵。", "en": "Stay lying there. Don't get up again, nya.", "ja": "そこで寝てるにゃ、もう起きるにゃよ。" },
+            { "zh": "很好。这一下够她头晕好一会儿了。", "en": "Good. That'll keep her dizzy for a while.", "ja": "よし。これでしばらく目を回してるにゃ。" },
+            { "zh": "倒了喵！东西都是猫推下去的，记住了。", "en": "Down she goes! A cat knocked that off - remember it.", "ja": "たおれたにゃ！落としたのは猫にゃ、おぼえとくにゃ。" },
+            { "zh": "趁现在！别浪费猫大人争取来的时间！", "en": "Now! Don't waste the time this cat bought you!", "ja": "今のうちにゃ！猫さまがかせいだ時間、ムダにするにゃよ！" },
+            { "zh": "咚的一声……哼，自作自受喵。", "en": "Boom... hmph, she asked for it.", "ja": "ドーンって……ふん、自業自得にゃ。" }
           ]
         },
         "grabbed": {
           "bubble": "shout",
           "lines": [
-            { "zh": "放开喵!", "en": "Let go, nya!", "ja": "はなすにゃ!" },
-            { "zh": "可恶!", "en": "Damn!", "ja": "くっ!" },
-            { "zh": "臭剪刀!", "en": "Stupid scissors!", "ja": "このハサミ!" },
-            { "zh": "咬你喵!", "en": "I'll bite, nya!", "ja": "かむにゃ!" },
-            { "zh": "…动不了", "en": "…Can't move", "ja": "…うごけない" },
-            { "zh": "滚开!", "en": "Get off!", "ja": "どけ!" }
+            { "zh": "放开喵！不然我咬你了！", "en": "Let go, nya! Or I'll bite!", "ja": "はなすにゃ！かみつくにゃよ！" },
+            { "zh": "可恶……动不了，快帮我把她打开！", "en": "Damn... I can't move - get her off me!", "ja": "くっ……うごけないにゃ、はやく引きはがすにゃ！" },
+            { "zh": "臭剪刀！别碰我的耳朵！", "en": "Stupid scissors! Don't touch my ears!", "ja": "このハサミ！耳にさわるにゃ！" },
+            { "zh": "滚开！我才不要被剪成两半喵！", "en": "Get off! I'm not getting cut in half, nya!", "ja": "どくにゃ！まっぷたつになんかされないにゃ！" },
+            { "zh": "爪子……够不着……快开枪喵！", "en": "My claws... can't reach... shoot, nya!", "ja": "爪が……とどかないにゃ……はやく撃つにゃ！" },
+            { "zh": "人偶对人偶……别小看付丧神喵！", "en": "Doll against doll... don't underestimate a tsukumogami!", "ja": "人形どうし……付喪神をなめるにゃよ！" }
           ]
         },
         "bell": {
           "bubble": "shout",
           "lines": [
-            { "zh": "敲!", "en": "Strike!", "ja": "つけ!" },
-            { "zh": "响吧!", "en": "Ring out!", "ja": "なれ!" },
-            { "zh": "送你走喵", "en": "Off you go, nya", "ja": "おくってやるにゃ" },
-            { "zh": "回去!", "en": "Go back!", "ja": "かえれ!" },
-            { "zh": "…结束了", "en": "…It's over", "ja": "…おわり" },
-            { "zh": "钟声!", "en": "The bell!", "ja": "かねのおと!" }
+            { "zh": "敲！把钟声敲进她的脑袋里！", "en": "Strike it! Drive the bell's sound into her head!", "ja": "つくにゃ！鐘の音、あいつの頭にたたきこむにゃ！" },
+            { "zh": "响吧！送你回该去的地方喵。", "en": "Ring out! I'll send you where you belong.", "ja": "なれにゃ！いくべきところへおくってやるにゃ。" },
+            { "zh": "回去！这里没有你的玩伴了。", "en": "Go back! There are no playmates for you here.", "ja": "かえれにゃ！ここにはもう遊び相手はいないにゃ。" },
+            { "zh": "再一下……钟声一停，她就会醒过来喵。", "en": "Once more... if the bell stops, she'll wake up.", "ja": "もう一回……鐘が止まったら、目をさますにゃ。" },
+            { "zh": "……结束了。南无，好好睡吧。", "en": "...It's over. Namu. Sleep well.", "ja": "……おわりにゃ。なむ、ゆっくり眠るにゃ。" },
+            { "zh": "钟声……好久没听到这么干净的声音了喵。", "en": "The bell... I haven't heard a sound this clear in ages.", "ja": "鐘の音……こんなきれいな音、ひさしぶりにゃ。" }
           ]
         }
       }

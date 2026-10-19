@@ -344,10 +344,7 @@
       "rampMax": 5,
       "sfx": "mantra",
       "kick": 1.4,
-      "tracer": "#ffd86a",
-      "voice": {
-        "grain": "shot"
-      }
+      "tracer": "#ffd86a"
     },
     "active": {
       "kind": "beam",

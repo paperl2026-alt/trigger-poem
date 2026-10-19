@@ -883,7 +883,6 @@ export class Game {
     if (by.a.charge.hit) by.addCharge(by.a.charge.hit);
     if (by.gatling && dealt) by.heal(by.a.heal);
     // every hit shows: one counter per enemy above its head that keeps adding up
-    if (dealt && this.hud.gl) this.hud.gl.stickers.hit(by, !!info.crit);
     if (dealt) {
       const b = this.box(target);
       this.hud.dmg(target, (b.x0 + b.x1) / 2, Math.max(this.H * 0.12, b.y0), dealt, !!info.crit, by.c.color);
