@@ -521,6 +521,7 @@ body:has(.screen.select) #dbg-btn, body:has(.screen.title) #dbg-btn { display: n
 .res8 .ln { display: flex; align-items: baseline; font-size: calc(1.85 * var(--u)); font-weight: 900; padding: calc(0.15 * var(--u)) 0; white-space: nowrap; }
 .res8 .ln .v { font-size: calc(2.3 * var(--u)); }
 .res8 .ln .v.red { color: var(--red); }
+.res8 .ln.cut, .res8 .ln.cut .v { color: var(--red); }   /* the deaths' cut (Game.applyRewards) */
 .res8 .ln.wide { grid-column: 1 / -1; }
 .res8 .ln.tot { margin-top: calc(0.3 * var(--u)); padding-top: calc(0.4 * var(--u)); border-top: calc(0.25 * var(--u)) solid var(--ink); font-size: calc(2.8 * var(--u)); }
 .res8 .ln.tot .v { font-size: calc(4.8 * var(--u)); line-height: 0.9; color: var(--red); }

@@ -658,9 +658,12 @@ export class Game {
     st.base = st.win ? E.clearDd + st.kills * E.winDdPerKill : st.kills * E.lossDdPerKill;
     st.first = st.firstClear ? E.firstClearDd : 0;
     st.xp = {}; st.unlocked = []; st.bonus = 0;
+    // every time a player's girl went down this run (not the AI's) takes deathCut off the 伍德刀盾 and the 历战值, at most deathMax times
+    // (user 2026-10-19: dying a lot still gets half)
+    st.deaths = this.deaths || 0; st.deathK = 1 - (E.deathCut ?? 0.1) * Math.min(E.deathMax ?? 5, st.deaths);
     if (this.ep.debug) { st.dd = 0; return; }
     for (const id of new Set(st.team)) {
-      const c = SAVE.chars[id], gain = st.win ? E.winXp + st.kills * E.winXpPerKill : st.kills * E.lossXpPerKill;
+      const c = SAVE.chars[id], gain = Math.round((st.win ? E.winXp + st.kills * E.winXpPerKill : st.kills * E.lossXpPerKill) * st.deathK);
       const before = levelOf(c.xp), top = before >= maxLv();
       st.xp[id] = { gain, before, after: levelOf(c.xp + gain), xp0: c.xp, xp: c.xp + gain, top, bonus: top ? Math.round(gain * E.maxXpDd) : 0 };
       if (top) st.bonus += st.xp[id].bonus; else c.xp += gain;
@@ -676,7 +679,7 @@ export class Game {
     if (st.firstClear) for (const o of [].concat(this.ep.reward?.outfits || [])) if (!SAVE.outfits.includes(o)) { SAVE.outfits.push(o); st.newOutfits.push(o); }
     st.mul = bagFx(this.run.bag).dd;
     st.mulBy = this.run.bag.map((id) => ({ id, dd: bagFx([id]).dd })).filter((m) => m.dd !== 1);
-    st.dd = Math.round((st.base + st.first + st.bonus) * st.mul);
+    st.dd = Math.round((st.base + st.first + st.bonus) * st.mul * st.deathK);
     SAVE.dd += st.dd;
     if (st.win) {
       rec.cleared = true; delete rec.cp;

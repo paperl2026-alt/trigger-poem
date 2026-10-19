@@ -129,7 +129,11 @@ export class Player {
     this.fever.hurt();
     this.addCharge(T.fever.hurtCharge ?? 0);   // hurt = a chunk of Fever and of the special (DESIGN「Fever 大方」)
     if (this.hero) this.hero.hurt(n >= 25); else this.soft.kick(1.4);
-    if (this.hp <= 0) { this.state = 'down'; this.downT = PL().downTime; return true; }
+    if (this.hp <= 0) {
+      this.state = 'down'; this.downT = PL().downTime;
+      if (this.ctrl?.kind !== 'ai') this.game.deaths = (this.game.deaths || 0) + 1;   // (a player's girl, not the AI's: the results cut, Game.applyRewards)
+      return true;
+    }
     this.state = 'hurt';
     this.hurtT = PL().hurtTime;
     return true;

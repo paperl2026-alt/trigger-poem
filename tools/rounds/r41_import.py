@@ -37,7 +37,7 @@ if __name__ == "__main__":
             for i, chars in enumerate(SHEETS):
                 f = RAW / f"gl_{style}_{i}.png"
                 if not f.exists(): print("missing", f.name); continue
-                for ch, im in zip(chars, cells(f, 3, 3)):
+                for ch, im in zip(chars, cells(f, 3, -(-len(chars) // 3))):   # (a last sheet of 3 is ONE row: cut as 3 x 3 they lost two thirds)
                     if im is not None: save(man, f"fx/gl2_{style}_u{ord(ch):x}", im, 320)
             print(style)
     if "pages" in what:

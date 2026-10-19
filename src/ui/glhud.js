@@ -350,7 +350,8 @@ class Panel {
     this.text('lv', `Lv${p.lv}`);
     this.text('hp', `${Math.ceil(p.hp)} / ${p.maxHp}`);
     const k = p.ctrl?.kind;
-    this.text('key', k === 'pad' ? 'Y' : k === 'keys' ? '⌫' : k === 'ai' ? 'AI' : ({ zh: '右键', ja: '右クリック', en: 'R-CLICK' }[lang] || 'R-CLICK'), '#121012', 0.62);
+    // who plays her: the AI, or a player - 1P / 2P (user 2026-10-19: not the skill's button; that is in the SKILL OK badge)
+    this.text('key', k === 'ai' ? 'AI' : p.slot ? '2P' : '1P', '#121012', 0.62);
     for (const tx of Object.values(this.t)) tx.pop = Math.max(0, tx.pop - dt * 5);
     // ammo
     const inf = p.gatling || p.beaming, n = this.ticks.length;
@@ -651,7 +652,7 @@ class Down {
     const put = (txt, b, str, k = 1) => { const B2 = bx(b); txt.set(str, (B2[3] - B2[1]) * s * 0.9, undefined, (B2[2] - B2[0]) * s * 1.3); txt.at(L.x((B2[0] + B2[2]) / 2, an), L.y((B2[1] + B2[3]) / 2, an), -6, k); };
     put(this.n, D.num, `${sec}`, 1 + 0.15 * Math.max(0, Math.sin(t * Math.PI * 2)));
     put(this.of, D.of, `/${T.combat.player.downTime}`);
-    put(this.label, D.label, { zh: '复活!', ja: '復活!', en: 'REVIVE!' }[lang] || 'REVIVE!');
+    put(this.label, D.label, p.c.revive ? tr(p.c.revive) : { zh: '复活!', ja: '復活!', en: 'REVIVE!' }[lang] || 'REVIVE!');   // (her own word: characters/<id>.json revive)
   }
 }
 

@@ -6,7 +6,7 @@ seamless loop.  python -I tools/bgm_pick.py [track ...] [--dry]
   one (or the one named in PICK, after the user has listened) becomes the track: the loop runs from the start of section `loopFrom` of the
   spec (default: the second section when the first is a short intro of 8 bars or less, played once; else the whole piece) to the end of the last section (one section earlier when the cover
   fades out at the end), both points moved by the cover's own lag there; the last 80 ms of the loop are blended into the 80 ms just before
-  its start so the jump back is seamless. Levelled to one loudness, written as Ogg Opus to public/content/base/bgm/<track>.ogg and
+  its start so the jump back is seamless. Levelled to one loudness (-14 dB RMS, vol 1.4), written as Ogg Opus to public/content/base/bgm/<track>.ogg and
   registered in content audio/sounds.json (music.<track>: files, loopStart, loopEnd, vol). art/raw/bgm_ai/_look/<track>.png shows the
   guide and every cover (envelope, spectrogram, the numbers); _look/pick_report.json keeps the numbers.
 """
@@ -19,7 +19,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 BASE = ROOT / "art" / "raw" / "bgm_ai"
 OUT = ROOT / "public" / "content" / "base" / "bgm"
 SOUNDS = ROOT / "public" / "content" / "base" / "audio" / "sounds.json"
-PICK = {}   # track -> the file name of the cover the user chose by ear (overrides the measured best)
+# track -> the file name of the cover the user chose by ear (overrides the measured best): art/raw/bgm_ai/picks.json, written by
+# tools/audition_apply.py from the listening page (sound.html)
+PICKS = BASE / "picks.json"
+PICK = json.loads(PICKS.read_text(encoding="utf-8")) if PICKS.exists() else {}
 CF = 0.08
 
 
@@ -93,7 +96,8 @@ def loop_of(T, sr, x, og, oc, bar, edges, st):
     y = x[:b].copy(); w = np.linspace(0, np.pi / 2, c)[:, None]
     y[b - c:b] = y[b - c:b] * np.cos(w) + x[a - c:a] * np.sin(w)
     fi = int(0.02 * sr); y[:fi] *= np.linspace(0, 1, fi)[:, None]
-    r = np.sqrt(np.mean(y[a:b] ** 2)); y = y * (10 ** (-17 / 20) / (r + 1e-9))
+    # (as loud as the synthesized loops were and a little more: at -17 dB they were lost under the guns and the voices, user 2026-10-19)
+    r = np.sqrt(np.mean(y[a:b] ** 2)); y = y * (10 ** (-14 / 20) / (r + 1e-9))
     y = np.where(np.abs(y) > 0.9, np.sign(y) * (0.9 + 0.09 * np.tanh((np.abs(y) - 0.9) / 0.09)), y)
     return y, a / sr, b / sr
 
@@ -129,7 +133,7 @@ def main():
                         "-c:a", "libopus", "-b:a", "128k", "-ar", "48000", str(OUT / f"{name}.ogg")], input=pcm, check=True)
         e = D.setdefault("music", {}).setdefault(name, {})
         e.update({"files": [f"bgm/{name}.ogg"], "loopStart": round(ls, 4), "loopEnd": round(le, 4), "src": "ace", "from": pick[1].stem})
-        e.setdefault("vol", 0.9); changed = True
+        e["vol"] = 1.4; changed = True
     rp.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     if changed:
         D["music"] = dict(sorted(D["music"].items()))

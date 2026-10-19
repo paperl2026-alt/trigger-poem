@@ -12,6 +12,7 @@ import { SAVE } from '../core/save.js';
 import { rigMesh, Body } from '../jiggle/rig.js';
 import { Sweat } from '../jiggle/sweat.js';
 import { Breath } from '../jiggle/atmo.js';
+import { Ease } from '../core/tween.js';
 
 const SUBSTEP = 1 / 240;
 
@@ -55,6 +56,17 @@ export class Heroine {
     this.breath = new Breath(this.g);
     for (const it of this.breath.items) it.m.renderOrder = 13;
     this.body = new Body();
+    // down (DESIGN「阵亡」, user 2026-10-19): the cat girl is a tsukumogami and falls back into the old cursed doll she once was; the
+    // twin-tail girl is an artificial human: her body is gone, only her clothes and a memorial photo are left (down/<id>). Her figure
+    // fades out into it and comes back out of it
+    const dk = `down/${player.id}`; this.downK = 0;
+    if (tex[dk]) {
+      const mat = new THREE.MeshBasicMaterial({ map: tex[dk], transparent: true, depthTest: false, depthWrite: false, opacity: 0 });
+      this.downM = new THREE.Mesh(new THREE.PlaneGeometry(1, 1).translate(0, 0.5, 0), mat);
+      this.downM.renderOrder = 10 + player.slot; this.downM.visible = false; this.downM.frustumCulled = false;
+      this.downAr = tex[dk].image.height / tex[dk].image.width;
+      player.group.add(this.downM);
+    }
     this.pose = 'cover'; this.out = false;
     this.exert = 0.3; this.acc = 0; this.lastBreath = 0; this.hitT = 0;
     this.canvasPx = 600;
@@ -130,7 +142,7 @@ export class Heroine {
       U.flash.value = Math.max(st.flash || 0, this.readyFlash * 0.85);
       U.tintAmt.value = this.hitT > 0 ? this.hitT * 1.2 : 0;
       U.dark.value = st.dark || 0;
-      U.opacity.value = st.opacity ?? 1;
+      U.opacity.value = (st.opacity ?? 1) * (1 - this.downK);
       const A = this.aura, pc = A.pulse > 0 && A.pcol ? A.pcol : A.col;
       U.aura.value.set(A.col.r * (1 - A.pulse) + pc.r * A.pulse, A.col.g * (1 - A.pulse) + pc.g * A.pulse, A.col.b * (1 - A.pulse) + pc.b * A.pulse, Math.min(1, A.a + A.pulse * 0.35));
       U.auraFlow.value = A.flow; U.auraPulse.value = A.pulse;
@@ -157,6 +169,16 @@ export class Heroine {
     this.readyFlash = Math.max(0, this.readyFlash - dt * 4);
     this.readyK += ((this.ready ? 1 : 0) - this.readyK) * Math.min(1, dt * (this.ready ? 3 : 10));
     this.aura.pulse = Math.max(0, this.aura.pulse - dt * 1.6);
+    // down: the doll / the heap of clothes takes her place (in 0.25 s), and gives it back when she gets up (0.3 s)
+    this.downK = this.downM ? Math.max(0, Math.min(1, this.downK + (st.state === 'down' ? dt / 0.25 : -dt / 0.3))) : 0;
+    if (this.downM) {
+      const k = this.downK, D = this.downM, h = this.dims('cover').h * (this.p.id === 'pink' ? 0.72 : 0.8) * (st.zoom || 1);
+      D.visible = k > 0.001;
+      const pop = st.state === 'down' ? Ease.outBack(k) : k, w = h / this.downAr * (0.8 + 0.2 * pop);
+      D.scale.set(w, h * (0.8 + 0.2 * pop), 1); D.position.set(st.x, st.y + h * 0.26, 0);   // (lifted over the cover and her panel)
+      D.rotation.z = Math.sin(t * 1.7 + this.p.slot) * 0.02 + (this.p.id === 'cat' && Math.sin(t * 9) > 0.97 ? 0.04 : 0);   // (the doll twitches now and then)
+      D.material.opacity = Math.min(1, k * 1.4);
+    }
     this.g.position.set(st.x, st.y, 0);
     this.g.scale.setScalar(st.zoom || 1);   // walking: the shot moves in on her (player.js)
     this.g.visible = st.visible !== false;

@@ -41,10 +41,24 @@ const mods = {
   },
 };
 
+// dev: the listening page (sound.html) plays the versions ACE-Step / Stable Audio made, from art/raw (never part of the game)
+const raw = {
+  name: 'dev-raw',
+  configureServer(server) {
+    const dir = path.resolve('art/raw');
+    server.middlewares.use('/raw/', (req, res, next) => {
+      const f = path.normalize(path.join(dir, decodeURIComponent(req.url.split('?')[0])));
+      if (!f.startsWith(dir) || !fs.existsSync(f) || fs.statSync(f).isDirectory()) { next(); return; }
+      res.setHeader('content-type', { '.wav': 'audio/wav', '.json': 'application/json', '.ogg': 'audio/ogg', '.png': 'image/png' }[path.extname(f).toLowerCase()] || 'application/octet-stream');
+      fs.createReadStream(f).pipe(res);
+    });
+  },
+};
+
 export default defineConfig({
   base: './',
   define: { __BUILD__: JSON.stringify(new Date().toLocaleString('zh-CN', { hour12: false })) },
-  plugins: [shots, mods],
+  plugins: [shots, mods, raw],
   server: { port: 5300, strictPort: true },
-  build: { chunkSizeWarningLimit: 2000, rollupOptions: { input: { main: path.resolve('index.html'), jiggle: path.resolve('jiggle.html') } } },
+  build: { chunkSizeWarningLimit: 2000, rollupOptions: { input: { main: path.resolve('index.html'), jiggle: path.resolve('jiggle.html'), sound: path.resolve('sound.html') } } },
 });

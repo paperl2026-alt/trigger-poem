@@ -10,6 +10,7 @@ echo    [2]     晃动技术验证
 echo    [3]     打包 exe
 echo    [4]     存档并同步到 GitHub
 echo    [5]     备份全部存档到 D 盘
+echo    [6]     声音试听（BGM、音效、台词：听、挑版本）
 echo.
 set "C="
 set /p "C=选一个，直接回车就是开始游戏："
@@ -19,6 +20,7 @@ if "%C%"=="2" goto jiggle
 if "%C%"=="3" goto exe
 if "%C%"=="4" goto save
 if "%C%"=="5" goto backup
+if "%C%"=="6" goto sound
 goto game
 
 :game
@@ -33,6 +35,14 @@ echo 操作：鼠标瞄准，按住左键探身射击，松开躲进掩体，右
 call npm run build
 if errorlevel 1 (pause & exit /b)
 call npx electron . --page=index.html?ep=corridor_test
+exit /b
+
+:sound
+echo 正在构建并打开声音试听……
+echo 挑好以后关掉窗口，告诉 Claude「声音挑好了」。
+call npm run build
+if errorlevel 1 (pause & exit /b)
+call npx electron . --page=sound.html
 exit /b
 
 :jiggle

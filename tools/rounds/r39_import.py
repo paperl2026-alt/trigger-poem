@@ -52,7 +52,8 @@ if __name__ == "__main__":
     for i in range((len(SPELL) + 8) // 9):
         f = RAW / f"gl_spell_{i}.png"
         if not f.exists(): continue
-        for ch, im in zip(SPELL[i * 9:i * 9 + 9], cells(f, 3, 3)):
+        chars = SPELL[i * 9:i * 9 + 9]
+        for ch, im in zip(chars, cells(f, 3, -(-len(chars) // 3))):   # (the last sheet has fewer rows)
             if im is not None: save(man, f"fx/gl_sharp_u{ord(ch):x}", im, 320)
         print(f.stem)
     mp.write_text(json.dumps(man, indent=1, sort_keys=True))

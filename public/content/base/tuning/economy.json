@@ -1,5 +1,5 @@
 {
-  "_doc": "局外数值（不做评级，DESIGN 局外）。通关：clearDd 伍德刀盾 + 每个击杀 winDdPerKill，首次通关再加 firstClearDd；历战值（熟练度经验）winXp + 每个击杀 winXpPerKill。失败：按击杀数给 lossDdPerKill 伍德刀盾、lossXpPerKill 历战值。角色已经满级（满破）时，她拿到的历战值按 maxXpDd 换成追加的伍德刀盾。背包里的道具（招财猫、克系存钱罐）再乘倍率。mastery：历战值等级表（xpAt[i] = 升到 i 级要的总经验），每级加伤害 dmgPerLv、暴击率 critPerLv、暴击倍率 critMulPerLv（2026-10-18 用户第十七批：局外升级主要加攻击力、暴击率、暴击倍率），减装填 reloadPerLv。bag：书包 cost 上限从 start 扩到 max，每扩 1 格的价格 = price[0] × price[1]^(已扩次数)（取整到 5 / 50 / 500，src/battle/items.js）。newSave：新存档的初始内容。",
+  "_doc": "局外数值（不做评级，DESIGN 局外）。通关：clearDd 伍德刀盾 + 每个击杀 winDdPerKill，首次通关再加 firstClearDd；历战值（熟练度经验）winXp + 每个击杀 winXpPerKill。失败：按击杀数给 lossDdPerKill 伍德刀盾、lossXpPerKill 历战值。角色已经满级（满破）时，她拿到的历战值按 maxXpDd 换成追加的伍德刀盾。背包里的道具（招财猫、克系存钱罐）再乘倍率。这一轮里玩家操作的角色（AI 的不算）每阵亡一次，伍德刀盾和历战值都少 deathCut（10%），最多算 deathMax 次（最少拿一半）。mastery：历战值等级表（xpAt[i] = 升到 i 级要的总经验），每级加伤害 dmgPerLv、暴击率 critPerLv、暴击倍率 critMulPerLv（2026-10-18 用户第十七批：局外升级主要加攻击力、暴击率、暴击倍率），减装填 reloadPerLv。bag：书包 cost 上限从 start 扩到 max，每扩 1 格的价格 = price[0] × price[1]^(已扩次数)（取整到 5 / 50 / 500，src/battle/items.js）。newSave：新存档的初始内容。",
   "economy": {
     "lossDdPerKill": 3,
     "winXpPerKill": 2,
@@ -21,6 +21,8 @@
     "clearDd": 300,
     "winDdPerKill": 3,
     "winXp": 80,
-    "maxXpDd": 0.5
+    "maxXpDd": 0.5,
+    "deathCut": 0.1,
+    "deathMax": 5
   }
 }

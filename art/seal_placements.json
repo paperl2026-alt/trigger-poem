@@ -1026,5 +1026,22 @@
     ],
     "keep_frame": true,
     "png": "art/raw/r58/fixed/cover_ep1_c.png"
+  },
+  "r64_down_cat_a": {
+    "src": "art/raw/r64/down_cat_a.png",
+    "center": [
+      335,
+      895
+    ],
+    "ring": 140,
+    "rot": -10.0,
+    "erase": [
+      240,
+      818,
+      428,
+      1045
+    ],
+    "keep_frame": true,
+    "png": "art/raw/r64/fixed/down_cat_a.png"
   }
 }

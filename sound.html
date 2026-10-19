@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>声音试听</title>
+  <style>
+    html, body { margin: 0; background: #1a0f20; color: #eee; font: 14px "Microsoft YaHei", sans-serif; }
+    header { position: sticky; top: 0; z-index: 2; background: #120a17ee; border-bottom: 3px solid #ff4fa8; padding: 10px 18px; display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+    header h1 { margin: 0; font-size: 20px; color: #ff7ac0; }
+    header .tabs button { font: 15px "Microsoft YaHei", sans-serif; background: #222; color: #fff; border: 2px solid #555; padding: 4px 14px; cursor: pointer; }
+    header .tabs button.on { border-color: #ff7ac0; color: #ff7ac0; }
+    header .saved { color: #8fdc9a; font-size: 13px; }
+    header input { font: 14px "Microsoft YaHei", sans-serif; background: #000; color: #fff; border: 1px solid #555; padding: 3px 8px; width: 180px; }
+    main { padding: 12px 18px 60px; max-width: 1200px; }
+    .help { color: #bbb; margin: 6px 0 14px; line-height: 1.6; }
+    .item { background: #00000060; border: 1px solid #3a2a40; border-left: 4px solid #6a4a78; margin: 8px 0; padding: 8px 12px; }
+    .item.redo { border-left-color: #ff4f6a; }
+    .item h3 { margin: 0 0 2px; font-size: 15px; color: #ffd27a; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+    .item h3 small { color: #aaa; font-weight: normal; font-size: 12px; }
+    .want { color: #ccc; font-size: 13px; margin-bottom: 6px; }
+    .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0; }
+    button.p { font: 13px "Microsoft YaHei", sans-serif; background: #2a1f30; color: #fff; border: 1px solid #77608a; padding: 4px 10px; cursor: pointer; border-radius: 3px; }
+    button.p:hover { background: #3c2c46; }
+    button.p.playing { background: #ff4fa8; border-color: #ff4fa8; }
+    button.p.no { text-decoration: line-through; color: #ff8a9a; border-color: #ff4f6a; opacity: 0.8; }
+    button.p.pick { background: #2d6a3a; border-color: #8fdc9a; }
+    button.t { font: 12px "Microsoft YaHei", sans-serif; background: none; color: #aaa; border: 1px dashed #666; padding: 3px 8px; cursor: pointer; }
+    button.t.on { color: #ff8a9a; border-color: #ff4f6a; border-style: solid; }
+    input.note { font: 13px "Microsoft YaHei", sans-serif; background: #000; color: #fff; border: 1px solid #444; padding: 3px 8px; flex: 1; min-width: 200px; }
+    .cand { display: flex; gap: 8px; align-items: center; margin: 3px 0; flex-wrap: wrap; }
+    .cand .tag { font-size: 12px; color: #9ad; }
+    .cand.cur .tag { color: #8fdc9a; }
+    .vol { display: flex; gap: 6px; align-items: center; color: #bbb; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>声音试听</h1>
+    <span class="tabs"><button data-tab="bgm">BGM</button><button data-tab="sfx">音效</button><button data-tab="voice">台词</button></span>
+    <input id="q" placeholder="筛选（名字 / 用在哪）" />
+    <span class="vol">音量 <input id="vol" type="range" min="0" max="1" step="0.05" value="0.8" /></span>
+    <span class="saved" id="saved"></span>
+  </header>
+  <main id="main"></main>
+  <script type="module" src="/src/audition.js"></script>
+</body>
+</html>

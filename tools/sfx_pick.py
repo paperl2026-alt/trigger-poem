@@ -54,8 +54,9 @@ def score(kind, sr, x):
     attack = float((np.argmax(e > -6) - on[0]) * 0.01)
     rms = 20 * np.log10(np.sqrt((x ** 2).mean()) + 1e-9); pk = 20 * np.log10(np.abs(x).max() + 1e-9); crest = pk - rms
     ends_inside = tail < L - 0.12
-    # (a hit that never decays - its envelope's median within 12 dB of its peak - is the generator's noise texture: never picked)
-    if kind in ("hit", "multi") and float(np.median(e)) > -12: return -1e6, dict(start=round(start, 2), floor=round(float(np.median(e)), 1), noise=True)
+    # (a hit that never decays and never ends - its envelope's median within 12 dB of its peak, sounding to the file's end - is the
+    # generator's noise texture: never picked. A shriek is loud most of the way too, but it ends inside the file)
+    if kind in ("hit", "multi") and float(np.median(e)) > -12 and tail >= L - 0.12: return -1e6, dict(start=round(start, 2), floor=round(float(np.median(e)), 1), noise=True)
     if kind == "hit":
         s = crest - gaps * 6 - start * 12 - attack * 40 - max(0.0, floor + 18) * 1.5 + (6 if ends_inside else -8)
     elif kind == "multi":
@@ -94,9 +95,12 @@ def main():
     args = [a for a in sys.argv[1:] if not a.startswith("--")]; dry = "--dry" in sys.argv
     S = mod(args[0]).SFX; keys = args[1:] or list(S)
     OUT.mkdir(parents=True, exist_ok=True)
-    D = json.loads(SOUNDS.read_text(encoding="utf-8")); report = {}
+    D = json.loads(SOUNDS.read_text(encoding="utf-8"))
+    rp = BASE / "_look" / "pick_report.json"; report = json.loads(rp.read_text(encoding="utf-8")) if rp.exists() else {}
     for key in keys:
         s = S[key]; kind = s["kind"]; files = sorted((BASE / key).glob("*.wav"))
+        rj = BASE / key / "rejected.json"   # (the versions the user turned down on the listening page: tools/audition_apply.py)
+        if rj.exists(): no = set(json.loads(rj.read_text(encoding="utf-8"))); files = [f for f in files if f.stem not in no]
         if not files: print("no files", key); continue
         cand = []
         for p in files:
@@ -114,11 +118,11 @@ def main():
         look.sheet(f"{key} ({kind}) kept {len(keep)}/{len(cand)}", rows, BASE / "_look" / f"pick_{key}.png")
         if not dry:
             e = D["sfx"].setdefault(key, {})
-            e.update({"when": s["when"], "want": s["want"], "src": "ai", "files": out})
+            e.update({"when": s["when"], "want": s["want"], "src": "ai", "files": out, "from": [c[1].stem for c in keep]})
             e.setdefault("vol", 0.8)
             if kind == "loop": e["loop"] = True
         print(key, kind, "kept", len(keep), "of", len(cand), "best", round(keep[0][0], 1))
-    (BASE / "_look" / "pick_report.json").write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
+    rp.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     if not dry:
         SOUNDS.write_text(json.dumps(D, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(SOUNDS)], check=True, stdin=subprocess.DEVNULL)

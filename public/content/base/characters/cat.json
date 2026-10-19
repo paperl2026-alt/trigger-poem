@@ -17,6 +17,11 @@
       "en": "Spirit Paw",
       "ja": "霊能ネコの手"
     },
+    "revive": {
+      "zh": "再临!",
+      "en": "RE:ADVENT!",
+      "ja": "再臨!"
+    },
     "blurb": {
       "zh": "鬼手射出六字真言：单发重、杂鱼几发就倒；连续打同一目标伤害递增，硬直长。",
       "en": "The demon hand fires mantra syllables: heavy hits that ramp up on the same target, long stagger.",

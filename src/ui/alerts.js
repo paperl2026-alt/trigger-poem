@@ -100,7 +100,8 @@ class Girl {
     this.dark.visible = this.cont.visible = this.num.m.visible = down;
     if (down) {
       this.dark.position.set(hcx, H / 2, 0); this.dark.scale.set(hw, H, 1); this.dark.material.opacity = 0.42 + 0.06 * Math.sin(t * 4);
-      const ck = this.who === 'pink' ? 'ui/alert_continue_p5' : 'ui/alert_continue_chrome';
+      // her own word (DESIGN「阵亡」: the cat girl 再临, the twin-tail girl 重生), the old CONTINUE? if the picture is missing
+      const ck = tex[`ui/alert_revive_${this.who}`] ? `ui/alert_revive_${this.who}` : this.who === 'pink' ? 'ui/alert_continue_p5' : 'ui/alert_continue_chrome';
       this.cont.material.uniforms.map.value = tex[ck] || null; this.cont.visible = !!tex[ck];
       size(this.cont, ck, Math.min(hw * 0.7, H * 0.7)); this.cont.position.set(hcx, H * 0.64, 0); this.cont.rotation.z = -0.05;
       this.cont.material.uniforms.a.value = (t * 2) % 1 < 0.75 ? 1 : 0.35; this.cont.material.uniforms.time.value = t;

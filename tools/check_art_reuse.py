@@ -41,9 +41,10 @@ def chars():
         walk(json.loads(f.read_text(encoding="utf-8")), f.stem)
     man = json.loads((BASE / "assets" / "manifest.json").read_text())
     for f in sorted((BASE / "characters").glob("*.json")):
-        def keys(o):
+        def keys(o):   # (not a rig's weight maps, "w": flat grey masks, no drawing in them; they matched anything)
             if isinstance(o, dict):
-                for v in o.values(): yield from keys(v)
+                for kk, v in o.items():
+                    if kk != "w": yield from keys(v)
             elif isinstance(o, list):
                 for v in o: yield from keys(v)
             elif isinstance(o, str) and o in man and man[o].get("src", "").endswith((".webp", ".png")):

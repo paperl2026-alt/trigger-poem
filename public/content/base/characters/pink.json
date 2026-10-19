@@ -17,6 +17,11 @@
       "en": "Purge Rifle",
       "ja": "物理浄化"
     },
+    "revive": {
+      "zh": "重生!",
+      "en": "REBIRTH!",
+      "ja": "再生!"
+    },
     "blurb": {
       "zh": "射速快、弹匣大、子弹穿透。一直打同一个敌人会不断叠硬直。",
       "en": "Fast, huge magazine, piercing rounds. Keep firing on one foe to stack stagger.",

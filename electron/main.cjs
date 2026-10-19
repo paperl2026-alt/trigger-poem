@@ -61,8 +61,10 @@ app.whenReady().then(() => {
       try { list = fs.readdirSync(MODS).filter((d) => fs.existsSync(path.join(MODS, d, 'pack.json'))); } catch (e) { /* no mods folder */ }
       return new Response(JSON.stringify(list), { headers: { 'content-type': 'application/json', 'cache-control': 'no-store' } });
     }
-    const root = p.startsWith('/mods/') ? MODS : DIST;
-    const file = path.normalize(path.join(root, p.startsWith('/mods/') ? p.slice(5) : p));
+    // (the listening page, sound.html, plays the generated versions from art/raw: only when running from the project, never packaged)
+    const rawDir = !app.isPackaged && p.startsWith('/raw/') ? path.join(__dirname, '..', 'art', 'raw') : null;
+    const root = rawDir || (p.startsWith('/mods/') ? MODS : DIST);
+    const file = path.normalize(path.join(root, rawDir ? p.slice(4) : p.startsWith('/mods/') ? p.slice(5) : p));
     if (!file.startsWith(root)) return new Response('forbidden', { status: 403 });
     try {
       const data = await fs.promises.readFile(file);

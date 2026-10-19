@@ -74,6 +74,7 @@ export function showResults(st, onDone, onRetry) {
   const right = [
     ln(t(st.win ? 'clearReward' : 'lossReward'), `+${st.base}`), st.first ? ln(t('firstClear'), `+${st.first}`) : '', st.bonus ? ln(t('maxBonus'), `+${st.bonus}`) : '',
     ...(st.mulBy || []).map((m) => ln(tr(C.items[m.id].name), `×${m.dd.toFixed(2)}`)),
+    st.deathK < 1 ? ln(t('deathCut').replace('{n}', st.deaths), `×${st.deathK.toFixed(1)}`, 'cut') : '',
   ].filter(Boolean);
   const L = left.filter(Boolean), rows = [];
   for (let i = 0; i < Math.max(L.length, right.length); i++) rows.push(L[i] || '<div></div>', right[i] || '<div></div>');

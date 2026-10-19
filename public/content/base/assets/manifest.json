@@ -2487,6 +2487,16 @@
   "src": "assets/cover/vault_rd.png",
   "w": 512
  },
+ "down/cat": {
+  "h": 900,
+  "src": "assets/down/cat.webp",
+  "w": 1000
+ },
+ "down/pink": {
+  "h": 753,
+  "src": "assets/down/pink.webp",
+  "w": 1000
+ },
  "enemy/armor_b_bite": {
   "anchor": "bottom",
   "figH": 0.9513,
@@ -18904,7 +18914,7 @@
   "w": 320
  },
  "fx/gl2_catbrush_u4ee4": {
-  "h": 136,
+  "h": 305,
   "src": "assets/fx/gl2_catbrush_u4ee4.webp",
   "w": 320
  },
@@ -18994,7 +19004,7 @@
   "w": 320
  },
  "fx/gl2_catbrush_u5982": {
-  "h": 101,
+  "h": 284,
   "src": "assets/fx/gl2_catbrush_u5982.webp",
   "w": 320
  },
@@ -19014,9 +19024,9 @@
   "w": 320
  },
  "fx/gl2_catbrush_u5f8b": {
-  "h": 115,
+  "h": 320,
   "src": "assets/fx/gl2_catbrush_u5f8b.webp",
-  "w": 320
+  "w": 316
  },
  "fx/gl2_catbrush_u6025": {
   "h": 284,
@@ -19179,7 +19189,7 @@
   "w": 320
  },
  "fx/gl2_seal_u4ee4": {
-  "h": 126,
+  "h": 314,
   "src": "assets/fx/gl2_seal_u4ee4.webp",
   "w": 320
  },
@@ -19269,7 +19279,7 @@
   "w": 315
  },
  "fx/gl2_seal_u5982": {
-  "h": 126,
+  "h": 313,
   "src": "assets/fx/gl2_seal_u5982.webp",
   "w": 320
  },
@@ -19289,7 +19299,7 @@
   "w": 319
  },
  "fx/gl2_seal_u5f8b": {
-  "h": 126,
+  "h": 314,
   "src": "assets/fx/gl2_seal_u5f8b.webp",
   "w": 320
  },
@@ -19454,7 +19464,7 @@
   "w": 320
  },
  "fx/gl2_sigil_u4ee4": {
-  "h": 216,
+  "h": 313,
   "src": "assets/fx/gl2_sigil_u4ee4.webp",
   "w": 320
  },
@@ -19544,9 +19554,9 @@
   "w": 320
  },
  "fx/gl2_sigil_u5982": {
-  "h": 113,
+  "h": 320,
   "src": "assets/fx/gl2_sigil_u5982.webp",
-  "w": 320
+  "w": 310
  },
  "fx/gl2_sigil_u5de8": {
   "h": 320,
@@ -19564,9 +19574,9 @@
   "w": 320
  },
  "fx/gl2_sigil_u5f8b": {
-  "h": 114,
+  "h": 320,
   "src": "assets/fx/gl2_sigil_u5f8b.webp",
-  "w": 320
+  "w": 311
  },
  "fx/gl2_sigil_u6025": {
   "h": 320,
@@ -19769,9 +19779,9 @@
   "w": 320
  },
  "fx/gl_sharp_u4ee4": {
-  "h": 152,
+  "h": 320,
   "src": "assets/fx/gl_sharp_u4ee4.webp",
-  "w": 320
+  "w": 319
  },
  "fx/gl_sharp_u4f0f": {
   "h": 320,
@@ -19829,7 +19839,7 @@
   "w": 318
  },
  "fx/gl_sharp_u5982": {
-  "h": 123,
+  "h": 306,
   "src": "assets/fx/gl_sharp_u5982.webp",
   "w": 320
  },
@@ -19849,9 +19859,9 @@
   "w": 311
  },
  "fx/gl_sharp_u5f8b": {
-  "h": 119,
+  "h": 320,
   "src": "assets/fx/gl_sharp_u5f8b.webp",
-  "w": 320
+  "w": 315
  },
  "fx/gl_sharp_u6025": {
   "h": 320,
@@ -22677,6 +22687,16 @@
   "h": 270,
   "src": "assets/ui/alert_reload_p5.webp",
   "w": 549
+ },
+ "ui/alert_revive_cat": {
+  "h": 492,
+  "src": "assets/ui/alert_revive_cat.webp",
+  "w": 900
+ },
+ "ui/alert_revive_pink": {
+  "h": 643,
+  "src": "assets/ui/alert_revive_pink.webp",
+  "w": 900
  },
  "ui/bell": {
   "dom": true,

@@ -122,7 +122,8 @@
     "itemLv": { "zh": "Lv", "en": "Lv", "ja": "Lv" },
     "noRecord": { "zh": "--:--", "en": "--:--", "ja": "--:--" },
     "loreTabs": { "zh": "说明|来历|低语", "en": "ABOUT|ORIGIN|WHISPER", "ja": "説明|由来|囁き" },
-    "lossReward": { "zh": "残局报酬", "en": "SCRAP PAY", "ja": "敗走手当" }
+    "lossReward": { "zh": "残局报酬", "en": "SCRAP PAY", "ja": "敗走手当" },
+    "deathCut": { "zh": "阵亡 {n} 次", "en": "DOWNED ×{n}", "ja": "戦闘不能 {n} 回" }
   },
   "gameTitle": {
     "zh": { "small": "相对希望的少女", "big": "扣击诗" },
