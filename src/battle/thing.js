@@ -16,7 +16,7 @@ import { paperMesh, DamageMap, attachDamage, setRelief } from '../core/paper.js'
 import { Ease } from '../core/tween.js';
 import { sfx } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
-import { Actor } from './enemies.js';
+import { Actor, Enemy } from './enemies.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
 
@@ -72,46 +72,88 @@ export class TheThing extends Actor {
     this.shadowM.scale.setScalar(this.w * 0.6);
   }
 
-  // ---------------------------------------------------------------- the offering (bosses.json "ritual"; docs/DESIGN.md 第 1 话: in Sweet Home
-  // the lady is laid to rest by showing her the photo, then the diary, then her child's coffin). In her last form the things float up in
-  // front of her (src/battle/gimmick.js); shot in the right order each one flies into her and hurts her badly, a wrong one bounces back.
+  // ---------------------------------------------------------------- her child's things (bosses.json "ritual"; docs/DESIGN.md 第 1 话 10;
+  // in Sweet Home the lady is laid to rest by showing her the photo, then the diary, then her child's coffin). In her last form the three
+  // come out and swing back and forth before her, each on its own beat, and now and then one of them swings in front of her core and
+  // takes the shots meant for her. Nothing hurts them. Each counts down, at an uneven pace, to a blow of its own at one of the girls (the
+  // red "shoot it" ring: hiding does not help); a shot knocks it back and starts its count again, and she cries out (they are her child's).
+  // Her core is open in the gaps between them. When her strength is gone she sinks down and the three hang still in a row: shown to her
+  // in the right order (her words tell which) each one flies into her arms; with the last her child comes back to her and she is at rest.
+  // A wrong one floats back.
   ritual() {
-    const g = this.game, R = this.def.ritual, z = this.cam.z - (R.dist ?? 4.2);
-    this.ritualNext = 0;
-    this.ritualObjs = R.items.map((k, i) => {
-      const gm = new Gimmick(g, { id: `ritual${i}`, k, on: 'stand', x: this.cam.x + (i - (R.items.length - 1) / 2) * 2.4, y: 1.7 + (i % 2) * 0.5, z, w: 0.85,
-        station: g.stationId, do: [{ ritual: i }] });
+    const g = this.game, R = this.def.ritual, P = this.root.position;
+    this.ritualNext = 0; this.stuck = 0; this.talkT = 0;
+    this.keeps = R.items.map((k, i) => {
+      const gm = new Keepsake(g, this, i, { id: `ritual${i}`, k, on: 'air', x: P.x, y: this.S.h * 0.5, z: P.z, w: R.w ?? 1.3, station: g.stationId });
       gm.inner.scale.setScalar(0.01); g.tweens.to(gm.inner.scale, { x: 1, y: 1, z: 1 }, 0.6, { delay: i * 0.35, ease: Ease.outBack });
       g.actors.push(gm); return gm;
     });
+    this.guardT = rr(R.guard.every);
     sfx.clear(); g.post.flash(0.3, 0xfff0c8);
+    this.say('keep');
+  }
+  // one of them is shot: nothing happens to it but a knock (its count starts again) and her cry; once she is down, it is shown to her
+  keepHit(k, info) {
+    const g = this.game, R = this.def.ritual;
+    info.dealt = 0; k.flash = 1;
+    const p = k.uvToWorld(info.uv.u, info.uv.v);
+    g.fx.star(p, 0.6, COL.white); g.fx.confetti(p, 3, 0.9, [COL.white, COL.bone]);
+    if ((this.tickT || 0) <= 0) { sfx.clang(); this.tickT = 0.18; }
+    if (this.grief) { this.offer(k.i, k); return; }
+    k.knock();
+    if (this.talkT <= 0) { this.talkT = R.talkGap ?? 7; this.say(R.lines[k.i]); }
+  }
+  // her strength is gone (only once her child's things are out): she sinks down, and they hang still in a row before her
+  grieve() {
+    const g = this.game, P = this.root.position;
+    this.grief = true; this.seq++; this.endWindup(); this.markCore(false); this.armor = false; this.hp = 0;
+    g.clearProjectiles();
+    for (const a of g.actors) if (a instanceof Enemy && a.alive) a.die('mantra', { uv: { u: 0.5, v: 0.5 } });   // (what she called up goes with her)
+    this.state = 'hurt'; this.play('hurt'); this.flash = 1;
+    sfx.roar(); g.post.flash(0.5, 0xffffff); g.post.shake(1);
+    g.etw.kill(P); g.tweens.to(P, { y: -this.S.h * 0.15 }, 1.4, { ease: Ease.outQuad });
+    for (const k of this.keeps) k.still();
+    this.stuck = 0; this.say('kneel');
   }
   offer(i, gm) {
-    const g = this.game;
-    if (!this.alive) return;
-    if (i !== this.ritualNext) {   // not yet: it shakes and floats back
-      sfx.miss(); gm.spent = false; gm.hits = 0; gm.u.outlineOn.value = 1;
+    const g = this.game, R = this.def.ritual;
+    if (!this.alive || gm.mode !== 'still') return;
+    if (i !== this.ritualNext) {   // not that one yet: it shakes and floats back
+      sfx.miss(); if (this.talkT <= 0) { this.talkT = 3; this.say('wrong'); }
       g.tweens.run(0.4, (e) => { gm.inner.position.x = Math.sin(e * 40) * 0.08 * (1 - e); });
       return;
     }
-    this.ritualNext++;
-    const P = gm.root.position, to = this.center();
-    g.tweens.to(P, { x: to.x, y: to.y, z: to.z + 0.3 }, 0.7, { ease: Ease.inQuad, onDone: () => {
+    const n = ++this.ritualNext; this.stuck = 0;
+    gm.mode = 'offered'; gm.u.outlineOn.value = 0;
+    const P = gm.root.position, to = this.uvToWorld(0.5, 0.55);   // (into her arms)
+    g.tweens.to(P, { x: to.x, y: to.y, z: to.z + 0.3 }, 0.9, { ease: Ease.inOutQuad, onDone: () => {
       gm.act({ gone: true });
       if (!this.alive) return;
-      this.flash = 1; g.post.flash(0.6, 0xffffff); g.post.shake(0.8); sfx.slam();
-      g.fx.confetti(to, 30, 3, [COL.pink, COL.white]);
-      this.hp -= this.maxHp * (this.def.ritual.hit ?? 0.12);
-      if (this.ritualNext >= this.def.ritual.items.length) this.hp = Math.min(this.hp, 0);
-      if (this.hp <= 0) this.die();
+      this.flash = 1; g.post.flash(0.4, 0xfff0c8); sfx.clear();
+      g.fx.confetti(to, 24, 2.4, [COL.pink, COL.white]);
+      if (n < R.items.length) { this.talkT = 0; this.say(`offer${n}`); return; }
+      this.rest();
     } });
   }
+  // the last one: a small light rises from where the coffin went into her arms - her child back with her - and she is at rest
+  rest() {
+    const g = this.game, to = this.uvToWorld(0.5, 0.6), from = to.clone().setY(0.3), q = new THREE.Vector3();
+    this.seq++; this.say('rest');
+    let k = 0;
+    g.tweens.run(2.6, (e) => {
+      if (e * 30 < k) return; k++;
+      q.lerpVectors(from, to, e); q.x += Math.sin(e * 9) * 0.25;
+      g.fx.star(q, 0.9, COL.white); if (k % 3 === 0) g.fx.confetti(q, 3, 0.5, [COL.white, COL.pink]);
+    }, { onDone: () => { if (this.alive) this.die(true); } });
+  }
+  say(kind) { this.game.hud.gl.stickers.boss?.(this, kind); }
 
   // ---------------------------------------------------------------- hits
   // DESIGN「Boss」(2026-10-18): only its core takes damage (each form's "core": [u, v] on its drawing, radius r of its height; a ring
   // marks it); everything else glances off. While it attacks nothing gets through; its wind-up is the opening (and hits on the core
   // there can break a lunge off)
-  weakNow() { return !this.mutating && this.state !== 'attack'; }
+  hitMeshes() { return this.alive && !this.grief ? [this.mesh] : []; }   // (down and grieving: not a target any more, only her child's things)
+  weakNow() { return !this.mutating && !this.grief && this.state !== 'attack'; }
   onCore(uv) {
     const c = this.S.core; if (!c) return true;
     return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11);
@@ -124,6 +166,7 @@ export class TheThing extends Actor {
   }
   hit(info) {
     if (!this.alive || this.mutating) return;
+    if (this.grief) { this.glance(info); return; }
     const D = this.def;
     if (!this.weakNow() || !this.onCore(info.uv)) { this.glance(info); return; }
     const dmg = info.dmg * (D.coreMul ?? 1);
@@ -135,8 +178,9 @@ export class TheThing extends Actor {
     // a lunge being gathered breaks off when its core is hit enough
     if (this.state === 'windup' && this.move === 'lunge' && info.stagger) { this.poise += info.stagger; if (this.poise >= D.lunge.poise) this.interrupt(); }
     this.hp -= dmg;
+    if (D.ritual && !this.keeps) this.hp = Math.max(this.hp, 1);   // (her child's things come out before her end)
     this.game.onHit(this, info.kind, info);
-    if (this.hp <= 0) { this.die(); return; }
+    if (this.hp <= 0) { if (this.keeps) this.grieve(); else this.die(); return; }
     // the next mutation
     const next = this.def.stages.findIndex((s, i) => i > this.stage && this.hp <= this.maxHp * s.at);
     if (next > this.stage && !this.mutating) this.mutate(next);
@@ -176,6 +220,7 @@ export class TheThing extends Actor {
     this.u.outlineCol.value.setRGB(1, 1, 1);
     this.tickT = (this.tickT || 0) - dt;
     this.markCore(wk && this.S.core, t);
+    if (this.keeps) this.keepTick(dt);
     // breathing
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
     if (this.lock) {
@@ -184,11 +229,29 @@ export class TheThing extends Actor {
       this.timer -= dt;
       return;
     }
-    if (this.busy || this.mutating || this.state === 'hurt') return;
+    if (this.busy || this.mutating || this.grief || this.state === 'hurt') return;
     this.timer -= dt;
     if (this.timer > 0) return;
     const P2 = this.S.pattern, mv = P2[this.pi++ % P2.length];
     this.move = mv; this[mv]();
+  }
+
+  // her child's things: now and then one of them goes in front of her core for a while
+  keepTick(dt) {
+    const R = this.def.ritual;
+    this.talkT -= dt;
+    if (this.grief) {   // stuck on which to show her: she says it again
+      this.stuck += dt;
+      if (this.stuck > (R.hint ?? 9) && this.talkT <= 0) { this.stuck = 0; this.talkT = 4; this.say(this.ritualNext ? `offer${this.ritualNext}` : 'kneel'); }
+      return;
+    }
+    if (this.mutating || !this.game.combat) return;
+    this.guardT -= dt;
+    if (this.guardT > 0) return;
+    const on = this.keeps.find((k) => k.mode === 'guard'), free = this.keeps.filter((k) => k.mode === 'swing');
+    if (on) { on.mode = 'swing'; this.guardT = rr(R.guard.every); }
+    else if (free.length) { free[Math.floor(Math.random() * free.length)].mode = 'guard'; this.guardT = rr(R.guard.time); }
+    else this.guardT = 0.5;
   }
 
   // ---------------------------------------------------------------- moves
@@ -292,13 +355,12 @@ export class TheThing extends Actor {
   }
 
   // ---------------------------------------------------------------- purified
-  die() {
+  die(calm) {   // (calm: laid to rest - her child back with her - not torn apart)
     this.alive = false; this.seq++; this.endWindup(); this.markCore(false);
-    for (const o of this.ritualObjs || []) if (o.alive) o.act({ gone: true });
+    for (const o of this.keeps || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
-    sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6);
-    this.play('hurt');
-    for (let i = 0; i < 10; i++) g.tweens.wait(i * 0.2, () => { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.2, 0.9)); g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
+    if (calm) { sfx.clear(); g.post.flash(0.8, 0xfff6e8); } else { sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6); this.play('hurt'); }
+    for (let i = 0; i < 10; i++) g.tweens.wait(i * 0.2, () => { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.2, 0.9)); if (calm) { g.fx.confetti(q, 14, 1.5, [COL.white, COL.pink]); g.fx.star(q, 2, COL.white); return; } g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
     g.tweens.wait(1.2, () => {
       sfx.burnOut(0);
       this.u.dOrigin.value.set(0.5, 0.6);
@@ -307,3 +369,90 @@ export class TheThing extends Actor {
     g.onBossDead(this);
   }
 }
+
+// one of her child's things (TheThing.ritual): swings before her, guards her core now and then, counts down to its blow; can't be hurt
+class Keepsake extends Gimmick {
+  constructor(game, boss, i, g) {
+    super(game, g);
+    const R = boss.def.ritual, S = R.swing;
+    this.boss = boss; this.i = i; this.billboard = true; this.mode = 'swing'; this.q = 0; this.knockT = 0;
+    this.ph = i * 2.1 + rnd(0, 1); this.sp = rr(S.speed); this.amp = rr(S.x); this.yk = S.y[i % S.y.length];
+    this.to = this.root.position.clone(); this.rate = 1; this.rateT = 0;
+    this.restart(rr(S.first ?? R.fuse));
+  }
+  live() { return this.alive && this.game.combat && this.mode !== 'offered'; }
+  hit(info) { if (this.live()) this.boss.keepHit(this, info); }
+  // a new count to its next blow, at one of the girls
+  restart(s) {
+    const g = this.game;
+    this.fuse = this.fuse0 = s ?? rr(this.boss.def.ritual.fuse);
+    this.slot = g.pickTarget(this.root.position.x - g.world.camPos.x);
+    if (this.ring) this.ring.slot = this.slot;
+  }
+  ringOff() { if (this.ring) { this.ring.remove(); this.ring = null; } }
+  // shot: knocked back a little, spinning, and its count starts again (a blow on its way is stopped)
+  knock() {
+    const g = this.game;
+    if (this.mode === 'strike') { this.q++; g.tweens.kill(this.root.position); this.mode = 'swing'; }
+    this.restart();
+    if (this.knockT > 0) return;
+    this.knockT = 0.45;
+    g.tweens.run(0.45, (e) => { this.inner.rotation.y = Math.sin(e * Math.PI * 2) * 0.7 * (1 - e); this.inner.position.z = -Math.sin(e * Math.PI) * 0.6; },
+      { onDone: () => { this.inner.rotation.y = 0; this.inner.position.z = 0; } });
+  }
+  // she is down: it stops where it is and waits to be shown to her
+  still() { this.q++; this.game.tweens.kill(this.root.position); this.mode = 'still'; this.ringOff(); this.flash = 1; }
+  // its count ran out: a shiver, then it flies at that girl and strikes (bosses.json ritual.strike), and swings back to its place
+  strike() {
+    const g = this.game, B = this.boss, A = B.def.ritual.strike[this.i] || B.def.ritual.strike[0], P = this.root.position, q = ++this.q;
+    this.mode = 'strike'; this.ringOff();
+    const c = g.world.camPos, to = new THREE.Vector3(c.x + (this.slot ? 1 : -1) * 1.1, 1.5, c.z - 2.4);
+    g.tweens.run(0.35, (e) => { this.inner.position.x = Math.sin(e * 50) * 0.07; }, { onDone: () => {
+      this.inner.position.x = 0;
+      if (q !== this.q || !this.alive) return;
+      g.tweens.to(P, { x: to.x, y: to.y, z: to.z }, 0.32, { ease: Ease.inQuad, onDone: () => {
+        if (q !== this.q || !this.alive) return;
+        const p = this.center();
+        if (A.flash) g.post.flash(0.7, 0xffffff);
+        if (sfx[A.sfx]) sfx[A.sfx](); else sfx.slam();
+        g.post.shake(A.all ? 1.2 : 0.8); g.fx.confetti(p, 18, 2.5, A.all ? [COL.bone, COL.hot] : [COL.paper, COL.pink]);
+        g.playerAttacked({ kind: 'shot', dmg: A.dmg, from: this, slot: A.all ? -1 : this.slot });
+        this.mode = 'back';
+        g.tweens.to(P, { x: this.to.x, y: this.to.y, z: this.to.z }, 0.7, { ease: Ease.outQuad, onDone: () => { if (q === this.q) { this.mode = 'swing'; this.restart(); } } });
+      } });
+    } });
+  }
+  update(dt, t) {
+    if (!this.alive) return;
+    this.baseUpdate(dt, t);
+    this.knockT -= dt;
+    const g = this.game, B = this.boss, R = B.def.ritual, P = this.root.position;
+    if (this.mode === 'strike' || this.mode === 'back' || this.mode === 'offered') return;
+    // toward the camera from her: the things hang between her and the girls
+    const bp = B.root.position, cam = g.world.camera.position, dx = cam.x - bp.x, dz = cam.z - bp.z, dl = Math.hypot(dx, dz) || 1, fx = dx / dl, fz = dz / dl;
+    this.ph += dt * this.sp;
+    if (this.mode === 'still') {   // in a row before her, waiting to be shown to her (the one she is waiting for glows once it takes long)
+      const off = (this.i - (B.keeps.length - 1) / 2) * (R.rowGap ?? 2);
+      this.to.set(bp.x + fx * R.near * 1.4 - fz * off, (R.rowY ?? 2) + Math.sin(t * 1.5 + this.i) * 0.08, bp.z + fz * R.near * 1.4 + fx * off);
+      if (B.ritualNext === this.i && B.stuck > (R.hint ?? 9) * 0.5) this.flash = Math.max(this.flash, 0.35 + 0.35 * Math.sin(t * 6));
+    } else if (this.mode === 'guard') {   // before her core, between it and the girls
+      const c = B.uvToWorld(B.S.core[0], B.S.core[1]);
+      this.to.set(c.x + fx * R.near, c.y, c.z + fz * R.near);
+    } else {   // swinging back and forth before her, a lazy figure of eight
+      const s = Math.sin(this.ph);
+      this.to.set(bp.x + fx * R.near - fz * s * this.amp, B.S.h * this.yk + Math.sin(this.ph * 2) * 0.35, bp.z + fz * R.near + fx * s * this.amp);
+    }
+    P.lerp(this.to, 1 - Math.exp(-dt * (this.mode === 'guard' ? 7 : 4)));
+    this.inner.rotation.z = Math.cos(this.ph) * 0.18;   // (hanging, like a pendulum)
+    // its count, at an uneven pace (the pace changes every second or so)
+    if (this.mode === 'still' || !g.combat || B.mutating || B.grief || !B.alive) { this.ringOff(); return; }
+    this.rateT -= dt; if (this.rateT <= 0) { this.rateT = rnd(0.7, 1.8); this.rate = rnd(R.pace[0], R.pace[1]); }
+    this.fuse -= dt * this.rate;
+    if (this.fuse <= 0) { this.strike(); return; }
+    if (!this.ring) this.ring = g.fx.lock('shot', this.slot);
+    const wc = this.center(), c = g.world.project(wc), b = this.screenBox();
+    this.ring.set(c.x, g.H - c.y, Math.max(22, (b.y1 - b.y0) * 0.5), 1 - this.fuse / this.fuse0, t, this.fuse, b, wc);
+  }
+  dispose() { this.ringOff(); super.dispose(); }
+}
+

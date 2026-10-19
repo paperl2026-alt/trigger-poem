@@ -126,10 +126,21 @@
     },
     "ritual": {
       "items": ["ep1/photo", "ep1/diary", "ep1/coffin"],
-      "hit": 0.12,
-      "dist": 4.2,
-      "_doc": "最后一个形态：照片 → 日记 → 小棺材按顺序打中（原作的解法），每个对的扣 hit 比例的血，三个都对就安息"
+      "lines": ["photo", "diary", "coffin"],
+      "w": 1.6,
+      "near": 1.8,
+      "swing": { "x": [1.8, 2.8], "speed": [0.7, 1.1], "y": [0.72, 0.5, 0.3], "first": [2.5, 5] },
+      "fuse": [4.5, 7.5],
+      "pace": [0.55, 1.6],
+      "guard": { "every": [3.5, 6.5], "time": [2.2, 3.4] },
+      "strike": [{ "dmg": 14, "sfx": "shutter", "flash": true }, { "dmg": 14, "sfx": "tear" }, { "dmg": 10, "sfx": "slam", "all": true }],
+      "talkGap": 7,
+      "hint": 9,
+      "rowGap": 2.0,
+      "rowY": 2.0,
+      "_doc": "最后一个形态身边出来照片、日记、小棺材（docs/DESIGN.md 第 1 话 10，src/battle/thing.js ritual / Keepsake）：items 图，lines 打中时她说的台词种类（text/stickers.json bosses.madame），w 宽（米），near 挂在她身前多远；swing 来回晃（x 左右幅度、speed 快慢、y 每件的高度占她身高的比例、first 第一次倒计时）；fuse 每次倒计时秒数，pace 走得忽快忽慢的倍率；guard 隔多久有一件挡到她核心前、挡多久；strike 每件倒计时走完的一击（dmg 伤害，躲也没用，all 打两个人）；talkGap 她两句台词至少隔几秒；她倒下后三件排成一排（rowGap 间距、rowY 高度），按顺序打中飞进她怀里，hint 秒没进展她再说一遍提示"
     },
-    "coreMul": 1
+    "coreMul": 1,
+    "tag": "MADAME"
   }
 }

@@ -101,7 +101,7 @@
             "license": "ACML 1.0",
             "licenseUrl": "https://github.com/Aivis-Project/ACML/blob/master/ACML-1.0.md",
             "source": "https://hub.aivis-project.com/aivm-models/a670e6b8-0852-45b2-8704-1bc9862f2fe6",
-            "use": "所有怪物的叫声，还有她的笑声和お蚕様的哀嚎（tools/monster_voice.py 合成后魔改：变调、卡顿、倒放回声、环形调制、声码器、失真；用户 2026-10-19：只要女声），sfx/ai/cry_*、sheLaugh、kaikoWail",
+            "use": "所有怪物的叫声和第 1 话 Boss 腐蜜夫人的台词（加幽灵处理），还有她的笑声和お蚕様的哀嚎（tools/monster_voice.py 合成后魔改：变调、卡顿、倒放回声、环形调制、声码器、失真；用户 2026-10-19：只要女声），sfx/ai/cry_*、sheLaugh、kaikoWail",
             "changes": "大幅变声、加效果、修剪、统一音量"
           }
         ]

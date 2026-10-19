@@ -1,7 +1,7 @@
 """The girls' voices with AivisSpeech (docs/TECH.md「声音」): a free voice-synthesis engine that runs on this computer (the official
 Windows zip unpacked in tools/aivis/app, not in git) with voice models from AivisHub. Settings per girl in content audio/sounds.json
-voices.<who> (model, read, say, credit); her lines are the Japanese ones in text/stickers.json. Clips are trimmed, peak-levelled and
-written as Ogg Opus with ffmpeg (tools/ffmpeg, not in git).
+voices.<who> (model, read, say, credit); her lines are the Japanese ones in text/stickers.json (a boss's: stickers.bosses.<who>, bent
+by voices.<who>.fx, e.g. "ghost"). Clips are trimmed, peak-levelled and written as Ogg Opus with ffmpeg (tools/ffmpeg, not in git).
 usage:
   python -I tools/voice_aivis.py start                            start the engine if it is not running; install the models sounds.json names
   python -I tools/voice_aivis.py read <who>                       how every line will be read (style, settings, kana), no sound files
@@ -12,7 +12,7 @@ usage:
                                                                   syllables "say", a style / speed / intonation or one per syllable, and
                                                                   "takes": the whole list said again in other styles) -> voice/<who>/g_<key>_<n>.ogg,
                                                                   trimmed like the lines (whole words with their tails), registered in grains.<key>.files"""
-import io, sys, json, time, wave, pathlib, subprocess, urllib.request, urllib.parse
+import io, sys, json, time, wave, zlib, pathlib, subprocess, importlib.util, urllib.request, urllib.parse
 import numpy as np
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -114,6 +114,22 @@ def tight(a, sr):   # a weapon syllable: no air before it, a short tail, a quick
     return a * (10 ** (-1 / 20) / max(1e-6, np.abs(a).max()))
 
 
+def bend(name, a, sr, key):   # a boss's voice bent a little (voices.<who>.fx), the words still clear (tools/monster_voice.py effects)
+    spec = importlib.util.spec_from_file_location("mv", ROOT / "tools" / "monster_voice.py"); MV = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(MV)
+    rng = np.random.default_rng(zlib.crc32(key.encode()))
+    if name == "ghost":   # a mother's ghost: a touch lower and slower, doubled a hair apart, a reversed whisper rising into it, a long cold room
+        y = MV.tape(a, -1.2)
+        y = y * 0.8 + MV.comb(y, sr, 21, 0.3) * 0.3
+        y = MV.rev_swell(y, sr, rng, 0.45)
+        n = int(1.6 * sr); ir = rng.standard_normal(n) * np.exp(-np.linspace(0, 7, n))
+        wet = MV.signal.fftconvolve(y, ir); wet = wet / (np.abs(wet).max() + 1e-9)
+        y = np.concatenate([y, np.zeros(len(wet) - len(y))]) + wet * 0.22 * np.abs(y).max()
+        f = int(0.3 * sr); y[-f:] *= np.linspace(1, 0, f)
+        return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
+    raise SystemExit(f"unknown fx {name}")
+
+
 def ffmpeg():
     f = sorted((ROOT / "tools" / "ffmpeg").glob("*/bin/ffmpeg.exe"))
     if not f: raise SystemExit("no ffmpeg: unzip an ffmpeg build into tools/ffmpeg")
@@ -133,7 +149,8 @@ def write(a, sr, out):
 
 def plan(who, only=()):   # (key, kind, n, written line, spoken text, read settings) for each line of <who>
     V = voices()[who]
-    lines = json.loads((PACK / "text" / "stickers.json").read_text(encoding="utf-8"))["stickers"]["heroines"][who]
+    S = json.loads((PACK / "text" / "stickers.json").read_text(encoding="utf-8"))["stickers"]
+    lines = S["heroines"].get(who) or S.get("bosses", {})[who]
     for kind, s in lines.items():
         for i, ln in enumerate(s["lines"]):
             key = f"{kind}_{i + 1}"
@@ -164,7 +181,9 @@ if __name__ == "__main__":
             sid = ids[h["style"]]
             x, sr = synth(query(text, sid, h), sid)
             rel = f"voice/{who}/{key}.ogg"
-            size = write(tidy(x, sr), sr, PACK / rel); total += size
+            y = tidy(x, sr)
+            if V.get("fx"): y = bend(V["fx"], y, sr, key)
+            size = write(y, sr, PACK / rel); total += size
             V["lines"][key] = rel
             print(f"{rel:<28} {h['style']:<6} {len(x) / sr:4.1f}s {size:>6} bytes  {line}", flush=True)
         order = [key for key, *_ in plan(who)]   # same order as the lines

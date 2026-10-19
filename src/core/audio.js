@@ -464,12 +464,17 @@ function talk(who, b, pr, pan) {
 }
 // a girl says the i-th line of a sticker kind (text/stickers.json) with its priority (stickers.js PRIO): true = said, false = not now
 // (someone else is talking / too soon), null = that line has no voice (yet)
-export function voice(who, kind, i, slot = 0, pr = 5) {
+export function voice(who, kind, i, slot = 0, pr = 5, pan) {
   const f = C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`];
   if (!ctx || !f) return null;
   const b = BUF.get(f);
   if (!b || b instanceof Promise) { if (b === undefined) load(f); return null; }
-  return talk(who, b, pr, slot ? 0.25 : -0.25);
+  return talk(who, b, pr, pan ?? (slot ? 0.25 : -0.25));
+}
+// how long that line is said (seconds; 0 = no voice / not loaded yet): a line's words stay up while it is said
+export function voiceLen(who, kind, i) {
+  const b = BUF.get(C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`]);
+  return b && !(b instanceof Promise) ? b.duration - (b.startAt || 0) : 0;
 }
 // her weapon's voice (sounds.json voices.<who>.grains, characters/*.json weapon.voice / active.voice): one syllable per shot at most
 // every V.every seconds, cut to V.len; each one cuts off her last (one mouth: 突突突…); seq = the i-th syllable (the mantra glyph her shot

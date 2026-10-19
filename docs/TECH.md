@@ -60,7 +60,7 @@
   - 引擎和 ffmpeg 不进 git，手动解压：官方 Windows zip 解到 `tools/aivis/app/`（GitHub Aivis-Project/AivisSpeech，官网下载按钮给的那个版本），BtbN 的 ffmpeg Windows 构建解到 `tools/ffmpeg/`。
   - `start`：引擎没开就在后台开（`run.exe --port 10101`，日志 `tools/aivis/engine.log`），并从 AivisHub 装上 sounds.json 写的模型（引擎第一次启动还会自己装官方默认模型 コハク、まお；模型在 `%APPDATA%\AivisSpeech-Engine\Models`）。
   - `read <角色>`：不出声音，列出每句用的风格和引擎实际的读法（假名）。汉字读错就在 `say` 里写假名。
-  - `lines <角色> [场合 | 场合_第几句 …]`：读 text/stickers.json 的日语台词，♡ ♪ 不念、空格当停顿、~ 当长音，按 `read` 设好风格、语速、语气浓淡；生成后裁掉首尾静音、峰值拉到 -1 dB，用 ffmpeg 转 Ogg Opus 48k，写到 `public/content/base/voice/<角色>/<场合>_<第几句>.ogg` 并登记进 `lines`。不写场合就整个重做。
+  - `lines <角色> [场合 | 场合_第几句 …]`：读 text/stickers.json 的日语台词（Boss 读 `bosses.<id>`，`voices.<id>.fx` 再加处理），♡ ♪ 不念、空格当停顿、~ 当长音，按 `read` 设好风格、语速、语气浓淡；生成后裁掉首尾静音、峰值拉到 -1 dB，用 ffmpeg 转 Ogg Opus 48k，写到 `public/content/base/voice/<角色>/<场合>_<第几句>.ogg` 并登记进 `lines`。不写场合就整个重做。
   - `say <角色> <风格> <输出> <文本>`：试一句。
   - `grains <角色>`：武器的音节（sounds.json `voices.<角色>.grains`：`say` 每个音节、`style` / `speed` / `intonation` 可以每个音节一个，`takes` 整串换几种语气再念几遍），和台词一样修剪（留自然的头和尾巴），写到 `voice/<角色>/g_<键>_<n>.ogg`。
   - 解码时 `level()` 裁开头静音只裁到第一个大于 0.003 的采样再往前留 20 ms（以前 0.01 / 4 ms，轻的辅音 ふ し ひ 被裁掉）。
@@ -264,6 +264,11 @@
 - 招式一次一个（`stages[].pattern`）：drift（换位置、喘口气）、volley（飞行物，红环）、lunge（蓄力扑过来，快打红环，能打断）、burst（长蓄力大招，快躲紫色环带）、summon（一种杂鱼）。
 - 蓄力和出招时弱点张开（描边变粉、伤害 ×weakMul），最后的核心阶段一直是弱点；血量到 `at` 时变异（抽搐、溅黏液、长成下一阶段，wreckAt 那一阶段把教学楼换成被压坏的那张），不插漫画。
 - 时间都走敌方时钟（`game.etw`）。
+- 腐蜜夫人最后一个形态的三样东西（`ritual` + `Keepsake`，数据 `bosses.json` madame.ritual，打法见 DESIGN 第 1 话 10）：
+  - `Keepsake` 是 Gimmick 的子类，挂在她身前（`near`），8 字形来回晃；`keepTick` 隔一阵派一样去挡核心（`guard`）。
+  - 每样有自己的倒计时 `fuse`，速度每一秒多变一次（`pace`）。走完 `strike`：抖一下，飞到那个人面前打 `playerAttacked kind: 'shot'`（躲没用），再飞回去。打中它 `knock`：重新倒计时，正在飞的一击也被打断。
+  - 血打空时有这三样就 `grieve`：她跪下、叫出来的杂鱼一起没了、她本身不再是目标（`hitMeshes` 空）；三样停成一排，`offer` 按顺序收。最后一样 `rest`：光飘进怀里，`die(true)` 安静地消散。
+- Boss 的台词：`stickers.boss(a, kind)`，文字在 text/stickers.json `bosses.<id>.<kind>`（id 是 bosses.json 的键）。语音是 sounds.json `voices.<id>`，`voice_aivis.py lines <id>` 生成（`fx: "ghost"` 加幽灵处理）。字幕框比两人的大，挂在她头边，语音多长就留多久。
 
 ## （旧）巨大化风纪委员（已删，2026-10-17 用户第七批推翻）
 - 曾经的做法，代码和素材已从内容包删掉（原图在 `art/raw/r42`），这里只留作历史：在操场打，她太大，屏幕里只有局部；三个形态各有自己的一套部件（`Part`：一个挂在锚点上的组，能显示不同样子，每种样子的几个版本出场时随机挑，受伤痕迹跨样子保留；画多宽、锚点在 `parts`）。

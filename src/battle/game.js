@@ -597,7 +597,7 @@ export class Game {
     this.clearActors();
     const def = C.bosses[id], B = BOSSES[def?.beh];
     if (!B) { console.warn('unknown boss', id); this.onBossDead(); return; }
-    this.boss = new B(this, def);
+    this.boss = new B(this, def); this.boss.id = id;   // (its lines: text/stickers.json bosses.<id>)
     this.actors.push(this.boss);
     playMusic('boss');
     this.hud.boss(tr(this.boss.name), 1);

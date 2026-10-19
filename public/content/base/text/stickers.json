@@ -1,5 +1,5 @@
 {
-  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。",
+  "_doc": "战斗里的气泡贴纸（docs/DESIGN.md「拟声词 / 卖萌贴纸」，src/ui/stickers.js）。stickers.heroines：每个角色（按角色 id）在各种战况下随机说的话，每条是 zh / en / ja；bubble 用哪一类气泡底图（cute 卖萌 / shout 喊叫）。stickers.monsters：每种怪（按 enemies.json 的 id）蓄力、攻击、挨打、死掉时的拟声词，default 是没写的怪用的。可以随便加句子，越多越不重复。台词要卖萌、妩媚、带点擦边（docs/DESIGN.md「台词」），不要一本正经地报状态；quit = 标题页鼠标停在「离开游戏」上，poke = 戳她，idle = 战斗里一阵子没说话时的无意义卖萌。日语那一句就是以后的语音（TTS）。 2026-10-18 用户第十三批：关卡里的台词都压成一个语气词 / 拟声词（必杀是一句短话），标题页的 quit / poke 照旧；地雷妹有「切」(ちぇっ)「mua」(ちゅっ♡)，猫娘的暴击是「呔」「喝」，定身是「定」「摄」。 start = 开始游戏 / 出发时、win = 结算、lose = 失败时说的一句（关卡外）。 第 2 话她的几种：sheSeen 她出现（她的主题响起）、runNow 倒跑开始、hush 躲着屏住气、trapHit 机关砸倒她、grabbed 被她抓住、bell 敲钟送她走（src/battle/chase.js say）。 stickers.bosses：Boss 的台词（按 bosses.json 的 id，src/ui/stickers.js boss），每种场合几句，日语那句配成她的语音（sounds.json voices.<id>）；madame：keep 三样东西出来、photo / diary / coffin 打中那一样、kneel 跪下、offer1 / offer2 献上第一 / 第二样之后（提示下一样）、wrong 打错顺序、rest 安息。",
   "stickers": {
     "heroines": {
       "pink": {
@@ -788,6 +788,106 @@
       "paper": { "windup": ["沙沙沙", "哗啦"], "attack": ["嗖嗖!"], "hurt": ["嘶啦!"], "die": ["呼~"] },
       "frame": { "windup": ["叮——", "咔咔"], "attack": ["锵锵!"], "hurt": ["叮!"], "die": ["哗啷!"] },
       "horn": { "windup": ["哔——", "嗡嗡嗡", "啊啊啊——"], "attack": ["呜哇——!!"], "hurt": ["哔!"], "die": ["滋…"] }
+    },
+    "bosses": {
+      "madame": {
+        "keep": {
+          "lines": [
+            { "zh": "这些都是那孩子的东西……谁也不许碰！", "en": "These are all my little girl's things... nobody touches them!", "ja": "これは全部あの子のものよ……誰にも触らせない！" },
+            {
+              "zh": "你看，她的照片、我的日记、她的小床……都在这里陪着我。",
+              "en": "Look - her photo, my diary, her little bed... they all stay here with me.",
+              "ja": "ほら、あの子の写真も、わたしの日記も、あの子のベッドも……みんなここにいるの。"
+            }
+          ]
+        },
+        "photo": {
+          "lines": [
+            {
+              "zh": "别碰那张照片！那是我们一家人最后一次一起笑。",
+              "en": "Don't touch that photo! It's the last time we all smiled together.",
+              "ja": "その写真に触らないで！家族みんなで笑った、最後の一枚なの。"
+            },
+            {
+              "zh": "照片里的那孩子……一直在看着你们哦。",
+              "en": "The child in that photo... she has been watching you all along.",
+              "ja": "写真のあの子がね……ずっとあなたたちを見てるのよ。"
+            },
+            {
+              "zh": "你们也想被拍进去吗？留在照片里，就永远不会长大了。",
+              "en": "Do you want to be in it too? Stay in the photo, and you never have to grow up.",
+              "ja": "あなたたちも写りたいの？写真の中なら、ずっと大人にならずにすむのよ。"
+            }
+          ]
+        },
+        "diary": {
+          "lines": [
+            { "zh": "不许读！那是我每天晚上写给那孩子的话。", "en": "Don't read it! I wrote to her every single night.", "ja": "読まないで！毎晩あの子に書いた言葉なの。" },
+            {
+              "zh": "每一页都写着「对不起」……可她一次也没有回答我。",
+              "en": "Every page says \"I'm sorry\"... and she has never once answered me.",
+              "ja": "どのページにも「ごめんね」って書いたのに……あの子は一度も答えてくれない。"
+            },
+            { "zh": "把日记还给我……最后一页，我还没有写完。", "en": "Give me back my diary... I haven't finished the last page.", "ja": "日記を返して……最後のページ、まだ書きかけなの。" }
+          ]
+        },
+        "coffin": {
+          "lines": [
+            { "zh": "嘘……别吵醒她，她好不容易才睡着。", "en": "Shh... don't wake her. She only just fell asleep.", "ja": "しーっ……起こさないで。やっと眠ったところなの。" },
+            { "zh": "那么小的棺材……你们怎么忍心对着它开枪？", "en": "Such a little coffin... how can you point a gun at it?", "ja": "あんなに小さな棺に……よく銃なんて向けられるわね。" },
+            {
+              "zh": "她一个人在里面太冷了，所以我才要找人陪她啊。",
+              "en": "It's so cold in there all alone. That's why I find her playmates.",
+              "ja": "あの中は一人じゃ寒いの。だから遊び相手を探してあげてるのよ。"
+            }
+          ]
+        },
+        "kneel": {
+          "lines": [
+            {
+              "zh": "……好累啊。那孩子……最喜欢那张全家福了。",
+              "en": "...I'm so tired. She loved that family photo more than anything.",
+              "ja": "……疲れたわ。あの子ね……あの家族写真が、大好きだったの。"
+            },
+            { "zh": "让我再看一眼……我们一家人笑着的样子。", "en": "Let me see it once more... the three of us, smiling.", "ja": "もう一度見せて……家族みんなで、笑ってた顔を。" }
+          ]
+        },
+        "offer1": {
+          "lines": [
+            {
+              "zh": "对……就是这张。然后……那本日记，我每天都写给她。",
+              "en": "Yes... this one. And then... the diary. I wrote to her every day.",
+              "ja": "そう……この写真。それから……あの日記。毎日あの子に書いたの。"
+            },
+            { "zh": "日记……把我写给她的那些话，也带过来吧。", "en": "The diary... bring me the words I wrote to her, too.", "ja": "日記を……あの子に書いた言葉も、持ってきて。" }
+          ]
+        },
+        "offer2": {
+          "lines": [
+            { "zh": "……让我抱抱她吧。就一下，就一下就好。", "en": "...Let me hold her. Just for a moment, just once.", "ja": "……あの子を抱かせて。少しだけ、少しだけでいいから。" },
+            {
+              "zh": "那个小小的……她睡着的地方。把她还给我。",
+              "en": "That little... place where she sleeps. Give her back to me.",
+              "ja": "あの小さな……あの子が眠ってるところ。あの子を返して。"
+            }
+          ]
+        },
+        "wrong": {
+          "lines": [
+            { "zh": "不对……不是那个。你们根本不懂那孩子。", "en": "No... not that one. You don't know her at all.", "ja": "違う……それじゃないの。あなたたちは、あの子のことを何も知らない。" },
+            { "zh": "不是那个……那孩子最先想看到的，不是它。", "en": "Not that... that's not what she would want to see first.", "ja": "それじゃない……あの子が最初に見たいのは、それじゃないの。" }
+          ]
+        },
+        "rest": {
+          "lines": [
+            {
+              "zh": "啊……你在这里啊。妈妈找了你好久……我们回家吧。",
+              "en": "Ah... there you are. Mommy looked for you so long... let's go home.",
+              "ja": "ああ……ここにいたのね。ママ、ずっと探してたのよ……おうちに帰りましょう。"
+            }
+          ]
+        }
+      }
     }
   }
 }

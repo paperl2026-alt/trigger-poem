@@ -4,7 +4,7 @@
 // head, on the outer side (between her and the screen edge), above her HUD panel; never at the reticle or the middle of the screen,
 // never over the HUD or the girls (user, round 7). One fan per girl; a more important line replaces the showing one.
 // Every kill pops a sound-effect sticker where the monster was (fx/ono_*, art R42). Lines: content text/stickers.json.
-import { voice } from '../core/audio.js';
+import { voice, voiceLen } from '../core/audio.js';
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { C, T } from '../core/content.js';
@@ -51,11 +51,11 @@ class Slab {
 class Fan {
   constructor(layer, order) { this.slabs = [0, 1].map(() => new Slab(layer, order)); this.t = 9; this.life = 1; }
   get on() { return this.t < this.life; }
-  show(kind, text, x, y, h, dir) {
+  show(kind, text, x, y, h, dir, o = {}) {   // (o: tag, life)
     this.kind = kind; this.x = x; this.y = y; this.h = h; this.dir = dir; this.t = 0;
-    this.life = 1.0 + Math.min(0.9, text.length * 0.05);
+    this.life = o.life ?? 1.0 + Math.min(0.9, text.length * 0.05);
     this.slabs[0].set(text, h, true);
-    this.slabs[1].set(TAG[kind] || 'TALK', h * 0.58, false);
+    this.slabs[1].set(o.tag || TAG[kind] || 'TALK', h * 0.58, false);
     this.w = Math.max(this.slabs[0].w, this.slabs[1].w + h * 0.5);
   }
   knock() { if (this.t < this.life - 0.12) this.t = this.life - 0.12; }
@@ -82,6 +82,7 @@ export class Stickers {
     this.her = this.game.players.map(() => ({ f: new Fan(this.layer, 75), cd: 0, last: {}, recent: {} }));
     this.mon = [0, 1].map(() => new Fan(this.layer, 74));
     this.big = new Fan(this.layer, 76);
+    this.bossF = new Fan(this.layer, 76); this.bossSaid = {};
     this.onos = [0, 1, 2, 3, 4, 5].map(() => { const m = picture(null, 73, Math.random()); this.layer.add(m); m.userData.t = 9; return m; });
     this.oi = 0; this.mi = 0; this.seen = new Map(); this.monCd = 0;
   }
@@ -128,6 +129,22 @@ export class Stickers {
     const spot = this.hud.space.find(Hh * 0.55, h * 2.2, [{ x: W / 2, y: Hh * 0.72 }, { x: W / 2, y: Hh * 0.6 }]);
     this.big.show('callout', text, spot.x, spot.y, h, 1); this.big.spot = spot;
   }
+  // a boss's line (text/stickers.json bosses.<id>.<kind>, said in her voice: sounds.json voices.<id>): a bigger slab by her head, up as
+  // long as it is said; never the same line twice running
+  boss(a, kind) {
+    const set = this.D.bosses?.[a.id]?.[kind];
+    if (!set) return;
+    const n = set.lines.length, last = this.bossSaid[kind], free = [...Array(n).keys()].filter((j) => n < 2 || j !== last);
+    const li = pick(free), line = set.lines[li], text = line[lang] || line.en;
+    this.bossSaid[kind] = li;
+    const g = this.game, b = g.box(a), Hh = this.hud.L.H, h = Hh * 0.05, cx = (b.x0 + b.x1) / 2;
+    voice(a.id, kind, li, 0, 7, Math.max(-0.6, Math.min(0.6, (cx / g.W - 0.5) * 1.2)));
+    const f = this.bossF;
+    f.show(kind, text, 0, 0, h, 1, { tag: a.def.tag || 'BOSS', life: Math.max(2.4, voiceLen(a.id, kind, li) + 0.7, [...text].length * 0.14) });
+    const spot = this.hud.space.find(f.w * 1.1, h * 2.4, [{ x: cx, y: Hh - b.y0 + h * 1.6 }, { x: b.x1 + f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 },
+      { x: b.x0 - f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 }, { x: this.hud.L.W / 2, y: Hh * 0.82 }]);
+    f.x = spot.x; f.y = spot.y; f.dir = spot.x >= cx ? 1 : -1; f.spot = spot;
+  }
   monster(a, kind) {
     if (this.hud.holdUI?.on || this.monCd > 0) return;
     const set = this.D.monsters[a.type] || this.D.monsters.default, lines = set[kind] || this.D.monsters.default[kind];
@@ -170,7 +187,7 @@ export class Stickers {
       const was = this.seen.get(a), now = !a.alive ? 'dead' : a.state;
       if (was !== now) this.seen.set(a, now);
     }
-    for (const f of [...this.mon, this.big]) { if (f.on && f.spot) this.hud.space.claim(f.spot); f.update(dt); }
+    for (const f of [...this.mon, this.big, this.bossF]) { if (f.on && f.spot) this.hud.space.claim(f.spot); f.update(dt); }
     // the kill stickers: slap in big, wobble, float up and fade
     for (const m of this.onos) {
       const u = m.userData; u.t += dt;
