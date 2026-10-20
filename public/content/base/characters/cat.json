@@ -333,7 +333,7 @@
     "weapon": {
       "kind": "mantra",
       "rate": 0.3,
-      "dmg": 22,
+      "dmg": 38.5,
       "vary": [1.2, 1.8],
       "mag": 8,
       "reload": 1.3,

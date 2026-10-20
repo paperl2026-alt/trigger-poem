@@ -165,7 +165,8 @@ S["stations"] = {
   "ky1": {"cam": [0.6, 1.15, -1.4], "look": [-1.0, 1.5, 2.0], "pause": 1.4, "say": "photo"},
 }
 # ================================================================ 3. the corridor (calm), 4. the bath
-S, H, d0, d1 = place("rouka", False, music="ep2_inn")
+# (night falls on the corridor: the girls' whispered chant, tools/bgm_free.py ep2_night - user 2026-10-20 "the inn one can go in")
+S, H, d0, d1 = place("rouka", False, music="ep2_night")
 xb = d0[0] if d0 else 0
 S["stations"] = {
   "ro0": {"leave": {"way": "end"}, "arrive": {"way": "back", "at": [xb, 1.15, round(H["z0"] - 1.3, 2)], "look": [0, 1.1, H["z1"]]}, "cam": [0, 1.15, -8], "look": [0, 1.1, H["z1"]], "pause": 0.8, "sfx": "snipFar"},

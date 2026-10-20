@@ -7,7 +7,7 @@
 const BASE = 'content/base/';
 const USE = {
   ep0_stage: '序章 各小关', ep0_boss: '序章 Boss 战', ep1_stage: '第 1 话 各小关', ep1_boss: '第 1 话 Boss（腐蜜夫人）',
-  ep2_inn: '第 2 话 民宿（停电前，平静）', ep2_she: '第 2 话 她出现时（追逐主题）', ep2_final: '第 2 话 钟楼表盘决战',
+  ep2_inn: '第 2 话 民宿（停电前，平静）', ep2_night: '第 2 话 走廊入夜（念咒第二版）', ep2_she: '第 2 话 她出现时（追逐主题）', ep2_final: '第 2 话 钟楼表盘决战',
 };
 const EP2_LINES = ['sheSeen', 'runNow', 'hush', 'trapHit', 'grabbed', 'bell'];
 const getJson = (u) => fetch(u).then((r) => (r.ok ? r.json() : null)).catch(() => null);

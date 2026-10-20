@@ -1,7 +1,7 @@
 // Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops; a sound with recorded files in content
 // audio/sounds.json plays those instead (at the end of this file).
 import { C } from './content.js';
-let ctx = null, master, sfxBus, fxBus, musBus, musDuck, voiceBus, verb, verbIn, wetSfx, wetVoice, noiseBuf;
+let ctx = null, master, sfxBus, fxBus, musBus, musDuck, voiceBus, verb, verbIn, wetSfx, wetVoice, noiseBuf, radio, crackleBuf;
 let muted = false;
 let volume = 0.7;
 let musicVol = 0.7, sfxVol = 0.7, voiceVol = 0.7; // the player's sliders (0..1): 0.7 is the mix as designed (docs/TECH.md「混音」)
@@ -47,8 +47,9 @@ export function initAudio() {
   // the voices and the hits live, the top eased, the peaks held down gently; then the duck
   const mid = ctx.createBiquadFilter(); mid.type = 'peaking'; mid.frequency.value = 2800; mid.Q.value = 0.9; mid.gain.value = -3.5;
   const air = ctx.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 8000; air.gain.value = -2;
+  const boom = ctx.createBiquadFilter(); boom.type = 'lowshelf'; boom.frequency.value = 150; boom.gain.value = -3;   // (ours were two thirds bass)
   const mcomp = ctx.createDynamicsCompressor(); mcomp.threshold.value = -18; mcomp.knee.value = 10; mcomp.ratio.value = 2.5; mcomp.attack.value = 0.02; mcomp.release.value = 0.25;
-  musBus.connect(mid); mid.connect(air); air.connect(mcomp); mcomp.connect(musDuck); musDuck.connect(master);
+  musBus.connect(boom); boom.connect(mid); mid.connect(air); air.connect(mcomp); mcomp.connect(musDuck); musDuck.connect(master);
   verb = ctx.createConvolver();
   const len = ctx.sampleRate * 2.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
@@ -65,6 +66,28 @@ export function initAudio() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const nd = noiseBuf.getChannelData(0);
   for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+  // a boss's voice as if over an old radio (user 2026-10-20: "some post-processing, like a radio"; sounds.json voices.<who>.radio): the
+  // band of a small speaker with its honk, driven a little; under the line a hiss with crackles, a squelch at each end (radioBed)
+  radio = ctx.createGain();
+  const rhp = ctx.createBiquadFilter(); rhp.type = 'highpass'; rhp.frequency.value = 420; rhp.Q.value = 0.8;
+  const rpk = ctx.createBiquadFilter(); rpk.type = 'peaking'; rpk.frequency.value = 1700; rpk.Q.value = 1.1; rpk.gain.value = 6;
+  const rlp = ctx.createBiquadFilter(); rlp.type = 'lowpass'; rlp.frequency.value = 3300; rlp.Q.value = 0.9;
+  const rws = ctx.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) cv[i] = Math.tanh((i / 1023 * 2 - 1) * 3) / Math.tanh(3);
+  rws.curve = cv; rws.oversample = '2x';
+  const rout = ctx.createGain(); rout.gain.value = 0.8;
+  radio.connect(rhp); rhp.connect(rpk); rpk.connect(rws); rws.connect(rlp); rlp.connect(rout); rout.connect(voiceBus);
+  crackleBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
+  const cd = crackleBuf.getChannelData(0);
+  for (let i = 0; i < cd.length; i++) { cd[i] = (Math.random() * 2 - 1) * 0.22; if (Math.random() < 0.0005) { const a = (Math.random() * 2 - 1) * 0.9; for (let k = 0; k < 90 && i + k < cd.length; k++) cd[i + k] += a * Math.exp(-k / 18) * (Math.random() * 2 - 1); } }
+}
+function radioBed(t0, dur) {
+  const s = ctx.createBufferSource(); s.buffer = crackleBuf; s.loop = true;
+  const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.6;
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t0);
+  g.gain.linearRampToValueAtTime(0.5, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.1);   // (the squelch, then the hiss under her)
+  g.gain.setValueAtTime(0.07, t0 + dur); g.gain.linearRampToValueAtTime(0.4, t0 + dur + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + 0.16);
+  s.connect(bp); bp.connect(g); g.connect(voiceBus); s.start(t0, Math.random() * 1.5); s.stop(t0 + dur + 0.2);
+  return s;
 }
 // what the speakers play, by pitch: 16 bands from 60 Hz to 10 kHz spaced like the ear hears them, 0..1 (the cat girl's reticle is a sound
 // visualizer: src/ui/glhud.js RETG_FRAG - the music, her chant, the shots all move it). Read once per audio tick, shared by whoever asks.
@@ -486,10 +509,11 @@ function talk(who, b, pr, pan) {
   if (busy && pr < TALK.pr + 2) { STATS.linesDropped++; return false; }
   if (!busy && pr <= 4 && (t - TALK.start < TALK_GAP || intensity > 0.85)) { STATS.linesDropped++; return false; }
   STATS.lines++; if (busy) STATS.linesCut++;
-  if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.04); TALK.s.stop(t + 0.2); } catch (e) { /* over */ } }
-  const s = playBuf(b, { vol: 1, pan, bus: voiceBus, fadeIn: busy ? 0.04 : 0, verbAmt: 0.08 });
+  if (busy && TALK.s) { try { TALK.s.g.gain.setTargetAtTime(0.0001, t, 0.04); TALK.s.stop(t + 0.2); TALK.bed?.stop(t + 0.05); } catch (e) { /* over */ } }
+  const R = !C.characters?.[who] && C.sounds?.voices?.[who]?.radio;   // (a boss over the radio)
+  const s = playBuf(b, { vol: 1, pan, bus: R ? radio : voiceBus, fadeIn: busy ? 0.04 : 0, verbAmt: R ? 0 : 0.08 });
   const end = t + (b.duration - (b.startAt || 0));
-  Object.assign(TALK, { s, who, pr, end, start: t });
+  Object.assign(TALK, { s, who, pr, end, start: t, bed: R ? radioBed(t, end - t) : null });
   return true;
 }
 // a girl says the i-th line of a sticker kind (text/stickers.json) with its priority (stickers.js PRIO): true = said, false = not now

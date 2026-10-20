@@ -1,6 +1,6 @@
 """BGM, step 2 of 2 (docs/TECH.md 声音): ACE-Step 1.5 (local, CPU) plays the guide of tools/bgm_guide.py again with real instruments: its
 "cover" task keeps the guide's melody, harmony and form (strength = how closely) and takes its sound from the caption (tools/rounds/
-bgm_specs.py). Runs in ACE-Step's own environment:
+bgm_specs.py; a track with `vocals` is sung: its lyrics, in Japanese). Runs in ACE-Step's own environment:
   C:\\AI\\ACE-Step-1.5\\venv_cpu\\Scripts\\python.exe -I tools/bgm_ace.py [track ...] [--k 0.55,0.75] [--n 1]
   -> art/raw/bgm_ai/<track>_k<strength>_<seed>.wav (+ .json: what it was asked); tools/bgm_pick.py makes the game's loops of them.
 The CPU path follows the user's own script (../bgm/gen_bgm.py: bf16 on CPU; the iGPU is blocked by Windows Smart App Control)."""
@@ -44,8 +44,8 @@ def main():
         for k in [float(x) for x in a.k.split(",")]:
             for i in range(a.n):
                 t1 = time.time()
-                p = GenerationParams(task_type="cover", src_audio=str(guide), audio_cover_strength=k, caption=T["caption"], lyrics="[Instrumental]",
-                                     instrumental=True, bpm=T["bpm"], keyscale=T["key"], duration=round(dur, 2), shift=3.0, seed=-1, thinking=False)
+                p = GenerationParams(task_type="cover", src_audio=str(guide), audio_cover_strength=k, caption=T["caption"], lyrics=T.get("vocals", "[Instrumental]"),
+                                     instrumental=not T.get("vocals"), vocal_language="ja" if T.get("vocals") else "unknown", bpm=T["bpm"], keyscale=T["key"], duration=round(dur, 2), shift=3.0, seed=-1, thinking=False)
                 cfg = GenerationConfig(batch_size=1, use_random_seed=True, audio_format="wav")
                 r = generate_music(dit, llm, p, cfg, save_dir=str(OUT / "_raw"))
                 if not r.success: print(f"[{name} k{k}] failed: {r.error}", flush=True); continue
