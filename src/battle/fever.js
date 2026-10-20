@@ -22,8 +22,9 @@ export class Fever {
   }
   level(k) { return Math.min(F().maxLevel, Math.floor(this.v[k])); }
   get dmgMul() { return F().dmgMul[this.level('dmg')]; }
-  get critRate() { return F().critRate[this.level('acc')]; }
-  get critMul() { return F().critMul[this.level('acc')]; }
+  // (her own crit table if her gun has one: characters/<id>.json weapon.crit - the two differ, user 2026-10-20)
+  get critRate() { return (this.w.crit?.rate || F().critRate)[this.level('acc')]; }
+  get critMul() { return (this.w.crit?.mul || F().critMul)[this.level('acc')]; }
   get reloadMul() { return F().reloadMul[this.level('combo')]; }
   get full() { return FEVER_KEYS.every((k) => this.level(k) >= F().maxLevel); }
   add(k, d) { this.v[k] = Math.max(0, Math.min(F().maxLevel + 0.999, this.v[k] + d)); }

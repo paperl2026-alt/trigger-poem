@@ -1,5 +1,5 @@
 {
-  "_doc": "Fever 三项（伤害/准头/连击），每项 0~3 级。dmgMul 等数组按等级取值（下标 0 = 0 级）。accPerShot、accMissPerShot 乘的是武器射击间隔（射得越慢每发涨得越多）。过场不掉；战斗中 idleDelay 秒没打中后三项开始掉，每秒 idleDrain × (1 + 超出的秒数 × idleAccel)，越掉越快，打中就停；被打中三项各涨 hurtGain（DESIGN「Fever 大方」：失误也给一截，鼓励接着打），必杀充能加 hurtCharge。三项里每升一级回 levelHeal 血，放必杀回 skillHeal 血。rankBadge：三项等级加起来（0~9）对应的评价字母。",
+  "_doc": "Fever 三项（伤害/准头/连击），每项 0~3 级。dmgMul 等数组按等级取值（下标 0 = 0 级）。accPerShot、accMissPerShot 乘的是武器射击间隔（射得越慢每发涨得越多）。过场不掉；战斗中 idleDelay 秒没打中后三项开始掉，每秒 idleDrain × (1 + 超出的秒数 × idleAccel)，越掉越快，打中就停；被打中三项各涨 hurtGain（DESIGN「Fever 大方」：失误也给一截，鼓励接着打），必杀充能加 hurtCharge。三项里每升一级回 levelHeal 血，放必杀回 skillHeal 血。rankBadge：三项等级加起来（0~9）对应的评价字母。critRate / critMul 是没写自己暴击表的角色用的；两人各有自己的（characters/<id>.json weapon.crit）。",
   "fever": {
     "maxLevel": 3,
     "dmgMul": [1, 1.15, 1.3, 1.45],
