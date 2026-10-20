@@ -1109,5 +1109,11 @@
     "auto": true,
     "png": "public/jiggle/cat_dragged.png",
     "keep_frame": true
+  },
+  "r78_cat_startled_b": {
+    "src": "art/raw/r78/cat_startled_b.png",
+    "auto": true,
+    "png": "art/raw/r78/seal/cat_startled_b.png",
+    "keep_frame": true
   }
 }

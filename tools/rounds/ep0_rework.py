@@ -120,52 +120,123 @@ def corridor(S):
     st["cor2"].update({"via": [[0, 1.35, -2.5], [-0.6, 1.3, -8.5]], "cam": [-1.6, 1.75, -9.6], "look": [1.4, -0.4, -26], "shot": {"kind": "cover", "cam": {"zoom": 10}}})
     entrances(st["cor2"]["waves"], ["c2", "c3"], 2.0)
 
+def corridor_walls(rects, h, keys_in, keys_out, force=None, cell=0.2, thick=0.24):
+    """the walls round a corridor made of axis-aligned rectangles (x0, x1, z0, z1), as scenery boxes: the union rasterised in cell-metre
+    squares, every edge between inside and outside a wall, runs along one line merged into one box; the picture on the face that looks into
+    the corridor (keys_in for the faces looking +x / +z, keys_out for -x / -z, taken in turn; force: {(line, face): key} for one wall)"""
+    X0 = min(r[0] for r in rects); X1 = max(r[1] for r in rects); Z0 = min(r[2] for r in rects); Z1 = max(r[3] for r in rects)
+    nx, nz = round((X1 - X0) / cell), round((Z1 - Z0) / cell)
+    inside = [[any(r[0] - 1e-6 <= X0 + (i + 0.5) * cell <= r[1] + 1e-6 and r[2] - 1e-6 <= Z0 + (j + 0.5) * cell <= r[3] + 1e-6 for r in rects)
+               for j in range(nz)] for i in range(nx)]
+    isin = lambda i, j: 0 <= i < nx and 0 <= j < nz and inside[i][j]
+    runs = {}   # (axis, line index, face) -> [cell index along the line]
+    for i in range(nx):
+        for j in range(nz):
+            if not inside[i][j]: continue
+            if not isin(i - 1, j): runs.setdefault(("x", i, "right"), []).append(j)
+            if not isin(i + 1, j): runs.setdefault(("x", i + 1, "left"), []).append(j)
+            if not isin(i, j - 1): runs.setdefault(("z", j, "front"), []).append(i)
+            if not isin(i, j + 1): runs.setdefault(("z", j + 1, "back"), []).append(i)
+    out, n_in, n_out = [], 0, 0
+    for (ax, li, face), cells in sorted(runs.items()):
+        cells.sort(); start = prev = cells[0]
+        for c in cells[1:] + [None]:
+            if c is not None and c == prev + 1: prev = c; continue
+            a, b = start, prev + 1   # (a run of cells [a, b))
+            line = round((X0 if ax == "x" else Z0) + li * cell, 3)
+            k = (force or {}).get((line, face))
+            if not k:
+                if face in ("right", "front"): k = keys_in[n_in % len(keys_in)]; n_in += 1
+                else: k = keys_out[n_out % len(keys_out)]; n_out += 1
+            if ax == "x":
+                za, zb = Z0 + a * cell, Z0 + b * cell
+                out.append({"kind": "box", "at": [round(line + (-thick / 2 if face == "right" else thick / 2), 3), 0, round((za + zb) / 2, 3)],
+                            "size": [thick, h, round(zb - za, 3)], "tex": {face: k}, "tile": [4.5, h], "color": "#d8ccd0"})
+            else:
+                xa, xb = X0 + a * cell, X0 + b * cell
+                out.append({"kind": "box", "at": [round((xa + xb) / 2, 3), 0, round(line + (-thick / 2 if face == "front" else thick / 2), 3)],
+                            "size": [round(xb - xa, 3), h, thick], "tex": {face: k}, "tile": [4.5, h], "color": "#d8ccd0"})
+            if c is not None: start = prev = c
+    return out
+
+
 def dash(S):
-    """the run out of the building (user 2026-10-20, the run filmed round the girls failed: "the views switch too fast, the monsters come
-    and can't be seen; on a run like this they come along the way in the middle of the view, even early; their run has no motion, so
-    don't film the girls, keep the camera on the monsters; change the view behind a burst of smoke, not a smooth swing; shoot one way a
-    while, then the other - not back and forth"): the camera runs down the corridor at eye height, the girls small at the bottom corners;
-    the monsters come down the middle of the way, there early in the haze, running along with them (ride.carry) and the run slows while
-    each lot is fought (hold); one turn round and back, each behind smoke (cut). Half way the corridor's window side falls away into an
-    open walkway (hall.open): the whole school and the sky beside them"""
-    H = S["hall"]
-    H["open"] = [{"on": "right", "z0": -46, "z1": -104}]
-    rail = "#c8c0b8"
-    S["scenery"] = outside(1, -70, 340) + [
-        {"kind": "box", "at": [3.15, 1.0, -75], "size": [0.07, 0.07, 58], "color": rail},
-        {"kind": "box", "at": [3.15, 0.5, -75], "size": [0.05, 0.05, 58], "color": rail},
-        {"kind": "box", "at": [3.15, 0, -46.5], "size": [0.07, 1.04, 0.07], "color": rail, "repeat": {"n": 30, "step": [0, 0, -2]}},
-    ]
+    """the chase out of the building (user 2026-10-20, after The House of the Dead 2: "the boss appears and the chase begins - give it lines;
+    small monsters keep darting out, one shot each but many; now and then a look back, the boss closer each time - best a run of corners,
+    after each one a look back and it is a little nearer; at last they run flat out into a corner with nowhere to go and, as in the comic,
+    jump out of the window"): first person, the girls out of the picture (they shoot from below it). Looking back down the corridor they
+    came, the possessed discipline-committee girl bursts through its end wall and says the school rule - a whip round and they run. Four
+    corners (the corridor rectangles below, its walls built from them); the small fry burst out of the ceiling, pop up out of the floor,
+    wait round the corners - one shot each (hp 4), many, and whatever reaches the camera goes up (ride.blast); after each corner a look back:
+    she comes round it, 12, 9, 6, then 4 metres behind, a line of hers each time; last, flat out down the final stretch into the dead end -
+    a window. The comic (ep0_boss) takes it from there: the window shot out, the jump, the landing."""
+    h = S["hall"]["h"]
+    # the corridor: five stretches, four corners (x0, x1, z0, z1), 3.2 m wide
+    R = [(-1.6, 1.6, -27.6, 4.0), (-1.6, 29.6, -27.6, -24.4), (26.4, 29.6, -57.6, -24.4), (-1.6, 29.6, -57.6, -54.4), (-1.6, 1.6, -81.6, -54.4)]
+    CLS = ["st3/wallL1", "st3/wallL2", "st3/wallL3", "st3/wallL4", "st3/wallA", "st3/wallL5", "st3/wallL6", "st3/wallB", "st3/wallL8"]
+    WIN = ["st3/wallW", "st3/wallR1", "st3/wallR2", "st3/wallR3", "st3/wallR4", "st3/wallR5", "st3/wallR6", "st3/wallR7", "st3/wallR8"]
+    S["scenery"] = corridor_walls(R, h, CLS, WIN, force={(-81.6, "front"): "st3/wallW", (4.0, "back"): "st3/end"})
+    # (the hall itself: its floor and ceiling over the whole of it, its own walls just outside the corridor's, hidden)
+    S["hall"].update({"x0": -1.75, "x1": 29.75, "z0": 4.15, "z1": -81.75, "tilesX": 10})
+    for k in ("open", "ways", "outside", "outsideX", "outsideAt"): S["hall"].pop(k, None)
+    S["decals"] = [d for d in S.get("decals", []) if d["on"] in ("floor", "hang")]   # (the wall ones were on the old straight hall's walls)
     st = S["stations"]["ds1"]
-    st["shot"] = {"kind": "run", "players": {"x": [0.12, 0.88], "crop": 0.42, "scale": 0.9}}   # (small, low, out at the corners)
-    R = st["ride"]
-    for k in ("girls", "cam"): R.pop(k, None)
-    R.update({"from": [0, 1.35, 4], "speed": 6, "carry": True,
-              "path": [[-0.3, 1.35, -14], [0.3, 1.4, -32], [-0.3, 1.35, -50], [0.3, 1.4, -68], [-0.3, 1.35, -86], [0.3, 1.4, -104],
-                       [-0.3, 1.35, -122], [0.3, 1.4, -140], [0, 1.35, -144]]})
-    row = lambda typ, n, a0, w, ys, frm, step=1.2: [{"type": typ, "ahead": round(a0 + i * step, 2), "x": round(-w + 2 * w * i / max(1, n - 1), 2),
-                                                      **({"y": ys[i % len(ys)]} if ys else {}), "from": frm} for i in range(n)]
-    smoke = "#cbb8d0"
-    R["marks"] = [
-        {"at": 0, "speed": 3, "say": "scare", "shake": 1.0, "sfx": "roar"},
-        {"at": 3, "speed": 6, "hint": "runBlock"},
-        # (forward: the way ahead)
-        {"at": 5, "hold": True, "spawn": row("paper", 5, 24, 1.2, [1.5, 2.1], "outside")},
-        {"at": 20, "block": {"k": "cover/desks", "h": 1.0, "ahead": 20, "x": 0.0}},
-        {"at": 30, "hold": True, "spawn": [{"type": "chair", "ahead": 22, "x": -0.7, "from": "burrow"}, {"type": "shoe", "ahead": 25, "x": 0.7, "from": "burrow"},
-                                           {"type": "shoe", "ahead": 28, "x": 0.0, "from": "burrow"}]},
-        {"at": 46, "block": {"k": "cover/lockers", "h": 1.2, "ahead": 18, "x": 0.4}},
-        # (turned round behind smoke: what chases them down the corridor)
-        {"at": 58, "cut": {"face": "back", "color": smoke}},
-        {"at": 59, "hold": True, "spawn": [{"type": "chair", "ahead": -16, "x": -0.6, "from": "burrow"}, {"type": "desk", "ahead": -19, "x": 0.6, "from": "burrow"},
-                                           {"type": "shoe", "ahead": -22, "x": 0.0, "from": "burrow"}]},
-        {"at": 74, "hold": True, "burst": [0.9, [3, 1, 4], 0.13, 2097176, 16726688], "spawn": [{"type": "board", "ahead": -18, "x": 0.0, "from": "burrow"}]},
-        # (and round again: the way out)
-        {"at": 92, "cut": {"face": "fwd", "color": smoke}},
-        {"at": 94, "speed": 7, "hold": True, "spawn": row("book", 5, 24, 1.3, [1.5, 2.0], "outside")},
-        {"at": 112, "hold": True, "spawn": row("paper", 6, 22, 1.4, [1.6, 2.1], "outside")},
-        {"at": 134, "speed": 10, "shake": 1.2, "say": "start"},
+    st["shot"] = {"kind": "run", "players": {"show": False}}   # (first person: they are out of the picture, shooting from below it)
+    st["quietEnd"] = True   # (they escape, nothing is "cleared": no fanfare at the window)
+    Rd = st["ride"]
+    for k in ("girls", "cam"): Rd.pop(k, None)
+    Rd.update({"from": [0, 1.35, -2], "speed": 0, "face": "back", "carry": True, "lean": 0.22,   # (lean: a gentle bank round the corners)
+               "path": [[0, 1.35, -24.6], [1.4, 1.4, -26], [26.6, 1.35, -26], [28, 1.4, -27.4], [28, 1.35, -54.6], [26.6, 1.4, -56], [1.4, 1.35, -56],
+                        [0, 1.4, -57.4], [0, 1.35, -79]]})
+    # (metres along the way: out of each corner at about 24.8, 52.2, 81.6, 109; the dead end at about 130)
+    E = [24.8, 52.2, 81.6, 109.0]
+    TURN = [1, -1, -1, 1]   # (right, left, left, right: looking back, she comes round on the screen's left after a right turn)
+    have = packs.manifest()
+    pic = lambda k, alt="boss/qq_s1_move": k if k in have else alt
+    RUN, CORNER, LUNGE = pic("boss/qq_chase_run_a"), pic("boss/qq_chase_corner_a"), pic("boss/qq_chase_lunge_a")
+    cut = lambda girl, mo, v="a": pic(f"ep0/cut_{girl}_{mo}_{v}", None)
+    m = lambda typ, frm, ahead, x: {"type": typ, "from": frm, "ahead": ahead, "x": x, "hp": 4}
+    pop, ceil, burrow = (lambda t_, a, x: m(t_, "pop", a, x)), (lambda t_, a, x: m(t_, "ceiling", a, x)), (lambda t_, a, x: m(t_, "burrow", a, x))
+    marks = [
+        # she bursts through the end wall behind them and says the rule; a scream; a whip round and they run
+        {"t": 0.3, "hole": {"at": [0, 1.7, 4.0], "n": [0, 0, -1], "size": 3.0}, "glimpse": {"k": RUN, "at": [0, 2.4], "h": 3.3, "life": 2.8, "lunge": 1.4},
+         "shake": 1.2, "sfx": "roar",
+         "insert": [i for i in ({"k": cut("pink", "startled"), "side": -1, "life": 1.3, "delay": 0.9}, {"k": cut("cat", "startled", "b"), "side": 1, "life": 1.2, "delay": 1.05}) if i["k"]]},
+        {"t": 0.7, "bossSay": {"who": "qq", "kind": "intro"}},
+        {"t": 2.6, "cut": {"face": "fwd", "whip": True}, "speed": 7},
+        {"at": 6, "say": "flee"},
+        # the small fry: out of the ceiling, up out of the floor, waiting round the corners
+        {"at": 5, "spawn": [ceil("paper", 14, -0.6), ceil("paper", 16, 0.7), ceil("paper", 18, 0.0)]},
+        {"at": 12, "spawn": [pop("shoe", 11, -0.8), pop("shoe", 12, 0.8), pop("shoe", 13.5, 0.0)]},
+        {"at": 20, "spawn": [ceil("book", 10, 0.0), ceil("book", 12, 0.5), ceil("book", 13, -0.5)]},
+        {"at": 28, "spawn": [burrow("chair", 11, 0.6), pop("shoe", 12, -0.6), ceil("paper", 14, 0.0)]},
+        {"at": 43, "spawn": [pop("shoe", 9, -0.7), pop("shoe", 10, 0.7), ceil("paper", 11.5, 0.0), ceil("paper", 13, 0.4)]},
+        {"at": 46, "say": "flee"},
+        {"at": 55, "spawn": [ceil("book", 11, -0.5), ceil("book", 12.5, 0.5), burrow("chair", 13, 0.0)]},
+        {"at": 68, "spawn": [pop("shoe", 9, -0.8), pop("shoe", 10, 0.0), pop("shoe", 11, 0.8), ceil("paper", 12.5, 0.3)]},
+        {"at": 72, "say": "flee"},
+        {"at": 76, "spawn": [ceil("paper", 9, -0.5), ceil("book", 11, 0.5)]},
+        {"at": 84, "spawn": [burrow("chair", 10, 0.0), pop("shoe", 11, 0.7)]},
+        {"at": 95, "spawn": [pop("shoe", 9, -0.8), pop("shoe", 10, 0.0), pop("shoe", 11, 0.8), ceil("paper", 11, -0.4), ceil("paper", 12, 0.4)]},
+        {"at": 98, "say": "flee"},
+        {"at": 103, "spawn": [ceil("book", 9, 0.0), ceil("book", 10.5, -0.6), ceil("book", 12, 0.6)]},
     ]
+    # after each corner, a look back: she comes round it, nearer every time; she says a line of hers, and on they run
+    # (round the corner first - half of her out from behind it, on the side the corridor came from - then at them; the last time she is
+    # right there, lunging)
+    for i, (e, d) in enumerate(zip(E, (12, 9, 6, 4))):
+        girl = ("pink", "cat")[i % 2]
+        if i < 3: G = [{"k": CORNER, "ahead": -(d + 0.8), "x": 0.9 * TURN[i], "flip": TURN[i] < 0, "h": 3.3, "life": 1.0, "lunge": 0.3},
+                       {"k": RUN, "ahead": -(d + 0.4), "x": 0.0, "h": 3.3, "life": 1.7, "lunge": 2.0, "delay": 0.75}]
+        else: G = [{"k": LUNGE, "ahead": -3.0, "x": 0.0, "h": 2.5, "life": 1.8, "lunge": 1.0}]
+        mk = {"at": round(e + d, 1), "cut": {"face": "back", "whip": True}, "speed": 3, "glimpse": G,
+              "bossSay": {"who": "qq", "kind": "chase"}, "shake": 0.6 if i < 3 else 1.4, "sfx": "roar"}
+        if cut(girl, "lookback"): mk["insert"] = {"k": cut(girl, "lookback"), "side": -1 if girl == "pink" else 1, "life": 1.4, "delay": 0.5}
+        marks.append(mk)
+        marks.append({"at": round(e + d + 5, 1), "cut": {"face": "fwd", "whip": True}, "speed": 10 if i == 3 else 7, "say": "lookBack"})
+    # flat out into the dead end: only the window
+    marks.append({"at": 122, "say": "deadEnd", "who": 0})
+    Rd["marks"] = sorted(marks, key=lambda k: (k.get("at", -1), k.get("t", 0)))
 
 HEALER = "drip"   # (round 75's IV-drip spirits: tools/rounds/r75_import.py)
 

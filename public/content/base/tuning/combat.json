@@ -90,6 +90,6 @@
       "share": 0.35,
       "fallDmg": 18
     },
-    "ride": { "speed": 8, "lean": 0.9, "lines": 9, "behind": 7, "crashDmg": 14, "holdSpeed": 1.2, "holdMax": 10 }
+    "ride": { "speed": 8, "lean": 0.9, "lines": 9, "behind": 7, "crashDmg": 14, "holdSpeed": 0.8, "holdMax": 10, "blast": 2.6 }
   }
 }

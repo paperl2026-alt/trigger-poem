@@ -869,7 +869,10 @@
         "hush": { "style": "Negative", "speed": 0.85, "intonation": 0.7, "volume": 0.8 },
         "trapHit": { "style": "Positive", "intonation": 1.3 },
         "grabbed": { "style": "Negative", "speed": 1.15, "intonation": 1.3 },
-        "bell": { "style": "Positive", "intonation": 1.2 }
+        "bell": { "style": "Positive", "intonation": 1.2 },
+        "flee": { "style": "Negative", "speed": 1.15, "intonation": 1.2 },
+        "lookBack": { "style": "Negative", "speed": 1.05, "intonation": 1.1 },
+        "deadEnd": { "style": "Negative", "speed": 1.1, "intonation": 1.2 }
       },
       "say": {
         "poke_5": "そんなにさわりたいの?",
@@ -1056,7 +1059,25 @@
         "bell_3": "voice/pink/bell_3.ogg",
         "bell_4": "voice/pink/bell_4.ogg",
         "bell_5": "voice/pink/bell_5.ogg",
-        "bell_6": "voice/pink/bell_6.ogg"
+        "bell_6": "voice/pink/bell_6.ogg",
+        "flee_1": "voice/pink/flee_1.ogg",
+        "flee_2": "voice/pink/flee_2.ogg",
+        "flee_3": "voice/pink/flee_3.ogg",
+        "flee_4": "voice/pink/flee_4.ogg",
+        "flee_5": "voice/pink/flee_5.ogg",
+        "flee_6": "voice/pink/flee_6.ogg",
+        "lookBack_1": "voice/pink/lookBack_1.ogg",
+        "lookBack_2": "voice/pink/lookBack_2.ogg",
+        "lookBack_3": "voice/pink/lookBack_3.ogg",
+        "lookBack_4": "voice/pink/lookBack_4.ogg",
+        "lookBack_5": "voice/pink/lookBack_5.ogg",
+        "lookBack_6": "voice/pink/lookBack_6.ogg",
+        "deadEnd_1": "voice/pink/deadEnd_1.ogg",
+        "deadEnd_2": "voice/pink/deadEnd_2.ogg",
+        "deadEnd_3": "voice/pink/deadEnd_3.ogg",
+        "deadEnd_4": "voice/pink/deadEnd_4.ogg",
+        "deadEnd_5": "voice/pink/deadEnd_5.ogg",
+        "deadEnd_6": "voice/pink/deadEnd_6.ogg"
       }
     },
     "cat": {
@@ -1091,7 +1112,10 @@
         "hush": { "style": "せつなめ", "speed": 0.85, "intonation": 0.7, "volume": 0.8 },
         "trapHit": { "style": "ノーマル", "speed": 1.05, "intonation": 1.3 },
         "grabbed": { "style": "せつなめ", "speed": 1.15, "intonation": 1.3 },
-        "bell": { "style": "ノーマル", "intonation": 1.4 }
+        "bell": { "style": "ノーマル", "intonation": 1.4 },
+        "flee": { "style": "ノーマル", "speed": 1.15, "intonation": 1.3 },
+        "lookBack": { "style": "ノーマル", "speed": 0.95 },
+        "deadEnd": { "style": "ノーマル", "speed": 1.05, "intonation": 1.2 }
       },
       "say": {
         "poke_4": "みみはくすぐったいにゃ",
@@ -1303,7 +1327,25 @@
         "bell_3": "voice/cat/bell_3.ogg",
         "bell_4": "voice/cat/bell_4.ogg",
         "bell_5": "voice/cat/bell_5.ogg",
-        "bell_6": "voice/cat/bell_6.ogg"
+        "bell_6": "voice/cat/bell_6.ogg",
+        "flee_1": "voice/cat/flee_1.ogg",
+        "flee_2": "voice/cat/flee_2.ogg",
+        "flee_3": "voice/cat/flee_3.ogg",
+        "flee_4": "voice/cat/flee_4.ogg",
+        "flee_5": "voice/cat/flee_5.ogg",
+        "flee_6": "voice/cat/flee_6.ogg",
+        "lookBack_1": "voice/cat/lookBack_1.ogg",
+        "lookBack_2": "voice/cat/lookBack_2.ogg",
+        "lookBack_3": "voice/cat/lookBack_3.ogg",
+        "lookBack_4": "voice/cat/lookBack_4.ogg",
+        "lookBack_5": "voice/cat/lookBack_5.ogg",
+        "lookBack_6": "voice/cat/lookBack_6.ogg",
+        "deadEnd_1": "voice/cat/deadEnd_1.ogg",
+        "deadEnd_2": "voice/cat/deadEnd_2.ogg",
+        "deadEnd_3": "voice/cat/deadEnd_3.ogg",
+        "deadEnd_4": "voice/cat/deadEnd_4.ogg",
+        "deadEnd_5": "voice/cat/deadEnd_5.ogg",
+        "deadEnd_6": "voice/cat/deadEnd_6.ogg"
       }
     },
     "madame": {
@@ -1364,7 +1406,8 @@
         "s3": { "speed": 0.85, "intonation": 1.3 },
         "s4": { "speed": 1.15, "intonation": 1.5 },
         "s5": { "speed": 0.85, "intonation": 1.2 },
-        "end": { "speed": 0.85, "intonation": 1.1 }
+        "end": { "speed": 0.85, "intonation": 1.1 },
+        "chase": { "speed": 0.88, "intonation": 0.55 }
       },
       "say": { "intro_1": "……こうそくだいいちじょう。ほうかごのいのこりは、きんしです。", "s4_1": "ちつじょ、ちつじょ、ちつじょ……ひとりもにがしません!" },
       "lines": {
@@ -1374,7 +1417,13 @@
         "s3_1": "voice/qq/s3_1.ogg",
         "s4_1": "voice/qq/s4_1.ogg",
         "s5_1": "voice/qq/s5_1.ogg",
-        "end_1": "voice/qq/end_1.ogg"
+        "end_1": "voice/qq/end_1.ogg",
+        "chase_1": "voice/qq/chase_1.ogg",
+        "chase_2": "voice/qq/chase_2.ogg",
+        "chase_3": "voice/qq/chase_3.ogg",
+        "chase_4": "voice/qq/chase_4.ogg",
+        "chase_5": "voice/qq/chase_5.ogg",
+        "chase_6": "voice/qq/chase_6.ogg"
       }
     },
     "she": {

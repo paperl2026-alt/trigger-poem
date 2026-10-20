@@ -600,6 +600,16 @@ export class PanelWorld {
     this.root.add(g); (this.holes || (this.holes = [])).push(m);
     return g;
   }
+  // a hole burst in any wall (a set's own walls: scenery pieces): at a point on it, n = the way the wall faces (into the place)
+  holeAt(at, n, size = 1.8) {
+    this.game.vfx?.play('wallBreak', at, { n, scale: size / 2 });
+    const g = new THREE.Group(), m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: holeTex(false), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 }));
+    m.rotation.z = Math.random() * Math.PI * 2; m.renderOrder = 3; g.add(m);
+    g.position.copy(at).addScaledVector(n, 0.03); g.lookAt(g.position.clone().add(n));
+    g.scale.setScalar(0.2); this.game.tweens.to(g.scale, { x: 1, y: 1, z: 1 }, 0.22, { ease: Ease.outBack });
+    this.root.add(g); (this.holes || (this.holes = [])).push(m);
+    return g;
+  }
   // a hole right through a side wall at (z, y), an opening size metres across: the board there is replaced by the pieces round it
   // a doorway's rectangle cut out of a side wall (it may span two bays): each board it reaches is put back as the pieces round it
   cutWallRect(on, za, zb, ya, yb) {

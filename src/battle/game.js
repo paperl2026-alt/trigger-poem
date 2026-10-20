@@ -806,14 +806,15 @@ export class Game {
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();
-    sfx.clear();
+    const quiet = this.S.quietEnd;   // (a stop that is not won but run from - the chase: no fanfare, no "cleared!")
+    if (!quiet) sfx.clear();
     this.players.forEach((p) => { p.tauntT = 1.1; if (p.activeOn) p.endActive(false); });
     if (this.S.on?.clear) this.cues.timeline(this.S.on.clear);   // (the stop's own cues at its end: station on.clear)
     if (this.stationQ.length) {
-      this.hud.gl.hold('clear');
+      if (!quiet) this.hud.gl.hold('clear');
       this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
     } else {
-      this.hud.gl.hold('stageClear');
+      if (!quiet) this.hud.gl.hold('stageClear');
       this.openNextStage();
       const heal = bagFx(this.run.bag).stageHeal;
       if (heal) this.players.forEach((p) => { if (p.state !== 'away') { p.heal(heal); this.hud.healPop(p.slot, heal); } });

@@ -321,6 +321,36 @@
             { "zh": "拜拜♡ 下次就当个普通的人偶陪我玩吧。", "en": "Bye-bye♡ Next time, just be an ordinary doll and play with me.", "ja": "ばいばい♡ 今度はふつうのお人形として遊ぼうね。" },
             { "zh": "结束了……吗？剪刀声，听不见了……", "en": "Is it... over? I can't hear the scissors anymore...", "ja": "おわった……の？ハサミのおと、聞こえない……" }
           ]
+        },
+        "flee": {
+          "lines": [
+            { "zh": "快跑快跑！它追上来了！", "en": "Run, run! It's catching up!", "ja": "はしって、はしって！おいかけてくる！" },
+            { "zh": "别停下！停下就完蛋了！", "en": "Don't stop! Stop and we're done for!", "ja": "とまっちゃだめ！とまったらおわりだよ！" },
+            { "zh": "拐弯！这边这边！", "en": "Corner! This way, this way!", "ja": "まがって！こっち、こっち！" },
+            { "zh": "拉住我的手，绝对不要松开哦！", "en": "Hold my hand - don't you dare let go!", "ja": "手、はなさないでね！ぜったいだよ！" },
+            { "zh": "呜……鞋跟太高了啦，跑不快！", "en": "Ugh... these heels are too high, I can't run fast!", "ja": "うぅ……ヒールたかすぎて、はしれないよぉ！" },
+            { "zh": "走廊怎么这么长啊——！", "en": "Why is this corridor so long?!", "ja": "ろうか、ながすぎるよぉ——！" }
+          ]
+        },
+        "lookBack": {
+          "lines": [
+            { "zh": "它、它还在后面！", "en": "I-it's still behind us!", "ja": "ま、まだうしろにいる！" },
+            { "zh": "越来越近了……不要过来啊！", "en": "It's getting closer... stay away!", "ja": "どんどんちかづいてくる……こないでよぉ！" },
+            { "zh": "那是风纪委员……？眼睛好可怕！", "en": "Is that the discipline girl...? Her eyes are terrifying!", "ja": "あれ、風紀委員……？目がこわいよ！" },
+            { "zh": "甩不掉……怎么都甩不掉！", "en": "Can't shake it... no matter what!", "ja": "ふりきれない……ぜんぜんふりきれないよ！" },
+            { "zh": "呀啊！刚才就在拐角那里！", "en": "Eek! It was right at the corner!", "ja": "ひゃっ！いま、かどのところにいた！" },
+            { "zh": "别看了别看了，快跑！", "en": "Stop looking, stop looking - run!", "ja": "みちゃだめ、みちゃだめ、はしって！" }
+          ]
+        },
+        "deadEnd": {
+          "lines": [
+            { "zh": "死、死路！？前面没路了！", "en": "A d-dead end?! There's nowhere left!", "ja": "い、いきどまり！？もうみちがない！" },
+            { "zh": "只有窗户……这里是二楼耶！？", "en": "Only a window... we're on the second floor!?", "ja": "まどしかない……ここ二階だよ！？" },
+            { "zh": "没办法了……窗户，我来打碎它！", "en": "No choice... the window - I'll shoot it out!", "ja": "しかたない……まど、わたしがわる！" },
+            { "zh": "一起跳吧！抓紧我！", "en": "Let's jump together! Hold on to me!", "ja": "いっしょにとぼう！つかまって！" },
+            { "zh": "呜呜，好高……不敢看下面！", "en": "Waah, so high... I can't look down!", "ja": "うぅ、たかい……したみれないよぉ！" },
+            { "zh": "背后是它，前面是窗……只能跳了！", "en": "It's behind us, the window's ahead... we have to jump!", "ja": "うしろはあれ、まえはまど……とぶしかないよ！" }
+          ]
         }
       },
       "cat": {
@@ -678,6 +708,36 @@
             { "zh": "……结束了。南无，好好睡吧。", "en": "...It's over. Namu. Sleep well.", "ja": "……おわりにゃ。なむ、ゆっくり眠るにゃ。" },
             { "zh": "钟声……好久没听到这么干净的声音了喵。", "en": "The bell... I haven't heard a sound this clear in ages.", "ja": "鐘の音……こんなきれいな音、ひさしぶりにゃ。" }
           ]
+        },
+        "flee": {
+          "lines": [
+            { "zh": "跑喵！别回头，回头就会被抓住！", "en": "Run, nya! Look back and it'll grab you!", "ja": "はしるにゃ！ふりむいたら、つかまるにゃ！" },
+            { "zh": "前面拐弯！跟紧我的尾巴！", "en": "Corner ahead! Stay on my tail!", "ja": "この先まがるにゃ！しっぽについてくるにゃ！" },
+            { "zh": "哈……哈……猫可不擅长长跑喵……", "en": "Hah... hah... cats aren't built for distance, nya...", "ja": "はぁ……はぁ……猫は長距離にがてにゃ……" },
+            { "zh": "小的交给我，你只管跑！", "en": "Leave the small fry to me - just run!", "ja": "ちいさいのはまかせるにゃ、あんたははしるにゃ！" },
+            { "zh": "这走廊……刚才有这么多拐角吗喵？", "en": "This corridor... did it have this many corners before, nya?", "ja": "この廊下……こんなに角あったかにゃ？" },
+            { "zh": "别停！停下来就是它的晚饭喵！", "en": "Don't stop! Stop and you're its dinner, nya!", "ja": "とまるにゃ！とまったらあいつの晩ごはんにゃ！" }
+          ]
+        },
+        "lookBack": {
+          "lines": [
+            { "zh": "……追上来了喵。比刚才近。", "en": "...It's catching up, nya. Closer than before.", "ja": "……おいついてきたにゃ。さっきよりちかいにゃ。" },
+            { "zh": "那东西附在风纪委员身上了喵。", "en": "That thing's possessing the discipline girl, nya.", "ja": "あれ、風紀委員にとりついてるにゃ。" },
+            { "zh": "啧，开枪也只能拖一下喵。", "en": "Tch, shooting only slows it a little, nya.", "ja": "ちっ、うっても足止めにしかならないにゃ。" },
+            { "zh": "它在笑……它在玩我们喵。", "en": "It's smiling... it's toying with us, nya.", "ja": "わらってるにゃ……あそばれてるにゃ。" },
+            { "zh": "下一个拐角之前得拉开距离喵！", "en": "We need distance before the next corner, nya!", "ja": "つぎのかどまでに、はなすにゃ！" },
+            { "zh": "别回头了！回头会慢下来的喵！", "en": "Stop looking back! It slows you down, nya!", "ja": "ふりむくにゃ！おそくなるにゃ！" }
+          ]
+        },
+        "deadEnd": {
+          "lines": [
+            { "zh": "……被逼到角落了喵。", "en": "...We're cornered, nya.", "ja": "……おいつめられたにゃ。" },
+            { "zh": "窗户！猫从二楼跳下去不会有事的喵！", "en": "The window! A cat can drop from the second floor, nya!", "ja": "まどにゃ！猫は二階からでも平気にゃ！" },
+            { "zh": "你会跳吗？不会也得跳喵！", "en": "Can you jump? Even if you can't, you're jumping, nya!", "ja": "とべるかにゃ？とべなくてもとぶにゃ！" },
+            { "zh": "打碎它！我数三下——跳喵！", "en": "Shoot it out! On three - jump, nya!", "ja": "わるにゃ！さんでとぶにゃ！" },
+            { "zh": "落地的时候记得弯膝盖喵。", "en": "Bend your knees when you land, nya.", "ja": "着地はひざをまげるにゃ。" },
+            { "zh": "没路了？那就开一条路喵！", "en": "No way out? Then we make one, nya!", "ja": "みちがない？なら、つくるにゃ！" }
+          ]
         }
       }
     },
@@ -850,6 +910,16 @@
         "end": {
           "lines": [
             { "zh": "……谢谢。明天……我会好好来上学的。", "en": "...Thank you. Tomorrow... I'll come to school properly.", "ja": "……ありがとう。あしたは……ちゃんと、学校にくるね。" }
+          ]
+        },
+        "chase": {
+          "lines": [
+            { "zh": "走廊里……禁止奔跑。", "en": "...No running in the corridors.", "ja": "廊下を……走らないでください。" },
+            { "zh": "站住。违反校规的学生……要接受处分。", "en": "Stop. Students who break the rules... will be punished.", "ja": "止まりなさい。校則違反の生徒は……処分です。" },
+            { "zh": "放学后的校舍……不许逗留……不许逃……", "en": "After school... no lingering... no running away...", "ja": "放課後の校舎に……居残りは……逃亡は……禁止……" },
+            { "zh": "跑也没用的……我……全都看得见……", "en": "Running is useless... I... can see everything...", "ja": "逃げても……むだです……ぜんぶ……見えています……" },
+            { "zh": "头发的颜色……违规……违规违规违规……", "en": "Hair colour... violation... violation violation violation...", "ja": "髪の色……違反……違反違反違反……" },
+            { "zh": "一个……都不许……离开学校……", "en": "Not one... of you... leaves this school...", "ja": "ひとりも……学校から……出しません……" }
           ]
         }
       },

@@ -720,7 +720,9 @@ export class Enemy extends Actor {
     const ux = dx / d, uz = dz / d, step = Math.min(d - bp.windupDist * 0.6, zig ? bp.rollStep : bp.hopStep);
     let tx = P.x + ux * step, tz = P.z + uz * step;
     // (zigzag: slanting from one side of its line at her to the other, each roll nearer - a Z at her, not a sway: user 2026-10-20)
-    if (zig) { this.zigSide = -this.zigSide; const off = this.zigSide * bp.rollSide * 0.5, dl = off - (this.zigOff || 0); this.zigOff = off; tx += -uz * dl; tz += ux * dl; }
+    // (the swing narrows as it nears and the last roll lands on the line: it must get close enough to spring - a full swing at the end
+    // kept it rolling from side to side for ever, never in reach)
+    if (zig) { this.zigSide = -this.zigSide; const near = Math.min(1, Math.max(0, (d - step - bp.windupDist) / bp.rollStep)), off = this.zigSide * bp.rollSide * 0.5 * near, dl = off - (this.zigOff || 0); this.zigOff = off; tx += -uz * dl; tz += ux * dl; }
     const H = g.world.set?.hall; if (H) { tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx)); }
     const x0 = P.x, z0 = P.z, dur = (zig ? bp.rollTime : bp.hopTime) / this.rage(), arc = zig ? bp.rollArc : bp.hopArc, spin = zig ? this.zigSide * Math.PI * 2 : 0;
     this.moving = true; this.play(zig ? 'walk' : 'leap');

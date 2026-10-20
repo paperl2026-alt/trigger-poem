@@ -15,7 +15,7 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, fever: 6, join: 5, ready: 5, combo: 4, kill: 3,
   scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5,
-  sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8 };   // (episode 2: she, src/battle/chase.js say)
+  sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8, flee: 6, lookBack: 7, deadEnd: 8 };   // (flee / lookBack / deadEnd: the prologue's chase, ride.js)   // (episode 2: she, src/battle/chase.js say)
 const TAG = { kill: 'K.O.', combo: 'COMBO', low: 'DANGER', fever: 'FEVER',
   ready: 'SKILL OK', skill: 'SKILL', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
 // fewer, longer lines (user 2026-10-19 batch 23): small talk waits this long after her last line (by priority: <= 4 / 5)
@@ -87,7 +87,7 @@ export class Stickers {
     this.her = this.game.players.map(() => ({ f: new Fan(this.layer, 75), cd: 0, last: {}, recent: {} }));
     this.mon = [0, 1].map(() => new Fan(this.layer, 74));
     this.big = new Fan(this.layer, 76);
-    this.bossF = new Fan(this.layer, 76, 0.15, () => this.hud.L.W);   // (her lines nearly flat, on the screen: user 2026-10-20) this.bossSaid = {};
+    this.bossF = new Fan(this.layer, 76, 0.15, () => this.hud.L.W); this.bossSaid = {};   // (her lines nearly flat, on the screen: user 2026-10-20)
     this.onos = [0, 1, 2, 3, 4, 5].map(() => { const m = picture(null, 73, Math.random()); this.layer.add(m); m.userData.t = 9; return m; });
     this.oi = 0; this.mi = 0; this.seen = new Map(); this.monCd = 0;
   }
