@@ -116,6 +116,13 @@
     - `relief`：深度浮雕图；
     - `weak`：Boss 弱点。
 - 代码用到时才读 `C.*` / `T.*`（`T = C.tuning`），模组改值会生效。`content.js` 有每类数据的默认值，出错记在 `C.errors`。
+
+## 关卡包（`public/content/base/levels/<话>/`；用户 2026-10-20：每个关卡一个独立的资产索引目录和配置表）
+- 每一话一个关卡包，格式和内容包一样：`level.json`（id、name、order、`requires: ["base"]`、`data`、`assets`），`episode.json`（这一话的流程）、`sets.json`（场景）、`comics.json`、`bosses.json`、`enemies.json` / `projectiles.json`（只在这一话出现的怪和飞行物），`assets/` + `assets/manifest.json`（这一话自己的图：src 相对关卡包，key 和本体一样，比如 `ep1/coffin`）。
+- 本体 `pack.json` 的 `levels` 列出关卡包；`content.js loadPack` 读完一个包接着读它列出的关卡包（模组 / DLC 也可以带自己的关卡包）。图片什么时候载入还是 `groups.js` 按小关算的，和图放在哪个包无关。
+- 什么归哪个包：只有这一话的流程走得到的条目和图归这一话；一话自己名字的图（`ep1/…`、`cover/ep1_…`、`prop/ep2s_…`）总归那一话；几话共用的、两人、界面、特效留在本体。
+- 工具：`tools/packs.py`（工具都经它读写内容：`manifest()` 把所有包的图当一个字典用，`m.path(key)` 文件在哪，新 key 自动进它该去的包；`data_file(cat, id)` 一个条目在哪个文件）；`tools/level_packs.py check`（每张图的文件都在、没有 key 同时在两个包里）、`sync`（还按老路子往本体写图的工具跑完后，把一话自己的图挪进关卡包）；`tools/node/dump_content.mjs`（照游戏的读法读全部内容存成一个 JSON：改布局前后对比用）。
+- 还在本体的：声音（`audio/sounds.json`、`bgm/`），试听页和声音工具直接读它；以后再挪。
 - 加载顺序：`main.js` boot → `loadContent()` → initSettings / initSave / initLang / initTheme → 加载图片。
 
 ## 代码地图
@@ -149,6 +156,11 @@
   - `manga`（翻页转场）、`comic`（漫画播放）；
   - `hud`（战斗 HUD 外壳：教程提示、开场横幅、伤害数字仍是 DOM）+ **`glhud`（战斗 HUD 本体，WebGL）**：效果图拆出的图层 + 程序画的文字（画布文字贴图）、条、环、格、弹药、Q 版头像、准星、装填图、倒计时、Boss 条；位置数据在 `ui/battle.json`（效果图像素，按屏幕高度换算，四角锚定）；
   - `game.cine(o, then)`（特写，DESIGN「要给玩家看的东西放慢、特写」）：镜头去 `o.cam` 看 `o.at`，或者对着 `o.on`（一个 actor / 一个点；`o.face` 从它朝向的正前方）`o.dist` 米、`o.up`、`o.side`，移动的跟着拍；`o.during()` 到位时调用，`o.hold` 秒数（可以是函数：说完台词才知道多长），`o.lull` 期间谁也不开枪、不受伤；`game.cineOn` 时两人的立绘滑出画面（player.js `cineK`）、HUD 除了台词和警示都藏起来、上下黑边（glhud.js `cineUpdate`）、准星环淡出（fx.js）、镜头不随准星晃、提示和下一波怪等它拍完。站点 `focus: { gimmick, dist, up, v, hold }` 先特写那个机关、让它演完（Gimmick 的 `twitch` / `flicker` / `swap`）。Boss 用 `closeUp(kind, o)`：特写 + 说那一句、按台词长度停。
+    - 特写的镜头调度（2026-10-20，研究目录「战斗中的镜头」）：`o.orbit`（弧度）停留期间绕它转这么多；`o.dolly`（度）停留期间视野放宽这么多、同时镜头往前推保持它一样大（推拉变焦：后面的房间被拉长）；`o.up` 为负 = 从低处仰拍；`o.title` 上下黑边里滚动的大字（glhud.js `marquee`：上面实心、下面空心反向滚，文字重复铺满）。Boss 登场：从低处仰拍、绕半圈、推拉变焦、黑边滚她的名字；变身：反方向绕；第 2 话「她」第一次露面：仰拍 + 推拉变焦。
+  - 战斗中的镜头：随准星微微侧倾（`rotateZ(-look.x × 0.035)`，PanelWorld / World），打死耐打的怪往前一冲（`world.punch` 度，衰减）。
+  - 换画风（`post.js` `styleBurst(dur, seq, beat, a, b)`，研究目录「整段换画风」）：画面按拍子硬切成别的画法：1 双色调、2 线稿（亮度的边）、3 故障（整行错位 + 色差 + 杂色条）、4 像素、5 网点、6 负片；每次最多一帧负片（防光敏）。用在：Boss 变身、Boss 死、序章异变（invade）、第 1 话翻转、第 2 话「她」露面、蜜蛆破一半 / 死。
+  - 世界里的光（fx.js，研究目录「体积光武器 / 死亡演出」）：`beam3d`（猫娘必杀：从手到准星打到的地方的一根真光柱，外面一圈光晕，一个个光环顺着它往外跑，屏幕上的光带照旧当核心）、`shockRing`（地面上往外冲的光环：打死耐打的怪、Boss 死）、`pillar`（Boss 死时立起的光柱）。着色器 `VOL_FRAG`：按表面朝不朝镜头算亮度（侧面亮，像一根光管）、沿长度滚动的条纹、加色。
+  - 前景粒子（PanelWorld `ambient`，研究目录「前景粒子永远在」）：镜头前 1～8 米一直飘着东西：平静时光里的灰尘，翻转后粉色爱心花瓣和灰，暗的地方火星；set `ambient: { kind: dust | petals | embers | off, rate }`。
   - 怪的入场（enemies.json 波次的 `from`，DESIGN「怪要有合理的入场」）：`door`（`way: end | back`，从那个门洞后面的过道走 / 飞出来）、`stairs`（门洞在楼梯顶：先走下楼梯）、`outside`（飞的从栏杆外进来）、`wall` / `ceiling`（破洞，成群的只破第一个）、`drop`、`statue`；`pop`（地上翻起来）不再用在第 2 话。比 `layout.json monster.smallH` 矮的地上怪，终点往后挪到头顶在屏幕 `smallTop` 以上（`PanelWorld.minDepth`）。
   - 场景之间怎么走（第 2 话，`Game.passThrough`，DESIGN 第 2 话「场景之间怎么走」）：`walkOn` 时两人立绘退出、HUD 收起（没有黑边）；`turnTo` 先原地转向出口；站点 `leave: { way, via, steps, exit, hole }`、`arrive: { way, from, hole, at, look, steps }`。PanelWorld：`hall.ways`（门洞后面的过道，`buildWay`；`door: { kind: slide | swing, k }` 门板，`door(id, open)` 开关）、`hall.stairs`（真的台阶 + 扶手，`buildStairs`）、`hall.shafts`（天花板 / 地板上的竖井 + 梯子，`buildShaft`，那一格天花板拆成围着洞的四块 `holeRects`）、`cutWall`（侧墙真的挖穿，`addHole(..., through)`）；`travel(..., { steps })` 上楼梯、爬梯子一步一顿。下一个小关在别的地方时，`nextStep` 不先换场景，让 `passThrough` 走过去换；新小关开始时她先退场（`chase.gone`）。站点 `slam: 'back'` 镜头转过去看那扇门关上；`appear` 的机关到它那一站才倒下来。数据由 `tools/rounds/ep2_level.py` 生成，门洞图片的修整在 `tools/rounds/ep2_ways.py`。
   - `game.lull`：战斗暂停一下（Boss 变身）：玩家不能开火、不受伤，必杀计时停住（player.js），Boss 不吃伤害（thing.js）。
@@ -180,13 +192,26 @@
   - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
 - 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
 - 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）。
+- 抱头乱射（2026-10-20，DESIGN「女主动起来」，`player.js` `blind`，数值 `combat.player.blind`）：手柄 / 键盘同时按住躲和射击，或鼠标在要快躲的大招打过来时刚按下的 `tap` 秒内：她留在掩体里（`state` 还是 cover、不暴露），`updateGun(dt, t, true)` 照常打，子弹散在准星周围 `spread`、伤害 × `dmg`（`p.dmgMul`），枪口在掩体顶上；AI 队友躲大招时有 `combat.ai.blind` 的概率这样打（`AICtrl.blindy`）。姿势 `blind`（有图时 heroine.js 换成她的抱头乱射图）。
+- 女主的动作图（heroine.js `ACTIONS`：blind / sidehide / sidefire / leap / land / aerial）：角色的 `rig` 里有哪张就建哪张，`setOut(out, want)` 按 player.js 的姿势名换图（必杀 = aerial），没有图就照旧 cover / fire；枪口位置用那张图自己的 `muzzle`。
 - 打击感（2026-10-20，数值都在 `tuning/combat.json feel`）：
   - 怪自己（`Enemy.feel`，`baseUpdate` 里三根阻尼弹簧）：按这一下多重（`weight`：枪轻、加特林更轻、咒重、光束每跳很轻，暴击 ×`critMul`）压扁再弹回（`mesh.scale`）、往后仰（`mesh.rotation.x`，3D 里真的倒）、往打中的另一边歪（叠在 boil 的 `rotation.z` 上），被打的那只原地定住 `freeze` 秒（`Game.update` 只给它 6% 的时间、动画停、贴图抖）；连射时幅度有上限。
   - 整个画面：重的一下（weight ≥ 0.9）和打死时顿帧（`Game.feelStop` → `G.stop`，两次至少隔 `stop.gap`，必杀中不顿），震屏分档；`post.js` 的震屏改成按 trauma² 采几条正弦（平滑，不是每帧随机）并带一点镜头翻滚 `shakeR`（三种镜头都 `rotateZ`）；打死耐打的怪（最大血量 ≥ `impact.hp`，暴击打死门槛减半）插冲击帧 `post.impact()`（前半黑白高反差、后半反相，HUD 不受影响，至少隔 `impact.gap`）。
   - 命中音随连击升调（`Game.comboRate`：每 `comboPitch.per` 下高一个半音，最多 `max` 个；`hitNote` 的 rate）。
 - 受伤的样子（`src/core/paper.js` 的 solid 分支，怪和 Boss）：伤害图 R 通道越重的地方越偏淡紫粉、越透明（最多剩 40%，`am`）、透明的边缘发粉光；G 通道（真言 / 镭射的灼烧）偏琥珀色、略透明，不再变黑。
 - 伤害：`characters.js buildStats` = 角色的枪 + 熟练度（每级 `economy.json mastery` dmgPerLv / critPerLv / critMulPerLv / reloadPerLv，现在 2% / 0.5% / 0.02 / 1%，满级 +18% 伤害）+ 书包；暴击率 = Fever 准头 + `w.critAdd`，暴击倍率 = Fever + `w.critMulAdd`（`Game.critRate / critMul`）。
-- 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`，没血了往后倒、淡出；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`）。
+- 场景道具能打坏（set 的 `props`，写 `solid: true` 的不坏）：挡子弹（`Game.hitMeshes` 带上 `world.breakableMeshes()`，透明处不挡：道具图在 manifest 标了 `hit` 建了 alpha 遮罩），打了留洞，血量 `tuning/combat.json prop.hp`；怪走路 / 跳 / 冲过去会撞碎（`smashPropsNear`，从怪那边撞飞）。
+- **物理**（2026-10-20 用户：整个游戏都要有物理，不是做一个演示；`src/battle/physics.js`，数值 `tuning/combat.json prop.phys`）：Rapier（`@dimforge/rapier3d-compat` 0.21.0，wasm 内联成 base64，构建时单独一个约 4.3 MB 的 `rapier-*.js`；`main.js` 启动时 `loadPhysics()` 后台加载，没加载好的地方照旧走补间动画）。
+  - 每个 PanelWorld 一个 `Physics`：地板、有的侧墙、尽头墙、有天花板的天花板是固定盒子。刚体原点就是物体的支点（画的底边中点，或中心），碰撞盒摆在它上方 / 四周，所以每帧物体直接照抄刚体的位置和转角；画永远不绕竖轴转（不会侧过来露出纸边）。`add(obj, w, h, d, { type: dynamic / kinematic / fixed, pivot, spin, density })`。
+  - 场景道具（set 的 `props`）：盒子（宽高照画、深约宽的四分之一，`d` 可改；`solid` 的是固定的）。打中在打中的那一点上推一下（`push` 按攻击种类），会晃、滑、歪倒；打烂时从镜头（或撞它的怪）那边打飞（`breakPush` / `breakUp`），翻滚、撞墙、弹几下停下，`fadeAfter` 秒后淡出，飞出 `chips` 个木片。被掩体占掉的道具刚体也关掉（`clearProps`）。
+  - 怪：活着是运动学刚体（`follow`），走到哪碰撞盒跟到哪：把挡路的道具推开，飞来的东西撞上会弹开；走路 / 小步挪只推（`smashPropsNear(p, r, false)`），跳扑、冲刺、从地下钻出、破墙才撞碎。死了（`Enemy.die`）变成动态刚体（`Actor.toBody`）被那一枪打飞：速度 = `death.base + death.perWeight × 这一下的重量`（打击感的 weight，猫娘的咒最重），往上 `death.up`，在打中的那一点上推（会转），撞墙、撞道具、撞掩体、撞别的怪，停下 `death.life` 秒后淡出；咒 / 光束打死的边飞边烧掉；暴击打死的碎成它自己的一格格碎片（`shatter`：按画的大小切 3～6 × 3～7 格，空格不要，每片一个刚体，从打中的点往外 + 顺着子弹飞，`pieceLife` 秒）。飞行物被打下来也是刚体（打飞、落地、弹），撞到掩体被挡下的掉在掩体前面弹几下。
+  - 掩体：站着时是运动学刚体（飞来的尸体、碎片撞上会弹开），挨打时往后晃一下再弹回（`rockCover`，弹簧）；被打烂变成动态刚体，从镜头那边撞飞翻倒（`coverBreak`），飞出木片，躺在倒下的地方（离开时不再折叠）；离开站点时刚体删掉再折叠。掩体写 `fall: true` 的在到达时从 `coverFall` 米高处直直掉下来砸进位置（扬尘、震屏），落稳后才变成站着的掩体。
+  - 吊着的东西：set 的 `decals` 里 `on: hang` 的旗子挂在天花板一个球铰上（`hang`），飞来的东西撞上、打空的子弹打在它上面都会晃（打空的子弹打在旗子上不留弹孔）。
+  - 机关落下（`Gimmick.drop`）：真的掉下来（给一个向下的初速度，正好在原定时间落地），落地后翻、弹、躺着。
+  - 打空的子弹打在墙上 / 地上：弹孔 + 飞出 `wallChips` 块灰泥碎屑（朝镜头这边）。
+  - 碎屑、碎片同屏最多 `chipMax` 个（多了先删最老的）。
+  - 撞击声：动态刚体撞得够狠（接触力超过 `soundForce` × 质量）在那里出声，大的 `thud`、小的 `shell`，越狠越响，同时最多每 70 毫秒一声。
+  - 固定 1/60 秒一步（一帧最多 4 步），用游戏时间：顿帧时物体也慢下来。道具的影子跟着它在地上走，离地越高越淡。
 
 ## 第 2 话：她和追逐（`src/battle/chase.js`，数值 `tuning/chase.json`，关卡 `sets/ep2.json` 由 `tools/rounds/ep2_level.py` 生成）
 - **她**（`Stalker`，三个形态 a / c / e 的图 `enemy/she_<形态>_<姿势>`，お蚕様 `enemy/kaiko_<姿势>`）：没有血，打她只攒硬直槽（`she.stagger`；张开剪刀蓄力时挨打 ×`windupStagger`；不挨打时慢慢掉），攒满倒地 `down` 秒，每倒一次乘 `downDecay`（最少 `downMin`），爬起来；够到人（`reach`）就蓄力（红色快打环）再扑（穿过掩体），扑中有 `grabChance` 抓住一个人：屏幕中间「狂点射击挣脱」，`mashTime` 秒内打 `mash` 下挣脱（她被推倒），否则一直掉血；身上的伤痕慢慢褪、倒地时清空（她打不死）。お蚕様打满只会退一下，只有灯油 / 蜡烛的机关（`trap.kill`）烧得死。她不算波次里的怪（`a.stalker`，`checkWave` 不等她）。
@@ -263,6 +288,40 @@
   - **木板桥**（站点 `bridge`）：赶路走到一半咔嚓一声，震屏、两人吓到、冒 `bridge` 台词；
   - **从别处进来**（小关第一个站点的 `enter: { from, dur, shake, overlay, sfx }`，`Game.enterFrom`）：镜头从偏移 `from` 的地方移到站点（掉进坑：从上面落下来、震屏；被拽出坑：从下面升上来，`overlay` 的图（猫爪）同时从屏幕上方伸下来再拉走，`#ui .haul`）。
 - 怪物 `rush: true`（走路怪）：扑上来是冲撞（穿过掩体），带快打环、蓄力能被打断（半截丧尸）。
+
+## 停留点预设（`tuning/shots.json`，`src/battle/shot.js`；DESIGN「停留点不只是一个镜头、一种打法」）
+- 一种停留点 = 一套预设：`cover`（掩体战）、`open`（开阔地）、`corner`（大房间对角）、`ride`（载具）、`run`（自己跑）、`escort`（远处狙击护卫）、`cine`（演出镜头）。每套写两人（`players`：显示、`x` 两人的位置、`scale`、`y`、`crop` 往下沉只露上半身、`set` 姿势组、`out` 按住探身 / 一直探身）、`cover` 有没有掩体、`ammo`、`weapon`（攻击模式：`characters/<id>.json modes.<名字>`）、`hud`（显示、`mid` 中下那条往上挪、`bubbles` 弹幕气泡）、`cam`（`zoom` 收窄视野、`lens` 暗角）、`mv` 强度、`combat`。
+- 站点写 `shot: "<预设>"` 或 `shot: { kind, 要改的项 }`；没写按站点推断（`ride` 有车 → ride、没车 → run，`escort` → escort，`cine` → cine，其余 cover）。`Game.goStation` 换预设，`Game.shot` 是当前的；`Game.live`（`Live`）每帧把屏幕上的东西缓过去（两人的位置、大小、下沉、显隐，中下 HUD，视野，暗角），换预设是挪过去，不是跳。
+- 用到预设的地方：`player.js`（位置、大小、下沉、显隐、一直探身、不装弹、攻击模式）、`heroine.js setSet`（姿势组：`rig.sets.<组>: { cover, fire, actions }` 指向 rig 里的条目，没有就用 cover / fire）、`glhud.js`（中下那条 `Top` 的高度，Dodge 跟着；`hud.show: false` 和特写一样退下；`lens` 暗角）、`stickers.js`（`bubbles: false` 不冒气泡，指令里的台词 `force` 例外）、`panels.js` / `world.js`（视野减 `live.zoom`）、`Game.arrive`（`cover: false` 不摆掩体）、`mv.js`（每拍强度乘 `mv`）。
+
+## 演出指令（`src/battle/cues.js`，Game 的 `cues`）
+- 关卡里所有「到这儿发生点什么」都用同一种指令：一个对象，每个键都可选，同时生效。`say`（`who`、`force`）、`sfx` / `sound`、`shake`、`flash: [强度, "#色"]`、`impact`、`burst: [秒, [画风], 拍长, "#色A", "#色B"]`、`hint`、`music`、`mv`（MV 导演）、`act`（怪的演出，`acts.js`）、`spawn`（波次条目）、`turn` / `mutate` / `gimmick` / `collapse` / `spawner` / `wake`（原来的波次事件）、`swap`、`fire`、`cam`（特写：`on: "boss" | 怪的种类 | [x,y,z]`、`dist`、`up`、`side`、`zoom`、`orbit`、`dolly`、`title`、`hold`…）、`shot`（从这儿换预设）。
+- 用在：高速段的 `marks`（除了 `spawn` / `block` / `face` / `speed` 自己处理，其余交给指令）、波次里的事件（`{ t }` 按时间、`{ kills }` 按击杀数）、站点 `on: { arrive: [...], clear: [...] }`（到达时、打完时，和别的同时跑）、演出停留点 `cine: [...]`（按 `at` 秒数排的时间线；有 `cam` 的那条等镜头回来再往下；放完接下一站）、Boss 的 `bosses.json cues: { intro, s2, s3, die }`。
+
+## MV 导演（`src/battle/mv.js`，Game 的 `mv`；数值 `tuning/combat.json mv`）
+- 跟着音乐打拍子：`audio.js musicBeat()`（录好的曲子用 `sounds.json music.<名字>.bpm`，`offset` 第一拍前的秒数；合成曲用自己的 bpm）。每拍一个小脉冲（色差一踢、前景闪粉），每小节强一点；强度乘停留点预设的 `mv`。
+- 零件（画在 overlay 上）：`wall` 一个词一行行重复铺满全屏、每行一种颜色、左右交错滚；`slam` 镀铬 + 糖果色渐变的大标题砸进画面中间、后面三层错位的影子；`popups` 假系统弹窗一个叠一个（YAMERO 的弹窗瀑布）；`label` 红底白字标签条横穿；`tunnel` 爱心一层层从中间冲向镜头；`phone` 画面挤成中间一条竖屏、两边黑底上竖排大字。
+- 什么时候：Fever 满 → `overdrive`（几秒内每小节一面字墙、爱心隧道、标签条，脉冲加强）；进新小关 → 爱心隧道；连击每 `comboEvery` → 标签条；有人残血（`lowHp`）→ 毒电波：画面扭曲加强、隔几秒一阵故障 + 像素化、错误弹窗（`text/ui.json mvToxic`）；Boss 变身 → 她名字的字墙；其余由演出指令 `mv` 在关卡数据里写。
+
+## 远处护卫（`src/battle/escort.js`，Game 的 `escort`；数值 `tuning/combat.json escort`）
+- 站点 `escort: { who: soul | <图 key>, path: [[x,y,z]...], speed, hp, share, h, name, loop }`，预设 `escort`（望远镜视野 + 暗角，两人退到两边只露肩膀以上）。护卫目标沿 `path` 走，有自己的血条（Boss 条）和金色保护环（`fx.lock('guard')`）；走到头这一站就赢了（`Game.escortDone`，剩下的怪一起消失）。
+- 波次在它走的时候循环（从第 `loop` 波起）；波次条目写 `ahead`（沿它的路往前几米，负数在它后面）/ `side`（离路几米）就从那里出来，不经过「挪到看得清的地方」。护卫期间出来的怪都冲它去（`Enemy.escortT`：走过去咬它、扔东西砸它；`forGirls: true` 的照旧打两人），打到它的伤害由 `Game.playerAttacked` 转给 `escort.hit`：它掉血，两人各掉 `share` 比例；它倒下会缓一会儿、剩 40% 血再起来，两人各掉 `fallDmg`。
+
+## 高速段 ride（`src/battle/ride.js`，Game 的 `ride`；数值 `tuning/combat.json ride`；DESIGN「停留点不只是一个镜头、一种打法」）
+- 站点写 `ride: { from, path, speed, face, lean, vehicle, marks }`：镜头从 `from` 沿 `path` 的样条一路冲（速度缓到 `speed`），朝前或朝后看（`face`，转身是从侧面转过去的），转弯时往里倾（`world.rideBank`，三种镜头的 rotateZ），满屏从中间往外的速度线（`lines` 每米几条），铁轨的颠簸。
+- 两人怎么站、打：停留点预设 `ride`（有车）/ `run`（没车，自己跑）：一直探身、不装弹，攻击换成 `modes.ride`（地雷妹 `gatling` 转盘机枪、猫娘 `rate` 射速倍率），两人往中间靠、只露上半身；开始时两人从画面下面跳进车里。
+- `marks`（按沿路的米数触发）：`spawn`（波次条目，位置写 `ahead` 沿路往前几米（负数 = 后面追来的，`rideChaser`，不会被甩掉）、`x` 左右、`y`），`block`（铁轨上的东西：一个场景道具，刚体，得提前打烂，不然撞上去两人各掉 `crashDmg`、减速、它被撞飞），`face`、`speed`，其余都是演出指令（`say`、`sfx`、`shake`、`burst`、`hint`、`mv`、`cam`…，见「演出指令」）。落在镜头后面 `behind` 米的怪就没了；跑到头时还在的也一起甩掉。
+- `vehicle: cart`：车头的前沿挂在镜头上、画在两人前面（挡住她们的腿），铁轨和枕木沿路铺（Tube + InstancedMesh）。
+- 第 1 话：`tools/rounds/ep1_ride.py` 生成蜜矿（ep1_mine，260 米，十五个标记）和冥界（ep1_nether，开阔地，四面漂浮岛屿远景，Boss 场）两个 set 和 episodes 里的两步。
+
+## Boss：蜜蛆（`src/battle/worm.js`，数据 `bosses.json` maggot，beh `worm`；DESIGN 第 1 话 8）
+- 不是纸片：全是 3D 网格（头：球 + 一圈牙 + 嘴里的核心；身体：一节节球，背上蜜囊），自己的卡通着色器（三档光、边缘透光、环纹和叶脉噪声）+ 反向外壳描边。
+- 开阔地（set 没有侧墙：冥界）是钻地（`newBreach`）：从镜头前面 7～20 米、左右 7 米内的地上破洞钻出来，4～8 米高的弧，钻回另一个洞（有时弧往镜头这边甩）。
+- 有墙的地方：从房间外（尽头墙 / 侧墙 / 天花板里）穿过一个洞（`world.addHole`，到洞口那一刻才破开、扬尘、震屏），在房间里拐两三下，从另一面的洞钻出去；身体是蛇形跟随（头走过的轨迹，每节在头后面固定米数处，朝着轨迹方向），墙是不透明、写深度的，所以墙里的那段自然看不见。
+- 招式：后仰（`fx.lock('hide')` 的紫环，`rear` 秒）→ 沿直线扑到镜头前咬（两人都挨 `heavy`，躲着的挡住）→ 回到路线；张嘴吐 `spits` 团 `glob` 飞行物。囊破一半：`stage` 2，更快、出招更勤。
+- 打：只有蜜囊吃伤害（`part.userData.sac`；`targetsAt` 把打中的网格作为 `part` 传进 `hit`），打肉弹开（隔 8 秒有人说一句 armor）；囊全破了打嘴里的核心。总血量 = 每节 `sacHp` × 节数 + `headHp`，血条照常。
+- 死：每一节和头都变成物理刚体被打散掉下来，四道地面光环、一根光柱、换画风一下，5 秒后淡出。
+- 给游戏其余部分的接口：`hitMeshes / hit / update / dispose / intro（特写：从低处仰拍、绕 0.7 弧度、推拉变焦，黑边里滚动它的名字）/ center / screenBox / aimAt（AI 打最近的蜜囊）/ uvToWorld`。
 
 ## Boss：「？？？」（`src/battle/thing.js`，数据 `bosses.json` qq）
 - 只有核心吃伤害（每个形态 `core: [u, v, 半径]`，图上从左、从下的比例，半径按身高算；`markCore` 用小的快打环圈住它），别处打中只冒火花（`glance`）；出招（`attack` 状态）时什么都打不进；蓄力时打核心能打断冲撞。AI 队友瞄核心（`aimAt`）。腐蜜夫人（madame）同一套。
