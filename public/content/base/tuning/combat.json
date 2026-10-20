@@ -60,6 +60,7 @@
       },
       "_doc": "场景里能打坏的道具（PanelWorld makeProp，set 里写 solid 的不会坏）：血量；挡子弹，怪冲过去会撞碎。phys（2026-10-20 物理，src/battle/physics.js）：道具是真的刚体（盒子：画的宽高、深约宽的四分之一），density 密度（kg/m³）、friction 摩擦、restitution 弹性、damping 阻尼；push 每种攻击打中时推它多快（米/秒，加在打中的那一点上，所以会晃、会歪；暴击 ×1.5）；打烂时 breakPush 米/秒往外飞（breakUp 往上的分量），飞出 chips 个木片（场上最多 chipMax 个，各活 chipLife 秒左右），停下 fadeAfter 秒后淡出；soundForce 撞得多狠才出声（每公斤多少牛），pieceLife 暴击打碎的碎片活多久；death：怪被打死时被打飞多快 = base + perWeight × 这一下的重量（猫娘的咒最重），up 往上的分量，life 停下多久后淡出；coverFall 标了 fall 的掩体从多高掉下来，coverBreak 掩体被打烂时被撞飞多快；wallChips 子弹打在墙上 / 地上飞出几块碎屑"
     },
+    "anim": { "rate": 0.5, "blend": 0.14, "_doc": "怪的逐帧动画（src/battle/enemies.js tickAnim / setFrame，用户 2026-10-20：换帧太快）：rate 播放速度（画的帧率的几倍，0.5 = 慢一倍）；blend 换帧时旧帧淡出、新旧两帧沿移动方向拖一点残影的秒数（老游戏的补帧手法，src/core/paper.js map2 / mixK）" },
     "comboKill": 3,
     "comboCall": 50,
     "waveCarry": 1,
@@ -89,6 +90,6 @@
       "share": 0.35,
       "fallDmg": 18
     },
-    "ride": { "speed": 8, "lean": 0.9, "lines": 9, "behind": 7, "crashDmg": 14 }
+    "ride": { "speed": 8, "lean": 0.9, "lines": 9, "behind": 7, "crashDmg": 14, "holdSpeed": 1.2, "holdMax": 10 }
   }
 }

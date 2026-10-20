@@ -128,5 +128,11 @@
   "w": 1024,
   "h": 1472,
   "canvasH": 1536
+ },
+ "cat_dragged": {
+  "src": "r77/cat_dragged_b",
+  "w": 1024,
+  "h": 1534,
+  "canvasH": 1536
  }
 }

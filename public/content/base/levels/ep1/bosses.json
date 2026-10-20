@@ -1,10 +1,10 @@
 {
   "_doc": "第 1 话关卡包的 bosses（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
   "madame": {
-    "beh": "thing",
+    "beh": "madame",
     "sprite": "boss/md",
     "name": { "zh": "腐蜜夫人", "en": "Madame Rotten Honey", "ja": "腐蜜夫人" },
-    "hp": 12000,
+    "hp": 4160,
     "stunTime": 1.6,
     "firstDelay": 1.8,
     "speed": 1.2,
@@ -12,21 +12,16 @@
     "summonRest": 2.6,
     "zone": { "x": [-3.5, 3.5], "z": [-12, -9] },
     "stages": [
-      { "at": 1, "h": 4.6, "pattern": ["drift", "volley", "drift", "lunge", "drift", "volley"], "core": [0.55, 0.83, 0.11] },
+      { "at": 1, "h": 4.6, "pattern": ["drift", "volley", "drift", "lunge", "volley"], "core": [0.55, 0.83, 0.11], "projectiles": ["furniture"] },
       {
-        "at": 0.66,
+        "at": 0.865,
         "h": 5.0,
-        "pattern": ["drift", "volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
-        "summon": [{ "type": "ghoul", "from": "pop", "x": -2.4, "z": -5 }, { "type": "ghoul", "from": "pop", "x": 2.4, "z": -5.5 }],
-        "core": [0.5, 0.84, 0.11]
+        "pattern": ["drift", "volley", "drift", "volley", "lunge"],
+        "core": [0.5, 0.84, 0.11],
+        "projectiles": ["plane", "manga"],
+        "shots": [5, 8]
       },
-      {
-        "at": 0.33,
-        "h": 4.4,
-        "pattern": ["volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
-        "summon": [{ "type": "bat", "x": -2, "y": 2.6, "z": -5 }, { "type": "bat", "x": 0, "y": 3.0, "z": -6 }, { "type": "bat", "x": 2, "y": 2.6, "z": -5 }],
-        "core": [0.5, 0.65, 0.11]
-      }
+      { "at": 0.433, "h": 4.4, "pattern": ["drift", "drag", "drift", "volley", "drag", "burst"], "core": [0.5, 0.65, 0.11] }
     ],
     "volley": { "shots": [3, 5], "gap": 0.55, "flight": 1.9, "dmg": 14, "projectiles": ["furniture", "cherry", "scoop"] },
     "lunge": { "windup": 1.8, "time": 0.45, "dmg": 22, "coverDmg": 50, "poise": 120 },
@@ -54,7 +49,74 @@
       "_doc": "最后一个形态身边出来照片、日记、小棺材（docs/DESIGN.md 第 1 话 10，src/battle/thing.js ritual / Keepsake）：items 图，lines 打中时她说的台词种类（text/stickers.json bosses.madame），w 宽（米），near 挂在她身前多远；swing 来回晃（x 左右幅度、speed 快慢、y 每件的高度占她身高的比例、first 第一次倒计时）；fuse 每次倒计时秒数，pace 走得忽快忽慢的倍率；guard 隔多久有一件挡到她核心前、挡多久；strike 每件倒计时走完的一击（dmg 伤害，躲也没用，all 打两个人）；talkGap 她两句台词至少隔几秒；她倒下后三件排成一排（rowGap 间距、rowY 高度），按顺序打中飞进她怀里，hint 秒没进展她再说一遍提示"
     },
     "coreMul": 1,
-    "tag": "MADAME"
+    "tag": "MADAME",
+    "madame": {
+      "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相），chunk 每打对一页扣她最大血量的比例、stun 僵住几秒、cut 打错那页割人的伤害、coreMul 直接打她的伤害倍数；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
+      "photo": { "dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10 },
+      "diary": {
+        "pages": [
+          {
+            "date": "2/3",
+            "text": {
+              "zh": "今天给女儿烤了蜂蜜蛋糕。她最喜欢烤炉的香味。",
+              "en": "Baked honey cake for my girl today. She loves the smell of the oven.",
+              "ja": "今日は娘に蜂蜜ケーキを焼いた。あの子はオーブンの匂いが大好き。"
+            }
+          },
+          {
+            "date": "2/28",
+            "text": { "zh": "烤炉的门没有关好……都是我的错。", "en": "The oven door wasn't shut... It's all my fault.", "ja": "オーブンの扉がちゃんと閉まってなかった……全部わたしのせい。" }
+          },
+          {
+            "date": "3/13",
+            "text": { "zh": "她一个人在那边，一定很寂寞。", "en": "She must be so lonely over there, all alone.", "ja": "あの子、向こうでひとりぼっち。きっと寂しい。" }
+          },
+          {
+            "date": "4/4",
+            "text": { "zh": "邻居家的孩子来玩了。我请她吃了点心。", "en": "The neighbours' child came to play. I gave her sweets.", "ja": "近所の子が遊びに来た。お菓子をあげたの。" }
+          },
+          {
+            "date": "5/5",
+            "text": { "zh": "娃娃又多了一个。你看，好多朋友。", "en": "One more doll now. Look, so many friends.", "ja": "お人形がまたひとつ。ほら、お友だちがいっぱい。" }
+          },
+          {
+            "date": "6/7",
+            "text": { "zh": "有人挖开了后院的小坟。……谁也不许走。", "en": "Someone dug up the little grave out back... No one leaves.", "ja": "誰かが裏庭の小さなお墓を掘った。……誰も帰さない。" }
+          }
+        ],
+        "chunk": 0.072,
+        "stun": 1.2,
+        "cut": 12,
+        "coreMul": 0.35
+      },
+      "coffin": {
+        "hands": "ep1/hands_crowd",
+        "arm": {
+          "reach": "ep1/arm_reach",
+          "grip": "ep1/arm_grip",
+          "reach_t": 0.7,
+          "lift": 0.02,
+          "dist": 2.6,
+          "over": 1.3,
+          "eye_reach": [0.745, 0.5, 0.1],
+          "eye_grip": [0.855, 0.643, 0.075]
+        },
+        "pit": 4.2,
+        "hits": 6,
+        "time": 4.0,
+        "dmg": 18,
+        "away": 6,
+        "hangX": 1.6,
+        "crushR": 3.4,
+        "crush": 0.07,
+        "stun": 3.0,
+        "open": 4.0,
+        "openMul": 2.0
+      },
+      "repaint": { "time": 2.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
+      "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"]
+    },
+    "weave": { "legs": 3, "lateral": 1.8, "leg": 0.8, "pause": 0.35, "near": 5.0, "topY": 0.06, "windup": 1.0, "dmg": 12, "back": 1.6 }
   },
   "maggot": {
     "beh": "worm",

@@ -10,6 +10,9 @@
 //             them while fighting her, or she heals back to where this form began and returns to the one before (regress)
 //   charge    (5) a long gathering, its weak point jumping from place to place (S.cores) - break it with enough damage or everyone is hit hard
 //   volley / lunge / burst / drift   the older moves (things spat at them, a lunge at a cover, a blast to hide from, a drift aside)
+//   weave     (drift, when its data has weave: user 2026-10-20 "a snaking Z back and forth AT the girls, and in range it hits them - not a
+//             target sliding to and fro") slanting legs at one girl, a stamp at each turn, nearer each time; in range (or its head off the
+//             top of the picture) it rears up - a red mark, hide - and strikes; then backs off in two slanting steps to where it fights from
 // Only its core takes damage (a ring marks it), and nothing gets through while it attacks (DESIGN「Boss」, 2026-10-18).
 // Hits change its colour, never hole it (paper.js solid damage). Between stages it convulses, splashes ooze and the next mutation grows out
 // (no comic: the fight keeps its rhythm).
@@ -206,6 +209,18 @@ export class TheThing extends Actor {
     const next = this.def.stages.findIndex((s, i) => i > this.stage && this.hp <= this.maxHp * s.at);
     if (next > this.stage && !this.mutating) this.mutate(next);
   }
+  // the place came down on her (a chandelier, a blast: Game.harm): the whole of it hurts, and she reels for stun seconds
+  crushed(dmg, stun) {
+    if (!this.alive || this.mutating || this.grief) return;
+    const g = this.game; this.hp -= dmg; this.stageDmg = (this.stageDmg || 0) + dmg; this.flash = 1;
+    g.fx.stamp('don', g.W * 0.5, g.H * 0.6, 0.32, 0); g.post.shake(1.4); g.G.stop(0.12); sfx.roar();
+    this.game.onHit(this, 'crush', { dmg, dealt: dmg });
+    if (this.def.ritual && !this.keeps) this.hp = Math.max(this.hp, 1);   // (her child's things come out before her end)
+    if (this.hp <= 0) { if (this.keeps) this.grieve(); else this.die(); return; }
+    if (stun) { this.seq++; this.endWindup(); this.zz = null; this.chg = null; this.state = 'hurt'; this.play('hurt'); this.later(stun, () => { this.state = 'idle'; this.play('idle', 3); }); this.timer = stun + 0.6; }
+    const next = this.def.stages.findIndex((s, i) => i > this.stage && this.hp <= this.maxHp * s.at);
+    if (next > this.stage && !this.mutating) this.mutate(next);
+  }
   interrupt() {
     const g = this.game;
     this.seq++; this.endWindup(); this.poise = 0;
@@ -288,12 +303,51 @@ export class TheThing extends Actor {
 
   // ---------------------------------------------------------------- moves
   drift() {
+    if (this.def.weave) { this.weave(); return; }
     const g = this.game, Z = this.zone, P = this.root.position;
     let x = rnd(Z.x[0], Z.x[1]); if (Math.abs(x - P.x) < 1.5) x = P.x > 0 ? Z.x[0] * 0.7 : Z.x[1] * 0.7;
     const z = rnd(Z.z[0], Z.z[1]), d = Math.hypot(x - P.x, z - P.z), time = Math.max(1.2, d / this.def.speed);
     this.state = 'move'; this.play('move', 4);
     g.etw.to(P, { x, z }, time, { ease: Ease.inOutQuad, onDone: () => { if (this.alive && this.state === 'move') { this.state = 'idle'; this.play('idle', 3); } } });
     this.timer = time + rr(this.def.rest);
+  }
+  weave() {
+    const g = this.game, D = this.def.weave, Z = this.zone, P = this.root.position, c = g.world.camPos, slot = g.pickTarget(P.x - c.x), cov = g.world.covers?.[slot];
+    const from = P.clone(), gx = cov ? cov.def.x : c.x + (slot ? 1 : -1), gz = cov ? cov.def.z : c.z - 2;
+    const dx = gx - from.x, dz = gz - from.z, dd = Math.hypot(dx, dz) || 1, reach = Math.max(0, dd - D.near);
+    const to = new THREE.Vector3(from.x + dx / dd * reach, from.y, from.z + dz / dd * reach), side = Math.random() < 0.5 ? -1 : 1;
+    this.state = 'move'; this.play('move', 6);
+    const leg = (i) => {
+      if (!this.alive || this.state !== 'move') return;
+      const top = g.world.project(this.uvToWorld(this.core()[0], Math.min(1, this.core()[1] + 0.12)));
+      if (i > D.legs || top.y < g.H * (D.topY ?? 0.06)) { this.weaveStrike(slot); return; }
+      const q = from.clone().lerp(to, i / D.legs);
+      if (i < D.legs) q.x = Math.max(Z.x[0] - 1.5, Math.min(Z.x[1] + 1.5, q.x + side * (i % 2 ? 1 : -1) * D.lateral));
+      g.etw.to(P, { x: q.x, z: q.z }, D.leg, { ease: Ease.inOutQuad, onDone: () => {
+        if (!this.alive || this.state !== 'move') return;
+        g.post.shake(0.35); sfx.thud(0); g.fx.puff(P, 6, COL.bone, 1.6);   // (a stamp at each turn)
+        this.later(D.pause, () => leg(i + 1));
+      } });
+    };
+    leg(1);
+    this.timer = D.legs * (D.leg + D.pause) + D.windup + 0.6 + D.back + rr(this.def.rest);
+  }
+  weaveStrike(slot) {
+    const g = this.game, D = this.def.weave, P = this.root.position;
+    this.state = 'idle';
+    this.windup(D.windup, 'hide', slot, () => {
+      this.attackPose(0.5); sfx.slam(); g.post.shake(1.2); g.G.stop(0.06);
+      g.playerAttacked({ kind: 'ranged', dmg: D.dmg, from: this, slot, rattle: true });
+      this.later(0.55, () => {   // (back off: two slanting steps, the other way)
+        const Z = this.zone, bx = rnd(Z.x[0], Z.x[1]), bz = rnd(Z.z[0], Z.z[1]);
+        const mx = (P.x + bx) / 2 + (P.x > bx ? 1 : -1) * D.lateral * 0.6, mz = (P.z + bz) / 2;
+        this.state = 'move'; this.play('move', 4);
+        g.etw.to(P, { x: mx, z: mz }, D.back * 0.5, { ease: Ease.inOutQuad, onDone: () => {
+          if (!this.alive || this.state !== 'move') return;
+          g.etw.to(P, { x: bx, z: bz }, D.back * 0.5, { ease: Ease.inOutQuad, onDone: () => { if (this.alive && this.state === 'move') { this.state = 'idle'; this.play('idle', 3); } } });
+        } });
+      });
+    });
   }
   windup(time, threat, slot, then) {
     const g = this.game;
@@ -309,7 +363,7 @@ export class TheThing extends Actor {
     this.later(dur, () => { if (this.state === 'attack') { this.state = 'idle'; this.play('idle', 3); } });
   }
   volley() {
-    const g = this.game, D = this.def.volley, n = Math.round(rr(this.S.shots || D.shots)), kinds = D.projectiles;
+    const g = this.game, D = this.def.volley, n = Math.round(rr(this.S.shots || D.shots)), kinds = this.S.projectiles || D.projectiles;   // (a form's own things to throw)
     this.attackPose(0.4 + n * D.gap);
     for (let i = 0; i < n; i++) this.later(0.3 + i * D.gap, () => {
       const from = this.uvToWorld(rnd(0.35, 0.65), rnd(0.45, 0.7));
@@ -539,7 +593,7 @@ export class TheThing extends Actor {
 }
 
 // one of her child's things (TheThing.ritual): swings before her, guards her core now and then, counts down to its blow; can't be hurt
-class Keepsake extends Gimmick {
+export class Keepsake extends Gimmick {
   constructor(game, boss, i, g) {
     super(game, g);
     const R = boss.def.ritual, S = R.swing;

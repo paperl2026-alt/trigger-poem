@@ -40,6 +40,7 @@ export const FOG = { color: { value: new THREE.Color(0, 0, 0) }, density: { valu
 
 const FRAG = `
 uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg; uniform float dmgSolid;
+uniform sampler2D map2; uniform float mixK; uniform vec2 blurDir;   // (the frame before, blended out with a smear: Actor.setFrame)
 uniform float flash; uniform vec3 tint; uniform float tintAmt; uniform float opacity; uniform float dark;
 uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float sliceOn; uniform float aspect;
 uniform float seed; uniform float time; uniform vec3 edgeColor;
@@ -50,6 +51,12 @@ varying vec2 vUv; varying float vFogDepth;
 ${NOISE_GLSL}
 void main(){
   vec4 tx = texture2D(map, vUv);
+  if (mixK < 0.999) {   // (between two drawings: the old one fading out, the new one in, both smeared a little along the move - old games' in-betweens)
+    vec2 sm = blurDir * (1.0 - mixK);
+    vec4 nw = (tx + texture2D(map, vUv - sm) + texture2D(map, vUv - sm * 2.0)) / 3.0;
+    vec4 od = (texture2D(map2, vUv) + texture2D(map2, vUv + sm) + texture2D(map2, vUv + sm * 2.0)) / 3.0;
+    tx = mix(od, nw, smoothstep(0.0, 1.0, mixK));
+  }
   float thr = reliefOn > 0.5 ? 0.45 : 0.03;
   if (tx.a < thr) {
     // what can be shot gets a white outline and a soft white glow around it (docs/DESIGN.md「战斗画面布局」)
@@ -149,7 +156,7 @@ function blankTex() {
 export function paperMaterial(map, aspect = 1) {
   return new THREE.ShaderMaterial({
     uniforms: {
-      map: { value: map }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
+      map: { value: map }, map2: { value: map }, mixK: { value: 1 }, blurDir: { value: new THREE.Vector2(0, 0) }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
       outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) }, outlineW: { value: 1 },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
       dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },

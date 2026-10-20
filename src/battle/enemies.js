@@ -78,7 +78,13 @@ export class Actor {
   }
   setFrame(key) {
     if (this.mesh.userData.texKey === key || !tex[key]) return;
+    const old = this.mesh.userData.texKey;
     this.mesh.userData.texKey = key;
+    // (not a hard cut: the drawing before fades out, both smeared a little the way it moves - tuning combat.json anim.blend seconds)
+    if (this.u.map2 && old && tex[old] && tex[old].image?.width === tex[key].image?.width) {
+      this.u.map2.value = tex[old]; this.u.mixK.value = 0; this.blendT = T.combat.anim?.blend ?? 0.14;
+      const dx = this.root.position.x - (this.lastX ?? this.root.position.x); this.u.blurDir.value.set(Math.sign(dx) * 0.006 + 0.002, 0.002);
+    }
     this.u.map.value = tex[key];
     this.u.mapTexel.value.set(1 / tex[key].image.width, 1 / tex[key].image.height);
     if (this.relief) { const r = tex[meta[key]?.relief]; if (r) { this.u.relief.value = r; this.u.reliefTexel.value.set(1 / r.image.width, 1 / r.image.height); } }
@@ -90,9 +96,11 @@ export class Actor {
     this.setFrame(this.prefix + frames[0]);
   }
   tickAnim(dt) {
+    if (this.u.mixK && this.u.mixK.value < 1) this.u.mixK.value = Math.min(1, this.u.mixK.value + dt / (this.blendT || 0.14));
+    this.lastX = this.root.position.x;
     const a = this.anim;
     if (!a) return;
-    a.t += dt;
+    a.t += dt * (T.combat.anim?.rate ?? 0.5);   // (half the drawn speed, the in-betweens blended: user 2026-10-20)
     let i = Math.floor(a.t * a.fps);
     i = a.loop ? i % a.frames.length : Math.min(a.frames.length - 1, i);
     this.setFrame(this.prefix + a.frames[i]);
@@ -117,6 +125,7 @@ export class Actor {
   // the shot's (it grows or shrinks about its feet, its hits with it), eased so it never pops. Bosses keep their own size.
   sizeFloor(dt) {
     const g = this.game, cam = g.world?.camera, Cm = g.shot?.compose; if (!cam || !Cm || !this.h || this === g.boss || this.type === 'boss') return;
+    if (!(this instanceof Enemy || this instanceof Projectile)) return;   // (monsters and what they throw only: not the place's things, a boss's relics)
     const p = this.root.position, d = SZ.copy(p).sub(cam.position).dot(cam.getWorldDirection(SZ2));
     let k = 1;
     if (d > 0.5) {
@@ -327,12 +336,13 @@ export class Enemy extends Actor {
     const vs = def.variants || [def.sprite];
     const live = game.actors.filter((a) => a.alive && a.type === s.type).map((a) => a.sprite);
     const sprite = s.sprite || vs.map((v) => [v, live.filter((x) => x === v).length + Math.random() * 0.5]).sort((x, y) => x[1] - y[1])[0][0];
-    super(game, `enemy/${sprite}_${def.first}`, def.h, pivot);
+    super(game, `enemy/${sprite}_${def.first}`, s.h ?? def.h, pivot);   // (a wave can make one bigger: s.h)
     this.sprite = sprite;
     this.move = s.move || def.moves?.[Math.max(0, vs.indexOf(sprite))] || def.move || DEFAULT_MOVE[def.beh];
     this.hopT = 0.3; this.zigSide = Math.random() < 0.5 ? 1 : -1;
     this.type = s.type;
     this.def = def;
+    this.morphs = s.morph || null;   // (this one's own changes, over its kind's: src/battle/morph.js)
     this.beh = def.beh;
     const B = T.behaviors;
     this.bp = { ...B.common, ...B[def.beh], ...def.params };   // this enemy's behaviour numbers
@@ -460,6 +470,8 @@ export class Enemy extends Actor {
       const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'), len = curve.getLength();
       curve.getPointAt(0, P); this.play(walker ? 'walk' : 'rise', 8);
       tw.run(Math.max(0.8, len / (bp.enterSpeed ?? 2.6)), (e) => curve.getPointAt(e, P), { onDone: ready });
+    } else if (s.from === 'melt' && this.game.morph) {   // (out of the wall, dripping: src/battle/morph.js)
+      this.game.morph.melt(this, s, ready);
     } else if (s.from === 'pop') {
       P.set(s.x, s.y || 0, s.z);
       this.inner.rotation.x = -Math.PI / 2;
@@ -519,6 +531,7 @@ export class Enemy extends Actor {
   update(dt, t) {
     this.baseUpdate(dt, t);
     if (this.healer) { if (this.alive) this.healTick(dt, t); return; }
+    if (this.busyMorph || this.merging) return;   // (in the middle of a change: src/battle/morph.js)
     if (!this.alive || this.state === 'scripted' || this.state === 'statue') return;
     this.keepClear(dt);
     const g = this.game;
@@ -706,7 +719,8 @@ export class Enemy extends Actor {
     const g = this.game, P = this.root.position, bp = this.bp, dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz) || 1;
     const ux = dx / d, uz = dz / d, step = Math.min(d - bp.windupDist * 0.6, zig ? bp.rollStep : bp.hopStep);
     let tx = P.x + ux * step, tz = P.z + uz * step;
-    if (zig) { this.zigSide = -this.zigSide; tx += -uz * bp.rollSide * this.zigSide; tz += ux * bp.rollSide * this.zigSide; }
+    // (zigzag: slanting from one side of its line at her to the other, each roll nearer - a Z at her, not a sway: user 2026-10-20)
+    if (zig) { this.zigSide = -this.zigSide; const off = this.zigSide * bp.rollSide * 0.5, dl = off - (this.zigOff || 0); this.zigOff = off; tx += -uz * dl; tz += ux * dl; }
     const H = g.world.set?.hall; if (H) { tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx)); }
     const x0 = P.x, z0 = P.z, dur = (zig ? bp.rollTime : bp.hopTime) / this.rage(), arc = zig ? bp.rollArc : bp.hopArc, spin = zig ? this.zigSide * Math.PI * 2 : 0;
     this.moving = true; this.play(zig ? 'walk' : 'leap');
@@ -1090,6 +1104,7 @@ export class Enemy extends Actor {
     else this.dieKnock();
     if (how === 'burn') sfx.burnOut(0); else if (how === 'shatter') sfx.shatter(0); else sfx.paperRip(0);
     this.game.onKill(this, how, crit);
+    this.game.morph?.burst(this); this.game.morph?.puddle(this);   // (its insides climb out; it leaves a pool: src/battle/morph.js)
   }
 }
 

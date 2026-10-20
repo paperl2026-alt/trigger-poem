@@ -12,7 +12,7 @@ import { Stickers } from './stickers.js';
 import { Space } from './space.js';
 import { Hold } from './hold.js';
 import { Alerts } from './alerts.js';
-import { sfx } from '../core/audio.js';
+import { sfx, spectrum } from '../core/audio.js';
 import { SIGNS, ledCanvas } from './ledsign.js';
 import { FeverGauge } from './feverfx.js';
 
@@ -116,7 +116,7 @@ void main(){
 const RETV_FRAG = `
 uniform float shape; uniform float ears; uniform float thick; uniform float corner; uniform float rot; uniform float a; uniform vec3 col;
 uniform float grow; uniform float dotR; uniform float ring; uniform float dash; uniform float time; uniform float earK;
-uniform sampler2D map; uniform float useMap;
+uniform sampler2D map; uniform float useMap; uniform float ph; uniform float rgb;
 varying vec2 vUv;
 float seg(vec2 p, vec2 a, vec2 b){ vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h); }
 float ell(vec2 p, vec2 c, vec2 r){ vec2 q = (p - c) / r; return abs(length(q) - 1.0) * min(r.x, r.y); }
@@ -131,7 +131,16 @@ void main(){
     if (ring > 0.0) { float rr = abs(length(p0) - 0.86), an = atan(p0.y, p0.x) + time * 2.0; float w = 0.012 + grow * 2.0;
       if (dash < 0.5 || fract(an / 6.2832 * 14.0) < 0.55) al = max(al, (1.0 - smoothstep(w, w + 0.02, rr)) * ring); }
     if (al * a < 0.004) discard;
-    gl_FragColor = vec4(col * al * a, al * a); return;
+    // (metal: lighter on top, darker below; now and then a bright band sweeps across it and it glows - user 2026-10-20)
+    float sw = fract(time * 0.28 + ph), band = smoothstep(0.16, 0.0, abs((p0.x - p0.y) * 0.5 - (sw * 3.2 - 1.6)));
+    vec3 cc = mix(col * (0.8 + 0.3 * (p0.y * 0.5 + 0.5)), vec3(1.0), band * 0.85) * (1.0 + band * 0.6);
+    if (rgb > 0.0) {   // (its colours split apart: a slow sway, and a quick glitchy jolt now and then)
+      float j = step(0.9, fract(sin(floor(time * 9.0 + ph * 7.0) * 91.7) * 4375.85)), o = rgb * (0.4 + 0.6 * sin(time * 1.3 + ph * 6.0) + j * 2.5);
+      vec2 dd = vec2(cos(time * 0.7), sin(time * 0.7)) * o;
+      vec3 ch = vec3(texture2D(map, uv + dd).a, al, texture2D(map, uv - dd).a); float am = max(ch.r, max(ch.g, ch.b));
+      gl_FragColor = vec4(cc * ch * a, am * a); return;
+    }
+    gl_FragColor = vec4(cc * al * a, al * a); return;
   }
   if (shape < 0.5) {
     for (int i = 0; i < 4; i++) {
@@ -165,6 +174,72 @@ void main(){
   float al = 1.0 - smoothstep(w, w + 0.025, d);
   if (al * a < 0.004) discard;
   gl_FragColor = vec4(col * al * a, al * a);
+}`;
+// the light round her drawn reticle (user 2026-10-20, two pictures to go by: a sound visualizer's glowing line for the cat girl, a ring
+// of light pillars rising for the gun girl - "not a new shape: effects, particles, light, RGB changes"). Drawn under the line, adding
+// light: its lines spread into a soft glow, a light running along them, sparks drifting off them; the cat girl's: thin bars hanging
+// from her lines like a spectrum, moving with what the speakers play (audio.js spectrum) and jumping with each shot, a thin flare across
+// her middle; the gun girl's: pillars of light rising from her lines in shifting colours, an RGB-split glow. Its quad is span times the
+// picture's (room for the light), the picture turned with the reticle; screen-down is down for the bars and pillars.
+const RETG_FRAG = `
+uniform sampler2D map; uniform float rot; uniform float a; uniform float time; uniform float ph; uniform float who; uniform float kick;
+uniform float span; uniform vec3 tint; uniform float tintK; uniform float spec[16]; uniform float level;
+varying vec2 vUv;
+float h1(float n){ return fract(sin(n * 127.1) * 43758.5453); }
+float h2(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+float L(vec2 q0){ float c = cos(rot), s = sin(rot); vec2 uv = (mat2(c, -s, s, c) * q0) * 0.5 + 0.5;
+  return (uv.x < 0.0 || uv.y < 0.0 || uv.x > 1.0 || uv.y > 1.0) ? 0.0 : texture2D(map, uv).a; }
+float sp(float i){ float r = 0.0; for (int k = 0; k < 16; k++) if (float(k) == i) r = spec[k]; return r; }
+float halo(vec2 p, float rad){ float h = 0.0; for (int i = 0; i < 10; i++) { float an = float(i) * 0.6283; vec2 d = vec2(cos(an), sin(an));
+  h += L(p + d * rad * 0.45) * 0.55 + L(p + d * rad) * 0.45; } return h / 10.0; }
+void main(){
+  vec2 p0 = (vUv - 0.5) * 2.0 * span;
+  float breath = 0.78 + 0.22 * sin(time * 1.7 + ph * 6.0);
+  float ang = atan(p0.y, p0.x), r = length(p0);
+  vec3 c = vec3(0.0);
+  // sparks drifting off the lines (cells; each a point that twinkles now and then)
+  vec2 gq = (p0 + vec2(0.0, -time * (who > 0.5 ? 0.22 : 0.1))) * 13.0, id = floor(gq), f = fract(gq) - 0.5;
+  float rs = h2(id), sd = length(f - (vec2(h2(id + 1.3), h2(id + 2.7)) - 0.5) * 0.7);
+  float spark = smoothstep(0.09, 0.0, sd) * pow(0.5 + 0.5 * sin(time * (3.0 + rs * 5.0) + rs * 40.0), 10.0) * step(0.55, rs);
+  if (who < 0.5) {
+    // the cat girl: her lines glow deep blue, a cyan-white bar of light sweeps across them
+    float hal = halo(p0, 0.075);
+    float sx = (p0.x - (fract(time * 0.32 + ph) * 3.0 - 1.5) * span) * 3.2, sweep = exp(-sx * sx);
+    // the spectrum: thin bars hanging from her lines (low pitches in her middle, high ones out at the sides), a few short ones rising
+    float N = 44.0, xc = (floor((p0.x / span * 0.5 + 0.5) * N) + 0.5) / N, cx = (xc * 2.0 - 1.0) * span;
+    float bi = min(15.0, floor(abs(xc - 0.5) * 2.0 * 16.0));
+    float hb = 0.05 + sp(bi) * 0.42 + kick * 0.16 + 0.07 * h1(xc * 91.0 + floor(time * 12.0));
+    float stripe = smoothstep(0.32, 0.08, abs(fract((p0.x / span * 0.5 + 0.5) * N) - 0.5)), bar = 0.0;
+    for (int k = 1; k <= 8; k++) { float d = hb * float(k) / 8.0; bar = max(bar, L(vec2(cx, p0.y + d)) * (1.0 - float(k) / 9.0));
+      bar = max(bar, L(vec2(cx, p0.y - d * 0.35)) * (1.0 - float(k) / 9.0) * 0.6); }
+    bar *= stripe * (1.0 - L(p0));
+    // a thin flare across her middle, the aim point itself left clear
+    float flare = exp(-abs(p0.y) * 90.0) * exp(-abs(p0.x) * 1.6) * smoothstep(0.1, 0.32, abs(p0.x)) * (0.12 + level * 0.5 + kick * 0.7);
+    c = vec3(0.12, 0.38, 1.0) * hal * 1.3 * breath + vec3(0.55, 0.88, 1.0) * hal * sweep * 1.6
+      + vec3(0.45, 0.8, 1.0) * bar * (0.75 + kick * 0.5) + vec3(0.6, 0.9, 1.0) * flare
+      + vec3(0.85, 0.95, 1.0) * spark * smoothstep(0.0, 0.08, halo(p0, 0.22)) * 1.4;
+  } else {
+    // the gun girl: an RGB-split glow, its colours running round her (pink most of all)
+    vec2 o = vec2(cos(time * 0.9), sin(time * 0.9)) * (0.02 + kick * 0.03);
+    vec3 hal = vec3(halo(p0 + o, 0.07), halo(p0, 0.07), halo(p0 - o, 0.07));
+    vec3 hue = 0.5 + 0.5 * cos(6.2832 * (ang / 6.2832 + time * 0.12 + vec3(0.0, 0.33, 0.67)));
+    hue = mix(hue, vec3(1.0, 0.42, 0.8), 0.45);
+    // a light running round along her lines
+    float da = abs(mod(ang - time * 2.2 - ph * 6.0 + 3.1416, 6.2832) - 3.1416), run = exp(-da * da * 5.0);
+    // pillars of light rising from her lines, each its own colour and height, flickering
+    float N = 38.0, col = floor((p0.x / span * 0.5 + 0.5) * N), xc = (col + 0.5) / N, cx = (xc * 2.0 - 1.0) * span;
+    float tk = floor(time * 7.0 + h1(col) * 3.0), hp = 0.06 + 0.3 * h1(col * 7.3 + tk) * step(0.35, h1(col * 3.1 + floor(time * 1.3))) + level * 0.18 + kick * 0.14;
+    float stripe = smoothstep(0.34, 0.1, abs(fract((p0.x / span * 0.5 + 0.5) * N) - 0.5)), pil = 0.0;
+    for (int k = 1; k <= 8; k++) { float d = hp * float(k) / 8.0; pil = max(pil, L(vec2(cx, p0.y - d)) * pow(1.0 - float(k) / 9.0, 1.5)); }
+    pil *= stripe * (1.0 - L(p0));
+    float pk = h1(col * 13.7);
+    vec3 pc = pk < 0.35 ? vec3(1.0, 0.4, 0.78) : pk < 0.6 ? vec3(0.45, 0.75, 1.0) : pk < 0.82 ? vec3(0.75, 0.45, 1.0) : vec3(1.0, 0.95, 1.0);
+    c = hal * hue * 1.25 * breath + vec3(1.0, 0.85, 0.95) * hal.g * run * 1.5 + pc * pil * 0.9
+      + mix(vec3(1.0, 0.6, 0.9), vec3(1.0), rs) * spark * smoothstep(0.0, 0.08, halo(p0, 0.22)) * 1.4;
+  }
+  c *= 1.0 - L(p0) * 0.9;   // (not under the line itself: the gun girl's line inverts what is behind it, and must stay white)
+  c = mix(c, tint * dot(c, vec3(0.35, 0.45, 0.2)) * 1.6, tintK) * a;
+  gl_FragColor = vec4(c, 1.0);
 }`;
 const quad = new THREE.PlaneGeometry(1, 1);
 const RED = new THREE.Color('#d8141e'), WHITE = new THREE.Color(1, 1, 1);
@@ -552,8 +627,13 @@ class Reticle {
     // the drawn reticle (RETV_FRAG): the dark outline under, the line itself over (inverting what is behind it)
     const U = this.U = { shape: { value: 0 }, ears: { value: this.cat ? 1 : 2 }, thick: { value: 0.03 }, corner: { value: 0.38 }, rot: { value: 0 }, a: { value: 1 },
       col: { value: new THREE.Color(1, 1, 1) }, grow: { value: 0 }, dotR: { value: 0.03 }, ring: { value: 0 }, dash: { value: 1 }, time: { value: 0 }, earK: { value: 0 },
-      map: { value: null }, useMap: { value: 0 } };
-    const UO = this.UO = { ...U, col: { value: new THREE.Color(0.04, 0.02, 0.06) }, grow: { value: 0.035 }, a: { value: 0.7 }, ears: { value: 0 } };
+      map: { value: null }, useMap: { value: 0 }, ph: { value: p.slot * 0.5 } };
+    U.rgb = { value: this.cat ? 0.004 : 0.009 };
+    const UO = this.UO = { ...U, col: { value: new THREE.Color(0.04, 0.02, 0.06) }, grow: { value: 0.035 }, a: { value: 0.7 }, ears: { value: 0 }, rgb: { value: 0 } };
+    // the light round it (RETG_FRAG), under the line
+    const UG = this.UG = { map: U.map, rot: U.rot, time: U.time, ph: U.ph, a: { value: 1 }, who: { value: this.cat ? 0 : 1 }, kick: { value: 0 }, span: { value: 1.35 },
+      tint: { value: new THREE.Color(1, 1, 1) }, tintK: { value: 0 }, spec: { value: new Array(16).fill(0) }, level: { value: 0 } };
+    this.glow = new THREE.Mesh(quad, mat(RETG_FRAG, UG, { blending: THREE.AdditiveBlending })); this.glow.renderOrder = 69.95 + p.slot; this.glow.frustumCulled = false; hud.g.add(this.glow);
     U.ears.value = 0;   // (her ears come from her drawn reticle, R70: the ones drawn by the script sat wrong - user 2026-10-20)
     this.who = this.cat ? 'cat' : 'pink';
     this.under = new THREE.Mesh(quad, mat(RETV_FRAG, UO)); this.under.renderOrder = 69.9 + p.slot; this.under.frustumCulled = false; hud.g.add(this.under);
@@ -578,7 +658,7 @@ class Reticle {
     // in a fight
     const human = ct && ct.kind !== 'ai';
     const vis = ct && ct.active && p.state !== 'away' && (g.combat || human);
-    for (const m of [this.cur, this.under, this.line, this.lineB, this.tag, this.name.m, this.ghost]) m.visible = false;
+    for (const m of [this.cur, this.under, this.glow, this.line, this.lineB, this.tag, this.name.m, this.ghost]) m.visible = false;
     if (!vis) return;
     // the monster under her aim, if any
     const over = g.actors.find((a) => { if (!a.alive || !a.hitMeshes || !a.hitMeshes().length || !a.def) return false; const b = g.box(a); return p.aimX > b.x0 && p.aimX < b.x1 && p.aimY > b.y0 && p.aimY < b.y1; });
@@ -606,6 +686,7 @@ class Reticle {
     U.shape.value = this.shp; U.rot.value = st === 'lock' ? 0 : this.rot; U.time.value = t; U.earK.value = st === 'lock' ? 0 : 1;
     U.col.value.set(st === 'empty' ? 0xff3040 : st === 'fever' ? 0xffd040 : st === 'special' ? p.c.color : 0xffffff);
     if (st === 'lock' || st === 'idle') U.col.value.setRGB(1, 1, 1);   // (white through the inverting blend: the reverse of what is behind)
+    if (this.cat && (st === 'idle' || st === 'cover')) U.col.value.setRGB(0.82, 0.92, 1.0);   // (hers white with a blue cast, drawn as it is: user 2026-10-20, the inverted one was dull)
     U.a.value = (st === 'cover' ? 0.5 : 1) * (st === 'empty' && Math.sin(t * 18) < -0.3 ? 0.4 : 1);
     U.thick.value = st === 'lock' ? 0.045 : 0.032; U.dotR.value = st === 'lock' ? 0.02 : 0.035;
     const art = tex[`ui/retv_${this.who}_${st === 'lock' ? 'lock' : 'idle'}`];
@@ -615,11 +696,19 @@ class Reticle {
     this.UO.grow.value = art ? 0.012 : 0.035; U.grow.value = 0;
     this.UO.a.value = 0.7 * U.a.value;
     // (colours other than white show as themselves: the inverting blend only for the white forms)
-    this.cur.material.blending = U.col.value.r + U.col.value.g + U.col.value.b > 2.9 ? THREE.CustomBlending : THREE.NormalBlending;
+    this.cur.material.blending = U.col.value.r + U.col.value.g + U.col.value.b > 2.95 ? THREE.CustomBlending : THREE.NormalBlending;
     // (her picture: the frame spans 46% of it - drawn bigger to match; the form it changes to pops in big and closes in fast)
     const fi = meta[`ui/retv_${this.who}_idle`]?.frame || 0.46;   // (one scale for both of her forms: the lock form is drawn smaller)
     const qs = art ? size * 1.1 / fi * (1 + (1 - this.k) * (1 - this.k) * 0.9) : size * 2.2;
     for (const m of [this.under, this.cur]) { m.visible = true; m.position.set(x + shake, y, 0); m.scale.setScalar(qs); }
+    if (art) {   // (its light: dimmer in cover, the state's own colour when it has one; the sound and her shots move it)
+      const UG = this.UG, S = spectrum(), RG = this.hud.B.reticle.glow ?? 1;
+      let lv = 0; for (let i = 0; i < 16; i++) { UG.spec.value[i] = S[i]; lv += S[i] / 16; }
+      UG.level.value += (lv - UG.level.value) * Math.min(1, dt * 10); UG.kick.value = this.kick;
+      UG.a.value = U.a.value * RG * (st === 'cover' ? 0.6 : 1);
+      UG.tintK.value = st === 'empty' || st === 'fever' || st === 'special' ? 0.65 : 0; UG.tint.value.copy(U.col.value);
+      this.glow.visible = RG > 0; this.glow.position.set(x + shake, y, 0); this.glow.scale.setScalar(qs * UG.span.value);
+    }
     // locked on: a leader line up and out to a name tag with the monster's name
     this.lockK += ((over && (st === 'lock' || st === 'fever' || st === 'special') ? 1 : 0) - this.lockK) * Math.min(1, dt * 10);
     if (this.lockK > 0.02 && over) {

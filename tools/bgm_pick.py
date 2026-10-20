@@ -6,11 +6,12 @@ seamless loop.  python -I tools/bgm_pick.py [track ...] [--dry]
   one (or the one named in PICK, after the user has listened) becomes the track: the loop runs from the start of section `loopFrom` of the
   spec (default: the second section when the first is a short intro of 8 bars or less, played once; else the whole piece) to the end of the last section (one section earlier when the cover
   fades out at the end), both points moved by the cover's own lag there; the last 80 ms of the loop are blended into the 80 ms just before
-  its start so the jump back is seamless. Levelled to one loudness (-14 dB RMS, vol 1.4), written as Ogg Opus to public/content/base/bgm/<track>.ogg and
+  its start so the jump back is seamless. Levelled to one loudness (-14 dB RMS; then measured, EBU R128, and its vol set so it plays at
+  -12 LUFS - every track as loud as the others: user 2026-10-20, the loud ones buried the sounds), written as Ogg Opus to public/content/base/bgm/<track>.ogg and
   registered in content audio/sounds.json (music.<track>: files, loopStart, loopEnd, vol). art/raw/bgm_ai/_look/<track>.png shows the
   guide and every cover (envelope, spectrogram, the numbers); _look/pick_report.json keeps the numbers.
 """
-import importlib.util, json, pathlib, subprocess, sys
+import importlib.util, json, pathlib, re, subprocess, sys
 import numpy as np
 from scipy.io import wavfile
 from scipy.signal import stft
@@ -134,12 +135,17 @@ def main():
         e = D.setdefault("music", {}).setdefault(name, {})
         e.update({"files": [f"bgm/{name}.ogg"], "loopStart": round(ls, 4), "loopEnd": round(le, 4), "src": "ace", "from": pick[1].stem,
                   "bpm": T["bpm"], "key": T["key"]})   # (the hits play along in its key, on its sixteenths: src/core/audio.js hitNote)
-        e["vol"] = 1.4; changed = True
+        lu = lufs(OUT / f"{name}.ogg"); e["lufs"] = lu; e["vol"] = round(10 ** ((-12 - lu) / 20), 2); changed = True
     rp.write_text(json.dumps(report, ensure_ascii=False, indent=1), encoding="utf-8")
     if changed:
         D["music"] = dict(sorted(D["music"].items()))
         SOUNDS.write_text(json.dumps(D, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
         subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(SOUNDS)], check=True, stdin=subprocess.DEVNULL)
+
+
+def lufs(f):   # integrated loudness (ffmpeg ebur128)
+    r = subprocess.run([spm.ffmpeg(), "-hide_banner", "-nostats", "-i", str(f), "-af", "ebur128", "-f", "null", "-"], capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return float(re.findall(r"I:\s+(-?[\d.]+) LUFS", r.stderr)[-1])
 
 
 if __name__ == "__main__":

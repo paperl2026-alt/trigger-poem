@@ -21,8 +21,8 @@
       "hopTime": 0.38,
       "hopArc": 0.55,
       "hopPause": [0.35, 0.8],
-      "rollStep": 1.1,
-      "rollSide": 1.3,
+      "rollStep": 1.8,
+      "rollSide": 1.6,
       "rollTime": 0.42,
       "rollArc": 0.12,
       "rollPause": [0.25, 0.55],
@@ -31,7 +31,7 @@
       "burrowMin": 3,
       "burrowStep": [2.2, 3.4],
       "burrowUnder": [0.4, 0.9],
-      "_moves": "怎么逼近（enemies.js move）：hop 跳着走（一步 hopStep 米、hopTime 秒、停 hopPause），zigzag 左右翻滚（侧移 rollSide、前进 rollStep），charge 慢慢挪（chargeCreep 倍速），到 chargeDist 米内远远蓄力后扑过来，burrow 钻进地里、在 burrowStep 米外钻出来"
+      "_moves": "怎么逼近（enemies.js move）：hop 跳着走（一步 hopStep 米、hopTime 秒、停 hopPause），zigzag Z 字翻滚着逼近（在它冲她那条线的两侧来回，左右摆幅 rollSide 米、每滚一下前进 rollStep 米），charge 慢慢挪（chargeCreep 倍速），到 chargeDist 米内远远蓄力后扑过来，burrow 钻进地里、在 burrowStep 米外钻出来"
     },
     "flyer": {
       "threat": "ranged",

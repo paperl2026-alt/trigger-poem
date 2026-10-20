@@ -44,6 +44,7 @@
   - 总线：`master`（总音量）→ 限幅器（-6 dB 起压，只抓峰值）→ 输出；`music`（BGM 推子）← `musDuck`；`sfx`（音效推子）← `ui` / `player`（她的枪、武器音节）/ `hit`（命中）/ `enemy`（怪叫）/ `world`（场景：门、机关、她的脚步；合成音效默认在这）/ `amb`（环境循环：钟、雨、火）；`voice`（语音推子）：两人的台词；混响按场景（set 的 `reverb`，`setRoom`），各组送进去的量不同，送的量跟着推子走。
   - 推子（`sliderGain`）：0.7 = 设计好的混音（0 dB），1 = +6 dB，往下每 0.1 小 4 dB，0 = 关；默认全是 70%。各总线在 70% 时的量 `NOM`：离屏实测（第 1 话的一场战斗）没有音乐的战斗约 -23.5 dB RMS、只有音乐约 -22 dB，一起约 -20.4 dB，全部推到 100% 还能大约 4 dB（限幅器只压峰值）。以前音乐比战斗小 9～10 dB，听着像没有。
   - 每 50 ms 动态平衡（`mixTick`）：有人说话时音乐 -5 dB、环境 -8、场景和怪 -4、命中和她的枪 -3（界面不动）；打得越热闹（刚响过的命中、怪叫、大的碰撞撞高一个窗口，约一秒落下）环境最多 -9 dB、音乐最多 -2.5 dB，安静下来再回来；压得快、回得慢。
+  - Boss 说话（说话的不是主角）压得更狠（`DUCK_BOSS`：音乐 -9 dB、环境 -12、场景和怪 -9、命中和她的枪 -8、界面 -3）。音乐总线自己的处理（2026-10-20 用户：响的曲子把音效埋了，要专门的总线）：`musBus` → 2.8 kHz 凹 3.5 dB（让出人声和打击音）→ 8 kHz 高架 -2 dB → 轻压缩（-18 dB 起、2.5:1）→ `musDuck`。每首按测得的响度定音量（`sounds.json music.<name>.lufs`，ffmpeg ebur128；`vol` = 10^((-12 - LUFS) / 20)，所有曲子一样响；`bgm_pick.py` 挑新曲时自动测）。
   - 从哪来的声音就从哪听（`setListener`，Game 每帧把相机给它）：给了位置（`pos`）的声音用 HRTF 定位——左右、前后、远近（怪叫、机关、她的剪刀声：倒跑时她在背后就听着在背后）；没给位置的照旧左右声像。
   - 不再靠剪短来防止糊成一片：音效挑选时首尾都留得宽（`sfx_pick.py`：-50 dB 前 30 ms 到 -60 dB 后 120 / 250 ms），插话的台词 120 ms 淡出，怪叫最多 4 个同时、被顶掉的 250 ms 淡出，武器音节停时 30 ms 淡出。
 - **打上去的声音、所有战斗音效**（2026-10-19 用户：普通击打基本全灭，不要写实，全部换卡通——老虎机、抓娃娃机那种；连射是玩具枪的短音一下一下地放，不是故意编一段来回的旋律；非台词的音效就是清楚、短、和 BGM 台词分得开）：`tools/toy_sfx.py` 从零合成整套（方波 / 正弦的快速滑音、弹簧、软木塞、金币、蜂鸣器、棘轮、滑笛、木鱼……每种几个版本，环境声做成无缝循环），登记成 sounds.json 的 `src: "toy"`；`hitNote(who, crit, kill)`（Game.onHit / onKill）放 `hitPink` / `hitCat` / `crit` / `kill`；每一发都放玩具枪（`gun` 地雷妹的光线枪「啾」、`cannon` 猫娘的软木塞枪「嘭」，`gap` 防止糊在一起）。
@@ -175,10 +176,12 @@
   - `screens`（结算 `showResults`：漫画杂志目录页，版式在 `style.css .res8`，条目按数据重复；数据来自 `Game.applyRewards`：`st.newItems` 只有首通的新道具、`st.unlocked` 只有新开的章节、`st.mulBy` 每个倍率道具一条；插画 `res/cover_<大关>`（没有就 `res/cover`）、`res/face_<角色>`、`res/item_<道具>`，没有就退回 Q 版脸 / 道具图标；全灭时同一个页面（`st.win` false：刊头 DOWN、残局报酬、`onRetry` 从检查点重来），插画在 `res/lose_<n>` 里随机挑一张）、`uifx`（菜单粒子）、`cursor`。
 - `src/jiggle/`：晃动技术（见下），`jiggle.html` 验证页和战斗主角（`heroine.js`）共用。
 - 服装（DESIGN「服装」）：`characters/<id>.json` 的 `rig` 是制服，`rigs.<服装>` 是同一套姿势换了衣服（同样的 cover / fire、骨架、软肉，只有图和部件权重图是新的）；`SAVE.chars[id].outfit` 是她穿的，`SAVE.outfits` 是已经有的（大关 `reward.outfits`，首通给，读档时补发已通关的）；`heroine.js` 按它挑 rig（图没读到就退回制服）。服装的图叫 `outfit/…`，不算核心，只在穿的时候读（`groups.js outfitKeys`，`main.js picsFor` 和 `Game.nextStep` 把它加进要读的图）。选关的服装牌（`select.js` chip base）：显示她穿的，点一下换下一套，没有别的服装时抖一下、提示怎么拿；结算的特集里新服装和新道具排在一起（`res/outfit_<id>` 图，没有就用衬衫图标）。测试：网址 `?outfit=yk` 两人都穿上。
+- 伤害随机（`weapon.vary` / `active.vary: [lo, hi]`：每一下各乘一个随机倍数，Fever 的伤害累计按平均算）：猫娘每发 22 × 1.2～1.8、镭射每跳 × 0.85～1.25（DESIGN「灵能攻击流」）。
 
 ## 怪怎么逼近、场景破坏（`src/battle/enemies.js`、`src/battle/panels.js`）
 - 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`，波次写 `far` 能更远；2026-10-18 拉近到 5.5～8.5 米），再逼过来；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。
 - 波次里单只怪还能写 `hp`（这一只的血量）、`tough: true`（不吃硬直、挨打不后退；怪的定义里也能写）。
+- 逐帧动画放慢、补帧（2026-10-20 用户：换帧太快，老游戏那样慢一倍、中间程序补）：`Enemy.tickAnim` 按 `combat.json anim.rate`（0.5）播；`setFrame` 换帧时旧帧进 `paper.js` 的 `map2`，`mixK` 在 `anim.blend` 秒里从 0 到 1，新旧两帧沿移动方向各拖一点残影交叉淡化。Z 字翻滚（`hop(zig)`）在它冲她那条线的两侧来回（摆幅 `rollSide`、每下前进 `rollStep`，`tuning/behaviors.json`）。
 - `move`（波次单独写 > 这种怪的 `moves`[第几个造型] > `move` > 按行为模板默认）：
   - 走路怪：`walk` 直走、`hop` 一跳一停、`zigzag` 左右翻滚走 Z 字（图转一整圈）、`charge` 慢慢挪，到 `chargeDist` 米内远远蓄力（红环）再整段扑过来（冲撞，穿过掩体）、`burrow` 钻进地里在几米外钻出来（`from: 'burrow'` 也能从地下出场）；参数 `tuning/behaviors.json walker`；
   - 飞的：`float` 每一秒左右换个点飘，每俯冲一次悬停点往前靠 `homeStep` 米；
@@ -321,6 +324,7 @@
 ## 准星（`src/ui/glhud.js Reticle`，DESIGN「准星精简」）
 - 画法：一个着色器（`RETV_FRAG`）画两遍：先一层暗边（普通混合），再一层线本身用反色混合（OneMinusDstColor：永远和背后反差最大）。有她的图（`ui/retv_<who>_<idle|lock>`，R70 Codex 线稿，`tools/rounds/r70_import.py` 把中心点挪到图正中、记下框占图的宽度 `frame`）就用图的透明度当线、暗边是透明度往外扩；没有就只画四角框和中心点。
 - 状态：平时 idle；压在能打的东西上 lock（换成她更小的图：地雷妹小方框、猫娘小三角，新形态从大往小快速缩进来）；装填 / Fever / 必杀加一圈转动的虚线圈；没子弹红色、发抖；躲着变淡。锁定时的引线和怪名牌照旧。
+- 光（2026-10-20 用户：流光、辉光、金属光泽、粒子、RGB；DESIGN「准星的光」）：线本身（`RETV_FRAG`）上下明暗的金属渐变、不时一道亮带扫过（`ph` 两人错开）、偶尔 RGB 错开一下（`rgb`，地雷妹多）；猫娘平时白偏蓝、普通混合。线下面一层光（`RETG_FRAG`，加法混合，四边比图大 `span` 倍，线本身下面不加：地雷妹的线是反色的、要保持白）：线往外散成柔光、一道光沿线跑、线边飘出闪烁的星点；猫娘：线下挂一排细竖条像频谱，跟着扬声器里正在放的声音跳（`audio.js spectrum()`：混音末端的 AnalyserNode，16 段 60 Hz～10 kHz）、每发蹦一下，中间一道细横光（瞄准点留空）；地雷妹：从线往上冒的光柱，每根自己的颜色、高度、闪烁，光晕 RGB 分离、颜色绕着转。亮度 `ui/battle.json reticle.glow`（0 = 不画）。
 
 ## 特效预设（`src/battle/vfx.js`，`tuning/vfx.json`，DESIGN「场景破坏和怪物特效」）
 - 一个预设由几种成分组合，全都在世界里（有深度、会被挡住）：flash 闪光、debris 物理碎块（`physics.chipsAt`）、dust 慢慢胀大上浮的尘团（SMOKE 帧，普通混合）、sparks 火星拖尾、embers 余烬、fire 火舌、ring 地上的冲击波环、shake / flash2d / sound。怪的大招还有三种：stream 从怪喷到两人跟前的一股火 / 烟 / 泡沫 / 光（一颗颗粒子直飞到镜头前 1 米左右、边飞边胀大，飞到就消失）、veil 糊在镜头前慢慢散的烟（世界里的烟团，两人画在它前面）、circle 蓄力时怪身前立起来的法阵（着色器画的圈、符文带、六芒星，按蓄力进度画一圈，越转越快，出招一亮放大，被打断 / 打死就灭）。`Game.vfx.play(名字, 位置, { n 朝向, scale, to 喷向哪里, life 法阵蓄多久 })` 返回 `{ arrive 喷到的秒数, stop(亮不亮) }`；`trail(名字, 位置, dt)` 给飞行中的东西拖尾；`update(dt)` 每帧推进喷流、延后的烟幕、法阵；换地方 `clear()`。
@@ -338,6 +342,7 @@
 - 两人怎么站、打：停留点预设 `ride`（有车）/ `run`（没车，自己跑）：一直探身、不装弹，攻击换成 `modes.ride`（地雷妹 `gatling` 转盘机枪、猫娘 `rate` 射速倍率），两人往中间靠、只露上半身；开始时两人从画面下面跳进车里。
 - `marks`（按沿路的米数触发）：`spawn`（波次条目，位置写 `ahead` 沿路往前几米（负数 = 后面追来的，`rideChaser`，不会被甩掉）、`x` 左右、`y`），`block`（铁轨上的东西：一个场景道具，刚体，得提前打烂，不然撞上去两人各掉 `crashDmg`、减速、它被撞飞），`face`、`speed`，其余都是演出指令（`say`、`sfx`、`shake`、`burst`、`hint`、`mv`、`cam`…，见「演出指令」）。落在镜头后面 `behind` 米的怪就没了；跑到头时还在的也一起甩掉。
 - `vehicle: cart`：车头的前沿挂在镜头上、画在两人前面（挡住她们的腿），铁轨和枕木沿路铺（Tube + InstancedMesh）。
+- **跑道上的怪跟着跑、打的时候放慢、烟雾硬切**（2026-10-20 用户，DESIGN 序章）：`ride.carry`：标记点派出的怪跟着镜头往前（每帧加上镜头沿路走的那段位移，它自己的走位叠在上面），一直在前面、慢慢逼近；标记点写 `hold`（true 或秒数）：路速降到 `holdSpeed`，这一批打完或 `holdMax` 秒后恢复；`cut: { face, color, n, hide }`：满屏烟雾（覆盖层粒子），`hide` 秒后趁看不见直接转向（不扫过去），转走那一边剩下的怪消失在烟里，新视角里留一层慢慢散的烟（`vfx.veil`）。序章冲出教学楼（`ep0_rework.py dash`）：镜头在路上 1.35 米高，两人缩在两下角只露上半身（`run` 预设改 x / crop / scale），往前 → 烟雾转身 → 烟雾转回，全程只转一次身。
 - 第 1 话：`tools/rounds/ep1_ride.py` 生成蜜矿（ep1_mine，260 米，十五个标记）和冥界（ep1_nether，开阔地，四面漂浮岛屿远景，Boss 场）两个 set 和 episodes 里的两步。
 
 - **两人自己跑、镜头导演**（`ride.girls: { spread }`）：`path` 是两人脚下的路线，两人在场景里沿路跑（`player.js toWorld`，`ride.girlSpot`），镜头不在路上，而在她们身边由 `cam: { back, side, up, ahead, lookUp, ease }` 定的位置（`back` 负数 = 跑在她们前面回头拍，`side` 正数 = 右边），标记点的 `cam` 换位置：绕着她们转过去（距离和角度分开缓，最近 `combat.json ride.girlsCamMin`），不从人身上穿过。序章「冲出教学楼」就是这样：起跑低角度、窗外飞怪时侧拍、后面追来时跑到前面迎面拍。
@@ -359,10 +364,12 @@
 - 时间都走敌方时钟（`game.etw`）。
 - 序章「？？？」五个形态各自的招式（DESIGN 序章 Boss，数据 `bosses.json qq` 的 `approach` / `throw` / `zigzag` / `heal` / `charge` 和各形态的 `pattern`，由 `tools/rounds/ep0_rework.py` 写）：`approach`（`walkOn` 每帧往镜头走，速度随这一形态挨的伤害（`stageDmg`）加快，弱点快出画面顶上或到 `near` 就 `pound`：蓄力（紫，快躲）后连砸几下，`playerAttacked({ rattle: true })` 让躲着的人的掩体猛晃不掉血，露头的照常挨打）、`throw`（形态写 `guarded`：平时弱点关着，每扔一下开 `expose` 秒、一轮扔完再开 `after` 秒，开着时伤害 ×`exposedMul`）、`zigzag`（从蓄力起把伤害记在 `zz`，到 `poise` 就 `repel`：打回原位、晕；冲到了就 `ram` 打那个人（无视掩体）；形态写 `open: [状态…]` 只在这些状态露弱点）、`heal`（放出 `heal.type` 的小怪，`Enemy.healer` = 她：`healTick` 飘到她两侧、连上就放治疗流，她每秒回 `rate` × 连着的数量；血回到这一形态的 `at` 线就 `regress`：点滴瓶散掉、`mutate(上一形态, back)`）、`charge`（长蓄力，蓄力中弱点在 `cores` 里跳 `shifts` 次（`core()` 取当前的），伤害到 `poise` 就打断，蓄满就 `ram` 打两人）。每个形态开始时显示 `texts.h<n>` 的提示。
 - 怪的大小按镜头构图（`Enemy.sizeFloor`）时 Boss 不算在内（`type === 'boss'`）；`def.screen` 给一种怪自己的画面占比（点滴瓶 0.2：一眼要看见）。
-- 腐蜜夫人最后一个形态的三样东西（`ritual` + `Keepsake`，数据 `bosses.json` madame.ritual，打法见 DESIGN 第 1 话 10）：
-  - `Keepsake` 是 Gimmick 的子类，挂在她身前（`near`），8 字形来回晃；`keepTick` 隔一阵派一样去挡核心（`guard`）。
-  - 每样有自己的倒计时 `fuse`，速度每一秒多变一次（`pace`）。走完 `strike`：抖一下，飞到那个人面前打 `playerAttacked kind: 'shot'`（躲没用），再飞回去。打中它 `knock`：重新倒计时，正在飞的一击也被打断。
-  - 血打空时有这三样就 `grieve`：她跪下、叫出来的杂鱼一起没了、她本身不再是目标（`hitMeshes` 空）；三样停成一排，`offer` 按顺序收。最后一样 `rest`：光飘进怀里，`die(true)` 安静地消散。
+- Z 字逼近（2026-10-20 用户：蛇皮走位不是左右横移的靶子）：数据写了 `weave` 的 Boss，`drift` 改走 `weave()`：朝一个人走 `legs` 段斜线（每段 `leg` 秒、左右 `lateral` 米，拐角跺一下、停 `pause`），到她前面 `near` 米或核心上方出了画面顶（`topY`）就蓄力（快躲红环，`windup`）出手（`dmg`，躲着只晃掩体），再两步斜着退回 `zone`（`back` 秒）。序章 Boss（`ep0_rework.py`，血量翻倍 7440、第 3 形态冲撞放慢到 3.4 秒）和腐蜜夫人（`ep1_rework.py`）都用。
+- 腐蜜夫人（`src/battle/madame.js`，`Madame extends TheThing`，beh `madame`，数据 `bosses.json madame.madame`，由 `tools/rounds/ep1_rework.py` 写；打法见 DESIGN 第 1 话 10）：三个形态各是一样东西，`Relic`（Gimmick 子类，打中交给她处理）飘在她身前。照片：画室变暗（`world.dark`），她的不透明度降到一层影子、只在 `exposedT` 里能打；打中照片闪光、亮灯、她现形 `reveal` 秒；照片自己按 `fuse` 蓄力，最后 `warn` 秒出快打环，蓄满致盲（白屏慢慢褪）+ 两人掉血。日记：每页一张程序画的纸（`pageKey`：日期大字 + 乱写的行），位置打乱；按日期顺序打中，那页飞进她身体、MV 字砸出那页的真相（`mv.slam`）、她挨 `chunk` 比例的伤害并僵住；打错那页飞去割开枪的人（一页只罚一次，`busy`）；直接打她只有 `coreMul`。棺材：孩子的灵绕着她转、身边一口小棺材；被抓的人脚下张开黑洞（`hole`：两片画在两人那层的程序圆，后片是漩涡和紫边、前片是洞口前沿的光，位置在她脚下、Fever 槽那一行（`arm.lift`），她的立绘着色器 `sink` 按洞口前沿把沉下去的部分裁掉、越近洞口越黑；没有自己「被抓」立绘的人叠一圈手 `coffin.hands`；她的姿势换成 `dragged`）；`drag`：手臂（R76，`arm_reach` / `arm_grip` 同一张画布）从被抓的人那侧屏幕边缘的裂口伸进来，画在两人那一层（第 1 层，射线 `layers.enableAll` 也打得到），按屏幕位置每帧摆（`placeArm`：手停在她肩旁、大小按画面高度），手心眼睛（`eye_reach` / `eye_grip`）带快打环、只有打眼睛才算，打 `hits` 下放手缩回；`time` 秒内没打掉，她整个沉进洞、洞合上，`away` 秒后回来。AI 队友打当下要紧的东西（`Madame.aimAt`：手心的眼睛、照片、下一页）。两盏吊灯（Gimmick，`drop` + `crush`）打断砸在她身上（`Game.harm` → `crushed`：整块伤害 + 僵住，`open` 秒内打她 ×`openMul`）。换形态不用序章那套：`styleBurst` 数据毁坏 / 残影 / 线稿 / 像素拖拽，她的话一字一拍砸出来（`repaint.word`），她像湿颜料溶掉（`dissolve`）再画回来。最后一个形态血打空 `endCheck`：三样东西直接排成一排（`KeepRow`），照片 → 日记 → 棺材按顺序献上，同原来的结局。
+- 地形伤怪（`gimmick.js` 事件 `crush: { r, dmg, stun }` 跟着 `drop` 落地时、`blast: { r, dmg, vfx }` 打爆时，都走 `Game.harm(p, r, dmg, stun)`：范围内的怪各挨 dmg，Boss 走 `crushed`）。第 1 话烤炉厨房的煤气烤炉就是 `blast`。
+- 怪的程序变化（`src/battle/morph.js`，Game 的 `morph`；怪的种类数据（enemies.json 的 `morph: { … }`）或波次条目的 `morph` 写；种类数据里同名的旧字段（扔东西的 `burst` 等）不算）：`shed` 走着走着身上掉下小怪（落地弹一下再起来）、`burst` 打死后裂开钻出新怪、`puddle` 死后留一滩（程序画的圆斑），同组的滩够数就爬到一起长出一只新的（`as` 给它大小、血）、`merge` 两只同在够久就靠拢、白闪合成一只新的、波次 `from: 'melt'` 墙上先渗出一块污渍、顺墙流下、怪从墙脚那滩里长出来。都是缩放压扁、白闪、墨点、地上的滩，没有新图。波次条目还能写 `h`（这一只多大）。
+- 电波系画面（`post.js` 的 style 7～12，`styleBurst` 里排）：7 数据毁坏（上一帧的整块拖过来）、8 像素拖拽（亮的往下流）、9 融化（一列列往下淌）、10 残影（上一帧留着慢慢退）、11 万花筒（六向镜像转）、12 撕裂（整屏滚动、按行横向错开、色差）。7、10 要上一帧：那时 post 画进两张轮换的目标再贴到屏幕上。
+- 结局的献物（`TheThing.ritual` + `Keepsake`，数据 `bosses.json madame.ritual`）：血打空时 `grieve`：她跪下、叫出来的杂鱼一起没了、她本身不再是目标；三样停成一排，`offer` 按顺序收，打错的晃一下飘回去；最后一样 `rest`：光飘进怀里，`die(true)` 安静地消散。（`Keepsake` 还留着在她身前 8 字形晃、挡核心、倒计时砸人的打法，`ritual()` 才会用；腐蜜夫人现在不走这条，直接用 `KeepRow` 排成一排。）
 - Boss 的台词：`stickers.boss(a, kind)`，文字在 text/stickers.json `bosses.<id>.<kind>`（id 是 bosses.json 的键）。语音是 sounds.json `voices.<id>`，`voice_aivis.py lines <id>` 生成（`fx: "ghost"` 加幽灵处理）。字幕框比两人的大，挂在她头边，语音多长就留多久。
 
 ## （旧）巨大化风纪委员（已删，2026-10-17 用户第七批推翻）

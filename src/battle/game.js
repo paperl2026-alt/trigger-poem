@@ -20,6 +20,7 @@ import { MV } from './mv.js';
 import { Acts } from './acts.js';
 import { Escort } from './escort.js';
 import { VFX } from './vfx.js';
+import { Morph } from './morph.js';
 import { Mark3D } from './marks3d.js';
 import { shotOf, shotFrom, Live } from './shot.js';
 import { Hud } from '../ui/hud.js';
@@ -72,6 +73,7 @@ export class Game {
     this.mv = new MV(this);         // (the MV director: the beat, word walls, pop-ups, tunnels, toxic waves: src/battle/mv.js)
     this.acts = new Acts(this);     // (the monsters' own play: rituals, summoners, sacrifices, squabbles, transformations: src/battle/acts.js)
     this.escort = new Escort(this); // (guarding something far off from a sniper's distance: src/battle/escort.js)
+    this.morph = new Morph(this);   // (the monsters changing before their eyes: shed, burst, pools, merges, out of the walls)
     this.vfx = new VFX(this);       // (things breaking, the monsters' fire, smoke and magic: presets in tuning/vfx.json, src/battle/vfx.js)
     this.addGimmicks();
     this.warm();
@@ -99,7 +101,7 @@ export class Game {
     if (!old) return;
     this.clearActors(); this.boss = null; this.etw.clear(); this.acts.clear(); this.mv.clear();
     this.addGimmicks();
-    this.fx.clear(); this.vfx.clear();
+    this.fx.clear(); this.vfx.clear(); this.morph.clear();
     for (const p of this.players) { p.group.removeFromParent(); if (p.inWorld) p.unworld(); this.world.camera.add(p.group); }
     this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
     if (old.dispose) old.dispose();
@@ -534,6 +536,17 @@ export class Game {
     try { r.compile(this.world.scene, this.world.camera); r.compile(this.hudScene, this.ortho); } catch (e) { /* (best effort) */ }
     for (const m of tmp) m.remove();
     this.hud.gl.alerts?.scars.clear();
+  }
+  // the place hits the monsters (a chandelier brought down, an oven blown up: gimmick.js crush / blast): every monster within r of p takes
+  // dmg (not through its armour: the whole of it), the boss too - and stunned for stun seconds when it can be (Boss.crushed)
+  harm(p, r, dmg, stun = 0, by = null) {
+    for (const a of [...this.actors]) {
+      if (!a.alive || a === by || a.prop || a.phantom || a instanceof Projectile) continue;
+      const c = a.center ? a.center() : a.root.position, d = Math.hypot(c.x - p.x, c.z - p.z);
+      if (d > r + (a.w || 1) * 0.5) continue;
+      if (a.type === 'boss') { a.crushed?.(dmg, stun); continue; }
+      if (a.damage) a.damage(dmg, 'crush', { dmg, uv: { u: 0.5, v: 0.5 }, kind: 'crush' });
+    }
   }
   // the stop's shot changes (a cue's shot: cues.js)
   setShot(spec) { this.shot = shotFrom(spec, this.shot); }
@@ -1041,6 +1054,7 @@ export class Game {
       let dmg = w.dmg * (i ? K.pierceDmgMul : 1) * p.fever.dmgMul * (p.dmgMul ?? 1);   // (dmgMul: blind fire, player.js)
       if (p.gatling) dmg *= p.a.dmg;
       if (w.ramp) dmg *= 1 + w.ramp * Math.min(n, w.rampMax);
+      if (w.vary && !p.gatling) dmg *= w.vary[0] + Math.random() * (w.vary[1] - w.vary[0]);   // (each hit its own: the cat girl's, user 2026-10-20)
       const c = Math.random() < this.critRate(p);
       if (c) { dmg *= this.critMul(p); crit = true; }
       const stagger = w.stagger * (w.kind === 'rifle' ? 1 + K.rifleStaggerRamp * Math.min(n, K.rifleStaggerRampMax) : 1) * (p.gatling ? p.a.stagger : 1);
@@ -1197,7 +1211,7 @@ export class Game {
     for (const a of this.actors) a.update(a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }
-    this.fx.update(dt, now); this.vfx.update(dt);
+    this.fx.update(dt, now); this.vfx.update(dt); if (this.combat) this.morph.update(edt);
     this.live.ease(this.shot, dt);
     this.danger(dt);
     this.lens();

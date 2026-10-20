@@ -5848,6 +5848,18 @@
   "src": "assets/enemy/teacup_stand_rd.png",
   "w": 512
  },
+ "ep1/arm_grip": {
+  "h": 1010,
+  "hit": true,
+  "src": "assets/ep1/arm_grip.webp",
+  "w": 1531
+ },
+ "ep1/arm_reach": {
+  "h": 1010,
+  "hit": true,
+  "src": "assets/ep1/arm_reach.webp",
+  "w": 1531
+ },
  "ep1/cart_front": {
   "h": 1024,
   "rim": 0.52,
@@ -6509,6 +6521,36 @@
   ],
   "src": "assets/ep1/door9_room.webp",
   "w": 1023
+ },
+ "ep1/door_double_l": {
+  "h": 1024,
+  "src": "assets/ep1/door_double_l.webp",
+  "w": 319
+ },
+ "ep1/door_double_l_x": {
+  "h": 1024,
+  "src": "assets/ep1/door_double_l_x.webp",
+  "w": 305
+ },
+ "ep1/door_double_r": {
+  "h": 1024,
+  "src": "assets/ep1/door_double_r.webp",
+  "w": 320
+ },
+ "ep1/door_double_r_x": {
+  "h": 1024,
+  "src": "assets/ep1/door_double_r_x.webp",
+  "w": 305
+ },
+ "ep1/door_single": {
+  "h": 1024,
+  "src": "assets/ep1/door_single.webp",
+  "w": 437
+ },
+ "ep1/door_single_x": {
+  "h": 1024,
+  "src": "assets/ep1/door_single_x.webp",
+  "w": 431
  },
  "ep1/eye_l": {
   "h": 514,
@@ -7329,6 +7371,11 @@
   "hit": true,
   "src": "assets/ep1/hands_b.webp",
   "w": 1200
+ },
+ "ep1/hands_crowd": {
+  "h": 1024,
+  "src": "assets/ep1/hands_crowd.webp",
+  "w": 1536
  },
  "ep1/nb_candle": {
   "h": 328,

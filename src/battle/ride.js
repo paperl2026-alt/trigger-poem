@@ -6,7 +6,11 @@
 //   station ride: { path: [[x, y, z], ...] (world points after where the camera is), speed (m/s), face: fwd | back, lean (how hard it
 //                   banks), vehicle: cart (its front edge in the bottom of the picture, rails laid along the path), marks: [...] }
 //   a mark, at metres along the path: { at, spawn: [wave entries placed by ahead (metres along the path from the camera; < 0 behind),
-//     x (to the side), y], block: { k, h, ahead, x } (a thing lying across the way), face, speed, say, sfx, shake, burst: [dur, seq] }
+//     x (to the side), y], block: { k, h, ahead, x } (a thing lying across the way), face, speed, say, sfx, shake, burst: [dur, seq],
+//     hold (true or seconds: the run slows almost to a stop until what this mark sent is beaten, or that long - tuning ride.holdSpeed /
+//     holdMax), cut: { face, color, n, hide } (a cut hidden in smoke: the picture fills with it and the view is turned while nothing shows) }
+//   ride.carry: what the marks send runs along with the camera (user 2026-10-20: "the monsters on the way in the middle of the view, there
+//   early" - they keep their distance as the camera runs, coming on only at their own pace, so they can be seen and shot)
 // The girls' own run (DESIGN「这是轨道射击，要的是表现力」: they are in the place, the camera films them): ride.girls: { spread (metres
 // between them) } - the path is where THEY run (its points on the floor), they run along it in the 3D scene (player.js toWorld), and the
 // camera keeps to a place beside them that the marks direct: cam: { back (metres behind them; < 0: ahead of them, looking back),
@@ -34,7 +38,7 @@ export class Ride {
     this.curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'); this.len = this.curve.getLength(); this.s = 0;
     this.speed = 0; this.target = R.speed ?? K().speed; this.face = R.face || 'fwd'; this.faceK = this.face === 'back' ? 1 : 0;
     this.marks = (R.marks || []).map((m) => ({ ...m, done: false })).sort((a, b) => a.at - b.at);
-    this.blocks = []; this.clack = 0;
+    this.blocks = []; this.clack = 0; this.hold = null; this.carry = !!R.carry;
     if (girls) { const c = { back: 2.6, side: 0, up: 1.45, ahead: 8, lookUp: 0.9, ease: 1.6, ...(R.cam || {}) }; this.cam = c; this.camNow = { ...c }; }
     g.combat = true; g.riding = true; g.settled = true;
     // the girls jump up into the cart from below the picture (out of cover, up and shooting from now on)
@@ -59,8 +63,17 @@ export class Ride {
     if (!this.on) return;
     const g = this.g, w = g.world, R = this.R, k = K();
     if (g.lull) return;
+    if (this.hold) {   // (held: what the mark sent beaten, or the time up -> on again)
+      const Hd = this.hold; Hd.t += dt;
+      if (Hd.t > Hd.max || !Hd.list.some((a) => a.alive)) { this.target = Hd.resume; this.hold = null; } else this.target = k.holdSpeed ?? 1.2;
+    }
     this.speed += (this.target - this.speed) * Math.min(1, dt * 1.6);
+    const s0 = this.s;
     this.s = Math.min(this.len, this.s + this.speed * dt);
+    if (this.carry && this.s > s0) {   // (the ones running along: moved on as far as the camera, their own moves on top)
+      this.at(this.s, 0, null, V).sub(this.at(s0, 0, null, V2));
+      for (const a of g.actors) if (a.alive && a.rideCarry) { a.root.position.x += V.x; a.root.position.z += V.z; }
+    }
     for (const m of this.marks) if (!m.done && this.s >= m.at) { m.done = true; this.mark(m); }
     // the girls' own run: the camera where the marks put it about them (behind, beside, ahead), looking where they direct
     if (this.girls) {
@@ -114,18 +127,44 @@ export class Ride {
   mark(m) {
     if (m.cam && this.girls) this.cam = { ...this.cam, ...m.cam };   // (the girls' own run: the camera goes round them)
     const g = this.g;
+    const sent = [];
     if (m.spawn) for (const e of m.spawn) {
       const ahead = e.ahead ?? 14, P = this.at(this.s + ahead, e.x ?? rnd(-1, 1));
       const a = g.spawnEnemy({ ...e, x: P.x, z: P.z, y: e.y });
       if (ahead < 0) a.rideChaser = true;
+      if (this.carry && e.carry !== false) a.rideCarry = true;
+      sent.push(a);
     }
     if (m.block) this.block(m.block);
     if (m.face) this.face = m.face;
-    if (m.speed != null) this.target = m.speed;
+    if (m.speed != null) { this.target = m.speed; if (this.hold) this.hold.resume = m.speed; }
+    if (m.hold && sent.length) { this.hold = { list: sent, t: 0, max: m.hold === true ? (K().holdMax ?? 10) : m.hold, resume: this.hold?.resume ?? this.target }; this.target = K().holdSpeed ?? 1.2; }
+    if (m.cut) this.cut(m.cut);
     // the rest of the mark is a director's cue (cues.js: say, sfx, shake, burst, hint, mv, act, cam ...); a line a moment late (not in the
     // very first frame of a stage: the HUD lays itself out first)
-    const { at: _a, spawn: _s, block: _b, face: _f, speed: _v, done: _d, ...cue } = m;
+    const { at: _a, spawn: _s, block: _b, face: _f, speed: _v, done: _d, hold: _h, cut: _c, ...cue } = m;
     if (cue.say) { const { say, ...rest } = cue; g.cues.run(rest); g.tweens.wait(0.6, () => g.cues.run({ say, who: cue.who, force: true })); } else g.cues.run(cue);
+  }
+  // a cut hidden in smoke (user 2026-10-20: not a smooth swing round - "a lot of smoke or particles making a sudden screen, and when it
+  // clears, a new view"): a burst of smoke over the whole picture; while nothing shows the view is turned (no swing), the ones left on
+  // the side it turned from are lost in it; smoke left hanging in the new view, thinning
+  cut(Cu) {
+    const g = this.g, fx = g.fx, W = g.W, H = g.H, hx = Cu.color ?? '#c8b8cc', c = new THREE.Color(hx), col = [c.r, c.g, c.b];
+    for (let i = 0; i < (Cu.n ?? 52); i++) {
+      const x = rnd(-0.1, 1.1) * W, y = rnd(-0.1, 1.1) * H, sz = H * rnd(0.35, 0.7), sh = rnd(0.82, 1.05);
+      fx.oNorm.emit({ x, y, vx: (x - W / 2) * rnd(0.15, 0.5), vy: (y - H / 2) * rnd(0.15, 0.5), life: rnd(1.0, 1.5), size: sz * 0.55, size1: sz * 1.5,
+        rot: rnd(0, 6.28), vrot: rnd(-0.7, 0.7), color: col.map((v) => v * sh), a: 1, a1: 0, frame: FR.SMOKE });
+    }
+    sfx.whoosh(0); g.post.shake(0.6);
+    g.tweens.wait(Cu.hide ?? 0.3, () => {
+      if (!this.on) return;
+      if (Cu.face) {
+        this.face = Cu.face; this.faceK = Cu.face === 'back' ? 1 : 0;
+        const tg = this.curve.getTangentAt(Math.min(0.999, this.s / this.len)), sg = Cu.face === 'back' ? -1 : 1;
+        for (const a of g.actors) if (a.alive && a.def && !a.boss && V.subVectors(a.root.position, g.world.camPos).dot(tg) * sg < 0) { g.fx.puff(a.root.position, 4, 0xd8c8b0, 1); a.alive = false; a.dispose(); }
+      }
+      g.vfx?.veil({ n: 16, dist: [1.2, 4], size: [1.2, 2.6], life: [1.0, 2.2], a: 0.55, color: hx }, 1);
+    });
   }
   // a thing lying across the way ahead (a set prop, breakable, a rigid body: src/battle/physics.js): shoot it to bits in time
   block(B) {

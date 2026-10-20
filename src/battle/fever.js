@@ -32,7 +32,8 @@ export class Fever {
   hit(dealt) {
     this.idle = 0;
     const w = this.w;
-    this.add('dmg', dealt / (w.dmg / w.rate * F().dmgSecondsPerLevel)); // seconds of steady hitting per level
+    const mean = w.vary ? (w.vary[0] + w.vary[1]) / 2 : 1;   // (a random hit counts against its average)
+    this.add('dmg', dealt / (w.dmg * mean / w.rate * F().dmgSecondsPerLevel)); // seconds of steady hitting per level
     this.add('acc', w.rate * F().accPerShot);
   }
   miss() { this.add('acc', -this.w.rate * F().accMissPerShot); }

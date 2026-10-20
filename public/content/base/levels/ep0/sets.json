@@ -506,129 +506,94 @@
     "stations": {
       "ds1": {
         "ride": {
-          "from": [0, 0.55, 3.2],
+          "from": [0, 1.35, 4],
           "path": [
-            [0, 0, 1],
-            [-0.35, 0, -14],
-            [0.35, 0, -32],
-            [-0.35, 0, -50],
-            [0.35, 0, -68],
-            [-0.35, 0, -86],
-            [0.35, 0, -104],
-            [-0.35, 0, -122],
-            [0.35, 0, -140],
-            [0, 0, -144]
+            [-0.3, 1.35, -14],
+            [0.3, 1.4, -32],
+            [-0.3, 1.35, -50],
+            [0.3, 1.4, -68],
+            [-0.3, 1.35, -86],
+            [0.3, 1.4, -104],
+            [-0.3, 1.35, -122],
+            [0.3, 1.4, -140],
+            [0, 1.35, -144]
           ],
-          "speed": 7.5,
+          "speed": 6,
           "marks": [
             { "at": 0, "speed": 3, "say": "scare", "shake": 1.0, "sfx": "roar" },
-            { "at": 3, "speed": 7.5, "hint": "runBlock" },
+            { "at": 3, "speed": 6, "hint": "runBlock" },
             {
-              "at": 6,
-              "cam": { "back": 2.8, "side": 0.3, "up": 1.5, "ahead": 8, "lookUp": 0.8 }
-            },
-            {
-              "at": 8,
+              "at": 5,
+              "hold": true,
               "spawn": [
-                { "type": "paper", "ahead": 14.0, "x": -2.2, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 15.4, "x": -1.32, "y": 2.0, "from": "outside" },
-                { "type": "paper", "ahead": 16.8, "x": -0.44, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 18.2, "x": 0.44, "y": 2.0, "from": "outside" },
-                { "type": "paper", "ahead": 19.6, "x": 1.32, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 21.0, "x": 2.2, "y": 2.0, "from": "outside" }
+                { "type": "paper", "ahead": 24.0, "x": -1.2, "y": 1.5, "from": "outside" },
+                { "type": "paper", "ahead": 25.2, "x": -0.6, "y": 2.1, "from": "outside" },
+                { "type": "paper", "ahead": 26.4, "x": 0.0, "y": 1.5, "from": "outside" },
+                { "type": "paper", "ahead": 27.6, "x": 0.6, "y": 2.1, "from": "outside" },
+                { "type": "paper", "ahead": 28.8, "x": 1.2, "y": 1.5, "from": "outside" }
               ]
-            },
-            {
-              "at": 9,
-              "cam": { "back": -0.4, "side": 2.3, "up": 1.2, "ahead": 1.5, "lookUp": 1.0, "ease": 1.2 }
-            },
-            {
-              "at": 17,
-              "cam": { "back": 3.2, "side": 0, "up": 1.9, "ahead": 12, "lookUp": 0.6, "ease": 1.4 }
             },
             { "at": 20, "block": { "k": "cover/desks", "h": 1.0, "ahead": 20, "x": 0.0 } },
             {
-              "at": 33,
-              "cam": { "back": -3.4, "side": 0.4, "up": 1.3, "ahead": -9, "lookUp": 1.0, "ease": 1.4 }
-            },
-            {
-              "at": 34,
+              "at": 30,
+              "hold": true,
               "spawn": [
-                { "type": "chair", "ahead": -6, "x": -1.2, "from": "burrow" },
-                { "type": "shoe", "ahead": -8, "x": 1.2, "from": "burrow" },
-                { "type": "shoe", "ahead": -10, "x": 0.0, "from": "burrow" }
+                { "type": "chair", "ahead": 22, "x": -0.7, "from": "burrow" },
+                { "type": "shoe", "ahead": 25, "x": 0.7, "from": "burrow" },
+                { "type": "shoe", "ahead": 28, "x": 0.0, "from": "burrow" }
+              ]
+            },
+            { "at": 46, "block": { "k": "cover/lockers", "h": 1.2, "ahead": 18, "x": 0.4 } },
+            { "at": 58, "cut": { "face": "back", "color": "#cbb8d0" } },
+            {
+              "at": 59,
+              "hold": true,
+              "spawn": [
+                { "type": "chair", "ahead": -16, "x": -0.6, "from": "burrow" },
+                { "type": "desk", "ahead": -19, "x": 0.6, "from": "burrow" },
+                { "type": "shoe", "ahead": -22, "x": 0.0, "from": "burrow" }
               ]
             },
             {
-              "at": 49,
-              "cam": { "back": 0.8, "side": -2.6, "up": 1.5, "ahead": 3, "lookUp": 1.2, "ease": 1.0 }
-            },
-            {
-              "at": 58,
-              "spawn": [
-                { "type": "book", "ahead": 15.0, "x": -2.6, "y": 1.6, "from": "outside" },
-                { "type": "book", "ahead": 16.4, "x": -1.3, "y": 2.0, "from": "outside" },
-                { "type": "book", "ahead": 17.8, "x": 0.0, "y": 1.6, "from": "outside" },
-                { "type": "book", "ahead": 19.2, "x": 1.3, "y": 2.0, "from": "outside" },
-                { "type": "book", "ahead": 20.6, "x": 2.6, "y": 1.6, "from": "outside" }
-              ]
-            },
-            {
-              "at": 62,
-              "cam": { "back": 3.2, "side": -1.6, "up": 1.8, "ahead": 8, "lookUp": 1.0, "ease": 0.8 }
-            },
-            { "at": 70, "block": { "k": "cover/lockers", "h": 1.2, "ahead": 22, "x": 0.6 } },
-            {
-              "at": 82,
-              "cam": { "back": 4.2, "side": -0.3, "up": 0.45, "ahead": 10, "lookUp": 1.6, "ease": 1.2 }
-            },
-            {
-              "at": 84,
-              "speed": 9,
+              "at": 74,
+              "hold": true,
               "burst": [0.9, [3, 1, 4], 0.13, 2097176, 16726688],
               "spawn": [
-                { "type": "board", "ahead": 18, "x": 0.0, "from": "burrow" }
+                { "type": "board", "ahead": -18, "x": 0.0, "from": "burrow" }
               ]
             },
+            { "at": 92, "cut": { "face": "fwd", "color": "#cbb8d0" } },
             {
-              "at": 98,
-              "cam": { "back": -3.4, "side": 0.4, "up": 1.3, "ahead": -9, "lookUp": 1.0, "ease": 1.4 }
-            },
-            {
-              "at": 100,
+              "at": 94,
+              "speed": 7,
+              "hold": true,
               "spawn": [
-                { "type": "desk", "ahead": -6, "x": 0.0, "from": "burrow" },
-                { "type": "chair", "ahead": -9, "x": -1.0, "from": "burrow" }
+                { "type": "book", "ahead": 24.0, "x": -1.3, "y": 1.5, "from": "outside" },
+                { "type": "book", "ahead": 25.2, "x": -0.65, "y": 2.0, "from": "outside" },
+                { "type": "book", "ahead": 26.4, "x": 0.0, "y": 1.5, "from": "outside" },
+                { "type": "book", "ahead": 27.6, "x": 0.65, "y": 2.0, "from": "outside" },
+                { "type": "book", "ahead": 28.8, "x": 1.3, "y": 1.5, "from": "outside" }
               ]
             },
             {
               "at": 112,
-              "cam": { "back": 2.6, "side": 0.9, "up": 1.4, "ahead": 9, "lookUp": 0.9, "ease": 1.4 }
-            },
-            {
-              "at": 122,
+              "hold": true,
               "spawn": [
-                { "type": "paper", "ahead": 12.0, "x": -2.8, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 13.4, "x": -1.86, "y": 2.0, "from": "outside" },
-                { "type": "paper", "ahead": 14.8, "x": -0.94, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 16.2, "x": -0.0, "y": 2.0, "from": "outside" },
-                { "type": "paper", "ahead": 17.6, "x": 0.94, "y": 1.6, "from": "outside" },
-                { "type": "paper", "ahead": 19.0, "x": 1.86, "y": 2.0, "from": "outside" },
-                { "type": "paper", "ahead": 20.4, "x": 2.8, "y": 1.6, "from": "outside" }
+                { "type": "paper", "ahead": 22.0, "x": -1.4, "y": 1.6, "from": "outside" },
+                { "type": "paper", "ahead": 23.2, "x": -0.84, "y": 2.1, "from": "outside" },
+                { "type": "paper", "ahead": 24.4, "x": -0.28, "y": 1.6, "from": "outside" },
+                { "type": "paper", "ahead": 25.6, "x": 0.28, "y": 2.1, "from": "outside" },
+                { "type": "paper", "ahead": 26.8, "x": 0.84, "y": 1.6, "from": "outside" },
+                { "type": "paper", "ahead": 28.0, "x": 1.4, "y": 2.1, "from": "outside" }
               ]
             },
-            {
-              "at": 136,
-              "cam": { "back": 2.4, "side": 0, "up": 0.6, "ahead": 8, "lookUp": 1.3, "ease": 1.4 }
-            },
-            { "at": 138, "speed": 11, "shake": 1.2, "say": "start" }
+            { "at": 134, "speed": 10, "shake": 1.2, "say": "start" }
           ],
-          "girls": { "spread": 2.0 },
-          "cam": { "back": 2.2, "side": 0, "up": 0.55, "ahead": 6, "lookUp": 1.2, "ease": 1.6 }
+          "carry": true
         },
         "cam": [0, 1.25, -144],
         "look": [0, 1.2, -160],
-        "shot": { "kind": "run", "players": { "world": { "m": 1.5 } } }
+        "shot": { "kind": "run", "players": { "x": [0.12, 0.88], "crop": 0.42, "scale": 0.9 } }
       }
     },
     "scenery": [

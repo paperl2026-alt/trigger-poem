@@ -160,7 +160,7 @@ export class PanelWorld {
       fogAt: () => FOG.density.value,
       setAnomaly() {}, update() {},
     };
-    this.ray = new THREE.Raycaster();
+    this.ray = new THREE.Raycaster(); this.ray.layers.enableAll();   // (what is drawn over the girls can be shot too: madame.js arms)
     this.look = { x: 0, y: 0 };
     this.camPos = new THREE.Vector3(0, 1.1, 2);
     this.lookAt = new THREE.Vector3(0, 1, -10);

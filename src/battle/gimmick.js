@@ -13,6 +13,9 @@
 //   spawner pours out of and stops it (Game.sealSpawner); { gate: true } one of the seals holding the drawbridge (PanelWorld.gateHit);
 //   (shown up close, a station's focus: Game.arrive) { twitch: { n, amp, every, creak } } it jerks; { flicker: seconds } the lights flicker;
 //   { swap: true } it is kx at once (no page turn: it changed while the lights were out)
+//   the place used against the monsters (DESIGN「总纲」 处处有小巧思: a chandelier brought down on the boss, a gas oven blown up beside them):
+//   { crush: { r, dmg, stun } } where it lands (with drop), every monster within r metres is hit for dmg and the boss stunned stun seconds
+//   (bosses take it whole: Boss.crushed); { blast: { r, dmg, vfx } } it blows up where it is: the same, out of the blast (tuning/vfx.json)
 import { Actor } from './enemies.js';
 import { tex } from '../core/assets.js';
 import { sfx, sound } from '../core/audio.js';
@@ -86,7 +89,8 @@ export class Gimmick extends Actor {
     if (e.swap && this.g.kx) this.setFrame(this.g.kx);
     // episode 2 (src/battle/chase.js): it falls from where it hangs (drop: { t }), onto her if she is under it (trap: { r, down, hold });
     // a door / shutters slammed between her and the girls (door: { hold }); a clock struck to draw her away (lure: { t }); meter: time earned
-    if (e.drop) this.drop(e.drop);
+    if (e.drop) this.drop(e.drop, e.crush);
+    if (e.blast) this.explode(e.blast);
     if (e.trap) g.tweens.wait(e.drop ? (e.drop.t ?? 0.45) : e.topple ? 0.7 : 0, () => g.chase?.trap(this, e.trap));
     if (e.door) g.chase?.door(this, e.door);
     if (e.lure) g.chase?.lure(this, e.lure);
@@ -111,8 +115,16 @@ export class Gimmick extends Actor {
     });
   }
   // a hanging thing comes down (its chain shot through): falls flat onto the floor with a crash
-  drop(spec) {
+  // what it does to the monsters round a point (a crash, a blast): hits every one within r, the boss stunned (game.harm)
+  harm(p, H) { this.game.harm(p, H.r ?? 2.5, H.dmg ?? 300, H.stun ?? 0, this); }
+  explode(B) {
+    const g = this.game, p = this.center();
+    g.vfx.play(B.vfx || 'explosion', p, { n: g.world.camPos.clone().sub(p).setY(0).normalize() });
+    this.harm(p, B); this.mesh.visible = false; this.alive = false; g.tweens.wait(0.05, () => this.dispose());
+  }
+  drop(spec, crush) {
     const g = this.game, P = this.root.position, y1 = this.pivot === 'center' ? this.h * 0.42 : 0, d = spec.t ?? 0.45;
+    if (crush) g.tweens.wait(d, () => this.harm(P.clone().setY(0.5), crush));
     sound('beamFall', { pos: this.center() }) || sfx.slam();
     // with the physics it really falls: thrown down so it lands when the trap goes off (d), then it tips, bounces and lies there
     const ph = g.world.phys;

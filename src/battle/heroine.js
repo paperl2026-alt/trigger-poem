@@ -15,7 +15,7 @@ import { Breath } from '../jiggle/atmo.js';
 import { Ease } from '../core/tween.js';
 
 // her actions besides cover and fire, each a still of its own with its rig (characters/<id>.json rig.<name>; DESIGN「女主动起来」)
-const ACTIONS = ['blind', 'sidehide', 'sidefire', 'leap', 'land', 'aerial', 'run_side', 'run_front'];
+const ACTIONS = ['blind', 'sidehide', 'sidefire', 'leap', 'land', 'aerial', 'run_side', 'run_front', 'dragged'];
 // her pose sets (characters/<id>.json rig.sets.<set>: { cover, fire, actions } - the rig entries she uses at that kind of stop: riding,
 // running, the scope; tuning/shots.json players.set). A set she has no pictures for uses the cover set's (the cover / fire stills)
 const setNames = (R) => Object.values(R.sets || {}).flatMap((s) => [s.cover, s.fire]).filter(Boolean);

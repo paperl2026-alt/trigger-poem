@@ -51,7 +51,8 @@ class Slab {
 
 // a fan of slabs that comes out one by one beside a point, holds, and is knocked away
 class Fan {
-  constructor(layer, order) { this.slabs = [0, 1].map(() => new Slab(layer, order)); this.t = 9; this.life = 1; }
+  // (tilt: how steep - the boss's long lines lie nearly flat and are kept on the screen: W, the width to keep them in)
+  constructor(layer, order, tilt = 1, W = 0) { this.slabs = [0, 1].map(() => new Slab(layer, order)); this.t = 9; this.life = 1; this.tilt = tilt; this.W = W; }
   get on() { return this.t < this.life; }
   show(kind, text, x, y, h, dir, o = {}) {   // (o: tag, life)
     this.kind = kind; this.x = x; this.y = y; this.h = h; this.dir = dir; this.t = 0;
@@ -69,10 +70,12 @@ class Fan {
     this.slabs.forEach((s, i) => {
       // out of her (the fan's root is at her head), one after another, steeply tilted like the P5 menu; at the end swept outward
       const k = Math.min(1, Math.max(0, (this.t - i * 0.08) / 0.1)), e = 1 - (1 - k) * (1 - k);
-      const rot = this.dir * ((i ? 0.22 : 0.4) + (1 - e) * 0.5 + out * 0.5);
+      const rot = this.dir * ((i ? 0.22 : 0.4) * this.tilt + (1 - e) * 0.5 + out * 0.5);
       const ox = this.dir * (i ? this.h * 1.0 : 0), oy = i ? -this.h * 0.95 : 0;
       const from = (1 - e) * this.dir * -this.w * 0.45, away = out * this.dir * this.w * 0.9;
-      s.place(this.x + ox + from + away, this.y + oy + (1 - e) * -this.h * 0.6 + out * this.h * 0.5, rot, (0.5 + 0.5 * e) * (1 + 0.1 * Math.max(0, 1 - this.t * 5)), e * (1 - out));
+      const W = typeof this.W === 'function' ? this.W() : this.W, m = this.h * 0.4, hw = (s.w * Math.abs(Math.cos(rot)) + this.h) / 2;
+      const cx = W ? Math.min(W - hw - m, Math.max(hw + m, this.x + ox)) : this.x + ox;   // (kept on the screen)
+      s.place(cx + from + away, this.y + oy + (1 - e) * -this.h * 0.6 + out * this.h * 0.5, rot, (0.5 + 0.5 * e) * (1 + 0.1 * Math.max(0, 1 - this.t * 5)), e * (1 - out));
     });
   }
 }
@@ -84,7 +87,7 @@ export class Stickers {
     this.her = this.game.players.map(() => ({ f: new Fan(this.layer, 75), cd: 0, last: {}, recent: {} }));
     this.mon = [0, 1].map(() => new Fan(this.layer, 74));
     this.big = new Fan(this.layer, 76);
-    this.bossF = new Fan(this.layer, 76); this.bossSaid = {};
+    this.bossF = new Fan(this.layer, 76, 0.15, () => this.hud.L.W);   // (her lines nearly flat, on the screen: user 2026-10-20) this.bossSaid = {};
     this.onos = [0, 1, 2, 3, 4, 5].map(() => { const m = picture(null, 73, Math.random()); this.layer.add(m); m.userData.t = 9; return m; });
     this.oi = 0; this.mi = 0; this.seen = new Map(); this.monCd = 0;
   }
@@ -140,10 +143,11 @@ export class Stickers {
     const n = set.lines.length, last = this.bossSaid[kind], free = [...Array(n).keys()].filter((j) => n < 2 || j !== last);
     const li = pick(free), line = set.lines[li], text = line[lang] || line.en;
     this.bossSaid[kind] = li;
-    const g = this.game, b = g.box(a), Hh = this.hud.L.H, h = Hh * 0.05, cx = (b.x0 + b.x1) / 2;
+    const g = this.game, b = g.box(a), Hh = this.hud.L.H, cx = (b.x0 + b.x1) / 2; let h = Hh * 0.05;
     voice(a.id, kind, li, 0, 7, Math.max(-0.6, Math.min(0.6, (cx / g.W - 0.5) * 1.2)));
     const f = this.bossF;
     f.show(kind, text, 0, 0, h, 1, { tag: a.tag || a.def?.tag || 'BOSS', life: Math.max(2.4, voiceLen(a.id, kind, li) + 0.7, [...text].length * 0.14) });
+    if (f.w > this.hud.L.W * 0.9) { h *= this.hud.L.W * 0.9 / f.w; f.show(kind, text, 0, 0, h, 1, { tag: a.tag || a.def?.tag || 'BOSS', life: f.life }); }   // (a long line: smaller, never wider than the screen)
     const spot = this.hud.space.find(f.w * 1.1, h * 2.4, [{ x: cx, y: Hh - b.y0 + h * 1.6 }, { x: b.x1 + f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 },
       { x: b.x0 - f.w * 0.55, y: Hh - (b.y0 + b.y1) / 2 }, { x: this.hud.L.W / 2, y: Hh * 0.82 }]);
     f.x = spot.x; f.y = spot.y; f.dir = spot.x >= cx ? 1 : -1; f.spot = spot;

@@ -1391,7 +1391,7 @@
       "loopEnd": 57.71,
       "src": "ace",
       "from": "ep0_boss_k0.80_2289551029",
-      "vol": 1.4,
+      "vol": 1.0, "lufs": -12.0,
       "bpm": 150,
       "key": "E minor"
     },
@@ -1401,7 +1401,7 @@
       "loopEnd": 54.8571,
       "src": "ace",
       "from": "ep0_stage_k0.80_1537096230",
-      "vol": 1.4,
+      "vol": 1.06, "lufs": -12.5,
       "bpm": 140,
       "key": "A minor"
     },
@@ -1411,7 +1411,7 @@
       "loopEnd": 54.8571,
       "src": "ace",
       "from": "ep1_boss_k0.80_2706038643",
-      "vol": 1.4,
+      "vol": 1.07, "lufs": -12.6,
       "bpm": 140,
       "key": "C minor"
     },
@@ -1421,7 +1421,7 @@
       "loopEnd": 64.0,
       "src": "ace",
       "from": "ep1_stage_k0.55_3689891084",
-      "vol": 1.4,
+      "vol": 0.92, "lufs": -11.3,
       "bpm": 120,
       "key": "A minor"
     },
@@ -1431,7 +1431,7 @@
       "loopEnd": 66.0,
       "src": "ace",
       "from": "ep2_final_k0.80_2187012721",
-      "vol": 1.4,
+      "vol": 0.97, "lufs": -11.7,
       "bpm": 160,
       "key": "D minor"
     },
@@ -1441,7 +1441,7 @@
       "loopEnd": 50.5163,
       "src": "ace",
       "from": "ep2_inn_k0.55_451967191",
-      "vol": 1.4,
+      "vol": 0.79, "lufs": -9.9,
       "bpm": 76,
       "key": "D major"
     },
@@ -1451,7 +1451,7 @@
       "loopEnd": 83.4783,
       "src": "ace",
       "from": "ep2_she_k0.80_405652989",
-      "vol": 1.4,
+      "vol": 1.01, "lufs": -12.1,
       "bpm": 138,
       "key": "D minor"
     }

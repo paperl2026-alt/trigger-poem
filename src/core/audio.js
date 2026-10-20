@@ -35,12 +35,20 @@ export function initAudio() {
   comp.threshold.value = -6; comp.knee.value = 6; comp.ratio.value = 8; comp.attack.value = 0.003; comp.release.value = 0.2;
   master = ctx.createGain(); master.gain.value = muted ? 0 : NOM.master * sliderGain(volume);
   master.connect(comp); comp.connect(ctx.destination);
+  ana = ctx.createAnalyser(); ana.fftSize = 1024; ana.smoothingTimeConstant = 0.72; ana.minDecibels = -80; ana.maxDecibels = -18;
+  comp.connect(ana); anaBuf = new Uint8Array(ana.frequencyBinCount);   // (listens only: spectrum())
   sfxBus = ctx.createGain(); sfxBus.gain.value = NOM.sfx * sliderGain(sfxVol); sfxBus.connect(master);
   for (const k of GROUPS) { GRP[k] = ctx.createGain(); GRP[k].connect(sfxBus); }
   fxBus = GRP.world;   // (the default for everything that names no group)
   voiceBus = ctx.createGain(); voiceBus.gain.value = NOM.voice * sliderGain(voiceVol); voiceBus.connect(master);
   musBus = ctx.createGain(); musBus.gain.value = NOM.music * sliderGain(musicVol);
-  musDuck = ctx.createGain(); musBus.connect(musDuck); musDuck.connect(master);
+  musDuck = ctx.createGain();
+  // the music's own treatment (user 2026-10-20: the loud tracks bury the sounds - "the loud ones need a bus of their own"): a dip where
+  // the voices and the hits live, the top eased, the peaks held down gently; then the duck
+  const mid = ctx.createBiquadFilter(); mid.type = 'peaking'; mid.frequency.value = 2800; mid.Q.value = 0.9; mid.gain.value = -3.5;
+  const air = ctx.createBiquadFilter(); air.type = 'highshelf'; air.frequency.value = 8000; air.gain.value = -2;
+  const mcomp = ctx.createDynamicsCompressor(); mcomp.threshold.value = -18; mcomp.knee.value = 10; mcomp.ratio.value = 2.5; mcomp.attack.value = 0.02; mcomp.release.value = 0.25;
+  musBus.connect(mid); mid.connect(air); air.connect(mcomp); mcomp.connect(musDuck); musDuck.connect(master);
   verb = ctx.createConvolver();
   const len = ctx.sampleRate * 2.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
   for (let ch = 0; ch < 2; ch++) {
@@ -57,6 +65,21 @@ export function initAudio() {
   noiseBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const nd = noiseBuf.getChannelData(0);
   for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+}
+// what the speakers play, by pitch: 16 bands from 60 Hz to 10 kHz spaced like the ear hears them, 0..1 (the cat girl's reticle is a sound
+// visualizer: src/ui/glhud.js RETG_FRAG - the music, her chant, the shots all move it). Read once per audio tick, shared by whoever asks.
+let ana = null, anaBuf = null, specAt = -1;
+const SPEC = new Float32Array(16);
+export function spectrum() {
+  if (!ana || ctx.currentTime === specAt) return SPEC;
+  specAt = ctx.currentTime; ana.getByteFrequencyData(anaBuf);
+  const N = anaBuf.length, hz = ctx.sampleRate / 2 / N;
+  for (let i = 0; i < 16; i++) {
+    const a = Math.floor(60 * Math.pow(10000 / 60, i / 16) / hz), b = Math.max(a + 1, Math.ceil(60 * Math.pow(10000 / 60, (i + 1) / 16) / hz));
+    let m = 0; for (let j = a; j < b && j < N; j++) m = Math.max(m, anaBuf[j]);
+    SPEC[i] = Math.pow(Math.max(0, (m / 255 - 0.3) / 0.7), 1.4);
+  }
+  return SPEC;
 }
 export function setMuted(m) { muted = m; if (master) master.gain.value = m ? 0 : NOM.master * sliderGain(volume); }
 export function setVolume(v) { volume = v; if (master) master.gain.value = muted ? 0 : NOM.master * sliderGain(volume); }
@@ -293,6 +316,8 @@ export function hitNote(who, crit = false, kill = false, pan = 0, rate = 1) {
 //   a busy fight (the loudness of what has just happened, like an HDR window: hits, cries, crashes push it up, it falls off in a second):
 //   the beds up to -9 dB, the music up to -2.5 dB; in a lull they come back up. Attack fast, release slow (no pumping)
 const DUCK_V = { music: -5, amb: -8, world: -4, enemy: -4, hit: -3, player: -3, ui: 0 }, BUSY = { amb: -9, music: -2.5 };
+// a boss talking: everything steps right back for her line (user 2026-10-20: "unless a boss's line covers them for a moment")
+const DUCK_BOSS = { music: -9, amb: -12, world: -9, enemy: -9, hit: -8, player: -8, ui: -3 };
 const VERB = { ui: 0, player: 0.05, hit: 0.08, enemy: 0.15, world: 0.2, amb: 0 };   // (how much of each group goes into the place's reverb)
 let act = 0;
 const LOUD = { hit: 0.05, enemy: 0.12, world: 0.06, player: 0.015 }, BIG = /^(slam|roar|shatter|beamFall|woodBreak|bellToll|doorSlam|kaikoWail|sheKnock)/;
@@ -302,13 +327,13 @@ function groupOf(key) { const g = C.sounds?.sfx?.[key]?.bus; return GRP[g] ? g :
 const db = (x) => Math.pow(10, x / 20);
 function mixTick() {
   if (!ctx) return;
-  const t = now(), talk = talking(), k = act;
+  const t = now(), talk = talking(), k = act, D = talk && !C.characters?.[TALK.who] ? DUCK_BOSS : DUCK_V;   // (not a heroine: a boss)
   act *= 0.94;   // (about a second to fall away)
   for (const g of GROUPS) {
-    const target = db((talk ? DUCK_V[g] : 0) + (BUSY[g] || 0) * k) * GRPU[g];
+    const target = db((talk ? D[g] : 0) + (BUSY[g] || 0) * k) * GRPU[g];
     GRP[g].gain.setTargetAtTime(target, t, target < GRP[g].gain.value ? 0.03 : 0.3);
   }
-  const m = db((talk ? DUCK_V.music : 0) + BUSY.music * k) * GRPU.music;
+  const m = db((talk ? D.music : 0) + BUSY.music * k) * GRPU.music;
   musDuck.gain.setTargetAtTime(m, t, m < musDuck.gain.value ? 0.06 : 0.6);
 }
 // where the camera is (Game every frame): the sounds given a point are heard from here

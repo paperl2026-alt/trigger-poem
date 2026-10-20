@@ -1103,5 +1103,11 @@
     "auto": true,
     "png": "public/jiggle/cat_run_side.png",
     "keep_frame": true
+  },
+  "jig_cat_dragged": {
+    "src": "art/raw/r77/cat_dragged_b.png",
+    "auto": true,
+    "png": "public/jiggle/cat_dragged.png",
+    "keep_frame": true
   }
 }

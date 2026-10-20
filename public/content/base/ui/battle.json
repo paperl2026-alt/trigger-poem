@@ -749,7 +749,9 @@
   "reticle": {
    "pink": "pink_a",
    "cat": "cat_c",
-   "size": 0.11
+   "size": 0.11,
+   "glow": 1,
+   "_glow": "准星周围的光（src/ui/glhud.js RETG_FRAG）亮度倍数，0 = 不画"
   },
   "talisman": "a",
   "reloadQ": {

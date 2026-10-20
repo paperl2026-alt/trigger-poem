@@ -121,8 +121,13 @@ def corridor(S):
     entrances(st["cor2"]["waves"], ["c2", "c3"], 2.0)
 
 def dash(S):
-    """the run out of the building: half way along, the corridor's window side falls away into an open walkway (hall.open), the whole
-    school and the sky beside them - the camera goes round outside to film them running along it, then far out, then back in low"""
+    """the run out of the building (user 2026-10-20, the run filmed round the girls failed: "the views switch too fast, the monsters come
+    and can't be seen; on a run like this they come along the way in the middle of the view, even early; their run has no motion, so
+    don't film the girls, keep the camera on the monsters; change the view behind a burst of smoke, not a smooth swing; shoot one way a
+    while, then the other - not back and forth"): the camera runs down the corridor at eye height, the girls small at the bottom corners;
+    the monsters come down the middle of the way, there early in the haze, running along with them (ride.carry) and the run slows while
+    each lot is fought (hold); one turn round and back, each behind smoke (cut). Half way the corridor's window side falls away into an
+    open walkway (hall.open): the whole school and the sky beside them"""
     H = S["hall"]
     H["open"] = [{"on": "right", "z0": -46, "z1": -104}]
     rail = "#c8c0b8"
@@ -131,15 +136,36 @@ def dash(S):
         {"kind": "box", "at": [3.15, 0.5, -75], "size": [0.05, 0.05, 58], "color": rail},
         {"kind": "box", "at": [3.15, 0, -46.5], "size": [0.07, 1.04, 0.07], "color": rail, "repeat": {"n": 30, "step": [0, 0, -2]}},
     ]
-    R = S["stations"]["ds1"]["ride"]
-    keep = [m for m in R["marks"] if "cam" not in m or m["at"] in (6, 9, 17, 33, 136)]
-    # (inside, by the wall, looking out past them to the open side: the school and the sky behind them as they run)
-    keep += [{"at": 49, "cam": {"back": 0.8, "side": -2.6, "up": 1.5, "ahead": 3, "lookUp": 1.2, "ease": 1.0}},
-             {"at": 62, "cam": {"back": 3.2, "side": -1.6, "up": 1.8, "ahead": 8, "lookUp": 1.0, "ease": 0.8}},
-             {"at": 82, "cam": {"back": 4.2, "side": -0.3, "up": 0.45, "ahead": 10, "lookUp": 1.6, "ease": 1.2}},
-             {"at": 98, "cam": {"back": -3.4, "side": 0.4, "up": 1.3, "ahead": -9, "lookUp": 1.0, "ease": 1.4}},
-             {"at": 112, "cam": {"back": 2.6, "side": 0.9, "up": 1.4, "ahead": 9, "lookUp": 0.9, "ease": 1.4}}]
-    R["marks"] = sorted([m for m in keep if not ("cam" in m and m["at"] in (56, 66, 120))], key=lambda m: m["at"])
+    st = S["stations"]["ds1"]
+    st["shot"] = {"kind": "run", "players": {"x": [0.12, 0.88], "crop": 0.42, "scale": 0.9}}   # (small, low, out at the corners)
+    R = st["ride"]
+    for k in ("girls", "cam"): R.pop(k, None)
+    R.update({"from": [0, 1.35, 4], "speed": 6, "carry": True,
+              "path": [[-0.3, 1.35, -14], [0.3, 1.4, -32], [-0.3, 1.35, -50], [0.3, 1.4, -68], [-0.3, 1.35, -86], [0.3, 1.4, -104],
+                       [-0.3, 1.35, -122], [0.3, 1.4, -140], [0, 1.35, -144]]})
+    row = lambda typ, n, a0, w, ys, frm, step=1.2: [{"type": typ, "ahead": round(a0 + i * step, 2), "x": round(-w + 2 * w * i / max(1, n - 1), 2),
+                                                      **({"y": ys[i % len(ys)]} if ys else {}), "from": frm} for i in range(n)]
+    smoke = "#cbb8d0"
+    R["marks"] = [
+        {"at": 0, "speed": 3, "say": "scare", "shake": 1.0, "sfx": "roar"},
+        {"at": 3, "speed": 6, "hint": "runBlock"},
+        # (forward: the way ahead)
+        {"at": 5, "hold": True, "spawn": row("paper", 5, 24, 1.2, [1.5, 2.1], "outside")},
+        {"at": 20, "block": {"k": "cover/desks", "h": 1.0, "ahead": 20, "x": 0.0}},
+        {"at": 30, "hold": True, "spawn": [{"type": "chair", "ahead": 22, "x": -0.7, "from": "burrow"}, {"type": "shoe", "ahead": 25, "x": 0.7, "from": "burrow"},
+                                           {"type": "shoe", "ahead": 28, "x": 0.0, "from": "burrow"}]},
+        {"at": 46, "block": {"k": "cover/lockers", "h": 1.2, "ahead": 18, "x": 0.4}},
+        # (turned round behind smoke: what chases them down the corridor)
+        {"at": 58, "cut": {"face": "back", "color": smoke}},
+        {"at": 59, "hold": True, "spawn": [{"type": "chair", "ahead": -16, "x": -0.6, "from": "burrow"}, {"type": "desk", "ahead": -19, "x": 0.6, "from": "burrow"},
+                                           {"type": "shoe", "ahead": -22, "x": 0.0, "from": "burrow"}]},
+        {"at": 74, "hold": True, "burst": [0.9, [3, 1, 4], 0.13, 2097176, 16726688], "spawn": [{"type": "board", "ahead": -18, "x": 0.0, "from": "burrow"}]},
+        # (and round again: the way out)
+        {"at": 92, "cut": {"face": "fwd", "color": smoke}},
+        {"at": 94, "speed": 7, "hold": True, "spawn": row("book", 5, 24, 1.3, [1.5, 2.0], "outside")},
+        {"at": 112, "hold": True, "spawn": row("paper", 6, 22, 1.4, [1.6, 2.1], "outside")},
+        {"at": 134, "speed": 10, "shake": 1.2, "say": "start"},
+    ]
 
 HEALER = "drip"   # (round 75's IV-drip spirits: tools/rounds/r75_import.py)
 
@@ -172,7 +198,8 @@ def yard(S, B):
     S3["pattern"] = ["drift", "zigzag", "drift", "zigzag"]; S3["open"] = ["windup", "dash", "hurt", "back"]
     # (how long each form lasts: about 40 to 70 s each - its share of the health, the whole a little under 6000)
     # (measured on the auto-player: about 15, 19, 17, 7.5 and 15.6 damage a second in each form -> 45, 45, 50, 55 and 60 s)
-    B["hp"] = 3720
+    # (user 2026-10-20: "too short - at least double each form": twice that, the same shares -> about 90 to 120 s a form)
+    B["hp"] = 7440
     for s, at in zip(B["stages"], (1, 0.817, 0.586, 0.363, 0.253)): s["at"] = at
     # (4) healers (user 2026-10-20): they feed her back; healed past where this form began, she returns to the third
     S4["pattern"] = ["heal", "drift", "volley", "heal", "drift", "lunge", "drift"]
@@ -184,7 +211,9 @@ def yard(S, B):
     S5["cores"] = [[0.32, 0.65, 0.09], [0.73, 0.46, 0.09], [0.39, 0.82, 0.08], [0.19, 0.37, 0.08], [0.69, 0.27, 0.08]]
     B["approach"] = {"speed": 0.9, "speedUp": 3.0, "near": 9.5, "topY": 0.1, "windup": 0.8, "slams": 3, "gap": 0.55, "dmg": 14, "back": 2.2}
     B["throw"] = {"shots": [2, 4], "gap": 1.0, "expose": 1.3, "after": 1.5, "exposedMul": 2.0, "flight": 2.1, "dmg": 14}
-    B["zigzag"] = {"windup": 0.9, "legs": 5, "lateral": 3.2, "time": 2.6, "stop": 2.0, "poise": 110, "dmg": 26}
+    B["zigzag"] = {"windup": 0.9, "legs": 5, "lateral": 2.8, "time": 3.4, "stop": 2.0, "poise": 110, "dmg": 26}
+    # (its "drift" between attacks is a weave in at the girls and a strike in range - user 2026-10-20: never a target sliding to and fro)
+    B["weave"] = {"legs": 4, "lateral": 2.4, "leg": 0.75, "pause": 0.3, "near": 6.5, "topY": 0.06, "windup": 0.9, "dmg": 16, "back": 1.8}
     B["charge"] = {"time": 4.6, "shifts": 3, "poise": 150, "dmg": 34}
     B["summonMax"] = 6
     B["texts"].update({

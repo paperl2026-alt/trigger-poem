@@ -76,6 +76,7 @@ uniform vec3 tint; uniform float tintAmt; uniform float dark;
 uniform vec4 aura; uniform float auraFlow; uniform float auraPulse; uniform float auraOnly; uniform vec2 texel;
 uniform float wet; uniform float flush; uniform float time; uniform float aspect; uniform sampler2D FL;
 uniform vec4 DR[${MAXD}]; uniform vec4 DV[${MAXD}]; uniform sampler2D SW; uniform vec2 SWpx; uniform float mir;
+uniform vec4 sink;   // (sunk into a hole: its centre x, y and radii x, y in device pixels; z = 0 none)
 const ivec2 NL = ivec2(${LATTICE.NX}, ${LATTICE.NY});
 varying vec2 vUv; varying vec3 vA; varying vec3 vB; varying vec3 vC; varying vec3 vE; varying vec2 vF;
 float h1(vec2 p) { p = fract(p * vec2(443.897, 441.423)); p += dot(p, p.yx + 19.19); return fract((p.x + p.y) * p.x); }
@@ -126,6 +127,12 @@ float auraLight() {
 void main() {
   vec4 t = texture2D(map, vUv);
   if (t.a < 0.02) discard;
+  float sunk = 1.0;
+  if (sink.z > 0.0) {   // (the near rim of the hole hides what is below it; the last bit above it goes dark)
+    float dx = (gl_FragCoord.x - sink.x) / sink.z, rim = abs(dx) < 1.0 ? sink.y - sink.w * sqrt(1.0 - dx * dx) : sink.y;
+    if (gl_FragCoord.y < rim) discard;
+    sunk = smoothstep(rim, rim + sink.w * 1.6, gl_FragCoord.y);
+  }
   if (auraOnly > 1.5) {   // an afterimage (battle: her special is ready): her silhouette in her colour, a little of the picture showing through
     float lum = dot(t.rgb, vec3(0.3, 0.59, 0.11));
     gl_FragColor = vec4(mix(aura.rgb * 1.2, vec3(1.0), 0.45 + 0.25 * lum), t.a * aura.a * opacity);
@@ -173,7 +180,7 @@ void main() {
     vec3 h = mix(vec3(0.1, 0.25, 1.0), vec3(1.0, 0.15, 0.2), vF.x);
     col = mix(col * 0.55, h, 0.35 + 0.4 * vF.x) + vec3(1.0, 0.9, 0.4) * clamp(vF.y * 25.0, 0.0, 0.6);
   }
-  gl_FragColor = vec4(col, t.a * opacity);
+  gl_FragColor = vec4(col * mix(0.08, 1.0, sunk), t.a * opacity);
 }`;
 
 export function rigMesh(tex, weights, rig, fleshDef, segs = [96, 144]) {
@@ -188,7 +195,7 @@ export function rigMesh(tex, weights, rig, fleshDef, segs = [96, 144]) {
       size: { value: new THREE.Vector2(1, ar) }, C: { value: C }, D: { value: CH.map(() => new THREE.Vector4()) },
       BODY: { value: new THREE.Vector4() }, LINES: { value: new THREE.Vector4(rig.lines.ground, rig.lines.hip, rig.lines.waist, rig.lines.chest) },
       PIV: { value: new THREE.Vector4(rig.waistPivot[0], rig.waistPivot[1], rig.neckPivot[0], rig.neckPivot[1]) },
-      flash: { value: 0 }, opacity: { value: 1 }, showW: { value: 0 }, tint: { value: new THREE.Color(1, 0.1, 0.3) }, tintAmt: { value: 0 }, dark: { value: 0 },
+      flash: { value: 0 }, opacity: { value: 1 }, showW: { value: 0 }, sink: { value: new THREE.Vector4(0, 0, 0, 0) }, tint: { value: new THREE.Color(1, 0.1, 0.3) }, tintAmt: { value: 0 }, dark: { value: 0 },
       aura: { value: new THREE.Vector4(1, 1, 1, 0) }, auraFlow: { value: 0 }, auraPulse: { value: 0 }, auraOnly: { value: 0 }, texel: { value: new THREE.Vector2(1 / tex.image.width, 1 / tex.image.height) },
       wet: { value: 0 }, flush: { value: 0 }, time: { value: 0 }, aspect: { value: ar },
       DR: { value: Array.from({ length: MAXD }, () => new THREE.Vector4()) }, DV: { value: Array.from({ length: MAXD }, () => new THREE.Vector4()) },

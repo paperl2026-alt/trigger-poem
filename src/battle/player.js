@@ -298,6 +298,7 @@ export class Player {
         if (p >= 1) { this.mv = null; this.y0 += M.dy * this.H; this.baseShift = (this.baseShift || 0) + M.dx * (this.frame?.w || this.W); }
       }
     }
+    if (this.dragged) pose = 'dragged';   // (caught by the hands in the hole: madame.js)
     this.setPose(pose);
     this.kick = Math.max(0, this.kick - dt * 10);
     this.pop += (1 - this.pop) * Math.min(1, dt * 18);
@@ -442,7 +443,7 @@ export class Player {
     this.beamTick = B.tick;
     this.soft.kick(0.3);
     this.fever.shot();
-    const n = g.beamHit(this, this.aimX, this.aimY, width * B.radius, this.a.dps * B.tick);
+    const V = this.a.vary, n = g.beamHit(this, this.aimX, this.aimY, width * B.radius, this.a.dps * B.tick * (V ? V[0] + Math.random() * (V[1] - V[0]) : 1));
     if (n) this.hits++;
     this.shots++;
     if (this.slot === 0) g.post.shake(0.12);
