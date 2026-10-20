@@ -21559,6 +21559,282 @@
   "src": "assets/prop/ep2_zen_rd.png",
   "w": 512
  },
+ "prop/ep2s_chika_barrel": {
+  "h": 956,
+  "hit": true,
+  "relief": "prop/ep2s_chika_barrel_rd",
+  "src": "assets/prop/ep2s_chika_barrel.webp",
+  "w": 844
+ },
+ "prop/ep2s_chika_barrel_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_chika_barrel_rd.png",
+  "w": 452
+ },
+ "prop/ep2s_chika_crate": {
+  "h": 726,
+  "hit": true,
+  "relief": "prop/ep2s_chika_crate_rd",
+  "src": "assets/prop/ep2s_chika_crate.webp",
+  "w": 1100
+ },
+ "prop/ep2s_chika_crate_rd": {
+  "h": 338,
+  "src": "assets/prop/ep2s_chika_crate_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_chika_wheel": {
+  "h": 969,
+  "hit": true,
+  "relief": "prop/ep2s_chika_wheel_rd",
+  "src": "assets/prop/ep2s_chika_wheel.webp",
+  "w": 1043
+ },
+ "prop/ep2s_chika_wheel_rd": {
+  "h": 476,
+  "src": "assets/prop/ep2s_chika_wheel_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_furo_oke": {
+  "h": 854,
+  "hit": true,
+  "relief": "prop/ep2s_furo_oke_rd",
+  "src": "assets/prop/ep2s_furo_oke.webp",
+  "w": 1100
+ },
+ "prop/ep2s_furo_oke_rd": {
+  "h": 397,
+  "src": "assets/prop/ep2s_furo_oke_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_furo_stool": {
+  "h": 744,
+  "hit": true,
+  "relief": "prop/ep2s_furo_stool_rd",
+  "src": "assets/prop/ep2s_furo_stool.webp",
+  "w": 1093
+ },
+ "prop/ep2s_furo_stool_rd": {
+  "h": 349,
+  "src": "assets/prop/ep2s_furo_stool_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_furo_yuzu": {
+  "h": 706,
+  "hit": true,
+  "relief": "prop/ep2s_furo_yuzu_rd",
+  "src": "assets/prop/ep2s_furo_yuzu.webp",
+  "w": 1100
+ },
+ "prop/ep2s_furo_yuzu_rd": {
+  "h": 329,
+  "src": "assets/prop/ep2s_furo_yuzu_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_genkan_hibachi": {
+  "h": 1100,
+  "hit": true,
+  "relief": "prop/ep2s_genkan_hibachi_rd",
+  "src": "assets/prop/ep2s_genkan_hibachi.webp",
+  "w": 825
+ },
+ "prop/ep2s_genkan_hibachi_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_genkan_hibachi_rd.png",
+  "w": 384
+ },
+ "prop/ep2s_genkan_umbrella": {
+  "h": 1100,
+  "hit": true,
+  "relief": "prop/ep2s_genkan_umbrella_rd",
+  "src": "assets/prop/ep2s_genkan_umbrella.webp",
+  "w": 404
+ },
+ "prop/ep2s_genkan_umbrella_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_genkan_umbrella_rd.png",
+  "w": 188
+ },
+ "prop/ep2s_hiroma_shamisen": {
+  "h": 1100,
+  "hit": true,
+  "relief": "prop/ep2s_hiroma_shamisen_rd",
+  "src": "assets/prop/ep2s_hiroma_shamisen.webp",
+  "w": 353
+ },
+ "prop/ep2s_hiroma_shamisen_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_hiroma_shamisen_rd.png",
+  "w": 164
+ },
+ "prop/ep2s_hiroma_taru": {
+  "h": 1100,
+  "hit": true,
+  "relief": "prop/ep2s_hiroma_taru_rd",
+  "src": "assets/prop/ep2s_hiroma_taru.webp",
+  "w": 1076
+ },
+ "prop/ep2s_hiroma_taru_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_hiroma_taru_rd.png",
+  "w": 501
+ },
+ "prop/ep2s_kane_drum": {
+  "h": 995,
+  "hit": true,
+  "relief": "prop/ep2s_kane_drum_rd",
+  "src": "assets/prop/ep2s_kane_drum.webp",
+  "w": 938
+ },
+ "prop/ep2s_kane_drum_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_kane_drum_rd.png",
+  "w": 483
+ },
+ "prop/ep2s_kane_saisen": {
+  "h": 683,
+  "hit": true,
+  "relief": "prop/ep2s_kane_saisen_rd",
+  "src": "assets/prop/ep2s_kane_saisen.webp",
+  "w": 1100
+ },
+ "prop/ep2s_kane_saisen_rd": {
+  "h": 318,
+  "src": "assets/prop/ep2s_kane_saisen_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_kane_shimenawa": {
+  "h": 499,
+  "hit": true,
+  "relief": "prop/ep2s_kane_shimenawa_rd",
+  "src": "assets/prop/ep2s_kane_shimenawa.webp",
+  "w": 1100
+ },
+ "prop/ep2s_kane_shimenawa_rd": {
+  "h": 232,
+  "src": "assets/prop/ep2s_kane_shimenawa_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_kura_boxes": {
+  "h": 988,
+  "hit": true,
+  "relief": "prop/ep2s_kura_boxes_rd",
+  "src": "assets/prop/ep2s_kura_boxes.webp",
+  "w": 1080
+ },
+ "prop/ep2s_kura_boxes_rd": {
+  "h": 468,
+  "src": "assets/prop/ep2s_kura_boxes_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_kura_nagamochi": {
+  "h": 464,
+  "hit": true,
+  "relief": "prop/ep2s_kura_nagamochi_rd",
+  "src": "assets/prop/ep2s_kura_nagamochi.webp",
+  "w": 1100
+ },
+ "prop/ep2s_kura_nagamochi_rd": {
+  "h": 216,
+  "src": "assets/prop/ep2s_kura_nagamochi_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_kyakushitsu_chabudai": {
+  "h": 828,
+  "hit": true,
+  "relief": "prop/ep2s_kyakushitsu_chabudai_rd",
+  "src": "assets/prop/ep2s_kyakushitsu_chabudai.webp",
+  "w": 1100
+ },
+ "prop/ep2s_kyakushitsu_chabudai_rd": {
+  "h": 385,
+  "src": "assets/prop/ep2s_kyakushitsu_chabudai_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_kyakushitsu_zaisu": {
+  "h": 989,
+  "hit": true,
+  "relief": "prop/ep2s_kyakushitsu_zaisu_rd",
+  "src": "assets/prop/ep2s_kyakushitsu_zaisu.webp",
+  "w": 1100
+ },
+ "prop/ep2s_kyakushitsu_zaisu_rd": {
+  "h": 460,
+  "src": "assets/prop/ep2s_kyakushitsu_zaisu_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_nakaniwa_bench": {
+  "h": 628,
+  "hit": true,
+  "relief": "prop/ep2s_nakaniwa_bench_rd",
+  "src": "assets/prop/ep2s_nakaniwa_bench.webp",
+  "w": 1100
+ },
+ "prop/ep2s_nakaniwa_bench_rd": {
+  "h": 292,
+  "src": "assets/prop/ep2s_nakaniwa_bench_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_nakaniwa_bonsai": {
+  "h": 936,
+  "hit": true,
+  "relief": "prop/ep2s_nakaniwa_bonsai_rd",
+  "src": "assets/prop/ep2s_nakaniwa_bonsai.webp",
+  "w": 1100
+ },
+ "prop/ep2s_nakaniwa_bonsai_rd": {
+  "h": 436,
+  "src": "assets/prop/ep2s_nakaniwa_bonsai_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_rouka_bucket": {
+  "h": 999,
+  "hit": true,
+  "relief": "prop/ep2s_rouka_bucket_rd",
+  "src": "assets/prop/ep2s_rouka_bucket.webp",
+  "w": 915
+ },
+ "prop/ep2s_rouka_bucket_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_rouka_bucket_rd.png",
+  "w": 469
+ },
+ "prop/ep2s_rouka_vase": {
+  "h": 1100,
+  "hit": true,
+  "relief": "prop/ep2s_rouka_vase_rd",
+  "src": "assets/prop/ep2s_rouka_vase.webp",
+  "w": 446
+ },
+ "prop/ep2s_rouka_vase_rd": {
+  "h": 512,
+  "src": "assets/prop/ep2s_rouka_vase_rd.png",
+  "w": 208
+ },
+ "prop/ep2s_shoro_cogs": {
+  "h": 985,
+  "hit": true,
+  "relief": "prop/ep2s_shoro_cogs_rd",
+  "src": "assets/prop/ep2s_shoro_cogs.webp",
+  "w": 1100
+ },
+ "prop/ep2s_shoro_cogs_rd": {
+  "h": 458,
+  "src": "assets/prop/ep2s_shoro_cogs_rd.png",
+  "w": 512
+ },
+ "prop/ep2s_shoro_toolbox": {
+  "h": 680,
+  "hit": true,
+  "relief": "prop/ep2s_shoro_toolbox_rd",
+  "src": "assets/prop/ep2s_shoro_toolbox.webp",
+  "w": 1100
+ },
+ "prop/ep2s_shoro_toolbox_rd": {
+  "h": 317,
+  "src": "assets/prop/ep2s_shoro_toolbox_rd.png",
+  "w": 512
+ },
  "prop/lanternpole": {
   "figH": 0.9338,
   "h": 574,

@@ -161,6 +161,17 @@
             "use": "3D 渲染（打进 game.js）"
           },
           {
+            "name": "Rapier 0.21（@dimforge/rapier3d-compat）",
+            "credit": "Rapier",
+            "required": false,
+            "ship": true,
+            "license": "Apache-2.0",
+            "licenseUrl": "https://github.com/dimforge/rapier/blob/master/LICENSE",
+            "copyright": "Copyright 2020 Dimforge EURL",
+            "source": "npm @dimforge/rapier3d-compat 0.21.0",
+            "use": "物理引擎（场景道具的刚体、碎木片：src/battle/physics.js，打包成单独的 rapier 文件）"
+          },
+          {
             "name": "Electron 33",
             "credit": "Electron",
             "required": false,

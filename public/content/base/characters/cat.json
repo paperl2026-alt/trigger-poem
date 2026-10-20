@@ -1444,6 +1444,9 @@
           "tick": 0.7
         }
       }
+    },
+    "ride": {
+      "rate": 0.4
     }
   },
   "_doc": " rig：战斗里的主角立绘（晃动技术，src/jiggle）：cover 躲掩体、fire 射击两张图，各带部件权重图 w、骨架 rig、软肉 flesh、身体中线 anchor、枪口 muzzle、枪的手感 kick / tick；由 tools/jig_import.py 生成，不要手改。 rigs：别的服装（同一套姿势只改衣服，晃动骨架一样）：yk = 浴衣（第 2 话通关解锁，tools/rounds/r62_yukata.py 生成，不要手改）；选关画面队伍卡的服装小牌切换（SAVE.chars[id].outfit），图只在穿的时候读（src/core/groups.js outfitKeys）。"

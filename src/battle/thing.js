@@ -157,7 +157,9 @@ export class TheThing extends Actor {
       hold: () => Math.max(o.min ?? 2.6, n + 0.3) }, then);
   }
   // her entrance (Game.arrive, after the warning): the camera goes up close and she says her first words
-  intro(then) { this.closeUp('intro', { lull: true, dist: this.S.h * 0.85, v: 0.7 }, then); }
+  // (from low down looking up at her, the camera going half way round her as the room stretches out behind her: the references' boss
+  // entrances, docs/ART.md「用户给的参考里的手法」)
+  intro(then) { this.closeUp('intro', { lull: true, dist: this.S.h * 0.85, v: 0.7, up: -this.S.h * 0.22, orbit: 0.85, dolly: 16, title: tr(this.name || '') || null }, then); }
 
   // ---------------------------------------------------------------- hits
   // DESIGN「Boss」(2026-10-18): only its core takes damage (each form's "core": [u, v] on its drawing, radius r of its height; a ring
@@ -345,7 +347,9 @@ export class TheThing extends Actor {
     g.hud.gl.hold('phase', { text: tr(this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: M.shake + M.grow + 0.2 });
     // up close the whole time (DESIGN「要给玩家看的东西放慢、特写」): her line as she convulses; the fight comes back with the camera
     const big = Math.max(this.S.h, this.def.stages[n].h);
-    this.closeUp(`s${n + 1}`, { dist: big * 1.2, v: 0.55, in: 0.6, min: M.shake + M.grow + 0.6 }, () => {
+    // (the picture switches how it is drawn as she changes, cut on the beat: two colours, line art, glitch, halftone, the negative)
+    this.game.post.styleBurst(1.5, n % 2 ? [6, 2, 5, 1, 3] : [1, 5, 2, 6, 3], 0.14, 0x1a0010, n % 2 ? 0x5ad8ff : 0xff5aa8);
+    this.closeUp(`s${n + 1}`, { dist: big * 1.2, v: 0.55, in: 0.6, min: M.shake + M.grow + 0.6, up: -big * 0.15, orbit: n % 2 ? 0.6 : -0.6, dolly: 10 }, () => {   // (going round her the other way each time)
       if (!this.alive) return;
       this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3);
       if (this.def.ritual && n === this.def.stages.length - 1) this.ritual();
@@ -377,13 +381,18 @@ export class TheThing extends Actor {
     for (const o of this.keeps || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
     if (calm) { sfx.clear(); g.post.flash(0.8, 0xfff6e8); } else { sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6); this.play('hurt'); }
+    // rings of light racing out across the floor one after another, and a column of light standing up out of her (R-Type's bosses)
+    const P = this.root.position;
+    for (let i = 0; i < 4; i++) g.tweens.wait(i * 0.35, () => g.fx.shockRing(P, 3 + i * 2.5, calm ? 0xfff2e0 : i % 2 ? 0xff5aa8 : 0xffffff, 0.8));
+    if (!calm) g.post.styleBurst(1.0, [6, 1, 5, 2], 0.16, 0x200010, 0xffe0f0);
+    g.fx.pillar(P, this.S.h * 2.2, this.S.h * 0.18, calm ? 0xfff6e8 : 0xffd0f0, calm ? 3 : 1.6);
     for (let i = 0; i < 10; i++) g.tweens.wait(i * 0.2, () => { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.2, 0.9)); if (calm) { g.fx.confetti(q, 14, 1.5, [COL.white, COL.pink]); g.fx.star(q, 2, COL.white); return; } g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
     g.tweens.wait(1.2, () => {
       sfx.burnOut(0);
       this.u.dOrigin.value.set(0.5, 0.6);
       g.tweens.run(2.2, (e) => { this.u.dissolve.value = e; }, { onDone: () => this.dispose() });
     });
-    if (!calm && this.game.hud.gl.stickers.D.bosses?.[this.id]?.end) this.closeUp('end', { dist: this.S.h * 1.1, v: 0.6, min: 3.4 });   // (her last words, up close)
+    if (!calm && this.game.hud.gl.stickers.D.bosses?.[this.id]?.end) this.closeUp('end', { dist: this.S.h * 1.1, v: 0.6, min: 3.4, orbit: 0.4, dolly: -8 });   // (the room closing in on her)   // (her last words, up close)
     g.onBossDead(this);
   }
 }

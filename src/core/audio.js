@@ -251,6 +251,13 @@ export function stopMusic(fade = 0.6) {
   if (track) { const { s, g } = track; try { g.gain.setTargetAtTime(0.0001, now(), fade / 4); s.stop(now() + fade + 0.05); } catch (e) { /* over */ } track = null; trackName = null; }
 }
 export const musicNow = () => trackName || (song ? 'synth' : null);
+// where the music is in its beat (the MV director, src/battle/mv.js): beats since it started (a recorded track's sounds.json bpm, and
+// offset = the seconds before its first beat), null when there is none or nothing playing
+export function musicBeat() {
+  if (track && trackName) { const M = C.sounds?.music?.[trackName]; if (!M?.bpm) return null; const s = now() - track.t0 - (M.offset || 0); return s < 0 ? null : { beats: s * M.bpm / 60, bpm: M.bpm }; }
+  if (song) return { beats: step / 4, bpm: song.bpm };
+  return null;
+}
 export function duckMusic(v, t = 0.3) { if (musBus) musBus.gain.setTargetAtTime(v, now(), t); }
 function schedule() {
   if (!song || muted) { if (song) nextT = now() + 0.1; return; }

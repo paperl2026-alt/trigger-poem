@@ -170,8 +170,11 @@ export class World {
     cam.lookAt(this.lookAt);
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
-    cam.rotateZ(g.post.shakeR);
-    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0);
+    // banking with the aim (Mirage Feathers' tilted horizon: the camera leans a little into where she aims) and the shake's roll; a
+    // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
+    cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
+    this.punch = (this.punch || 0) * Math.exp(-dt * 7);
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch;
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     this.level.update(dt, t, cam);

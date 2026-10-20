@@ -14,15 +14,17 @@ from transformers import AutoImageProcessor, AutoModelForDepthEstimation
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 A = ROOT / "public" / "content" / "base" / "assets"
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 MODEL = ROOT / "tools" / "models" / "depth-anything-v2-small"
 MAXS = 512   # relief maps are small: the mesh has at most ~128 vertices across
 
 if __name__ == "__main__":
-    mp = A / "manifest.json"; man = json.loads(mp.read_text())
+    man = packs.manifest()
     keys = [k for pat in sys.argv[1:] for k in man if fnmatch.fnmatch(k, pat) and not k.endswith("_rd")]
     proc = AutoImageProcessor.from_pretrained(MODEL); model = AutoModelForDepthEstimation.from_pretrained(MODEL).eval()
     for k in keys:
-        src = A / man[k]["src"].replace("assets/", "", 1)
+        src = man.path(k)
         im = Image.open(src).convert("RGBA")
         s = min(1, MAXS / max(im.size)); im = im.resize((max(1, round(im.width * s)), max(1, round(im.height * s))), Image.LANCZOS)
         a = np.asarray(im)[..., 3].astype(np.float32) / 255
@@ -39,9 +41,9 @@ if __name__ == "__main__":
         r = r[idx[0], idx[1]]
         r = ndimage.gaussian_filter(r, max(1.0, im.width / 220))
         key = f"{k}_rd"
-        out = A / f"{key}.png"
+        out = man.dir(k) / "assets" / f"{key}.png"   # (next to its picture, in the same pack)
         Image.fromarray((r * 255).astype(np.uint8)).save(out, optimize=True)
-        man[key] = {"src": f"assets/{key}.png", "w": im.width, "h": im.height}
-        man[k]["relief"] = key
+        man.put(key, {"src": f"assets/{key}.png", "w": im.width, "h": im.height}, like=k)   # (in its picture's pack)
+        man[k] = {**man[k], "relief": key}
         print(key, im.size)
-    mp.write_text(json.dumps(man, indent=1, sort_keys=True))
+    man.save()

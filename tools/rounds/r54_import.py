@@ -16,6 +16,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 RAW = ROOT / "art" / "raw" / "r54"
 A = ROOT / "public" / "content" / "base" / "assets"
 sys.path[:0] = [str(ROOT / "tools" / "rounds"), str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 from r28_import import key_magenta, tileable
 from r31_import import same_edges
 from r23_import import cells
@@ -29,8 +30,9 @@ DECALS = {"drips": ["drip1", "drip2", "drip3", "drip4", "drip5", "drip6"], "rot"
 
 
 def save(man, key, im, q=90, **extra):
-    (A / key).parent.mkdir(parents=True, exist_ok=True)
-    im.save(A / f"{key}.webp", quality=q, method=6)
+    d = man.dir(key) / "assets" if hasattr(man, "dir") else A   # (its pack's folder: tools/packs.py)
+    (d / key).parent.mkdir(parents=True, exist_ok=True)
+    im.save(d / f"{key}.webp", quality=q, method=6)
     man[key] = {**{k: v for k, v in man.get(key, {}).items() if k in ("relief",)}, "src": f"assets/{key}.webp", "w": im.width, "h": im.height, **extra}
 
 
@@ -103,6 +105,6 @@ def decals(man):
 
 
 if __name__ == "__main__":
-    mp = A / "manifest.json"; man = json.loads(mp.read_text())
+    man = packs.manifest()
     for w in sys.argv[1:] or ["panels", "covers", "props", "decals"]: globals()[w](man)
-    mp.write_text(json.dumps(man, indent=1, sort_keys=True))   # (the way every import writes it)
+    man.save()   # (the way every import writes it)

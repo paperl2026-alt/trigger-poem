@@ -115,6 +115,14 @@
         "thumb": "ui/sel_thumb_ep1_pit"
       },
       {
+        "stage": "mine",
+        "set": "ep1_mine",
+        "stations": ["mn1"],
+        "name": { "zh": "蜜矿矿车", "en": "HONEY MINE RIDE", "ja": "蜜の鉱山トロッコ" },
+        "thumb": "ui/sel_thumb_ep1_pit"
+      },
+      { "boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit" },
+      {
         "door": { "frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left" }
       },
       { "comic": "ep1_studio" },

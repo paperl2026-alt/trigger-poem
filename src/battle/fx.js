@@ -290,7 +290,26 @@ function ring3d(scene, col, kind) {
     dispose() { scene.remove(g); for (const m of mats) m.dispose(); for (const geo of geos) geo.dispose(); },
   };
 }
-const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3(), TV3 = new THREE.Vector3();
+// Light that is really in the world (docs/ART.md「用户给的参考里的手法」 体积光武器 / 死亡演出; R-Type's charged shot, its flame cones,
+// its bosses dying in rings of light): open cylinders and flat rings with a glow worked out from how the surface faces the camera
+// (bright where it is seen side-on, the edge of a tube of light), scrolling bands along it, added on top of what is behind it.
+const VOL_VERT = `varying vec3 vN; varying vec3 vV; varying vec2 vUv;
+void main(){ vUv = uv; vec4 mv = modelViewMatrix * vec4(position, 1.0); vV = -mv.xyz; vN = normalMatrix * normal; gl_Position = projectionMatrix * mv; }`;
+const VOL_FRAG = `uniform vec3 col; uniform float a; uniform float t; uniform float bands; uniform float speed; uniform float core;
+varying vec3 vN; varying vec3 vV; varying vec2 vUv;
+void main(){
+  float f = abs(dot(normalize(vN), normalize(vV)));          // 1 facing you (the middle of the tube), 0 side-on (its edges)
+  float body = pow(f, 1.5) * core + pow(1.0 - f, 3.0) * 0.6;
+  float b = 0.55 + 0.45 * sin((vUv.y * bands - t * speed) * 6.2832);   // bands running along it
+  float ends = smoothstep(0.0, 0.04, vUv.y) * smoothstep(1.0, 0.9, vUv.y);
+  vec3 c = mix(col, vec3(1.0), pow(f, 4.0) * 0.8);
+  gl_FragColor = vec4(c * body * (0.6 + 0.6 * b), a * ends * clamp(body, 0.0, 1.0));
+}`;
+const RINGW_FRAG = `uniform vec3 col; uniform float a; uniform float r0; varying vec2 vUv;
+void main(){ vec2 q = vUv - 0.5; float d = length(q) * 2.0; float w = 0.08;
+  float k = smoothstep(r0 - w, r0, d) * smoothstep(r0 + w * 0.5, r0, d); float inner = smoothstep(r0, 0.0, d) * 0.15;
+  gl_FragColor = vec4(mix(col, vec3(1.0), k * 0.6), (k + inner) * a); }`;
+const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3(), TV3 = new THREE.Vector3(), RING_Q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 const markTex = (k) => MT[k] || (MT[k] = (() => { const t = new THREE.CanvasTexture(markCanvas(k)); t.colorSpace = THREE.NoColorSpace; return t; })());
 const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
 const notchTex = () => canvasTex(64, 64, (g) => { g.fillStyle = '#fff'; g.strokeStyle = '#000'; g.lineWidth = 6; g.beginPath(); g.moveTo(32, 58); g.lineTo(6, 10); g.lineTo(58, 10); g.closePath(); g.stroke(); g.fill(); });
@@ -773,6 +792,65 @@ export class FX {
       },
       dispose: () => { this.overlay().remove(m); m.material.dispose(); m.geometry.dispose(); },
     });
+  }
+  // ---- light in the world
+  // the cat girl's beam as a real tube of light in the room (with the band on the screen as its core): from her palm (sx, sy on the
+  // screen, a little in front of the camera) to where the aim meets the room, rings of light running out along it (R-Type's wave cannon)
+  beam3d(hex) {
+    const game = this.game, w = () => game.world, col = new THREE.Color(hex);
+    const mk = (frag, u, geo) => { const m = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms: u, vertexShader: VOL_VERT, fragmentShader: frag,
+      transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide })); m.frustumCulled = false; m.renderOrder = 55; return m; };
+    const U = { col: { value: col }, a: { value: 0 }, t: { value: 0 }, bands: { value: 9 }, speed: { value: 3.5 }, core: { value: 1.2 } };
+    const g = new THREE.Group(), tube = mk(VOL_FRAG, U, new THREE.CylinderGeometry(1, 1, 1, 24, 1, true).translate(0, 0.5, 0));
+    const UO = { ...U, a: { value: 0 }, t: { value: 0 }, core: { value: 0.35 }, bands: { value: 4 }, speed: { value: 2 } }, outer = mk(VOL_FRAG, UO, tube.geometry);
+    g.add(tube, outer);
+    const ringGeo = new THREE.TorusGeometry(1, 0.06, 8, 32);
+    const rings = Array.from({ length: 6 }, () => { const r = mk(VOL_FRAG, { col: { value: col }, a: { value: 0 }, t: { value: 0 }, core: { value: 1.6 }, bands: { value: 1 }, speed: { value: 0 } }, ringGeo); g.add(r); return r; });
+    w().scene.add(g);
+    const from = new THREE.Vector3(), to = new THREE.Vector3(), dir = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0), q = new THREE.Quaternion();
+    let born = 0, last = 0;
+    return {
+      set(mx, my, ax, ay, width, t) {
+        const W = w(), cam = W.camera, dt = Math.min(0.05, last ? t - last : 0.016); last = t; born = Math.min(1, born + dt * 4);
+        // her palm: on the line through it on the screen, 1.4 m in front of the camera; the far end: where that aim meets the room
+        W.ray.setFromCamera(W.ndc(mx, game.H - my), cam); from.copy(W.ray.ray.origin).addScaledVector(W.ray.ray.direction, 1.4);
+        W.ray.setFromCamera(W.ndc(ax, game.H - ay), cam);
+        const hit = W.level?.group ? W.ray.intersectObject(W.level.group, true)[0] : null;
+        to.copy(W.ray.ray.origin).addScaledVector(W.ray.ray.direction, hit ? hit.distance : 30);
+        dir.subVectors(to, from); const L = Math.max(0.5, dir.length()); dir.normalize();
+        q.setFromUnitVectors(up, dir);
+        const r = 0.09 + width / game.H * 0.9;
+        tube.position.copy(from); tube.quaternion.copy(q); tube.scale.set(r, L, r);
+        outer.position.copy(from); outer.quaternion.copy(q); outer.scale.set(r * 2.6, L, r * 2.6);
+        rings.forEach((m, i) => { const k = (t * 0.9 + i / rings.length) % 1; m.position.copy(from).addScaledVector(dir, k * L); m.quaternion.copy(q).multiply(RING_Q);
+          const s = r * (1.6 + 2.2 * k); m.scale.set(s, s, s); m.material.uniforms.a.value = born * (1 - k) * 0.9; m.material.uniforms.t.value = t; });
+        U.a.value = born; U.t.value = t; UO.a.value = born * 0.7; UO.t.value = t;
+      },
+      remove() { w().scene.remove(g); g.traverse((m) => { if (m.material) m.material.dispose(); }); tube.geometry.dispose(); ringGeo.dispose(); },
+    };
+  }
+  // a ring of light racing out flat across the floor from p (a tough kill, a boss going down): r metres wide at the end, s seconds
+  shockRing(p, r = 3, color = 0xffffff, s = 0.6) {
+    const W = this.game.world, U = { col: { value: new THREE.Color(color) }, a: { value: 1 }, r0: { value: 0.1 } };
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({ uniforms: U, vertexShader: BASIC_VERT, fragmentShader: RINGW_FRAG,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+    m.rotation.x = -Math.PI / 2; m.position.set(p.x, 0.05, p.z); m.renderOrder = 6; m.scale.setScalar(r * 2); W.scene.add(m);
+    let t = 0;
+    this.add({ update: (dt) => { t += dt; const k = Math.min(1, t / s); U.r0.value = 0.1 + 0.85 * (1 - (1 - k) * (1 - k)); U.a.value = 1 - k;
+      if (k >= 1) { W.scene.remove(m); m.geometry.dispose(); m.material.dispose(); return false; } return true; },
+      dispose: () => { W.scene.remove(m); m.geometry.dispose(); m.material.dispose(); } });
+  }
+  // a column of light standing up from p for s seconds (a boss's end)
+  pillar(p, h = 8, r = 0.8, color = 0xffffff, s = 1.4) {
+    const W = this.game.world, U = { col: { value: new THREE.Color(color) }, a: { value: 1 }, t: { value: 0 }, bands: { value: 3 }, speed: { value: -2 }, core: { value: 1.4 } };
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 24, 1, true).translate(0, 0.5, 0), new THREE.ShaderMaterial({ uniforms: U, vertexShader: VOL_VERT, fragmentShader: VOL_FRAG,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide }));
+    m.position.set(p.x, 0, p.z); m.renderOrder = 6; W.scene.add(m);
+    let t = 0;
+    this.add({ update: (dt) => { t += dt; const k = Math.min(1, t / s); const grow = Math.min(1, t / 0.15);
+      m.scale.set(r * (0.3 + 0.7 * grow) * (1 + k), h * grow, r * (0.3 + 0.7 * grow) * (1 + k)); U.a.value = 1 - k * k; U.t.value = t;
+      if (k >= 1) { W.scene.remove(m); m.geometry.dispose(); m.material.dispose(); return false; } return true; },
+      dispose: () => { W.scene.remove(m); m.geometry.dispose(); m.material.dispose(); } });
   }
   // NIKKE-style skill cut-in: a slanted stripe band slams in, the heroine lunges across it. Runs on real time (the world is in hit-stop).
   cutIn(key, side = -1, hex = 0xff2e93) {

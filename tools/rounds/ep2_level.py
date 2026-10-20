@@ -19,9 +19,11 @@ from scipy import ndimage
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 B = ROOT / "public" / "content" / "base"; A = B / "assets"
-sys.path[:0] = [str(ROOT / "tools" / "rounds")]
+sys.path[:0] = [str(ROOT / "tools" / "rounds"), str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 import job_specs63 as J
-MAN = json.loads((A / "manifest.json").read_text())
+import job_specs66 as R66
+MAN = packs.manifest()
 have = lambda k: k in MAN
 L = lambda zh, en, ja: {"zh": zh, "en": en, "ja": ja}
 
@@ -53,7 +55,7 @@ def door(key, W, h, mirror=False):
     """the doorway painted in a far / back wall (keyed out): (x of its middle, the height of its middle) in the place's metres, or None
     (mirror: a back wall, which faces the other way: its picture's left is the place's right)"""
     if not have(key) or not MAN[key].get("keyed"): return None
-    im = Image.open(A / MAN[key]["src"].replace("assets/", "")).convert("RGBA"); a = np.asarray(im)[..., 3] < 100
+    im = Image.open(MAN.path(key)).convert("RGBA"); a = np.asarray(im)[..., 3] < 100
     lab, n = ndimage.label(a)
     if not n: return None
     big = 1 + int(np.argmax(ndimage.sum(a, lab, range(1, n + 1)))); ys, xs = np.nonzero(lab == big)
@@ -64,7 +66,7 @@ def door(key, W, h, mirror=False):
 def rect(key, W, h, mirror=False):
     """the same doorway's rectangle in the place's metres: x0, x1 (across), y0, y1 (its bottom, its top), or None"""
     if not have(key) or not MAN[key].get("keyed"): return None
-    im = Image.open(A / MAN[key]["src"].replace("assets/", "")).convert("RGBA"); a = np.asarray(im)[..., 3] < 100
+    im = Image.open(MAN.path(key)).convert("RGBA"); a = np.asarray(im)[..., 3] < 100
     lab, n = ndimage.label(a)
     if not n: return None
     big = 1 + int(np.argmax(ndimage.sum(a, lab, range(1, n + 1)))); ys, xs = np.nonzero(lab == big); Hh, Ww = a.shape
@@ -190,7 +192,8 @@ S["stations"].update({
   "rc1": {"leave": {"way": "back"}, "arrive": {"way": "end", "at": [0, 1.15, round(H["z1"] + 1.0, 2)], "look": [0, 1.1, H["z1"] - 3]}, "state": 1, "cam": [0, 1.15, -4.0], "look": [0, 1.1, H["z1"]],
           "chase": {"path": [[0.3, 1.15, -21], [-0.35, 1.15, -16], [0.35, 1.15, -11], [-0.2, 1.15, -7]], "face": "back", "form": "a", "dist": 6.5, "speed": 1.25,
                     "herSpeed": 2.4, "hint": "sheTrap"}},
-  "rc2": {"cam": [0, 1.15, -4.0], "look": [0, 1.1, H["z0"]], "covers": cov("rouka", 2, 3), "cp": True, "state": 1,
+  "rc2": {"cam": [0, 1.15, -4.0], "look": [0, 1.1, H["z0"]], "covers": [{"k": "cover/ep2_rouka2", "side": -1}, {"k": "cover/ep2_rouka4", "side": 1, "fall": 1.6}],   # (a fusuma door comes off its track as they get there: DESIGN「掩体」)
+          "cp": True, "state": 1,
           "block": {"form": "a", "dist": 11, "hint": "sheBlock"},
           "waves": [[{"t": 0, "type": "surippa", "count": 5, "x": 0, "z": 0, "spread": 2.4, "every": 0.35}], [kat(14, 0, 0.5, 2.3)],
                     [{"t": 0, "type": "karakasa", "x": -0.6, "z": 0.8, "from": "pop"}, {"t": 1.2, "type": "surippa", "count": 4, "x": 0, "z": 0.5, "spread": 2, "every": 0.4}]]},
@@ -328,6 +331,39 @@ for k, nw, nf, fl, walls in (("genkan", 4, 3, ("slippers",), True), ("kyakushits
                             ("kura", 4, 2, ("doll",), True), ("chika", 6, 2, ("doll", "slippers"), True), ("shoro", 4, 0, (), True)):
     marks(SETS[f"ep2_{k}"], k, nw, nf, fl, walls)
 
+# the loose things standing about (round 66; user 2026-10-20: the whole game physical): rigid bodies in the game (docs/TECH.md「物理」) that
+# rock when shot, fly and tumble when broken, get shoved by the monsters. Along the side walls (the middle is the way the camera walks),
+# never on a stop's camera, a mechanism, the stairs or a hole in the floor; height in metres; solid ones (stone) never move
+PROP_H = {"umbrella": 1.0, "hibachi": 0.6, "tanuki": 0.8, "getabox": 0.5, "chabudai": 0.55, "zaisu": 0.6, "andon": 0.95, "zabuton": 0.45,
+          "bucket": 0.45, "vase": 0.9, "towels": 0.5, "tray": 0.8, "oke": 0.55, "stool": 0.35, "yuzu": 0.35, "bottles": 0.4, "taru": 0.85,
+          "shamisen": 1.1, "ozen": 0.45, "lantern": 1.3, "bonsai": 0.8, "bench": 0.6, "watering": 0.6, "koi": 0.55, "nagamochi": 0.8,
+          "boxes": 0.9, "kame": 0.9, "mino": 1.4, "crate": 0.7, "wheel": 1.0, "barrel": 0.8, "jizo": 0.7, "toolbox": 0.45, "cogs": 0.5,
+          "oilcan": 0.7, "spool": 0.7, "saisen": 0.7, "shimenawa": 0.4, "drum": 0.8, "incense": 0.6}
+SOLID = {"jizo", "koi"}
+def scatter(S, k):
+    H = S["hall"]; rng = np.random.default_rng(sum(map(ord, k)) * 29); out = []
+    names = [n for n, _ in R66.PROPS.get(k, []) if have(f"prop/ep2s_{k}_{n}")]
+    if not names: return
+    W = H["x1"] - H["x0"]; z_hi, z_lo = H["z0"] - 1.6, H["z1"] + 1.2
+    avoid = [(st["cam"][0], st["cam"][2], 1.7) for st in S["stations"].values() if st.get("cam")]
+    avoid += [(g.get("x", 0), g["z"], 1.1) for g in S["gimmicks"] if g.get("z") is not None]
+    for s in H.get("stairs", []): avoid.append((s["x"], (s["z0"] + s["z1"]) / 2, max(1.5, abs(s["z0"] - s["z1"]) / 2 + 0.6)))
+    for s in H.get("shafts", []):
+        if s.get("at") == "floor": avoid.append((s["x"], s["z"], s["size"] / 2 + 1.0))
+    free = lambda x, z: all((x - ax) ** 2 + (z - az) ** 2 > r * r for ax, az, r in avoid) and all((x - o["x"]) ** 2 + (z - o["z"]) ** 2 > 1.0 for o in out)
+    for i, n in enumerate(names * 2):   # (each thing up to twice in a long place, in different spots)
+        if i >= max(len(names), round((z_hi - z_lo) / 2.2)): break
+        for _ in range(40):
+            side = -1 if (i + int(rng.integers(2))) % 2 else 1
+            x = side * (W / 2 - rng.uniform(0.45, 0.9)); z = rng.uniform(z_lo, z_hi)
+            if z_hi > z_lo and free(x, z):
+                p = {"k": f"prop/ep2s_{k}_{n}", "h": PROP_H.get(n, 0.7), "x": round(float(x), 2), "z": round(float(z), 2)}
+                if n in SOLID: p["solid"] = True
+                out.append(p); avoid.append((x, z, 0.9)); break
+    if out: S["props"] = out
+for k in ("genkan", "kyakushitsu", "rouka", "furo", "hiroma", "nakaniwa", "kura", "chika", "shoro", "kane"):
+    scatter(SETS[f"ep2_{k}"], k)
+
 # where each monster comes in from (DESIGN「怪要有合理的入场」, user 2026-10-19 batch 23: many small ones appeared out of nowhere on a
 # flat floor; in 3D they can pour down the stairs, out of the rooms): only the ones that had none or popped up from the floor. door = out of
 # the passage behind that doorway (way end / back), stairs = down the genkan stairs, wall = through a side wall (the paper shoji of the
@@ -361,11 +397,11 @@ DOC = ("第 2 话「钟楼惊宿」九个小关（docs/DESIGN.md「第 2 话」�
        "镜头自己走过去（Game.passThrough：两人退出画面，转向出口，开门，走进门洞后面的过道 hall.ways，或上楼梯 hall.stairs、爬梯子、钻她剪开的洞，在过道的黑暗里换成下一个地方，从那边的过道 / 洞 / 天窗走出来）；站点 leave 怎么离开上一个地方（way、via、steps、hole、exit），arrive 怎么进来（way、from、hole、at、look）；hall.shafts 天花板 / 地板上的竖井。站点多了：chase 倒跑、block 路障、hide 躲藏点、"
        "she 她在这一站巡游、dial 钟楼表盘决战；leave 怎么离开上一个地方（hole 她剪开的墙洞）；state 这个地方这时停没停电；cp 检查点；fire 到了就触发的机关；"
        "swap 换掉一块墙的图。机关多了 drop / trap / door / lure / read / node / toll / free / collapse，block: true 是挡路的东西，on: floor 平放在地上。")
-SP = B / "sets" / "ep2.json"
+SP = packs.new_file("sets", "ep2_genkan")   # (episode 2's level pack)
 SP.write_text(json.dumps({"_doc": DOC, **SETS}, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(SP)], check=True, stdin=subprocess.DEVNULL)
 
-EP = B / "episodes.json"; raw = EP.read_bytes(); crlf = b"\r\n" in raw; E = json.loads(raw.decode("utf-8"))
+EP = packs.data_file("episodes", "ep2"); raw = EP.read_bytes(); crlf = b"\r\n" in raw; E = json.loads(raw.decode("utf-8"))
 E["ep2"]["set"] = "ep2_genkan"
 STAGES = [   # (id, name, its places, its stops)
     ("genkan", L("玄关", "ENTRANCE HALL", "玄関"), ["genkan"], ["gk0", "gk1", "gk2"]),

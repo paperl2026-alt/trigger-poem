@@ -21,6 +21,8 @@ from scipy.signal import fftconvolve
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 BASE = ROOT / "public" / "content" / "base"
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 SIDE = 256          # images compared at this size (longer side)
 PATCH = 40          # patch size at that scale
 THRESH = 0.86       # normalised correlation that means "same drawing"
@@ -39,7 +41,7 @@ def chars():
                 walk(v, screen)
     for f in sorted((BASE / "ui").glob("*.json")):
         walk(json.loads(f.read_text(encoding="utf-8")), f.stem)
-    man = json.loads((BASE / "assets" / "manifest.json").read_text())
+    man = packs.manifest()
     for f in sorted((BASE / "characters").glob("*.json")):
         def keys(o):   # (not a rig's weight maps, "w": flat grey masks, no drawing in them; they matched anything)
             if isinstance(o, dict):
@@ -113,7 +115,7 @@ if __name__ == "__main__":
     if "--poses" in sys.argv:
         for sc, k, p in used_poses(): print(f"{sc}: {p}")
         sys.exit(0)
-    src = {k: BASE / man[k]["src"] for _, k, _ in items if k in man}
+    src = {k: man.path(k) for _, k, _ in items if k in man}
     bad = []
     by_key = {}
     for screen, k, pose in items:

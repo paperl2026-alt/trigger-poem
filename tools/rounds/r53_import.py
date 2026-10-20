@@ -41,8 +41,9 @@ PAGES = {"intro": ("a", 5), "glass": ("a", 3), "photo": ("b", 2), "web": ("b", 3
 
 
 def put(man, key, im, q=90, **extra):
-    (A / key).parent.mkdir(parents=True, exist_ok=True)
-    im.save(A / f"{key}.webp", quality=q, method=6)
+    d = man.dir(key) / "assets" if hasattr(man, "dir") else A   # (its pack's folder: tools/packs.py)
+    (d / key).parent.mkdir(parents=True, exist_ok=True)
+    im.save(d / f"{key}.webp", quality=q, method=6)
     man[key] = {**{k: v for k, v in man.get(key, {}).items() if k in ("relief", "pad")}, "src": f"assets/{key}.webp", "w": im.width,
                 "h": im.height, **extra}
 

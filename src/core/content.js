@@ -1,7 +1,12 @@
 // Content packs. The game itself is the "base" pack (public/content/base). DLC and Workshop packs use exactly the same
 // format and load on top of it, so the code never hard-codes game data: it reads C.* at use time, after loadContent().
 //
-//   <pack>/pack.json   { id, name, version, order, enabled, requires: [ids], data: { <category>: [files] }, assets: "assets/manifest.json" }
+//   <pack>/pack.json   { id, name, version, order, enabled, requires: [ids], data: { <category>: [files] }, assets: "assets/manifest.json",
+//                        levels: ["levels/<id>", ...] }
+//   level packs        one per chapter (docs/TECH.md「关卡包」; user 2026-10-20: every level its own asset index and config tables): a
+//                      folder inside a pack with a level.json in the same format as pack.json - the chapter's episode, sets, comics, bosses,
+//                      its own monsters and shots, and its own pictures (keys as everywhere, src relative to the level folder). Loaded right
+//                      after the pack that lists them, in that order; a mod / DLC can bring its own chapters the same way.
 //
 // Categories:
 //   collections  characters enemies projectiles bosses items episodes comics sets
@@ -74,8 +79,8 @@ function soundPaths(o, base, key = '') {
   }
 }
 
-async function loadPack(base) {
-  const pack = await getJson(`${base}pack.json`);
+async function loadPack(base, file = 'pack.json') {
+  const pack = await getJson(base + file);
   pack.base = base;
   for (const req of pack.requires || []) if (!C.packs.some((p) => p.id === req)) { note(`${pack.id}: needs pack "${req}", skipped`); return; }
   for (const [cat, files] of Object.entries(pack.data || {})) {
@@ -98,6 +103,9 @@ async function loadPack(base) {
     } catch (e) { note(`${pack.id}/${pack.assets}: ${e.message}`); }
   }
   C.packs.push(pack);
+  for (const lv of pack.levels || []) {
+    try { await loadPack(`${base}${lv}/`, 'level.json'); } catch (e) { note(`${pack.id}/${lv}: ${e.message}`); }
+  }
 }
 
 // fill defaults + normalise colours after all packs are in

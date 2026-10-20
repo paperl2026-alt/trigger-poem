@@ -140,6 +140,12 @@
       { "k": "ep2/d_slippersb", "on": "floor", "x": -0.02, "z": -0.45, "w": 0.67, "r": 1.57, "anomaly": true },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 1.6, "z": -4.7, "w": 0.71, "r": -0.72, "anomaly": true },
       { "k": "ep2/d_slippersb", "on": "floor", "x": 2.19, "z": -7.62, "w": 0.66, "r": -0.07, "anomaly": true }
+    ],
+    "props": [
+      { "k": "prop/ep2s_genkan_umbrella", "h": 1.0, "x": -3.03, "z": -6.62 },
+      { "k": "prop/ep2s_genkan_hibachi", "h": 0.6, "x": 3.0, "z": -5.35 },
+      { "k": "prop/ep2s_genkan_umbrella", "h": 1.0, "x": -2.8, "z": -9.0 },
+      { "k": "prop/ep2s_genkan_hibachi", "h": 0.6, "x": -2.71, "z": -3.59 }
     ]
   },
   "ep2_kyakushitsu": {
@@ -223,6 +229,11 @@
       { "k": "ep2/d_haira", "on": "right", "z": -4.76, "y": 2.25, "w": 1.18, "anomaly": true },
       { "k": "ep2/d_dolla", "on": "floor", "x": -1.65, "z": -0.23, "w": 0.77, "r": -1.07, "anomaly": true },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.8, "z": -3.33, "w": 0.67, "r": 0.29, "anomaly": true }
+    ],
+    "props": [
+      { "k": "prop/ep2s_kyakushitsu_chabudai", "h": 0.55, "x": 2.18, "z": -2.24 },
+      { "k": "prop/ep2s_kyakushitsu_zaisu", "h": 0.6, "x": 2.2, "z": -3.48 },
+      { "k": "prop/ep2s_kyakushitsu_chabudai", "h": 0.55, "x": 2.0, "z": 0.36 }
     ]
   },
   "ep2_rouka": {
@@ -379,7 +390,7 @@
       "rc2": {
         "cam": [0, 1.15, -4.0],
         "look": [0, 1.1, 2.0],
-        "covers": [{ "k": "cover/ep2_rouka2", "side": -1 }, { "k": "cover/ep2_rouka3", "side": 1 }],
+        "covers": [{ "k": "cover/ep2_rouka2", "side": -1 }, { "k": "cover/ep2_rouka4", "side": 1, "fall": 1.6 }],
         "cp": true,
         "state": 1,
         "block": { "form": "a", "dist": 11, "hint": "sheBlock" },
@@ -422,6 +433,12 @@
       { "k": "ep2/d_dolla", "on": "floor", "x": -0.69, "z": -6.8, "w": 0.89, "r": 2.58, "anomaly": true },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.6, "z": -14.23, "w": 0.84, "r": 1.34, "anomaly": true },
       { "k": "ep2/d_dolla", "on": "floor", "x": -0.28, "z": -18.44, "w": 0.73, "r": -0.42, "anomaly": true }
+    ],
+    "props": [
+      { "k": "prop/ep2s_rouka_bucket", "h": 0.45, "x": 0.95, "z": -15.72 },
+      { "k": "prop/ep2s_rouka_vase", "h": 0.9, "x": 1.35, "z": -11.79 },
+      { "k": "prop/ep2s_rouka_bucket", "h": 0.45, "x": -0.92, "z": -6.32 },
+      { "k": "prop/ep2s_rouka_vase", "h": 0.9, "x": -1.17, "z": -18.01 }
     ]
   },
   "ep2_furo": {
@@ -510,6 +527,11 @@
       { "k": "ep2/d_gougeb", "on": "right", "z": -4.17, "y": 1.06, "w": 0.78, "anomaly": true },
       { "k": "ep2/d_hairb", "on": "right", "z": -6.13, "y": 1.22, "w": 1.01, "anomaly": true },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.73, "z": 0.01, "w": 0.68, "r": -2.88, "anomaly": true }
+    ],
+    "props": [
+      { "k": "prop/ep2s_furo_oke", "h": 0.55, "x": -1.87, "z": -2.65 },
+      { "k": "prop/ep2s_furo_stool", "h": 0.35, "x": -1.9, "z": -0.21 },
+      { "k": "prop/ep2s_furo_yuzu", "h": 0.35, "x": -2.05, "z": -6.4 }
     ]
   },
   "ep2_hiroma": {
@@ -722,6 +744,12 @@
       { "k": "ep2/d_dolla", "on": "floor", "x": -1.05, "z": -1.51, "w": 0.64, "r": 2.3 },
       { "k": "ep2/d_slippersb", "on": "floor", "x": -2.45, "z": -9.73, "w": 0.88, "r": -0.81 },
       { "k": "ep2/d_dollb", "on": "floor", "x": 0.21, "z": -14.59, "w": 0.78, "r": -3.0 }
+    ],
+    "props": [
+      { "k": "prop/ep2s_hiroma_taru", "h": 0.85, "x": 5.44, "z": -5.66 },
+      { "k": "prop/ep2s_hiroma_shamisen", "h": 1.1, "x": -5.54, "z": -6.91 },
+      { "k": "prop/ep2s_hiroma_taru", "h": 0.85, "x": -5.49, "z": -14.13 },
+      { "k": "prop/ep2s_hiroma_shamisen", "h": 1.1, "x": 5.17, "z": -4.2 }
     ]
   },
   "ep2_nakaniwa": {
@@ -910,6 +938,12 @@
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.71, "z": -10.6, "w": 0.64, "r": 1.2 },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.08, "z": -13.8, "w": 0.69, "r": 1.34 },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.46, "z": -17.95, "w": 0.87, "r": 2.17 }
+    ],
+    "props": [
+      { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 0.92, "z": -14.87 },
+      { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": 1.13, "z": -3.93 },
+      { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 1.04, "z": -1.66 },
+      { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": -1.14, "z": -9.57 }
     ]
   },
   "ep2_kura": {
@@ -1055,6 +1089,12 @@
       { "k": "ep2/d_hairb", "on": "left", "z": -9.6, "y": 2.24, "w": 1.12 },
       { "k": "ep2/d_dolla", "on": "floor", "x": 2.04, "z": -0.58, "w": 0.63, "r": 1.73 },
       { "k": "ep2/d_dollb", "on": "floor", "x": 1.01, "z": -4.76, "w": 0.82, "r": 0.54 }
+    ],
+    "props": [
+      { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": -2.39, "z": -9.97 },
+      { "k": "prop/ep2s_kura_boxes", "h": 0.9, "x": -2.18, "z": -6.92 },
+      { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": 2.42, "z": -5.93 },
+      { "k": "prop/ep2s_kura_boxes", "h": 0.9, "x": -2.29, "z": -2.9 }
     ]
   },
   "ep2_chika": {
@@ -1222,6 +1262,14 @@
       { "k": "ep2/d_threadsa", "on": "right", "z": -23.37, "y": 1.89, "w": 0.89 },
       { "k": "ep2/d_dolla", "on": "floor", "x": -1.0, "z": -6.11, "w": 0.8, "r": 0.43 },
       { "k": "ep2/d_slippersb", "on": "floor", "x": -2.52, "z": -16.07, "w": 0.78, "r": -0.54 }
+    ],
+    "props": [
+      { "k": "prop/ep2s_chika_crate", "h": 0.7, "x": -3.22, "z": -10.93 },
+      { "k": "prop/ep2s_chika_wheel", "h": 1.0, "x": 3.48, "z": -4.41 },
+      { "k": "prop/ep2s_chika_barrel", "h": 0.8, "x": -3.44, "z": -3.01 },
+      { "k": "prop/ep2s_chika_crate", "h": 0.7, "x": 3.49, "z": -9.27 },
+      { "k": "prop/ep2s_chika_wheel", "h": 1.0, "x": 3.32, "z": -0.85 },
+      { "k": "prop/ep2s_chika_barrel", "h": 0.8, "x": -3.45, "z": -25.67 }
     ]
   },
   "ep2_shoro": {
@@ -1332,6 +1380,10 @@
       { "k": "ep2/d_threadsb", "on": "right", "z": -1.27, "y": 1.09, "w": 1.11 },
       { "k": "ep2/d_gougeb", "on": "right", "z": -2.62, "y": 2.11, "w": 0.91 },
       { "k": "ep2/d_haira", "on": "left", "z": -4.31, "y": 1.02, "w": 0.75 }
+    ],
+    "props": [
+      { "k": "prop/ep2s_shoro_toolbox", "h": 0.45, "x": -2.04, "z": -3.18 },
+      { "k": "prop/ep2s_shoro_cogs", "h": 0.5, "x": -1.79, "z": -4.77 }
     ]
   },
   "ep2_kane": {
@@ -1595,6 +1647,12 @@
     "music": "ep2_final",
     "clocks": true,
     "reverb": 0.15,
-    "entry": { "at": [-0.02, 1.15, 5.75], "look": [0, 1.1, -6.0] }
+    "entry": { "at": [-0.02, 1.15, 5.75], "look": [0, 1.1, -6.0] },
+    "props": [
+      { "k": "prop/ep2s_kane_saisen", "h": 0.7, "x": -5.17, "z": 3.78 },
+      { "k": "prop/ep2s_kane_shimenawa", "h": 0.4, "x": -5.15, "z": 2.52 },
+      { "k": "prop/ep2s_kane_drum", "h": 0.8, "x": 5.45, "z": -4.76 },
+      { "k": "prop/ep2s_kane_saisen", "h": 0.7, "x": 5.39, "z": -3.29 }
+    ]
   }
 }

@@ -145,11 +145,13 @@ export class AICtrl {
     this.y += (ty - this.y) * Math.min(1, dt * (2 + s * 3)) + Math.cos(this.wob * 2.3) * wob * dt * 6;
     // a must-hide attack coming at her: down at once, and stay down until it is over
     const danger = [...(game.fx.live || [])].some((L) => (L.type === 'hide' || L.type === 'heavy') && (L.slot === me.slot || L.slot === -1));
+    if (danger && this.hideT <= 0) this.blindy = Math.random() < (A.blind ?? 0.5);   // (now and then she fires blind from behind her cover meanwhile: player.js)
     if (danger) this.hideT = 0.35;
     this.hide = this.hideT > 0 || !this.busy;
     let on = false;
     if (this.target) { const b = this.target.screenBox(); on = this.x > b.x0 && this.x < b.x1 && this.y > b.y0 && this.y < b.y1; }
     this.fire = this.busy && !this.hide && this.reactT <= 0 && (on || this.miss > 0);
+    if (danger && this.blindy && this.target) this.fire = true;   // (hide + fire: blind fire)
     if (me.charge >= 1 && Math.random() < dt * 0.5 && (game.boss || game.actors.filter((a) => a.alive && a.type).length >= 2)) this.skill = true;
     if (me.beaming) this.fire = !!this.target && !danger;
   }

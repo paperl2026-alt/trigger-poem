@@ -539,7 +539,8 @@ export class Chase {
     if (H.burst) {   // (out of the bath water: up from below with a splash, the lights going out)
       const P = she.root.position, y0 = P.y; P.y = -2.4; sound('splash') || sfx.slam(); this.g.post.flash(0.6, 0xffffff); this.g.post.shake(1.4);
       this.g.tweens.to(P, { y: y0 }, 0.55, { ease: Ease.outBack }); she.pose('lunge'); sound('sheLaugh');
-      this.closeUp(she, 'intro', { in: 0.45, dist: 2.6, v: 0.75 });   // (the first time she is seen: up close, her first words)
+      this.g.post.styleBurst(1.1, [2, 1, 2, 6, 1], 0.12, 0x000000, 0xf0e8e0);   // (the first sight of her: line art, black and white, one flash of the negative - never more than one in a burst: flashing)
+      this.closeUp(she, 'intro', { in: 0.45, dist: 2.6, v: 0.75, up: -0.35, dolly: 18 });   // (the first time she is seen: up close from low down, the corridor stretching away behind her, her first words)
     }
     this.music(true);
     this.g.etw.wait(H.wake ?? 2.5, () => {

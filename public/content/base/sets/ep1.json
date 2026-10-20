@@ -1185,5 +1185,190 @@
         "covers": [{ "k": "cover/ep1_studio3", "side": -1 }, { "k": "cover/ep1_studio4", "side": 1 }]
       }
     }
+  },
+  "ep1_mine": {
+    "panels": true,
+    "seed": 87,
+    "fogNear": 8,
+    "fogFar": 34,
+    "fogDensity": 0.014,
+    "sky": "#f0c890",
+    "fog": "#c88a50",
+    "lit": [1.04, 0.94, 0.84],
+    "ink": "#3a2010",
+    "paper": 0.05,
+    "void": "#2a160c",
+    "grade": { "tint": [1.06, 0.95, 0.86], "k": 0.3, "sat": 1.04 },
+    "ambient": { "kind": "embers", "rate": 9 },
+    "hall": {
+      "x0": -1.6,
+      "x1": 1.6,
+      "z0": 6,
+      "z1": -260,
+      "h": 5,
+      "bay": 3,
+      "tile": 3,
+      "tilesX": 2,
+      "tileL": 1.5,
+      "left": ["ep1/pit_wall1", "ep1/pit_wall2", "ep1/pit_wall3", "ep1/pit_wall4"],
+      "right": ["ep1/pit_wall1", "ep1/pit_wall2", "ep1/pit_wall3", "ep1/pit_wall4"],
+      "floor": ["ep1/pit_floor1", "ep1/pit_floor2"],
+      "end": ["ep1/pit_wall2", "ep1/pit_wall3"]
+    },
+    "stations": {
+      "mn1": {
+        "ride": {
+          "from": [0, 1.35, 4],
+          "path": [
+            [-0.45, 1.35, -20],
+            [0.45, 1.35, -44],
+            [-0.45, 1.35, -68],
+            [0.45, 1.35, -92],
+            [-0.45, 1.35, -116],
+            [0.45, 1.35, -140],
+            [-0.45, 1.35, -164],
+            [0.45, 1.35, -188],
+            [-0.45, 1.35, -212],
+            [0.45, 1.35, -236],
+            [0, 1.35, -254]
+          ],
+          "speed": 10,
+          "vehicle": "cart",
+          "marks": [
+            { "at": 0, "speed": 5, "say": "start" },
+            { "at": 6, "speed": 10, "shake": 0.6, "sfx": "whoosh" },
+            {
+              "at": 12,
+              "spawn": [
+                { "type": "bat", "ahead": 18.0, "x": -1.2, "y": 2.0, "from": "outside" },
+                { "type": "bat", "ahead": 19.2, "x": -0.6, "y": 2.6, "from": "outside" },
+                { "type": "bat", "ahead": 20.4, "x": 0.0, "y": 2.0, "from": "outside" },
+                { "type": "bat", "ahead": 21.6, "x": 0.6, "y": 2.6, "from": "outside" },
+                { "type": "bat", "ahead": 22.8, "x": 1.2, "y": 2.0, "from": "outside" }
+              ]
+            },
+            { "at": 26, "block": { "k": "prop/ep1_tunnel1", "h": 1.3, "ahead": 26, "x": 0 }, "hint": "rideBlock" },
+            {
+              "at": 44,
+              "spawn": [
+                { "type": "ghoul", "ahead": 16, "x": -0.5, "from": "burrow" },
+                { "type": "crawler", "ahead": 21, "x": 0.5, "from": "burrow" }
+              ]
+            },
+            {
+              "at": 62,
+              "face": "back",
+              "say": "scare",
+              "spawn": [
+                { "type": "double_pink", "ahead": -7, "x": -0.4, "from": "burrow" },
+                { "type": "double_cat", "ahead": -9, "x": 0.4, "from": "burrow" }
+              ]
+            },
+            { "at": 90, "face": "fwd" },
+            {
+              "at": 94,
+              "block": { "k": "prop/ep1_tunnel2", "h": 1.4, "ahead": 24, "x": 0.2 }
+            },
+            {
+              "at": 108,
+              "spawn": [
+                { "type": "bat", "ahead": 16.0, "x": -1.4, "y": 2.0, "from": "outside" },
+                { "type": "bat", "ahead": 17.2, "x": -0.84, "y": 2.6, "from": "outside" },
+                { "type": "bat", "ahead": 18.4, "x": -0.28, "y": 2.0, "from": "outside" },
+                { "type": "bat", "ahead": 19.6, "x": 0.28, "y": 2.6, "from": "outside" },
+                { "type": "bat", "ahead": 20.8, "x": 0.84, "y": 2.0, "from": "outside" },
+                { "type": "bat", "ahead": 22.0, "x": 1.4, "y": 2.6, "from": "outside" }
+              ]
+            },
+            {
+              "at": 126,
+              "speed": 13,
+              "burst": [0.8, [1, 3], 0.14, 1972224, 16756800],
+              "spawn": [{ "type": "shadow", "ahead": 20, "x": 0, "from": "burrow" }]
+            },
+            {
+              "at": 146,
+              "block": { "k": "prop/ep1_tunnel1", "h": 1.2, "ahead": 22, "x": 0.35 }
+            },
+            {
+              "at": 150,
+              "block": { "k": "prop/ep1_tunnel2", "h": 1.3, "ahead": 30, "x": -0.35 }
+            },
+            {
+              "at": 170,
+              "face": "back",
+              "spawn": [
+                { "type": "double_cat", "ahead": -6, "x": 0, "from": "burrow" },
+                { "type": "double_pink", "ahead": -8, "x": -0.5, "from": "burrow" },
+                { "type": "double_pink", "ahead": -10, "x": 0.5, "from": "burrow" }
+              ]
+            },
+            {
+              "at": 198,
+              "face": "fwd",
+              "spawn": [
+                { "type": "ghoul", "ahead": 14, "x": 0.5, "from": "burrow" },
+                { "type": "ghoul", "ahead": 19, "x": -0.5, "from": "burrow" }
+              ]
+            },
+            { "at": 222, "speed": 15, "shake": 1.2, "burst": [1.2, [5, 1, 2, 6], 0.15, 1972224, 16764048], "say": "scare" }
+          ]
+        },
+        "cam": [0, 1.35, -254],
+        "look": [0, 1.3, -270]
+      }
+    }
+  },
+  "ep1_nether": {
+    "panels": true,
+    "seed": 61,
+    "fogNear": 10,
+    "fogFar": 60,
+    "fogDensity": 0.012,
+    "sky": "#e6a868",
+    "fog": "#e6b07a",
+    "lit": [1.12, 0.98, 0.86],
+    "ink": "#3a2010",
+    "paper": 0.05,
+    "void": "#d89050",
+    "grade": { "tint": [1.1, 0.95, 0.85], "k": 0.3, "sat": 1.08 },
+    "ambient": { "kind": "petals", "rate": 8 },
+    "hall": {
+      "x0": -14,
+      "x1": 14,
+      "z0": 10,
+      "z1": -44,
+      "h": 14,
+      "bay": 10,
+      "tile": 6,
+      "tilesX": 5,
+      "tileL": 6,
+      "left": [],
+      "right": [],
+      "floor": ["ep1/nether_floor1", "ep1/nether_floor2", "ep1/nether_floor3"]
+    },
+    "boards": [
+      { "k": "ep1/nether_a", "x": 0, "y": -10, "z": -80, "w": 170, "sky": true },
+      { "k": "ep1/nether_b", "x": -78, "y": -10, "z": -20, "w": 170, "ry": 90, "sky": true },
+      { "k": "ep1/nether_b", "x": 78, "y": -10, "z": -20, "w": 170, "ry": -90, "sky": true },
+      { "k": "ep1/nether_a", "x": 0, "y": -10, "z": 50, "w": 170, "ry": 180, "sky": true }
+    ],
+    "props": [
+      { "k": "ep1/nb_cone", "h": 1.4, "x": -9, "z": -12 },
+      { "k": "ep1/nb_frame", "h": 1.8, "x": 9, "z": -18 },
+      { "k": "ep1/nb_cup", "h": 1.0, "x": -4, "z": -26 },
+      { "k": "ep1/nb_spoon", "h": 2.0, "x": 6, "z": -30 },
+      { "k": "ep1/nb_glove", "h": 1.1, "x": 11, "z": -8 },
+      { "k": "ep1/nb_scoop", "h": 1.2, "x": -11, "z": -32 },
+      { "k": "ep1/nb_cherry", "h": 0.9, "x": 2, "z": -38 },
+      { "k": "ep1/nb_ribbon", "h": 1.0, "x": -6, "z": -40 }
+    ],
+    "stations": {
+      "ne1": {
+        "cam": [-5.5, 1.25, 5],
+        "look": [4, 2.2, -22],
+        "covers": [{ "k": "cover/ep1_hall1", "side": -1 }, { "k": "cover/ep1_hall2", "side": 1 }]
+      }
+    }
   }
 }

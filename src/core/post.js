@@ -8,7 +8,7 @@ const FRAG = `
 uniform sampler2D tDiffuse; uniform float time; uniform float aspect;
 uniform float flash; uniform vec3 flashColor; uniform float chroma; uniform float blur; uniform vec2 center;
 uniform float madness; uniform float hurt; uniform float dim; uniform float grain; uniform float wipe; uniform float warn; uniform vec3 warnColor;
-uniform vec4 edgeA; uniform vec4 edgeB; uniform float impact;
+uniform vec4 edgeA; uniform vec4 edgeB; uniform float impact; uniform float style; uniform vec3 styleA; uniform vec3 styleB; uniform vec2 px;
 varying vec2 vUv;
 ${NOISE_GLSL}
 vec3 hueShift(vec3 c, float a){ const vec3 k = vec3(0.57735); float ca = cos(a); return c * ca + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - ca); }
@@ -27,6 +27,10 @@ void main(){
     vec2 kp = vec2(cos(a2), sin(a2)) * r * 0.8;
     uv = mix(uv, kp / vec2(aspect, 1.0) + 0.5, edge * 0.4);
   }
+  // the picture redrawn in another way for a while (Post.styleBurst; the MVs and R-Type's last stage: a whole section switches how it is
+  // drawn, cut on the beat): 3 glitch (blocks of the picture shoved sideways), 4 pixels (big blocks)
+  if (style > 2.5 && style < 3.5) { float row = floor(uv.y * 24.0); float n = hash12(vec2(row, floor(time * 20.0))); if (n > 0.6) uv.x += (n - 0.8) * 0.12; }
+  if (style > 3.5 && style < 4.5) { vec2 bs = px * 14.0; uv = (floor(uv / bs) + 0.5) * bs; }
   vec2 dir = uv - center;
   vec3 c;
   if (blur > 0.001) {
@@ -68,6 +72,21 @@ void main(){
   float gn = hash12(vUv * vec2(1920.0, 1080.0) + fract(time * 7.0) * 100.0);
   c += (gn - 0.5) * grain;
   c *= 1.0 - 0.035 * step(0.5, fract(vUv.y * 360.0 + time * 0.5));
+  // the other styles: 1 two colours (a dark and a light one by brightness: the sunset section), 2 line art (only the edges, dark lines on
+  // paper), 3 glitch (the colours torn apart too), 5 manga halftone dots, 6 the negative
+  if (style > 0.5) {
+    float l = dot(c, vec3(0.3, 0.59, 0.11));
+    if (style < 1.5) c = mix(styleA, styleB, smoothstep(0.2, 0.75, l));
+    else if (style < 2.5) {
+      float lx = dot(texture2D(tDiffuse, uv + vec2(px.x, 0.0)).rgb - texture2D(tDiffuse, uv - vec2(px.x, 0.0)).rgb, vec3(0.333));
+      float ly = dot(texture2D(tDiffuse, uv + vec2(0.0, px.y)).rgb - texture2D(tDiffuse, uv - vec2(0.0, px.y)).rgb, vec3(0.333));
+      float e = smoothstep(0.04, 0.16, length(vec2(lx, ly)));
+      c = mix(vec3(0.96, 0.93, 0.88), vec3(0.08, 0.05, 0.1), e);
+    }
+    else if (style < 3.5) { c.r = texture2D(tDiffuse, uv + vec2(0.012, 0.0)).r; c.b = texture2D(tDiffuse, uv - vec2(0.012, 0.0)).b; c = mix(c, styleB, step(0.97, hash12(vec2(floor(uv.y * 60.0), floor(time * 30.0)))) * 0.8); }
+    else if (style > 4.5 && style < 5.5) { vec2 g = fract(vUv / (px * 9.0)) - 0.5; float dotR = sqrt(1.0 - l) * 0.55; c = mix(styleA, vec3(0.97, 0.94, 0.9), step(dotR, length(g))); }
+    else if (style > 5.5) c = 1.0 - c;
+  }
   // the impact frame (anime / fighting games): everything hard black or white for a moment, the second frame turned inside out
   if (impact > 0.5) { float l = dot(c, vec3(0.3, 0.59, 0.11)); float k = step(0.42, l); if (impact > 1.5) k = 1.0 - k;
     c = mix(vec3(0.07, 0.0, 0.05), vec3(1.0, 0.96, 0.98), k); }
@@ -92,7 +111,7 @@ export class Post {
       tDiffuse: { value: this.rt.texture }, time: { value: 0 }, aspect: { value: 1 },
       flash: { value: 0 }, flashColor: { value: new THREE.Color(1, 1, 1) }, chroma: { value: 0 }, blur: { value: 0 }, center: { value: new THREE.Vector2(0.5, 0.5) },
       madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
-      impact: { value: 0 },
+      impact: { value: 0 }, style: { value: 0 }, styleA: { value: new THREE.Color(0.12, 0.0, 0.08) }, styleB: { value: new THREE.Color(1.0, 0.45, 0.2) }, px: { value: new THREE.Vector2(0.001, 0.001) },
     };
     this.scene = new THREE.Scene();
     this.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -107,7 +126,12 @@ export class Post {
   }
   setSize(w, h, dpr) {
     this.rt.setSize(Math.round(w * dpr), Math.round(h * dpr));
-    this.u.aspect.value = w / h;
+    this.u.aspect.value = w / h; this.u.px.value.set(1 / Math.max(1, w * dpr), 1 / Math.max(1, h * dpr));
+  }
+  // a burst of other ways of drawing the picture, cut hard every beat seconds for dur seconds (seq: the styles to cycle through:
+  // 1 two colours, 2 line art, 3 glitch, 4 pixels, 5 halftone, 6 negative; colours: the two-colour / halftone pair, as hex)
+  styleBurst(dur = 1.2, seq = [1, 2, 3, 5], beat = 0.15, a = 0x1e0014, b = 0xff7330) {
+    this.burst = { t: 0, dur, seq, beat }; this.u.styleA.value.set(a); this.u.styleB.value.set(b);
   }
   flash(a = 0.7, color = 0xffffff) { this.u.flash.value = Math.max(this.u.flash.value, a); this.u.flashColor.value.set(color); }
   shake(a) { this.shakeAmt = Math.max(this.shakeAmt, a); }
@@ -129,6 +153,7 @@ export class Post {
     this.shakeY = s * 0.5 * (Math.sin(q * 37.7 + 2.1) * 0.6 + Math.sin(q * 59.1 + 0.4) * 0.4);
     this.shakeR = s * 0.011 * (Math.sin(q * 31.9 + 0.7) * 0.6 + Math.sin(q * 53.3 + 2.6) * 0.4);
     this.impactT = Math.max(0, this.impactT - dt);
+    if (this.burst) { const B = this.burst; B.t += dt; u.style.value = B.t < B.dur ? B.seq[Math.floor(B.t / B.beat) % B.seq.length] : 0; if (B.t >= B.dur) this.burst = null; }
     u.impact.value = this.impactT > 0 ? (this.impactT > this.impactT0 * 0.5 ? 1 : 2) : 0;
   }
   // drawScenes: the world (shaken, warped, graded by the pass); drawAfter: things drawn straight on top, untouched (the HUD)

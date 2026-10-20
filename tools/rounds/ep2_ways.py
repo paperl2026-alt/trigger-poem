@@ -16,6 +16,7 @@ from scipy import ndimage
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 A = ROOT / "public" / "content" / "base" / "assets"
 sys.path[:0] = [str(ROOT / "tools" / "rounds"), str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 from r54_import import save
 DARK = (26, 18, 30)   # (what a keyed doorway shows where the passage beyond is not drawn: r63_import key2)
 
@@ -75,7 +76,7 @@ def thumbs(man):   # (the size of the old one: 1200 x 363)
 
 
 if __name__ == "__main__":
-    mp = A / "manifest.json"; man = json.loads(mp.read_text())
+    man = packs.manifest()
     for k in ("ep2/kyakushitsu_end1", "ep2/hiroma_end1"): open_to_floor(man, k)
     kura_doors(man); fusuma(man); thumbs(man)
-    mp.write_text(json.dumps(man, indent=1, sort_keys=True))
+    man.save()

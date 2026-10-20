@@ -10,6 +10,13 @@ from scipy import ndimage
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 RAW = ROOT / "art" / "raw"
 OUT = ROOT / "public" / "content" / "base" / "assets"
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
+
+
+def where(manifest, key):
+    """the assets folder a picture's file goes in: its pack's (tools/packs.py Manifest), the base pack's for a plain dict"""
+    return manifest.dir(key) / "assets" if hasattr(manifest, "dir") else OUT
 
 
 def alpha_np(im):
@@ -98,7 +105,7 @@ def save(im, group, name, max_side=None, max_h=None, pad=2, meta=None, manifest=
         scale = max_h / im.height
     if scale < 1:
         im = im.resize((max(1, round(im.width * scale)), max(1, round(im.height * scale))), Image.LANCZOS)
-    d = OUT / group
+    d = where(manifest, f"{group}/{name}") / group
     d.mkdir(parents=True, exist_ok=True)
     im.save(d / f"{name}.webp", "WEBP", quality=quality, method=6)
     entry = {"src": f"assets/{group}/{name}.webp", "w": im.width, "h": im.height}
@@ -129,7 +136,7 @@ def opaque(name, group, out_name, max_w, manifest, dom=False, quality=86):
     s = min(1.0, max_w / im.width)
     if s < 1:
         im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
-    d = OUT / group
+    d = where(manifest, f"{group}/{out_name}") / group
     d.mkdir(parents=True, exist_ok=True)
     im.save(d / f"{out_name}.webp", "WEBP", quality=quality, method=6)
     manifest[f"{group}/{out_name}"] = {"src": f"assets/{group}/{out_name}.webp", "w": im.width, "h": im.height, **({"dom": True} if dom else {})}
@@ -173,7 +180,7 @@ def save_tex(im, name, m, size=1024):
     if max(im.size) > size:
         s = size / max(im.size)
         im = im.resize((round(im.width * s), round(im.height * s)), Image.LANCZOS)
-    d = OUT / "tex"; d.mkdir(parents=True, exist_ok=True)
+    d = where(m, f"tex/{name}") / "tex"; d.mkdir(parents=True, exist_ok=True)
     im.save(d / f"{name}.webp", "WEBP", quality=88, method=6)
     m[f"tex/{name}"] = {"src": f"assets/tex/{name}.webp", "w": im.width, "h": im.height}
     print(f"tex/{name}: {im.size}")
@@ -333,10 +340,8 @@ def ui_items(m):
 
 
 if __name__ == "__main__":
-    mp = OUT / "manifest.json"
-    manifest = json.loads(mp.read_text()) if mp.exists() else {}
+    manifest = packs.manifest()
     names = sys.argv[1:] or list(JOBS)
     for n in names:
         JOBS[n](manifest)
-    OUT.mkdir(parents=True, exist_ok=True)
-    mp.write_text(json.dumps(manifest, indent=1, sort_keys=True))
+    manifest.save()

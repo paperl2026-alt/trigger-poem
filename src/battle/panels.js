@@ -11,8 +11,10 @@ import { Ease } from '../core/tween.js';
 import { sfx, sound } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { shadowTex, COL } from './fx.js';
+import { Physics, physicsReady } from './physics.js';
+import { FR } from '../core/particles.js';
 
-const tmpV = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
+const tmpV = new THREE.Vector3(), tmpV3 = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
 const rnd = (a, b) => a + Math.random() * (b - a);
 
 // a flat board w x h (metres) showing texture key with the given uv scale; pivot at its centre
@@ -278,6 +280,9 @@ export class PanelWorld {
       else if (d.on === 'floor') { m.position.set(d.x, 0.01, d.z); m.rotation.x = -Math.PI / 2; m.rotation.z = d.r || 0; }
       else if (d.on === 'hang') { m.position.set(d.x, h - hh / 2 - 0.05, d.z); m.material.side = THREE.DoubleSide; }
       put(m, d.z);
+      // a banner hangs from the ceiling on a pivot: what flies into it, a shot that lands on it, swings it (src/battle/physics.js)
+      if (d.on === 'hang' && !d.anomaly && this.phys && m.parent === R) {   // (not in the folding part: it moves)
+        m.updateMatrixWorld(true); m.userData.hang = this.phys.hang(m, w, hh, 0.03, new THREE.Vector3(d.x, h - 0.03, d.z)); }
       if (d.anomaly) { m.visible = false; (this.anomalyDecals || (this.anomalyDecals = [])).push(m); }
     }
     // the ways between places (hall.ways / stairs / shafts, tools/rounds/ep2_level.py; DESIGN 第 2 话「场景之间怎么走」): a short passage
@@ -290,6 +295,8 @@ export class PanelWorld {
     // props standing in the corridor (relief drawings), and every station's covers: placed in the level, there from the start
     this.coverSets = {};
     for (const [sid, st] of Object.entries(S.stations)) this.coverSets[sid] = (st.covers || []).map((c) => this.makeCover(c, st, sid));
+    // the props are real things (src/battle/physics.js: they rock when shot, fly when broken, tumble and bounce off the room)
+    this.phys = physicsReady() ? new Physics(Hd, this.root) : null;
     for (const p of S.props || []) this.makeProp(p);
     // the anomaly wave starts where the evil energy hits (set "anomalyFrom", default the far end) and runs outward from there
     this.root.updateMatrixWorld(true);
@@ -366,6 +373,9 @@ export class PanelWorld {
   makeProp(p) {
     const r = this.relief(p.k, p.h, p.x, p.z, new THREE.Vector3(p.fx ?? p.x, 0, p.fz ?? p.z + 5), 0.3);
     const q = { ...r, x: p.x, z: p.z, solid: !!p.solid, broken: false, hp: p.hp ?? T.combat.prop?.hp ?? 120 };
+    // its body: a box as wide and tall as the drawing, about a quarter of its width deep (set "d" for another depth); a solid one does
+    // not move but the others bounce off it
+    if (this.phys) { const d = p.d ?? Math.max(0.12, Math.min(0.4, q.w * 0.25)); q.body = this.phys.add(r.m, q.w, q.h, d, { type: q.solid ? 'fixed' : 'dynamic', owner: q }); }
     if (!q.solid) {
       q.dm = new DamageMap(r.h / r.w, 256); attachDamage(r.m, q.dm);
       const W = this;
@@ -382,22 +392,53 @@ export class PanelWorld {
     if (info.uv) q.dm.hole(info.uv.u, info.uv.v, (info.kind === 'mantra' ? 0.12 : 0.07) * k);
     const g = this.game, pt = q.m.localToWorld(tmpV.set(((info.uv?.u ?? 0.5) - 0.5) * q.w, (info.uv?.v ?? 0.5) * q.h, 0.05).clone());
     g.fx.confetti(pt, 3, 0.6, [COL.bone, 0xffffff]);
+    // it takes the shot: pushed where it was hit, away from the camera (it rocks, slides, a heavy one tips it)
+    if (q.body) { const P = T.combat.prop.phys, dir = tmpV3.copy(pt).sub(this.camPos).setY(0).normalize(); this.phys.push(q.body, pt, dir, (P.push[info.kind] ?? P.push.rifle) * (info.crit ? 1.5 : 1)); }
     if (q.hp <= 0) this.breakProp(q);
   }
-  // a prop goes: it tips over away from the camera with a burst of splinters, then fades out
-  breakProp(q) {
+  // a prop goes: knocked flying away from the camera (or from the monster that ran into it: from), it tumbles, bounces about, comes to
+  // rest and fades out a while later, its splinters scattering (src/battle/physics.js); without the physics it tips over and fades
+  breakProp(q, from = null) {
     if (q.broken || q.solid) return;
     q.broken = true;
     const g = this.game, P = q.m.position;
     sfx.shatter(0); g.post.shake(0.35);
     g.fx.confetti(tmpV.set(P.x, q.h * 0.5, P.z).clone(), 26, 2.2, [COL.bone, 0xffffff]); g.fx.puff(P, 6, COL.bone, 0.9);
+    if (q.body) {
+      const F = T.combat.prop.phys, src = from || this.camPos, dir = tmpV3.set(P.x - src.x, 0, P.z - src.z).normalize();
+      const top = q.m.localToWorld(tmpV.set((Math.random() - 0.5) * q.w * 0.5, q.h * 0.8, 0)).clone();
+      this.phys.knock(q.body, top, src, F.breakPush * (0.8 + Math.random() * 0.4), F.breakUp);
+      this.phys.chipsAt(tmpV.set(P.x, q.h * 0.5, P.z).clone(), dir, F.chips, [COL.bone, COL.paper, 0xd09060, 0xb87848]);
+      g.tweens.wait(F.fadeAfter, () => g.tweens.run(0.6, (e) => { q.m.material.uniforms.opacity.value = 1 - e; }, { onDone: () => { q.m.visible = false; q.sh.visible = false; this.phys.remove(q.body); q.body = null; } }));
+      return;
+    }
     const c = this.camPos, away = Math.atan2(P.x - c.x, P.z - c.z) - q.m.rotation.y;
     const tip = Math.cos(away) >= 0 ? -1.45 : 1.45;
     g.tweens.to(q.m.rotation, { x: tip }, 0.45, { ease: Ease.inQuad, onDone: () => g.tweens.run(0.5, (e) => { q.m.material.uniforms.opacity.value = 1 - e; }, { onDone: () => { q.m.visible = false; q.sh.visible = false; } }) });
   }
+  // the air is never still (docs/ART.md「用户给的参考里的手法」 前景粒子永远在: the MVs' hearts, bokeh and glitter always drifting in front):
+  // things floating in the light between the camera and the far end - dust in the calm, pink petals and ash once the place has turned
+  // (anomaly), embers and paper specks in a dark place; set "ambient": { kind: dust | petals | embers | off, rate }
+  ambient(dt) {
+    const A = this.set.ambient || {}, kind = A.kind || (this.anomaly > 0.5 ? 'petals' : this.set.dark ? 'embers' : 'dust');
+    if (kind === 'off' || !this.game.fx) return;
+    this.ambT = (this.ambT || 0) + dt * (A.rate ?? 7);
+    const fx = this.game.fx, cam = this.camera, f = tmpV3.set(0, 0, -1).applyQuaternion(cam.quaternion);
+    while (this.ambT >= 1) {
+      this.ambT -= 1;
+      const d = 1.2 + Math.random() * 7, side = (Math.random() - 0.5) * d * 1.3, up = (Math.random() - 0.4) * d * 0.7;
+      const x = cam.position.x + f.x * d + (-f.z) * side, z = cam.position.z + f.z * d + f.x * side, y = Math.max(0.1, cam.position.y + up);
+      if (kind === 'dust') fx.wAdd.emit({ x, y, z, vx: (Math.random() - 0.5) * 0.08, vy: 0.02 + Math.random() * 0.05, life: 4 + Math.random() * 3, size: 0.012 + Math.random() * 0.02, color: [1, 0.95, 0.85], a: 0.5, a1: 0, frame: FR.GLOW, flutter: 0.15 });
+      else if (kind === 'embers') fx.wAdd.emit({ x, y, z, vx: (Math.random() - 0.5) * 0.15, vy: 0.08 + Math.random() * 0.15, life: 3 + Math.random() * 2, size: 0.015 + Math.random() * 0.02, color: [1, 0.6, 0.25], a: 0.8, a1: 0, frame: FR.GLOW, flutter: 0.4 });
+      else fx.wNorm.emit({ x, y: y + 1, z, vx: (Math.random() - 0.5) * 0.2, vy: -0.15 - Math.random() * 0.15, life: 5 + Math.random() * 3, size: 0.05 + Math.random() * 0.05, vrot: (Math.random() - 0.5) * 3,
+        color: Math.random() < 0.6 ? [1, 0.55, 0.75] : [0.2, 0.15, 0.17], a: 0.85, a1: 0, frame: Math.random() < 0.6 ? FR.HEART : FR.ASH, flutter: 0.6, drag: 0.4 });
+    }
+  }
   // a monster moving through here smashes whatever breakable prop it runs into
-  smashPropsNear(p, r) {
-    for (const q of this.props || []) if (!q.solid && !q.broken && q.m.visible && Math.hypot(q.x - p.x, q.z - p.z) < q.w * 0.5 + r) this.breakProp(q);
+  // hard: a leap, a dash, bursting up through the floor (it smashes them); a walk (hard false) only shoves them, with the physics
+  smashPropsNear(p, r, hard = true) {
+    if (!hard && this.phys) return;
+    for (const q of this.props || []) if (!q.solid && !q.broken && q.m.visible && Math.hypot(q.m.position.x - p.x, q.m.position.z - p.z) < q.w * 0.5 + r) this.breakProp(q, p);
   }
   // a prop standing where a station's cover goes (covers are placed from the heroines' screen layout) steps aside: it is not drawn
   clearProps() {
@@ -405,6 +446,7 @@ export class PanelWorld {
     for (const p of this.props || []) {
       const hit = all.some((c) => Math.hypot(c.def.x - p.x, c.def.z - p.z) < c.w / 2 + p.w / 2 + 0.15);
       p.m.visible = p.sh.visible = !hit;
+      p.body?.setEnabled(!hit);   // (and not in the physics either)
     }
   }
 
@@ -613,14 +655,37 @@ export class PanelWorld {
     this.covers = [];
     for (const c of this.coverSets[sid] || []) {
       c.hp = c.max = T.combat.cover.hp; c.broken = false; this.covers[c.slot] = c;
+      if (this.phys) this.coverBody(c);
     }
   }
+  // a cover in the physics: standing, it does not move but what flies bounces off it; one marked "fall" comes crashing down into its
+  // place as they arrive (DESIGN「掩体」: covers can fall; it drops straight, lands, settles) and stands from then on ("fall": true from
+  // prop.phys.coverFall metres up, or a number: from that high - a door coming off its track, a table going over)
+  coverBody(c) {
+    if (c.falling) return;   // (arrive runs again after a close look: it is still coming down)
+    if (c.body) { this.phys.remove(c.body); c.body = null; }
+    const S = c.m.scale.y, w = c.w * S, h = c.h * S, d = Math.max(0.15, h * 0.3);
+    if (c.c.fall && !c.fell) {
+      c.fell = true;
+      const y0 = c.m.position.y; c.m.position.y = y0 + (typeof c.c.fall === 'number' ? c.c.fall : T.combat.prop.phys.coverFall);
+      c.m.updateMatrixWorld(true);
+      c.body = this.phys.add(c.m, w, h, d, { spin: false, density: 400 });
+      this.game.tweens.wait(0.25, () => sound('beamFall', { pos: c.m.position.clone() }) || sfx.whoosh(0));
+      c.falling = { y0, w, h, d, t: 0 };   // (update() sees it land: never by polling with waits, a long frame runs those all at once)
+      return;
+    }
+    c.body = this.phys.add(c.m, w, h, d, { type: 'kinematic' });
+  }
+  // a cover takes a blow: it rocks back and springs up again (rock: how far, radians)
+  rockCover(c, rock) { if (!c.broken) { c.rock = c.rock || 0; c.rockV = (c.rockV || 0) + rock * 14; } }
   // leaving: they fold over backwards, away from the girls, flat onto the floor like pop-up book pages (the relief flattens too), and
   // the girls walk on over them; returns how long that takes (the game waits for it before anyone gets up)
   dropCovers() {
     const live = this.covers.filter(Boolean), tw = this.game.tweens, t = T.layout.cover.foldTime;
     this.covers = [];
+    for (const c of live) { if (c.body) { this.phys.remove(c.body); c.body = null; } c.rock = c.rockV = 0; if (c.falling) { c.m.position.y = c.falling.y0; c.falling = null; } }
     live.forEach((c, i) => {
+      if (c.broken && this.phys) return;   // (knocked over by the physics: it lies where it fell)
       const u = c.m.material.uniforms;
       tw.to(c.m.rotation, { x: -Math.PI / 2 }, t, { delay: i * 0.06, ease: Ease.inQuad });
       tw.to(u.reliefAmt, { value: 0 }, t, { delay: i * 0.06 });
@@ -635,7 +700,18 @@ export class PanelWorld {
     c.dm.cut([[0.1, 0.9], [0.9, 0.2]], 0.03); c.dm.cut([[0.15, 0.2], [0.85, 0.85]], 0.03);
     m.material.uniforms.flash.value = 1;
     g.fx.confetti(m.position.clone().add(new THREE.Vector3(0, c.h * 0.5, 0)), 30, 1.8);
-    // it topples over backwards (away from the girl crouching at it), flat onto the floor
+    // it goes over backwards (away from the girl crouching at it): with the physics knocked over and tumbling, splinters flying; else
+    // it topples flat onto the floor
+    if (c.body && this.phys) {
+      this.phys.remove(c.body); c.rock = c.rockV = 0; m.rotation.x = 0; m.updateMatrixWorld(true);
+      const S = m.scale.y, w = c.w * S, h = c.h * S;
+      c.body = this.phys.add(m, w, h, Math.max(0.15, h * 0.3), { density: 350 });
+      const top = m.localToWorld(new THREE.Vector3((Math.random() - 0.5) * c.w * 0.4, c.h * 0.85, 0));
+      this.phys.knock(c.body, top, this.camPos, T.combat.prop.phys.coverBreak, 0.15);
+      this.phys.chipsAt(m.position.clone().add(new THREE.Vector3(0, h * 0.6, 0)), tmpV3.set(m.position.x - this.camPos.x, 0, m.position.z - this.camPos.z).normalize(), 10, [COL.bone, COL.paper, 0xd09060, 0xb87848]);
+      g.post.shake(0.6);
+      return;
+    }
     g.tweens.to(m.rotation, { x: -Math.PI / 2 * 0.92 }, 0.45, { ease: Ease.inQuad, onDone: () => { sfx.thud(0); g.post.shake(0.6); } });
   }
 
@@ -757,6 +833,7 @@ export class PanelWorld {
   }
   // the run moves on to another set: everything this one made goes (the pictures stay loaded, they belong to the asset cache)
   dispose() {
+    this.phys?.dispose(); this.phys = null;
     for (const m of this.holes || []) m.geometry.dispose();
     this.scene.traverse((o) => {
       if (o.geometry) o.geometry.dispose();
@@ -770,6 +847,25 @@ export class PanelWorld {
   update(dt, t) {
     const g = this.game, cam = this.camera;
     this.updateAnomaly(dt);
+    this.ambient(dt);
+    if (this.phys) {   // (the props' bodies; their shadows stay under them on the floor; a cover that took a blow rocks back and up)
+      this.phys.step(dt);
+      // a falling cover down and still (or it took too long: something under it): it stands in its place from now on
+      for (const c of this.covers) if (c?.falling && c.body) {
+        const F = c.falling; F.t += dt;
+        if (F.t > 0.3 && ((c.m.position.y <= F.y0 + 0.03 && Math.abs(c.body.linvel().y) < 0.3) || F.t > 2.5)) {
+          this.phys.remove(c.body); c.falling = null; c.m.position.y = F.y0; c.m.updateMatrixWorld(true);
+          c.body = this.phys.add(c.m, F.w, F.h, F.d, { type: 'kinematic' });
+          this.game.post.shake(0.9); this.game.fx.puff(c.m.position, 10, COL.bone, 1.2); sfx.thud(0);
+        }
+      }
+      for (const c of this.covers) if (c && !c.broken && c.body && (c.rock || c.rockV)) {
+        c.rockV += (-c.rock * 160 - c.rockV * 9) * dt; c.rock += c.rockV * dt;
+        if (Math.abs(c.rock) + Math.abs(c.rockV) < 0.002) c.rock = c.rockV = 0;
+        c.m.rotation.x = -c.rock;
+      }
+      for (const q of this.props || []) if (q.body && q.m.visible) { q.sh.position.x = q.m.position.x; q.sh.position.z = q.m.position.z; q.sh.material.opacity = Math.max(0, 1 - q.m.position.y * 1.5); }
+    }
     const c1 = g.players[0]?.ctrl, on = c1 && c1.active && !g.cineOn && !g.walkOn;   // (a close look, Game.cine / a walk between places: held still)
     const lx = on ? c1.x / g.W - 0.5 : 0, ly = on ? c1.y / g.H - 0.5 : 0;
     this.look.x += (lx - this.look.x) * Math.min(1, dt * 4);
@@ -781,8 +877,11 @@ export class PanelWorld {
     cam.lookAt(this.lookAt);
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
-    cam.rotateZ(g.post.shakeR);
-    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0);
+    // banking with the aim (Mirage Feathers' tilted horizon: the camera leans a little into where she aims) and the shake's roll; a
+    // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
+    cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
+    this.punch = (this.punch || 0) * Math.exp(-dt * 7);
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch;
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }

@@ -14,6 +14,7 @@ import { Enemy, Projectile } from './enemies.js';
 import { BOSSES } from './boss.js';
 import { Gimmick } from './gimmick.js';
 import { Chase } from './chase.js';
+import { Ride } from './ride.js';
 import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { playDoor } from '../ui/door.js';
@@ -30,6 +31,8 @@ const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const EDGE_C = new THREE.Color();
+
+const CINE_D = new THREE.Vector3();
 
 export class Game {
   // run: { ep, team: [id1P, id2P], bag: [...] }
@@ -55,6 +58,7 @@ export class Game {
     this.comic = new Comic();
     this.actors = [];
     this.chase = new Chase(this);   // (episode 2: she who cannot be killed, and the run she drives: src/battle/chase.js)
+    this.ride = new Ride(this);     // (high-speed stretches: a cart, a float, a lift, their own legs: src/battle/ride.js)
     this.addGimmicks();
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
@@ -220,6 +224,8 @@ export class Game {
       this.music(boss);
       // (a stage that starts with a run, episode 2: from where it comes in, along the run's path)
       if (S.chase) { const A = S.arrive || {}; this.world.place(A.at || S.chase.path?.[0] || S.cam, A.look || S.look); this.chase.run(S, () => this.arrive(S, boss)); return; }
+      // (a stage that starts at speed: from the start of its path)
+      if (S.ride) { this.world.place(S.ride.from || S.cam, S.look); this.ride.run(S, () => this.arrive(S, boss)); return; }
       this.world.place(S.cam, S.look);
       this.setAll('cover'); this.settled = true;
       if (S.enter) { this.enterFrom(S.enter, () => this.arrive(S, boss)); return; }
@@ -228,6 +234,8 @@ export class Game {
     }
     // episode 2: a stretch run looking back at her (station chase, src/battle/chase.js); arrives at the end of it
     if (S.chase) { this.post.u.wipe.value = 0; this.settleAnomaly(S); this.world.setCovers(S.covers); this.chase.run(S, () => this.arrive(S, boss)); return; }
+    // a high-speed stretch: the cart / float / lift carries them along the path (src/battle/ride.js); arrives at its end
+    if (S.ride) { this.post.u.wipe.value = 0; this.settleAnomaly(S); this.ride.run(S, () => this.arrive(S, boss)); return; }
     // something behind them: the view whips round where they stand (DESIGN「演出」 背后出现敌人)
     if (S.whip) { this.post.u.wipe.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
     const pts = [this.world.camPos.toArray(), ...(S.via || []), S.cam];
@@ -321,12 +329,19 @@ export class Game {
     if (!w.camPos) { o.during?.(); this.tweens.wait(o.hold ?? 2, () => then && then()); return; }
     const q = ++this.cineQ, tw = this.tweens, home = { cam: w.camPos.clone(), look: w.lookAt.clone() }, cam = new THREE.Vector3(), at = new THREE.Vector3();
     this.cineOn = true; if (o.lull) this.lull = true;
-    const aim = () => {   // (where it is now: a moving boss is followed)
+    this.cineTitle = o.title || null;   // (words in the black bars: glhud.js marquee)
+    // k: how far into the hold. o.orbit (radians): the camera goes round it that far over the hold; o.dolly (degrees): the view widens that
+    // much over the hold while the camera closes in to keep it the same size (a dolly zoom: the room stretches out behind it); o.up < 0:
+    // from below, looking up at it (DESIGN「战斗中的镜头」, the references: boss entrances shot from low down, half way round her)
+    const aim = (k = 0) => {   // (where it is now: a moving boss is followed)
       if (!o.on) { cam.set(...o.cam); at.set(...o.at); return; }
       at.copy(o.on.uvToWorld ? o.on.uvToWorld(o.u ?? 0.5, o.v ?? 0.62) : o.on);
       // (from where the camera was; o.face: straight in front of the thing, the way it faces)
-      const d = this.cineDir || (this.cineDir = o.face && o.on.root ? new THREE.Vector3(Math.sin(o.on.root.rotation.y), 0, Math.cos(o.on.root.rotation.y)) : new THREE.Vector3().subVectors(home.cam, at).setY(0).normalize());
-      cam.copy(at).addScaledVector(d, o.dist ?? 3); cam.x += -d.z * (o.side ?? 0); cam.z += d.x * (o.side ?? 0); cam.y = at.y + (o.up ?? 0);
+      const d0 = this.cineDir || (this.cineDir = o.face && o.on.root ? new THREE.Vector3(Math.sin(o.on.root.rotation.y), 0, Math.cos(o.on.root.rotation.y)) : new THREE.Vector3().subVectors(home.cam, at).setY(0).normalize());
+      const a = (o.orbit ?? 0) * k, d = CINE_D.set(d0.x * Math.cos(a) + d0.z * Math.sin(a), 0, -d0.x * Math.sin(a) + d0.z * Math.cos(a));
+      let dist = o.dist ?? 3;
+      if (o.dolly) { const f0 = (w.baseFov ?? 60) - (o.zoom ?? 0), f1 = f0 + o.dolly * k; dist *= Math.tan(f0 * Math.PI / 360) / Math.tan(f1 * Math.PI / 360); }
+      cam.copy(at).addScaledVector(d, dist); cam.x += -d.z * (o.side ?? 0); cam.z += d.x * (o.side ?? 0); cam.y = at.y + (o.up ?? 0);
     };
     this.cineDir = null; aim();
     const c0 = w.camPos.clone(), l0 = w.lookAt.clone(), z0 = w.cineZoom || 0, inT = o.in ?? 0.8;
@@ -335,15 +350,20 @@ export class Game {
         if (q !== this.cineQ) return;
         o.during?.();
         if (o.back === false) { then && then(); return; }
-        tw.run(typeof o.hold === 'function' ? o.hold() : o.hold ?? 2.5, () => { if (q !== this.cineQ) return; aim(); w.camPos.copy(cam); w.lookAt.copy(at); }, { onDone: () => {
+        tw.run(typeof o.hold === 'function' ? o.hold() : o.hold ?? 2.5, (e) => {
           if (q !== this.cineQ) return;
-          const c1 = w.camPos.clone(), l1 = w.lookAt.clone();
-          tw.run(o.out ?? 0.7, (e) => { w.camPos.lerpVectors(c1, home.cam, e); w.lookAt.lerpVectors(l1, home.look, e); w.cineZoom = (o.zoom ?? 0) * (1 - e); },
+          const k = o.orbit || o.dolly ? e * e * (3 - 2 * e) : 0;
+          aim(k); w.camPos.copy(cam); w.lookAt.copy(at);
+          if (o.dolly) w.cineZoom = (o.zoom ?? 0) - o.dolly * k;
+        }, { onDone: () => {
+          if (q !== this.cineQ) return;
+          const c1 = w.camPos.clone(), l1 = w.lookAt.clone(), z1 = w.cineZoom || 0;
+          tw.run(o.out ?? 0.7, (e) => { w.camPos.lerpVectors(c1, home.cam, e); w.lookAt.lerpVectors(l1, home.look, e); w.cineZoom = z1 * (1 - e); },
             { ease: Ease.inOutCubic, onDone: () => { if (q === this.cineQ) this.cineEnd(); if (o.lull) this.lull = false; then && then(); } });
         } });
       } });
   }
-  cineEnd() { this.cineOn = false; if (this.world.cineZoom) this.world.cineZoom = 0; }
+  cineEnd() { this.cineOn = false; this.cineTitle = null; if (this.world.cineZoom) this.world.cineZoom = 0; }
   // the lights go: hard flickers of black over s seconds (Gimmick flicker)
   flicker(s) {
     let el = document.querySelector('#ui .flicker');
@@ -372,7 +392,7 @@ export class Game {
     const w = this.world, to = spec.to ?? 1;
     if (!w.turnFrom) { w.anomaly = to; then && then(); return; }
     w.turnFrom(spec.from || w.set.anomalyFrom, to < (w.anomaly ?? 1) ? -1 : 1);
-    if (spec.hit) { sfx.slam(); this.post.flash(0.7, to > 0.5 ? 0xffa040 : 0xfff2d0); this.post.shake(1); }
+    if (spec.hit) { sfx.slam(); this.post.flash(0.7, to > 0.5 ? 0xffa040 : 0xfff2d0); this.post.shake(1); if (to > 0.5) this.post.styleBurst(1.0, [1, 5, 3], 0.14, 0x1e0a00, 0xffa040); }   // (the rot: drawn in two colours, halftone, torn, for a moment)
     sfx.tear(0);
     this.tweens.to(w, { anomaly: to }, spec.dur ?? 1.6, { ease: Ease.inOutCubic, onDone: () => {
       // one of the girls reacts: the place rotted / came back (text/stickers.json rot / real)
@@ -558,6 +578,7 @@ export class Game {
     sfx.slam(); sfx.madness();
     this.G.stop(0.25);
     this.post.flash(0.9, 0xff3aa0);
+    this.post.styleBurst(1.8, [3, 1, 4, 2, 6, 3], 0.12, 0x200018, 0xff3aa0);   // (the paper world tearing: glitch, two colours, pixels, line art)
     this.post.shake(1.4);
     this.hud.gl.hold('invade');
     this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.6); p.soft.kick(1.6); });
@@ -858,7 +879,7 @@ export class Game {
   assist(sx, sy, radius) {
     let best = null, bd = radius;
     for (const a of this.actors) {
-      if (!a.alive || !a.hitMeshes().length) continue;
+      if (!a.alive || !a.mesh || !a.hitMeshes().length) continue;   // (a body of real 3D parts - the honey maggot's sacs - is aimed at for real)
       const uv = this.boxUV(a, sx, sy);
       if (!uv || uv.d > bd) continue;
       best = { a, uv }; bd = uv.d;
@@ -905,7 +926,13 @@ export class Game {
       this.world.ray.setFromCamera(this.world.ndc(sx, sy), this.world.camera);
       const hit = this.world.ray.intersectObject(this.world.level.group, true)
         .find((h) => !h.object.userData.texKey || (h.uv && alphaAt(h.object.userData.texKey, h.uv.x, h.uv.y) > 110));
-      if (hit) { this.fx.decal(hit); sfx.miss((sx / this.W - 0.5) * 0.6); }
+      if (hit) {
+        // a banner hanging there swings (the physics); a wall / the floor takes a hole and chips fly off it toward the camera
+        const ph = this.world.phys, hg = hit.object.userData.hang, back = new THREE.Vector3().subVectors(this.world.camPos, hit.point).setY(0).normalize();
+        if (hg && ph) ph.push(hg.body, hit.point, back.negate(), T.combat.prop.phys.push[w.kind] ?? 0.2);
+        else { this.fx.decal(hit); ph?.chipsAt(hit.point.clone().addScaledVector(back, 0.05), back, T.combat.prop.phys.wallChips, [0xe0d8d0, 0xa89a90, 0x7a6a70], 0.45); }
+        sfx.miss((sx / this.W - 0.5) * 0.6);
+      }
       p.fever.miss();
       return { n: 0, crit: false };
     }
@@ -913,7 +940,7 @@ export class Game {
     hits.forEach((tg, i) => {
       if (i === 0) { if (p.focus.a === tg.a && p.focus.t > 0) p.focus.n++; else { p.focus.a = tg.a; p.focus.n = 0; } p.focus.t = K.focusTime; }
       const n = i === 0 ? p.focus.n : 0;
-      let dmg = w.dmg * (i ? K.pierceDmgMul : 1) * p.fever.dmgMul;
+      let dmg = w.dmg * (i ? K.pierceDmgMul : 1) * p.fever.dmgMul * (p.dmgMul ?? 1);   // (dmgMul: blind fire, player.js)
       if (p.gatling) dmg *= p.a.dmg;
       if (w.ramp) dmg *= 1 + w.ramp * Math.min(n, w.rampMax);
       const c = Math.random() < this.critRate(p);
@@ -930,10 +957,12 @@ export class Game {
     let n = 0;
     for (const a of [...this.actors]) {
       if (!a.alive || !a.hitMeshes().length) continue;
-      const uv = this.boxUV(a, sx, sy);
+      // (a body of real 3D parts - the honey maggot: the part of it nearest the beam, if within reach)
+      const part = a.mesh ? null : a.partAt?.(sx, sy, R);
+      const uv = a.mesh ? this.boxUV(a, sx, sy) : part ? { u: 0.5, v: 0.5, d: 0 } : null;
       if (!uv || uv.d > R) continue;
       const c = Math.random() < this.critRate(p);
-      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? this.critMul(p) : 1), uv, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
+      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? this.critMul(p) : 1), uv, part, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
       n++;
     }
     return n;
@@ -975,6 +1004,7 @@ export class Game {
     const u = clamp((s.x - l.x) / Math.max(1, r.x - l.x), 0.08, 0.92), v = 0.45 + Math.random() * 0.4;
     if (from instanceof Projectile && from.kind === 'takoyaki') { cov.dm.cut([[u - 0.12, v + 0.1], [u + 0.12, v - 0.08]], 0.012); sfx.clang(); } else if (heavy) { cov.dm.cut([[0.15, 0.85], [0.85, 0.45]], 0.02); cov.dm.hole(0.5, 0.65, 0.09); } else cov.dm.hole(u, v, 0.05);
     if (mesh.material?.uniforms) mesh.material.uniforms.flash.value = 0.6;
+    this.world.rockCover?.(cov, heavy ? 0.16 : 0.06);   // (it rocks back with the blow: PanelWorld)
     sfx.coverHit();
     this.post.shake(heavy ? 1.1 : 0.4);
     this.fx.sparks(l.x + u * (r.x - l.x), this.H - l.y, 6, COL.bone, 0.8);
@@ -1033,7 +1063,8 @@ export class Game {
     const F = T.combat.feel, tough = (target.maxHp || 0) >= F.impact.hp * (crit ? 0.5 : 1);
     if (!(by && by.activeOn)) this.feelStop(tough ? F.stop.killHeavy : F.stop.kill, tough);
     this.post.shake(tough ? F.shake.killHeavy : F.shake.kill);
-    if (tough && !this.cineOn) { const now = performance.now() / 1000; if (now - (this.impactAt ?? -9) > F.impact.gap) { this.impactAt = now; this.post.impact(F.impact.time); } }
+    if (tough && !this.cineOn) { const now = performance.now() / 1000; if (now - (this.impactAt ?? -9) > F.impact.gap) { this.impactAt = now; this.post.impact(F.impact.time); this.world.punch = 4; } }
+    if (tough) this.fx.shockRing(target.root.position, 1.2 + target.w * 1.5, by?.c?.hex ?? 0xffffff, 0.55);   // (a ring of light racing out across the floor)
     if (this.combo >= T.combat.tauntCombo && by && by.state === 'cover') by.tauntT = 0.7;
     sfx.viewer();
   }
@@ -1054,6 +1085,7 @@ export class Game {
     this.rdt = dt;
     this.etw.update(edt);
     this.chase.update(dt);
+    this.ride.update(dt);
     for (const a of this.actors) a.update(a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }

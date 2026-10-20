@@ -747,6 +747,24 @@ export class HudGL {
     this.cine = 0; this.cineHid = null;
     this.bars = [0, 1].map(() => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ color: 0x050307, depthTest: false, depthWrite: false }));
       m.renderOrder = 72; m.frustumCulled = false; m.visible = false; this.g.add(m); return m; });
+    // words in the bars (Game.cine title: a boss coming on): her name huge, again and again, running along the top bar, and hollow
+    // running the other way along the bottom one (the MVs' label bars and words repeated till they fill the screen)
+    this.marquee = [0, 1].map((i) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ transparent: true, depthTest: false, depthWrite: false, opacity: 0 }));
+      m.renderOrder = 73; m.frustumCulled = false; m.visible = false; this.g.add(m); m.userData.i = i; return m; });
+    this.marqueeText = null;
+  }
+  // the bars' words as a texture that repeats along them: filled (top) or hollow (bottom)
+  marqueeTex(text, hollow) {
+    const c = document.createElement('canvas'); c.width = 2048; c.height = 160;
+    const g = c.getContext('2d');
+    g.font = `900 112px ${FONT}`; g.textBaseline = 'middle';
+    const one = g.measureText(`${text}  ◆  `).width, n = Math.max(1, Math.round(2048 / one));
+    g.setTransform(2048 / (one * n), 0, 0, 1, 0, 0);   // (a whole number of repeats fills the canvas: it joins up seamlessly)
+    const s = `${text}  ◆  `.repeat(n);
+    if (hollow) { g.strokeStyle = '#ff3a8a'; g.lineWidth = 5; g.strokeText(s, 0, 84); }
+    else { g.fillStyle = '#fff4f8'; g.fillText(s, 0, 84); }
+    const t = new THREE.CanvasTexture(c); t.wrapS = THREE.RepeatWrapping; t.colorSpace = THREE.SRGBColorSpace;
+    return t;
   }
   show(v) { this.visible = v; this.g.visible = v; }
   react(slot, kind, hold) { this.panels[slot]?.react(kind, hold); }
@@ -779,7 +797,20 @@ export class HudGL {
     const g = this.game, k = this.cine = this.cine + ((g.cineOn || g.walkOn ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H;
     this.barK = (this.barK || 0) + ((g.cineOn ? 1 : 0) - (this.barK || 0)) * Math.min(1, dt * 5); const bh = H * 0.11 * this.barK;   // (bars: close-ups only)
     this.bars.forEach((m, i) => { m.visible = this.barK > 0.01; m.scale.set(W * 1.02, bh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0); });
-    const keep = [this.stickers.layer, this.holdUI.g, ...this.bars];
+    // the words in the bars while a close look has a title
+    const title = g.cineOn ? g.cineTitle : null;
+    if (title !== this.marqueeText) {
+      this.marqueeText = title;
+      for (const m of this.marquee) { m.material.map?.dispose(); m.material.map = title ? this.marqueeTex(title, m.userData.i === 1) : null; m.material.needsUpdate = true; }
+    }
+    for (const m of this.marquee) {
+      const on = !!this.marqueeText && this.barK > 0.05, mh = bh * 0.82, i = m.userData.i;
+      m.visible = on; if (!on) continue;
+      m.scale.set(W * 1.02, mh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0);
+      const tx = m.material.map; tx.repeat.x = (W / mh) / (2048 / 160); tx.offset.x += (i ? -1 : 1) * dt * 0.18;
+      m.material.opacity = Math.min(1, this.barK * 1.4);
+    }
+    const keep = [this.stickers.layer, this.holdUI.g, ...this.bars, ...this.marquee];
     if (k > 0.3) {   // (what each part shows is its own business: hidden on top of it every frame, given back as it was at the end)
       if (!this.cineHid) { this.cineHid = new Map(); for (const c of this.g.children) if (!keep.includes(c)) this.cineHid.set(c, c.visible); }
       for (const c of this.cineHid.keys()) c.visible = false;

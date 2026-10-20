@@ -1,0 +1,60 @@
+{
+  "_doc": "停留点预设（docs/DESIGN.md「停留点不只是一个镜头、一种打法」，docs/TECH.md「停留点预设」）。同一种停留点在哪一话都是同一套，一致性从这里来；关卡包可以加自己的预设或改某一项（tuning 会叠加）。站点写 shot: \"<预设名>\" 或 { \"kind\": \"<预设名>\", 要改的项… }；没写的按站点推断：有 ride 的是 ride，有 escort 的是 escort，有 cine 的是 cine，其余 cover。每个预设：players 两人：show 显示不显示；x 1P / 2P 身体中线在 HUD 框里的横向位置；scale 大小（相对 layout.standHeight）；y 整体上下挪（屏幕高度比例，负数往下）；crop 往下沉多少、只露上半身（她站姿身高的比例：0.45 ≈ 腰以上）；set 用哪组姿势（characters/<id>.json rig.sets.<组>，这组没有的图用掩体那组的）；out：hold = 按住才探身（掩体战），always = 一直探身打（没有地方躲）。cover 有没有掩体；ammo：mag 要装弹，infinite 不用；weapon 换哪种攻击模式（characters/<id>.json modes.<名字>，null 不换）。hud：show false = 整个 HUD 退下去（只在不打的镜头里）；mid 中下方那条（关卡名 / 连击 / 评级）往上挪多少（屏幕高度比例；左下右下两人的面板永远不动）；bubbles 两人头上的弹幕气泡。cam：zoom 视野收窄几度（望远镜），lens 镜头边上的暗角 0～1。mv：MV 导演的强度倍数。combat false = 这一站不打（演出）。",
+  "shots": {
+    "cover": {
+      "players": { "show": true, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
+      "cover": true, "ammo": "mag", "weapon": null,
+      "hud": { "show": true, "mid": 0, "bubbles": true },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 1, "combat": true
+    },
+    "open": {
+      "_": "开阔地：和掩体战一样打，镜头更宽（站点自己写 fov），远景开阔；两人站得开一点",
+      "players": { "show": true, "x": [0.24, 0.76], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
+      "cover": true, "ammo": "mag", "weapon": null,
+      "hud": { "show": true, "mid": 0, "bubbles": true },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 1, "combat": true
+    },
+    "corner": {
+      "_": "大房间对着一角：掩体战，镜头斜着看过去",
+      "players": { "show": true, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
+      "cover": true, "ammo": "mag", "weapon": null,
+      "hud": { "show": true, "mid": 0, "bubbles": true },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 1, "combat": true
+    },
+    "ride": {
+      "_": "载具上：一直探身，不装弹，换乘车的攻击模式；两人往中间靠、只露上半身（腿在车里）；没有弹幕气泡（台词走字幕）",
+      "players": { "show": true, "x": [0.31, 0.69], "scale": 0.96, "y": 0, "crop": 0.22, "set": "ride", "out": "always" },
+      "cover": false, "ammo": "infinite", "weapon": "ride",
+      "hud": { "show": true, "mid": 0, "bubbles": false },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 1.3, "combat": true
+    },
+    "run": {
+      "_": "自己跑：一直探身，不装弹，边跑边打；镜头推到膝盖以上",
+      "players": { "show": true, "x": [0.3, 0.7], "scale": 1.05, "y": 0, "crop": 0.3, "set": "run", "out": "always" },
+      "cover": false, "ammo": "infinite", "weapon": "ride",
+      "hud": { "show": true, "mid": 0, "bubbles": false },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 1.3, "combat": true
+    },
+    "escort": {
+      "_": "远处狙击护卫：望远镜视野（收窄 + 暗角），两人退到画面两边、只露肩膀以上和枪",
+      "players": { "show": true, "x": [0.13, 0.87], "scale": 0.86, "y": 0, "crop": 0.42, "set": "scope", "out": "hold" },
+      "cover": true, "ammo": "mag", "weapon": null,
+      "hud": { "show": true, "mid": 0, "bubbles": false },
+      "cam": { "zoom": 20, "lens": 0.7 },
+      "mv": 0.7, "combat": true
+    },
+    "cine": {
+      "_": "演出镜头：不打，没有 HUD 和两人，只拍事件（变身、地形变化、机关、转场、进出门）",
+      "players": { "show": false, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
+      "cover": false, "ammo": "mag", "weapon": null,
+      "hud": { "show": false, "mid": 0, "bubbles": false },
+      "cam": { "zoom": 0, "lens": 0 },
+      "mv": 0.6, "combat": false
+    }
+  }
+}

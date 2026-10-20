@@ -53,6 +53,22 @@ export class Actor {
     this.litC = new THREE.Color(1, 1, 1);
   }
   reliefAmt() { return Math.min(this.w, this.h) * 0.32; }
+  // ---- the physics (src/battle/physics.js, docs/TECH.md「物理」)
+  // from now on a body knocked away by a hit at (a world point): k metres a second along the shot from the camera, up a little; it
+  // tumbles, hits walls, props, covers and the others, and lies still; life seconds later it fades and is gone (null: the caller ends it)
+  toBody(at, k, up, life) {
+    const ph = this.game.world.phys; if (!ph) return false;
+    this.kinPh?.unfollow(this.root);
+    this.billboard = false; this.kick = null;
+    this.inner.position.set(0, 0, 0); this.inner.rotation.set(0, 0, 0); this.inner.scale.set(1, 1, 1);
+    this.mesh.scale.set(1, 1, 1); this.mesh.rotation.set(0, 0, 0); this.mesh.position.set(0, 0, 0); this.boilZ = this.boilX = 0;
+    this.root.updateMatrixWorld(true);
+    this.phys = ph;
+    this.body = ph.add(this.root, this.w * 0.8, this.h * 0.95, Math.max(0.06, this.w * 0.12), { pivot: this.pivot, owner: this });
+    ph.knock(this.body, at, this.game.world.camPos, k, up);
+    if (life != null) this.game.tweens.run(0.5, (e) => { this.u.opacity.value = 1 - e; }, { delay: life, onDone: () => this.dispose() });
+    return true;
+  }
   setFrame(key) {
     if (this.mesh.userData.texKey === key || !tex[key]) return;
     this.mesh.userData.texKey = key;
@@ -144,6 +160,8 @@ export class Actor {
   }
   dispose() {
     if (this.lock) { this.lock.remove(); this.lock = null; }
+    if (this.body) { this.phys.remove(this.body); this.body = null; }
+    this.kinPh?.unfollow(this.root);   // (the place it walked in)
     this.root.parent && this.root.parent.remove(this.root);
     if (this.shadowM) this.shadowM.parent && this.shadowM.parent.remove(this.shadowM);
     this.dm.dispose();
@@ -419,6 +437,8 @@ export class Enemy extends Actor {
     this.baseUpdate(dt, t);
     if (!this.alive || this.state === 'scripted' || this.state === 'statue') return;
     const g = this.game;
+    // alive it is a kinematic body going where it goes: it shoves the props in its way, what flies bounces off it (src/battle/physics.js)
+    if (!this.kinOn && g.world.phys) { this.kinOn = true; this.kinPh = g.world.phys; g.world.phys.follow(this.root, this.w * 0.6, this.h * 0.85, this.pivot); }
     this.invul = Math.max(0, this.invul - dt);
     if (this.def.evade) this.updateEvade(dt);
     if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
@@ -516,7 +536,7 @@ export class Enemy extends Actor {
         return;
       }
       const sp = this.def.speed * this.rage() * (M === 'charge' ? bp.chargeCreep : 1) * (0.7 + 0.6 * Math.abs(Math.sin(this.walkPhase)));
-      if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; g.world.smashPropsNear?.(P, this.w * 0.35); }
+      if (d > 0.05) { P.x += dx / d * sp * dt; P.z += dz / d * sp * dt; g.world.smashPropsNear?.(P, this.w * 0.35, false); }   // (walking: it shoves them aside)
       this.walkPhase += dt * 7;
       this.inner.position.y = Math.abs(Math.sin(this.walkPhase)) * 0.1;
       if (M === 'charge' && !this.charged && d < bp.chargeDist) {   // the rush: winds up from afar (red ring), then leaps the whole way
@@ -699,7 +719,7 @@ export class Enemy extends Actor {
     if (H) tx = Math.max(H.x0 + this.w * 0.5, Math.min(H.x1 - this.w * 0.5, tx));
     const x0 = P.x, z0 = P.z, hider = this.def.hides, dur = rr(bp.stepTime);
     this.state = 'advance'; this.play(hider ? 'hide' : 'idle');
-    g.etw.run(dur, (e) => { if (!this.alive) return; P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; if (!hider) this.inner.position.y = Math.abs(Math.sin(e * Math.PI * 3)) * 0.12; g.world.smashPropsNear?.(P, this.w * 0.35); }, {
+    g.etw.run(dur, (e) => { if (!this.alive) return; P.x = x0 + (tx - x0) * e; P.z = z0 + (tz - z0) * e; if (!hider) this.inner.position.y = Math.abs(Math.sin(e * Math.PI * 3)) * 0.12; g.world.smashPropsNear?.(P, this.w * 0.35, false); }, {
       ease: Ease.inOutQuad, onDone: () => {
         this.inner.position.y = 0; this.inner.rotation.z = 0;
         if (!this.alive || this.state !== 'advance') return;
@@ -929,7 +949,19 @@ export class Enemy extends Actor {
     const crit = info?.crit;
     // rifle: knocked flat / shattered on a crit. mantra + beam: purified (burns away in gold) / shattered on a crit
     const how = crit ? 'shatter' : kind === 'mantra' || kind === 'beam' ? 'burn' : 'knock';
-    if (how === 'burn') this.dieBurn(uv);
+    // with the physics: knocked away by that shot (harder the heavier it was), tumbling into what is there; burning away as it flies; a
+    // crit breaks it into its own pieces, each flying and bouncing (tuning combat.json prop.phys.death)
+    const ph = this.game.world.phys, F = T.combat.prop.phys.death, k = F.base + F.perWeight * (info?.weight ?? 0.4);
+    if (ph && how === 'shatter') {
+      this.kinPh?.unfollow(this.root);
+      const key = this.mesh.userData.texKey;
+      ph.shatter(this.mesh, this.w, this.h, this.pivot, uv, this.game.world.camPos, k * 1.2, (u, v) => alphaAt(key, u, v) > 60);
+      const p = this.uvToWorld(uv.u, uv.v); this.game.fx.confetti(p, 20, 1.4); this.game.fx.ink(p, 12, 1.3);
+      this.mesh.visible = false; this.game.tweens.wait(0.05, () => this.dispose());
+    } else if (ph) {
+      this.toBody(this.uvToWorld(uv.u, uv.v), k, F.up, how === 'burn' ? null : F.life);
+      if (how === 'burn') this.dieBurn(uv); else this.game.fx.confetti(this.center(), 18, 1.1);
+    } else if (how === 'burn') this.dieBurn(uv);
     else if (how === 'shatter') this.dieShatter(uv, 1.2);
     else this.dieKnock();
     if (how === 'burn') sfx.burnOut(0); else if (how === 'shatter') sfx.shatter(0); else sfx.paperRip(0);
@@ -1019,7 +1051,9 @@ export class Projectile extends Actor {
       this.alive = false;
       this.lock.remove(); this.lock = null;
       const blocked = this.game.playerAttacked({ kind: 'shot', dmg: this.dmg, from: this, slot: this.targetSlot });   // (hiding does not help: shoot it down)
-      if (blocked) this.game.tweens.to(this.root.position, { y: -1, x: this.root.position.x + (Math.random() - 0.5) * 3 }, 0.6, { ease: Ease.inQuad, onDone: () => this.dispose() });
+      // stopped by the cover: it drops in front of it and bounces about (the physics), or falls away
+      if (blocked && this.toBody(this.root.position.clone().add(new THREE.Vector3(0, 0.1, 0)), 1.0, -0.2, 1.0)) { /* the body ends it */ }
+      else if (blocked) this.game.tweens.to(this.root.position, { y: -1, x: this.root.position.x + (Math.random() - 0.5) * 3 }, 0.6, { ease: Ease.inQuad, onDone: () => this.dispose() });
       else this.dispose();
     }
   }
@@ -1032,7 +1066,9 @@ export class Projectile extends Actor {
     this.game.onHit(this, info.kind, info);
     if (this.kind === 'takoyaki') sfx.thud(0); else sfx.shatter(0);
     this.game.fx.ink(this.center(), 10, 1, this.kind === 'wisp' ? COL.violet : this.kind === 'balloon' ? COL.hot : COL.bone);
-    this.dieShatter(info.uv, 0.8);
+    // shot down: knocked away along the shot, it falls and bounces about (the physics); without it, it bursts
+    const F = T.combat.prop.phys.death;
+    if (!this.toBody(this.uvToWorld(info.uv.u, info.uv.v), F.base * 0.8 + F.perWeight * (info.weight ?? 0.4), F.up, 1.2)) this.dieShatter(info.uv, 0.8);
     this.game.onKill(this, 'pop', false);
   }
 }

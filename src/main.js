@@ -20,6 +20,7 @@ import { initTheme } from './battle/fx.js';
 import { DBG, mountDebug } from './core/debug.js';
 import { SET, saveSettings, mountSettings, initSettings } from './core/settings.js';
 import { HybridCtrl, PadBook, PAD } from './core/input.js';
+import { loadPhysics } from './battle/physics.js';
 
 THREE.ColorManagement.enabled = false;
 window.__errs = [];
@@ -235,6 +236,7 @@ G.shot = async (name = 'shot') => {
 async function boot() {
   // 1) content packs (base + mods): every number, text, level and the image list; 2) everything that reads them
   await loadContent(import.meta.env.BASE_URL || './');
+  loadPhysics();   // (the physics engine, src/battle/physics.js: ready long before the first fight; without it props just tip over)
   initSettings(); initSave(); initLang(); initTheme();
   G.content = C; // debug handle
   initCursor();

@@ -16,6 +16,8 @@ from scipy import ndimage
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 A = ROOT / "public" / "content" / "base" / "assets"
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 OUT = ROOT / "art" / "raw" / "_cutout"
 
 
@@ -36,10 +38,10 @@ def pieces(im):
 
 def main():
     args = [x for x in sys.argv[1:] if not x.startswith("--")]
-    man = json.loads((A / "manifest.json").read_text())
+    man = packs.manifest()
     if "--fix" in sys.argv:
         for key in args:
-            p = A / man[key]["src"].replace("assets/", ""); im = Image.open(p).convert("RGBA"); lab, bad = pieces(im)
+            p = man.path(key); im = Image.open(p).convert("RGBA"); lab, bad = pieces(im)
             if not bad: print("nothing on", key); continue
             a = np.asarray(im).copy(); a[np.isin(lab, bad), 3] = 0
             Image.fromarray(a).save(p, quality=92, method=6) if p.suffix == ".webp" else Image.fromarray(a).save(p)
@@ -50,7 +52,7 @@ def main():
     for key, m in sorted(man.items()):
         if not key.startswith(pre) or m.get("dom") is None and False: continue
         if not key.startswith(pre): continue
-        p = A / m["src"].replace("assets/", "")
+        p = man.path(key)
         if not p.exists(): continue
         im = Image.open(p)
         if im.mode not in ("RGBA", "LA", "P") and "transparency" not in im.info: continue

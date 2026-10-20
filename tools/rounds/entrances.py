@@ -10,7 +10,9 @@ import json, pathlib, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 B = ROOT / "public" / "content" / "base"
-EN = json.loads((B / "enemies.json").read_text(encoding="utf-8"))
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
+EN = packs.collection("enemies")
 
 
 def how(e, hall):
@@ -24,8 +26,8 @@ def how(e, hall):
 
 if __name__ == "__main__":
     dry = "--dry" in sys.argv
-    for name in ("ep0", "ep1"):
-        p = B / "sets" / f"{name}.json"; raw = p.read_bytes(); crlf = b"\r\n" in raw; D = json.loads(raw.decode("utf-8")); n = 0
+    for p in [f for name in ("ep0", "ep1") for f in packs.data_files(name, "sets")]:
+        name = p.parent.name; raw = p.read_bytes(); crlf = b"\r\n" in raw; D = json.loads(raw.decode("utf-8")); n = 0
         for sid, S in D.items():
             if sid == "_doc" or not isinstance(S, dict): continue
             for st in (S.get("stations") or {}).values():

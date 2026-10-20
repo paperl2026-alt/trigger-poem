@@ -212,7 +212,12 @@ async function chantTab() {
 async function sandboxTab() {
   const pack = await getJson(`${BASE}pack.json`);
   const sets = {}, enemies = await getJson(`${BASE}enemies.json`) || {};
-  for (const f of pack?.data?.sets || []) { const d = await getJson(BASE + f); for (const [k, v] of Object.entries(d || {})) if (!k.startsWith('_') && v?.stations) sets[k] = { file: f, v }; }
+  // the base pack and its level packs (docs/TECH.md「关卡包」): every chapter's places and its own monsters
+  const dirs = [['', pack], ...await Promise.all((pack?.levels || []).map(async (l) => [`${l}/`, await getJson(`${BASE}${l}/level.json`)]))];
+  for (const [dir, P] of dirs) {
+    for (const f of P?.data?.sets || []) { const d = await getJson(BASE + dir + f); for (const [k, v] of Object.entries(d || {})) if (!k.startsWith('_') && v?.stations) sets[k] = { file: dir + f, v }; }
+    if (dir) for (const f of P?.data?.enemies || []) Object.assign(enemies, await getJson(BASE + dir + f) || {});
+  }
   let cfg = { set: 'ep2_hiroma', music: 'ep2_she', monsters: [], beds: [], she: '', auto: true, god: true, p2: 'ai', dark: true };
   try { const s = window.native?.read('sandbox')?.data || localStorage.getItem('sandbox'); if (s) cfg = { ...cfg, ...JSON.parse(s) }; } catch (e) { /* defaults */ }
   const saveCfg = () => { const s = JSON.stringify(cfg); try { if (window.native) window.native.write('sandbox', s); localStorage.setItem('sandbox', s); } catch (e) { /* the page still goes */ } };

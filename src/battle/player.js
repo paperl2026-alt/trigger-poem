@@ -161,12 +161,13 @@ export class Player {
     if (this.hero) this.hero.pulse(new THREE.Color(this.c.hex));
     this.edgePulse = 1.4;
     g.hud.setFace(this.slot, 'hype', this.a.dur);
-    if (this.a.kind === 'beam') { this.beamGrace = T.combat.beam.grace; this.beam = g.fx.beam(this.c.hex); this.beamTick = 0; }
+    if (this.a.kind === 'beam') { this.beamGrace = T.combat.beam.grace; this.beam = g.fx.beam(this.c.hex); this.beam3d = g.fx.beam3d(this.c.hex); this.beamTick = 0; }   // (the band on the screen and the tube of light in the room)
   }
   endActive(cancelled) {
     if (this.a.kind === 'beam') {
       if (cancelled) { const h = this.a.heal * this.activeT / this.a.dur; this.heal(h); if (h > 1) { this.game.hud.healPop(this.slot, h); sfx.clear(); } }
       if (this.beam) { this.beam.remove(); this.beam = null; }
+      if (this.beam3d) { this.beam3d.remove(); this.beam3d = null; }
     }
     this.activeT = 0;
   }
@@ -201,7 +202,13 @@ export class Player {
         this.reloadT -= dt;
         if (this.reloadT <= 0) { this.ammo = this.w.mag; this.state = 'cover'; }
       } else {
-        const wantOut = (c.fire || c.wantsOut) && !c.hide;
+        // blind fire (DESIGN「女主动起来」: 抱头乱射): she stays down behind her cover, a hand over her head, and fires over it without
+        // looking - a pad or the keys: hide and fire held together; the mouse: the first moment of a click while a must-hide attack is
+        // coming at her (hold on and she leans out after all). Safe, but the shots go wide and hit softer (tuning combat.player.blind)
+        this.pressT = c.fire ? (this.pressT || 0) + dt : 0;
+        const B = PL().blind, press = c.fire && !this.activeOn;
+        this.blind = press && (c.hide || (this.state !== 'out' && this.dangerOn() && this.pressT < B.tap));
+        const wantOut = g.riding || ((c.fire || c.wantsOut) && !c.hide && !this.blind);   // (riding: nowhere to hide, always up and shooting)
         if (this.activeOn) {
           // her special (DESIGN「角色性能」): she stays out the whole time, untouchable; letting go or ducking does not end it
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); }
@@ -209,7 +216,7 @@ export class Player {
         } else if (wantOut) {
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); this.soft.kick(0.8); }
           this.linger = PL().outLinger;
-        } else if (this.state === 'out') {
+        } else if (this.state === 'out' && !g.riding) {
           this.linger -= dt;
           if (this.linger <= 0 || c.hide) { this.state = 'cover'; this.coverTime = 0; this.soft.kick(0.8); }
         }
@@ -222,6 +229,7 @@ export class Player {
     } else if (this.activeOn && !g.combat && !g.lull) this.endActive(false);
     this.exposed = this.state === 'out';
     if (this.state === 'out' && c && !g.lull) { if (this.beaming) this.updateBeam(dt, t); else this.updateGun(dt, t); }
+    else if (this.blind && this.state === 'cover' && c && !busy) this.updateGun(dt, t, true);
 
     // ---- frame ----
     let pose = 'cover';
@@ -233,7 +241,8 @@ export class Player {
     else if (this.state === 'victory') pose = 'victory';
     else if (this.state === 'cover') {
       this.peekT -= dt;
-      if (this.tauntT > 0) pose = 'taunt';
+      if (this.blind) pose = 'blind';
+      else if (this.tauntT > 0) pose = 'taunt';
       else if (this.peekT < 0) { pose = 'peek'; if (this.peekT < -PL().peekHold) this.peekT = rr(PL().peekEvery); }
     }
     this.setPose(pose);
@@ -262,7 +271,7 @@ export class Player {
       const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom);
       this.hero.setReady(this.charge >= 1 && !this.activeOn && g.combat && this.state !== 'down' && this.state !== 'away');
       this.hero.update(dt, t, {
-        state: this.state, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0) - out,
+        state: this.state, pose: this.pose, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0) - out,
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
         dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,
@@ -305,28 +314,35 @@ export class Player {
     sfx.reload();
   }
 
-  updateGun(dt, t) {
+  // a must-hide attack coming at her (an orbit marker of that kind aimed at her or at both: fx.lock)
+  dangerOn() { for (const L of this.game.fx.live || []) if ((L.type === 'hide' || L.type === 'heavy') && (L.slot === this.slot || L.slot === -1)) return true; return false; }
+  // blind: fired from behind her cover without looking (the shots go wide, hit softer, come from lower down)
+  updateGun(dt, t, blind = false) {
     const g = this.game, c = this.ctrl, w = this.w;
     if (!(c.fire || this.activeOn) || this.fireCD > 0) return;   // her special fires by itself: just point (DESIGN「必杀」)
-    if (this.ammo <= 0 && !this.gatling) { sfx.empty(); this.startReload(1); return; }
-    this.fireCD += this.gatling ? this.a.rate : w.rate;
+    // riding (src/battle/ride.js): no reloading, and her ride mode (characters/<id>.json ride: the gunner's rotary gun, the cat's rapid spell)
+    const RM = g.riding ? this.c.ride || {} : null, rot = this.gatling || RM?.gatling;
+    if (this.ammo <= 0 && !rot && !RM) { sfx.empty(); this.startReload(1); return; }
+    this.fireCD += rot ? this.a.rate : w.rate * (RM?.rate ?? 1);
     if (this.fireCD < 0) this.fireCD = 0;
-    if (!this.gatling) this.ammo--;
+    if (!rot && !RM) this.ammo--;
     this.shots++;
     this.fever.shot();
-    const sp = this.H * w.spread * (this.gatling ? PL().gatlingSpread : 1);
+    const sp = this.H * (blind ? PL().blind.spread : w.spread * (rot ? PL().gatlingSpread : 1));
     const sx = this.aimX + rnd(-sp, sp), sy = this.aimY + rnd(-sp, sp);
+    this.dmgMul = blind ? PL().blind.dmg : 1;
     const res = g.shoot(this, sx, sy);
+    this.dmgMul = 1;
     if (res.n) this.hits++;
     this.recoilT = PL().recoilPose;
-    const mz = this.muzzlePos();
+    const mz = this.muzzlePos(); if (blind && !this.hero?.poses.blind) mz.y -= this.H * 0.07;   // (over the top of the cover, until she has her own picture for it)
     if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit);   // each syllable its own colour and its own way in / out (glyphs.js)
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
     this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
     if (res.n) this.muzzle.hit(sx, g.H - sy, res.crit);
     this.kick = 1;
-    if (this.hero) this.hero.shoot(this.gatling);
-    else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (this.gatling ? 0.7 : 1)); // fast guns: many small bounces
+    if (this.hero) this.hero.shoot(rot);
+    else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (rot ? 0.7 : 1)); // fast guns: many small bounces
     const pan = (this.aimX / g.W - 0.5) * 0.6;
     // every shot its toy gun's short sound (user 2026-10-19: like an old game, again and again; her one-syllable voice over it went:
     // single syllables sound strange, batch 23)
@@ -340,6 +356,7 @@ export class Player {
     this.muzzle.sustain(mz.x, mz.y);
     const B = T.combat.beam, width = g.H * B.width;
     if (this.beam) this.beam.set(mz.x, mz.y, this.aimX, g.H - this.aimY, width, t);
+    if (this.beam3d) this.beam3d.set(mz.x, mz.y, this.aimX, g.H - this.aimY, width, t);
     this.kick = 0.6;
     this.beamTick -= dt;
     if (this.beamTick > 0) return;

@@ -20,6 +20,8 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 DECAL = ROOT / "art" / "ref" / "cat_seal_decal.png"
 PLACE = ROOT / "art" / "seal_placements.json"
 OUT = ROOT / "public" / "content" / "base" / "assets"
+sys.path[:0] = [str(ROOT / "tools")]
+import packs  # noqa: E402   (where content lives: the base pack or a chapter's level pack, docs/TECH.md「关卡包」)
 RING_CENTER = (134, 145)   # ring centre inside the decal (px)
 RING_D = 195               # ring diameter inside the decal (px)
 
@@ -166,10 +168,10 @@ def run(name, p, preview=None):
         fixed.save(ROOT / p["png"])
     else:
         out = fixed if p.get("keep_frame") else fixed.crop(fixed.getbbox())   # keep_frame: layers placed 1:1 on a mockup
-        mp = OUT / "manifest.json"; man = json.loads(mp.read_text())
-        out.save(OUT / "ui" / f"{p['out']}.webp", quality=92, method=6)
+        man = packs.manifest(); d = man.dir(f"ui/{p['out']}") / "assets"
+        out.save(d / "ui" / f"{p['out']}.webp", quality=92, method=6)
         man[f"ui/{p['out']}"] = {**man.get(f"ui/{p['out']}", {}), "src": f"assets/ui/{p['out']}.webp", "w": out.width, "h": out.height, "dom": True, "seal": "canonical"}
-        mp.write_text(json.dumps(man, indent=1, sort_keys=True))
+        man.save()
     print(name, "ok")
 
 
