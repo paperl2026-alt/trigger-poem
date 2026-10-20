@@ -1043,5 +1043,53 @@
     ],
     "keep_frame": true,
     "png": "art/raw/r64/fixed/down_cat_a.png"
+  },
+  "jig_cat_ride": {
+    "src": "art/raw/r69/cat_ride_fire_b.png",
+    "auto": true,
+    "png": "public/jiggle/cat_ride.png",
+    "keep_frame": true
+  },
+  "jig_cat_run": {
+    "src": "art/raw/r69/cat_run_fire_a.png",
+    "auto": true,
+    "png": "public/jiggle/cat_run.png",
+    "keep_frame": true
+  },
+  "jig_cat_scopec": {
+    "src": "art/raw/r69/cat_scope_cover_a.png",
+    "center": [
+      792,
+      760
+    ],
+    "ring": 60,
+    "rot": -30,
+    "squash": 0.75,
+    "erase": [
+      745,
+      728,
+      835,
+      800
+    ],
+    "png": "public/jiggle/cat_scopec.png",
+    "keep_frame": true
+  },
+  "jig_cat_scope": {
+    "src": "art/raw/r69/cat_scope_fire_b.png",
+    "auto": true,
+    "png": "public/jiggle/cat_scope.png",
+    "keep_frame": true
+  },
+  "jig_cat_blind": {
+    "src": "art/raw/r68/cat_blind_a.png",
+    "auto": true,
+    "png": "public/jiggle/cat_blind.png",
+    "keep_frame": true
+  },
+  "jig_cat_aerial": {
+    "src": "art/raw/r71/cat_aerial_mid_a.png",
+    "auto": true,
+    "png": "public/jiggle/cat_aerial.png",
+    "keep_frame": true
   }
 }

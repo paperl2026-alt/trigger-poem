@@ -22,14 +22,17 @@ BASE = ("Reference image 1 is this heroine's approved battle picture in this gam
         "this girl (face, hair, every piece of her outfit, her weapon) in EXACTLY the same painting style, line work and colouring as "
         "reference image 1. A full-body picture of her seen FROM BEHIND, slightly from the side, the way the camera of a third-person "
         "shooter sees its heroine (like reference image 1), her whole body inside the picture with a margin, on a fully transparent "
-        "background: no floor, no shadow, no vehicle, no wall or cover drawn, no other people, no text, no letters, no numbers. A NEW "
-        "pose, not the one in reference image 1: ")
+        "background: no floor, no shadow, no vehicle, no wall or cover drawn, no other people, no text, no letters, no numbers. Modest, "
+        "wholesome, all-ages game art: her clothes cover her fully, nothing revealing, the camera at her shoulder height, never looking "
+        "up under her skirt or coat. A NEW pose, not the one in reference image 1: ")
 WHO = {
     "cat": dict(refs=["public/jiggle/cat_fire.png", "art/ref/cat_sheet.png"],
                 note=" She is the cat girl: white bob hair with cat ears and red ribbons, a white sailor-collar kimono top with wide sleeves, "
                      "a dark pleated skirt with a red obi, a long white tail, black platform geta with red cords. Her RIGHT arm is the huge "
                      "white furry cat paw with red claws (her weapon: she fires spells from its palm), the red seal on the back of the paw; "
-                     "her left hand is a normal hand.",
+                     "her left hand is a normal hand. Her long fluffy white tail looks exactly as in reference image 1: it shows below the "
+                     "side edge of her pleated skirt, the skirt hanging over its upper end like a curtain, and it sweeps away from her in "
+                     "a long soft curve.",
                 act={"ride_fire": "standing braced with her feet wide apart as if on a speeding cart, leaning forward into a strong "
                                   "headwind, hair, ears, wide sleeves, skirt and tail all blown straight back, her RIGHT cat paw thrust "
                                   "far forward with its palm open, her LEFT hand pressed against the back of the paw to steady it, "

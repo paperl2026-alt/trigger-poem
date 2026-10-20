@@ -7,6 +7,7 @@
 //   sfx: <sound key or synth sound>, shake: n, flash: [strength, '#hex'], impact: seconds, burst: [dur, [styles], beat, '#hexA', '#hexB']
 //   hint: <ui text key>, music: <name> | null (stops it)
 //   mv: { wall, slam, sub, popups: [...], label, tunnel, phone: [left, right], overdrive }   the MV director (mv.js)
+//   vfx: <preset> | { name, at: [x, y, z], scale }   an effect (tuning/vfx.json: a wall bursting, an explosion, a blast of magic...)
 //   act: <kind> + its fields (ritual / summon / sacrifice / squabble / transform: acts.js)
 //   spawn: [wave entries], turn, mutate, gimmick, collapse, spawner, wake          the old wave events (Game.waveEvent)
 //   swap: { <board>: <board> }, fire: [gimmick ids]
@@ -38,6 +39,7 @@ export class Cues {
     if (c.hint) g.hint(c.hint);
     if (c.say) this.say(c);
     if (c.mv) g.mv.play(c.mv);
+    if (c.vfx) { const V = typeof c.vfx === 'string' ? { name: c.vfx } : c.vfx; g.vfx.play(V.name, V.at ? v3(V.at) : g.world.lookAt.clone(), { scale: V.scale }); }
     if (c.act) g.acts.start(c);
     if (c.swap) for (const [from, to] of Object.entries(c.swap)) g.world.swapBoard?.(from, to);
     if (c.fire) for (const id of c.fire) g.actors.find((a) => a.g?.id === id && !a.spent)?.fire();

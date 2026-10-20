@@ -126,7 +126,7 @@ export class Acts {
         if (d > 0.4) { P.x += (goal.x - P.x) / d * sp * dt; P.z += (goal.z - P.z) / d * sp * dt; return true; }
         // there: it blows up, the wall gets a hole right through, a cover goes to pieces
         const at = m.center(); m.alive = false; m.dispose();
-        G.fx.confetti(at, 40, 3, [COL.hot, COL.ember, COL.bone]); G.fx.shockRing(at, 3, 0xff6a3a, 0.5); G.post.shake(1.6); G.post.flash(0.5, 0xffa060); sfx.slam(); sound('woodBreak', { pos: at });
+        G.fx.confetti(at, 40, 3, [COL.hot, COL.ember, COL.bone]); G.vfx.play('explosion', at);
         if (cov) w.breakCover?.(cov);
         else w.addHole?.(side < 0 ? 'left' : 'right', new THREE.Vector3(goal.x, 1.1, goal.z), 2.4, true);
         w.phys?.chipsAt(at, new THREE.Vector3(0, 1, 0), 12, [COL.bone, 0x9a8070, 0x6a5a50], 1.2);
@@ -171,7 +171,7 @@ export class Acts {
           if (t > (e.t ?? 1.2) + 1.6) {
             phase = 2; const P = q.m.position.clone();
             G.fx.ink(P.clone().setY(0.6), 30, 2.5, COL.violet); G.fx.confetti(P.clone().setY(0.6), 30, 2, [COL.violet, COL.hot]); G.post.styleBurst(0.6, [3, 1], 0.12, 0x200018, 0xb04dff); G.post.shake(1); sfx.tear(0);
-            q.m.visible = false; q.sh.visible = false; if (q.body) { w.phys.remove(q.body); q.body = null; } q.broken = true;
+            q.m.visible = false; q.sh.visible = false; if (q.body) { w.phys?.remove(q.body); q.body = null; } q.broken = true;
             this.spawn(e.of, P.x, P.z); return false;
           }
         }

@@ -108,6 +108,64 @@ void main(){
   gl_FragColor = vec4(c, t.a * a);
 }`;
 
+
+// the reticle, drawn (docs/DESIGN.md「准星精简」, user 2026-10-20: the pictures were too big and hid what she aimed at): four corner
+// brackets and a dot - almost nothing in the middle - with her ears on top (the cat girl's cat ears, the gun girl's bunny ears); over
+// something she can hit it closes in to a small square (the gun girl) or triangle (the cat girl). Drawn twice: a dark outline, then the
+// line itself inverting what is behind it (RET_INV: always the strongest contrast).
+const RETV_FRAG = `
+uniform float shape; uniform float ears; uniform float thick; uniform float corner; uniform float rot; uniform float a; uniform vec3 col;
+uniform float grow; uniform float dotR; uniform float ring; uniform float dash; uniform float time; uniform float earK;
+uniform sampler2D map; uniform float useMap;
+varying vec2 vUv;
+float seg(vec2 p, vec2 a, vec2 b){ vec2 pa = p - a, ba = b - a; float h = clamp(dot(pa, ba) / dot(ba, ba), 0.0, 1.0); return length(pa - ba * h); }
+float ell(vec2 p, vec2 c, vec2 r){ vec2 q = (p - c) / r; return abs(length(q) - 1.0) * min(r.x, r.y); }
+void main(){
+  vec2 p0 = (vUv - 0.5) * 2.0;
+  float c = cos(rot), s = sin(rot); vec2 p = mat2(c, -s, s, c) * p0;
+  float R = 0.5, d = 1e3;
+  if (useMap > 0.5) {
+    // the picture's lines (its alpha), turned with it; the dark edge: the alpha spread out by grow (uv)
+    vec2 uv = p * 0.5 + 0.5; float al = texture2D(map, uv).a;
+    if (grow > 0.0) for (int i = 0; i < 12; i++) { float an = float(i) * 0.5236; al = max(al, texture2D(map, uv + vec2(cos(an), sin(an)) * grow).a); }
+    if (ring > 0.0) { float rr = abs(length(p0) - 0.86), an = atan(p0.y, p0.x) + time * 2.0; float w = 0.012 + grow * 2.0;
+      if (dash < 0.5 || fract(an / 6.2832 * 14.0) < 0.55) al = max(al, (1.0 - smoothstep(w, w + 0.02, rr)) * ring); }
+    if (al * a < 0.004) discard;
+    gl_FragColor = vec4(col * al * a, al * a); return;
+  }
+  if (shape < 0.5) {
+    for (int i = 0; i < 4; i++) {
+      vec2 sg = vec2((i == 0 || i == 3) ? -1.0 : 1.0, i < 2 ? 1.0 : -1.0), cn = sg * R;
+      d = min(d, seg(p, cn, cn - vec2(sg.x * corner * R, 0.0)));
+      d = min(d, seg(p, cn, cn - vec2(0.0, sg.y * corner * R)));
+    }
+  } else {
+    vec2 v0 = vec2(0.0, R * 1.1), v1 = vec2(-R * 0.98, -R * 0.62), v2 = vec2(R * 0.98, -R * 0.62);
+    float k = corner * 0.5;
+    d = min(d, seg(p, v0, mix(v0, v1, k))); d = min(d, seg(p, v0, mix(v0, v2, k)));
+    d = min(d, seg(p, v1, mix(v1, v0, k))); d = min(d, seg(p, v1, mix(v1, v2, k)));
+    d = min(d, seg(p, v2, mix(v2, v0, k))); d = min(d, seg(p, v2, mix(v2, v1, k)));
+  }
+  d = min(d, max(length(p0) - dotR, 0.0));
+  if (ring > 0.0) {   // reload / Fever / special: a dashed ring round it, turning
+    float rr = abs(length(p0) - 0.78), an = atan(p0.y, p0.x) + time * 2.0;
+    if (dash < 0.5 || fract(an / 6.2832 * 12.0) < 0.55) d = min(d, rr + (1.0 - ring) * 0.2);
+  }
+  // her ears on top of it (not turning with it)
+  vec2 q = p0 - vec2(0.0, R * (1.0 + 0.04 * earK));
+  if (ears > 0.5 && ears < 1.5) {
+    d = min(d, seg(q, vec2(-0.36, 0.02), vec2(-0.28, 0.26))); d = min(d, seg(q, vec2(-0.28, 0.26), vec2(-0.14, 0.04)));
+    d = min(d, seg(q, vec2(0.36, 0.02), vec2(0.28, 0.26)));  d = min(d, seg(q, vec2(0.28, 0.26), vec2(0.14, 0.04)));
+  } else if (ears > 1.5) {
+    float tilt = 0.12 * sin(time * 2.0) * earK;
+    d = min(d, ell(q, vec2(-0.16 - tilt, 0.24), vec2(0.07, 0.22)));
+    d = min(d, ell(q, vec2(0.16 + tilt * 0.6, 0.26), vec2(0.07, 0.24)));
+  }
+  float w = thick + grow;
+  float al = 1.0 - smoothstep(w, w + 0.025, d);
+  if (al * a < 0.004) discard;
+  gl_FragColor = vec4(col * al * a, al * a);
+}`;
 const quad = new THREE.PlaneGeometry(1, 1);
 const RED = new THREE.Color('#d8141e'), WHITE = new THREE.Color(1, 1, 1);
 
@@ -446,6 +504,10 @@ class Top {
     this.lastR = r;
     this.put(this.mul, 'mul', `×${p1.fever.dmgMul.toFixed(1)}`);
     this.layer.position.x += Math.sin(t * 60) * this.pop * L.s * 4;
+    // the shot moves the strip up (tuning/shots.json hud.mid, share of the screen height; the corner panels never move)
+    const dy = (g.live?.mid || 0) * L.H;
+    if (dy) for (const m of [this.layer, this.stage.m, this.combo.m, this.comboL.m, this.rank.m, this.mul.m]) m.position.y += dy;
+    this.hud.midDY = dy;
   }
 }
 
@@ -473,7 +535,7 @@ class Dodge {
     const h = (b[3] - b[1]) * L.s, w = h * img.width / img.height;
     const u = this.m.material.uniforms; u.map.value = tx;
     this.m.scale.set(w, h * (0.5 + 0.5 * this.on), 1);
-    this.m.position.set(L.x((b[0] + b[2]) / 2, an), L.y((b[1] + b[3]) / 2, an), 0); this.m.rotation.z = 0;
+    this.m.position.set(L.x((b[0] + b[2]) / 2, an), L.y((b[1] + b[3]) / 2, an) + (this.hud.midDY || 0), 0); this.m.rotation.z = 0;
     // each sign switches on like an LED panel: a few flickers, then steady
     const fl = this.k < 0.14 && Math.floor(this.k * 50) % 2 ? 0.25 : 1;
     u.a.value = this.on * fl; u.boil.value = 0; u.shine.value = 0; u.time.value = t; u.flash.value = this.k < 0.05 ? 0.5 : 0;
@@ -486,9 +548,18 @@ class Reticle {
   constructor(hud, p) {
     this.hud = hud; this.p = p;
     this.set = hud.B.reticle[p.w.kind === 'mantra' ? 'cat' : 'pink'];   // by who she is, not by which side she stands on
-    this.mk = () => { const u = { map: { value: null }, a: { value: 1 }, rin: { value: 0 }, rout: { value: 0 }, split: { value: 0.22 }, flash: { value: 0 }, time: { value: 0 } };
-      const m = new THREE.Mesh(quad, mat(RET_FRAG, u)); m.renderOrder = 70 + p.slot; m.frustumCulled = false; hud.g.add(m); return m; };
-    this.cur = this.mk(); this.old = this.mk(); this.old.visible = false;
+    this.cat = p.w.kind === 'mantra';
+    // the drawn reticle (RETV_FRAG): the dark outline under, the line itself over (inverting what is behind it)
+    const U = this.U = { shape: { value: 0 }, ears: { value: this.cat ? 1 : 2 }, thick: { value: 0.03 }, corner: { value: 0.38 }, rot: { value: 0 }, a: { value: 1 },
+      col: { value: new THREE.Color(1, 1, 1) }, grow: { value: 0 }, dotR: { value: 0.03 }, ring: { value: 0 }, dash: { value: 1 }, time: { value: 0 }, earK: { value: 0 },
+      map: { value: null }, useMap: { value: 0 } };
+    const UO = this.UO = { ...U, col: { value: new THREE.Color(0.04, 0.02, 0.06) }, grow: { value: 0.035 }, a: { value: 0.7 }, ears: { value: 0 } };
+    U.ears.value = 0;   // (her ears come from her drawn reticle, R70: the ones drawn by the script sat wrong - user 2026-10-20)
+    this.who = this.cat ? 'cat' : 'pink';
+    this.under = new THREE.Mesh(quad, mat(RETV_FRAG, UO)); this.under.renderOrder = 69.9 + p.slot; this.under.frustumCulled = false; hud.g.add(this.under);
+    this.cur = new THREE.Mesh(quad, mat(RETV_FRAG, U, { blending: THREE.CustomBlending, blendEquation: THREE.AddEquation, blendSrc: THREE.OneMinusDstColorFactor, blendDst: THREE.OneMinusSrcAlphaFactor }));
+    this.cur.renderOrder = 70 + p.slot; this.cur.frustumCulled = false; hud.g.add(this.cur);
+    this.old = this.cur; this.sz = 1; this.shp = 0; this.rot = 0;
     this.state = ''; this.k = 1; this.spin = 0; this.kick = 0;
     // the locked form's leader line and name tag
     this.line = new THREE.Mesh(quad, new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, depthTest: false, depthWrite: false }));
@@ -507,39 +578,48 @@ class Reticle {
     // in a fight
     const human = ct && ct.kind !== 'ai';
     const vis = ct && ct.active && p.state !== 'away' && (g.combat || human);
-    for (const m of [this.cur, this.old, this.line, this.lineB, this.tag, this.name.m, this.ghost]) m.visible = false;
+    for (const m of [this.cur, this.under, this.line, this.lineB, this.tag, this.name.m, this.ghost]) m.visible = false;
     if (!vis) return;
     // the monster under her aim, if any
     const over = g.actors.find((a) => { if (!a.alive || !a.hitMeshes || !a.hitMeshes().length || !a.def) return false; const b = g.box(a); return p.aimX > b.x0 && p.aimX < b.x1 && p.aimY > b.y0 && p.aimY < b.y1; });
     const inf = p.gatling || p.beaming;
     const st = !g.combat || p.state === 'down' || p.state === 'run' ? 'cover' : p.activeOn ? 'special' : p.state === 'reload' ? 'reload' : (p.ammo <= 0 && !inf) ? 'empty'
       : p.state === 'cover' || p.state === 'hurt' ? 'cover' : p.fever.full ? 'fever' : over ? 'lock' : 'idle';
-    if (st !== this.state) {   // the old form flies apart, the new one snaps in turning
-      const tmp = this.old; this.old = this.cur; this.cur = tmp;
-      this.oldK = 1; this.k = 0.55; this.state = st;   // the new form is there at once (it only finishes popping in)
-      const key = `ui/ret_${this.set}_${st}`;
-      this.cur.material.uniforms.map.value = tex[key] || tex[`ui/ret_${this.set}_idle`];
-    }
+    if (st !== this.state) { this.k = (st === 'lock') !== (this.state === 'lock') ? 0 : 0.4; this.state = st; }
     if ((p.shots || 0) !== this.lastShots) { this.kick = 1; this.lastShots = p.shots || 0; }
     this.kick = Math.max(0, this.kick - dt * 9);
-    this.k = Math.min(1, this.k + dt * 9); this.oldK = Math.max(0, (this.oldK || 0) - dt * 7);
-    const size = H * this.hud.B.reticle.size * (st === 'special' ? 1.5 : st === 'fever' ? 1.25 : st === 'cover' ? 0.7 : 1);
-    // motion per state: slow drift, locked = tight fast counter-spin, firing = kicks out, reload = a steady turn, special = a whirl
-    const sp = { idle: [0.3, -0.5], lock: [2.2, -3.4], fire: [0.6, -0.6], reload: [3.5, 0], cover: [0.15, -0.15], empty: [0, 0], fever: [1.4, -2.4], special: [5, -7] }[st];
-    this.spin += dt;
+    this.k = Math.min(1, this.k + dt * 8);
+    // the form per state (DESIGN「准星精简」): small and open; over something she can hit: closes in fast to a smaller square (the gun girl)
+    // or triangle (the cat girl); reload: a dashed ring turning, a slow turn; empty: red, wide open, shaking; Fever: gold, a ring; her
+    // special: her colour, a ring, spinning; in cover: faint
+    const F = { idle: [1, 0, 0.36, 0], lock: [tex[`ui/retv_${this.cat ? 'cat' : 'pink'}_lock`] ? 1 : 0.55, this.cat ? 1 : 0, 0.5, 0], reload: [0.9, 0, 0.3, 1], empty: [1.15, 0, 0.22, 0], cover: [0.8, 0, 0.3, 0],
+      fever: [0.85, this.cat ? 1 : 0, 0.45, 1], special: [1.1, this.cat ? 1 : 0, 0.5, 1] }[st] || [1, 0, 0.36, 0];
+    const e = Math.min(1, dt * (st === 'lock' ? 22 : 12));   // (closing in on a target is fast)
+    this.sz += (F[0] - this.sz) * e; this.shp = F[1]; this.U.corner.value += (F[2] - this.U.corner.value) * e;
+    this.U.ring.value += (F[3] - this.U.ring.value) * e;
+    this.rot += dt * (st === 'special' ? 5 : st === 'reload' ? 1.6 : st === 'lock' && !this.cat ? 0 : 0.15);
+    const size = H * (this.hud.B.reticle.drawn ?? 0.07) * this.sz * (1 + this.kick * 0.1) * (1 + (1 - this.k) * 0.3);
     // where it is: her aim this very frame (the slow beam aim of the cat girl's special is drawn there, and her pointer gets a dot)
-    const x = p.aimX, y = H - p.aimY, pop = 1 + (1 - this.k) * 0.6 * (1 - this.k);
+    const x = p.aimX, y = H - p.aimY;
     if (p.beaming && human) { this.ghost.visible = true; this.ghost.position.set(ct.x, H - ct.y, 0); this.ghost.scale.setScalar(H * 0.018); }
-    const U = this.cur.material.uniforms;
-    U.rin.value = this.spin * sp[1]; U.rout.value = this.spin * sp[0] + (1 - this.k) * 1.2; U.time.value = t;
-    U.a.value = Math.min(1, 0.4 + this.k) * (st === 'cover' ? 0.75 : 1); U.flash.value = this.kick * 0.35;
-    this.cur.visible = !!U.map.value;
-    const shake = st === 'empty' ? Math.sin(t * 50) * H * 0.004 : 0;
-    this.cur.position.set(x + shake, y, 0); this.cur.scale.setScalar(size * pop * (1 + this.kick * 0.12));
-    if (this.oldK > 0 && this.old.material.uniforms.map.value) {
-      this.old.visible = true; const O = this.old.material.uniforms; O.a.value = this.oldK; this.old.position.set(x, y, 0);
-      this.old.scale.setScalar(size * (1 + (1 - this.oldK) * 0.8)); O.rout.value += dt * 6;
-    }
+    const U = this.U, shake = st === 'empty' ? Math.sin(t * 50) * H * 0.004 : 0;
+    U.shape.value = this.shp; U.rot.value = st === 'lock' ? 0 : this.rot; U.time.value = t; U.earK.value = st === 'lock' ? 0 : 1;
+    U.col.value.set(st === 'empty' ? 0xff3040 : st === 'fever' ? 0xffd040 : st === 'special' ? p.c.color : 0xffffff);
+    if (st === 'lock' || st === 'idle') U.col.value.setRGB(1, 1, 1);   // (white through the inverting blend: the reverse of what is behind)
+    U.a.value = (st === 'cover' ? 0.5 : 1) * (st === 'empty' && Math.sin(t * 18) < -0.3 ? 0.4 : 1);
+    U.thick.value = st === 'lock' ? 0.045 : 0.032; U.dotR.value = st === 'lock' ? 0.02 : 0.035;
+    const art = tex[`ui/retv_${this.who}_${st === 'lock' ? 'lock' : 'idle'}`];
+    U.map.value = art || null; U.useMap.value = art ? 1 : 0;
+    if (art) { U.shape.value = 0; U.rot.value = st === 'reload' || st === 'special' ? this.rot : 0; }
+    for (const k of ['shape', 'rot', 'time', 'earK', 'thick', 'dotR', 'corner', 'ring', 'dash', 'map', 'useMap']) this.UO[k].value = U[k].value;
+    this.UO.grow.value = art ? 0.012 : 0.035; U.grow.value = 0;
+    this.UO.a.value = 0.7 * U.a.value;
+    // (colours other than white show as themselves: the inverting blend only for the white forms)
+    this.cur.material.blending = U.col.value.r + U.col.value.g + U.col.value.b > 2.9 ? THREE.CustomBlending : THREE.NormalBlending;
+    // (her picture: the frame spans 46% of it - drawn bigger to match; the form it changes to pops in big and closes in fast)
+    const fi = meta[`ui/retv_${this.who}_idle`]?.frame || 0.46;   // (one scale for both of her forms: the lock form is drawn smaller)
+    const qs = art ? size * 1.1 / fi * (1 + (1 - this.k) * (1 - this.k) * 0.9) : size * 2.2;
+    for (const m of [this.under, this.cur]) { m.visible = true; m.position.set(x + shake, y, 0); m.scale.setScalar(qs); }
     // locked on: a leader line up and out to a name tag with the monster's name
     this.lockK += ((over && (st === 'lock' || st === 'fever' || st === 'special') ? 1 : 0) - this.lockK) * Math.min(1, dt * 10);
     if (this.lockK > 0.02 && over) {
@@ -794,7 +874,7 @@ export class HudGL {
     this.cineUpdate(dt);
   }
   cineUpdate(dt) {
-    const g = this.game, k = this.cine = this.cine + ((g.cineOn || g.walkOn ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H;
+    const g = this.game, k = this.cine = this.cine + ((g.cineOn || g.walkOn || g.shot?.hud?.show === false ? 1 : 0) - this.cine) * Math.min(1, dt * 5), W = this.L.W, H = this.L.H;
     this.barK = (this.barK || 0) + ((g.cineOn ? 1 : 0) - (this.barK || 0)) * Math.min(1, dt * 5); const bh = H * 0.11 * this.barK;   // (bars: close-ups only)
     this.bars.forEach((m, i) => { m.visible = this.barK > 0.01; m.scale.set(W * 1.02, bh, 1); m.position.set(W / 2, i ? H - bh / 2 : bh / 2, 0); });
     // the words in the bars while a close look has a title

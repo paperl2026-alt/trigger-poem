@@ -136,6 +136,13 @@
     "loreTabs": { "zh": "说明|来历|低语", "en": "ABOUT|ORIGIN|WHISPER", "ja": "説明|由来|囁き" },
     "lossReward": { "zh": "残局报酬", "en": "SCRAP PAY", "ja": "敗走手当" },
     "deathCut": { "zh": "阵亡 {n} 次", "en": "DOWNED ×{n}", "ja": "戦闘不能 {n} 回" },
+    "mvFever": { "zh": "超负荷!!", "en": "OVERDOSE!!", "ja": "オーバードーズ!!" },
+    "mvToxic": {
+      "zh": ["ERROR", "HP 不足", "连接中断…", "救我", "404"],
+      "en": ["ERROR", "HP LOW", "DISCONNECTED", "HELP", "404"],
+      "ja": ["ERROR", "HP 不足", "つながらない…", "たすけて", "404"]
+    },
+    "runBlock": { "zh": "挡路的东西要提前打烂！", "en": "SHOOT WHAT BLOCKS THE WAY!", "ja": "道をふさぐ物は先に壊して!" },
     "rideBlock": { "zh": "挡在轨道上的东西要提前打烂！", "en": "SHOOT WHAT BLOCKS THE TRACK!", "ja": "線路の障害物を先に壊して!" }
   },
   "gameTitle": {

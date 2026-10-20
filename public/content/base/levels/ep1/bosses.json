@@ -1,0 +1,78 @@
+{
+  "_doc": "第 1 话关卡包的 bosses（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "madame": {
+    "beh": "thing",
+    "sprite": "boss/md",
+    "name": { "zh": "腐蜜夫人", "en": "Madame Rotten Honey", "ja": "腐蜜夫人" },
+    "hp": 12000,
+    "stunTime": 1.6,
+    "firstDelay": 1.8,
+    "speed": 1.2,
+    "rest": [1.1, 1.9],
+    "summonRest": 2.6,
+    "zone": { "x": [-3.5, 3.5], "z": [-12, -9] },
+    "stages": [
+      { "at": 1, "h": 4.6, "pattern": ["drift", "volley", "drift", "lunge", "drift", "volley"], "core": [0.55, 0.83, 0.11] },
+      {
+        "at": 0.66,
+        "h": 5.0,
+        "pattern": ["drift", "volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
+        "summon": [{ "type": "ghoul", "from": "pop", "x": -2.4, "z": -5 }, { "type": "ghoul", "from": "pop", "x": 2.4, "z": -5.5 }],
+        "core": [0.5, 0.84, 0.11]
+      },
+      {
+        "at": 0.33,
+        "h": 4.4,
+        "pattern": ["volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
+        "summon": [{ "type": "bat", "x": -2, "y": 2.6, "z": -5 }, { "type": "bat", "x": 0, "y": 3.0, "z": -6 }, { "type": "bat", "x": 2, "y": 2.6, "z": -5 }],
+        "core": [0.5, 0.65, 0.11]
+      }
+    ],
+    "volley": { "shots": [3, 5], "gap": 0.55, "flight": 1.9, "dmg": 14, "projectiles": ["furniture", "cherry", "scoop"] },
+    "lunge": { "windup": 1.8, "time": 0.45, "dmg": 22, "coverDmg": 50, "poise": 120 },
+    "burst": { "windup": 2.6, "dmg": 26 },
+    "summon": [{ "type": "bat", "x": -2, "y": 2.4, "z": -5 }],
+    "texts": {
+      "mutate": { "zh": "她在变!", "en": "SHE IS CHANGING!", "ja": "変わっていく!" },
+      "s2": { "zh": "把孩子还给我", "en": "GIVE ME BACK MY CHILD", "ja": "こどもを かえせ" },
+      "s3": { "zh": "悲恸", "en": "GRIEF", "ja": "悲嘆" }
+    },
+    "ritual": {
+      "items": ["ep1/photo", "ep1/diary", "ep1/coffin"],
+      "lines": ["photo", "diary", "coffin"],
+      "w": 1.6,
+      "near": 1.8,
+      "swing": { "x": [1.8, 2.8], "speed": [0.7, 1.1], "y": [0.72, 0.5, 0.3], "first": [2.5, 5] },
+      "fuse": [4.5, 7.5],
+      "pace": [0.55, 1.6],
+      "guard": { "every": [3.5, 6.5], "time": [2.2, 3.4] },
+      "strike": [{ "dmg": 14, "sfx": "shutter", "flash": true }, { "dmg": 14, "sfx": "tear" }, { "dmg": 10, "sfx": "slam", "all": true }],
+      "talkGap": 7,
+      "hint": 9,
+      "rowGap": 2.0,
+      "rowY": 2.0,
+      "_doc": "最后一个形态身边出来照片、日记、小棺材（docs/DESIGN.md 第 1 话 10，src/battle/thing.js ritual / Keepsake）：items 图，lines 打中时她说的台词种类（text/stickers.json bosses.madame），w 宽（米），near 挂在她身前多远；swing 来回晃（x 左右幅度、speed 快慢、y 每件的高度占她身高的比例、first 第一次倒计时）；fuse 每次倒计时秒数，pace 走得忽快忽慢的倍率；guard 隔多久有一件挡到她核心前、挡多久；strike 每件倒计时走完的一击（dmg 伤害，躲也没用，all 打两个人）；talkGap 她两句台词至少隔几秒；她倒下后三件排成一排（rowGap 间距、rowY 高度），按顺序打中飞进她怀里，hint 秒没进展她再说一遍提示"
+    },
+    "coreMul": 1,
+    "tag": "MADAME"
+  },
+  "maggot": {
+    "beh": "worm",
+    "name": { "zh": "蜜蛆", "en": "Honey Maggot", "ja": "蜜蛆" },
+    "worm": {
+      "segments": 18,
+      "radius": 1.05,
+      "spacing": 1.35,
+      "speed": 5.5,
+      "angry": 1.45,
+      "sacHp": 220,
+      "headHp": 1000,
+      "coreMul": 1.0,
+      "attackEvery": [3.2, 5.5],
+      "rear": 1.3,
+      "biteDmg": 22,
+      "spits": 3,
+      "glob": "ooze"
+    }
+  }
+}

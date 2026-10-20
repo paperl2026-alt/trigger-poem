@@ -45,7 +45,7 @@ uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float 
 uniform float seed; uniform float time; uniform vec3 edgeColor;
 uniform vec3 lit; uniform vec3 fogColor; uniform float fogDensity; uniform float useFog;
 uniform sampler2D relief; uniform float reliefOn; uniform float reliefAmt; uniform vec2 reliefTexel; uniform vec2 softSize; uniform vec3 lightL;
-uniform float outlineOn; uniform vec2 mapTexel; uniform vec3 outlineCol;
+uniform float outlineOn; uniform vec2 mapTexel; uniform vec3 outlineCol; uniform float outlineW;
 varying vec2 vUv; varying float vFogDepth;
 ${NOISE_GLSL}
 void main(){
@@ -58,8 +58,8 @@ void main(){
     for (int i = 0; i < 12; i++) {
       float an = float(i) * 0.5236;
       vec2 d = vec2(cos(an), sin(an)) * mapTexel;
-      o = max(o, texture2D(map, vUv + d * 5.0).a);
-      g = max(g, texture2D(map, vUv + d * 12.0).a);
+      o = max(o, texture2D(map, vUv + d * 5.0 * outlineW).a);
+      g = max(g, texture2D(map, vUv + d * 12.0 * outlineW).a);
     }
     float line = smoothstep(0.35, 0.6, o), glow = smoothstep(0.35, 0.6, g) * 0.4;
     float a = max(line, glow) * opacity * outlineOn;
@@ -150,7 +150,7 @@ export function paperMaterial(map, aspect = 1) {
   return new THREE.ShaderMaterial({
     uniforms: {
       map: { value: map }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
-      outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) },
+      outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) }, outlineW: { value: 1 },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
       dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },
       slice: { value: new THREE.Vector3() }, sliceOn: { value: 0 }, aspect: { value: aspect },

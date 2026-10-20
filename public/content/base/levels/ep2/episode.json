@@ -1,0 +1,119 @@
+{
+  "_doc": "第 2 话关卡包的 episodes（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "ep2": {
+    "id": "ep2",
+    "no": 2,
+    "title": { "zh": "第2话　钟楼惊宿", "en": "Ep.2  Bell Tower Inn", "ja": "第2話　時鐘の宿" },
+    "sub": { "zh": "致敬：《クロックタワー》(1995)", "en": "Homage: Clock Tower (1995)", "ja": "オマージュ：クロックタワー (1995)" },
+    "blurb": {
+      "zh": "订房网站上便宜得离谱的周末方案：雾里山城的老民宿「时守屋」，一晚 980 円。两人到了才发现，迎客的只有一张留言条，和柜子里那个拿着剪刀的人偶。",
+      "en": "A weekend deal too cheap to be true: an old inn in a misty mountain town, 980 yen a night. Nobody greets them but a note on the desk, and a doll in a glass case holding a pair of scissors.",
+      "ja": "予約サイトで見つけた格安プラン。霧の山あいの古い宿「時守屋」、一泊980円。出迎えたのは置き手紙と、ガラスケースの中でハサミを持つ人形だけだった。"
+    },
+    "set": "ep2_genkan",
+    "par": 1800,
+    "reward": { "outfits": ["yk"] },
+    "steps": [
+      { "comic": "ep2_open" },
+      { "comic": "ep2_rules" },
+      {
+        "stage": "genkan",
+        "set": "ep2_genkan",
+        "places": ["ep2_genkan", "ep2_kyakushitsu"],
+        "stations": ["gk0", "gk1", "gk2"],
+        "name": { "zh": "玄关", "en": "ENTRANCE HALL", "ja": "玄関" },
+        "thumb": "ui/sel_thumb_ep2_genkan",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "room",
+        "set": "ep2_kyakushitsu",
+        "places": ["ep2_kyakushitsu", "ep2_rouka", "ep2_furo"],
+        "stations": ["ky0", "ky1", "ro0", "ro1", "fu0", "fu1"],
+        "name": { "zh": "客房与浴场", "en": "ROOM AND BATH", "ja": "客室と湯殿" },
+        "thumb": "ui/sel_thumb_ep2_room",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "run",
+        "set": "ep2_rouka",
+        "places": ["ep2_rouka", "ep2_kyakushitsu", "ep2_hiroma"],
+        "stations": ["rc1", "rc2", "kh1"],
+        "name": { "zh": "逃回客房", "en": "BACK TO THE ROOM", "ja": "客室へ逃げろ" },
+        "thumb": "ui/sel_thumb_ep2_run",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "hiroma",
+        "set": "ep2_hiroma",
+        "places": ["ep2_hiroma", "ep2_nakaniwa"],
+        "stations": ["hr0", "hr1", "hr2"],
+        "name": { "zh": "大广间", "en": "BANQUET HALL", "ja": "大広間" },
+        "thumb": "ui/sel_thumb_ep2_hiroma",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "nakaniwa",
+        "set": "ep2_nakaniwa",
+        "places": ["ep2_nakaniwa", "ep2_kura"],
+        "stations": ["nk1", "nk2", "nk3"],
+        "name": { "zh": "雨中渡廊", "en": "RAINY WALKWAY", "ja": "雨の渡り廊下" },
+        "thumb": "ui/sel_thumb_ep2_nakaniwa",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "kura",
+        "set": "ep2_kura",
+        "places": ["ep2_kura", "ep2_chika"],
+        "stations": ["ku1", "ku2", "ku3"],
+        "name": { "zh": "土藏", "en": "STOREHOUSE", "ja": "蔵" },
+        "thumb": "ui/sel_thumb_ep2_kura",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "chika",
+        "set": "ep2_chika",
+        "places": ["ep2_chika", "ep2_shoro"],
+        "stations": ["ch1", "ch2", "ch2b", "ch3", "ch4"],
+        "name": { "zh": "地底", "en": "UNDERGROUND", "ja": "地下" },
+        "thumb": "ui/sel_thumb_ep2_chika",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "shoro",
+        "set": "ep2_shoro",
+        "places": ["ep2_shoro", "ep2_kane"],
+        "stations": ["sh1", "sh2", "sh3"],
+        "name": { "zh": "钟楼竖井", "en": "BELL TOWER SHAFT", "ja": "鐘楼" },
+        "thumb": "ui/sel_thumb_ep2_shoro",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      {
+        "stage": "kane",
+        "set": "ep2_kane",
+        "places": ["ep2_kane"],
+        "stations": ["kn1", "kn2"],
+        "name": { "zh": "时之钟", "en": "THE TIME BELL", "ja": "時の鐘" },
+        "thumb": "ui/sel_thumb_ep2_kane",
+        "she": "she",
+        "kaiko": "kaiko",
+        "shots": ["geta", "scissors", "pins", "crane"]
+      },
+      { "comic": "ep2_end" }
+    ]
+  }
+}

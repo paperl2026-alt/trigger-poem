@@ -8,7 +8,7 @@ const FRAG = `
 uniform sampler2D tDiffuse; uniform float time; uniform float aspect;
 uniform float flash; uniform vec3 flashColor; uniform float chroma; uniform float blur; uniform vec2 center;
 uniform float madness; uniform float hurt; uniform float dim; uniform float grain; uniform float wipe; uniform float warn; uniform vec3 warnColor;
-uniform vec4 edgeA; uniform vec4 edgeB; uniform float impact; uniform float style; uniform vec3 styleA; uniform vec3 styleB; uniform vec2 px;
+uniform vec4 focus; uniform vec4 edgeA; uniform vec4 edgeB; uniform float impact; uniform float style; uniform vec3 styleA; uniform vec3 styleB; uniform vec2 px;
 varying vec2 vUv;
 ${NOISE_GLSL}
 vec3 hueShift(vec3 c, float a){ const vec3 k = vec3(0.57735); float ca = cos(a); return c * ca + cross(k, c) * sin(a) + k * dot(k, c) * (1.0 - ca); }
@@ -31,6 +31,9 @@ void main(){
   // drawn, cut on the beat): 3 glitch (blocks of the picture shoved sideways), 4 pixels (big blocks)
   if (style > 2.5 && style < 3.5) { float row = floor(uv.y * 24.0); float n = hash12(vec2(row, floor(time * 20.0))); if (n > 0.6) uv.x += (n - 0.8) * 0.12; }
   if (style > 3.5 && style < 4.5) { vec2 bs = px * 14.0; uv = (floor(uv / bs) + 0.5) * bs; }
+  // the danger moment: inside the circle round the threat, a little magnified
+  float fin = 0.0;
+  if (focus.w > 0.001) { float fd = length((uv - focus.xy) * vec2(aspect, 1.0)); fin = 1.0 - smoothstep(focus.z, focus.z * 1.35, fd); uv = mix(uv, focus.xy + (uv - focus.xy) * (1.0 - 0.16 * focus.w), fin); }
   vec2 dir = uv - center;
   vec3 c;
   if (blur > 0.001) {
@@ -49,6 +52,14 @@ void main(){
     c = mix(c, hueShift(c, time * 1.3 + r * 6.0), madness * smoothstep(0.15, 0.7, r) * (0.3 + 0.35 * rings));
     float l = dot(c, vec3(0.3, 0.59, 0.11));
     c = mix(vec3(l), c, 1.0 + madness * 0.4);
+  }
+  if (focus.w > 0.001) {
+    // outside it the world goes grey and hard; inside, its colour and a ghost of it (a copy pushed out from the middle)
+    float l = dot(c, vec3(0.3, 0.59, 0.11)); vec3 gr = vec3(smoothstep(0.08, 0.9, l)) * vec3(0.9, 0.93, 1.0);
+    c = mix(c, gr, focus.w * (1.0 - fin) * 0.92);
+    vec3 ghost = texture2D(tDiffuse, uv + (uv - focus.xy) * 0.06).rgb;
+    c = mix(c, max(c, ghost), fin * focus.w * 0.35);
+    c *= 1.0 + fin * focus.w * 0.12;
   }
   // vignette, cover dim, hurt
   float v = smoothstep(0.35, 1.05, r);
@@ -110,7 +121,7 @@ export class Post {
     this.u = {
       tDiffuse: { value: this.rt.texture }, time: { value: 0 }, aspect: { value: 1 },
       flash: { value: 0 }, flashColor: { value: new THREE.Color(1, 1, 1) }, chroma: { value: 0 }, blur: { value: 0 }, center: { value: new THREE.Vector2(0.5, 0.5) },
-      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
+      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, focus: { value: new THREE.Vector4(0, 0, 0, 0) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
       impact: { value: 0 }, style: { value: 0 }, styleA: { value: new THREE.Color(0.12, 0.0, 0.08) }, styleB: { value: new THREE.Color(1.0, 0.45, 0.2) }, px: { value: new THREE.Vector2(0.001, 0.001) },
     };
     this.scene = new THREE.Scene();
@@ -137,6 +148,8 @@ export class Post {
   shake(a) { this.shakeAmt = Math.max(this.shakeAmt, a); }
   // the impact frame for t seconds (its first half hard black and white, the second half inside out)
   impact(t = 0.07) { this.impactT = Math.max(this.impactT, t); this.impactT0 = this.impactT; }
+  // the danger moment (Game.danger): the threat's place on the screen (uv, y up), the circle's radius (screen heights), how strong
+  focus(x, y, r, k) { this.u.focus.value.set(x, y, r, k); }
   kick(chroma = 1, blur = 0) { this.u.chroma.value = Math.max(this.u.chroma.value, chroma); this.u.blur.value = Math.max(this.u.blur.value, blur); }
   update(dt) {
     const u = this.u;

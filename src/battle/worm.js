@@ -118,7 +118,7 @@ export class WormBoss {
   hole(h) {
     const g = this.game, P = h.p;
     if (g.world.addHole) g.world.addHole(h.on === 'end' ? 'end' : h.on, P.clone(), this.def.worm.radius * 3.2);
-    g.fx.confetti(P.clone(), 30, 2.4, [COL.bone, 0x7a5030]); g.fx.puff(P.clone(), 12, 0x8a6a50, 1.6); g.post.shake(1.0);
+    g.fx.confetti(P.clone(), 30, 2.4, [COL.bone, 0x7a5030]); g.vfx.play('breach', P.clone().setY(0.2), { scale: 1.4 });   // (and its hole bursts: panels addHole)
     sound('woodBreak', { pos: P.clone() }) || sfx.slam();
   }
 
@@ -250,6 +250,7 @@ export class WormBoss {
   // ---- the end: it comes apart, every segment falling as a body of its own
   die() {
     const g = this.game; this.alive = false; this.lock?.remove(); this.lock = null;
+    g.cues.run(this.def.cues?.die);   // (bosses.json cues.die)
     sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(2); g.post.styleBurst(1.0, [6, 1, 5, 2], 0.16, 0x200a00, 0xffe0a0);
     const ph = this.phys = g.world.phys, P = this.head.position.clone();
     for (let i = 0; i < 4; i++) g.tweens.wait(i * 0.3, () => g.fx.shockRing(P, 3 + i * 2.5, i % 2 ? 0xffc060 : 0xffffff, 0.8));
@@ -277,6 +278,7 @@ export class WormBoss {
   // ---- what the rest of the game asks of a boss
   intro(then) {
     const g = this.game;
+    g.cues.run(this.def.cues?.intro);   // (bosses.json cues.intro)
     g.cine({ on: { uvToWorld: () => this.head.position }, dist: 3.6, up: -0.6, in: 0.9, hold: 3.2, out: 0.8, lull: true, orbit: 0.7, dolly: 16, title: this.title() }, then);
     sfx.roar(); g.post.shake(1.2);
   }

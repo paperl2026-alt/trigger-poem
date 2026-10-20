@@ -1,0 +1,17 @@
+{
+  "_doc": "关卡包（docs/TECH.md「关卡包」）：一话的流程、场景、漫画、Boss、只有这一话出现的怪和飞行物，和它自己的图（assets/manifest.json，src 相对这个文件夹，key 和本体一样）。格式和 pack.json 一样，本体载入后接着载入；模组 / DLC 也可以带自己的关卡包。",
+  "id": "ep0",
+  "name": { "zh": "第0话　放学后的限定蜜瓜包", "en": "Ep.0  The Limited Melon Bread", "ja": "第0話　放課後の限定メロンパン" },
+  "version": "0.1.0",
+  "order": 1,
+  "requires": ["base"],
+  "data": {
+    "episodes": ["episode.json"],
+    "sets": ["sets.json"],
+    "comics": ["comics.json"],
+    "bosses": ["bosses.json"],
+    "enemies": ["enemies.json"],
+    "projectiles": ["projectiles.json"]
+  },
+  "assets": "assets/manifest.json"
+}

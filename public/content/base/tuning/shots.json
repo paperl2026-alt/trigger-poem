@@ -3,58 +3,79 @@
   "shots": {
     "cover": {
       "players": { "show": true, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
-      "cover": true, "ammo": "mag", "weapon": null,
+      "cover": true,
+      "ammo": "mag",
+      "weapon": null,
       "hud": { "show": true, "mid": 0, "bubbles": true },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 1, "combat": true
+      "mv": 1,
+      "combat": true
     },
     "open": {
       "_": "开阔地：和掩体战一样打，镜头更宽（站点自己写 fov），远景开阔；两人站得开一点",
       "players": { "show": true, "x": [0.24, 0.76], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
-      "cover": true, "ammo": "mag", "weapon": null,
+      "cover": true,
+      "ammo": "mag",
+      "weapon": null,
       "hud": { "show": true, "mid": 0, "bubbles": true },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 1, "combat": true
+      "mv": 1,
+      "combat": true
     },
     "corner": {
       "_": "大房间对着一角：掩体战，镜头斜着看过去",
       "players": { "show": true, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
-      "cover": true, "ammo": "mag", "weapon": null,
+      "cover": true,
+      "ammo": "mag",
+      "weapon": null,
       "hud": { "show": true, "mid": 0, "bubbles": true },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 1, "combat": true
+      "mv": 1,
+      "combat": true
     },
     "ride": {
-      "_": "载具上：一直探身，不装弹，换乘车的攻击模式；两人往中间靠、只露上半身（腿在车里）；没有弹幕气泡（台词走字幕）",
-      "players": { "show": true, "x": [0.31, 0.69], "scale": 0.96, "y": 0, "crop": 0.22, "set": "ride", "out": "always" },
-      "cover": false, "ammo": "infinite", "weapon": "ride",
+      "_": "载具上：一直探身，不装弹，换乘车的攻击模式；两人往中间靠，站在车里（车头画在两人前面，挡住膝盖以下）；没有弹幕气泡（台词走字幕）",
+      "players": { "show": true, "x": [0.31, 0.69], "scale": 0.96, "y": 0, "crop": 0, "set": "ride", "out": "always" },
+      "cover": false,
+      "ammo": "infinite",
+      "weapon": "ride",
       "hud": { "show": true, "mid": 0, "bubbles": false },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 1.3, "combat": true
+      "mv": 1.3,
+      "combat": true
     },
     "run": {
       "_": "自己跑：一直探身，不装弹，边跑边打；镜头推到膝盖以上",
       "players": { "show": true, "x": [0.3, 0.7], "scale": 1.05, "y": 0, "crop": 0.3, "set": "run", "out": "always" },
-      "cover": false, "ammo": "infinite", "weapon": "ride",
+      "cover": false,
+      "ammo": "infinite",
+      "weapon": "ride",
       "hud": { "show": true, "mid": 0, "bubbles": false },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 1.3, "combat": true
+      "mv": 1.3,
+      "combat": true
     },
     "escort": {
-      "_": "远处狙击护卫：望远镜视野（收窄 + 暗角），两人退到画面两边、只露肩膀以上和枪",
-      "players": { "show": true, "x": [0.13, 0.87], "scale": 0.86, "y": 0, "crop": 0.42, "set": "scope", "out": "hold" },
-      "cover": true, "ammo": "mag", "weapon": null,
+      "_": "远处狙击护卫：望远镜视野（收窄 + 圆形镜筒暗角，压在两人下面），两人站在镜筒外两边略靠里、只露上半身和枪；没有掩体（缩下去就是装弹）",
+      "players": { "show": true, "x": [0.2, 0.8], "scale": 0.92, "y": 0, "crop": 0.2, "set": "scope", "out": "hold" },
+      "cover": false,
+      "ammo": "mag",
+      "weapon": null,
       "hud": { "show": true, "mid": 0, "bubbles": false },
       "cam": { "zoom": 20, "lens": 0.7 },
-      "mv": 0.7, "combat": true
+      "mv": 0.7,
+      "combat": true
     },
     "cine": {
       "_": "演出镜头：不打，没有 HUD 和两人，只拍事件（变身、地形变化、机关、转场、进出门）",
       "players": { "show": false, "x": [0.27, 0.73], "scale": 1, "y": 0, "crop": 0, "set": "cover", "out": "hold" },
-      "cover": false, "ammo": "mag", "weapon": null,
+      "cover": false,
+      "ammo": "mag",
+      "weapon": null,
       "hud": { "show": false, "mid": 0, "bubbles": false },
       "cam": { "zoom": 0, "lens": 0 },
-      "mv": 0.6, "combat": false
+      "mv": 0.6,
+      "combat": false
     }
   }
 }

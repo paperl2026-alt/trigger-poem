@@ -17,7 +17,7 @@ def flock(kind, n, ahead, spread=2.2, y=1.6, frm="outside"):
 
 MARKS = [
     {"at": 0, "speed": 3, "say": "scare", "shake": 1.0, "sfx": "roar"},
-    {"at": 3, "speed": 7.5, "hint": "rideBlock"},
+    {"at": 3, "speed": 7.5, "hint": "runBlock"},
     {"at": 8, "spawn": flock("paper", 6, 14)},
     {"at": 20, "block": {"k": "cover/desks", "h": 1.0, "ahead": 20, "x": 0}},
     {"at": 34, "face": "back", "spawn": [{"type": "chair", "ahead": -6, "x": -0.6, "from": "burrow"}, {"type": "shoe", "ahead": -8, "x": 0.6, "from": "burrow"},

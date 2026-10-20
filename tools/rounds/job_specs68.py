@@ -19,14 +19,17 @@ BASE = ("Reference image 1 is this heroine's approved battle picture in this gam
         "this girl (face, hair, every piece of her outfit, her weapon) in EXACTLY the same painting style, line work and colouring as "
         "reference image 1. A full-body picture of her seen FROM BEHIND, slightly from the side, the way the camera of a third-person "
         "cover shooter sees its heroine (like reference image 1), her whole body inside the picture with a margin, on a fully transparent "
-        "background: no floor, no shadow, no cover or wall drawn, no other people, no text, no letters, no numbers. A NEW pose, not "
-        "the one in reference image 1: ")
+        "background: no floor, no shadow, no cover or wall drawn, no other people, no text, no letters, no numbers. Modest, wholesome, "
+        "all-ages game art: her clothes cover her fully, nothing revealing, the camera at her shoulder height, never looking up under "
+        "her skirt or coat. A NEW pose, not the one in reference image 1: ")
 WHO = {
-    "cat": dict(refs=["public/jiggle/cat_fire.png", "art/ref/cat_sheet.png"],
+    "cat": dict(refs=["public/jiggle/cat_fire.png", "art/ref/cat_sheet.png", "art/raw/r69/cat_ride_fire_b.png"],   # (3: her tail drawn right)
                 note=" She is the cat girl: white bob hair with cat ears and red ribbons, a white sailor-collar kimono top with wide sleeves, "
                      "a dark pleated skirt with a red obi, a long white tail, black platform geta with red cords. Her RIGHT arm is the huge "
                      "white furry cat paw with red claws (her weapon: she fires spells from its palm), the red seal on the back of the paw; "
-                     "her left hand is a normal hand.",
+                     "her left hand is a normal hand. Her long fluffy white tail looks exactly as in reference images 1 and 3: it shows below "
+                     "the side edge of her pleated skirt, the skirt hanging over its upper end like a curtain, and it sweeps away from her "
+                     "in a long soft curve.",
                 act={"blind": "crouching very low on both feet, curled up small, eyes squeezed shut, her LEFT hand pressed over the top of "
                               "her head, her RIGHT cat paw thrust straight up and forward above her head, its palm pointing forward over an "
                               "imagined barricade in front of her: firing blind without looking",
@@ -34,12 +37,15 @@ WHO = {
                                  "left (not drawn), the cat paw held up close to her chest ready, looking back over her right shoulder",
                      "sidefire": "leaning out to the RIGHT past the edge of an imagined tall pillar on her left (not drawn), her body tilted "
                                  "sideways, the right cat paw stretched out forward aiming at something far ahead",
-                     "leap": "in mid-air in a big jump forward and up, knees pulled up, kimono sleeves, skirt, hair and tail flying up, the "
-                             "cat paw stretched forward",
+                     "leap": "in mid-air in a big jump forward and up, knees pulled up, kimono sleeves, skirt and hair lifted by the jump, "
+                             "the cat paw stretched forward; her tail sweeps out behind her in a big S-curve from the side edge of the skirt, "
+                             "following the leap",
                      "land": "landing from a jump in a deep crouch, one knee nearly on the ground, her LEFT hand flat on the ground, the cat "
-                             "paw held out to the side for balance, sleeves and skirt still settling",
+                             "paw held out to the side for balance, sleeves and skirt still settling, her tail still swinging out in a curve "
+                             "from the side edge of the skirt",
                      "aerial": "flipping through the air sideways, her body almost horizontal, legs swung up behind her, the cat paw "
-                               "pointing down and forward at something below, her tail curling round"}),
+                               "pointing down and forward at something below; her tail whips round in a wide arc that starts at the side edge "
+                               "of the skirt, like a ribbon trailing the spin"}),
     "pink": dict(refs=["public/jiggle/pink_fire.png", "art/ref/pink_sheet.png"],
                  note=" She is the twin-tail girl with the pink bunny rifle. " + OUTFIT,
                  act={"blind": "crouching very low behind cover, curled up small, eyes squeezed shut, holding her pink rifle with both "

@@ -1,0 +1,47 @@
+{
+  "_doc": "第 0 话关卡包的 episodes（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "ep0": {
+    "id": "ep0",
+    "no": 0,
+    "set": "ep0_classroom",
+    "cover": "ui/sel_card_ep0",
+    "par": 300,
+    "unlocks": ["ep1"],
+    "reward": { "item": "pig" },
+    "title": { "zh": "第0话　放学后的限定蜜瓜包", "en": "Ep.0  The Limited Melon Bread", "ja": "第0話　放課後の限定メロンパン" },
+    "sub": { "zh": "序章 · 教学关", "en": "Prologue · Tutorial", "ja": "序章・チュートリアル" },
+    "blurb": {
+      "zh": "放学前，两个互不认识的女孩各自看着手机和笔记——今天一定要抢到限定的周边和美食！就在这时，学校被不明能量击中，同学和老师接连异化。一个掏出枪，一个变出鬼手，从教室一路净化到操场。",
+      "en": "Just before the bell, two girls who have never met check their phone and their notes: today they must get the limited goods and the limited treat! Then an unknown energy strikes the school, and classmates and teachers turn into something else. One draws a gun, the other a demon hand, and they purify their way from the classroom to the schoolyard.",
+      "ja": "放課後の直前、知らない同士の二人がそれぞれスマホとノートを見て思い出す――今日は限定グッズと限定グルメを絶対に手に入れなきゃ！その時、学校が謎のエネルギーに撃たれ、クラスメイトも先生も次々と異形に。一人は銃を抜き、一人は鬼の手を出し、教室から校庭まで浄化しながら突き進む。"
+    },
+    "steps": [
+      { "comic": "ep0_intro" },
+      {
+        "stage": "classroom",
+        "set": "ep0_classroom",
+        "stations": ["cls1", "cls2"],
+        "name": { "zh": "教室", "en": "CLASSROOM", "ja": "教室" },
+        "thumb": "ui/sel_thumb1"
+      },
+      { "comic": "ep0_mid" },
+      {
+        "stage": "corridor",
+        "set": "ep0_corridor",
+        "stations": ["cor1", "cor2"],
+        "name": { "zh": "走廊", "en": "CORRIDOR", "ja": "廊下" },
+        "thumb": "ui/sel_thumb2"
+      },
+      {
+        "stage": "dash",
+        "set": "ep0_dash",
+        "stations": ["ds1"],
+        "name": { "zh": "冲出教学楼", "en": "RUN FOR IT", "ja": "校舎から脱出" },
+        "thumb": "ui/sel_thumb2"
+      },
+      { "comic": "ep0_boss" },
+      { "boss": "qq", "set": "ep0_yard", "station": "yard", "name": { "zh": "操场", "en": "SCHOOLYARD", "ja": "校庭" }, "thumb": "ui/sel_thumb_boss" },
+      { "comic": "ep0_end" }
+    ]
+  }
+}

@@ -10,6 +10,7 @@ import { picture } from '../ui/glhud.js';
 import { Mantra } from './glyphs.js';
 import { lang } from '../core/i18n.js';
 import { markCanvas } from '../ui/marks.js';
+import { Mark3D } from './marks3d.js';
 // the countdown on a warning's ring: the time left as a red arc running down from the top
 const ARC_FRAG = `
 uniform float p; uniform vec3 col; uniform float a;
@@ -309,6 +310,7 @@ const RINGW_FRAG = `uniform vec3 col; uniform float a; uniform float r0; varying
 void main(){ vec2 q = vUv - 0.5; float d = length(q) * 2.0; float w = 0.08;
   float k = smoothstep(r0 - w, r0, d) * smoothstep(r0 + w * 0.5, r0, d); float inner = smoothstep(r0, 0.0, d) * 0.15;
   gl_FragColor = vec4(mix(col, vec3(1.0), k * 0.6), (k + inner) * a); }`;
+const TV4 = new THREE.Vector3();
 const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3(), TV3 = new THREE.Vector3(), RING_Q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 const markTex = (k) => MT[k] || (MT[k] = (() => { const t = new THREE.CanvasTexture(markCanvas(k)); t.colorSpace = THREE.NoColorSpace; return t; })());
 const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
@@ -666,13 +668,13 @@ export class FX {
   // The hearts and wings are drawn by src/ui/marks.js (the lesson cards use the same drawing). A flying thing gets the small ring; its
   // circle is also where a shot counts (Game.targetsAt). slot: who it is after (0 / 1), -1 = everyone.
   lock(type = 'kill', slot = 0) {
-    const kind = type === 'hide' || type === 'heavy' ? 'hide' : type === 'shot' ? 'shot' : 'kill';
+    const kind = type === 'hide' || type === 'heavy' ? 'hide' : type === 'shot' ? 'shot' : type === 'guard' ? 'guard' : 'kill';
     return this.orbit(kind, slot);
   }
   shotLock(slot) { return this.orbit('shot', slot); }
   orbit(kind, slot) {
     const game = this.game, fx = this, g = new THREE.Group(), hide = kind === 'hide', small = kind === 'shot';
-    const col = new THREE.Color(hide ? 0xb04dff : 0xff2a4a);
+    const col = new THREE.Color(hide ? 0xb04dff : kind === 'guard' ? 0xffd860 : 0xff2a4a);   // (guard: what the girls keep safe, escort.js)
     const U = { col: { value: col }, a: { value: 0 }, time: { value: 0 }, p: { value: 0 }, hide: { value: hide ? 1 : 0 }, tilt: { value: -0.35 }, squash: { value: 0.36 },
       side: { value: 0 }, flare: { value: 0 }, flareA: { value: 0 }, inner3: { value: 0 } };
     const quad = (u, order, depth) => {
@@ -684,11 +686,11 @@ export class FX {
     const back = hide ? new THREE.Group() : null, ringB = hide ? quad({ ...U, side: { value: -1 } }, 0, true) : null;
     if (back) { back.add(ringB); back.visible = false; game.world.scene.add(back); }
     const pic = (t, o, seed) => { const m = picture(null, o, seed); m.material.uniforms.map.value = t; m.visible = true; g.add(m); return m; };
-    const crest = small ? null : pic(markTex(hide ? 'hide' : 'kill'), 42.5, 0.3);
+    const crest = small ? null : pic(markTex(hide ? 'hide' : kind === 'guard' ? 'hideHeart' : 'kill'), 42.5, 0.3);
     // the moons riding the belt (hide): the winged heart first, then two small hearts
     const moons = hide ? [crest, pic(markTex('hideHeart'), 42.6, 0.5), pic(markTex('hideHeart'), 42.6, 0.8)] : [];
     this.overlay().add(g);
-    let born = 0, prevT = null, flareT = 0.5, flareK = 9, R3 = null;
+    let born = 0, prevT = null, flareT = 0.5, flareK = 9, R3 = null, M3 = null;
     const live = this.live, cam = game.world.camera;
     const L = {
       type: kind, slot, p: 0, left: 9, x: 0, y: 0, r: 0,
@@ -715,8 +717,12 @@ export class FX {
           const zv = TV2.set(0, 0, -1).applyQuaternion(cam.quaternion).dot(TV.copy(wc).sub(cam.position));
           kw = 2 * zv * Math.tan(cam.fov * Math.PI / 360) / H;
         }
-        if (R3) R3.g.visible = !!wc;
-        U.inner3.value = R3 && wc ? 1 : 0; ring.visible = !(hide && R3 && wc);
+        // the 3D structure (marks3d.js: the icosahedron cage, the cone and the twisted mucube, the tetrahedron, the graphene shell) takes
+        // the flat ring's place wherever the thing's place in the world is known; the winged heart stays with it
+        if (wc && !M3) { M3 = new Mark3D(game.world.scene, hide ? 'hide' : small ? 'shot' : kind === 'guard' ? 'guard' : 'kill'); L.m3 = M3; }
+        if (M3) { M3.root.visible = !!wc && ck > 0.3; if (wc) M3.set(wc, r * kw * (hide ? 0.8 : 0.9), p, t, hide ? fx.victimAt(slot, TV4) : null, fx.res(), dt); }
+        if (R3) R3.g.visible = !!wc && !M3;
+        U.inner3.value = R3 && wc ? 1 : 0; ring.visible = !(R3 && wc) && !(M3 && wc);
         if (R3 && wc && !hide) R3.set(wc, r * kw, t, p, U.a.value, 0, cam);
         // the winged heart's quad is centred a little above the heart itself (marks.js markCanvas: the heart at 0.593 of its height)
         if (crest && !hide) {
@@ -768,13 +774,29 @@ export class FX {
         live.delete(L);
         if (broken && small) fx.ringPop(L.x, L.y, L.r, col);
         for (const o of [g, back]) if (o) { o.parent && o.parent.remove(o); o.traverse((m) => { if (m.material) m.material.dispose(); }); }
-        ring.geometry.dispose(); ringB?.geometry.dispose(); R3?.dispose();
+        ring.geometry.dispose(); ringB?.geometry.dispose(); R3?.dispose(); M3?.remove();
       },
     };
     live.add(L);
     return L;
   }
   overlay() { return this.game.overlay; }
+  // where a girl is in the world (a blow aimed at her: the hide cone's tip): beside and below the camera, on her side (slot -1: both)
+  victimAt(slot, out) {
+    const cam = this.game.world.camera, side = slot === 1 ? 0.55 : slot === 0 ? -0.55 : 0;
+    return out.set(side, -0.35, -0.7).applyMatrix4(cam.matrixWorld);
+  }
+  res() { return (this.resV || (this.resV = new THREE.Vector2())).set(this.game.W, this.game.H); }
+  // the glint the moment before a blow (docs/DESIGN.md「攻击将至的预警」: like Sekiro's flash): a four-point star where its eyes / its
+  // weapon are, a long streak across it, quick and hard
+  glint(p, color = 0xffffff, size = 1) {
+    const g = this.game, s = g.world.project(p); if (s.z > 1) return;
+    const x = s.x, y = g.H - s.y, h = g.H * 0.09 * size, c = new THREE.Color(color);
+    this.oAdd.emit({ x, y, life: 0.22, size: h * 1.6, size1: h * 0.3, rot: 0, color: [1, 1, 1], a: 1, a1: 0, frame: FR.STAR });
+    this.oAdd.emit({ x, y, life: 0.26, size: h * 2.4, size1: h * 0.6, rot: Math.PI / 4, color: [c.r, c.g, c.b], a: 0.9, a1: 0, frame: FR.STAR });
+    this.oAdd.emit({ x, y, life: 0.2, size: h * 3.2, size1: h * 1.2, rot: 0, color: [c.r, c.g, c.b], a: 0.8, a1: 0, frame: FR.STREAK });
+    this.oAdd.emit({ x, y, life: 0.12, size: h * 0.9, size1: h * 0.2, color: [1, 1, 1], a: 1, a1: 0, frame: FR.GLOW });
+  }
   // a flying thing shot down: its ring bursts outward, white, and fades
   ringPop(x, y, r, col) {
     const U = { col: { value: new THREE.Color(0xffffff) }, a: { value: 1 }, time: { value: 0 }, p: { value: 1 }, hide: { value: 0 }, tilt: { value: 0 }, squash: { value: 1 },

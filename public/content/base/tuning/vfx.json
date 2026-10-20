@@ -1,0 +1,96 @@
+{
+  "_doc": "场景破坏和怪物特效的预设（docs/DESIGN.md「场景破坏和怪物特效」，src/battle/vfx.js）。每个预设由几种成分组合：flash 爆开的闪光（color、size 米、life 秒）；debris 碎块，真刚体（n 块数、size 大小倍数、colors 颜色、k 往外推的力、up 往上的力）；dust 尘土（n 团数、size [最小, 最大] 米、grow 长大到几倍、life [最短, 最长] 秒、color、rise 上升速度、spread 散开多远、a 浓度）；sparks 火星（n、speed、color、life）；embers 余烬（n、color、life、rise）；fire 火舌（n、size、life、color）；ring 地上一圈冲击波（r、color、s 秒）；shake 震屏；flash2d 整屏一闪 [强度, 颜色]；sound 声音；scale 整体大小。怪的大招另有三种成分：stream 从怪喷向两人的火 / 烟 / 泡沫 / 光（kind fire / smoke / foam / glow、n、time 喷多久、speed 米每秒、size、grow 飞到时长大几倍、colors、spread 到两人那头散多宽、a），喷到时才算伤害；veil 喷到后糊在镜头前慢慢散的烟 / 泡沫（n、color、size、life、a、dist 镜头前几米）；circle 蓄力时怪身前画出来的法阵（r 半径米、color、spin 转速），越转越快，出招时一亮炸开，被打断就灭。trail 类（rate 每秒几团、kind fire / smoke / glow / ink、color、size、life、grow、rise、a）给飞行中的东西拖尾。关卡包和模组可以加自己的预设或改某一项；怪物数据里 blast.vfx、飞行物 trail 按名字调用。",
+  "vfx": {
+    "wallBreak": {
+      "flash": { "color": "#ffe0b0", "size": 2.2, "life": 0.16 },
+      "debris": { "n": 16, "size": 1.3, "colors": ["#b8a08c", "#7a6a5c", "#d8c8b0", "#5a4a40"], "k": 2.4, "up": 0.8 },
+      "dust": { "n": 16, "size": [0.5, 1.1], "grow": 2.6, "life": [1.6, 2.8], "color": "#c8baa4", "rise": 0.35, "spread": 1.4, "a": 0.35 },
+      "sparks": { "n": 14, "speed": 6, "color": "#ffc070", "life": 0.45 },
+      "embers": { "n": 6, "color": "#ff9a50", "life": [1.2, 2.2], "rise": 0.9 },
+      "shake": 1.2,
+      "sound": "woodBreak"
+    },
+    "floorBreak": {
+      "flash": { "color": "#ffd8a0", "size": 1.8, "life": 0.14 },
+      "debris": { "n": 18, "size": 1.2, "colors": ["#9a7a5a", "#6a5040", "#c8a880"], "k": 0.4, "up": 2.4 },
+      "dust": { "n": 26, "size": [0.7, 1.6], "grow": 3.0, "life": [2.5, 4.2], "color": "#b8a890", "rise": 0.6, "spread": 2.0, "a": 0.6 },
+      "sparks": { "n": 10, "speed": 5, "color": "#ffb060", "life": 0.4 },
+      "ring": { "r": 3.2, "color": "#ffe8c8", "s": 0.5 },
+      "shake": 1.5,
+      "sound": "woodBreak"
+    },
+    "ceilBreak": {
+      "debris": { "n": 14, "size": 1.1, "colors": ["#a89888", "#6a5a50", "#d0c0a8"], "k": 0.2, "up": -0.5 },
+      "dust": { "n": 12, "size": [0.4, 1.0], "grow": 2.4, "life": [1.6, 2.6], "color": "#c0b4a0", "rise": -0.2, "spread": 1.2, "a": 0.35 },
+      "shake": 0.9,
+      "sound": "woodBreak"
+    },
+    "explosion": {
+      "flash": { "color": "#fff0c0", "size": 2.2, "life": 0.2 },
+      "fire": { "n": 22, "size": 0.9, "life": [0.5, 1.0], "color": "#ff8a30" },
+      "debris": { "n": 14, "size": 1.0, "colors": ["#3a2a20", "#7a5a40", "#c8a070"], "k": 3.0, "up": 1.6 },
+      "dust": { "n": 20, "size": [0.8, 1.6], "grow": 3.2, "life": [2.0, 3.6], "color": "#4a3c34", "rise": 0.8, "spread": 1.6, "a": 0.6 },
+      "sparks": { "n": 26, "speed": 8, "color": "#ffb050", "life": 0.6 },
+      "embers": { "n": 14, "color": "#ff8030", "life": [1.4, 2.6], "rise": 1.4 },
+      "ring": { "r": 3.6, "color": "#ffb070", "s": 0.5 },
+      "shake": 1.6,
+      "flash2d": [0.35, "#ffb070"],
+      "sound": "slam"
+    },
+    "blast": {
+      "flash": { "color": "#ff7ad8", "size": 1.1, "life": 0.2 },
+      "dust": { "n": 8, "size": [0.4, 0.8], "grow": 2.0, "life": [1.2, 2.0], "color": "#ff9ad8", "rise": 0.3, "spread": 1.6, "a": 0.22 },
+      "sparks": { "n": 24, "speed": 7, "color": "#ff70d0", "life": 0.5 },
+      "ring": { "r": 4.0, "color": "#ff70d0", "s": 0.55 }
+    },
+    "fireBreath": {
+      "stream": { "kind": "fire", "n": 80, "time": 0.6, "speed": 10, "size": [0.22, 0.4], "grow": 4.5, "colors": ["#ffd070", "#ff9a40", "#ff6a20"], "spread": 1.0, "a": 0.95, "a1": 0.5 },
+      "flash": { "color": "#ffb060", "size": 1.4, "life": 0.2 },
+      "fire": { "n": 10, "size": 0.5, "life": [0.4, 0.8], "color": "#ff8a30" },
+      "embers": { "n": 18, "color": "#ff8030", "life": [1.2, 2.2], "rise": 1.2 },
+      "flash2d": [0.25, "#ff8a40"],
+      "shake": 1.1,
+      "sound": "slam"
+    },
+    "incenseSmoke": {
+      "stream": { "kind": "smoke", "n": 40, "time": 0.8, "speed": 6, "size": [0.3, 0.5], "grow": 3.5, "colors": ["#8a8098", "#a49ab0", "#6a6078"], "spread": 1.4, "a": 0.6, "a1": 0.45 },
+      "veil": { "n": 14, "color": "#9a90a8", "size": [0.6, 1.1], "life": [3.0, 4.5], "a": 0.3, "dist": [2.0, 3.5] },
+      "embers": { "n": 8, "color": "#ffb070", "life": [1.0, 2.0], "rise": 0.6 },
+      "shake": 0.6
+    },
+    "foamSpray": {
+      "stream": { "kind": "foam", "n": 55, "time": 0.6, "speed": 9, "size": [0.2, 0.35], "grow": 3.2, "colors": ["#ffffff", "#e8f2ff", "#d8e8f8"], "spread": 1.0, "a": 0.85, "a1": 0.55 },
+      "veil": { "n": 12, "color": "#f0f6ff", "size": [0.5, 1.0], "life": [2.4, 3.6], "a": 0.35, "dist": [1.8, 3.2] },
+      "flash": { "color": "#ffffff", "size": 1.0, "life": 0.16 },
+      "shake": 0.8
+    },
+    "darkCharge": { "circle": { "r": 1.0, "color": "#b060ff", "spin": 0.7 } },
+    "darkMagic": {
+      "stream": { "kind": "glow", "n": 45, "time": 0.3, "speed": 14, "size": [0.12, 0.26], "grow": 3.0, "colors": ["#c080ff", "#8a40ff", "#ffffff"], "spread": 1.2, "a": 1 },
+      "flash": { "color": "#b070ff", "size": 1.6, "life": 0.22 },
+      "sparks": { "n": 22, "speed": 7, "color": "#c080ff", "life": 0.5 },
+      "embers": { "n": 14, "color": "#c080ff", "life": [1.0, 2.0], "rise": 1.2 },
+      "flash2d": [0.3, "#a060ff"],
+      "shake": 1.2,
+      "sound": "slam"
+    },
+    "curseCharge": { "circle": { "r": 0.9, "color": "#ff4060", "spin": -0.9 } },
+    "curseMagic": {
+      "stream": { "kind": "glow", "n": 40, "time": 0.3, "speed": 13, "size": [0.12, 0.24], "grow": 3.0, "colors": ["#ff5070", "#ff9ab0", "#ffffff"], "spread": 1.1, "a": 1 },
+      "flash": { "color": "#ff5070", "size": 1.4, "life": 0.2 },
+      "sparks": { "n": 18, "speed": 6, "color": "#ff7090", "life": 0.45 },
+      "flash2d": [0.28, "#ff4060"],
+      "shake": 1.1,
+      "sound": "slam"
+    },
+    "breach": {
+      "debris": { "n": 20, "size": 1.4, "colors": ["#c88a30", "#8a5a20", "#f0c060"], "k": 0.6, "up": 3.0 },
+      "dust": { "n": 22, "size": [0.8, 1.8], "grow": 2.6, "life": [2.0, 3.6], "color": "#d8a860", "rise": 0.7, "spread": 2.2, "a": 0.55 },
+      "shake": 1.3
+    },
+    "fireTrail": { "rate": 40, "kind": "fire", "color": "#ff8a30", "size": [0.12, 0.22], "life": [0.25, 0.45], "grow": 0.4, "rise": 0.8, "a": 0.9 },
+    "smokeTrail": { "rate": 26, "kind": "smoke", "color": "#b8b0a8", "size": [0.12, 0.2], "life": [0.6, 1.0], "grow": 2.6, "rise": 0.3, "a": 0.4 },
+    "glowTrail": { "rate": 30, "kind": "glow", "color": "#ff9ad8", "size": [0.06, 0.12], "life": [0.3, 0.5], "grow": 0.3, "rise": 0.1, "a": 0.9 },
+    "inkTrail": { "rate": 24, "kind": "ink", "color": "#2a1030", "size": [0.08, 0.14], "life": [0.4, 0.7], "grow": 1.2, "rise": -0.2, "a": 0.8 }
+  }
+}

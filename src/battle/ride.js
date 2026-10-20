@@ -9,6 +9,7 @@
 //     x (to the side), y], block: { k, h, ahead, x } (a thing lying across the way), face, speed, say, sfx, shake, burst: [dur, seq] }
 // Numbers: content tuning/combat.json ride.
 import * as THREE from 'three';
+import { tex as TEX, meta as META } from '../core/assets.js';
 import { sfx, sound } from '../core/audio.js';
 import { T } from '../core/content.js';
 import { FR } from '../core/particles.js';
@@ -79,7 +80,7 @@ export class Ride {
       if (!a.alive || !a.def || a.rideChaser) continue;
       V.subVectors(a.root.position, w.camPos); if (V.dot(tg) < -k.behind) { a.alive = false; a.dispose(); }
     }
-    if (this.vehicleG) this.vehicleG.position.y = -0.55 + Math.sin(this.s * 2.3) * 0.012;
+    if (this.vehicleG) this.vehicleG.position.y = this.vehicleY + Math.sin(this.s * 2.3) * 0.012;
     if (this.s >= this.len - 0.01) this.end();
   }
 
@@ -93,11 +94,10 @@ export class Ride {
     if (m.block) this.block(m.block);
     if (m.face) this.face = m.face;
     if (m.speed != null) this.target = m.speed;
-    if (m.say) g.tweens.wait(0.6, () => g.hud.gl.stickers.say(g.players[Math.random() < 0.5 || !g.p2on() ? 0 : 1], m.say, 1));   // (not in the very first frame of a stage: the HUD lays itself out first)
-    if (m.sfx) sound(m.sfx) || sfx[m.sfx]?.(0);
-    if (m.shake) g.post.shake(m.shake);
-    if (m.burst) g.post.styleBurst(...m.burst);
-    if (m.hint) g.hint(m.hint);
+    // the rest of the mark is a director's cue (cues.js: say, sfx, shake, burst, hint, mv, act, cam ...); a line a moment late (not in the
+    // very first frame of a stage: the HUD lays itself out first)
+    const { at: _a, spawn: _s, block: _b, face: _f, speed: _v, done: _d, ...cue } = m;
+    if (cue.say) { const { say, ...rest } = cue; g.cues.run(rest); g.tweens.wait(0.6, () => g.cues.run({ say, who: cue.who, force: true })); } else g.cues.run(cue);
   }
   // a thing lying across the way ahead (a set prop, breakable, a rigid body: src/battle/physics.js): shoot it to bits in time
   block(B) {
@@ -123,9 +123,16 @@ export class Ride {
     x.fillStyle = '#2a1a10'; for (const bx of [24, 488]) x.fillRect(bx - 10, 0, 20, 128);
     x.fillStyle = '#3a3a40'; x.fillRect(0, 0, 512, 10); x.fillRect(0, 118, 512, 10);
     x.fillStyle = '#c8a050'; for (let i = 0; i < 8; i++) { x.beginPath(); x.arc(40 + i * 62, 64, 5, 0, 7); x.fill(); }
-    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
-    const gr = new THREE.Group(), m = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 0.55), new THREE.MeshBasicMaterial({ map: tex, depthTest: false, depthWrite: false, fog: false }));
-    m.renderOrder = 15; gr.add(m); gr.position.set(0, -0.55, -1.05); cam.add(gr); this.vehicleG = gr; this.vehicleTex = tex;
+    // its painted front (station ride.front: a picture key, its manifest "rim" = where its top edge is from the picture's top): as wide
+    // as the view, its rim at RIM of the screen height (the girls' thighs); without one, a plain plank band
+    const art = this.R.front && TEX[this.R.front], RIM = 0.17, D = 1.05;
+    const half = D * Math.tan(THREE.MathUtils.degToRad(w.baseFov / 2)), Wv = 2 * half * cam.aspect * 1.04;
+    const tex = art ? null : new THREE.CanvasTexture(c); if (tex) tex.colorSpace = THREE.SRGBColorSpace;
+    let pw = 2.2, ph = 0.55, y0 = -0.61;
+    if (art) { pw = Wv; ph = Wv * art.image.height / art.image.width; const top = (RIM * 2 - 1) * half + (META[this.R.front]?.rim ?? 0.5) * ph; y0 = top - ph / 2; }
+    const gr = new THREE.Group(), m = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), new THREE.MeshBasicMaterial({ map: art || tex, transparent: !!art, depthTest: false, depthWrite: false, fog: false }));
+    m.renderOrder = 15; gr.add(m); gr.position.set(0, y0, -D); cam.add(gr); this.vehicleG = gr; this.vehicleTex = tex; this.vehicleY = y0;
+    m.layers.set(2);   // (drawn after the girls: they stand IN the cart, its front over their legs - Game.render)
     if (kind === 'cart') {
       // the rails: two thin rods and the sleepers along the path, on the floor
       const pts = []; for (let s = 0; s <= this.len; s += 1) pts.push(s);
@@ -141,7 +148,7 @@ export class Ride {
     this.on = false; g.riding = false; w.rideBank = 0;
     // the ones still on the way are left behind as the cart shoots out (a puff where they were): the stop is over
     for (const a of g.actors) if (a.alive && a.def && !a.boss) { g.fx.puff(a.root.position, 6, 0xd8c8b0, 1); a.alive = false; a.dispose(); }
-    if (this.vehicleG) { this.vehicleG.parent?.remove(this.vehicleG); this.vehicleG.children.forEach((m) => { m.geometry.dispose(); m.material.dispose(); }); this.vehicleTex.dispose(); this.vehicleG = null; }
+    if (this.vehicleG) { this.vehicleG.parent?.remove(this.vehicleG); this.vehicleG.children.forEach((m) => { m.geometry.dispose(); m.material.dispose(); }); this.vehicleTex?.dispose(); this.vehicleG = null; }
     for (const r of this.rails || []) { r.parent?.remove(r); r.geometry.dispose(); r.material.dispose(); } this.rails = null;
     const then = this.then; this.then = null; then && then();
   }

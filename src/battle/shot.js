@@ -7,7 +7,7 @@ import { T, merge } from '../core/content.js';
 
 // a station's preset, its changes laid over it
 export function shotOf(S) {
-  const P = T.shots?.shots || {}, spec = S?.shot;
+  const P = T.shots || {}, spec = S?.shot;   // (tuning/shots.json: its "shots" is T.shots)
   const kind = (typeof spec === 'string' ? spec : spec?.kind) || (S?.ride ? (S.ride.vehicle ? 'ride' : 'run') : S?.escort ? 'escort' : S?.cine ? 'cine' : 'cover');
   let out = P[kind] || P.cover || {};
   if (spec && typeof spec === 'object') { const { kind: _k, ...rest } = spec; out = merge(out, rest); }

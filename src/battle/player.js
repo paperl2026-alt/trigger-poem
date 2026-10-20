@@ -71,15 +71,13 @@ export class Player {
 
   layout(W, H, frame) {
     this.W = W; this.H = H;
-    const Lo = T.layout, D = Lo.heroineDist;
-    const k = 2 * D * Math.tan(THREE.MathUtils.degToRad(this.game.world.baseFov / 2)) / H;
-    this.group.position.set(-W / 2 * k, -H / 2 * k, -D);
-    this.group.scale.set(k, k, k);
+    const Lo = T.layout;
+    this.fovAt = null; this.place();
     // full body on screen like a third-person game: a standing pose is about half the screen tall, feet on the bottom edge.
     // Each girl's body centre sits at 20% / 80% of the HUD frame (ultrawide screens don't fling her to the far edge).
     this.frame = frame;
     this.margin = H * Lo.margin;
-    this.baseX = frame.x + frame.w * Lo.bodyX[this.slot ? 1 : 0];
+    this.baseX = frame.x + frame.w * (this.game.live?.x[this.slot] ?? Lo.bodyX[this.slot ? 1 : 0]);   // (the shot moves it: update)
     this.bottom = H * Lo.bottom;
     const standH = H * Lo.standHeight;
     if (this.hero) this.hero.layout(W, H);
@@ -94,6 +92,16 @@ export class Player {
     }
   }
 
+  // her pixel space on the camera (1 unit = 1 screen px, origin bottom-left) for the view as the shot has it (a scope narrows it: she
+  // must not grow with the world; the quick kicks of the view - a kill's punch, a close look's zoom - leave her where she is)
+  place() {
+    const W = this.W, H = this.H, D = T.layout.heroineDist, fov = this.game.world.baseFov - (this.game.live?.zoom || 0);
+    if (!H || Math.abs(fov - (this.fovAt ?? -99)) < 0.01) return;
+    this.fovAt = fov;
+    const k = 2 * D * Math.tan(THREE.MathUtils.degToRad(fov / 2)) / H;
+    this.group.position.set(-W / 2 * k, -H / 2 * k, -D);
+    this.group.scale.set(k, k, k);
+  }
   setPose(p) {
     if (this.hero) { this.pose = p; return; }   // the heroine shows cover / fire herself (heroine.js)
     const FALLBACK = { runB: 'run', down: 'hurt', peek: 'cover', taunt: 'cover', recoil: 'aim', aimOut: 'aim', active: 'aim', activeOut: 'aimOut' };
@@ -208,7 +216,8 @@ export class Player {
         this.pressT = c.fire ? (this.pressT || 0) + dt : 0;
         const B = PL().blind, press = c.fire && !this.activeOn;
         this.blind = press && (c.hide || (this.state !== 'out' && this.dangerOn() && this.pressT < B.tap));
-        const wantOut = g.riding || ((c.fire || c.wantsOut) && !c.hide && !this.blind);   // (riding: nowhere to hide, always up and shooting)
+        const always = g.shot?.players?.out === 'always';   // (the shot: riding, running - nowhere to hide, always up and shooting)
+        const wantOut = always || ((c.fire || c.wantsOut) && !c.hide && !this.blind);
         if (this.activeOn) {
           // her special (DESIGN「角色性能」): she stays out the whole time, untouchable; letting go or ducking does not end it
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); }
@@ -216,13 +225,13 @@ export class Player {
         } else if (wantOut) {
           if (this.state !== 'out') { this.state = 'out'; sfx.popup(); this.soft.kick(0.8); }
           this.linger = PL().outLinger;
-        } else if (this.state === 'out' && !g.riding) {
+        } else if (this.state === 'out' && !always) {
           this.linger -= dt;
           if (this.linger <= 0 || c.hide) { this.state = 'cover'; this.coverTime = 0; this.soft.kick(0.8); }
         }
         if (this.state === 'cover') {
           this.coverTime += dt;
-          if (this.ammo < this.w.mag && (this.coverTime > PL().autoReloadAfter || this.ammo === 0) && !this.gatling) this.startReload(PL().autoReloadMul);
+          if (this.ammo < this.w.mag && (this.coverTime > PL().autoReloadAfter || this.ammo === 0) && !this.gatling && g.shot?.ammo !== 'infinite') this.startReload(PL().autoReloadMul);
         }
       }
       if (c.skill && this.charge >= 1 && !this.activeOn && this.state !== 'down' && this.state !== 'hurt') this.startActive();
@@ -248,8 +257,13 @@ export class Player {
     this.setPose(pose);
     this.kick = Math.max(0, this.kick - dt * 10);
     this.pop += (1 - this.pop) * Math.min(1, dt * 18);
-    // a close look (Game.cine) or a walk between places with the camera alone: she slides down out of the picture and back
+    // a close look (Game.cine), a walk between places with the camera alone, a shot without the girls: she slides down out of the
+    // picture and back
+    const Lv = g.live;
+    this.place();   // (the scope's narrower view: her size stays)
     this.cineK = (this.cineK || 0) + ((g.cineOn || g.walkOn ? 1 : 0) - (this.cineK || 0)) * Math.min(1, dt * 5);
+    this.cineK = Math.max(this.cineK, Lv ? 1 - Lv.show : 0);
+    if (Lv && this.frame) this.baseX = this.frame.x + this.frame.w * Lv.x[this.slot];
     const out = this.cineK * this.cineK * (3 - 2 * this.cineK) * this.H * 1.05;
     if (this.hero) {
       // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze
@@ -267,9 +281,11 @@ export class Player {
       // eased in and out, she grows about her body line and sinks until her knees sit on the bottom of the screen
       const Wk = T.layout.walk;
       this.walkK = (this.walkK || 0) + ((this.state === 'run' ? 1 : 0) - (this.walkK || 0)) * Math.min(1, dt * Wk.ease);
-      const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = 1 + (Wk.zoom - 1) * wk;
-      const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom);
+      const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = (1 + (Wk.zoom - 1) * wk) * (Lv?.scale ?? 1);
+      // the shot: her size, a rise, and sunk below the bottom edge so only her upper body shows (crop: share of her standing height)
+      const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom) + (Lv ? Lv.crop * this.hero.standH() * zoom - Lv.y * this.H : 0);
       this.hero.setReady(this.charge >= 1 && !this.activeOn && g.combat && this.state !== 'down' && this.state !== 'away');
+      this.hero.setSet(g.shot?.players?.set || 'cover');
       this.hero.update(dt, t, {
         state: this.state, pose: this.pose, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0) - out,
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
@@ -320,12 +336,13 @@ export class Player {
   updateGun(dt, t, blind = false) {
     const g = this.game, c = this.ctrl, w = this.w;
     if (!(c.fire || this.activeOn) || this.fireCD > 0) return;   // her special fires by itself: just point (DESIGN「必杀」)
-    // riding (src/battle/ride.js): no reloading, and her ride mode (characters/<id>.json ride: the gunner's rotary gun, the cat's rapid spell)
-    const RM = g.riding ? this.c.ride || {} : null, rot = this.gatling || RM?.gatling;
-    if (this.ammo <= 0 && !rot && !RM) { sfx.empty(); this.startReload(1); return; }
+    // the shot (tuning/shots.json): its weapon mode (characters/<id>.json modes.<name>: riding - the gunner's rotary gun, the cat's rapid
+    // spell) and endless ammunition
+    const S = g.shot || {}, RM = S.weapon ? this.c.modes?.[S.weapon] || {} : null, rot = this.gatling || RM?.gatling, free = S.ammo === 'infinite';
+    if (this.ammo <= 0 && !rot && !free) { sfx.empty(); this.startReload(1); return; }
     this.fireCD += rot ? this.a.rate : w.rate * (RM?.rate ?? 1);
     if (this.fireCD < 0) this.fireCD = 0;
-    if (!rot && !RM) this.ammo--;
+    if (!rot && !free) this.ammo--;
     this.shots++;
     this.fever.shot();
     const sp = this.H * (blind ? PL().blind.spread : w.spread * (rot ? PL().gatlingSpread : 1));
@@ -336,10 +353,10 @@ export class Player {
     if (res.n) this.hits++;
     this.recoilT = PL().recoilPose;
     const mz = this.muzzlePos(); if (blind && !this.hero?.poses.blind) mz.y -= this.H * 0.07;   // (over the top of the cover, until she has her own picture for it)
-    if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit);   // each syllable its own colour and its own way in / out (glyphs.js)
+    if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, res.crit, res.dist);   // each syllable its own colour and its own way in / out (glyphs.js)
     else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
     this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, res.crit);
-    if (res.n) this.muzzle.hit(sx, g.H - sy, res.crit);
+    if (res.n) this.muzzle.hit(sx, g.H - sy, res.crit, res.at, res.dist);
     this.kick = 1;
     if (this.hero) this.hero.shoot(rot);
     else this.soft.kick(w.kick * Math.max(0.35, Math.min(1, w.rate * 6)) * (rot ? 0.7 : 1)); // fast guns: many small bounces

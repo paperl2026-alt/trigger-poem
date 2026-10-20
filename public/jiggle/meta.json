@@ -38,5 +38,71 @@
   "w": 975,
   "h": 801,
   "canvasH": 1536
+ },
+ "cat_ride": {
+  "src": "r69/cat_ride_fire_b",
+  "w": 1002,
+  "h": 1447,
+  "canvasH": 1536
+ },
+ "cat_run": {
+  "src": "r69/cat_run_fire_a",
+  "w": 985,
+  "h": 1441,
+  "canvasH": 1536
+ },
+ "cat_scopec": {
+  "src": "r69/cat_scope_cover_a",
+  "w": 943,
+  "h": 1419,
+  "canvasH": 1536
+ },
+ "pink_ride": {
+  "src": "r69/pink_ride_fire_a",
+  "w": 1024,
+  "h": 1521,
+  "canvasH": 1536
+ },
+ "pink_run": {
+  "src": "r69/pink_run_fire_b",
+  "w": 1012,
+  "h": 1512,
+  "canvasH": 1536
+ },
+ "pink_scope": {
+  "src": "r69/pink_scope_fire_b",
+  "w": 1024,
+  "h": 1536,
+  "canvasH": 1536
+ },
+ "cat_scope": {
+  "src": "r69/cat_scope_fire_b",
+  "w": 1005,
+  "h": 1513,
+  "canvasH": 1536
+ },
+ "cat_blind": {
+  "src": "r68/cat_blind_a",
+  "w": 996,
+  "h": 1393,
+  "canvasH": 1536
+ },
+ "cat_aerial": {
+  "src": "r71/cat_aerial_mid_a",
+  "w": 1005,
+  "h": 1368,
+  "canvasH": 1536
+ },
+ "pink_blind": {
+  "src": "r68/pink_blind_a",
+  "w": 975,
+  "h": 1481,
+  "canvasH": 1536
+ },
+ "pink_aerial": {
+  "src": "r68/pink_aerial_a",
+  "w": 1024,
+  "h": 1536,
+  "canvasH": 1536
  }
 }

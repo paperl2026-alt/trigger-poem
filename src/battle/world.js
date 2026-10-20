@@ -174,7 +174,7 @@ export class World {
     // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
     cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
     this.punch = (this.punch || 0) * Math.exp(-dt * 7);
-    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch;
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     this.level.update(dt, t, cam);

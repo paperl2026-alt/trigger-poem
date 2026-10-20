@@ -49,7 +49,7 @@ MINE = {"panels": True, "seed": 87, "fogNear": 8, "fogFar": 34, "fogDensity": 0.
         "ambient": {"kind": "embers", "rate": 9},
         "hall": {"x0": -1.6, "x1": 1.6, "z0": 6, "z1": -L, "h": 5, "bay": 3, "tile": 3, "tilesX": 2, "tileL": 1.5, "left": PIT, "right": PIT,
                  "floor": ["ep1/pit_floor1", "ep1/pit_floor2"], "end": ["ep1/pit_wall2", "ep1/pit_wall3"]},
-        "stations": {"mn1": {"ride": {"from": [0, 1.35, 4], "path": path(), "speed": 10, "vehicle": "cart", "marks": MARKS}, "cam": [0, 1.35, -(L - 6)], "look": [0, 1.3, -(L + 10)]}}}
+        "stations": {"mn1": {"ride": {"from": [0, 1.35, 4], "path": path(), "speed": 10, "vehicle": "cart", "front": "ep1/cart_front", "marks": MARKS}, "cam": [0, 1.35, -(L - 6)], "look": [0, 1.3, -(L + 10)]}}}
 
 NETHER = {"panels": True, "seed": 61, "fogNear": 10, "fogFar": 60, "fogDensity": 0.012, "sky": "#e6a868", "fog": "#e6b07a", "lit": [1.12, 0.98, 0.86],
           "ink": "#3a2010", "paper": 0.05, "void": "#d89050", "grade": {"tint": [1.1, 0.95, 0.85], "k": 0.3, "sat": 1.08}, "ambient": {"kind": "petals", "rate": 8},

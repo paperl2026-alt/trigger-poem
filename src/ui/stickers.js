@@ -91,14 +91,15 @@ export class Stickers {
   get D() { return C.text.stickers; }
   kill(p) { this.say(p, 'kill', 0.3); }   // (now and then; small talk waits GAP after her last line)
   // a sound-effect sticker where a monster died (screen px, y up)
-  onoma(x, y, big) {
+  onoma(x, y, big, k = 1) {   // (k: by how far it was - DESIGN「命中的效果是 3D 的」)
     const keys = Object.keys(tex).filter((k) => k.startsWith('fx/ono_'));
     if (!keys.length) return;
-    const m = this.onos[this.oi++ % this.onos.length], H = this.hud.L.H, s = H * (big ? 0.2 : 0.14) * rnd(0.9, 1.15);
+    const m = this.onos[this.oi++ % this.onos.length], H = this.hud.L.H, s = H * (big ? 0.2 : 0.14) * rnd(0.9, 1.15) * k;
     m.material.uniforms.map.value = tex[pick(keys)]; m.userData = { t: 0, x, y, s, rot: rnd(-0.35, 0.35), dx: rnd(-1, 1) * H * 0.06 };
   }
-  say(p, kind, chance = 1) {
+  say(p, kind, chance = 1, force = false) {
     if (!p || Math.random() > chance) return;
+    if (!force && this.game.shot?.hud?.bubbles === false) return;   // (tuning/shots.json: not every shot has the girls' bubbles)
     const H = this.her[p.slot], set = this.D.heroines[p.id]?.[kind];
     if (!H || !set) return;
     const pr = PRIO[kind] || 1, cur = H.f.on ? PRIO[H.f.kind] || 1 : -1;

@@ -34,12 +34,17 @@ export class Escort {
       const t = tex[E.who], m = new THREE.Mesh(new THREE.PlaneGeometry(h * t.image.width / t.image.height, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
       this.root.add(m); this.sprite = m;
     }
-    this.lock = g.fx.lock('guard', -1);
-    w.escortZoom = E.zoom ?? K().zoom;
+    this.lock = g.fx.lock('guard', -1);   // (the view narrows and darkens at the edges like a scope: the shot, tuning/shots.json escort)
     g.combat = true; g.escortName = tr(E.name || '') || null;
   }
   // the monsters' goal while it is out there (Enemy: walk at it, throw at it)
-  goal() { return this.on && !this.done ? this.pos : null; }
+  get going() { return this.on && !this.done; }
+  goal() { return this.going ? this.pos : null; }
+  // where a monster of the wave comes in: ahead metres further along its way (< 0: behind it), side metres to its side
+  place(ahead = 8, side = 0) {
+    const u = Math.max(0, Math.min(1, (this.s + ahead) / this.len)), p = this.curve.getPointAt(u), tg = this.curve.getTangentAt(u);
+    return new THREE.Vector3(p.x - tg.z * side, 0, p.z + tg.x * side);
+  }
   // something got to it: it takes the blow, and the girls with it (their bond with it: share)
   hit(dmg, from) {
     const g = this.g;
@@ -83,7 +88,7 @@ export class Escort {
   }
   end() {
     const g = this.g, w = g.world;
-    this.on = false; this.lock?.remove(); this.lock = null; w.escortZoom = 0; g.hud.boss(null);
+    this.on = false; this.lock?.remove(); this.lock = null; g.hud.boss(null);
     this.root.parent?.remove(this.root); this.root.traverse((m) => { m.geometry?.dispose(); m.material?.dispose(); });
     // whatever is still out there is beaten: the guarded thing got through
     for (const a of g.actors) if (a.alive && a.def) { a.alive = false; g.fx.puff(a.root.position, 6, 0xd8c8b0, 1); a.dispose(); }

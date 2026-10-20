@@ -1,0 +1,9 @@
+{
+  "_doc": "第 2 话关卡包的 projectiles（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "lanternlet": { "keys": ["p_lanternlet"], "size": 0.42, "spin": 4, "scar": "burn", "trail": "fireTrail" },
+  "kokehead": { "keys": ["p_kokehead"], "size": 0.4, "spin": 10, "scar": "crack", "trail": "smokeTrail" },
+  "geta": { "keys": ["p_geta"], "size": 0.42, "spin": 9, "scar": "crack", "trail": "smokeTrail" },
+  "crane": { "keys": ["p_crane"], "size": 0.5, "spin": 1.5, "arc": 1.6, "scar": "paper" },
+  "pins": { "keys": ["p_pins"], "size": 0.34, "spin": 14, "scar": "crack" },
+  "scissors": { "keys": ["p_scissors"], "size": 0.46, "spin": 12, "scar": "paper" }
+}

@@ -193,7 +193,7 @@
 - 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
 - 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）。
 - 抱头乱射（2026-10-20，DESIGN「女主动起来」，`player.js` `blind`，数值 `combat.player.blind`）：手柄 / 键盘同时按住躲和射击，或鼠标在要快躲的大招打过来时刚按下的 `tap` 秒内：她留在掩体里（`state` 还是 cover、不暴露），`updateGun(dt, t, true)` 照常打，子弹散在准星周围 `spread`、伤害 × `dmg`（`p.dmgMul`），枪口在掩体顶上；AI 队友躲大招时有 `combat.ai.blind` 的概率这样打（`AICtrl.blindy`）。姿势 `blind`（有图时 heroine.js 换成她的抱头乱射图）。
-- 女主的动作图（heroine.js `ACTIONS`：blind / sidehide / sidefire / leap / land / aerial）：角色的 `rig` 里有哪张就建哪张，`setOut(out, want)` 按 player.js 的姿势名换图（必杀 = aerial），没有图就照旧 cover / fire；枪口位置用那张图自己的 `muzzle`。
+- 女主的动作图（heroine.js `ACTIONS`：blind / sidehide / sidefire / leap / land / aerial）：角色的 `rig` 里有哪张就建哪张，`setOut(out, want)` 按 player.js 的姿势名换图（必杀照旧用射击图 + 光环残影；aerial 是跳跃正中那一帧，给场景里的跳跃用），没有图就照旧 cover / fire；枪口位置用那张图自己的 `muzzle`。
 - 打击感（2026-10-20，数值都在 `tuning/combat.json feel`）：
   - 怪自己（`Enemy.feel`，`baseUpdate` 里三根阻尼弹簧）：按这一下多重（`weight`：枪轻、加特林更轻、咒重、光束每跳很轻，暴击 ×`critMul`）压扁再弹回（`mesh.scale`）、往后仰（`mesh.rotation.x`，3D 里真的倒）、往打中的另一边歪（叠在 boil 的 `rotation.z` 上），被打的那只原地定住 `freeze` 秒（`Game.update` 只给它 6% 的时间、动画停、贴图抖）；连射时幅度有上限。
   - 整个画面：重的一下（weight ≥ 0.9）和打死时顿帧（`Game.feelStop` → `G.stop`，两次至少隔 `stop.gap`，必杀中不顿），震屏分档；`post.js` 的震屏改成按 trauma² 采几条正弦（平滑，不是每帧随机）并带一点镜头翻滚 `shakeR`（三种镜头都 `rotateZ`）；打死耐打的怪（最大血量 ≥ `impact.hp`，暴击打死门槛减半）插冲击帧 `post.impact()`（前半黑白高反差、后半反相，HUD 不受影响，至少隔 `impact.gap`）。
@@ -302,6 +302,23 @@
 - 跟着音乐打拍子：`audio.js musicBeat()`（录好的曲子用 `sounds.json music.<名字>.bpm`，`offset` 第一拍前的秒数；合成曲用自己的 bpm）。每拍一个小脉冲（色差一踢、前景闪粉），每小节强一点；强度乘停留点预设的 `mv`。
 - 零件（画在 overlay 上）：`wall` 一个词一行行重复铺满全屏、每行一种颜色、左右交错滚；`slam` 镀铬 + 糖果色渐变的大标题砸进画面中间、后面三层错位的影子；`popups` 假系统弹窗一个叠一个（YAMERO 的弹窗瀑布）；`label` 红底白字标签条横穿；`tunnel` 爱心一层层从中间冲向镜头；`phone` 画面挤成中间一条竖屏、两边黑底上竖排大字。
 - 什么时候：Fever 满 → `overdrive`（几秒内每小节一面字墙、爱心隧道、标签条，脉冲加强）；进新小关 → 爱心隧道；连击每 `comboEvery` → 标签条；有人残血（`lowHp`）→ 毒电波：画面扭曲加强、隔几秒一阵故障 + 像素化、错误弹窗（`text/ui.json mvToxic`）；Boss 变身 → 她名字的字墙；其余由演出指令 `mv` 在关卡数据里写。
+
+## 危险提示、预警、挨打残留（DESIGN「攻击分三种」「攻击将至的预警」「挨打留视觉残留」）
+- 3D 提示结构（`src/battle/marks3d.js`，`fx.orbit` 在知道东西世界位置时用它代替平面环，带翅膀的爱心留着）：快打 = 正二十面体线框笼子（倒计时越近转得越快、收得越紧）；快躲 = 从怪指向被打的人的线框圆锥（一圈圈环往她那边跑）+ 扭歪的无限多面体 {4,6|4}（立方格里「最多一个坐标是奇数」的格子的表面，只取一个球里的，转着）；飞来的东西 = 四面体 + 顶点发光球；护卫目标 = 石墨烯壳（测地球的对偶：六边形 + 十二个五边形），挨打处亮。线是 three/addons 的粗线（LineSegments2，屏幕像素宽），普通混合（在亮粉的房间里叠加发光只会变白），角上的点发光。
+- 怪身上的预警（`Enemy.tell`）：「能打」的白描边在它蓄力时按要来的攻击变色（紫 = 快躲、红 = 快打、琥珀 = 普通咬）并随拍脉动、变粗（`outlineW`，paper.js）；玩家准星压在上面时描边也亮（`aimedT`，`Game.danger` 每帧找）；出手前 0.14 秒在眼睛 / 武器处一个十字星闪光（`fx.glint`，位置 `def.glintAt` 或 `throwFrom`）；快躲的攻击落下前 0.09 秒、有人探身时卡几帧（`G.stop`）；蓄力时粒子往身上收（`fx.charge`，有标记的地上怪也有）。
+- 危机去色（`Game.danger` → `Post.focus`）：只在快躲的攻击进度过 `combat.mv.focus.at`、有人探身时；画面变灰变硬，只有威胁那一圈保持彩色、稍微放大、带一层残影；最长 `hold` 秒，之后歇 `rest` 秒。焦点 uniform 一开始必须是 (0,0,0,0)（three 的 Vector4 默认 w = 1，等于一直开着）。
+- 挨打残留（`src/ui/scars.js`，`alerts.js` 在她那半边画）：`Game.playerAttacked` 记下 `player.lastHit`（怪 / 飞行物的 `scar`、`scarColor`，没写就按攻击种类：咬 → bite、冲撞 → claw、飞行物 → crack、远程 → burn）；bite 齿痕、claw 抓痕、crack 原来的裂玻璃、splat 一大块往下流的糊状（按颜色染）、ink 墨、paper 割痕 + 贴着的纸片、burn 烧焦的边缘还在发光；几秒淡掉，最多叠 8 个。数据由 `tools/rounds/scars.py` 写（也写飞行物的 `trail` 和大招的 `blast.vfx`）。
+
+## 准星（`src/ui/glhud.js Reticle`，DESIGN「准星精简」）
+- 画法：一个着色器（`RETV_FRAG`）画两遍：先一层暗边（普通混合），再一层线本身用反色混合（OneMinusDstColor：永远和背后反差最大）。有她的图（`ui/retv_<who>_<idle|lock>`，R70 Codex 线稿，`tools/rounds/r70_import.py` 把中心点挪到图正中、记下框占图的宽度 `frame`）就用图的透明度当线、暗边是透明度往外扩；没有就只画四角框和中心点。
+- 状态：平时 idle；压在能打的东西上 lock（换成她更小的图：地雷妹小方框、猫娘小三角，新形态从大往小快速缩进来）；装填 / Fever / 必杀加一圈转动的虚线圈；没子弹红色、发抖；躲着变淡。锁定时的引线和怪名牌照旧。
+
+## 特效预设（`src/battle/vfx.js`，`tuning/vfx.json`，DESIGN「场景破坏和怪物特效」）
+- 一个预设由几种成分组合，全都在世界里（有深度、会被挡住）：flash 闪光、debris 物理碎块（`physics.chipsAt`）、dust 慢慢胀大上浮的尘团（SMOKE 帧，普通混合）、sparks 火星拖尾、embers 余烬、fire 火舌、ring 地上的冲击波环、shake / flash2d / sound。怪的大招还有三种：stream 从怪喷到两人跟前的一股火 / 烟 / 泡沫 / 光（一颗颗粒子直飞到镜头前 1 米左右、边飞边胀大，飞到就消失）、veil 糊在镜头前慢慢散的烟（世界里的烟团，两人画在它前面）、circle 蓄力时怪身前立起来的法阵（着色器画的圈、符文带、六芒星，按蓄力进度画一圈，越转越快，出招一亮放大，被打断 / 打死就灭）。`Game.vfx.play(名字, 位置, { n 朝向, scale, to 喷向哪里, life 法阵蓄多久 })` 返回 `{ arrive 喷到的秒数, stop(亮不亮) }`；`trail(名字, 位置, dt)` 给飞行中的东西拖尾；`update(dt)` 每帧推进喷流、延后的烟幕、法阵；换地方 `clear()`。
+- 用在：墙 / 地 / 天花板被打出洞（`panels.addHole`，场景自带的洞不炸），蜜蛆钻地（breach），自爆的怪（explosion），快躲的大招（`enemies.json blast`：`vfx` 样子、`charge` 蓄力时的法阵、`chance` 每次蓄力是大招的概率（其余照常扔东西）、`windup` 大招自己的蓄力时间；喷流类的伤害在喷到两人时才算（`arrive` 的八成）；由 `tools/rounds/scars.py` 写：广播喇叭 blast、灭火器女妖 foamSpray（泡沫糊镜头）、守丧之影 incenseSmoke（香烟糊镜头）、夫人之影 darkMagic + darkCharge 紫色法阵、提灯妖 fireBreath 喷火、小芥子 curseMagic + curseCharge 红色法阵），飞行物的拖尾（`trail`：fireTrail / smokeTrail / glowTrail / inkTrail），演出指令 `vfx`。
+
+## 命中效果（DESIGN「命中的效果是 3D 的」）
+- `Game.shoot` 返回命中点的世界坐标和距离；`muzzle.hit` 在那里炸开火花拖尾、纸屑 / 碎片（猫娘是符文和爪印），画好的命中图缩小变淡、按距离缩放（近大远小）；猫娘的咒文字 `Mantra.cast` 也按距离缩放，进场改成光绘（`dmode 6`：一支光笔沿着绕字中心的路径把字画出来，笔尖白热、身后的笔划还亮着，`pen` 撒光点和拖尾）。
 
 ## 远处护卫（`src/battle/escort.js`，Game 的 `escort`；数值 `tuning/combat.json escort`）
 - 站点 `escort: { who: soul | <图 key>, path: [[x,y,z]...], speed, hp, share, h, name, loop }`，预设 `escort`（望远镜视野 + 暗角，两人退到两边只露肩膀以上）。护卫目标沿 `path` 走，有自己的血条（Boss 条）和金色保护环（`fx.lock('guard')`）；走到头这一站就赢了（`Game.escortDone`，剩下的怪一起消失）。

@@ -3,7 +3,7 @@
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { alphaAt, meta, url } from '../core/assets.js';
-import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote } from '../core/audio.js';
+import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote, musicBeat } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
@@ -15,6 +15,13 @@ import { BOSSES } from './boss.js';
 import { Gimmick } from './gimmick.js';
 import { Chase } from './chase.js';
 import { Ride } from './ride.js';
+import { Cues } from './cues.js';
+import { MV } from './mv.js';
+import { Acts } from './acts.js';
+import { Escort } from './escort.js';
+import { VFX } from './vfx.js';
+import { Mark3D } from './marks3d.js';
+import { shotOf, shotFrom, Live } from './shot.js';
 import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { playDoor } from '../ui/door.js';
@@ -22,7 +29,8 @@ import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
 import { bagFx, giveItem } from './items.js';
-import { C, T, isStage } from '../core/content.js';
+import { C, T, isStage, hexNum } from '../core/content.js';
+import { scarFor } from '../ui/scars.js';
 import { coreKeys, stageKeys, stageKeysAt, setKeys, placeOf, stageFrom, stageAt, outfitKeys } from '../core/groups.js';
 import { loadKeys, releaseExcept, isLoaded } from '../core/assets.js';
 import { t, tr } from '../core/i18n.js';
@@ -53,13 +61,20 @@ export class Game {
     // the step it starts from, and moves to the next set when a stage needs it (useSet)
     this.useSet(this.setOf(run.step || 0));
     this.fx = new FX(this);
+    this.shot = shotOf(null); this.live = new Live();   // (the stop's shot and what is on screen easing toward it: tuning/shots.json, src/battle/shot.js)
     this.players = run.team.map((id, i) => new Player(this, id, i, { xp: SAVE.chars[id]?.xp || 0, bag: run.bag }));
     this.hud = new Hud(this);
     this.comic = new Comic();
     this.actors = [];
     this.chase = new Chase(this);   // (episode 2: she who cannot be killed, and the run she drives: src/battle/chase.js)
     this.ride = new Ride(this);     // (high-speed stretches: a cart, a float, a lift, their own legs: src/battle/ride.js)
+    this.cues = new Cues(this);     // (the director's cues: ride marks, wave events, a stop's arrival and end, cinematic stops: src/battle/cues.js)
+    this.mv = new MV(this);         // (the MV director: the beat, word walls, pop-ups, tunnels, toxic waves: src/battle/mv.js)
+    this.acts = new Acts(this);     // (the monsters' own play: rituals, summoners, sacrifices, squabbles, transformations: src/battle/acts.js)
+    this.escort = new Escort(this); // (guarding something far off from a sniper's distance: src/battle/escort.js)
+    this.vfx = new VFX(this);       // (things breaking, the monsters' fire, smoke and magic: presets in tuning/vfx.json, src/battle/vfx.js)
     this.addGimmicks();
+    this.warm();
     this.boxes = new Map();
     this.combat = false; this.lull = false;   // lull: a short pause in the fight (the boss changing form, thing.js mutate)
     this.cineOn = false; this.cineQ = 0;   // a close look (cine)
@@ -82,9 +97,9 @@ export class Game {
     this.world = this.makeWorld(id);
     this.justBuilt = true;
     if (!old) return;
-    this.clearActors(); this.boss = null; this.etw.clear();
+    this.clearActors(); this.boss = null; this.etw.clear(); this.acts.clear(); this.mv.clear();
     this.addGimmicks();
-    this.fx.clear();
+    this.fx.clear(); this.vfx.clear();
     for (const p of this.players) { old.camera.remove(p.group); this.world.camera.add(p.group); }
     this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
     if (old.dispose) old.dispose();
@@ -172,6 +187,7 @@ export class Game {
     if (st.stage) {
       // (a new stage: she who chased them through the last one is gone - each stage brings her back itself: src/battle/chase.js)
       if (this.chase.she || this.chase.mode) { this.chase.mode = null; this.chase.gone(); }
+      this.boss = null;   // (a stage after a boss in the same place - the netherworld's soul after the maggot: no new place clears it, and while it is set the waves are never checked)
       // a stage through several places (episode 2): which place each stop is in (the step's "places": [set ids]; a stop's id is looked up in them)
       this.setOfStation = null;
       if (st.places) { this.setOfStation = {}; for (const s of st.places) for (const k of Object.keys(C.sets[s]?.stations || {})) this.setOfStation[k] = s; }
@@ -180,6 +196,7 @@ export class Game {
       if (this.run.station && st.stations.includes(this.run.station)) { this.stationQ = st.stations.slice(st.stations.indexOf(this.run.station)); this.resumed = true; this.run.station = null; }
       this.mutated = false;
       if (st.name) this.hud.gl.hold('stage', { name: tr(st.name) });   // can't shoot until the first stop: the stage's warning overlay
+      this.mv.tunnel(1.1);   // (in through the heart tunnel: mv.js)
       this.goStation(this.stationQ.shift(), false);
     } else if (st.boss) this.goStation(st.station, true);
   }
@@ -193,6 +210,7 @@ export class Game {
     if (boss) for (const a of this.actors) if (a.g?.shoot === false && a.g.station && a.g.station !== id && !a.spent) a.settle();
     this.S = S;
     this.stationId = id;
+    this.shot = shotOf(S); this.cues.stop();   // (its shot: tuning/shots.json; the last stop's cues are over)
     this.combat = false;
     if (this.chase.mode === 'block' || this.chase.mode === 'prowl') this.chase.mode = null;
     // the covers fold away first; only then do the girls get up and move on (DESIGN: nobody runs through a cover)
@@ -474,6 +492,68 @@ export class Game {
     if (this.world.collapse) this.world.collapse(go); else go();
   }
   // what to do with a mechanism: the small see-through tag at the top for a few seconds (never over the fight: DESIGN「不能射击的阶段的提示」)
+  // what the girls' aim is on lights its outline (the assist outline: Enemy.tell); the most urgent blow about to land on a girl who is
+  // up (a must-hide attack, a thrown thing nearly there) drains the colour from the world round it, only it in colour, a little
+  // magnified, a ghost of it (Post.focus: docs/DESIGN.md「攻击将至的预警」)
+  danger(dt) {
+    if (this.combat) for (const p of this.players) {
+      if (p.slot && !this.p2on()) continue;
+      let best = null, bd = this.H * 0.09;
+      for (const a of this.actors) { if (!a.alive || !a.u?.outlineW || !a.mesh) continue; const s = this.world.project(a.center()); const d = Math.hypot(s.x - p.aimX, s.y - p.aimY); if (d < bd) { bd = d; best = a; } }
+      if (best) best.aimedT = 0.12;
+    }
+    // (rare on purpose: only a blow she cannot shoot down, nearly there, while she is up; at most FOCUS.hold seconds, then a rest)
+    const FC = T.combat.mv?.focus || { at: 0.75, hold: 0.6, rest: 2.5 };
+    let F = null;
+    this.focusT = (this.focusT || 0) - dt; this.focusRest = (this.focusRest || 0) - dt;
+    if (this.combat && !this.cineOn && this.focusRest <= 0) for (const L of this.fx.live || []) {
+      const up = this.players.some((p) => p.exposed && (L.slot === -1 || L.slot === p.slot));
+      if (up && L.type === 'hide' && L.p > FC.at && (!F || L.p > F.p)) F = L;
+    }
+    if (F && !this.focusOn) { this.focusOn = true; this.focusT = FC.hold; }
+    if (this.focusOn && (this.focusT <= 0 || !F)) { this.focusOn = false; this.focusRest = FC.rest; }
+    if (!this.focusOn) F = null;
+    const k = this.focusK = Math.max(0, Math.min(1, (this.focusK || 0) + (F ? dt * 7 : -dt * 4)));
+    if (F) this.focusAt = [F.x / this.W, F.y / this.H, Math.max(0.09, F.r * 1.25 / this.H)];
+    if (this.focusAt) this.post.focus(...this.focusAt, k);
+  }
+  // before the fight, so nothing stalls in it (the first time a picture is shown it goes up to the graphics card, the first time a kind of
+  // material is drawn its shader is built: a stall of a tenth of a second or more): every pose picture of the girls uploaded, one of each
+  // 3D warning structure and a hit mark built and compiled out of sight, then dropped
+  warm() {
+    const r = this.G.renderer, ups = new Set();
+    for (const p of this.players) for (const m of Object.values(p.hero?.poses || {})) { const U = m.material.uniforms; for (const k in U) { const v = U[k].value; if (v?.isTexture) ups.add(v); } }
+    // (the cat girl's chant: each syllable's glowing texture is made from its art the first time - ~90 ms each; the mantra's six now,
+    // the rest when first used - to be baked by the build: PLAN 进新地方卡顿)
+    if (this.players.some((p) => p.w.kind === 'mantra')) for (const ch of C.theme.mantra || []) ups.add(this.fx.chant.texOf(ch, this.fx.chant.styles.mantra));
+    for (const t of ups) { try { if (t) r.initTexture(t); } catch (e) { /* (a texture not ready: it goes up when first drawn) */ } }
+    const tmp = ['kill', 'hide', 'shot', 'guard'].map((k) => new Mark3D(this.world.scene, k));
+    for (const m of tmp) { m.root.position.set(0, -50, 0); m.set(m.root.position, 0.5, 0.5, 0, new THREE.Vector3(0, -49, 1), new THREE.Vector2(this.W || 1280, this.H || 720)); }
+    this.hud.gl.alerts?.scars.add('bite', -999, -999, 10); this.hud.gl.alerts?.scars.add('splat', -999, -999, 10, 0xffffff);
+    try { r.compile(this.world.scene, this.world.camera); r.compile(this.hudScene, this.ortho); } catch (e) { /* (best effort) */ }
+    for (const m of tmp) m.remove();
+    this.hud.gl.alerts?.scars.clear();
+  }
+  // the stop's shot changes (a cue's shot: cues.js)
+  setShot(spec) { this.shot = shotFrom(spec, this.shot); }
+  // a scope's tube (tuning/shots.json cam.lens): the world seen through a round lens, dark beyond it - on the camera, drawn with the world
+  // so the girls stand in front of it (they are drawn after the world: render)
+  lens() {
+    const k = this.live.lens, cam = this.world.camera;
+    if (k < 0.01 && !this.lensM) return;
+    if (!this.lensM) {
+      const c = document.createElement('canvas'); c.width = 1024; c.height = 576; const x = c.getContext('2d'), gr = x.createRadialGradient(512, 288, 236, 512, 288, 318);
+      gr.addColorStop(0, 'rgba(6,3,10,0)'); gr.addColorStop(0.55, 'rgba(6,3,10,0.7)'); gr.addColorStop(1, 'rgba(6,3,10,0.97)'); x.fillStyle = gr; x.fillRect(0, 0, 1024, 576);
+      x.strokeStyle = 'rgba(255,240,200,0.22)'; x.lineWidth = 3; x.beginPath(); x.arc(512, 288, 244, 0, Math.PI * 2); x.stroke();   // (the rim of the glass)
+      const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace;
+      this.lensM = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: tx, transparent: true, depthTest: false, depthWrite: false, fog: false }));
+      this.lensM.renderOrder = 30; this.lensM.frustumCulled = false;
+    }
+    if (this.lensM.parent !== cam) cam.add(this.lensM);   // (a new place, a new camera)
+    const d = 0.2, h = 2 * d * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));
+    this.lensM.position.set(0, 0, -d); this.lensM.scale.set(h * cam.aspect * 1.02, h * 1.02, 1);
+    this.lensM.material.opacity = k; this.lensM.visible = k > 0.01;
+  }
   hint(key) { if (this.cineOn) { this.tweens.wait(0.3, () => this.hint(key)); return; } this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }   // (not over a close look: after it)
   // a spawner's hole got blocked (Gimmick topple)
   sealSpawner(id) {
@@ -522,7 +602,7 @@ export class Game {
   }
 
   arrive(S, boss) {
-    this.world.setCovers(S.covers);
+    this.world.setCovers(this.shot.cover === false ? null : S.covers);
     // a door slams shut behind them (station slam: a way's id, its door): the camera turns to see it, then the stop carries on
     if (S.slam && this.world.ways?.[S.slam]) {
       const Wy = this.world.ways[S.slam], c = new THREE.Vector3(Wy.xc, Wy.y0 + Wy.hh * 0.45, Wy.zw);
@@ -539,6 +619,10 @@ export class Game {
     }
     // episode 2: a hiding place (station hide): she comes, the forced stabs, then on (src/battle/chase.js)
     if (S.hide) { this.enterCover(null, true); this.tweens.wait(0.3, () => this.chase.hide(S, () => this.onward(S))); return; }
+    // a cinematic stop (station cine: a timeline of cues, src/battle/cues.js; its shot: no fight, no HUD, no girls): it plays, then on
+    if (S.cine) { this.combat = false; this.cues.timeline(S.cine, () => this.onward(S)); return; }
+    // the stop's own cues as they get there (station on.arrive): they run alongside
+    if (S.on?.arrive) this.cues.timeline(S.on.arrive);
     // a stretch they only walk through (no waves: a corridor between two places, DESIGN「门和小关的衔接」): a line or a sound on the way, on
     if (S.swap) for (const [from, to] of Object.entries(S.swap)) this.world.swapBoard?.(from, to);   // (a wall that has changed: the burnt altar)
     if (S.fire) for (const gid of S.fire) this.actors.find((a) => a.g?.id === gid && !a.spent)?.fire();
@@ -566,6 +650,11 @@ export class Game {
     if (S.invade && this.world.anomaly < 1) { this.enterCover(null, true); this.tweens.wait(1.6, () => this.invade(() => this.beginStation())); return; }
     if (S.turn) { this.enterCover(null, true); this.tweens.wait(S.turn.wait ?? 0.6, () => this.turn(S.turn, () => this.enterCover(() => this.beginStation()))); return; }
     this.enterCover(() => { if (!boss) this.beginStation(); });
+  }
+  // the thing guarded got to the end of its way (escort.js): the stop is won - no more waves, what is left is gone (escort.end)
+  escortDone() {
+    this.waveIndex = this.S.waves.length; this.waveLive = true; this.pendingSpawns = 0; this.waveEvents = [];
+    for (const s of this.spawners || []) s.live = false;
   }
   // on from a stop with no fight of its own (a walk-through, the end of a chase, a hiding place): the next stop, or the stage's end
   onward(S) {
@@ -616,6 +705,7 @@ export class Game {
     if (this.S.block) this.chase.block(this.S);   // (episode 2: the way blocked while she comes up behind)
     if (this.S.dial) this.chase.dial(this.S);     // (episode 2: the bell tower's clock face, the last fight)
     if (this.S.she) this.chase.prowl(this.S);     // (episode 2: she prowls this fighting stop)
+    if (this.S.escort) this.escort.run(this.S, () => this.escortDone());   // (something far off to guard on its way: escort.js)
     // (the first wave waits for a close look that opens the stop: her first appearance up close)
     const go = () => (this.cineOn ? this.tweens.wait(0.25, go) : this.startWave());
     this.teach(this.S.lesson, () => this.tweens.wait(0.05, go));
@@ -640,11 +730,14 @@ export class Game {
       y: s.y != null ? s.y + (Math.random() - 0.5) * 0.8 : undefined })));
     this.pendingSpawns = spawns.length;
     this.waveLive = true; this.waveKills = 0;
-    for (const s of spawns) this.etw.wait(s.t + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });
+    for (const s of spawns) this.etw.wait((s.t || 0) + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });   // (an entry without t: at once)
     this.waveEvents = wave.filter((e) => !e.type && e.kills);
     for (const e of wave) if (!e.type && !e.kills) this.etw.wait(e.t || 0, () => this.combat && this.waveEvent(e));
   }
   waveEvent(e) {
+    // everything else a wave event says is a director's cue (cues.js: say, mv, act, cam, burst, shake ...)
+    const { t: _t, kills: _k, turn: _tu, mutate: _m, gimmick: _g, collapse: _c, hint: _h, sound: _s, spawner: _sp, wake: _w, ...cue } = e;
+    if (Object.keys(cue).length) this.cues.run(cue);
     if (e.turn) this.turn(e.turn);
     if (e.mutate) this.mutateAll();
     if (e.gimmick) this.actors.find((a) => a.g?.id === e.gimmick && !a.spent)?.fire();
@@ -695,11 +788,13 @@ export class Game {
     this.waveLive = false;
     this.waveIndex++;
     if (this.ep.sandbox && this.waveIndex >= this.S.waves.length) { this.waveIndex = 0; this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }   // (the sound sandbox: they keep coming)
+    if (this.escort.going && this.waveIndex >= this.S.waves.length) { this.waveIndex = this.S.escort.loop ?? 0; this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }   // (they keep coming while it is on its way)
     if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, () => this.combat && this.startWave()); return; }
     this.combat = false;
     this.clearProjectiles();
     sfx.clear();
     this.players.forEach((p) => { p.tauntT = 1.1; if (p.activeOn) p.endActive(false); });
+    if (this.S.on?.clear) this.cues.timeline(this.S.on.clear);   // (the stop's own cues at its end: station on.clear)
     if (this.stationQ.length) {
       this.hud.gl.hold('clear');
       this.tweens.wait(1.3, () => this.goStation(this.stationQ.shift(), false));
@@ -842,6 +937,8 @@ export class Game {
   // the place's shootable things (src/battle/gimmick.js): there for the whole set, each live at its own stop
   addGimmicks() { for (const g of this.world.set?.gimmicks || []) this.actors.push(new Gimmick(this, g)); }
   spawnEnemy(s) {
+    // an escort stop: a wave entry with ahead / side comes in along the guarded thing's way (escort.place), far off, as it is
+    if (this.escort.going && (s.ahead != null || s.side != null)) { const q = this.escort.place((s.ahead ?? 8) + (Math.random() - 0.5) * 2, (s.side ?? 0) + (Math.random() - 0.5) * 1.5); s = { ...s, x: q.x, z: q.z, free: true }; }
     const to = this.mutated && C.enemies[s.type]?.mutatesTo;   // (after the house has turned: mutateAll)
     const e = new Enemy(this, to ? { ...s, type: to, sprite: undefined } : s); this.actors.push(e); return e;
   }
@@ -934,7 +1031,7 @@ export class Game {
         sfx.miss((sx / this.W - 0.5) * 0.6);
       }
       p.fever.miss();
-      return { n: 0, crit: false };
+      return { n: 0, crit: false, at: hit ? hit.point.clone() : null, dist: hit ? hit.distance : null };
     }
     let crit = false;
     hits.forEach((tg, i) => {
@@ -948,7 +1045,9 @@ export class Game {
       const stagger = w.stagger * (w.kind === 'rifle' ? 1 + K.rifleStaggerRamp * Math.min(n, K.rifleStaggerRampMax) : 1) * (p.gatling ? p.a.stagger : 1);
       tg.a.hit({ kind: w.kind, dmg, uv: tg.uv, part: tg.part, by: p, crit: c, stagger, stun: w.stun });
     });
-    return { n: hits.length, crit };
+    // (where the first one was hit, in the world: the hit's sparks and the cat girl's syllable are there, sized by the distance)
+    const h0 = hits[0], at = h0.uv && h0.a.uvToWorld ? h0.a.uvToWorld(h0.uv.u, h0.uv.v) : h0.a.center?.() || null;
+    return { n: hits.length, crit, at, dist: at ? at.distanceTo(this.world.camPos) : null };
   }
   critRate(p) { return p.fever.critRate + (p.w.critAdd || 0); }
   critMul(p) { return p.fever.critMul + (p.w.critMulAdd || 0); }
@@ -970,6 +1069,10 @@ export class Game {
 
   // returns true when nobody got hurt (blocked by cover / missed)
   playerAttacked({ kind, dmg, from, heavy, slot = 0 }) {
+    if (from?.escortT && this.escort.going) { this.escort.hit(dmg, from); return false; }   // (it went for what they guard: escort.js)
+    // what it leaves on her screen if it gets through (src/ui/scars.js: the monster's / the thrown thing's scar, else its kind's)
+    const D = from?.def?.scar ? from.def : from?.kind && C.projectiles[from.kind]?.scar ? C.projectiles[from.kind] : null;
+    const hitMark = { scar: D?.scar || scarFor(kind), color: D?.scarColor ? hexNum(D.scarColor) : null, from };
     const targets = slot === -1 ? this.players : [this.players[slot] || this.players[0]];
     let hurt = false;
     for (const p of targets) {
@@ -980,7 +1083,7 @@ export class Game {
         this.coverHit(p, from, heavy);
         if (!heavy || !p.damage(dmg * T.combat.cover.chip)) continue;
       } else if (!p.damage(dmg)) continue;
-      hurt = true;
+      hurt = true; p.lastHit = hitMark;
       sfx.hurt();
       if (p.slot === 0) { this.post.u.hurt.value = 1; this.post.kick(2); this.fx.screenInk(heavy ? 12 : 7); } else this.post.u.hurt.value = Math.max(this.post.u.hurt.value, 0.35);
       this.post.shake(p.slot === 0 ? 1 : 0.5);
@@ -1057,7 +1160,7 @@ export class Game {
     this.combo += T.combat.comboKill; this.comboT = T.combat.comboTime; this.comboF = this.combo;   // (a kill: a few more)
     this.maxCombo = Math.max(this.maxCombo, this.combo);
     // every kill: a sound-effect sticker where it was (stickers.js), and now and then a line from the girl who got it
-    { const s = this.world.project(target.center()); this.hud.gl.stickers.onoma(s.x, this.H - s.y, crit); }
+    { const c = target.center(), s = this.world.project(c); this.hud.gl.stickers.onoma(s.x, this.H - s.y, crit, Math.max(0.45, Math.min(1.2, 4.5 / c.distanceTo(this.world.camPos)))); }
     if (by) this.hud.gl.stickers.kill(by);
     // the kill lands: a blink of stop and a shake; a tough one (or a crit on a fairly tough one) gets the impact frame too (tuning combat.feel)
     const F = T.combat.feel, tough = (target.maxHp || 0) >= F.impact.hp * (crit ? 0.5 : 1);
@@ -1086,10 +1189,22 @@ export class Game {
     this.etw.update(edt);
     this.chase.update(dt);
     this.ride.update(dt);
+    this.acts.update(edt, now);
+    this.escort.update(dt, now);
     for (const a of this.actors) a.update(a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }
-    this.fx.update(dt, now);
+    this.fx.update(dt, now); this.vfx.update(dt);
+    this.live.ease(this.shot, dt);
+    this.danger(dt);
+    this.lens();
+    this.mv.update(dt, now, musicBeat());
+    // the MV director's moments (mv.js): a girl's Fever full -> overdrive (word walls on the bar, the heart tunnel); every so many hits
+    // of the combo -> its number on a label racing across
+    for (const p of this.players) { const f = p.fever.full && this.combat; if (f && !p.wasFull) this.mv.overdrive(t('mvFever')); p.wasFull = f; }
+    const ce = T.combat.mv?.comboEvery ?? 50;
+    if (this.combat && Math.floor(this.combo / ce) > Math.floor((this.lastCombo || 0) / ce)) this.mv.label(`${Math.floor(this.combo / ce) * ce} COMBO`);
+    this.lastCombo = this.combo;
     // the combo holds outside the fight (walks, comics); in it, after comboTime without a hit it slides down, faster and faster
     if (this.combat && this.combo > 0) {
       this.comboT -= dt;
@@ -1097,7 +1212,7 @@ export class Game {
     }
     const active = this.players.some((p) => p.activeOn);
     const mu = this.post.u.madness;
-    mu.value += ((active ? 0.22 : 0) - mu.value) * Math.min(1, dt * 3);
+    mu.value += ((active ? 0.22 : 0) + this.mv.toxic * (T.combat.mv?.toxicMadness ?? 0.18) - mu.value) * Math.min(1, dt * 3);   // (+ the toxic waves of a girl nearly down: mv.js)
     const hid = ['cover', 'reload'].includes(this.players[0].state);
     this.post.u.dim.value += ((hid ? 0.5 : 0) - this.post.u.dim.value) * Math.min(1, dt * 8);
     this.post.u.warn.value = Math.max(0, this.post.u.warn.value - dt * 1.5);
@@ -1117,7 +1232,9 @@ export class Game {
     if (this.world.render) this.world.render(r); else { cam.layers.set(0); r.render(this.world.scene, cam); }
     const sc = this.world.scene, bg = sc.background, ac = r.autoClear;
     sc.background = null; r.autoClear = false;   // a background colour would clear the world away
-    cam.layers.set(1); r.render(sc, cam); cam.layers.set(0);
+    cam.layers.set(1); r.render(sc, cam);
+    if (this.ride.vehicleG) { cam.layers.set(2); r.render(sc, cam); }   // (what is in front of the girls: the cart's front, src/battle/ride.js)
+    cam.layers.set(0);
     sc.background = bg; r.autoClear = ac;
     r.render(this.overlay, this.ortho);
   }

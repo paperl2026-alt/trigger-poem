@@ -159,7 +159,7 @@ export class TheThing extends Actor {
   // her entrance (Game.arrive, after the warning): the camera goes up close and she says her first words
   // (from low down looking up at her, the camera going half way round her as the room stretches out behind her: the references' boss
   // entrances, docs/ART.md「用户给的参考里的手法」)
-  intro(then) { this.closeUp('intro', { lull: true, dist: this.S.h * 0.85, v: 0.7, up: -this.S.h * 0.22, orbit: 0.85, dolly: 16, title: tr(this.name || '') || null }, then); }
+  intro(then) { this.game.cues.run(this.def.cues?.intro); this.closeUp('intro', { lull: true, dist: this.S.h * 0.85, v: 0.7, up: -this.S.h * 0.22, orbit: 0.85, dolly: 16, title: tr(this.name || '') || null }, then); }
 
   // ---------------------------------------------------------------- hits
   // DESIGN「Boss」(2026-10-18): only its core takes damage (each form's "core": [u, v] on its drawing, radius r of its height; a ring
@@ -349,6 +349,8 @@ export class TheThing extends Actor {
     const big = Math.max(this.S.h, this.def.stages[n].h);
     // (the picture switches how it is drawn as she changes, cut on the beat: two colours, line art, glitch, halftone, the negative)
     this.game.post.styleBurst(1.5, n % 2 ? [6, 2, 5, 1, 3] : [1, 5, 2, 6, 3], 0.14, 0x1a0010, n % 2 ? 0x5ad8ff : 0xff5aa8);
+    // (her name in a wall of words behind it all, the MVs' way: mv.js; and whatever her data adds for this form: bosses.json cues.s<n>)
+    g.mv.wall(tr(this.name || ''), 1.3, false, 0.5); g.cues.run(this.def.cues?.[`s${n + 1}`]);
     this.closeUp(`s${n + 1}`, { dist: big * 1.2, v: 0.55, in: 0.6, min: M.shake + M.grow + 0.6, up: -big * 0.15, orbit: n % 2 ? 0.6 : -0.6, dolly: 10 }, () => {   // (going round her the other way each time)
       if (!this.alive) return;
       this.mutating = false; g.lull = false; this.pi = 0; this.timer = 1.2; this.state = 'idle'; this.play('idle', 3);
@@ -380,6 +382,7 @@ export class TheThing extends Actor {
     this.alive = false; this.seq++; this.endWindup(); this.markCore(false);
     for (const o of this.keeps || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
+    g.cues.run(this.def.cues?.die);   // (bosses.json cues.die)
     if (calm) { sfx.clear(); g.post.flash(0.8, 0xfff6e8); } else { sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(1.6); this.play('hurt'); }
     // rings of light racing out across the floor one after another, and a column of light standing up out of her (R-Type's bosses)
     const P = this.root.position;

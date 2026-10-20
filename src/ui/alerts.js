@@ -15,6 +15,7 @@ import { tex } from '../core/assets.js';
 import { C, T } from '../core/content.js';
 import { Text, picture } from './glhud.js';
 import { lang } from '../core/i18n.js';
+import { Scars } from './scars.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const quad = new THREE.PlaneGeometry(1, 1);
@@ -70,10 +71,14 @@ class Girl {
     // ---- hit: a crack where it came from, a quick word, a red wash over her half
     if (on && last.hp !== undefined && p.hp < last.hp - 0.5 && g.combat) {
       const c = this.cracks.find((m) => m.userData.t > 1.2) || this.cracks[0], n = Math.floor(Math.random() * 6);
-      c.material.uniforms.map.value = tex[`fx/crack_${n}`] || null; c.userData.t = 0;
       const outer = p.slot === 0 || !g.p2on() ? hx0 + hw * 0.16 : hx1 - hw * 0.16;   // toward her edge of the screen
       c.position.set(outer + rnd(-1, 1) * hw * 0.12, rnd(H * 0.3, H * 0.7), 0); c.rotation.z = rnd(0, 6.28);
       c.userData.s = H * rnd(0.2, 0.28);
+      // what hit her leaves its own mark (src/ui/scars.js: a bite, claws, a splash, ink, paper cuts, a burn; a crack for the rest)
+      const LH = p.lastHit; p.lastHit = null;
+      const kinds = [].concat(LH?.scar || 'crack');
+      c.material.uniforms.map.value = kinds.includes('crack') ? tex[`fx/crack_${n}`] || null : null; c.userData.t = kinds.includes('crack') ? 0 : 9;
+      kinds.filter((k) => k !== 'crack').forEach((k, i) => this.A.scars.add(k, c.position.x + i * H * 0.05, c.position.y - i * H * 0.04, H * rnd(0.26, 0.34) * (k === 'splat' ? 1.2 : 1), LH?.color, k === 'splat' ? 3.2 : 2.6));
       const ok = Math.random() < 0.5 ? 'ui/alert_ouch' : 'ui/alert_hit';
       this.ow.material.uniforms.map.value = tex[ok] || null; this.owT = 0; this.owPos = [c.position.x + rnd(-1, 1) * H * 0.05, c.position.y + H * 0.08];
       this.washK = 1;
@@ -189,6 +194,7 @@ const TMPC = new THREE.Color();
 export class Alerts {
   constructor(hud) {
     this.hud = hud; this.game = hud.game; this.g = new THREE.Group(); hud.g.add(this.g);
+    this.scars = new Scars(this.g);   // (what hit them, left on the glass: scars.js)
     this.girls = this.game.players.map((p) => new Girl(this, p));
     this.EU = { res: { value: new THREE.Vector2(1, 1) }, fr: { value: new THREE.Vector2(0, 1) }, colL: { value: new THREE.Vector4() }, colR: { value: new THREE.Vector4() }, time: { value: 0 } };
     this.edge = new THREE.Mesh(quad, new THREE.ShaderMaterial({ uniforms: this.EU, vertexShader: EDGE_VERT, fragmentShader: EDGE_FRAG, transparent: true, depthTest: false, depthWrite: false }));
@@ -209,6 +215,7 @@ export class Alerts {
   warnDanger() {}   // (the old full-screen DANGER!!: the edges say it now)
   update(dt, t) {
     for (const g of this.girls) g.update(dt, t);
+    this.scars.update(dt, t, this.hud.L.H);
     const L = this.hud.L, H = L.H, g = this.game, both = !g.p2on();
     // what threatens each side now
     const want = [{ hide: 0, shot: 0, low: 0, left: 9 }, { hide: 0, shot: 0, low: 0, left: 9 }];

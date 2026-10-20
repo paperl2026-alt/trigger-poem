@@ -75,6 +75,20 @@
       "impact": { "hp": 600, "time": 0.07, "gap": 1.2 },
       "comboPitch": { "per": 6, "max": 4 }
     },
+    "mv": {
+      "_": "MV 导演（src/battle/mv.js，DESIGN「停留点不只是一个镜头、一种打法」）：lowHp 有人血量低于这个比例时画面毒电波腐化（调色渗出、故障、错误弹窗）；toxicMadness 那时的画面扭曲强度；comboEvery 连击每到这个数的倍数，一条标签条横穿画面。每拍的脉冲强度乘停留点预设的 mv（tuning/shots.json）。",
+      "lowHp": 0.25,
+      "toxicMadness": 0.18,
+      "comboEvery": 50,
+      "focus": { "at": 0.75, "hold": 0.6, "rest": 2.5, "_": "危机时刻去色（Game.danger）：只在打不掉的「快躲」攻击进度过 at、有人探身在外时；最长 hold 秒，之后歇 rest 秒" }
+    },
+    "escort": {
+      "_": "远处护卫（src/battle/escort.js）：hp 护卫目标的血量；speed 它沿路走的速度（米 / 秒）；share 它挨打时两人跟着掉的比例；fallDmg 它倒下时两人各掉多少（它会缓一会儿再起来，剩 40% 血）。站点的 escort 可以单独改。",
+      "hp": 600,
+      "speed": 1.1,
+      "share": 0.35,
+      "fallDmg": 18
+    },
     "ride": { "speed": 8, "lean": 0.9, "lines": 9, "behind": 7, "crashDmg": 14 }
   }
 }

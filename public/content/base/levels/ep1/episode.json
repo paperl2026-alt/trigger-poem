@@ -1,0 +1,123 @@
+{
+  "_doc": "第 1 话关卡包的 episodes（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "ep1": {
+    "id": "ep1",
+    "no": 1,
+    "title": { "zh": "第1话　腐蜜之家", "en": "Ep.1  Rotten Honey Home", "ja": "第1話　腐蜜の家" },
+    "sub": { "zh": "致敬：《スウィートホーム》(1989)", "en": "Homage: Sweet Home (1989)", "ja": "オマージュ：スウィートホーム (1989)" },
+    "blurb": {
+      "zh": "山坡尽头新开了一家意式冰淇淋店「DOLCE CASA」，开在一栋翻新的老洋馆里。两人冲进去正要点限定口味——门在身后自己关上了。",
+      "en": "A new gelateria, DOLCE CASA, has opened in an old mansion at the top of the hill. The girls rush in for the limited flavour, and the door shuts behind them by itself.",
+      "ja": "丘の上の古い洋館に、新しいジェラテリア「DOLCE CASA」ができた。限定フレーバーを目当てに飛び込んだ二人の背後で、扉がひとりでに閉まる。"
+    },
+    "steps": [
+      { "comic": "ep1_intro" },
+      { "comic": "ep1_turn" },
+      {
+        "stage": "shop",
+        "set": "ep1_shop",
+        "stations": ["sh1", "sh2"],
+        "name": { "zh": "冰淇淋店", "en": "GELATERIA", "ja": "ジェラテリア" },
+        "thumb": "ui/sel_thumb_ep1_shop"
+      },
+      { "comic": "ep1_glass" },
+      {
+        "door": { "frame": "ep1/door1_frame", "leaf": "ep1/door1_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_photo" },
+      {
+        "stage": "gallery",
+        "set": "ep1_gallery",
+        "stations": ["ga0", "ga1", "ga2", "ga2b"],
+        "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" },
+        "thumb": "ui/sel_thumb_ep1_gallery"
+      },
+      { "comic": "ep1_web" },
+      {
+        "door": { "frame": "ep1/door2_frame", "leaf": "ep1/door2_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_fountain" },
+      {
+        "stage": "garden",
+        "set": "ep1_garden",
+        "stations": ["gd1", "gd2"],
+        "name": { "zh": "温室与骑士厅", "en": "GLASSHOUSE", "ja": "温室と騎士の間" },
+        "thumb": "ui/sel_thumb_ep1_garden"
+      },
+      {
+        "stage": "cold",
+        "set": "ep1_cold",
+        "stations": ["co1", "co2"],
+        "name": { "zh": "地下冷库", "en": "COLD STORE", "ja": "地下冷凍庫" },
+        "thumb": "ui/sel_thumb_ep1_cold"
+      },
+      {
+        "door": { "frame": "ep1/door4_frame", "leaf": "ep1/door4_leaf", "leaves": 1, "hinge": "left" }
+      },
+      { "comic": "ep1_nursery" },
+      {
+        "stage": "nursery",
+        "set": "ep1_nursery",
+        "stations": ["nu1", "nu2"],
+        "name": { "zh": "儿童房", "en": "NURSERY", "ja": "子供部屋" },
+        "thumb": "ui/sel_thumb_ep1_nursery"
+      },
+      {
+        "stage": "oven",
+        "set": "ep1_oven",
+        "stations": ["ov1", "ov2"],
+        "name": { "zh": "烤炉厨房", "en": "BAKERY", "ja": "パン焼き窯" },
+        "thumb": "ui/sel_thumb_ep1_oven"
+      },
+      { "comic": "ep1_fall" },
+      { "comic": "ep1_double" },
+      {
+        "stage": "tunnel",
+        "set": "ep1_pit",
+        "stations": ["pt1", "pt2", "pt3"],
+        "name": { "zh": "蜜之坑道", "en": "HONEY TUNNEL", "ja": "蜜の坑道" },
+        "thumb": "ui/sel_thumb_ep1_pit"
+      },
+      {
+        "stage": "mine",
+        "set": "ep1_mine",
+        "stations": ["mn1"],
+        "name": { "zh": "蜜矿矿车", "en": "HONEY MINE RIDE", "ja": "蜜の鉱山トロッコ" },
+        "thumb": "ui/sel_thumb_ep1_pit"
+      },
+      { "boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit" },
+      {
+        "stage": "soul",
+        "set": "ep1_nether",
+        "stations": ["ne2"],
+        "name": { "zh": "灵魂的归途", "en": "THE SOUL GOES HOME", "ja": "魂の帰り道" },
+        "thumb": "ui/sel_thumb_ep1_pit"
+      },
+      {
+        "door": { "frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left" }
+      },
+      { "comic": "ep1_studio" },
+      {
+        "stage": "studio",
+        "set": "ep1_studio",
+        "stations": ["st1", "st2"],
+        "name": { "zh": "画室", "en": "STUDIO", "ja": "アトリエ" },
+        "thumb": "ui/sel_thumb_ep1_studio"
+      },
+      { "comic": "ep1_merge" },
+      {
+        "boss": "madame",
+        "set": "ep1_studio",
+        "station": "boss",
+        "name": { "zh": "夫人的画像", "en": "HER PORTRAIT", "ja": "夫人の肖像" },
+        "thumb": "ui/sel_thumb_ep1_boss"
+      },
+      { "comic": "ep1_end" }
+    ],
+    "cover": "ui/sel_card_ep1",
+    "set": "ep1_shop",
+    "par": 900,
+    "reward": { "item": "cone" },
+    "unlocks": ["ep2"]
+  }
+}

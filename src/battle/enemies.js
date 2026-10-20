@@ -12,6 +12,7 @@ import { sfx, cry } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 
+const TELL_W = new THREE.Color();
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r); // [a, b] = random between, a number = itself
 const STEP = 1 / 12;
@@ -325,7 +326,10 @@ export class Enemy extends Actor {
     world.scene.add(this.root);
     const P = this.root.position;
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
-    if (world.fit && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop' && s.from !== 'statue') {   // (flyers: their hovering spot, below)
+    // an escort stop (escort.js): it comes in along the guarded thing's way, far off, and goes for it, not for the girls
+    this.escortT = !!(game.escort?.going && !s.forGirls);
+    if (this.escortT && s.free) { const q = game.escort.pos; this.goal.set(q.x, 0, q.z); }
+    if (world.fit && !s.free && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop' && s.from !== 'statue') {   // (flyers: their hovering spot, below)
       const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
@@ -348,7 +352,8 @@ export class Enemy extends Actor {
       else if (s.from === 'outside' && Hd0) P.set((s.x ?? 0) < 0 ? Hd0.x0 - 4 : Hd0.x1 + 4, s.y ?? 2.6, s.z);
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
-      if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true, { far: T.layout.monster.spawnFar, min: T.layout.monster.spawnMin });
+      if (s.free && this.escortT) { const q = game.escort.pos; this.home.set(q.x + rnd(-2, 2), rr(bp.homeY) + 1, q.z + rnd(-2, 2)); }
+      else if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true, { far: T.layout.monster.spawnFar, min: T.layout.monster.spawnMin });
       // a painted station: stay in front of the painted walls and inside the picture
       if (world.plates) {
         const d = Math.min(c.z - this.home.z, world.maxZ() * rnd(0.6, 0.9));
@@ -464,6 +469,7 @@ export class Enemy extends Actor {
       const b = this.screenBox();
       this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t, this.timer, b, wc);
     }
+    this.tell(dt, t);
   }
 
   // the turning-around scare (docs/DESIGN.md 第 1 话 ⑰): frames.scare = back turned eating, its head lifting, looking over its shoulder,
@@ -484,20 +490,51 @@ export class Enemy extends Actor {
   // does not help: flyers' dives), 'hide' = a blast nothing stops (hide), null = an ordinary attack (a bite, a throw whose projectiles carry
   // their own marker): no marker
   // (a walker with "rush": its lunge is a ram, like the half-body ghoul crawling at you: kill it fast)
-  markKind() { return this.def.blast ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.rushes() ? 'kill' : null; }
+  markKind() { return this.blasting ? 'hide' : this.beh === 'flyer' || this.beh === 'crawler' || this.rushes() ? 'kill' : null; }
   rushes() { return !!this.def.rush || this.move === 'charge'; }
   startWindup(time) {
     cry(this.type, 'windup', 0, this.center());   // its cry, when recorded (content audio/sounds.json monsters), from where it is
+    // its big attack (enemies.json blast; chance: how often a wind-up is one, else it throws as usual; windup: its own, longer gathering) -
+    // a magic one draws its circle now
+    const B = this.def.blast;
+    this.blasting = !!B && Math.random() < (B.chance ?? 1);
+    if (this.blasting && B.windup) time = B.windup;
     this.state = 'windup';
     this.timer = this.timer0 = time;
-    if (this.beh !== 'walker') this.targetSlot = this.def.blast ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
+    if (this.blasting && B.charge) this.chargeFx = this.game.vfx.play(B.charge, this.uvToWorld(0.5, 0.5), { life: time });
+    if (this.beh !== 'walker') this.targetSlot = this.blasting ? -1 : this.game.pickTarget(this.root.position.x - this.game.world.camPos.x);
     if (this.lock) this.lock.remove();
     this.mark = this.markKind();
     this.lock = this.mark ? this.game.fx.lock(this.mark, this.targetSlot) : null;
-    if (this.beh !== 'walker') this.game.fx.charge(this, this.def.blast ? 0xff4fc8 : 0xffb04a);   // the glow it gathers (art has no effects drawn in)
+    if (this.beh !== 'walker' || this.mark) this.game.fx.charge(this, this.blasting ? 0xff4fc8 : this.mark === 'kill' ? 0xff3a5a : 0xffb04a);   // the glow it gathers, the air drawn in (art has no effects drawn in)
+    this.glinted = false; this.froze = false;
     sfx.warn();
   }
-  endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
+  endWindup() {
+    if (this.lock) { this.lock.remove(); this.lock = null; }
+    if (this.chargeFx) { this.chargeFx.stop(this.state === 'windup' && this.timer <= 0); this.chargeFx = null; }   // (its circle: flares as it goes off, fizzles if cut short)
+  }
+  // the warning on its own body (docs/DESIGN.md「攻击将至的预警」): its outline - white, "it can be shot" - pulses in the colour of what
+  // is coming and thickens as the blow comes (purple: get down; red: shoot it; amber: an ordinary bite); a girl's aim on it lights it
+  // up too (the assist outline); the moment before the blow a glint at its eyes / its weapon; a blow she cannot stop, while she is up:
+  // the world holds still for a few frames to give her a moment
+  tell(dt, t) {
+    const U = this.u, g = this.game; if (!U.outlineW || U.outlineOn.value < 0.5) return;
+    const wind = this.state === 'windup' && this.timer0 > 0, p = wind ? Math.min(1, 1 - this.timer / this.timer0) : 0;
+    this.aimedT = Math.max(0, (this.aimedT || 0) - dt);
+    const col = wind ? (this.mark === 'hide' ? 0xb04dff : this.mark === 'kill' ? 0xff2a4a : 0xffa040) : this.aimedT > 0 ? 0xff5a6a : 0xffffff;
+    const beat = 0.5 + 0.5 * Math.sin(t * (6 + p * 18));
+    U.outlineCol.value.setHex(col).lerp(TELL_W.setRGB(1, 1, 1), wind ? (1 - beat) * 0.5 : this.aimedT > 0 ? 0.35 * beat : 0);
+    U.outlineW.value = wind ? 1.15 + p * 0.9 + beat * 0.2 : this.aimedT > 0 ? 1.3 : 1;
+    if (wind && !this.glinted && this.timer < 0.14) {
+      this.glinted = true; const fr = this.def.glintAt || this.bp.throwFrom || [0.5, 0.82];
+      g.fx.glint(this.uvToWorld(fr[0], fr[1]), col, this.mark ? 1.2 : 0.8); sfx.tink?.(0);
+    }
+    if (wind && this.mark === 'hide' && !this.froze && this.timer < 0.09) {
+      const P = g.players.filter((q) => q.exposed && (this.targetSlot === -1 || q.slot === this.targetSlot));
+      if (P.length) { this.froze = true; g.G.stop(0.07); }
+    }
+  }
 
   // ---- stagger: enough sustained hits interrupt whatever it was about to do
   // only a special attack being gathered ('kill') is broken off by hits: ordinary hits never freeze a monster (DESIGN「怪物挨打的样子」)
@@ -529,6 +566,7 @@ export class Enemy extends Actor {
     const g = this.game, P = this.root.position, tw = g.etw, bp = this.bp;
     if (this.state === 'walk') {
       if (this.moving) return;   // (a hop / roll / burrow under way)
+      if (this.escortT && g.escort.going) { const q = g.escort.pos; this.goal.set(q.x, 0, q.z); }   // (after what they guard: it moves on)
       const dx = this.goal.x - P.x, dz = this.goal.z - P.z, d = Math.hypot(dx, dz), M = this.move;
       if ((M === 'hop' || M === 'zigzag' || M === 'burrow') && d > bp.windupDist + 0.4) {
         this.inner.position.y = 0;
@@ -556,7 +594,7 @@ export class Enemy extends Actor {
         this.state = 'leap';
         this.play('leap');
         // jump onto the barricade, right in your face
-        const cov = g.world.covers[this.targetSlot]?.def, c = g.world.camPos;
+        const cov = this.escortT ? null : g.world.covers[this.targetSlot]?.def, c = this.escortT && g.escort.going ? g.escort.pos : g.world.camPos;
         // onto the barricade: just beyond it on the monster's side, whichever way the camera looks
         let tx = P.x, tz = P.z;
         if (cov) { const dx = cov.x - c.x, dz = cov.z - c.z, d = Math.hypot(dx, dz) || 1; tx = cov.x + dx / d * bp.leapOntoCover; tz = cov.z + dz / d * bp.leapOntoCover; }
@@ -679,7 +717,7 @@ export class Enemy extends Actor {
       if (this.timer <= 0) {
         this.endWindup();
         this.play('throw');
-        if (this.def.blast) this.blast();
+        if (this.blasting) this.blast();
         else if (this.def.summon && this.game.actors.filter((a) => a.alive && this.def.summon.some((q) => q.type === a.type)).length < (this.def.summonMax ?? 99)) {
           // it calls things up around itself instead of throwing (enemies.json summon: spawns, x / z relative; while fewer than summonMax
           // of them are up, else it throws)
@@ -692,7 +730,7 @@ export class Enemy extends Actor {
           for (let i = 0; i < n; i++) {
             this.game.etw.wait(i * 0.16, () => {
               if (!this.alive) return;
-              this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0 });
+              this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0, ...(this.escortT && this.game.escort.going ? { at: this.game.escort.pos, escortT: true } : {}) });
               sfx.throwIt(0);
             });
           }
@@ -728,18 +766,24 @@ export class Enemy extends Actor {
     return true;
   }
 
-  // a must-hide attack: everyone not behind cover is hit (cover takes it, and a little gets through)
+  // a must-hide attack: everyone not behind cover is hit (cover takes it, and a little gets through). Its look is its vfx preset
+  // (tuning/vfx.json): a burst where it stands (the pink wave and confetti of the old blasts), or a breath / spray / bolt that pours at the
+  // girls - fire, smoke, foam, magic - and hits as it gets to them, smoke and foam left hanging in front of the camera
   blast() {
-    const g = this.game, B = this.def.blast;
-    sfx.slam(); sfx.madness();
-    g.post.flash(0.55, 0xff5ac8);
-    g.post.shake(1.2);
-    const p = this.uvToWorld(0.5, 0.5), s = g.world.project(p);
-    g.fx.soundWave(s.x, g.H - s.y, 0xff4fc8);   // the wave itself is the program's (the art has none drawn in)
-    g.fx.confetti(p, 30, 2.4, [COL.pink, COL.white, COL.hot]);
-    g.fx.star(p, 3, COL.pink);
+    const g = this.game, B = this.def.blast, name = B.vfx || 'blast', V = T.vfx?.[name] || {};
+    const p = this.uvToWorld(0.5, 0.5), s = g.world.project(p), cam = g.world.camera;
+    const to = cam.position.clone().add(cam.getWorldDirection(new THREE.Vector3()).multiplyScalar(1.1)).add(new THREE.Vector3(0, -0.35, 0));
+    const h = g.vfx.play(name, p, { n: g.world.camPos.clone().sub(p).setY(0).normalize(), to });
+    sfx.madness();
+    if (!V.stream) {
+      sfx.slam(); g.post.flash(0.55, 0xff5ac8); g.post.shake(1.2);
+      g.fx.soundWave(s.x, g.H - s.y, 0xff4fc8);   // the wave itself is the program's (the art has none drawn in)
+      g.fx.confetti(p, 30, 2.4, [COL.pink, COL.white, COL.hot]);
+      g.fx.star(p, 3, COL.pink);
+    }
     g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.62, 0.26, 0);
-    g.playerAttacked({ kind: 'ranged', dmg: B.dmg, from: this, heavy: true, slot: -1 });
+    const hit = () => g.playerAttacked({ kind: 'ranged', dmg: B.dmg, from: this, heavy: true, slot: -1 });
+    if (h.arrive > 0.05) g.etw.wait(h.arrive * 0.8, () => { if (g.combat) hit(); }); else hit();
   }
 
   updateCrawler(dt, t) {
@@ -1024,7 +1068,8 @@ export class Projectile extends Actor {
     this.threat = 'shot';
     this.targetSlot = opts.slot ?? game.pickTarget(from.x - c.x);
     const side = (this.targetSlot ? 1 : -1) * rr(bp.side);
-    this.to = new THREE.Vector3(c.x + side, c.y + rr(bp.dropY), c.z - bp.stop);
+    this.to = opts.at ? opts.at.clone() : new THREE.Vector3(c.x + side, c.y + rr(bp.dropY), c.z - bp.stop);   // (at: thrown at what they guard, escort.js)
+    this.escortT = !!opts.escortT;
     this.ctrl = this.from.clone().lerp(this.to, 0.5).add(new THREE.Vector3((Math.random() - 0.5) * bp.wobble + (opts.curve || 0), opts.arc ?? P.arc ?? bp.arc, 0));
     this.T = opts.time || bp.time;
     this.t = 0;
@@ -1042,6 +1087,7 @@ export class Projectile extends Actor {
     this.root.position.set(m * m * a.x + 2 * m * k * b.x + k * k * c.x, m * m * a.y + 2 * m * k * b.y + k * k * c.y, m * m * a.z + 2 * m * k * b.z + k * k * c.z);
     this.inner.rotation.z += this.spin * dt;
     if (this.kind === 'orb') this.inner.scale.setScalar(1 + Math.sin(tt * 20) * 0.06);
+    const TR = C.projectiles[this.kind]?.trail; if (TR) this.game.vfx.trail(TR, this.root.position, dt, { key: this });   // (its fire / smoke / glow behind it)
     const s = this.game.world.project(this.root.position);
     const box = this.screenBox();
     // its sight: drawn on it and its hit zone (screen px, y down like the pointer): generous, it grows as it comes closer

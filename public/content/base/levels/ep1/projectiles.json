@@ -1,0 +1,12 @@
+{
+  "_doc": "第 1 话关卡包的 projectiles（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "furniture": {
+    "keys": ["p_chair", "p_cup", "p_candle", "p_chair_b", "p_cup_b", "p_candle_b"],
+    "size": 0.7,
+    "spin": 4,
+    "scar": "crack",
+    "trail": "smokeTrail"
+  },
+  "cherry": { "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"], "size": 0.45, "spin": 8, "scar": "splat", "scarColor": "#d01830" },
+  "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3, "scar": "splat", "scarColor": "#ffe0f0" }
+}

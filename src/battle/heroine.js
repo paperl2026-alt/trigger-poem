@@ -16,6 +16,9 @@ import { Ease } from '../core/tween.js';
 
 // her actions besides cover and fire, each a still of its own with its rig (characters/<id>.json rig.<name>; DESIGN「女主动起来」)
 const ACTIONS = ['blind', 'sidehide', 'sidefire', 'leap', 'land', 'aerial'];
+// her pose sets (characters/<id>.json rig.sets.<set>: { cover, fire, actions } - the rig entries she uses at that kind of stop: riding,
+// running, the scope; tuning/shots.json players.set). A set she has no pictures for uses the cover set's (the cover / fire stills)
+const setNames = (R) => Object.values(R.sets || {}).flatMap((s) => [s.cover, s.fire]).filter(Boolean);
 
 const SUBSTEP = 1 / 240;
 
@@ -31,7 +34,7 @@ export class Heroine {
     this.poses = {};
     // cover and fire always; her other actions where her rig has them (DESIGN「女主动起来」: blind fire, side-on at a tall cover, leaping,
     // landing, flipping through the air in her special; round 68)
-    for (const name of ['cover', 'fire', ...ACTIONS.filter((n) => R[n] && tex[R[n].img])]) {
+    for (const name of [...new Set(['cover', 'fire', ...ACTIONS, ...setNames(R)])].filter((n) => n === 'cover' || n === 'fire' || (R[n] && tex[R[n].img]))) {
       const P = R[name];
       const m = rigMesh(tex[P.img], P.w.map((k) => tex[k]), P.rig, P.flesh);
       const sw = new Sweat(r, tex[P.w[0]].image, m.userData.flesh, m.userData.ar);
@@ -72,7 +75,7 @@ export class Heroine {
       this.downAr = tex[dk].image.height / tex[dk].image.width;
       player.group.add(this.downM);
     }
-    this.pose = 'cover'; this.out = false;
+    this.pose = 'cover'; this.out = false; this.set = 'cover';
     this.exert = 0.3; this.acc = 0; this.lastBreath = 0; this.hitT = 0;
     this.canvasPx = 600;
     this.aura = { col: new THREE.Color(1, 1, 1), a: 0, flow: 0, pulse: 0, halo: 0 };
@@ -92,10 +95,13 @@ export class Heroine {
   dims(name) { const P = this.R[name], m = this.poses[name], h = P.h / P.canvasH * this.canvasPx; return { h, w: h / m.userData.ar }; }
   // ---- drives (same feel as the validation)
   kick(k) { this.body.jolt(k, this.J.amp); }                     // Soft-compatible: a jolt into cloth and flesh
+  // the pose set of this kind of stop (player.js from the shot)
+  setSet(name) { this.set = name; }
   // out of cover or in it; want: the action she is doing (player.js pose) if she has a picture for it
   setOut(out, want) {
-    if (want === 'active' || want === 'activeOut') want = 'aerial';   // (her special: up in the air, flipping)
-    const next = want && this.poses[want] ? want : out ? 'fire' : 'cover';
+    const S = this.set !== 'cover' ? this.R.sets?.[this.set] : null, base = out ? (S?.fire && this.poses[S.fire] ? S.fire : 'fire') : (S?.cover && this.poses[S.cover] ? S.cover : 'cover');
+    if (S && !S.actions?.includes(want)) want = null;   // (a set's own actions only: no blind fire in a cart)
+    const next = want && this.poses[want] ? want : base;
     if (out === this.out && next === this.pose) return;
     const popped = out !== this.out;
     this.out = out;
@@ -114,7 +120,7 @@ export class Heroine {
   hurt(heavy) { this.body.jolt(heavy ? 2.2 : 1.6, this.J.amp); this.body.recoil(this.p.side, heavy ? 1.4 : 0.9, this.J.amp, 0.6); this.hitT = 0.35; }
   // the muzzle in the Player's pixel space
   muzzle() {
-    const name = this.R[this.pose]?.muzzle ? this.pose : 'fire', F = this.R[name], m = this.poses[name], { w, h } = this.dims(name);
+    const name = this.R[this.pose]?.muzzle ? this.pose : this.poses[this.R.sets?.[this.set]?.fire] ? this.R.sets[this.set].fire : 'fire', F = this.R[name], m = this.poses[name], { w, h } = this.dims(name);
     const u = this.p.mirror ? 1 - F.muzzle[0] : F.muzzle[0];
     return { x: this.g.position.x + m.position.x + (u - 0.5) * w, y: this.g.position.y + m.position.y + F.muzzle[1] * h };
   }
@@ -132,13 +138,16 @@ export class Heroine {
       tt += SUBSTEP;
       b.update(SUBSTEP, tt, J.amp, J.ring, st.state === 'out', J.rhythm, this.exert);
       const kick = b.kick * 0.55; b.kick = 0;
+      // (only the picture on screen: she has many poses now and each one's flesh is a simulation - the hidden ones wait at rest)
       for (const p of Object.values(this.poses)) {
+        if (!p.visible) continue;
         const { B, X } = b.pose(sign, p.userData.ar);
         p.userData.flesh.step(SUBSTEP, B, X, J.amp, J.ring, b.breath, kick, [b.pulse[0] * sign, b.pulse[1]]);
       }
       this.breath.update(SUBSTEP);
     }
     for (const p of Object.values(this.poses)) {
+      if (!p.visible) { p.userData.halo.visible = false; for (const e of p.userData.echoes) e.visible = false; continue; }
       const name = p.userData.name, { w, h } = this.dims(name), au = this.R[name].anchor;
       const sx = w * (1 - b.sq.x * 0.5), sy = w * (1 + b.sq.x);
       p.scale.set(sign < 0 ? -sx : sx, sy, 1);

@@ -1,0 +1,49 @@
+{
+  "_doc": "第 0 话关卡包的 bosses（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "qq": {
+    "beh": "thing",
+    "name": { "zh": "？？？", "en": "???", "ja": "？？？" },
+    "hp": 8000,
+    "stunTime": 1.6,
+    "firstDelay": 1.6,
+    "speed": 1.6,
+    "rest": [1.0, 1.8],
+    "summonRest": 2.5,
+    "zone": { "x": [-3.5, 3.5], "z": [-6, -3.5] },
+    "stages": [
+      { "at": 1, "h": 3.8, "pattern": ["drift", "volley", "drift", "lunge", "drift", "volley"], "core": [0.62, 0.81, 0.11] },
+      { "at": 0.8, "h": 4.3, "pattern": ["drift", "volley", "drift", "lunge", "drift", "burst"], "core": [0.17, 0.21, 0.11] },
+      {
+        "at": 0.6,
+        "h": 4.9,
+        "pattern": ["drift", "lunge", "drift", "volley", "drift", "burst", "summon"],
+        "summon": [{ "type": "chair", "from": "pop", "x": -2, "z": -1 }, { "type": "chair", "from": "pop", "x": 2, "z": -1.5 }],
+        "core": [0.55, 0.38, 0.11]
+      },
+      { "at": 0.4, "h": 4.6, "float": true, "y": 2.3, "pattern": ["volley", "drift", "burst", "drift", "lunge", "drift"], "core": [0.33, 0.8, 0.11] },
+      {
+        "at": 0.2,
+        "h": 4.0,
+        "float": true,
+        "y": 2.6,
+        "core": [0.2, 0.63, 0.11],
+        "pattern": ["volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
+        "summon": [{ "type": "book", "x": -2, "y": 2.4, "z": -2 }, { "type": "paper", "x": 2, "y": 2.2, "z": -2.5 }]
+      }
+    ],
+    "volley": { "shots": [3, 5], "gap": 0.5, "flight": 1.9, "dmg": 14, "projectiles": ["eye", "ooze", "hair", "tooth", "lips", "eyes"] },
+    "lunge": { "windup": 1.8, "time": 0.45, "dmg": 22, "coverDmg": 50, "poise": 120 },
+    "burst": { "windup": 2.6, "dmg": 26 },
+    "summon": [{ "type": "paper", "x": -2, "y": 2.2, "z": -2 }],
+    "wreckAt": 2,
+    "schoolAfter": "st4/front2",
+    "texts": {
+      "mutate": { "zh": "它在变异!", "en": "IT'S MUTATING!", "ja": "変異している!" },
+      "s2": { "zh": "变异扩散!", "en": "IT SPREADS!", "ja": "変異拡大!" },
+      "s3": { "zh": "完全变异!", "en": "FULL MUTATION!", "ja": "完全変異!" },
+      "s4": { "zh": "失控!", "en": "OUT OF CONTROL!", "ja": "暴走!" },
+      "s5": { "zh": "核心暴露!", "en": "THE CORE!", "ja": "核心露出!" }
+    },
+    "coreMul": 1
+  }
+}

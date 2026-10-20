@@ -13,6 +13,7 @@ import { C, T } from '../core/content.js';
 import { shadowTex, COL } from './fx.js';
 import { Physics, physicsReady } from './physics.js';
 import { FR } from '../core/particles.js';
+import { shotOf } from './shot.js';
 
 const tmpV = new THREE.Vector3(), tmpV3 = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -265,7 +266,7 @@ export class PanelWorld {
       this.tiles.push({ g, t, x: xa + tw / 2, z: za - tl / 2 });
     }
     // holes there from the start (hall.holes: { on, z, y, size }: a spawner pours monsters out of one)
-    for (const o of Hd.holes || []) this.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z), o.size ?? 1.6);
+    for (const o of Hd.holes || []) this.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z), o.size ?? 1.6, false, true);   // (built with the place: no burst)
     // (the drawbridge's gap: no floor there)
     if (Hd.bridge) for (const t of this.tiles) if (t.z < Hd.bridge.z0 - 0.05 && t.z > Hd.bridge.z1 + 0.05) t.g.visible = false;
     // under the floor: the void the folds open onto
@@ -341,16 +342,20 @@ export class PanelWorld {
     const fw = new THREE.Vector3(), ray = new THREE.Ray(), hit = new THREE.Vector3(), floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     for (const list of Object.values(this.coverSets)) for (const cv of list) {
       const p = players[cv.slot]; if (!p || !p.H) continue;
-      const st = cv.st, H = p.H, W = p.W;
+      const st = cv.st, H = p.H, W = p.W, SP = shotOf(st), Pl = SP.players || {}, sc = Pl.scale ?? 1;
+      cam.fov = this.baseFov - (SP.cam?.zoom || 0); cam.updateProjectionMatrix();   // (that stop's shot: its scope narrows the view)
       cam.position.set(...st.cam); cam.lookAt(new THREE.Vector3(...st.look)); cam.updateMatrixWorld();
-      // her kneeling figure on screen: its height sets the cover's top, its width and middle the cover's width and middle
-      let kh = p.H * 0.4, kw = kh * 0.75, cx = p.baseX;
-      if (p.hero) { const d = p.hero.dims('cover'), au = p.hero.R.cover.anchor; kh = d.h; kw = d.w; cx = p.baseX - ((p.mirror ? 1 - au : au) - 0.5) * d.w; }
+      // her kneeling figure on screen in that stop's shot (tuning/shots.json players: where, how big, how far sunk): its height sets the
+      // cover's top, its width and middle the cover's width and middle
+      const bx = p.frame ? p.frame.x + p.frame.w * (Pl.x?.[cv.slot] ?? 0.5) : p.baseX;
+      let kh = p.H * 0.4 * sc, kw = kh * 0.75, cx = bx;
+      if (p.hero) { const d = p.hero.dims('cover'), au = p.hero.R.cover.anchor; kh = d.h * sc; kw = d.w * sc; cx = bx - ((p.mirror ? 1 - au : au) - 0.5) * d.w * sc; }
+      const pb = p.bottom + (Pl.y ?? 0) * H - (Pl.crop ?? 0) * (p.hero ? p.hero.standH() : H * 0.42) * sc;   // (her feet in that shot)
       // its foot on the floor a little above her feet on screen (= just beyond her), its top at a share of her kneeling height;
       // wider than her (a narrow drawing gets a higher top, up to maxTop)
-      const sx = cx + p.side * kw * L.x, base = p.bottom + H * L.lift;
-      let top = p.bottom + kh * L.top;
-      top = Math.min(p.bottom + kh * L.maxTop, Math.max(top, base + kw * L.w / cv.ar * cv.solid));
+      const sx = cx + p.side * kw * L.x, base = Math.max(H * L.lift, pb + H * L.lift);
+      let top = pb + kh * L.top;
+      top = Math.min(pb + kh * L.maxTop, Math.max(top, base + kw * L.w / cv.ar * cv.solid));
       ray.origin.copy(cam.position);
       ray.direction.set(sx / W * 2 - 1, base / H * 2 - 1, 0.5).unproject(cam).sub(cam.position).normalize();
       if (!ray.intersectPlane(floor, hit)) continue;
@@ -409,7 +414,7 @@ export class PanelWorld {
       const top = q.m.localToWorld(tmpV.set((Math.random() - 0.5) * q.w * 0.5, q.h * 0.8, 0)).clone();
       this.phys.knock(q.body, top, src, F.breakPush * (0.8 + Math.random() * 0.4), F.breakUp);
       this.phys.chipsAt(tmpV.set(P.x, q.h * 0.5, P.z).clone(), dir, F.chips, [COL.bone, COL.paper, 0xd09060, 0xb87848]);
-      g.tweens.wait(F.fadeAfter, () => g.tweens.run(0.6, (e) => { q.m.material.uniforms.opacity.value = 1 - e; }, { onDone: () => { q.m.visible = false; q.sh.visible = false; this.phys.remove(q.body); q.body = null; } }));
+      g.tweens.wait(F.fadeAfter, () => g.tweens.run(0.6, (e) => { q.m.material.uniforms.opacity.value = 1 - e; }, { onDone: () => { q.m.visible = false; q.sh.visible = false; this.phys?.remove(q.body); q.body = null; } }));   // (the place may be gone by then: no world, no body to take out)
       return;
     }
     const c = this.camPos, away = Math.atan2(P.x - c.x, P.z - c.z) - q.m.rotation.y;
@@ -539,8 +544,14 @@ export class PanelWorld {
     }
   }
   // a hole broken through (on: left | right | end | back | ceil | floor, p: a world point on that surface, size in metres); it bursts open
-  addHole(on, p, size = 1.8, through = false) {   // (through: really cut through the wall - a way to walk on through: cutWall)
+  addHole(on, p, size = 1.8, through = false, quiet = false) {   // (through: really cut through the wall - a way to walk on through: cutWall)
     const Hd = this.set.hall, g = new THREE.Group();
+    // it bursts (tuning/vfx.json wallBreak / floorBreak / ceilBreak: the flash, chunks flying, dust spreading, sparks), toward the room
+    if (!quiet && this.game.vfx) {
+      const N = on === 'left' ? [1, 0, 0] : on === 'right' ? [-1, 0, 0] : on === 'end' ? [0, 0, 1] : on === 'back' ? [0, 0, -1] : on === 'ceil' ? [0, -1, 0] : [0, 1, 0];
+      const at = new THREE.Vector3(on === 'left' ? Hd.x0 + 0.2 : on === 'right' ? Hd.x1 - 0.2 : p.x, on === 'ceil' ? Hd.h - 0.2 : on === 'floor' || !on ? 0.15 : p.y, on === 'end' ? Hd.z1 + 0.2 : on === 'back' ? Hd.z0 - 0.2 : p.z);
+      this.game.vfx.play(on === 'ceil' ? 'ceilBreak' : on === 'left' || on === 'right' || on === 'end' || on === 'back' ? 'wallBreak' : 'floorBreak', at, { n: new THREE.Vector3(...N), scale: size / 2 });
+    }
     if (through && (on === 'left' || on === 'right')) this.cutWall(on, p.z, p.y, size * 0.56);
     const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map: holeTex(through), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4, side: through ? THREE.DoubleSide : THREE.FrontSide }));
     m.rotation.z = Math.random() * Math.PI * 2; m.renderOrder = 3; g.add(m);
@@ -881,7 +892,7 @@ export class PanelWorld {
     // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
     cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
     this.punch = (this.punch || 0) * Math.exp(-dt * 7);
-    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch;
+    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }

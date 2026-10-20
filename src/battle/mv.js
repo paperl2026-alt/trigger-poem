@@ -13,7 +13,7 @@
 // changing -> her name in a wall and a slam; low HP -> toxic waves (popups of errors, glitches, the colours bleeding); combo milestones.
 import * as THREE from 'three';
 import { T } from '../core/content.js';
-import { tr } from '../core/i18n.js';
+import { tr, t as ui } from '../core/i18n.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const say = (s) => (s && typeof s === 'object' && !Array.isArray(s) ? tr(s) : s);   // (a text: plain, or { zh, en, ja })
@@ -42,7 +42,8 @@ export class MV {
         this.beatI = i; const bar = i % 4 === 0, k = (bar ? 1 : 0.5) * (0.3 + this.over * 0.9) * (g.shot?.mv ?? 1);
         post.kick(0.35 * k + this.toxic * 0.4); if (bar && this.over > 0.5) post.flash(0.08, 0xff5ab0);
         if (g.combat && (bar || this.over > 0.5)) this.sparkle(bar ? 6 : 3);
-        if (this.over > 0.5 && bar) this.wall(this.overWord, 0.45, true);
+        // (no word walls on the beat while they fight: the walls are for the moments nobody plays - a close look, a cinematic stop)
+        if (this.over > 0.5 && bar && !g.combat) this.wall(this.overWord, 0.45, true);
       }
     }
     // toxic radio waves while a girl is nearly down: the colours bleed, now and then a glitch and an error window
@@ -50,7 +51,7 @@ export class MV {
     this.toxic += ((low && g.combat ? 1 : 0) - this.toxic) * Math.min(1, dt * 1.5);
     if (this.toxic > 0.5 && (this.toxicT -= dt) <= 0) {
       this.toxicT = rnd(2.5, 5); post.styleBurst(0.3, [3, 4], 0.1, 0x200018, 0xff2a6a);
-      if (Math.random() < 0.6) this.popups(['ERROR', 'HP LOW', '受信中…', 'つながらない', '404'], 3, 0.9);
+      const W = ui('mvToxic'); if (Math.random() < 0.6 && Array.isArray(W)) this.popups(W, 3, 0.9);
     }
     this.over = Math.max(0, this.over - dt * (this.overHold > 0 ? 0 : 0.6)); this.overHold = (this.overHold || 0) - dt;
     for (let i = this.items.length - 1; i >= 0; i--) {
@@ -75,22 +76,24 @@ export class MV {
     if (o.phone) this.phone(say(o.phone[0]), say(o.phone[1]), o.life ?? 2.4);
   }
   // ---- moods
-  overdrive(word, s = 6) { this.over = 1; this.overHold = s; this.overWord = word; this.tunnel(0.9); this.wall(word, 0.8, true); this.label(word); }
+  // (in a fight: one faint hollow wall for a moment and the label - what she shoots at must stay in sight; user 2026-10-20)
+  overdrive(word, s = 6) { this.over = 1; this.overHold = s; this.overWord = word; this.tunnel(0.9); if (this.g.combat) this.wall(word, 0.6, true, 0.18, true); else this.wall(word, 0.8, true); this.label(word); }
 
   // ---- the pieces
   sparkle(n) {
     const g = this.g; for (let i = 0; i < n; i++) g.fx.oAdd?.emit({ x: rnd(0, g.W), y: rnd(0, g.H), vx: rnd(-20, 20), vy: rnd(20, 80), life: rnd(0.3, 0.6), size: g.H * rnd(0.008, 0.02), size1: 0, color: [1, rnd(0.5, 1), rnd(0.7, 1)], a: 1, a1: 0, frame: 10 });
   }
-  wall(text, life = 0.7, flash = false) {
+  // (alpha: how strong; hollow: outlines only - in a fight)
+  wall(text, life = 0.7, flash = false, alpha = null, hollow = false) {
     if (!text) return;
     const g = this.g, W = g.W, H = g.H, rows = 7, rh = H / rows;
     const grp = new THREE.Group();
     for (let r = 0; r < rows; r++) {
       const col = PAL[(r + Math.floor(Math.random() * 7)) % PAL.length], s = `${text} `.repeat(Math.ceil(W / (rh * 0.9 * Math.max(1, text.length))) + 2);
-      const m = canvasQuad(W * 1.6, rh, (x, w, h) => { x.font = `900 ${Math.round(h * 0.86)}px ${FONT}`; x.textBaseline = 'middle'; x.fillStyle = col; x.strokeStyle = '#1a0010'; x.lineWidth = h * 0.06; x.strokeText(s, 0, h * 0.54); x.fillText(s, 0, h * 0.54); });
+      const m = canvasQuad(W * 1.6, rh, (x, w, h) => { x.font = `900 ${Math.round(h * 0.86)}px ${FONT}`; x.textBaseline = 'middle'; x.fillStyle = col; x.strokeStyle = hollow ? col : '#1a0010'; x.lineWidth = h * (hollow ? 0.035 : 0.06); x.strokeText(s, 0, h * 0.54); if (!hollow) x.fillText(s, 0, h * 0.54); });
       m.position.set(W / 2 + (r % 2 ? -1 : 1) * W * 0.1, H - rh * (r + 0.5), 0); m.userData.dir = r % 2 ? 1 : -1; grp.add(m);
     }
-    this.add(grp, life, (k, dt) => { for (const m of grp.children) { m.position.x += m.userData.dir * W * 0.6 * dt; m.material.opacity = (flash ? 0.55 : 0.85) * (k < 0.15 ? k / 0.15 : k > 0.7 ? (1 - k) / 0.3 : 1); } });
+    this.add(grp, life, (k, dt) => { for (const m of grp.children) { m.position.x += m.userData.dir * W * 0.6 * dt; m.material.opacity = (alpha ?? (flash ? 0.55 : 0.85)) * (k < 0.15 ? k / 0.15 : k > 0.7 ? (1 - k) / 0.3 : 1); } });
   }
   slam(text, sub = '', life = 1.4) {
     if (!text) return;
@@ -124,9 +127,9 @@ export class MV {
       this.add(m, life + i * 0.08, (k, dt, it) => { const kk = Math.min(1, it.t / 0.08); m.scale.setScalar(it.t < i * 0.08 ? 0.01 : kk); m.material.opacity = k > 0.8 ? (1 - k) / 0.2 : 1; });
     }
   }
-  label(text, life = 1.6) {
+  label(text, life = 1.1) {
     if (!text) return;
-    const g = this.g, W = g.W, H = g.H, h = H * 0.07;
+    const g = this.g, W = g.W, H = g.H, h = H * 0.045;   // (a thin band: brief, never a wall over the fight)
     const m = canvasQuad(W * 0.8, h, (x, w, hh) => { x.fillStyle = '#e8102a'; x.fillRect(0, 0, w, hh); x.fillStyle = '#fff'; x.font = `900 ${Math.round(hh * 0.7)}px ${FONT}`; x.textBaseline = 'middle'; x.fillText(`${text}  ▶▶▶  ${text}`, hh * 0.3, hh * 0.54); });
     m.rotation.z = -0.06; m.position.set(-W * 0.4, H * 0.3, 0);
     this.add(m, life, (k) => { m.position.x = -W * 0.4 + (W * 1.8) * Math.min(1, k * 1.6) * (k < 0.6 ? 1 : 1) - (k > 0.6 ? 0 : 0); m.material.opacity = k > 0.85 ? (1 - k) / 0.15 : 1; });

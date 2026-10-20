@@ -70,9 +70,16 @@ void main(){
     c = mix(vec3(0.05), mix(vec3(1.0), col, dot_), F) + col * G * 0.5; al = max(max(F, O), G * 0.45);
   }
   c += flash * step(0.01, al);
-  // coming / going: 1 glow dissolve, 2 directional glow wipe, 3 burn from below, 4 shatter, 5 ink spread
+  // coming / going: 1 glow dissolve, 2 directional glow wipe, 3 burn from below, 4 shatter, 5 ink spread, 6 light painting (a pen of
+  // light drawing it: what it has passed shows, a white-hot head where it is, the strokes behind still glowing)
   float keep = 1.0, edge = 0.0;
-  if (diss > 0.0) {
+  if (dmode > 5.5 && diss > 0.0) {
+    vec2 q = vUv - 0.5; float an = atan(q.y, q.x) / 6.2832 + 0.5;
+    float path = fract(an + length(q) * 1.6 + fbm(vUv * 3.0 + seed) * 0.35);
+    float done = 1.0 - diss, d = done - path;
+    keep = step(0.0, d);
+    edge = (1.0 - smoothstep(0.0, 0.05, d)) * keep * 1.8 + (1.0 - smoothstep(0.0, 0.3, d)) * keep * 0.5;
+  } else if (diss > 0.0) {
     float n = fbm(vUv * 6.0);
     vec2 dv = vec2(cos(dang), sin(dang));
     float th = dmode < 1.5 ? n : dmode < 2.5 ? dot(vUv - 0.5, dv) + 0.5 + (n - 0.5) * 0.2 : dmode < 3.5 ? vUv.y * 0.8 + n * 0.2 : dmode < 4.5 ? h(floor(vUv * 6.0)) : n;
@@ -110,7 +117,7 @@ void main(){
 // the spectrum the syllables walk along (hue stops); syllable i runs from stop i to a bit past stop i + 1
 const STOPS = ['#ff2438', '#ff7a14', '#ffc814', '#2ee05a', '#1aa8ff', '#9a4bff', '#ff4fc8'].map((c) => new THREE.Color(c));
 const along = (x, out) => { const n = STOPS.length - 1, f = ((x % n) + n) % n, i = Math.floor(f); return out.copy(STOPS[i]).lerp(STOPS[i + 1], f - i); };
-const IN = ['glow', 'wipe', 'pixel', 'glitch', 'squish', 'spin'];
+const IN = ['glow', 'wipe', 'pixel', 'glitch', 'squish', 'spin'];   // (and 'paint': the mantra's syllables, light painting)
 const OUT = ['glow', 'wipe', 'burn', 'shatter', 'ink', 'implode', 'pixel'];
 const MATS = 8;
 const T_IN = 0.16, T_HOLD = 0.14, T_OUT = 0.3;   // (short: what she hits must stay visible, DESIGN「Boss」)
@@ -206,10 +213,12 @@ export class Mantra {
     g.rot = rnd(-0.18, 0.18); g.m.renderOrder = opt.order || 41; g.circle.renderOrder = (opt.order || 41) - 0.5;
   }
   // the i-th syllable of her chant lands at (x, y) (overlay px, y up); a streak in its colour from the paw (x0, y0)
-  cast(x0, y0, x, y, i, crit = false) {
+  // (dist: how far it landed - nearer bigger, further smaller: DESIGN「命中的效果是 3D 的」; it is written in light: ein 'paint')
+  cast(x0, y0, x, y, i, crit = false, dist = null) {
     const n = this.syll.length, s = ((i % n) + n) % n, g = this.mesh(), H = this.game.H;
-    this.dress(g, s, this.syll[s], this.styles.mantra, s, { crit });
-    g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.size = H * (crit ? 0.16 : 0.11); g.light = true;
+    this.dress(g, s, this.syll[s], this.styles.mantra, s, { crit, ein: 'paint', speed: 0.8 });
+    const k = dist ? Math.max(0.35, Math.min(1.3, 4.2 / dist)) : 1;
+    g.x = x + rnd(-H * 0.01, H * 0.01); g.y = y + rnd(-H * 0.01, H * 0.01); g.size = H * (crit ? 0.16 : 0.11) * k; g.light = true;
     this.game.fx.tracer(x0, y0, x, y, g.u.c0.value.getHex());
     return g;
   }
@@ -250,6 +259,13 @@ export class Mantra {
       put('fx/fu_w_2', '㗊', 0.25, -side * 0.1, 0.2, 0.3);      // 㗊
     }
   }
+  // the pen of light writing it: a hot dot running round the character as it is drawn, sparks trailing off it (overlay)
+  pen(g, e) {
+    const fx = this.game.fx, c = g.u.c0.value, a = e * 6.2832 * 1.0 + g.u.seed.value, r = g.size * (0.18 + 0.22 * ((e * 2.7) % 1));
+    const px = g.x + Math.cos(a) * r, py = g.y + Math.sin(a) * r;
+    fx.oAdd.emit({ x: px, y: py, life: 0.12, size: g.size * 0.16, size1: g.size * 0.03, color: [1, 1, 1], a: 1, a1: 0, frame: FR.GLOW });
+    fx.oAdd.emit({ x: px, y: py, vx: -Math.sin(a) * g.size * 2, vy: Math.cos(a) * g.size * 2, life: 0.3, size: g.size * 0.08, size1: 0, color: [c.r, c.g, c.b], a: 0.9, a1: 0, frame: FR.STREAK, rot: a + Math.PI / 2, drag: 4 });
+  }
   burst(g, out) {   // sparks of light as it lands, ink drops and shards as it goes
     const fx = this.game.fx, c = g.u.c0.value, H = this.game.H, n = out ? 6 : 9;
     for (let i = 0; i < n; i++) {
@@ -279,10 +295,11 @@ export class Mantra {
       let sx = 1, sy = 1, rot = g.rot, dx = 0, dy = 0;
       u.a.value = g.light ? 0.85 : 1; u.diss.value = 0; u.dmode.value = 0; u.pix.value = 0; u.split.value = 0; u.wig.value = 0; u.flash.value = g.crit ? 0.12 : 0; u.time.value = time;
       u.k.value = Math.min(1, Math.max(0, (t - T_IN * 0.5) / (T_HOLD + T_OUT * 0.6)));
-      const mode = (e) => ({ glow: 1, wipe: 2, burn: 3, shatter: 4, ink: 5 }[e] || 0);
+      const mode = (e) => ({ glow: 1, wipe: 2, burn: 3, shatter: 4, ink: 5, paint: 6 }[e] || 0);
       if (t < T_IN) {   // ---- in
         const e = t / T_IN;
         if (g.ein === 'glow' || g.ein === 'wipe') { u.dmode.value = mode(g.ein); u.diss.value = 1 - e; sx = sy = 1.15 - 0.15 * e; }
+        else if (g.ein === 'paint') { u.dmode.value = 6; u.diss.value = 1 - e; this.pen(g, e); }
         else if (g.ein === 'pixel') { u.pix.value = 1 - e; }
         else if (g.ein === 'glitch') { u.split.value = 0.08 * (1 - e); dx = (Math.random() - 0.5) * H * 0.03 * (1 - e); u.a.value = Math.random() < 0.25 * (1 - e) ? 0.2 : 1; }
         else if (g.ein === 'squish') { const q = easeOutBack(e); sx = 0.3 + 0.7 * q + (1 - e) * 0.6; sy = 1.8 - 0.8 * q; }

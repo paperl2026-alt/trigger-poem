@@ -1,0 +1,8630 @@
+{
+ "boss/md_s1_attack": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_attack_rd",
+  "src": "assets/boss/md_s1_attack.webp",
+  "w": 521
+ },
+ "boss/md_s1_attack_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_attack_rd.png",
+  "w": 512
+ },
+ "boss/md_s1_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_hurt_rd",
+  "src": "assets/boss/md_s1_hurt.webp",
+  "w": 521
+ },
+ "boss/md_s1_hurt_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_hurt_rd.png",
+  "w": 512
+ },
+ "boss/md_s1_idle0": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_idle0_rd",
+  "src": "assets/boss/md_s1_idle0.webp",
+  "w": 521
+ },
+ "boss/md_s1_idle0_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_idle0_rd.png",
+  "w": 512
+ },
+ "boss/md_s1_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_idle1_rd",
+  "src": "assets/boss/md_s1_idle1.webp",
+  "w": 521
+ },
+ "boss/md_s1_idle1_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_idle1_rd.png",
+  "w": 512
+ },
+ "boss/md_s1_move": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_move_rd",
+  "src": "assets/boss/md_s1_move.webp",
+  "w": 521
+ },
+ "boss/md_s1_move_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_move_rd.png",
+  "w": 512
+ },
+ "boss/md_s1_windup": {
+  "anchor": "bottom",
+  "figH": 0.9578,
+  "h": 521,
+  "hit": true,
+  "relief": "boss/md_s1_windup_rd",
+  "src": "assets/boss/md_s1_windup.webp",
+  "w": 521
+ },
+ "boss/md_s1_windup_rd": {
+  "h": 512,
+  "src": "assets/boss/md_s1_windup_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_attack": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_attack_rd",
+  "src": "assets/boss/md_s2_attack.webp",
+  "w": 519
+ },
+ "boss/md_s2_attack_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_attack_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_hurt_rd",
+  "src": "assets/boss/md_s2_hurt.webp",
+  "w": 519
+ },
+ "boss/md_s2_hurt_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_hurt_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_idle0": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_idle0_rd",
+  "src": "assets/boss/md_s2_idle0.webp",
+  "w": 519
+ },
+ "boss/md_s2_idle0_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_idle0_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_idle1_rd",
+  "src": "assets/boss/md_s2_idle1.webp",
+  "w": 519
+ },
+ "boss/md_s2_idle1_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_idle1_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_move": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_move_rd",
+  "src": "assets/boss/md_s2_move.webp",
+  "w": 519
+ },
+ "boss/md_s2_move_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_move_rd.png",
+  "w": 512
+ },
+ "boss/md_s2_windup": {
+  "anchor": "bottom",
+  "figH": 0.9846,
+  "h": 518,
+  "hit": true,
+  "relief": "boss/md_s2_windup_rd",
+  "src": "assets/boss/md_s2_windup.webp",
+  "w": 519
+ },
+ "boss/md_s2_windup_rd": {
+  "h": 511,
+  "src": "assets/boss/md_s2_windup_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_attack": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_attack_rd",
+  "src": "assets/boss/md_s3_attack.webp",
+  "w": 549
+ },
+ "boss/md_s3_attack_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_attack_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_hurt_rd",
+  "src": "assets/boss/md_s3_hurt.webp",
+  "w": 549
+ },
+ "boss/md_s3_hurt_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_hurt_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_idle0": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_idle0_rd",
+  "src": "assets/boss/md_s3_idle0.webp",
+  "w": 549
+ },
+ "boss/md_s3_idle0_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_idle0_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_idle1_rd",
+  "src": "assets/boss/md_s3_idle1.webp",
+  "w": 549
+ },
+ "boss/md_s3_idle1_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_idle1_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_move": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_move_rd",
+  "src": "assets/boss/md_s3_move.webp",
+  "w": 549
+ },
+ "boss/md_s3_move_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_move_rd.png",
+  "w": 512
+ },
+ "boss/md_s3_windup": {
+  "anchor": "bottom",
+  "figH": 0.9682,
+  "h": 503,
+  "hit": true,
+  "relief": "boss/md_s3_windup_rd",
+  "src": "assets/boss/md_s3_windup.webp",
+  "w": 549
+ },
+ "boss/md_s3_windup_rd": {
+  "h": 469,
+  "src": "assets/boss/md_s3_windup_rd.png",
+  "w": 512
+ },
+ "comic/ep1p_boss": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_boss.webp",
+  "w": 1920
+ },
+ "comic/ep1p_double": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_double.webp",
+  "w": 1920
+ },
+ "comic/ep1p_end": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_end.webp",
+  "w": 1920
+ },
+ "comic/ep1p_fall": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_fall.webp",
+  "w": 1920
+ },
+ "comic/ep1p_fountain": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_fountain.webp",
+  "w": 1920
+ },
+ "comic/ep1p_glass": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_glass.webp",
+  "w": 1920
+ },
+ "comic/ep1p_intro": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_intro.webp",
+  "w": 1920
+ },
+ "comic/ep1p_merge": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_merge.webp",
+  "w": 1920
+ },
+ "comic/ep1p_nursery": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_nursery.webp",
+  "w": 1920
+ },
+ "comic/ep1p_photo": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_photo.webp",
+  "w": 1920
+ },
+ "comic/ep1p_studio": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_studio.webp",
+  "w": 1920
+ },
+ "comic/ep1p_turn": {
+  "h": 1081,
+  "src": "assets/comic/ep1p_turn.webp",
+  "w": 1920
+ },
+ "comic/ep1p_web": {
+  "h": 1079,
+  "src": "assets/comic/ep1p_web.webp",
+  "w": 1920
+ },
+ "cover/ep1_cold1": {
+  "h": 561,
+  "relief": "cover/ep1_cold1_rd",
+  "solidTop": 0.037,
+  "src": "assets/cover/ep1_cold1.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold1_rd": {
+  "h": 205,
+  "src": "assets/cover/ep1_cold1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_cold2": {
+  "h": 597,
+  "relief": "cover/ep1_cold2_rd",
+  "solidTop": 0.111,
+  "src": "assets/cover/ep1_cold2.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold2_rd": {
+  "h": 218,
+  "src": "assets/cover/ep1_cold2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_cold3": {
+  "h": 585,
+  "relief": "cover/ep1_cold3_rd",
+  "solidTop": 0.092,
+  "src": "assets/cover/ep1_cold3.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold3_rd": {
+  "h": 214,
+  "src": "assets/cover/ep1_cold3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_cold4": {
+  "h": 517,
+  "relief": "cover/ep1_cold4_rd",
+  "solidTop": 0.085,
+  "src": "assets/cover/ep1_cold4.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold4_rd": {
+  "h": 189,
+  "src": "assets/cover/ep1_cold4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_cold5": {
+  "h": 540,
+  "relief": "cover/ep1_cold5_rd",
+  "solidTop": 0.046,
+  "src": "assets/cover/ep1_cold5.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold5_rd": {
+  "h": 197,
+  "src": "assets/cover/ep1_cold5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_cold6": {
+  "h": 645,
+  "relief": "cover/ep1_cold6_rd",
+  "solidTop": 0.11,
+  "src": "assets/cover/ep1_cold6.webp",
+  "w": 1400
+ },
+ "cover/ep1_cold6_rd": {
+  "h": 236,
+  "src": "assets/cover/ep1_cold6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery1": {
+  "h": 576,
+  "relief": "cover/ep1_gallery1_rd",
+  "solidTop": 0.085,
+  "src": "assets/cover/ep1_gallery1.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery1_rd": {
+  "h": 211,
+  "src": "assets/cover/ep1_gallery1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery2": {
+  "h": 625,
+  "relief": "cover/ep1_gallery2_rd",
+  "solidTop": 0.218,
+  "src": "assets/cover/ep1_gallery2.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery2_rd": {
+  "h": 229,
+  "src": "assets/cover/ep1_gallery2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery3": {
+  "h": 557,
+  "relief": "cover/ep1_gallery3_rd",
+  "solidTop": 0.086,
+  "src": "assets/cover/ep1_gallery3.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery3_rd": {
+  "h": 204,
+  "src": "assets/cover/ep1_gallery3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery4": {
+  "h": 630,
+  "relief": "cover/ep1_gallery4_rd",
+  "solidTop": 0.043,
+  "src": "assets/cover/ep1_gallery4.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery4_rd": {
+  "h": 230,
+  "src": "assets/cover/ep1_gallery4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery5": {
+  "h": 478,
+  "relief": "cover/ep1_gallery5_rd",
+  "solidTop": 0.088,
+  "src": "assets/cover/ep1_gallery5.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery5_rd": {
+  "h": 175,
+  "src": "assets/cover/ep1_gallery5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_gallery6": {
+  "h": 522,
+  "relief": "cover/ep1_gallery6_rd",
+  "solidTop": 0.033,
+  "src": "assets/cover/ep1_gallery6.webp",
+  "w": 1400
+ },
+ "cover/ep1_gallery6_rd": {
+  "h": 191,
+  "src": "assets/cover/ep1_gallery6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden1": {
+  "h": 726,
+  "relief": "cover/ep1_garden1_rd",
+  "solidTop": 0.125,
+  "src": "assets/cover/ep1_garden1.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden1_rd": {
+  "h": 266,
+  "src": "assets/cover/ep1_garden1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden2": {
+  "h": 579,
+  "relief": "cover/ep1_garden2_rd",
+  "solidTop": 0.09,
+  "src": "assets/cover/ep1_garden2.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden2_rd": {
+  "h": 212,
+  "src": "assets/cover/ep1_garden2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden3": {
+  "h": 565,
+  "relief": "cover/ep1_garden3_rd",
+  "solidTop": 0.094,
+  "src": "assets/cover/ep1_garden3.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden3_rd": {
+  "h": 207,
+  "src": "assets/cover/ep1_garden3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden4": {
+  "h": 813,
+  "relief": "cover/ep1_garden4_rd",
+  "solidTop": 0.4,
+  "src": "assets/cover/ep1_garden4.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden4_rd": {
+  "h": 297,
+  "src": "assets/cover/ep1_garden4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden5": {
+  "h": 796,
+  "relief": "cover/ep1_garden5_rd",
+  "solidTop": 0.142,
+  "src": "assets/cover/ep1_garden5.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden5_rd": {
+  "h": 291,
+  "src": "assets/cover/ep1_garden5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_garden6": {
+  "h": 677,
+  "relief": "cover/ep1_garden6_rd",
+  "solidTop": 0.102,
+  "src": "assets/cover/ep1_garden6.webp",
+  "w": 1400
+ },
+ "cover/ep1_garden6_rd": {
+  "h": 248,
+  "src": "assets/cover/ep1_garden6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall1": {
+  "h": 756,
+  "relief": "cover/ep1_hall1_rd",
+  "solidTop": 0.357,
+  "src": "assets/cover/ep1_hall1.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall1_rd": {
+  "h": 276,
+  "src": "assets/cover/ep1_hall1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall2": {
+  "h": 620,
+  "relief": "cover/ep1_hall2_rd",
+  "solidTop": 0.2,
+  "src": "assets/cover/ep1_hall2.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall2_rd": {
+  "h": 227,
+  "src": "assets/cover/ep1_hall2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall3": {
+  "h": 657,
+  "relief": "cover/ep1_hall3_rd",
+  "solidTop": 0.093,
+  "src": "assets/cover/ep1_hall3.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall3_rd": {
+  "h": 240,
+  "src": "assets/cover/ep1_hall3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall4": {
+  "h": 602,
+  "relief": "cover/ep1_hall4_rd",
+  "solidTop": 0.146,
+  "src": "assets/cover/ep1_hall4.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall4_rd": {
+  "h": 220,
+  "src": "assets/cover/ep1_hall4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall5": {
+  "h": 549,
+  "relief": "cover/ep1_hall5_rd",
+  "solidTop": 0.122,
+  "src": "assets/cover/ep1_hall5.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall5_rd": {
+  "h": 201,
+  "src": "assets/cover/ep1_hall5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_hall6": {
+  "h": 700,
+  "relief": "cover/ep1_hall6_rd",
+  "solidTop": 0.209,
+  "src": "assets/cover/ep1_hall6.webp",
+  "w": 1400
+ },
+ "cover/ep1_hall6_rd": {
+  "h": 256,
+  "src": "assets/cover/ep1_hall6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_nursery1": {
+  "h": 603,
+  "relief": "cover/ep1_nursery1_rd",
+  "solidTop": 0.068,
+  "src": "assets/cover/ep1_nursery1.webp",
+  "w": 1400
+ },
+ "cover/ep1_nursery1_rd": {
+  "h": 221,
+  "src": "assets/cover/ep1_nursery1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_nursery2": {
+  "h": 716,
+  "relief": "cover/ep1_nursery2_rd",
+  "solidTop": 0.075,
+  "src": "assets/cover/ep1_nursery2.webp",
+  "w": 1400
+ },
+ "cover/ep1_nursery2_rd": {
+  "h": 262,
+  "src": "assets/cover/ep1_nursery2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_nursery3": {
+  "h": 463,
+  "relief": "cover/ep1_nursery3_rd",
+  "solidTop": 0.022,
+  "src": "assets/cover/ep1_nursery3.webp",
+  "w": 1400
+ },
+ "cover/ep1_nursery3_rd": {
+  "h": 169,
+  "src": "assets/cover/ep1_nursery3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_nursery4": {
+  "h": 674,
+  "relief": "cover/ep1_nursery4_rd",
+  "solidTop": 0.098,
+  "src": "assets/cover/ep1_nursery4.webp",
+  "w": 1400
+ },
+ "cover/ep1_nursery4_rd": {
+  "h": 246,
+  "src": "assets/cover/ep1_nursery4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven1": {
+  "h": 622,
+  "relief": "cover/ep1_oven1_rd",
+  "solidTop": 0.098,
+  "src": "assets/cover/ep1_oven1.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven1_rd": {
+  "h": 227,
+  "src": "assets/cover/ep1_oven1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven2": {
+  "h": 608,
+  "relief": "cover/ep1_oven2_rd",
+  "solidTop": 0.061,
+  "src": "assets/cover/ep1_oven2.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven2_rd": {
+  "h": 222,
+  "src": "assets/cover/ep1_oven2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven3": {
+  "h": 596,
+  "relief": "cover/ep1_oven3_rd",
+  "solidTop": 0.032,
+  "src": "assets/cover/ep1_oven3.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven3_rd": {
+  "h": 218,
+  "src": "assets/cover/ep1_oven3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven4": {
+  "h": 786,
+  "relief": "cover/ep1_oven4_rd",
+  "solidTop": 0.356,
+  "src": "assets/cover/ep1_oven4.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven4_rd": {
+  "h": 287,
+  "src": "assets/cover/ep1_oven4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven5": {
+  "h": 515,
+  "relief": "cover/ep1_oven5_rd",
+  "solidTop": 0.029,
+  "src": "assets/cover/ep1_oven5.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven5_rd": {
+  "h": 188,
+  "src": "assets/cover/ep1_oven5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_oven6": {
+  "h": 695,
+  "relief": "cover/ep1_oven6_rd",
+  "solidTop": 0.06,
+  "src": "assets/cover/ep1_oven6.webp",
+  "w": 1400
+ },
+ "cover/ep1_oven6_rd": {
+  "h": 254,
+  "src": "assets/cover/ep1_oven6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop1": {
+  "h": 678,
+  "relief": "cover/ep1_shop1_rd",
+  "solidTop": 0.176,
+  "src": "assets/cover/ep1_shop1.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop1_rd": {
+  "h": 248,
+  "src": "assets/cover/ep1_shop1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop2": {
+  "h": 606,
+  "relief": "cover/ep1_shop2_rd",
+  "solidTop": 0.015,
+  "src": "assets/cover/ep1_shop2.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop2_rd": {
+  "h": 222,
+  "src": "assets/cover/ep1_shop2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop3": {
+  "h": 695,
+  "relief": "cover/ep1_shop3_rd",
+  "solidTop": 0.292,
+  "src": "assets/cover/ep1_shop3.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop3_rd": {
+  "h": 254,
+  "src": "assets/cover/ep1_shop3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop4": {
+  "h": 567,
+  "relief": "cover/ep1_shop4_rd",
+  "solidTop": 0.104,
+  "src": "assets/cover/ep1_shop4.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop4_rd": {
+  "h": 207,
+  "src": "assets/cover/ep1_shop4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop5": {
+  "h": 619,
+  "relief": "cover/ep1_shop5_rd",
+  "solidTop": 0.057,
+  "src": "assets/cover/ep1_shop5.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop5_rd": {
+  "h": 226,
+  "src": "assets/cover/ep1_shop5_rd.png",
+  "w": 512
+ },
+ "cover/ep1_shop6": {
+  "h": 642,
+  "relief": "cover/ep1_shop6_rd",
+  "solidTop": 0.09,
+  "src": "assets/cover/ep1_shop6.webp",
+  "w": 1400
+ },
+ "cover/ep1_shop6_rd": {
+  "h": 235,
+  "src": "assets/cover/ep1_shop6_rd.png",
+  "w": 512
+ },
+ "cover/ep1_studio1": {
+  "h": 712,
+  "relief": "cover/ep1_studio1_rd",
+  "solidTop": 0.319,
+  "src": "assets/cover/ep1_studio1.webp",
+  "w": 1400
+ },
+ "cover/ep1_studio1_rd": {
+  "h": 260,
+  "src": "assets/cover/ep1_studio1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_studio2": {
+  "h": 612,
+  "relief": "cover/ep1_studio2_rd",
+  "solidTop": 0.186,
+  "src": "assets/cover/ep1_studio2.webp",
+  "w": 1400
+ },
+ "cover/ep1_studio2_rd": {
+  "h": 224,
+  "src": "assets/cover/ep1_studio2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_studio3": {
+  "h": 727,
+  "relief": "cover/ep1_studio3_rd",
+  "solidTop": 0.047,
+  "src": "assets/cover/ep1_studio3.webp",
+  "w": 1400
+ },
+ "cover/ep1_studio3_rd": {
+  "h": 266,
+  "src": "assets/cover/ep1_studio3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_studio4": {
+  "h": 575,
+  "relief": "cover/ep1_studio4_rd",
+  "solidTop": 0.061,
+  "src": "assets/cover/ep1_studio4.webp",
+  "w": 1400
+ },
+ "cover/ep1_studio4_rd": {
+  "h": 210,
+  "src": "assets/cover/ep1_studio4_rd.png",
+  "w": 512
+ },
+ "cover/ep1_tunnel1": {
+  "h": 627,
+  "relief": "cover/ep1_tunnel1_rd",
+  "solidTop": 0.045,
+  "src": "assets/cover/ep1_tunnel1.webp",
+  "w": 1400
+ },
+ "cover/ep1_tunnel1_rd": {
+  "h": 229,
+  "src": "assets/cover/ep1_tunnel1_rd.png",
+  "w": 512
+ },
+ "cover/ep1_tunnel2": {
+  "h": 478,
+  "relief": "cover/ep1_tunnel2_rd",
+  "solidTop": 0.048,
+  "src": "assets/cover/ep1_tunnel2.webp",
+  "w": 1400
+ },
+ "cover/ep1_tunnel2_rd": {
+  "h": 175,
+  "src": "assets/cover/ep1_tunnel2_rd.png",
+  "w": 512
+ },
+ "cover/ep1_tunnel3": {
+  "h": 625,
+  "relief": "cover/ep1_tunnel3_rd",
+  "solidTop": 0.096,
+  "src": "assets/cover/ep1_tunnel3.webp",
+  "w": 1400
+ },
+ "cover/ep1_tunnel3_rd": {
+  "h": 229,
+  "src": "assets/cover/ep1_tunnel3_rd.png",
+  "w": 512
+ },
+ "cover/ep1_tunnel4": {
+  "h": 629,
+  "relief": "cover/ep1_tunnel4_rd",
+  "solidTop": 0.089,
+  "src": "assets/cover/ep1_tunnel4.webp",
+  "w": 1400
+ },
+ "cover/ep1_tunnel4_rd": {
+  "h": 230,
+  "src": "assets/cover/ep1_tunnel4_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_bite_rd",
+  "src": "assets/enemy/armor_b_bite.webp",
+  "w": 546
+ },
+ "enemy/armor_b_bite_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_crouch_rd",
+  "src": "assets/enemy/armor_b_crouch.webp",
+  "w": 546
+ },
+ "enemy/armor_b_crouch_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_hurt_rd",
+  "src": "assets/enemy/armor_b_hurt.webp",
+  "w": 546
+ },
+ "enemy/armor_b_hurt_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_still": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_still_rd",
+  "src": "assets/enemy/armor_b_still.webp",
+  "w": 546
+ },
+ "enemy/armor_b_still_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_still_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_wake": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_wake_rd",
+  "src": "assets/enemy/armor_b_wake.webp",
+  "w": 546
+ },
+ "enemy/armor_b_wake_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_wake_rd.png",
+  "w": 512
+ },
+ "enemy/armor_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_walk0_rd",
+  "src": "assets/enemy/armor_b_walk0.webp",
+  "w": 546
+ },
+ "enemy/armor_b_walk0_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/armor_bite": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_bite_rd",
+  "src": "assets/enemy/armor_bite.webp",
+  "w": 554
+ },
+ "enemy/armor_bite_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_bite_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_bite_rd",
+  "src": "assets/enemy/armor_c_bite.webp",
+  "w": 550
+ },
+ "enemy/armor_c_bite_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_crouch_rd",
+  "src": "assets/enemy/armor_c_crouch.webp",
+  "w": 550
+ },
+ "enemy/armor_c_crouch_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_hurt_rd",
+  "src": "assets/enemy/armor_c_hurt.webp",
+  "w": 550
+ },
+ "enemy/armor_c_hurt_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_still": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_still_rd",
+  "src": "assets/enemy/armor_c_still.webp",
+  "w": 550
+ },
+ "enemy/armor_c_still_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_still_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_wake": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_wake_rd",
+  "src": "assets/enemy/armor_c_wake.webp",
+  "w": 550
+ },
+ "enemy/armor_c_wake_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_wake_rd.png",
+  "w": 512
+ },
+ "enemy/armor_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_walk0_rd",
+  "src": "assets/enemy/armor_c_walk0.webp",
+  "w": 550
+ },
+ "enemy/armor_c_walk0_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/armor_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_crouch_rd",
+  "src": "assets/enemy/armor_crouch.webp",
+  "w": 554
+ },
+ "enemy/armor_crouch_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/armor_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_hurt_rd",
+  "src": "assets/enemy/armor_hurt.webp",
+  "w": 554
+ },
+ "enemy/armor_hurt_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/armor_still": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_still_rd",
+  "src": "assets/enemy/armor_still.webp",
+  "w": 554
+ },
+ "enemy/armor_still_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_still_rd.png",
+  "w": 512
+ },
+ "enemy/armor_wake": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_wake_rd",
+  "src": "assets/enemy/armor_wake.webp",
+  "w": 554
+ },
+ "enemy/armor_wake_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_wake_rd.png",
+  "w": 512
+ },
+ "enemy/armor_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_walk0_rd",
+  "src": "assets/enemy/armor_walk0.webp",
+  "w": 554
+ },
+ "enemy/armor_walk0_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/bat_b_dive": {
+  "anchor": "center",
+  "figH": 0.8022,
+  "h": 556,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_b_dive_rd",
+  "src": "assets/enemy/bat_b_dive.webp",
+  "w": 651
+ },
+ "enemy/bat_b_dive_rd": {
+  "h": 437,
+  "src": "assets/enemy/bat_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/bat_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8022,
+  "h": 556,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_b_fly0_rd",
+  "src": "assets/enemy/bat_b_fly0.webp",
+  "w": 651
+ },
+ "enemy/bat_b_fly0_rd": {
+  "h": 437,
+  "src": "assets/enemy/bat_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/bat_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8022,
+  "h": 556,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_b_fly1_rd",
+  "src": "assets/enemy/bat_b_fly1.webp",
+  "w": 651
+ },
+ "enemy/bat_b_fly1_rd": {
+  "h": 437,
+  "src": "assets/enemy/bat_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/bat_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8022,
+  "h": 556,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_b_hurt_rd",
+  "src": "assets/enemy/bat_b_hurt.webp",
+  "w": 651
+ },
+ "enemy/bat_b_hurt_rd": {
+  "h": 437,
+  "src": "assets/enemy/bat_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/bat_b_windup": {
+  "anchor": "center",
+  "figH": 0.8022,
+  "h": 556,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_b_windup_rd",
+  "src": "assets/enemy/bat_b_windup.webp",
+  "w": 651
+ },
+ "enemy/bat_b_windup_rd": {
+  "h": 437,
+  "src": "assets/enemy/bat_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/bat_c_dive": {
+  "anchor": "center",
+  "figH": 0.8625,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_c_dive_rd",
+  "src": "assets/enemy/bat_c_dive.webp",
+  "w": 644
+ },
+ "enemy/bat_c_dive_rd": {
+  "h": 445,
+  "src": "assets/enemy/bat_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/bat_c_fly0": {
+  "anchor": "center",
+  "figH": 0.8625,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_c_fly0_rd",
+  "src": "assets/enemy/bat_c_fly0.webp",
+  "w": 644
+ },
+ "enemy/bat_c_fly0_rd": {
+  "h": 445,
+  "src": "assets/enemy/bat_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/bat_c_fly1": {
+  "anchor": "center",
+  "figH": 0.8625,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_c_fly1_rd",
+  "src": "assets/enemy/bat_c_fly1.webp",
+  "w": 644
+ },
+ "enemy/bat_c_fly1_rd": {
+  "h": 445,
+  "src": "assets/enemy/bat_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/bat_c_hurt": {
+  "anchor": "center",
+  "figH": 0.8625,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_c_hurt_rd",
+  "src": "assets/enemy/bat_c_hurt.webp",
+  "w": 644
+ },
+ "enemy/bat_c_hurt_rd": {
+  "h": 445,
+  "src": "assets/enemy/bat_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/bat_c_windup": {
+  "anchor": "center",
+  "figH": 0.8625,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/bat_c_windup_rd",
+  "src": "assets/enemy/bat_c_windup.webp",
+  "w": 644
+ },
+ "enemy/bat_c_windup_rd": {
+  "h": 445,
+  "src": "assets/enemy/bat_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/bat_dive": {
+  "anchor": "center",
+  "figH": 0.8304,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   24
+  ],
+  "relief": "enemy/bat_dive_rd",
+  "src": "assets/enemy/bat_dive.webp",
+  "w": 725
+ },
+ "enemy/bat_dive_rd": {
+  "h": 395,
+  "src": "assets/enemy/bat_dive_rd.png",
+  "w": 512
+ },
+ "enemy/bat_fly0": {
+  "anchor": "center",
+  "figH": 0.8304,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   24
+  ],
+  "relief": "enemy/bat_fly0_rd",
+  "src": "assets/enemy/bat_fly0.webp",
+  "w": 725
+ },
+ "enemy/bat_fly0_rd": {
+  "h": 395,
+  "src": "assets/enemy/bat_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/bat_fly1": {
+  "anchor": "center",
+  "figH": 0.8304,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   24
+  ],
+  "relief": "enemy/bat_fly1_rd",
+  "src": "assets/enemy/bat_fly1.webp",
+  "w": 725
+ },
+ "enemy/bat_fly1_rd": {
+  "h": 395,
+  "src": "assets/enemy/bat_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/bat_hurt": {
+  "anchor": "center",
+  "figH": 0.8304,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   24
+  ],
+  "relief": "enemy/bat_hurt_rd",
+  "src": "assets/enemy/bat_hurt.webp",
+  "w": 725
+ },
+ "enemy/bat_hurt_rd": {
+  "h": 395,
+  "src": "assets/enemy/bat_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/bat_windup": {
+  "anchor": "center",
+  "figH": 0.8304,
+  "h": 560,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   24
+  ],
+  "relief": "enemy/bat_windup_rd",
+  "src": "assets/enemy/bat_windup.webp",
+  "w": 725
+ },
+ "enemy/bat_windup_rd": {
+  "h": 395,
+  "src": "assets/enemy/bat_windup_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_fire": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_fire_rd",
+  "src": "assets/enemy/chandelier_b_fire.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_fire_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_fire_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_hover0": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_hover0_rd",
+  "src": "assets/enemy/chandelier_b_hover0.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_hover0_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_hover1": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_hover1_rd",
+  "src": "assets/enemy/chandelier_b_hover1.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_hover1_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_hurt_rd",
+  "src": "assets/enemy/chandelier_b_hurt.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_hurt_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_idle": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_idle_rd",
+  "src": "assets/enemy/chandelier_b_idle.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_idle_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_b_windup": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_windup_rd",
+  "src": "assets/enemy/chandelier_b_windup.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_windup_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_fire": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_fire_rd",
+  "src": "assets/enemy/chandelier_c_fire.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_fire_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_fire_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_hover0": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_hover0_rd",
+  "src": "assets/enemy/chandelier_c_hover0.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_hover0_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_hover1": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_hover1_rd",
+  "src": "assets/enemy/chandelier_c_hover1.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_hover1_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_hurt_rd",
+  "src": "assets/enemy/chandelier_c_hurt.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_hurt_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_idle": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_idle_rd",
+  "src": "assets/enemy/chandelier_c_idle.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_idle_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_c_windup": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_windup_rd",
+  "src": "assets/enemy/chandelier_c_windup.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_windup_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_fire": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_fire_rd",
+  "src": "assets/enemy/chandelier_fire.webp",
+  "w": 585
+ },
+ "enemy/chandelier_fire_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_fire_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_hover0": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_hover0_rd",
+  "src": "assets/enemy/chandelier_hover0.webp",
+  "w": 585
+ },
+ "enemy/chandelier_hover0_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_hover1": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_hover1_rd",
+  "src": "assets/enemy/chandelier_hover1.webp",
+  "w": 585
+ },
+ "enemy/chandelier_hover1_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_hurt": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_hurt_rd",
+  "src": "assets/enemy/chandelier_hurt.webp",
+  "w": 585
+ },
+ "enemy/chandelier_hurt_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_idle": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_idle_rd",
+  "src": "assets/enemy/chandelier_idle.webp",
+  "w": 585
+ },
+ "enemy/chandelier_idle_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_idle_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_windup": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_windup_rd",
+  "src": "assets/enemy/chandelier_windup.webp",
+  "w": 585
+ },
+ "enemy/chandelier_windup_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_windup_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_bite_rd",
+  "src": "assets/enemy/crawler_b_bite.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_bite_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_crouch_rd",
+  "src": "assets/enemy/crawler_b_crouch.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_crouch_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_hurt_rd",
+  "src": "assets/enemy/crawler_b_hurt.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_hurt_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_idle_rd",
+  "src": "assets/enemy/crawler_b_idle.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_idle_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_walk0_rd",
+  "src": "assets/enemy/crawler_b_walk0.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_walk0_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.8899,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_b_walk1_rd",
+  "src": "assets/enemy/crawler_b_walk1.webp",
+  "w": 562
+ },
+ "enemy/crawler_b_walk1_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_bite": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_bite_rd",
+  "src": "assets/enemy/crawler_bite.webp",
+  "w": 556
+ },
+ "enemy/crawler_bite_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_bite_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_bite_rd",
+  "src": "assets/enemy/crawler_c_bite.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_bite_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_crouch_rd",
+  "src": "assets/enemy/crawler_c_crouch.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_crouch_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_hurt_rd",
+  "src": "assets/enemy/crawler_c_hurt.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_hurt_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_idle_rd",
+  "src": "assets/enemy/crawler_c_idle.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_idle_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_walk0_rd",
+  "src": "assets/enemy/crawler_c_walk0.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_walk0_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9402,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_c_walk1_rd",
+  "src": "assets/enemy/crawler_c_walk1.webp",
+  "w": 561
+ },
+ "enemy/crawler_c_walk1_rd": {
+  "h": 473,
+  "src": "assets/enemy/crawler_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_crouch_rd",
+  "src": "assets/enemy/crawler_crouch.webp",
+  "w": 556
+ },
+ "enemy/crawler_crouch_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_hurt_rd",
+  "src": "assets/enemy/crawler_hurt.webp",
+  "w": 556
+ },
+ "enemy/crawler_hurt_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_idle": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_idle_rd",
+  "src": "assets/enemy/crawler_idle.webp",
+  "w": 556
+ },
+ "enemy/crawler_idle_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_idle_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_walk0": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_walk0_rd",
+  "src": "assets/enemy/crawler_walk0.webp",
+  "w": 556
+ },
+ "enemy/crawler_walk0_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/crawler_walk1": {
+  "anchor": "bottom",
+  "figH": 0.8944,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/crawler_walk1_rd",
+  "src": "assets/enemy/crawler_walk1.webp",
+  "w": 556
+ },
+ "enemy/crawler_walk1_rd": {
+  "h": 480,
+  "src": "assets/enemy/crawler_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/doily_b_dive": {
+  "anchor": "center",
+  "figH": 0.9015,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/doily_b_dive_rd",
+  "src": "assets/enemy/doily_b_dive.webp",
+  "w": 606
+ },
+ "enemy/doily_b_dive_rd": {
+  "h": 455,
+  "src": "assets/enemy/doily_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/doily_b_fly0": {
+  "anchor": "center",
+  "figH": 0.9015,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/doily_b_fly0_rd",
+  "src": "assets/enemy/doily_b_fly0.webp",
+  "w": 606
+ },
+ "enemy/doily_b_fly0_rd": {
+  "h": 455,
+  "src": "assets/enemy/doily_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/doily_b_fly1": {
+  "anchor": "center",
+  "figH": 0.9015,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/doily_b_fly1_rd",
+  "src": "assets/enemy/doily_b_fly1.webp",
+  "w": 606
+ },
+ "enemy/doily_b_fly1_rd": {
+  "h": 455,
+  "src": "assets/enemy/doily_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/doily_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9015,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/doily_b_hurt_rd",
+  "src": "assets/enemy/doily_b_hurt.webp",
+  "w": 606
+ },
+ "enemy/doily_b_hurt_rd": {
+  "h": 455,
+  "src": "assets/enemy/doily_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doily_b_windup": {
+  "anchor": "center",
+  "figH": 0.9015,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/doily_b_windup_rd",
+  "src": "assets/enemy/doily_b_windup.webp",
+  "w": 606
+ },
+ "enemy/doily_b_windup_rd": {
+  "h": 455,
+  "src": "assets/enemy/doily_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doily_c_dive": {
+  "anchor": "center",
+  "figH": 0.9101,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/doily_c_dive_rd",
+  "src": "assets/enemy/doily_c_dive.webp",
+  "w": 562
+ },
+ "enemy/doily_c_dive_rd": {
+  "h": 486,
+  "src": "assets/enemy/doily_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/doily_c_fly0": {
+  "anchor": "center",
+  "figH": 0.9101,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/doily_c_fly0_rd",
+  "src": "assets/enemy/doily_c_fly0.webp",
+  "w": 562
+ },
+ "enemy/doily_c_fly0_rd": {
+  "h": 486,
+  "src": "assets/enemy/doily_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/doily_c_fly1": {
+  "anchor": "center",
+  "figH": 0.9101,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/doily_c_fly1_rd",
+  "src": "assets/enemy/doily_c_fly1.webp",
+  "w": 562
+ },
+ "enemy/doily_c_fly1_rd": {
+  "h": 486,
+  "src": "assets/enemy/doily_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/doily_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9101,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/doily_c_hurt_rd",
+  "src": "assets/enemy/doily_c_hurt.webp",
+  "w": 562
+ },
+ "enemy/doily_c_hurt_rd": {
+  "h": 486,
+  "src": "assets/enemy/doily_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doily_c_windup": {
+  "anchor": "center",
+  "figH": 0.9101,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/doily_c_windup_rd",
+  "src": "assets/enemy/doily_c_windup.webp",
+  "w": 562
+ },
+ "enemy/doily_c_windup_rd": {
+  "h": 486,
+  "src": "assets/enemy/doily_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doily_dive": {
+  "anchor": "center",
+  "figH": 0.9162,
+  "h": 549,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/doily_dive_rd",
+  "src": "assets/enemy/doily_dive.webp",
+  "w": 581
+ },
+ "enemy/doily_dive_rd": {
+  "h": 484,
+  "src": "assets/enemy/doily_dive_rd.png",
+  "w": 512
+ },
+ "enemy/doily_fly0": {
+  "anchor": "center",
+  "figH": 0.9162,
+  "h": 549,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/doily_fly0_rd",
+  "src": "assets/enemy/doily_fly0.webp",
+  "w": 581
+ },
+ "enemy/doily_fly0_rd": {
+  "h": 484,
+  "src": "assets/enemy/doily_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/doily_fly1": {
+  "anchor": "center",
+  "figH": 0.9162,
+  "h": 549,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/doily_fly1_rd",
+  "src": "assets/enemy/doily_fly1.webp",
+  "w": 581
+ },
+ "enemy/doily_fly1_rd": {
+  "h": 484,
+  "src": "assets/enemy/doily_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/doily_hurt": {
+  "anchor": "center",
+  "figH": 0.9162,
+  "h": 549,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/doily_hurt_rd",
+  "src": "assets/enemy/doily_hurt.webp",
+  "w": 581
+ },
+ "enemy/doily_hurt_rd": {
+  "h": 484,
+  "src": "assets/enemy/doily_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doily_windup": {
+  "anchor": "center",
+  "figH": 0.9162,
+  "h": 549,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/doily_windup_rd",
+  "src": "assets/enemy/doily_windup.webp",
+  "w": 581
+ },
+ "enemy/doily_windup_rd": {
+  "h": 484,
+  "src": "assets/enemy/doily_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_hide": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_hide_rd",
+  "src": "assets/enemy/doll_b_hide.webp",
+  "w": 574
+ },
+ "enemy/doll_b_hide_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_hide_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_hurt_rd",
+  "src": "assets/enemy/doll_b_hurt.webp",
+  "w": 574
+ },
+ "enemy/doll_b_hurt_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_idle_rd",
+  "src": "assets/enemy/doll_b_idle.webp",
+  "w": 574
+ },
+ "enemy/doll_b_idle_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_rise": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_rise_rd",
+  "src": "assets/enemy/doll_b_rise.webp",
+  "w": 574
+ },
+ "enemy/doll_b_rise_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_rise_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_throw": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_throw_rd",
+  "src": "assets/enemy/doll_b_throw.webp",
+  "w": 574
+ },
+ "enemy/doll_b_throw_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_throw_rd.png",
+  "w": 512
+ },
+ "enemy/doll_b_windup": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_windup_rd",
+  "src": "assets/enemy/doll_b_windup.webp",
+  "w": 574
+ },
+ "enemy/doll_b_windup_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_hide": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_hide_rd",
+  "src": "assets/enemy/doll_c_hide.webp",
+  "w": 524
+ },
+ "enemy/doll_c_hide_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_hide_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_hurt_rd",
+  "src": "assets/enemy/doll_c_hurt.webp",
+  "w": 524
+ },
+ "enemy/doll_c_hurt_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_idle_rd",
+  "src": "assets/enemy/doll_c_idle.webp",
+  "w": 524
+ },
+ "enemy/doll_c_idle_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_rise": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_rise_rd",
+  "src": "assets/enemy/doll_c_rise.webp",
+  "w": 524
+ },
+ "enemy/doll_c_rise_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_rise_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_throw": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_throw_rd",
+  "src": "assets/enemy/doll_c_throw.webp",
+  "w": 524
+ },
+ "enemy/doll_c_throw_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_throw_rd.png",
+  "w": 512
+ },
+ "enemy/doll_c_windup": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_windup_rd",
+  "src": "assets/enemy/doll_c_windup.webp",
+  "w": 524
+ },
+ "enemy/doll_c_windup_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doll_hide": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_hide_rd",
+  "src": "assets/enemy/doll_hide.webp",
+  "w": 549
+ },
+ "enemy/doll_hide_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_hide_rd.png",
+  "w": 512
+ },
+ "enemy/doll_hurt": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_hurt_rd",
+  "src": "assets/enemy/doll_hurt.webp",
+  "w": 549
+ },
+ "enemy/doll_hurt_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/doll_idle": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_idle_rd",
+  "src": "assets/enemy/doll_idle.webp",
+  "w": 549
+ },
+ "enemy/doll_idle_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_idle_rd.png",
+  "w": 512
+ },
+ "enemy/doll_rise": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_rise_rd",
+  "src": "assets/enemy/doll_rise.webp",
+  "w": 549
+ },
+ "enemy/doll_rise_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_rise_rd.png",
+  "w": 512
+ },
+ "enemy/doll_throw": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_throw_rd",
+  "src": "assets/enemy/doll_throw.webp",
+  "w": 549
+ },
+ "enemy/doll_throw_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_throw_rd.png",
+  "w": 512
+ },
+ "enemy/doll_windup": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_windup_rd",
+  "src": "assets/enemy/doll_windup.webp",
+  "w": 549
+ },
+ "enemy/doll_windup_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_windup_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_bite_rd",
+  "src": "assets/enemy/double_cat_b_bite.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_bite_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_crouch_rd",
+  "src": "assets/enemy/double_cat_b_crouch.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_crouch_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_hurt_rd",
+  "src": "assets/enemy/double_cat_b_hurt.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_hurt_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_idle_rd",
+  "src": "assets/enemy/double_cat_b_idle.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_idle1_rd",
+  "src": "assets/enemy/double_cat_b_idle1.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_idle1_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_idle_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9516,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_cat_b_walk0_rd",
+  "src": "assets/enemy/double_cat_b_walk0.webp",
+  "w": 537
+ },
+ "enemy/double_cat_b_walk0_rd": {
+  "h": 512,
+  "src": "assets/enemy/double_cat_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_bite": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_bite_rd",
+  "src": "assets/enemy/double_cat_bite.webp",
+  "w": 576
+ },
+ "enemy/double_cat_bite_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_bite_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_bite_rd",
+  "src": "assets/enemy/double_cat_c_bite.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_bite_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_crouch_rd",
+  "src": "assets/enemy/double_cat_c_crouch.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_crouch_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_hurt_rd",
+  "src": "assets/enemy/double_cat_c_hurt.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_hurt_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_idle_rd",
+  "src": "assets/enemy/double_cat_c_idle.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_idle1_rd",
+  "src": "assets/enemy/double_cat_c_idle1.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_idle1_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_idle_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9442,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/double_cat_c_walk0_rd",
+  "src": "assets/enemy/double_cat_c_walk0.webp",
+  "w": 606
+ },
+ "enemy/double_cat_c_walk0_rd": {
+  "h": 455,
+  "src": "assets/enemy/double_cat_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_crouch": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_crouch_rd",
+  "src": "assets/enemy/double_cat_crouch.webp",
+  "w": 576
+ },
+ "enemy/double_cat_crouch_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_hurt": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_hurt_rd",
+  "src": "assets/enemy/double_cat_hurt.webp",
+  "w": 576
+ },
+ "enemy/double_cat_hurt_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_idle": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_idle_rd",
+  "src": "assets/enemy/double_cat_idle.webp",
+  "w": 576
+ },
+ "enemy/double_cat_idle1": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_idle1_rd",
+  "src": "assets/enemy/double_cat_idle1.webp",
+  "w": 576
+ },
+ "enemy/double_cat_idle1_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_idle_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_cat_walk0": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/double_cat_walk0_rd",
+  "src": "assets/enemy/double_cat_walk0.webp",
+  "w": 576
+ },
+ "enemy/double_cat_walk0_rd": {
+  "h": 480,
+  "src": "assets/enemy/double_cat_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_fire": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_fire_rd",
+  "src": "assets/enemy/double_pink_b_fire.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_fire_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_fire_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_hurt_rd",
+  "src": "assets/enemy/double_pink_b_hurt.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_hurt_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_idle_rd",
+  "src": "assets/enemy/double_pink_b_idle.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_idle1": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_idle1_rd",
+  "src": "assets/enemy/double_pink_b_idle1.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_idle1_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_idle_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_walk": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_walk_rd",
+  "src": "assets/enemy/double_pink_b_walk.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_walk_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_walk_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_b_windup": {
+  "anchor": "bottom",
+  "figH": 0.951,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_b_windup_rd",
+  "src": "assets/enemy/double_pink_b_windup.webp",
+  "w": 539
+ },
+ "enemy/double_pink_b_windup_rd": {
+  "h": 503,
+  "src": "assets/enemy/double_pink_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_fire": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_fire_rd",
+  "src": "assets/enemy/double_pink_c_fire.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_fire_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_fire_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_hurt_rd",
+  "src": "assets/enemy/double_pink_c_hurt.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_hurt_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_idle_rd",
+  "src": "assets/enemy/double_pink_c_idle.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_idle1_rd",
+  "src": "assets/enemy/double_pink_c_idle1.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_idle1_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_idle_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_walk": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_walk_rd",
+  "src": "assets/enemy/double_pink_c_walk.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_walk_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_walk_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_c_windup": {
+  "anchor": "bottom",
+  "figH": 0.9517,
+  "h": 538,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_c_windup_rd",
+  "src": "assets/enemy/double_pink_c_windup.webp",
+  "w": 559
+ },
+ "enemy/double_pink_c_windup_rd": {
+  "h": 493,
+  "src": "assets/enemy/double_pink_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_fire": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_fire_rd",
+  "src": "assets/enemy/double_pink_fire.webp",
+  "w": 538
+ },
+ "enemy/double_pink_fire_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_fire_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_hurt_rd",
+  "src": "assets/enemy/double_pink_hurt.webp",
+  "w": 538
+ },
+ "enemy/double_pink_hurt_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_idle": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_idle_rd",
+  "src": "assets/enemy/double_pink_idle.webp",
+  "w": 538
+ },
+ "enemy/double_pink_idle1": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_idle1_rd",
+  "src": "assets/enemy/double_pink_idle1.webp",
+  "w": 538
+ },
+ "enemy/double_pink_idle1_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_idle1_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_idle_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_idle_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_walk": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_walk_rd",
+  "src": "assets/enemy/double_pink_walk.webp",
+  "w": 538
+ },
+ "enemy/double_pink_walk_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_walk_rd.png",
+  "w": 512
+ },
+ "enemy/double_pink_windup": {
+  "anchor": "bottom",
+  "figH": 0.9475,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/double_pink_windup_rd",
+  "src": "assets/enemy/double_pink_windup.webp",
+  "w": 538
+ },
+ "enemy/double_pink_windup_rd": {
+  "h": 507,
+  "src": "assets/enemy/double_pink_windup_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_bite_rd",
+  "src": "assets/enemy/ghoul_b_bite.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_bite_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_crouch_rd",
+  "src": "assets/enemy/ghoul_b_crouch.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_crouch_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_hurt_rd",
+  "src": "assets/enemy/ghoul_b_hurt.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_hurt_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_leap_rd",
+  "src": "assets/enemy/ghoul_b_leap.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_leap_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_walk0_rd",
+  "src": "assets/enemy/ghoul_b_walk0.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_walk0_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_walk1_rd",
+  "src": "assets/enemy/ghoul_b_walk1.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_walk1_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_bite": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_bite_rd",
+  "src": "assets/enemy/ghoul_bite.webp",
+  "w": 573
+ },
+ "enemy/ghoul_bite_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_bite_rd",
+  "src": "assets/enemy/ghoul_c_bite.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_bite_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_crouch_rd",
+  "src": "assets/enemy/ghoul_c_crouch.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_crouch_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_hurt_rd",
+  "src": "assets/enemy/ghoul_c_hurt.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_hurt_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_leap_rd",
+  "src": "assets/enemy/ghoul_c_leap.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_leap_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_walk0_rd",
+  "src": "assets/enemy/ghoul_c_walk0.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_walk0_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_walk1_rd",
+  "src": "assets/enemy/ghoul_c_walk1.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_walk1_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_crouch_rd",
+  "src": "assets/enemy/ghoul_crouch.webp",
+  "w": 573
+ },
+ "enemy/ghoul_crouch_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_hurt_rd",
+  "src": "assets/enemy/ghoul_hurt.webp",
+  "w": 573
+ },
+ "enemy/ghoul_hurt_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_leap": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_leap_rd",
+  "src": "assets/enemy/ghoul_leap.webp",
+  "w": 573
+ },
+ "enemy/ghoul_leap_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare0": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare0_rd",
+  "src": "assets/enemy/ghoul_scare0.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare0_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare0_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare1": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare1_rd",
+  "src": "assets/enemy/ghoul_scare1.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare1_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare1_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare2": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare2_rd",
+  "src": "assets/enemy/ghoul_scare2.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare2_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare2_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare3": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare3_rd",
+  "src": "assets/enemy/ghoul_scare3.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare3_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare3_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare4": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare4_rd",
+  "src": "assets/enemy/ghoul_scare4.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare4_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare4_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_scare5": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_scare5_rd",
+  "src": "assets/enemy/ghoul_scare5.webp",
+  "w": 573
+ },
+ "enemy/ghoul_scare5_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_scare5_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_walk0_rd",
+  "src": "assets/enemy/ghoul_walk0.webp",
+  "w": 573
+ },
+ "enemy/ghoul_walk0_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_walk1_rd",
+  "src": "assets/enemy/ghoul_walk1.webp",
+  "w": 573
+ },
+ "enemy/ghoul_walk1_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/p_candle": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_candle.webp",
+  "w": 316
+ },
+ "enemy/p_candle_b": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_candle_b.webp",
+  "w": 322
+ },
+ "enemy/p_chair": {
+  "figH": 0.9008,
+  "h": 363,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_chair.webp",
+  "w": 396
+ },
+ "enemy/p_chair_b": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_chair_b.webp",
+  "w": 358
+ },
+ "enemy/p_cherry": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_cherry.webp",
+  "w": 382
+ },
+ "enemy/p_cherry_b": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_cherry_b.webp",
+  "w": 345
+ },
+ "enemy/p_cup": {
+  "figH": 0.9024,
+  "h": 369,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_cup.webp",
+  "w": 396
+ },
+ "enemy/p_cup_b": {
+  "figH": 0.9082,
+  "h": 392,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_cup_b.webp",
+  "w": 396
+ },
+ "enemy/p_scoop": {
+  "figH": 0.9043,
+  "h": 376,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_scoop.webp",
+  "w": 396
+ },
+ "enemy/p_scoop_b": {
+  "figH": 0.8966,
+  "h": 348,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_scoop_b.webp",
+  "w": 396
+ },
+ "enemy/p_wafer": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_wafer.webp",
+  "w": 369
+ },
+ "enemy/p_wafer_b": {
+  "figH": 0.9091,
+  "h": 396,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/enemy/p_wafer_b.webp",
+  "w": 357
+ },
+ "enemy/scoopling_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_bite_rd",
+  "src": "assets/enemy/scoopling_b_bite.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_bite_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_crouch_rd",
+  "src": "assets/enemy/scoopling_b_crouch.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_crouch_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_hurt_rd",
+  "src": "assets/enemy/scoopling_b_hurt.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_hurt_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_leap_rd",
+  "src": "assets/enemy/scoopling_b_leap.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_leap_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_walk0_rd",
+  "src": "assets/enemy/scoopling_b_walk0.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_walk0_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 499,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_b_walk1_rd",
+  "src": "assets/enemy/scoopling_b_walk1.webp",
+  "w": 558
+ },
+ "enemy/scoopling_b_walk1_rd": {
+  "h": 458,
+  "src": "assets/enemy/scoopling_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_bite": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_bite_rd",
+  "src": "assets/enemy/scoopling_bite.webp",
+  "w": 554
+ },
+ "enemy/scoopling_bite_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_bite_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_bite_rd",
+  "src": "assets/enemy/scoopling_c_bite.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_bite_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_crouch_rd",
+  "src": "assets/enemy/scoopling_c_crouch.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_crouch_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_hurt_rd",
+  "src": "assets/enemy/scoopling_c_hurt.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_hurt_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_leap_rd",
+  "src": "assets/enemy/scoopling_c_leap.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_leap_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_walk0_rd",
+  "src": "assets/enemy/scoopling_c_walk0.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_walk0_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9229,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_c_walk1_rd",
+  "src": "assets/enemy/scoopling_c_walk1.webp",
+  "w": 552
+ },
+ "enemy/scoopling_c_walk1_rd": {
+  "h": 481,
+  "src": "assets/enemy/scoopling_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_crouch": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_crouch_rd",
+  "src": "assets/enemy/scoopling_crouch.webp",
+  "w": 554
+ },
+ "enemy/scoopling_crouch_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_hurt": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_hurt_rd",
+  "src": "assets/enemy/scoopling_hurt.webp",
+  "w": 554
+ },
+ "enemy/scoopling_hurt_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_leap": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_leap_rd",
+  "src": "assets/enemy/scoopling_leap.webp",
+  "w": 554
+ },
+ "enemy/scoopling_leap_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_leap_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_walk0": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_walk0_rd",
+  "src": "assets/enemy/scoopling_walk0.webp",
+  "w": 554
+ },
+ "enemy/scoopling_walk0_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/scoopling_walk1": {
+  "anchor": "bottom",
+  "figH": 0.906,
+  "h": 521,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/scoopling_walk1_rd",
+  "src": "assets/enemy/scoopling_walk1.webp",
+  "w": 554
+ },
+ "enemy/scoopling_walk1_rd": {
+  "h": 482,
+  "src": "assets/enemy/scoopling_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_crouch_rd",
+  "src": "assets/enemy/shade_bride_crouch.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_crouch_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_hurt_rd",
+  "src": "assets/enemy/shade_bride_hurt.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_hurt_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_idle": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_idle_rd",
+  "src": "assets/enemy/shade_bride_idle.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_idle_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_rush": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_rush_rd",
+  "src": "assets/enemy/shade_bride_rush.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_rush_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_rush_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_stand": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_stand_rd",
+  "src": "assets/enemy/shade_bride_stand.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_stand_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_stand_rd.png",
+  "w": 512
+ },
+ "enemy/shade_bride_walk": {
+  "anchor": "bottom",
+  "figH": 0.9458,
+  "h": 535,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_bride_walk_rd",
+  "src": "assets/enemy/shade_bride_walk.webp",
+  "w": 555
+ },
+ "enemy/shade_bride_walk_rd": {
+  "h": 494,
+  "src": "assets/enemy/shade_bride_walk_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_glide": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_glide_rd",
+  "src": "assets/enemy/shade_hostess_glide.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_glide_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_glide_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_hurt_rd",
+  "src": "assets/enemy/shade_hostess_hurt.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_hurt_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_idle": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_idle_rd",
+  "src": "assets/enemy/shade_hostess_idle.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_idle_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_stand": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_stand_rd",
+  "src": "assets/enemy/shade_hostess_stand.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_stand_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_stand_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_throw": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_throw_rd",
+  "src": "assets/enemy/shade_hostess_throw.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_throw_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_throw_rd.png",
+  "w": 512
+ },
+ "enemy/shade_hostess_windup": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_hostess_windup_rd",
+  "src": "assets/enemy/shade_hostess_windup.webp",
+  "w": 554
+ },
+ "enemy/shade_hostess_windup_rd": {
+  "h": 488,
+  "src": "assets/enemy/shade_hostess_windup_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_glide": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_glide_rd",
+  "src": "assets/enemy/shade_mother_glide.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_glide_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_glide_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_hurt_rd",
+  "src": "assets/enemy/shade_mother_hurt.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_hurt_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_idle": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_idle_rd",
+  "src": "assets/enemy/shade_mother_idle.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_idle_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_rock": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_rock_rd",
+  "src": "assets/enemy/shade_mother_rock.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_rock_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_rock_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_throw": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_throw_rd",
+  "src": "assets/enemy/shade_mother_throw.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_throw_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_throw_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mother_windup": {
+  "anchor": "bottom",
+  "figH": 0.9209,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/shade_mother_windup_rd",
+  "src": "assets/enemy/shade_mother_windup.webp",
+  "w": 617
+ },
+ "enemy/shade_mother_windup_rd": {
+  "h": 441,
+  "src": "assets/enemy/shade_mother_windup_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_hover0": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_hover0_rd",
+  "src": "assets/enemy/shade_mourner_hover0.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_hover0_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_hover1": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_hover1_rd",
+  "src": "assets/enemy/shade_mourner_hover1.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_hover1_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_hurt_rd",
+  "src": "assets/enemy/shade_mourner_hurt.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_hurt_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_idle": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_idle_rd",
+  "src": "assets/enemy/shade_mourner_idle.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_idle_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_wail": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_wail_rd",
+  "src": "assets/enemy/shade_mourner_wail.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_wail_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_wail_rd.png",
+  "w": 512
+ },
+ "enemy/shade_mourner_windup": {
+  "anchor": "bottom",
+  "figH": 0.9508,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/shade_mourner_windup_rd",
+  "src": "assets/enemy/shade_mourner_windup.webp",
+  "w": 552
+ },
+ "enemy/shade_mourner_windup_rd": {
+  "h": 491,
+  "src": "assets/enemy/shade_mourner_windup_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_blast": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_blast_rd",
+  "src": "assets/enemy/shadow_b_blast.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_blast_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_blast_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_hover0": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_hover0_rd",
+  "src": "assets/enemy/shadow_b_hover0.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_hover0_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_hover1": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_hover1_rd",
+  "src": "assets/enemy/shadow_b_hover1.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_hover1_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_hurt_rd",
+  "src": "assets/enemy/shadow_b_hurt.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_hurt_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_idle": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_idle_rd",
+  "src": "assets/enemy/shadow_b_idle.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_idle_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_b_windup": {
+  "anchor": "bottom",
+  "figH": 0.9275,
+  "h": 524,
+  "hit": true,
+  "pad": [
+   23,
+   23,
+   23,
+   0
+  ],
+  "relief": "enemy/shadow_b_windup_rd",
+  "src": "assets/enemy/shadow_b_windup.webp",
+  "w": 708
+ },
+ "enemy/shadow_b_windup_rd": {
+  "h": 379,
+  "src": "assets/enemy/shadow_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_blast": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_blast_rd",
+  "src": "assets/enemy/shadow_blast.webp",
+  "w": 644
+ },
+ "enemy/shadow_blast_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_blast_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_blast": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_blast_rd",
+  "src": "assets/enemy/shadow_c_blast.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_blast_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_blast_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_hover0": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_hover0_rd",
+  "src": "assets/enemy/shadow_c_hover0.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_hover0_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_hover1": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_hover1_rd",
+  "src": "assets/enemy/shadow_c_hover1.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_hover1_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_hurt_rd",
+  "src": "assets/enemy/shadow_c_hurt.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_hurt_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_idle": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_idle_rd",
+  "src": "assets/enemy/shadow_c_idle.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_idle_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_c_windup": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_c_windup_rd",
+  "src": "assets/enemy/shadow_c_windup.webp",
+  "w": 654
+ },
+ "enemy/shadow_c_windup_rd": {
+  "h": 416,
+  "src": "assets/enemy/shadow_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_hover0": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_hover0_rd",
+  "src": "assets/enemy/shadow_hover0.webp",
+  "w": 644
+ },
+ "enemy/shadow_hover0_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_hover1": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_hover1_rd",
+  "src": "assets/enemy/shadow_hover1.webp",
+  "w": 644
+ },
+ "enemy/shadow_hover1_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_hurt_rd",
+  "src": "assets/enemy/shadow_hurt.webp",
+  "w": 644
+ },
+ "enemy/shadow_hurt_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_idle": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_idle_rd",
+  "src": "assets/enemy/shadow_idle.webp",
+  "w": 644
+ },
+ "enemy/shadow_idle_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_idle_rd.png",
+  "w": 512
+ },
+ "enemy/shadow_windup": {
+  "anchor": "bottom",
+  "figH": 0.9385,
+  "h": 537,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   0
+  ],
+  "relief": "enemy/shadow_windup_rd",
+  "src": "assets/enemy/shadow_windup.webp",
+  "w": 644
+ },
+ "enemy/shadow_windup_rd": {
+  "h": 427,
+  "src": "assets/enemy/shadow_windup_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_air": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_air_rd",
+  "src": "assets/enemy/teacup_air.webp",
+  "w": 558
+ },
+ "enemy/teacup_air_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_air_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_air": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_air_rd",
+  "src": "assets/enemy/teacup_b_air.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_air_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_air_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_bite_rd",
+  "src": "assets/enemy/teacup_b_bite.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_bite_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_crouch_rd",
+  "src": "assets/enemy/teacup_b_crouch.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_crouch_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_hurt_rd",
+  "src": "assets/enemy/teacup_b_hurt.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_hurt_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_leap_rd",
+  "src": "assets/enemy/teacup_b_leap.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_leap_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_b_stand": {
+  "anchor": "bottom",
+  "figH": 0.9119,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_b_stand_rd",
+  "src": "assets/enemy/teacup_b_stand.webp",
+  "w": 574
+ },
+ "enemy/teacup_b_stand_rd": {
+  "h": 466,
+  "src": "assets/enemy/teacup_b_stand_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_bite": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_bite_rd",
+  "src": "assets/enemy/teacup_bite.webp",
+  "w": 558
+ },
+ "enemy/teacup_bite_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_bite_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_air": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_air_rd",
+  "src": "assets/enemy/teacup_c_air.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_air_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_air_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_bite_rd",
+  "src": "assets/enemy/teacup_c_bite.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_bite_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_crouch_rd",
+  "src": "assets/enemy/teacup_c_crouch.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_crouch_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_hurt_rd",
+  "src": "assets/enemy/teacup_c_hurt.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_hurt_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_leap_rd",
+  "src": "assets/enemy/teacup_c_leap.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_leap_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_c_stand": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/teacup_c_stand_rd",
+  "src": "assets/enemy/teacup_c_stand.webp",
+  "w": 572
+ },
+ "enemy/teacup_c_stand_rd": {
+  "h": 473,
+  "src": "assets/enemy/teacup_c_stand_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_crouch_rd",
+  "src": "assets/enemy/teacup_crouch.webp",
+  "w": 558
+ },
+ "enemy/teacup_crouch_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_hurt_rd",
+  "src": "assets/enemy/teacup_hurt.webp",
+  "w": 558
+ },
+ "enemy/teacup_hurt_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_leap": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_leap_rd",
+  "src": "assets/enemy/teacup_leap.webp",
+  "w": 558
+ },
+ "enemy/teacup_leap_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_leap_rd.png",
+  "w": 512
+ },
+ "enemy/teacup_stand": {
+  "anchor": "bottom",
+  "figH": 0.8429,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/teacup_stand_rd",
+  "src": "assets/enemy/teacup_stand.webp",
+  "w": 558
+ },
+ "enemy/teacup_stand_rd": {
+  "h": 479,
+  "src": "assets/enemy/teacup_stand_rd.png",
+  "w": 512
+ },
+ "ep1/cart_front": {
+  "h": 1024,
+  "rim": 0.52,
+  "src": "assets/ep1/cart_front.webp",
+  "w": 1536
+ },
+ "ep1/coffin": {
+  "h": 520,
+  "hit": true,
+  "src": "assets/ep1/coffin.webp",
+  "w": 322
+ },
+ "ep1/coffin_box": {
+  "h": 730,
+  "hit": true,
+  "src": "assets/ep1/coffin_box.webp",
+  "w": 1200
+ },
+ "ep1/coffin_lid": {
+  "figH": 0.8508,
+  "h": 563,
+  "hit": true,
+  "pad": [
+   42,
+   42,
+   42,
+   42
+  ],
+  "src": "assets/ep1/coffin_lid.webp",
+  "w": 1284
+ },
+ "ep1/cold_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/cold_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/cold_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/cold_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_end1": {
+  "h": 1024,
+  "src": "assets/ep1/cold_end1.webp",
+  "w": 1536
+ },
+ "ep1/cold_end1_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_end1_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_end2": {
+  "h": 1024,
+  "src": "assets/ep1/cold_end2.webp",
+  "w": 1536
+ },
+ "ep1/cold_end2_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_end2_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor1.webp",
+  "w": 1024
+ },
+ "ep1/cold_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor2.webp",
+  "w": 1024
+ },
+ "ep1/cold_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor3.webp",
+  "w": 1024
+ },
+ "ep1/cold_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/cold_wallL1": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL1.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL1_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL1_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL2": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL2.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL2_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL2_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL3": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL3.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL3_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL3_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL4": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL4.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL4_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL4_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL5": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL5.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL5_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL5_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL6": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL6.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallL6_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallL6_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR1": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR1.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR1_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR1_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR2": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR2.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR2_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR2_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR3": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR3.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR3_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR3_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR4": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/cold_wallR4.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR4_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/cold_wallR4_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR5": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR5.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR5_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR5_x.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR6": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR6.webp",
+  "w": 1536
+ },
+ "ep1/cold_wallR6_x": {
+  "h": 1024,
+  "src": "assets/ep1/cold_wallR6_x.webp",
+  "w": 1536
+ },
+ "ep1/crayon1": {
+  "figH": 0.9003,
+  "h": 642,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon1.webp",
+  "w": 964
+ },
+ "ep1/crayon1_x": {
+  "figH": 0.9038,
+  "h": 665,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon1_x.webp",
+  "w": 964
+ },
+ "ep1/crayon2": {
+  "figH": 0.9045,
+  "h": 670,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon2.webp",
+  "w": 964
+ },
+ "ep1/crayon2_x": {
+  "figH": 0.9056,
+  "h": 678,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon2_x.webp",
+  "w": 964
+ },
+ "ep1/crayon3": {
+  "figH": 0.9008,
+  "h": 645,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon3.webp",
+  "w": 964
+ },
+ "ep1/crayon3_x": {
+  "figH": 0.9032,
+  "h": 661,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon3_x.webp",
+  "w": 964
+ },
+ "ep1/crayon4": {
+  "figH": 0.9052,
+  "h": 675,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon4.webp",
+  "w": 964
+ },
+ "ep1/crayon4_x": {
+  "figH": 0.9033,
+  "h": 662,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/crayon4_x.webp",
+  "w": 964
+ },
+ "ep1/d_asobo": {
+  "h": 298,
+  "src": "assets/ep1/d_asobo.webp",
+  "w": 420
+ },
+ "ep1/d_asobo2": {
+  "h": 375,
+  "src": "assets/ep1/d_asobo2.webp",
+  "w": 398
+ },
+ "ep1/d_bones": {
+  "h": 401,
+  "src": "assets/ep1/d_bones.webp",
+  "w": 411
+ },
+ "ep1/d_cherries": {
+  "h": 405,
+  "src": "assets/ep1/d_cherries.webp",
+  "w": 420
+ },
+ "ep1/d_cones": {
+  "h": 415,
+  "src": "assets/ep1/d_cones.webp",
+  "w": 453
+ },
+ "ep1/d_crack": {
+  "h": 437,
+  "src": "assets/ep1/d_crack.webp",
+  "w": 350
+ },
+ "ep1/d_drip1": {
+  "h": 368,
+  "src": "assets/ep1/d_drip1.webp",
+  "w": 461
+ },
+ "ep1/d_drip2": {
+  "h": 348,
+  "src": "assets/ep1/d_drip2.webp",
+  "w": 454
+ },
+ "ep1/d_drip3": {
+  "h": 310,
+  "src": "assets/ep1/d_drip3.webp",
+  "w": 468
+ },
+ "ep1/d_drip4": {
+  "h": 382,
+  "src": "assets/ep1/d_drip4.webp",
+  "w": 446
+ },
+ "ep1/d_drip5": {
+  "h": 350,
+  "src": "assets/ep1/d_drip5.webp",
+  "w": 461
+ },
+ "ep1/d_drip6": {
+  "h": 344,
+  "src": "assets/ep1/d_drip6.webp",
+  "w": 449
+ },
+ "ep1/d_hand": {
+  "h": 423,
+  "src": "assets/ep1/d_hand.webp",
+  "w": 452
+ },
+ "ep1/d_honey": {
+  "h": 396,
+  "src": "assets/ep1/d_honey.webp",
+  "w": 428
+ },
+ "ep1/d_kaeshite": {
+  "h": 301,
+  "src": "assets/ep1/d_kaeshite.webp",
+  "w": 419
+ },
+ "ep1/d_mould": {
+  "h": 451,
+  "src": "assets/ep1/d_mould.webp",
+  "w": 452
+ },
+ "ep1/d_peel": {
+  "h": 470,
+  "src": "assets/ep1/d_peel.webp",
+  "w": 379
+ },
+ "ep1/d_puddle": {
+  "h": 414,
+  "src": "assets/ep1/d_puddle.webp",
+  "w": 468
+ },
+ "ep1/d_smile": {
+  "h": 377,
+  "src": "assets/ep1/d_smile.webp",
+  "w": 398
+ },
+ "ep1/d_splash": {
+  "h": 461,
+  "src": "assets/ep1/d_splash.webp",
+  "w": 416
+ },
+ "ep1/d_syrup": {
+  "h": 449,
+  "src": "assets/ep1/d_syrup.webp",
+  "w": 361
+ },
+ "ep1/d_torn": {
+  "h": 449,
+  "src": "assets/ep1/d_torn.webp",
+  "w": 420
+ },
+ "ep1/d_web": {
+  "h": 452,
+  "src": "assets/ep1/d_web.webp",
+  "w": 461
+ },
+ "ep1/d_zutto": {
+  "h": 303,
+  "src": "assets/ep1/d_zutto.webp",
+  "w": 460
+ },
+ "ep1/diary": {
+  "h": 520,
+  "hit": true,
+  "src": "assets/ep1/diary.webp",
+  "w": 441
+ },
+ "ep1/door1_frame": {
+  "h": 1024,
+  "hole": [
+   0.362,
+   0.2363,
+   0.6354,
+   0.8857
+  ],
+  "src": "assets/ep1/door1_frame.webp",
+  "w": 1536
+ },
+ "ep1/door1_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door1_leaf.webp",
+  "w": 769
+ },
+ "ep1/door1_room": {
+  "h": 880,
+  "hole": [
+   0.2619,
+   0.242,
+   0.7381,
+   0.9977
+  ],
+  "src": "assets/ep1/door1_room.webp",
+  "w": 882
+ },
+ "ep1/door2_frame": {
+  "h": 1024,
+  "hole": [
+   0.3542,
+   0.1064,
+   0.6458,
+   0.9033
+  ],
+  "src": "assets/ep1/door2_frame.webp",
+  "w": 1536
+ },
+ "ep1/door2_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door2_leaf.webp",
+  "w": 776
+ },
+ "ep1/door2_room": {
+  "h": 927,
+  "hole": [
+   0.2618,
+   0.1175,
+   0.7382,
+   0.9978
+  ],
+  "src": "assets/ep1/door2_room.webp",
+  "w": 940
+ },
+ "ep1/door3_frame": {
+  "h": 1024,
+  "hole": [
+   0.3848,
+   0.1484,
+   0.6146,
+   0.8984
+  ],
+  "src": "assets/ep1/door3_frame.webp",
+  "w": 1536
+ },
+ "ep1/door3_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door3_leaf.webp",
+  "w": 827
+ },
+ "ep1/door3_room": {
+  "h": 922,
+  "hole": [
+   0.2619,
+   0.1648,
+   0.7382,
+   0.9978
+  ],
+  "src": "assets/ep1/door3_room.webp",
+  "w": 741
+ },
+ "ep1/door4_frame": {
+  "h": 1024,
+  "hole": [
+   0.3236,
+   0.1094,
+   0.6758,
+   0.8867
+  ],
+  "src": "assets/ep1/door4_frame.webp",
+  "w": 1536
+ },
+ "ep1/door4_leaf": {
+  "h": 1331,
+  "src": "assets/ep1/door4_leaf.webp",
+  "w": 902
+ },
+ "ep1/door4_room": {
+  "h": 910,
+  "hole": [
+   0.2615,
+   0.1231,
+   0.7377,
+   0.9978
+  ],
+  "src": "assets/ep1/door4_room.webp",
+  "w": 1136
+ },
+ "ep1/door5_frame": {
+  "h": 1024,
+  "hole": [
+   0.3717,
+   0.2207,
+   0.627,
+   0.8818
+  ],
+  "src": "assets/ep1/door5_frame.webp",
+  "w": 1536
+ },
+ "ep1/door5_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door5_leaf.webp",
+  "w": 745
+ },
+ "ep1/door6_frame": {
+  "h": 1024,
+  "hole": [
+   0.2832,
+   0.1904,
+   0.7168,
+   0.7646
+  ],
+  "src": "assets/ep1/door6_frame.webp",
+  "w": 1536
+ },
+ "ep1/door6_leaf": {
+  "h": 1092,
+  "src": "assets/ep1/door6_leaf.webp",
+  "w": 1129
+ },
+ "ep1/door7_frame": {
+  "h": 1024,
+  "hole": [
+   0.3783,
+   0.1533,
+   0.6224,
+   0.8633
+  ],
+  "src": "assets/ep1/door7_frame.webp",
+  "w": 1536
+ },
+ "ep1/door7_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door7_leaf.webp",
+  "w": 898
+ },
+ "ep1/door8_frame": {
+  "h": 1024,
+  "hole": [
+   0.3633,
+   0.0908,
+   0.6335,
+   0.9209
+  ],
+  "src": "assets/ep1/door8_frame.webp",
+  "w": 1536
+ },
+ "ep1/door8_leaf": {
+  "h": 1395,
+  "src": "assets/ep1/door8_leaf.webp",
+  "w": 732
+ },
+ "ep1/door9_frame": {
+  "h": 1024,
+  "hole": [
+   0.3444,
+   0.1377,
+   0.6615,
+   0.8418
+  ],
+  "src": "assets/ep1/door9_frame.webp",
+  "w": 1536
+ },
+ "ep1/door9_leaf": {
+  "h": 1297,
+  "src": "assets/ep1/door9_leaf.webp",
+  "w": 1169
+ },
+ "ep1/door9_room": {
+  "h": 864,
+  "hole": [
+   0.262,
+   0.1632,
+   0.7381,
+   0.9977
+  ],
+  "src": "assets/ep1/door9_room.webp",
+  "w": 1023
+ },
+ "ep1/eye_l": {
+  "h": 514,
+  "hit": true,
+  "src": "assets/ep1/eye_l.webp",
+  "w": 520
+ },
+ "ep1/eye_r": {
+  "h": 511,
+  "hit": true,
+  "src": "assets/ep1/eye_r.webp",
+  "w": 520
+ },
+ "ep1/fresco1": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco1.webp",
+  "w": 681
+ },
+ "ep1/fresco1_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco1_x.webp",
+  "w": 664
+ },
+ "ep1/fresco2": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco2.webp",
+  "w": 670
+ },
+ "ep1/fresco2_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco2_x.webp",
+  "w": 670
+ },
+ "ep1/fresco3": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco3.webp",
+  "w": 664
+ },
+ "ep1/fresco3_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco3_x.webp",
+  "w": 664
+ },
+ "ep1/fresco4": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco4.webp",
+  "w": 664
+ },
+ "ep1/fresco4_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco4_x.webp",
+  "w": 664
+ },
+ "ep1/fresco5": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco5.webp",
+  "w": 670
+ },
+ "ep1/fresco5_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco5_x.webp",
+  "w": 666
+ },
+ "ep1/fresco6": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco6.webp",
+  "w": 664
+ },
+ "ep1/fresco6_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/fresco6_x.webp",
+  "w": 664
+ },
+ "ep1/gallery_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/gallery_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/gallery_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/gallery_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_end1": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/gallery_end1.webp",
+  "w": 1280
+ },
+ "ep1/gallery_end1_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/gallery_end1_x.webp",
+  "w": 1280
+ },
+ "ep1/gallery_end2": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/gallery_end2.webp",
+  "w": 1280
+ },
+ "ep1/gallery_end2_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/gallery_end2_x.webp",
+  "w": 1280
+ },
+ "ep1/gallery_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor1.webp",
+  "w": 1024
+ },
+ "ep1/gallery_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor2.webp",
+  "w": 1024
+ },
+ "ep1/gallery_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor3.webp",
+  "w": 1024
+ },
+ "ep1/gallery_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/gallery_wallL1": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_wallL1.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL1_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_wallL1_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL2.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL2_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL3.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL3_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL4": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL4.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL4_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL4_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL5": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL5.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL5_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL5_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL6.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallL6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallL6_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR1": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_wallR1.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR1_x": {
+  "h": 1024,
+  "src": "assets/ep1/gallery_wallR1_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR2.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR2_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR3.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR3_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR4": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR4.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR4_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR4_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR5": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR5.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR5_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR5_x.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR6.webp",
+  "w": 1536
+ },
+ "ep1/gallery_wallR6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/gallery_wallR6_x.webp",
+  "w": 1536
+ },
+ "ep1/garden_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/garden_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/garden_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/garden_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_end2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/garden_end2.webp",
+  "w": 1536
+ },
+ "ep1/garden_end2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/garden_end2_x.webp",
+  "w": 1536
+ },
+ "ep1/garden_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor1.webp",
+  "w": 1024
+ },
+ "ep1/garden_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor2.webp",
+  "w": 1024
+ },
+ "ep1/garden_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor3.webp",
+  "w": 1024
+ },
+ "ep1/garden_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/garden_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/garden_outside": {
+  "h": 1365,
+  "src": "assets/ep1/garden_outside.webp",
+  "w": 2048
+ },
+ "ep1/garden_outside_x": {
+  "h": 1365,
+  "src": "assets/ep1/garden_outside_x.webp",
+  "w": 2048
+ },
+ "ep1/garden_wallL1": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL1.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL1_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL1_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL2": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL2.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL2_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL2_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL3": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL3.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL3_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL3_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL4": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL4.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL4_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL4_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL5": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL5.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL5_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL5_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL6": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL6.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallL6_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallL6_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR1": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR1.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR1_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR1_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR2": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR2.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR2_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR2_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR3": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR3.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR3_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR3_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR4": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR4.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR4_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR4_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR5": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR5.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR5_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR5_x.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR6": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR6.webp",
+  "w": 1280
+ },
+ "ep1/garden_wallR6_x": {
+  "h": 1280,
+  "keyed": true,
+  "src": "assets/ep1/garden_wallR6_x.webp",
+  "w": 1280
+ },
+ "ep1/hall_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/hall_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/hall_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/hall_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_end1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/hall_end1.webp",
+  "w": 1536
+ },
+ "ep1/hall_end1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/hall_end1_x.webp",
+  "w": 1536
+ },
+ "ep1/hall_end2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/hall_end2.webp",
+  "w": 1536
+ },
+ "ep1/hall_end2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/hall_end2_x.webp",
+  "w": 1536
+ },
+ "ep1/hall_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor1.webp",
+  "w": 1024
+ },
+ "ep1/hall_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor2.webp",
+  "w": 1024
+ },
+ "ep1/hall_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor3.webp",
+  "w": 1024
+ },
+ "ep1/hall_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/hall_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_outside": {
+  "h": 1365,
+  "src": "assets/ep1/hall_outside.webp",
+  "w": 2048
+ },
+ "ep1/hall_outside_x": {
+  "h": 1365,
+  "src": "assets/ep1/hall_outside_x.webp",
+  "w": 2048
+ },
+ "ep1/hall_wallL1": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL1.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL1_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL1_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL2": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL2.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL2_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL2_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL3": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL3.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL3_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL3_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL4": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL4.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallL4_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallL4_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR1": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR1.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR1_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR1_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR2": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR2.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR2_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR2_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR3": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR3.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR3_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR3_x.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR4": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR4.webp",
+  "w": 1024
+ },
+ "ep1/hall_wallR4_x": {
+  "h": 1536,
+  "keyed": true,
+  "src": "assets/ep1/hall_wallR4_x.webp",
+  "w": 1024
+ },
+ "ep1/hands_a": {
+  "h": 771,
+  "hit": true,
+  "src": "assets/ep1/hands_a.webp",
+  "w": 1200
+ },
+ "ep1/hands_b": {
+  "h": 684,
+  "hit": true,
+  "src": "assets/ep1/hands_b.webp",
+  "w": 1200
+ },
+ "ep1/nb_candle": {
+  "h": 328,
+  "hit": true,
+  "src": "assets/ep1/nb_candle.webp",
+  "w": 203
+ },
+ "ep1/nb_candle_out": {
+  "h": 328,
+  "hit": true,
+  "src": "assets/ep1/nb_candle_out.webp",
+  "w": 203
+ },
+ "ep1/nb_cherry": {
+  "h": 322,
+  "hit": true,
+  "src": "assets/ep1/nb_cherry.webp",
+  "w": 261
+ },
+ "ep1/nb_cone": {
+  "h": 329,
+  "hit": true,
+  "src": "assets/ep1/nb_cone.webp",
+  "w": 310
+ },
+ "ep1/nb_cup": {
+  "h": 231,
+  "hit": true,
+  "src": "assets/ep1/nb_cup.webp",
+  "w": 362
+ },
+ "ep1/nb_frame": {
+  "h": 330,
+  "hit": true,
+  "src": "assets/ep1/nb_frame.webp",
+  "w": 350
+ },
+ "ep1/nb_glove": {
+  "h": 326,
+  "hit": true,
+  "src": "assets/ep1/nb_glove.webp",
+  "w": 345
+ },
+ "ep1/nb_ribbon": {
+  "h": 327,
+  "hit": true,
+  "src": "assets/ep1/nb_ribbon.webp",
+  "w": 387
+ },
+ "ep1/nb_scoop": {
+  "h": 315,
+  "hit": true,
+  "src": "assets/ep1/nb_scoop.webp",
+  "w": 288
+ },
+ "ep1/nb_spoon": {
+  "h": 323,
+  "hit": true,
+  "src": "assets/ep1/nb_spoon.webp",
+  "w": 280
+ },
+ "ep1/nether_a": {
+  "h": 1024,
+  "src": "assets/ep1/nether_a.webp",
+  "w": 1536
+ },
+ "ep1/nether_b": {
+  "h": 1024,
+  "src": "assets/ep1/nether_b.webp",
+  "w": 1536
+ },
+ "ep1/nether_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/nether_floor1.webp",
+  "w": 1024
+ },
+ "ep1/nether_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/nether_floor2.webp",
+  "w": 1024
+ },
+ "ep1/nether_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/nether_floor3.webp",
+  "w": 1024
+ },
+ "ep1/nursery_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/nursery_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/nursery_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/nursery_end1": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_end1.webp",
+  "w": 1536
+ },
+ "ep1/nursery_end2": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_end2.webp",
+  "w": 1536
+ },
+ "ep1/nursery_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_floor1.webp",
+  "w": 1024
+ },
+ "ep1/nursery_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_floor2.webp",
+  "w": 1024
+ },
+ "ep1/nursery_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_floor3.webp",
+  "w": 1024
+ },
+ "ep1/nursery_wallL1": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL1.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallL2": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL2.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallL3": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL3.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallL4": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL4.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallL5": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL5.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallL6": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallL6.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR1": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR1.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR2": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR2.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR3": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR3.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR4": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR4.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR5": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR5.webp",
+  "w": 1536
+ },
+ "ep1/nursery_wallR6": {
+  "h": 1024,
+  "src": "assets/ep1/nursery_wallR6.webp",
+  "w": 1536
+ },
+ "ep1/oven_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/oven_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/oven_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/oven_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_end1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_end1.webp",
+  "w": 1536
+ },
+ "ep1/oven_end1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_end1_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_end2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_end2.webp",
+  "w": 1536
+ },
+ "ep1/oven_end2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_end2_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor1.webp",
+  "w": 1024
+ },
+ "ep1/oven_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor2.webp",
+  "w": 1024
+ },
+ "ep1/oven_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor3.webp",
+  "w": 1024
+ },
+ "ep1/oven_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/oven_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/oven_outside": {
+  "h": 1365,
+  "src": "assets/ep1/oven_outside.webp",
+  "w": 2048
+ },
+ "ep1/oven_outside_x": {
+  "h": 1365,
+  "src": "assets/ep1/oven_outside_x.webp",
+  "w": 2048
+ },
+ "ep1/oven_wallL1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL1.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL1_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL2.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL2_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL3.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL3_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL4": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL4.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL4_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL4_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL5": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL5.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL5_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL5_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL6.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallL6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallL6_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR1.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR1_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR2.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR2_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR3.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR3_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR4": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR4.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR4_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR4_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR5": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR5.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR5_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR5_x.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR6.webp",
+  "w": 1536
+ },
+ "ep1/oven_wallR6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/oven_wallR6_x.webp",
+  "w": 1536
+ },
+ "ep1/paw": {
+  "h": 1200,
+  "src": "assets/ep1/paw.webp",
+  "w": 762
+ },
+ "ep1/photo": {
+  "h": 520,
+  "hit": true,
+  "src": "assets/ep1/photo.webp",
+  "w": 361
+ },
+ "ep1/pit_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/pit_floor1.webp",
+  "w": 1024
+ },
+ "ep1/pit_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/pit_floor2.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall1": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall1.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall2": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall2.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall3": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall3.webp",
+  "w": 1024
+ },
+ "ep1/pit_wall4": {
+  "h": 1536,
+  "src": "assets/ep1/pit_wall4.webp",
+  "w": 1024
+ },
+ "ep1/portrait1": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait1.webp",
+  "w": 664
+ },
+ "ep1/portrait1_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait1_x.webp",
+  "w": 664
+ },
+ "ep1/portrait2": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait2.webp",
+  "w": 667
+ },
+ "ep1/portrait2_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait2_x.webp",
+  "w": 667
+ },
+ "ep1/portrait3": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait3.webp",
+  "w": 666
+ },
+ "ep1/portrait3_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait3_x.webp",
+  "w": 666
+ },
+ "ep1/portrait4": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait4.webp",
+  "w": 664
+ },
+ "ep1/portrait4_x": {
+  "figH": 0.9336,
+  "h": 964,
+  "hit": true,
+  "pad": [
+   32,
+   32,
+   32,
+   32
+  ],
+  "src": "assets/ep1/portrait4_x.webp",
+  "w": 664
+ },
+ "ep1/seal1": {
+  "figH": 0.9298,
+  "h": 513,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/ep1/seal1.webp",
+  "w": 474
+ },
+ "ep1/seal2": {
+  "figH": 0.9297,
+  "h": 512,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/ep1/seal2.webp",
+  "w": 551
+ },
+ "ep1/seal3": {
+  "figH": 0.9306,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/ep1/seal3.webp",
+  "w": 513
+ },
+ "ep1/seal4": {
+  "figH": 0.9308,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "src": "assets/ep1/seal4.webp",
+  "w": 527
+ },
+ "ep1/shop_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/shop_ceil1_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil1_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/shop_ceil2_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil2_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/shop_ceil3_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_ceil3_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_end1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_end1.webp",
+  "w": 1536
+ },
+ "ep1/shop_end1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_end1_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_end2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_end2.webp",
+  "w": 1536
+ },
+ "ep1/shop_end2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_end2_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor1.webp",
+  "w": 1024
+ },
+ "ep1/shop_floor1_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor1_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor2.webp",
+  "w": 1024
+ },
+ "ep1/shop_floor2_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor2_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor3.webp",
+  "w": 1024
+ },
+ "ep1/shop_floor3_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_floor3_x.webp",
+  "w": 1024
+ },
+ "ep1/shop_outside": {
+  "h": 1365,
+  "src": "assets/ep1/shop_outside.webp",
+  "w": 2048
+ },
+ "ep1/shop_outside_x": {
+  "h": 1365,
+  "src": "assets/ep1/shop_outside_x.webp",
+  "w": 2048
+ },
+ "ep1/shop_wallL1": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL1.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL1_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL1_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL2.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL2_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL3.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL3_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL4": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallL4.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL4_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallL4_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL5": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL5.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL5_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL5_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL6.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallL6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallL6_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR1": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR1.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR1_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR1_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR2": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR2.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR2_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR2_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR3": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR3.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR3_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR3_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR4": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR4.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR4_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR4_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR5": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR5.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR5_x": {
+  "h": 1024,
+  "src": "assets/ep1/shop_wallR5_x.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR6": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR6.webp",
+  "w": 1536
+ },
+ "ep1/shop_wallR6_x": {
+  "h": 1024,
+  "keyed": true,
+  "src": "assets/ep1/shop_wallR6_x.webp",
+  "w": 1536
+ },
+ "ep1/soul_child": {
+  "h": 900,
+  "src": "assets/ep1/soul_child.webp",
+  "w": 521
+ },
+ "ep1/studio_ceil1": {
+  "h": 1024,
+  "src": "assets/ep1/studio_ceil1.webp",
+  "w": 1024
+ },
+ "ep1/studio_ceil2": {
+  "h": 1024,
+  "src": "assets/ep1/studio_ceil2.webp",
+  "w": 1024
+ },
+ "ep1/studio_ceil3": {
+  "h": 1024,
+  "src": "assets/ep1/studio_ceil3.webp",
+  "w": 1024
+ },
+ "ep1/studio_end1": {
+  "h": 1024,
+  "src": "assets/ep1/studio_end1.webp",
+  "w": 1536
+ },
+ "ep1/studio_end2": {
+  "h": 1024,
+  "src": "assets/ep1/studio_end2.webp",
+  "w": 1536
+ },
+ "ep1/studio_floor1": {
+  "h": 1024,
+  "src": "assets/ep1/studio_floor1.webp",
+  "w": 1024
+ },
+ "ep1/studio_floor2": {
+  "h": 1024,
+  "src": "assets/ep1/studio_floor2.webp",
+  "w": 1024
+ },
+ "ep1/studio_floor3": {
+  "h": 1024,
+  "src": "assets/ep1/studio_floor3.webp",
+  "w": 1024
+ },
+ "ep1/studio_wallL1": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL1.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallL2": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL2.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallL3": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL3.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallL4": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL4.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallL5": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL5.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallL6": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallL6.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR1": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR1.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR2": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR2.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR3": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR3.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR4": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR4.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR5": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR5.webp",
+  "w": 1280
+ },
+ "ep1/studio_wallR6": {
+  "h": 1280,
+  "src": "assets/ep1/studio_wallR6.webp",
+  "w": 1280
+ },
+ "prop/ep1_armor_lance": {
+  "h": 900,
+  "hit": true,
+  "src": "assets/prop/ep1_armor_lance.webp",
+  "w": 295
+ },
+ "prop/ep1_cold1": {
+  "h": 528,
+  "hit": true,
+  "relief": "prop/ep1_cold1_rd",
+  "src": "assets/prop/ep1_cold1.webp",
+  "w": 900
+ },
+ "prop/ep1_cold1_rd": {
+  "h": 300,
+  "src": "assets/prop/ep1_cold1_rd.png",
+  "w": 512
+ },
+ "prop/ep1_cold2": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_cold2_rd",
+  "src": "assets/prop/ep1_cold2.webp",
+  "w": 506
+ },
+ "prop/ep1_cold2_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_cold2_rd.png",
+  "w": 288
+ },
+ "prop/ep1_cold3": {
+  "h": 713,
+  "hit": true,
+  "relief": "prop/ep1_cold3_rd",
+  "src": "assets/prop/ep1_cold3.webp",
+  "w": 900
+ },
+ "prop/ep1_cold3_rd": {
+  "h": 406,
+  "src": "assets/prop/ep1_cold3_rd.png",
+  "w": 512
+ },
+ "prop/ep1_garden1": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_garden1_rd",
+  "src": "assets/prop/ep1_garden1.webp",
+  "w": 880
+ },
+ "prop/ep1_garden1_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_garden1_rd.png",
+  "w": 501
+ },
+ "prop/ep1_garden2": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_garden2_rd",
+  "src": "assets/prop/ep1_garden2.webp",
+  "w": 295
+ },
+ "prop/ep1_garden2_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_garden2_rd.png",
+  "w": 168
+ },
+ "prop/ep1_garden3": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_garden3_rd",
+  "src": "assets/prop/ep1_garden3.webp",
+  "w": 750
+ },
+ "prop/ep1_garden3_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_garden3_rd.png",
+  "w": 427
+ },
+ "prop/ep1_garden4": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_garden4_rd",
+  "src": "assets/prop/ep1_garden4.webp",
+  "w": 274
+ },
+ "prop/ep1_garden4_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_garden4_rd.png",
+  "w": 156
+ },
+ "prop/ep1_hall1": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_hall1_rd",
+  "src": "assets/prop/ep1_hall1.webp",
+  "w": 388
+ },
+ "prop/ep1_hall1_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_hall1_rd.png",
+  "w": 221
+ },
+ "prop/ep1_hall2": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_hall2_rd",
+  "src": "assets/prop/ep1_hall2.webp",
+  "w": 728
+ },
+ "prop/ep1_hall2_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_hall2_rd.png",
+  "w": 414
+ },
+ "prop/ep1_nursery1": {
+  "h": 764,
+  "hit": true,
+  "relief": "prop/ep1_nursery1_rd",
+  "src": "assets/prop/ep1_nursery1.webp",
+  "w": 900
+ },
+ "prop/ep1_nursery1_rd": {
+  "h": 435,
+  "src": "assets/prop/ep1_nursery1_rd.png",
+  "w": 512
+ },
+ "prop/ep1_nursery2": {
+  "h": 544,
+  "hit": true,
+  "relief": "prop/ep1_nursery2_rd",
+  "src": "assets/prop/ep1_nursery2.webp",
+  "w": 900
+ },
+ "prop/ep1_nursery2_rd": {
+  "h": 309,
+  "src": "assets/prop/ep1_nursery2_rd.png",
+  "w": 512
+ },
+ "prop/ep1_nursery3": {
+  "h": 530,
+  "hit": true,
+  "relief": "prop/ep1_nursery3_rd",
+  "src": "assets/prop/ep1_nursery3.webp",
+  "w": 900
+ },
+ "prop/ep1_nursery3_rd": {
+  "h": 302,
+  "src": "assets/prop/ep1_nursery3_rd.png",
+  "w": 512
+ },
+ "prop/ep1_oven1": {
+  "h": 655,
+  "hit": true,
+  "relief": "prop/ep1_oven1_rd",
+  "src": "assets/prop/ep1_oven1.webp",
+  "w": 900
+ },
+ "prop/ep1_oven1_rd": {
+  "h": 373,
+  "src": "assets/prop/ep1_oven1_rd.png",
+  "w": 512
+ },
+ "prop/ep1_oven2": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_oven2_rd",
+  "src": "assets/prop/ep1_oven2.webp",
+  "w": 516
+ },
+ "prop/ep1_oven2_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_oven2_rd.png",
+  "w": 294
+ },
+ "prop/ep1_shop1": {
+  "h": 672,
+  "hit": true,
+  "relief": "prop/ep1_shop1_rd",
+  "src": "assets/prop/ep1_shop1.webp",
+  "w": 900
+ },
+ "prop/ep1_shop1_rd": {
+  "h": 382,
+  "src": "assets/prop/ep1_shop1_rd.png",
+  "w": 512
+ },
+ "prop/ep1_shop2": {
+  "h": 899,
+  "hit": true,
+  "relief": "prop/ep1_shop2_rd",
+  "src": "assets/prop/ep1_shop2.webp",
+  "w": 900
+ },
+ "prop/ep1_shop2_rd": {
+  "h": 511,
+  "src": "assets/prop/ep1_shop2_rd.png",
+  "w": 512
+ },
+ "prop/ep1_shop3": {
+  "h": 442,
+  "hit": true,
+  "relief": "prop/ep1_shop3_rd",
+  "src": "assets/prop/ep1_shop3.webp",
+  "w": 900
+ },
+ "prop/ep1_shop3_rd": {
+  "h": 251,
+  "src": "assets/prop/ep1_shop3_rd.png",
+  "w": 512
+ },
+ "prop/ep1_shop4": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_shop4_rd",
+  "src": "assets/prop/ep1_shop4.webp",
+  "w": 337
+ },
+ "prop/ep1_shop4_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_shop4_rd.png",
+  "w": 192
+ },
+ "prop/ep1_studio1": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_studio1_rd",
+  "src": "assets/prop/ep1_studio1.webp",
+  "w": 582
+ },
+ "prop/ep1_studio1_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_studio1_rd.png",
+  "w": 331
+ },
+ "prop/ep1_studio2": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_studio2_rd",
+  "src": "assets/prop/ep1_studio2.webp",
+  "w": 555
+ },
+ "prop/ep1_studio2_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_studio2_rd.png",
+  "w": 316
+ },
+ "prop/ep1_studio3": {
+  "h": 870,
+  "hit": true,
+  "relief": "prop/ep1_studio3_rd",
+  "src": "assets/prop/ep1_studio3.webp",
+  "w": 900
+ },
+ "prop/ep1_studio3_rd": {
+  "h": 495,
+  "src": "assets/prop/ep1_studio3_rd.png",
+  "w": 512
+ },
+ "prop/ep1_tunnel1": {
+  "h": 900,
+  "hit": true,
+  "relief": "prop/ep1_tunnel1_rd",
+  "src": "assets/prop/ep1_tunnel1.webp",
+  "w": 551
+ },
+ "prop/ep1_tunnel1_rd": {
+  "h": 512,
+  "src": "assets/prop/ep1_tunnel1_rd.png",
+  "w": 313
+ },
+ "prop/ep1_tunnel2": {
+  "h": 602,
+  "hit": true,
+  "relief": "prop/ep1_tunnel2_rd",
+  "src": "assets/prop/ep1_tunnel2.webp",
+  "w": 900
+ },
+ "prop/ep1_tunnel2_rd": {
+  "h": 342,
+  "src": "assets/prop/ep1_tunnel2_rd.png",
+  "w": 512
+ },
+ "ui/sel_card_ep1": {
+  "dom": true,
+  "h": 562,
+  "src": "assets/ui/sel_card_ep1.webp",
+  "w": 200
+ },
+ "ui/sel_thumb_ep1_boss": {
+  "dom": true,
+  "h": 491,
+  "src": "assets/ui/sel_thumb_ep1_boss.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_cold": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_cold.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_gallery": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_gallery.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_garden": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_garden.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_nursery": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_nursery.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_oven": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_oven.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_pit": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_pit.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_shop": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_shop.webp",
+  "w": 1200
+ },
+ "ui/sel_thumb_ep1_studio": {
+  "dom": true,
+  "h": 363,
+  "src": "assets/ui/sel_thumb_ep1_studio.webp",
+  "w": 1200
+ }
+}

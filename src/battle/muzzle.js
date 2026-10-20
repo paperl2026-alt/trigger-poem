@@ -94,11 +94,27 @@ export class Muzzle {
   setLevel(lv, full, skill) { this.lv = lv; this.full = full; this.skill = skill; }
 
   // a shot landed at (x, y) (overlay pixels, y up): a painted burst there, held for a moment
-  hit(x, y, crit = false) {
+  // where a shot struck (x, y overlay px; at / dist: the place in the world and how far): DESIGN「命中的效果是 3D 的」 - the hit is bits
+  // flying in the room (sparks and shards from the spot, toward the camera and out, falling: her colour; the cat girl's runes and paw
+  // prints), and the painted burst only small and faint, smaller the further it is
+  hit(x, y, crit = false, at = null, dist = null) {
+    const k = dist ? Math.max(0.3, Math.min(1.2, 4.2 / dist)) : 1, g = this.game;
+    if (at) {
+      const fx = g.fx, c = g.world.camPos, nx = c.x - at.x, ny = c.y - at.y, nz = c.z - at.z, L = Math.hypot(nx, ny, nz) || 1, col = C1.copy(this.col);
+      for (let i = 0; i < (crit ? 14 : 7); i++) {
+        const sp = rnd(1.8, crit ? 6 : 4), vx = (nx / L + rnd(-0.9, 0.9)) * sp, vy = (ny / L + rnd(-0.3, 1.0)) * sp, vz = (nz / L + rnd(-0.9, 0.9)) * sp;
+        fx.wAdd.emit({ x: at.x, y: at.y, z: at.z, vx, vy, vz, grav: 6, drag: 1.2, life: rnd(0.16, 0.34), size: rnd(0.035, 0.07), size1: 0.008,
+          color: i % 3 ? [1, 0.95, 0.85] : [col.r, col.g, col.b], a: 1, a1: 0, frame: FR.STREAK, rot: Math.atan2(vy, Math.hypot(vx, vz)) });
+      }
+      for (let i = 0; i < (crit ? 8 : 4); i++) fx.wNorm.emit({ x: at.x, y: at.y, z: at.z, vx: nx / L * rnd(0.5, 2) + rnd(-1.2, 1.2), vy: rnd(0.5, 2.6), vz: nz / L * rnd(0.5, 2) + rnd(-1.2, 1.2),
+        grav: 7, drag: 0.8, life: rnd(0.5, 0.9), size: rnd(0.035, 0.08), size1: 0.02, vrot: rnd(-10, 10), color: this.paw ? [1, 0.96, 0.92] : [1, 0.8, 0.9], a: 1, a1: 0,
+        frame: this.paw ? (i % 2 ? FR.RUNE : FR.PAW) : i % 2 ? FR.SHARD : FR.PAPER });
+      fx.wAdd.emit({ x: at.x, y: at.y, z: at.z, life: 0.09, size: crit ? 0.42 : 0.26, size1: 0.05, color: [col.r, col.g, col.b], a: 0.9, a1: 0, frame: FR.GLOW });
+    }
     const h = this.hits[this.hi++ % this.hits.length], list = this.art.hit;
     if (!list.length) return;
     h.m.material.uniforms.map.value = list[Math.floor(Math.random() * list.length)];
-    h.t = 0; h.x = x; h.y = y; h.rot = rnd(0, 6.28); h.sz = this.p.H * (crit ? 0.2 : 0.12) * rnd(0.85, 1.15);
+    h.t = 0; h.x = x; h.y = y; h.rot = rnd(0, 6.28); h.sz = this.p.H * (crit ? 0.12 : 0.07) * k * rnd(0.85, 1.15); h.fa = at ? 0.55 : 1;
   }
   // one shot from (x, y) toward (tx, ty), all in overlay pixels (y up)
   fire(x, y, tx, ty, crit = false) {
@@ -177,7 +193,7 @@ export class Muzzle {
       if (!h.m.visible) continue;
       const s = h.sz * (0.7 + 0.5 * Math.min(1, he * 3));
       h.m.position.set(h.x, h.y, 0); h.m.scale.set(s, s, 1); h.m.rotation.z = h.rot + he * 0.4;
-      U.a.value = 1 - he * he;
+      U.a.value = (1 - he * he) * (h.fa ?? 1);
     }
     // glow: the player's colour, warmer at the core, bigger and longer with Fever
     const G = this.glow, GU = G.material.uniforms, ga = on ? 1 - e * 0.6 : Math.max(0, GU.a.value - dt * 9);

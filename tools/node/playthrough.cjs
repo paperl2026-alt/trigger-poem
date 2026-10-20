@@ -6,11 +6,12 @@
 //   screenshot <out>_<n>.png at every new station), PT_EVERY=<ms> (a screenshot that often instead, for watching a scene),
 //   PT_NOSKIP=1 (comic pages and door close-ups are played, not skipped), PT_JS=<js> (run in the page every tick, e.g. to shoot the
 //   place's mechanisms, which the auto-player leaves alone: see docs/TECH.md 自检), PT_STATION=<stop> (start at that stop of a long
-//   stage, e.g. kn2: episode 2's last fight)
+//   stage, e.g. kn2: episode 2's last fight), PT_DIST=<folder> (play another build than dist/, e.g. a try built with vite build --outDir:
+//   it gets its own saves and cache, so it can run beside a check of dist/)
 // <out.json>: { done, results, timeline: [{ t, step, station, wave, ..., mem }], peak, load, audio, errs }; also <tmp>/playthrough.log while it runs.
 // audio = what the sound code did (src/core/audio.js STATS: lines said / dropped / cut in, weapon syllables, monster cries played / skipped).
 // load = { batches: [{ n pictures, ms }] (the first is the core at start-up), waits: [ms the loading bar showed before a stage],
-// jank: frames over 50 ms { n, max, sum } }.
+// jank: frames over 50 ms { n, max, sum, at: [[ms, step, stop, in a fight], ...] for the ones over 120 ms } }.
 // mem = MB of the game's processes (Electron app.getAppMetrics working sets): gpu (textures live there), tab (the page: decoded images,
 // JS), all; plus tex = textures on the graphics card (three.js renderer.info.memory.textures), vram = their size in MB (estimated,
 // src/core/assets.js vramMB), loaded = pictures loaded (src/core/groups.js decides which).
@@ -20,9 +21,9 @@ const path = require('node:path');
 const os = require('node:os');
 
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { standard: true, secure: true, supportFetchAPI: true, corsEnabled: true, stream: true } }]);
-app.setPath('userData', path.join(os.tmpdir(), 'trigger-poem-playthrough'));   // its own saves, never the player's
+app.setPath('userData', path.join(os.tmpdir(), 'trigger-poem-playthrough' + (process.env.PT_DIST ? '-' + path.basename(process.env.PT_DIST) : '')));   // its own saves, never the player's
 app.commandLine.appendSwitch('autoplay-policy', 'no-user-gesture-required');
-const DIST = path.join(__dirname, '..', '..', 'dist');
+const DIST = process.env.PT_DIST ? path.resolve(process.env.PT_DIST) : path.join(__dirname, '..', '..', 'dist');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.webp': 'image/webp', '.png': 'image/png', '.woff2': 'font/woff2', '.woff': 'font/woff', '.svg': 'image/svg+xml', '.mp3': 'audio/mpeg', '.ogg': 'audio/ogg', '.wav': 'audio/wav' };
 const LOG = path.join(os.tmpdir(), 'playthrough.log');
 const log = (...a) => fs.appendFileSync(LOG, a.join(' ') + '\n');
@@ -59,7 +60,7 @@ app.whenReady().then(async () => {
   await win.webContents.executeJavaScript(`new Promise((ok) => { (function poll() { if (window.__G && __G.game) return ok(); setTimeout(poll, 100); })(); })`);
   await win.webContents.executeJavaScript(`__G.god = true; __G.slow = ${SLOW}; __G.audioOn && __G.audioOn(); true`);   // (sound on, as after a click)
   // frames longer than 50 ms (decoding / uploading pictures shows up here)
-  await win.webContents.executeJavaScript(`window.__jank = { n: 0, max: 0, sum: 0 }; (function f(a) { requestAnimationFrame((b) => { const d = b - a; if (d > 50) { __jank.n++; __jank.sum += Math.round(d); __jank.max = Math.max(__jank.max, Math.round(d)); } f(b); }); })(performance.now()); true`);
+  await win.webContents.executeJavaScript(`window.__jank = { n: 0, max: 0, sum: 0, at: [] }; (function f(a) { requestAnimationFrame((b) => { const d = b - a; if (d > 50) { __jank.n++; __jank.sum += Math.round(d); __jank.max = Math.max(__jank.max, Math.round(d)); if (d > 120 && __jank.at.length < 60) { const g = __G.game; __jank.at.push([Math.round(d), g ? g.stepIdx : -1, g ? g.stationId : null, g ? !!g.combat : null]); } } f(b); }); })(performance.now()); true`);
   const timeline = [], t0 = Date.now();
   let last = '', shots = 0, lastStation = null, st;
   const peak = {};
