@@ -94,5 +94,19 @@
       "throw": ["blast"],
       "hurt": ["hurt"]
     }
+  },
+  "drip": {
+    "beh": "flyer",
+    "name": { "zh": "点滴瓶幽灵", "en": "IV Drip Spirit", "ja": "点滴おばけ" },
+    "sprite": "drip",
+    "variants": ["drip", "drip_b", "drip_c"],
+    "hp": 130,
+    "h": 1.6, "screen": 0.2,
+    "windup": 1.0,
+    "poise": 16,
+    "first": "fly0",
+    "frames": { "fly": ["fly0", "fly1", "idle", "fly1"], "channel": ["channel"], "windup": ["windup"], "dive": ["windup"], "hurt": ["hurt"] },
+    "scar": "splat",
+    "scarColor": "#ff8ab0"
   }
 }

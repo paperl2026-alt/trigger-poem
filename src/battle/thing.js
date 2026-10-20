@@ -1,12 +1,15 @@
 // The prologue boss "???" (docs/DESIGN.md 序章 / Boss, bosses.json "qq", art R43 boss/qq_s<n>_<pose>): the formless thing that fell on the
 // school, possessing the discipline-committee girl and mutating her like the G-virus, five stages from infection to the core.
 // Not a giant made of parts: one whole drawing at a time (idle / move / wind-up / attack / hurt), middle-sized, whole on the screen, drifting
-// back and forth across the yard and throwing things (DESIGN「Boss」). One move at a time, with breathers between (DESIGN「关卡编排要有起伏」):
-//   volley  things spat at the girls one after another (shoot them down: the amber edge)
-//   lunge   it gathers itself (blue brackets: shoot it enough and it is interrupted) and lunges at one girl's cover
-//   burst   a long wind-up nothing stops (the red edge: hide), then a blast over everyone
-//   summon  (later stages) a few small monsters of one kind
-//   move    it drifts somewhere else (the breather)
+// back and forth across the yard and throwing things (DESIGN「Boss」). One move at a time, with breathers between (DESIGN「关卡编排要有起伏」).
+// Each form fights its own way (DESIGN 序章 Boss 五个形态, user 2026-10-20) - its "pattern" in bosses.json picks from:
+//   approach  (1) it walks up on them, faster the more it is hit; at the covers it pounds them: they shake as if they would give, and hold
+//   throw     (2) it throws things one after another; only in the moment of each throw is its weak point open (S.guarded)
+//   zigzag    (3) it rushes at one girl in a fast zigzag: enough damage on the way knocks it back home, else it hits her, cover or not
+//   heal      (4) healers called up out of her (nurse's-office IV drips): they float beside her and feed her through their tubes - kill
+//             them while fighting her, or she heals back to where this form began and returns to the one before (regress)
+//   charge    (5) a long gathering, its weak point jumping from place to place (S.cores) - break it with enough damage or everyone is hit hard
+//   volley / lunge / burst / drift   the older moves (things spat at them, a lunge at a cover, a blast to hide from, a drift aside)
 // Only its core takes damage (a ring marks it), and nothing gets through while it attacks (DESIGN「Boss」, 2026-10-18).
 // Hits change its colour, never hole it (paper.js solid damage). Between stages it convulses, splashes ooze and the next mutation grows out
 // (no comic: the fight keeps its rhythm).
@@ -52,7 +55,7 @@ export class TheThing extends Actor {
 
   // ---------------------------------------------------------------- a stage's drawing set: a new mesh (its own size and shape)
   setStage(n) {
-    this.stage = n;
+    this.stage = n; this.stageDmg = 0; this.coreI = 0; this.exposedT = 0; this.zz = null; this.chg = null;
     const S = this.S, key = `${this.def.sprite || 'boss/qq'}_s${n + 1}_idle0`, t = tex[key];
     if (!t) { console.warn('boss: no frames for stage', n + 1); return; }
     const figH = meta[key]?.figH || 1, pivot = S.float ? 'center' : 'bottom';
@@ -166,9 +169,11 @@ export class TheThing extends Actor {
   // marks it); everything else glances off. While it attacks nothing gets through; its wind-up is the opening (and hits on the core
   // there can break a lunge off)
   hitMeshes() { return this.alive && !this.grief ? [this.mesh] : []; }   // (down and grieving: not a target any more, only her child's things)
-  weakNow() { return !this.mutating && !this.grief && this.state !== 'attack'; }
+  // (S.guarded: open only for moments - exposedT; S.open: open only in these states, e.g. while it rushes and when knocked back)
+  weakNow() { return !this.mutating && !this.grief && this.state !== 'attack' && (!this.S.guarded || this.exposedT > 0) && (!this.S.open || this.S.open.includes(this.state)); }
+  core() { const C = this.S.cores; return C ? C[(this.coreI || 0) % C.length] : this.S.core; }
   onCore(uv) {
-    const c = this.S.core; if (!c) return true;
+    const c = this.core(); if (!c) return true;
     return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11);
   }
   glance(info) {   // a shot that does nothing: sparks and a tick
@@ -182,7 +187,7 @@ export class TheThing extends Actor {
     if (this.grief) { this.glance(info); return; }
     const D = this.def;
     if (!this.weakNow() || !this.onCore(info.uv)) { this.glance(info); return; }
-    const dmg = info.dmg * (D.coreMul ?? 1);
+    const dmg = info.dmg * (D.coreMul ?? 1) * (this.S.guarded ? D.throw?.exposedMul ?? 2 : 1);   // (a form open only for moments: those moments hurt it more)
     info.dealt = dmg; this.lastHitBy = info.by;
     this.paint(info);
     this.flash = Math.max(this.flash, 0.7);
@@ -190,7 +195,10 @@ export class TheThing extends Actor {
     fx.ink(p, 8, 2.6, COL.hot); fx.star(p, 2.5, COL.pink);
     // a lunge being gathered breaks off when its core is hit enough
     if (this.state === 'windup' && this.move === 'lunge' && info.stagger) { this.poise += info.stagger; if (this.poise >= D.lunge.poise) this.interrupt(); }
-    this.hp -= dmg;
+    this.hp -= dmg; this.stageDmg = (this.stageDmg || 0) + dmg;
+    // (a zigzag rush knocked back by enough damage on the way; a charge broken by enough damage before it is full)
+    if (this.zz) { this.zz.dmg += dmg; if (this.zz.dmg >= D.zigzag.poise) this.repel(); }
+    if (this.chg && this.state === 'windup') { this.chg.dmg += dmg; if (this.chg.dmg >= D.charge.poise) { this.chg = null; this.interrupt(); } }
     if (D.ritual && !this.keeps) this.hp = Math.max(this.hp, 1);   // (her child's things come out before her end)
     this.game.onHit(this, info.kind, info);
     if (this.hp <= 0) { if (this.keeps) this.grieve(); else this.die(); return; }
@@ -209,13 +217,13 @@ export class TheThing extends Actor {
   }
   endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
   // where the AI partner aims (src/core/input.js): the core, on screen (y down like screenBox)
-  aimAt() { const c = this.S.core; if (!c) return null; const g = this.game, sc = g.world.project(this.uvToWorld(c[0], c[1])); return { x: sc.x, y: sc.y }; }
+  aimAt() { const c = this.core(); if (!c || !this.weakNow()) return null; const g = this.game, sc = g.world.project(this.uvToWorld(c[0], c[1])); return { x: sc.x, y: sc.y }; }
   // the ring round the core (the small kill ring: shoot inside it), gone while it attacks or changes
   markCore(on, t) {
     const g = this.game;
     if (!on) { if (this.coreMark) { this.coreMark.remove(); this.coreMark = null; } return; }
     if (!this.coreMark) this.coreMark = g.fx.orbit('shot', -1);
-    const c = this.S.core, wc = this.uvToWorld(c[0], c[1]), sc = g.world.project(wc), top = g.world.project(this.uvToWorld(c[0], c[1] + (c[2] ?? 0.11)));
+    const c = this.core(), wc = this.uvToWorld(c[0], c[1]), sc = g.world.project(wc), top = g.world.project(this.uvToWorld(c[0], c[1] + (c[2] ?? 0.11)));
     this.coreMark.set(sc.x, g.H - sc.y, Math.max(18, Math.abs(top.y - sc.y)), 0.2, t, 9, null, null);
   }
   later(s, fn) { const q = this.seq; this.game.etw.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
@@ -232,7 +240,15 @@ export class TheThing extends Actor {
     const wk = this.weakNow();
     this.u.outlineCol.value.setRGB(1, 1, 1);
     this.tickT = (this.tickT || 0) - dt;
-    this.markCore(wk && this.S.core && !g.cineOn, t);
+    this.markCore(wk && this.core() && !g.cineOn, t);
+    this.exposedT = Math.max(0, (this.exposedT || 0) - dt);
+    const H = this.def.heal, on = (this.healers || []).filter((e) => e.alive && e.attached).length;
+    if (H && on && !this.mutating && this.hp < this.maxHp) {
+      this.hp = Math.min(this.maxHp, this.hp + on * H.rate * dt); this.healGlow = 1;
+      if (this.stage === H.stage && this.hp >= this.maxHp * this.S.at) this.regress();
+    }
+    this.healGlow = Math.max(0, (this.healGlow || 0) - dt * 2);
+    if (this.healGlow > 0) this.u.outlineCol.value.setRGB(1 - 0.45 * this.healGlow, 1, 1 - 0.3 * this.healGlow);
     if (this.keeps) this.keepTick(dt);
     // breathing
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
@@ -243,6 +259,9 @@ export class TheThing extends Actor {
       return;
     }
     if (this.busy || this.mutating || this.grief || this.state === 'hurt' || g.cineOn) return;
+    if (this.state === 'approach') { this.walkOn(dt); return; }
+    // how this form is fought, once, as it starts (bosses.json texts.h<n>)
+    if (!(this.told ||= {})[this.stage] && this.def.texts?.[`h${this.stage + 1}`]) { this.told[this.stage] = true; g.hud.gl.hold('hint', { text: tr(this.def.texts[`h${this.stage + 1}`]), dur: 4.5 }); }
     this.timer -= dt;
     if (this.timer > 0) return;
     const P2 = this.S.pattern, mv = P2[this.pi++ % P2.length];
@@ -328,8 +347,127 @@ export class TheThing extends Actor {
     });
     this.timer = D.windup + 1.2 + rr(this.def.rest);
   }
+  // (1) it walks up on them, faster the more it has been hit in this form; it stops where its weak point would leave the top of the
+  // picture or at the covers, and pounds them
+  approach() {
+    this.state = 'approach'; this.play('move', 4); this.home = this.root.position.clone();
+  }
+  walkOn(dt) {
+    const g = this.game, D = this.def.approach, P = this.root.position, c = g.world.camPos;
+    const stageHp = this.maxHp * (this.S.at - (this.def.stages[this.stage + 1]?.at ?? 0));
+    const v = D.speed * (1 + D.speedUp * Math.min(1, (this.stageDmg || 0) / Math.max(1, stageHp)));
+    const dx = c.x - P.x, dz = c.z - P.z, d = Math.hypot(dx, dz);
+    const top = g.world.project(this.uvToWorld(this.core()[0], Math.min(1, this.core()[1] + 0.12)));
+    if (d <= D.near || top.y < g.H * D.topY) { this.pound(); return; }
+    P.x += (dx / d) * v * dt * 0.35 + Math.sin(performance.now() / 600) * 0.004; P.z += (dz / d) * v * dt;
+  }
+  pound() {
+    const g = this.game, D = this.def.approach, home = this.home || this.root.position.clone();
+    this.state = 'idle';
+    this.windup(D.windup, 'hide', -1, () => {
+      for (let i = 0; i < D.slams; i++) this.later(i * D.gap, () => {
+        this.attackPose(D.gap); sfx.slam(); g.post.shake(1.5); g.G.stop(0.05);
+        for (const cv of g.world.covers || []) if (cv) g.fx.confetti(cv.m.position.clone().setY(cv.h * 0.8), 10, 1.6, [COL.bone, COL.paper]);
+        g.playerAttacked({ kind: 'ranged', dmg: D.dmg, from: this, slot: -1, rattle: true });   // (hidden: the cover shakes as if it would give, and holds)
+      });
+      this.later(D.slams * D.gap + 0.3, () => {
+        this.state = 'move'; this.play('move', 4);
+        g.etw.to(this.root.position, { x: home.x, z: home.z }, D.back, { ease: Ease.inOutQuad, onDone: () => { if (this.alive && this.state === 'move') { this.state = 'idle'; this.play('idle', 3); } } });
+      });
+    });
+    this.timer = D.windup + D.slams * D.gap + D.back + 0.6 + rr(this.def.rest);
+  }
+  // (2) things thrown one after another; its weak point opens only for a moment at each throw
+  throw() {
+    const g = this.game, D = this.def.throw, n = Math.round(rr(D.shots)), kinds = this.def.volley.projectiles;
+    this.state = 'throwing'; this.play('windup');
+    for (let i = 0; i < n; i++) this.later(0.5 + i * D.gap, () => {
+      this.play('attack'); this.exposedT = D.expose; this.flash = Math.max(this.flash, 0.4);
+      const c = this.core(); g.fx.glint(this.uvToWorld(c[0], c[1]), 0xffffff, 1.4); sfx.tink?.(0);
+      const from = this.uvToWorld(rnd(0.35, 0.65), rnd(0.45, 0.7));
+      g.spawnProjectile(kinds[(i + this.stage) % kinds.length], from, { slot: g.pickTarget(from.x - g.world.camPos.x), time: D.flight, curve: rnd(-2, 2), dmg: D.dmg });
+      sfx.throwIt(0);
+      this.later(D.expose, () => { if (this.state === 'throwing') this.play('windup'); });
+    });
+    this.later(0.6 + n * D.gap, () => { if (this.state === 'throwing') { this.state = 'idle'; this.play('hurt'); this.exposedT = D.after ?? 1.5; this.later(D.after ?? 1.5, () => { if (this.state === 'idle') this.play('idle', 3); }); } });   // (spent: open a little longer)
+    this.timer = 0.8 + n * D.gap + (D.after ?? 1.5) + rr(this.def.rest);
+  }
+  // (3) a fast zigzag rush at one girl: enough damage on the way knocks it back home; else it hits her, cover or not, and goes back
+  zigzag() {
+    const g = this.game, D = this.def.zigzag, slot = g.pickTarget(this.root.position.x - g.world.camPos.x), Z = this.zz = { dmg: 0, home: this.root.position.clone() };   // (damage counts from the wind-up on)
+    this.windup(D.windup, 'kill', slot, () => {
+      if (this.zz !== Z) return;
+      const P = this.root.position, home = Z.home, cov = g.world.covers[slot], c = g.world.camPos;
+      const to = new THREE.Vector3(cov ? cov.def.x : c.x + (slot ? 1 : -1), P.y, cov ? cov.def.z - D.stop : c.z - 4);
+      const pts = [home];
+      for (let i = 1; i < D.legs; i++) { const q = home.clone().lerp(to, i / D.legs); q.x += (i % 2 ? 1 : -1) * D.lateral; pts.push(q); }
+      pts.push(to);
+      const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
+      this.state = 'dash'; this.play('move', 9); sfx.roar();
+      this.lock = g.fx.lock('kill', slot); this.timer = this.timer0 = D.time + 2.4 + rr(this.def.rest);   // (the red mark rides with it; the next move after it is back)
+      g.etw.run(D.time, (e) => { if (this.zz === Z) curve.getPointAt(e, P); }, { onDone: () => {
+        if (this.zz !== Z || !this.alive) return;
+        this.zz = null; this.endWindup(); this.attackPose(0.6);
+        sfx.slam(); g.post.shake(1.4); g.fx.confetti(to, 20, 2.2, [COL.hot, COL.bone]);
+        g.playerAttacked({ kind: 'ram', dmg: D.dmg, from: this, slot, heavy: true });
+        this.later(0.6, () => { this.state = 'back'; this.play('move', 4); g.etw.to(P, { x: home.x, z: home.z }, 1.0, { ease: Ease.inOutQuad, onDone: () => { if (this.alive && this.state === 'back') { this.state = 'idle'; this.play('idle', 3); } } }); });   // ('back': open on the way home)
+      } });
+    });
+    this.timer = D.windup + 1;
+  }
+  repel() {   // (knocked back home in the middle of its rush)
+    const g = this.game, Z = this.zz; this.zz = null; this.seq++; this.endWindup();
+    this.state = 'hurt'; this.play('hurt'); this.flash = 1;
+    g.fx.stamp('don', g.W * 0.5, g.H * 0.68, 0.26, 0); g.post.shake(1.1); sfx.roar(); g.G.stop(0.12);
+    g.hud.gl.stickers.say(g.players.find((p) => p.state === 'out') || g.players[0], 'stagger');
+    g.etw.to(this.root.position, { x: Z.home.x, z: Z.home.z }, 0.55, { ease: Ease.outQuad });
+    this.later(this.def.stunTime, () => { this.state = 'idle'; this.play('idle', 3); });
+    this.timer = this.def.stunTime + 0.8;
+  }
+  // (5) a long gathering, its weak point jumping from place to place; enough damage before it is full breaks it off, else a heavy blow
+  // over everyone, cover or not
+  charge() {
+    const g = this.game, D = this.def.charge, n = this.S.cores?.length || 1;
+    this.chg = { dmg: 0 };
+    for (let i = 1; i <= D.shifts; i++) this.later((D.time * i) / (D.shifts + 1), () => {
+      if (!this.chg) return;
+      this.coreI = ((this.coreI || 0) + 1 + Math.floor(Math.random() * Math.max(1, n - 1))) % n;
+      const c = this.core(); g.fx.glint(this.uvToWorld(c[0], c[1]), 0xff3a5a, 1.6); sfx.tink?.(0);
+    });
+    this.windup(D.time, 'kill', -1, () => {
+      if (!this.chg) return;
+      this.chg = null; this.attackPose(0.9);
+      sfx.slam(); sfx.madness(); g.post.flash(0.7, 0xff3a5a); g.post.shake(1.8);
+      const p = this.center(); g.fx.confetti(p, 50, 6, [COL.hot, COL.pink, COL.white]); g.fx.star(p, 8, COL.hot);
+      g.playerAttacked({ kind: 'ram', dmg: D.dmg, from: this, heavy: true, slot: -1 });
+    });
+    this.timer = D.time + 1.6 + rr(this.def.rest);
+  }
+  // (4) healers out of her body, one each side and above: kill them, or they feed her back (def.heal: rate per healer, max, type)
+  heal() {
+    const g = this.game, H = this.def.heal;
+    this.healers = (this.healers || []).filter((e) => e.alive);
+    const n = Math.min(H.n, H.max - this.healers.length);
+    if (n <= 0) { this.volley(); return; }
+    this.attackPose(0.8); sfx.roar(); this.flash = 0.6;
+    for (let i = 0; i < n; i++) this.later(0.3 + i * 0.5, () => {
+      const c = this.center(), side = (this.healN = (this.healN || 0) + 1) % 2 ? -1 : 1;   // (left, right, left...)
+      const e = g.spawnEnemy({ type: H.type, x: c.x, y: c.y, z: c.z + 0.5, free: true });
+      e.healer = this; e.healSide = side; this.healers.push(e);
+      g.fx.confetti(c, 14, 2.2, [COL.pink, COL.white]); sfx.popup?.();
+    });
+    this.timer = 1.2 + n * 0.5 + rr(this.def.rest);
+  }
+  // healed back past where this form began: back to the form before, and the healers go with it
+  regress() {
+    for (const e of this.healers || []) if (e.alive) { e.alive = false; this.game.fx.puff(e.center(), 8, 0xffd0e8, 1); e.dispose(); }
+    this.healers = [];
+    this.mutate(this.stage - 1, true);
+  }
   summon() {
     const g = this.game, list = this.S.summon || this.def.summon;
+    const up = g.actors.filter((a) => a.alive && a !== this && a.def && !a.boss && a.type !== 'boss').length;
+    if (up >= (this.def.summonMax ?? 99)) { this.volley(); return; }   // (enough of them about: it throws instead)
     this.attackPose(0.8); sfx.roar();
     list.forEach((s, i) => this.later(0.4 + i * 0.7, () => g.spawnEnemy({ ...s })));
     this.timer = 1.2 + list.length * 0.7 + this.def.summonRest;
@@ -337,14 +475,14 @@ export class TheThing extends Actor {
 
   // ---------------------------------------------------------------- the next mutation (DESIGN「Boss」: about 2 s, nobody can shoot):
   // it convulses and splashes ooze, a white flash, the next form bursts out and grows in. Real time (not the enemies' slower clock).
-  mutate(n) {
+  mutate(n, back) {
     const g = this.game, tw = g.tweens, M = this.def.mutate || { shake: 1.1, grow: 0.8 };
     this.mutating = true; this.seq++; this.endWindup(); this.armor = false;
     g.lull = true;
     g.clearProjectiles && g.clearProjectiles();
     this.state = 'hurt'; this.play('hurt');
     sfx.roar(); sfx.madness(); g.post.flash(0.8, 0xff3a8a); g.post.shake(1.4); g.G.stop(0.25);
-    g.hud.gl.hold('phase', { text: tr(this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: M.shake + M.grow + 0.2 });
+    g.hud.gl.hold('phase', { text: tr((back && this.def.texts.regress) || this.def.texts[`s${n + 1}`] || this.def.texts.mutate), dur: M.shake + M.grow + 0.2 });
     // up close the whole time (DESIGN「要给玩家看的东西放慢、特写」): her line as she convulses; the fight comes back with the camera
     const big = Math.max(this.S.h, this.def.stages[n].h);
     // (the picture switches how it is drawn as she changes, cut on the beat: two colours, line art, glitch, halftone, the negative)

@@ -1091,5 +1091,17 @@
     "auto": true,
     "png": "public/jiggle/cat_aerial.png",
     "keep_frame": true
+  },
+  "jig_cat_run_front": {
+    "src": "art/raw/r72/cat_run_front_a.png",
+    "auto": true,
+    "png": "public/jiggle/cat_run_front.png",
+    "keep_frame": true
+  },
+  "jig_cat_run_side": {
+    "src": "art/raw/r72/cat_run_side_a.png",
+    "auto": true,
+    "png": "public/jiggle/cat_run_side.png",
+    "keep_frame": true
   }
 }

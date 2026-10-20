@@ -2,12 +2,18 @@
   "_doc": "主角在屏幕上的站位。standHeight：站姿占屏幕高度的比例（全身入镜）。bodyX：1P / 2P 身体中线在 HUD 框里的横向位置。bottom：脚离屏幕底边的距离，margin：离屏幕边缘的最小距离（都是屏幕高度比例）。heroineDist：主角贴在镜头前的距离（米，一般不用动）。hudFrame：超宽屏时 HUD 和主角限制在哪个比例的框里（设置里的 16:9 / 21:9 / 全宽）。 canvas：晃动立绘的画布高度占屏幕高度的比例（射击站姿约等于 standHeight）。 walk：赶路时镜头推到膝盖以上：zoom 放大倍数，knee 膝盖在站姿身高的哪里（从脚算），ease 切换快慢。 cover：每个站点主角身前的掩体（掩体是场景里的东西，src/battle/panels.js placeCovers 按主角站位摆）。掩体立在她身后一点（在她和怪物之间，她永远画在掩体上面，像 NIKKE）：lift：掩体底边比她脚高多少（屏幕高度比例）；top：顶边在她脚上方多高（跪姿身高的比例）；w：宽度至少是她跪姿宽度的多少（图太窄就把顶边抬高，最多到 maxTop）；x：往画面中间挪多少（跪姿宽度的比例）；foldTime：离开站点时掩体向后折倒压平用的秒数。 monster：怪物出场时挪到看得清的位置（docs/DESIGN.md「怪物看得清」，src/battle/panels.js fit）：最远到它占屏幕高度 minShare 的距离，最近 near 米（掩体那里），脚不低于屏幕底边往上 feetMin（HUD 和主角膝盖那一带），左右在画面中间 walkX（地上的）/ flyX（飞的）比例的半宽里（两边站着主角），飞的上下在屏幕高度 flyY 之间。 monster：怪物出场时挪到看得清的位置（docs/DESIGN.md「战斗画面布局」，src/battle/panels.js fit）：最远到它占屏幕高度 minShare 的距离，最近 near 米（掩体那里），脚不低于屏幕底边往上 feetMin（HUD 和主角膝盖那一带），左右在画面中间 walkX（地上的）/ flyX（飞的）比例的半宽里（两边站着主角），飞的上下在屏幕高度 flyY 之间。",
   "layout": {
     "standHeight": 0.42,
-    "bodyX": [0.27, 0.73],
+    "bodyX": [0.2, 0.8],
     "bottom": 0.025,
     "margin": 0.012,
     "heroineDist": 1.4,
     "hudFrame": { "16:9": 1.7778, "21:9": 2.3333, "full": 99 },
     "canvas": 0.45,
+    "moves": {
+      "_doc": "两人在场景里的动作片段（DESIGN「女主动起来」，player.js move）：t 秒；h 跳多高（屏幕高度的比例，走一条弧）；frames [[从第几成开始, 姿势名], ...]，她有那张图就换上（起跳 leap、空中 aerial、落地 land、奔跑 run……），没有就照旧；演出指令 girls: { move, who, dx 横着挪多少（HUD 框宽的比例）, dy 落到高多少（屏幕高度的比例）, delay [1P, 2P] 秒 } 触发，镜头走台阶时自动一级级跳",
+      "hop": { "t": 0.75, "h": 0.07, "frames": [[0, "cover"], [0.14, "leap"], [0.42, "aerial"], [0.7, "land"]] },
+      "dash": { "t": 0.55, "h": 0.015, "frames": [[0, "run"]] },
+      "dive": { "t": 0.6, "h": 0.035, "frames": [[0, "leap"], [0.55, "land"], [0.85, "cover"]] }
+    },
     "walk": { "zoom": 1.35, "knee": 0.27, "ease": 5 },
     "monster": {
       "minShare": 0.27,

@@ -100,6 +100,9 @@ RIGS = {
     },
 }
 
+# rigs drawn by the round tools (tools/rounds/r69_rig.py ...: public/jiggle/rigs.json), besides the ones above
+if (DIR / "rigs.json").exists(): RIGS.update(json.loads((DIR / "rigs.json").read_text()))
+
 
 def poly_mask(poly, W, H):
     im = Image.new("L", (W, H), 0)
@@ -270,4 +273,4 @@ if __name__ == "__main__":
     only = [a.split("=", 1)[1] for a in sys.argv[1:] if a.startswith("--pose=")]
     od = next((a for a in sys.argv[1:] if not a.startswith("--")), None)
     for pose in only or RIGS:
-        build(pose, RIGS["_".join(pose.split("_")[:2])], od)
+        build(pose, RIGS.get(pose) or RIGS["_".join(pose.split("_")[:2])], od)   # (its own rig, else the one it is a variant of: <who>_<pose>_yk)

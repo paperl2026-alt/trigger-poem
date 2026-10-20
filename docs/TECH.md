@@ -24,7 +24,7 @@
 - 调试菜单（`` ` `` 键，`src/core/debug.js`）：每个大关一行（开场、每个小关连同它前面的漫画 / 开门特写、结尾），按 episodes.json 自动生成，选关里还是"制作中"的大关也能进。
 - 自检：
   - `NOA_SELFTEST=<png>` + `electron . --page=...` 会离屏跑几秒，写出截图和 `<png>.json`（报错和报错位置、是否进入战斗、主角状态）；这是**交付前必须过的检查**：用的是和用户一样的构建产物（`dist/`），两种队伍顺序都要跑；
-  - 整关通关测试：`electron tools/node/playthrough.cjs <out.json> [大关] [第几步]`，用构建产物离屏自动打（1P 自动、无敌、`PT_SLOW` 倍速，默认 3），每秒记一次走到哪一步 / 哪个停留点 / 第几波 / Boss 血量，打到结算或超时（`PT_TIME` 秒）为止，写出时间线和报错；`PT_TEAM=cat,pink` 换队，`PT_SHOTS=1` 每到新停留点截一张图，`PT_EVERY=<毫秒>` 每隔这么久截一张（看演出），`PT_NOSKIP=1` 漫画和开门特写照常播，`PT_JS=<js>` 每次在页面里执行（自动打不碰机关：要测机关就用它打，例如每次打一个还能打的 `prop`），`PT_STATION=<停留点>` 从长小关的这个停留点开始（例如 `kn2` 只打第 2 话的决战；网页参数 `&station=`）。改了关卡数据或流程后跑一遍（序章约 2 分钟）。
+  - 整关通关测试：`electron tools/node/playthrough.cjs <out.json> [大关] [第几步]`，用构建产物离屏自动打（1P 自动、无敌、`PT_SLOW` 倍速，默认 3），每秒记一次走到哪一步 / 哪个停留点 / 第几波 / Boss 血量，打到结算或超时（`PT_TIME` 秒）为止，写出时间线和报错；`PT_TEAM=cat,pink` 换队，`PT_SHOTS=1` 每到新停留点截一张图，`PT_EVERY=<毫秒>` 每隔这么久截一张（看演出），`PT_NOSKIP=1` 漫画和开门特写照常播，`PT_JS=<js>` 每次在页面里执行（自动打不碰机关：要测机关就用它打，例如每次打一个还能打的 `prop`），`PT_STATION=<停留点>` 从长小关的这个停留点开始（例如 `kn2` 只打第 2 话的决战；网页参数 `&station=`）。`PT_DIST=<目录>` 打另一份构建（试做的 `vite build --outDir dist-try`，各用各的存档和缓存，可以和 dist 的验证同时跑；**验证在跑时不要重新构建 dist**）。改了关卡数据或流程后跑一遍（序章约 2 分钟）。
   - 开发服务器：`.claude/launch.json` 的 trigger-poem-rec，端口 5310。
   - `tools/node/shot.cjs`（只给自己检查用）：
     - 用 Electron 截全尺寸图：`electron.exe tools/node/shot.cjs <端口> out.png 宽 高 [等待的选择器]`；
@@ -289,10 +289,19 @@
   - **从别处进来**（小关第一个站点的 `enter: { from, dur, shake, overlay, sfx }`，`Game.enterFrom`）：镜头从偏移 `from` 的地方移到站点（掉进坑：从上面落下来、震屏；被拽出坑：从下面升上来，`overlay` 的图（猫爪）同时从屏幕上方伸下来再拉走，`#ui .haul`）。
 - 怪物 `rush: true`（走路怪）：扑上来是冲撞（穿过掩体），带快打环、蓄力能被打断（半截丧尸）。
 
+- **侧墙的门**（`hall.ways` 的 `wall: left | right`，`z0` / `z1` 沿墙，`buildWay` 把墙在门洞那里切开（`cutWallRect`，可跨两段墙板），门后的过道转向墙外；`door: { kind: slide, k: [门板], side }` 照常拉开）：怪的 `from: 'door', way` 从门后的暗处走出来，出门前门先拉开（DESIGN「总纲」：怪会开门，不只破墙）。**没墙的一段**（`hall.open: [{ on, z0, z1 }]`）：那段侧墙不建，外面就是布景（外廊、走廊变成连廊）。地方用的镜头远平面 320 米（远处的楼和天在里面）。
+- **布景件**（`scenery`，`src/battle/scenery.js`）：大厅以外的大块真 3D：`box` / `slab` / `cyl` / `card`（远景层）在 `at` 处、`size`、`ry`，各面贴正视图（`tex` 一张或分面，`tile` 平铺），`repeat: { n, step }` 成排摆（楼、柱、树、路灯）。`sky`：围着整个地方的一圈天空（`size: [半径, 高]`，图贴在内侧，不受雾影响），从窗、门、敞开的一侧往外看都是天。序章用 `tools/rounds/ep0_rework.py` 写（窗外两层楼下的操场、一排树、对面那栋楼、天空）。用来把世界搭大：窗外、楼外、远处都是真东西，画面只取其中一块。
+- 场景层的放大镜头（`set.lens`，ink 合成那一遍的 `lensUv`，瞄准和投影走 `lensMap` 同样变形）：中间放大、四周压缩。可选，不作主手段（用户：不要搭标准房子再套滤镜；怪的大小靠「构图」）。
+
 ## 停留点预设（`tuning/shots.json`，`src/battle/shot.js`；DESIGN「停留点不只是一个镜头、一种打法」）
 - 一种停留点 = 一套预设：`cover`（掩体战）、`open`（开阔地）、`corner`（大房间对角）、`ride`（载具）、`run`（自己跑）、`escort`（远处狙击护卫）、`cine`（演出镜头）。每套写两人（`players`：显示、`x` 两人的位置、`scale`、`y`、`crop` 往下沉只露上半身、`set` 姿势组、`out` 按住探身 / 一直探身）、`cover` 有没有掩体、`ammo`、`weapon`（攻击模式：`characters/<id>.json modes.<名字>`）、`hud`（显示、`mid` 中下那条往上挪、`bubbles` 弹幕气泡）、`cam`（`zoom` 收窄视野、`lens` 暗角）、`mv` 强度、`combat`。
 - 站点写 `shot: "<预设>"` 或 `shot: { kind, 要改的项 }`；没写按站点推断（`ride` 有车 → ride、没车 → run，`escort` → escort，`cine` → cine，其余 cover）。`Game.goStation` 换预设，`Game.shot` 是当前的；`Game.live`（`Live`）每帧把屏幕上的东西缓过去（两人的位置、大小、下沉、显隐，中下 HUD，视野，暗角），换预设是挪过去，不是跳。
 - 用到预设的地方：`player.js`（位置、大小、下沉、显隐、一直探身、不装弹、攻击模式）、`heroine.js setSet`（姿势组：`rig.sets.<组>: { cover, fire, actions }` 指向 rig 里的条目，没有就用 cover / fire）、`glhud.js`（中下那条 `Top` 的高度，Dodge 跟着；`hud.show: false` 和特写一样退下；`lens` 暗角）、`stickers.js`（`bubbles: false` 不冒气泡，指令里的台词 `force` 例外）、`panels.js` / `world.js`（视野减 `live.zoom`）、`Game.arrive`（`cover: false` 不摆掩体）、`mv.js`（每拍强度乘 `mv`）。
+
+- **构图**（`compose`，DESIGN「总纲」：像拍电影，各层各用各的透视）：交战层的怪在画面上多大、停在哪、待在哪一块，按镜头定，不按那台相机的透视——`size: [[脚在画面的高度, 占画面高度的比例], ...]`（`Enemy.sizeFloor`：怪仍站在场景的地上，只是绕脚缩放到这个大小，判定跟着变；飞的 / 成群的 / 扔过来的 `fly`；Boss 不管），`front` 地上的怪停步的前线（画面高度比例，`floorAt` 从画面反算到地上），`zone` 怪待的横向范围（近处的不进两人所在的两侧，`Enemy.keepClear`；两只的图叠得多时近的那只往旁边让）。默认在 `cover` / `open` / `corner` 预设里，站点可以改。
+- **每人单独摆**：`players` 的 `x`、`scale`、`y`、`crop` 都可以写 `[1P, 2P]`（楼梯上一个在上一个在下、一个靠柱子一个站远……），一个数就是两人一样（`Live` 每人各自缓过去）。
+- **两人进到场景里**（`players.world: { m 身高米数, behind 站在掩体前几米, at: [[x, z], [x, z]] }`，`player.js toWorld`）：立绘组从镜头上摘下挂进场景（第 0 层，和场景一起画，会被前面的东西挡住、跟着调色），脚踩地、朝着镜头；镜头在她哪一边就换哪张图（`heroine.view`：`<姿势>_side`、`<姿势>_front`，侧面图按从右边拍画的，镜头在左边时镜像），枪口位置从场景投回屏幕。
+- **动作片段**（`tuning/layout.json moves`，演出指令 `girls: { move: hop | dash | dive, who, dx, dy, delay }`，`player.move`）：她有图就换上起跳 / 空中 / 落地 / 奔跑，在画面里走一条弧、挪过去；新站点开始时归位（`settle`）。
 
 ## 演出指令（`src/battle/cues.js`，Game 的 `cues`）
 - 关卡里所有「到这儿发生点什么」都用同一种指令：一个对象，每个键都可选，同时生效。`say`（`who`、`force`）、`sfx` / `sound`、`shake`、`flash: [强度, "#色"]`、`impact`、`burst: [秒, [画风], 拍长, "#色A", "#色B"]`、`hint`、`music`、`mv`（MV 导演）、`act`（怪的演出，`acts.js`）、`spawn`（波次条目）、`turn` / `mutate` / `gimmick` / `collapse` / `spawner` / `wake`（原来的波次事件）、`swap`、`fire`、`cam`（特写：`on: "boss" | 怪的种类 | [x,y,z]`、`dist`、`up`、`side`、`zoom`、`orbit`、`dolly`、`title`、`hold`…）、`shot`（从这儿换预设）。
@@ -331,6 +340,8 @@
 - `vehicle: cart`：车头的前沿挂在镜头上、画在两人前面（挡住她们的腿），铁轨和枕木沿路铺（Tube + InstancedMesh）。
 - 第 1 话：`tools/rounds/ep1_ride.py` 生成蜜矿（ep1_mine，260 米，十五个标记）和冥界（ep1_nether，开阔地，四面漂浮岛屿远景，Boss 场）两个 set 和 episodes 里的两步。
 
+- **两人自己跑、镜头导演**（`ride.girls: { spread }`）：`path` 是两人脚下的路线，两人在场景里沿路跑（`player.js toWorld`，`ride.girlSpot`），镜头不在路上，而在她们身边由 `cam: { back, side, up, ahead, lookUp, ease }` 定的位置（`back` 负数 = 跑在她们前面回头拍，`side` 正数 = 右边），标记点的 `cam` 换位置：绕着她们转过去（距离和角度分开缓，最近 `combat.json ride.girlsCamMin`），不从人身上穿过。序章「冲出教学楼」就是这样：起跑低角度、窗外飞怪时侧拍、后面追来时跑到前面迎面拍。
+
 ## Boss：蜜蛆（`src/battle/worm.js`，数据 `bosses.json` maggot，beh `worm`；DESIGN 第 1 话 8）
 - 不是纸片：全是 3D 网格（头：球 + 一圈牙 + 嘴里的核心；身体：一节节球，背上蜜囊），自己的卡通着色器（三档光、边缘透光、环纹和叶脉噪声）+ 反向外壳描边。
 - 开阔地（set 没有侧墙：冥界）是钻地（`newBreach`）：从镜头前面 7～20 米、左右 7 米内的地上破洞钻出来，4～8 米高的弧，钻回另一个洞（有时弧往镜头这边甩）。
@@ -346,6 +357,8 @@
 - 招式一次一个（`stages[].pattern`）：drift（换位置、喘口气）、volley（飞行物，红环）、lunge（蓄力扑过来，快打红环，能打断）、burst（长蓄力大招，快躲紫色环带）、summon（一种杂鱼）。
 - 蓄力和出招时弱点张开（描边变粉、伤害 ×weakMul），最后的核心阶段一直是弱点；血量到 `at` 时变异（抽搐、溅黏液、长成下一阶段，wreckAt 那一阶段把教学楼换成被压坏的那张），不插漫画。
 - 时间都走敌方时钟（`game.etw`）。
+- 序章「？？？」五个形态各自的招式（DESIGN 序章 Boss，数据 `bosses.json qq` 的 `approach` / `throw` / `zigzag` / `heal` / `charge` 和各形态的 `pattern`，由 `tools/rounds/ep0_rework.py` 写）：`approach`（`walkOn` 每帧往镜头走，速度随这一形态挨的伤害（`stageDmg`）加快，弱点快出画面顶上或到 `near` 就 `pound`：蓄力（紫，快躲）后连砸几下，`playerAttacked({ rattle: true })` 让躲着的人的掩体猛晃不掉血，露头的照常挨打）、`throw`（形态写 `guarded`：平时弱点关着，每扔一下开 `expose` 秒、一轮扔完再开 `after` 秒，开着时伤害 ×`exposedMul`）、`zigzag`（从蓄力起把伤害记在 `zz`，到 `poise` 就 `repel`：打回原位、晕；冲到了就 `ram` 打那个人（无视掩体）；形态写 `open: [状态…]` 只在这些状态露弱点）、`heal`（放出 `heal.type` 的小怪，`Enemy.healer` = 她：`healTick` 飘到她两侧、连上就放治疗流，她每秒回 `rate` × 连着的数量；血回到这一形态的 `at` 线就 `regress`：点滴瓶散掉、`mutate(上一形态, back)`）、`charge`（长蓄力，蓄力中弱点在 `cores` 里跳 `shifts` 次（`core()` 取当前的），伤害到 `poise` 就打断，蓄满就 `ram` 打两人）。每个形态开始时显示 `texts.h<n>` 的提示。
+- 怪的大小按镜头构图（`Enemy.sizeFloor`）时 Boss 不算在内（`type === 'boss'`）；`def.screen` 给一种怪自己的画面占比（点滴瓶 0.2：一眼要看见）。
 - 腐蜜夫人最后一个形态的三样东西（`ritual` + `Keepsake`，数据 `bosses.json` madame.ritual，打法见 DESIGN 第 1 话 10）：
   - `Keepsake` 是 Gimmick 的子类，挂在她身前（`near`），8 字形来回晃；`keepTick` 隔一阵派一样去挡核心（`guard`）。
   - 每样有自己的倒计时 `fuse`，速度每一秒多变一次（`pace`）。走完 `strike`：抖一下，飞到那个人面前打 `playerAttacked kind: 'shot'`（躲没用），再飞回去。打中它 `knock`：重新倒计时，正在飞的一击也被打断。

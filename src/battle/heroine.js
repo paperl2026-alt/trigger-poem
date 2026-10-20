@@ -15,7 +15,7 @@ import { Breath } from '../jiggle/atmo.js';
 import { Ease } from '../core/tween.js';
 
 // her actions besides cover and fire, each a still of its own with its rig (characters/<id>.json rig.<name>; DESIGN「女主动起来」)
-const ACTIONS = ['blind', 'sidehide', 'sidefire', 'leap', 'land', 'aerial'];
+const ACTIONS = ['blind', 'sidehide', 'sidefire', 'leap', 'land', 'aerial', 'run_side', 'run_front'];
 // her pose sets (characters/<id>.json rig.sets.<set>: { cover, fire, actions } - the rig entries she uses at that kind of stop: riding,
 // running, the scope; tuning/shots.json players.set). A set she has no pictures for uses the cover set's (the cover / fire stills)
 const setNames = (R) => Object.values(R.sets || {}).flatMap((s) => [s.cover, s.fire]).filter(Boolean);
@@ -101,7 +101,9 @@ export class Heroine {
   setOut(out, want) {
     const S = this.set !== 'cover' ? this.R.sets?.[this.set] : null, base = out ? (S?.fire && this.poses[S.fire] ? S.fire : 'fire') : (S?.cover && this.poses[S.cover] ? S.cover : 'cover');
     if (S && !S.actions?.includes(want)) want = null;   // (a set's own actions only: no blind fire in a cart)
-    const next = want && this.poses[want] ? want : base;
+    let next = want && this.poses[want] ? want : base;
+    // in the place, seen from the side or the front (player.js toWorld): that picture of this pose if she has it (<pose>_side, _front)
+    if (this.view && this.view !== 'back') { const v = `${next}_${this.view}`; if (this.poses[v]) next = v; }
     if (out === this.out && next === this.pose) return;
     const popped = out !== this.out;
     this.out = out;

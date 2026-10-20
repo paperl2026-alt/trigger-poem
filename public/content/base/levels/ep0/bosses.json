@@ -3,32 +3,48 @@
   "qq": {
     "beh": "thing",
     "name": { "zh": "？？？", "en": "???", "ja": "？？？" },
-    "hp": 8000,
+    "hp": 3720,
     "stunTime": 1.6,
     "firstDelay": 1.6,
     "speed": 1.6,
     "rest": [1.0, 1.8],
     "summonRest": 2.5,
-    "zone": { "x": [-3.5, 3.5], "z": [-6, -3.5] },
+    "zone": { "x": [-5.5, 5.5], "z": [-16, -11] },
     "stages": [
-      { "at": 1, "h": 3.8, "pattern": ["drift", "volley", "drift", "lunge", "drift", "volley"], "core": [0.62, 0.81, 0.11] },
-      { "at": 0.8, "h": 4.3, "pattern": ["drift", "volley", "drift", "lunge", "drift", "burst"], "core": [0.17, 0.21, 0.11] },
+      { "at": 1, "h": 8.4, "pattern": ["approach"], "core": [0.62, 0.81, 0.11] },
+      { "at": 0.817, "h": 9.4, "pattern": ["throw", "drift", "throw", "throw", "drift"], "core": [0.17, 0.21, 0.11], "guarded": true },
       {
-        "at": 0.6,
-        "h": 4.9,
-        "pattern": ["drift", "lunge", "drift", "volley", "drift", "burst", "summon"],
+        "at": 0.586,
+        "h": 10.8,
+        "pattern": ["drift", "zigzag", "drift", "zigzag"],
         "summon": [{ "type": "chair", "from": "pop", "x": -2, "z": -1 }, { "type": "chair", "from": "pop", "x": 2, "z": -1.5 }],
-        "core": [0.55, 0.38, 0.11]
+        "core": [0.55, 0.38, 0.11],
+        "open": ["windup", "dash", "hurt", "back"]
       },
-      { "at": 0.4, "h": 4.6, "float": true, "y": 2.3, "pattern": ["volley", "drift", "burst", "drift", "lunge", "drift"], "core": [0.33, 0.8, 0.11] },
       {
-        "at": 0.2,
-        "h": 4.0,
+        "at": 0.363,
+        "h": 10.1,
         "float": true,
-        "y": 2.6,
+        "y": 5.1,
+        "pattern": ["heal", "drift", "volley", "heal", "drift", "lunge", "drift"],
+        "core": [0.33, 0.8, 0.11],
+        "summon": [
+          { "type": "chair", "from": "burrow", "x": -4, "z": -3 },
+          { "type": "desk", "from": "burrow", "x": 4, "z": -4 },
+          { "type": "book", "from": "outside", "x": -6, "y": 3.0, "z": -5 },
+          { "type": "paper", "from": "outside", "x": 6, "y": 2.6, "z": -4 },
+          { "type": "shoe", "from": "burrow", "x": 0, "z": -6 }
+        ]
+      },
+      {
+        "at": 0.253,
+        "h": 8.8,
+        "float": true,
+        "y": 5.7,
         "core": [0.2, 0.63, 0.11],
-        "pattern": ["volley", "drift", "burst", "drift", "summon", "drift", "lunge"],
-        "summon": [{ "type": "book", "x": -2, "y": 2.4, "z": -2 }, { "type": "paper", "x": 2, "y": 2.2, "z": -2.5 }]
+        "pattern": ["drift", "charge"],
+        "summon": [{ "type": "book", "x": -2, "y": 2.4, "z": -2 }, { "type": "paper", "x": 2, "y": 2.2, "z": -2.5 }],
+        "cores": [[0.32, 0.65, 0.09], [0.73, 0.46, 0.09], [0.39, 0.82, 0.08], [0.19, 0.37, 0.08], [0.69, 0.27, 0.08]]
       }
     ],
     "volley": { "shots": [3, 5], "gap": 0.5, "flight": 1.9, "dmg": 14, "projectiles": ["eye", "ooze", "hair", "tooth", "lips", "eyes"] },
@@ -42,8 +58,40 @@
       "s2": { "zh": "变异扩散!", "en": "IT SPREADS!", "ja": "変異拡大!" },
       "s3": { "zh": "完全变异!", "en": "FULL MUTATION!", "ja": "完全変異!" },
       "s4": { "zh": "失控!", "en": "OUT OF CONTROL!", "ja": "暴走!" },
-      "s5": { "zh": "核心暴露!", "en": "THE CORE!", "ja": "核心露出!" }
+      "s5": { "zh": "核心暴露!", "en": "THE CORE!", "ja": "核心露出!" },
+      "h1": {
+        "zh": "她越挨打走得越快——砸过来时躲进掩体！",
+        "en": "THE MORE YOU HIT HER, THE FASTER SHE COMES - TAKE COVER WHEN SHE POUNDS!",
+        "ja": "撃つほど速く迫ってくる──叩きつけてきたら隠れて!"
+      },
+      "h2": {
+        "zh": "她只在扔东西的一瞬露出弱点：打掉飞来的东西，趁机打弱点！",
+        "en": "HER WEAK POINT OPENS ONLY AS SHE THROWS - SHOOT DOWN WHAT FLIES, THEN HIT IT!",
+        "ja": "投げる瞬間だけ弱点が開く──飛んでくる物を落として狙え!"
+      },
+      "h3": {
+        "zh": "Z 字冲过来了：路上打够伤害就能把她打回去！",
+        "en": "SHE ZIGZAGS IN - DEAL ENOUGH DAMAGE ON THE WAY TO KNOCK HER BACK!",
+        "ja": "ジグザグに突っ込んでくる──途中で削りきれば押し返せる!"
+      },
+      "h4": {
+        "zh": "点滴瓶在给她回血：先打掉它们！血回满她会退回上一形态！",
+        "en": "THE DRIPS ARE HEALING HER - SHOOT THEM DOWN, OR SHE HEALS BACK TO HER LAST FORM!",
+        "ja": "点滴が回復させてる──先に落とせ! 回復しきると前の形態に戻る!"
+      },
+      "h5": {
+        "zh": "蓄力时弱点会换位置：追着打，蓄满之前打爆她！",
+        "en": "HER WEAK POINT MOVES AS SHE CHARGES - CHASE IT AND BREAK HER BEFORE SHE'S FULL!",
+        "ja": "溜めの間に弱点が移る──追いかけて溜め切る前に砕け!"
+      },
+      "regress": { "zh": "她恢复了！", "en": "SHE HEALED BACK!", "ja": "回復された!" }
     },
-    "coreMul": 1
+    "coreMul": 1,
+    "approach": { "speed": 0.9, "speedUp": 3.0, "near": 9.5, "topY": 0.1, "windup": 0.8, "slams": 3, "gap": 0.55, "dmg": 14, "back": 2.2 },
+    "throw": { "shots": [2, 4], "gap": 1.0, "expose": 1.3, "after": 1.5, "exposedMul": 2.0, "flight": 2.1, "dmg": 14 },
+    "zigzag": { "windup": 0.9, "legs": 5, "lateral": 3.2, "time": 2.6, "stop": 2.0, "poise": 110, "dmg": 26 },
+    "charge": { "time": 4.6, "shifts": 3, "poise": 150, "dmg": 34 },
+    "summonMax": 6,
+    "heal": { "stage": 3, "type": "drip", "n": 2, "max": 3, "rate": 14 }
   }
 }

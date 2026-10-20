@@ -13,6 +13,8 @@
 //   swap: { <board>: <board> }, fire: [gimmick ids]
 //   cam: { on: 'boss' | <monster type> | [x, y, z], dist, up, side, zoom, orbit, dolly, title (a text), hold, in, out, lull }   a close look
 //   shot: <preset> | { kind, ... }   the stop's shot changes from here (tuning/shots.json; shot.js)
+//   girls: { move: hop | dash | dive, who: 0 | 1 | 'both', dx, dy, h, t, delay: [1P, 2P] } | 'settle'   the two of them move in the place
+//     (DESIGN「女主动起来」: a hop up or down a step, a dash across, a dive into cover; tuning/layout.json moves; player.js move)
 // timeline(list, then): cues with at (seconds from the start) in order; a cue with a cam holds the timeline until the camera is back.
 import * as THREE from 'three';
 import { sfx, sound, playMusic, stopMusic } from '../core/audio.js';
@@ -24,11 +26,22 @@ const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
 export class Cues {
   constructor(game) { this.g = game; this.q = 0; }
 
+  girls(G) {
+    const g = this.g;
+    g.players.forEach((p, i) => {
+      if (p.slot && !g.p2on()) return;
+      if (G === 'settle') { p.settle(); return; }
+      if (G.who != null && G.who !== 'both' && G.who !== i) return;
+      const d = Array.isArray(G.delay) ? G.delay[i] ?? 0 : G.delay ?? i * 0.12;
+      p.move(G.move, { ...G, delay: d });
+    });
+  }
   // one cue; then() when it is done (at once, or when its close look is over)
   run(c, then) {
     const g = this.g;
     if (!c) { then?.(); return; }
     if (c.shot !== undefined) g.setShot(c.shot);
+    if (c.girls) this.girls(c.girls);
     if (c.music !== undefined) { if (c.music) playMusic(c.music); else stopMusic(1.2); }
     if (c.sfx) { if (!sound(c.sfx)) sfx[c.sfx]?.(0); }
     if (c.sound) sound(c.sound);

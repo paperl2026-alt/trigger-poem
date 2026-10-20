@@ -7,6 +7,11 @@
 //                   banks), vehicle: cart (its front edge in the bottom of the picture, rails laid along the path), marks: [...] }
 //   a mark, at metres along the path: { at, spawn: [wave entries placed by ahead (metres along the path from the camera; < 0 behind),
 //     x (to the side), y], block: { k, h, ahead, x } (a thing lying across the way), face, speed, say, sfx, shake, burst: [dur, seq] }
+// The girls' own run (DESIGN「这是轨道射击，要的是表现力」: they are in the place, the camera films them): ride.girls: { spread (metres
+// between them) } - the path is where THEY run (its points on the floor), they run along it in the 3D scene (player.js toWorld), and the
+// camera keeps to a place beside them that the marks direct: cam: { back (metres behind them; < 0: ahead of them, looking back),
+// side (metres to their right; < 0 left), up (metres above the floor), ahead (where it looks: metres along the way from them), lookUp,
+// ease (how fast it gets there) } - the first one on ride.cam, then any mark's cam: from behind, round to the side, out in front...
 // Numbers: content tuning/combat.json ride.
 import * as THREE from 'three';
 import { tex as TEX, meta as META } from '../core/assets.js';
@@ -24,11 +29,13 @@ export class Ride {
   run(S, then) {
     const g = this.g, w = g.world, R = S.ride;
     this.S = S; this.R = R; this.then = then; this.on = true;
-    const pts = [w.camPos.clone(), ...R.path.map((p) => new THREE.Vector3(...p))];
+    const girls = this.girls = !!R.girls;
+    const pts = girls ? R.path.map((p) => new THREE.Vector3(...p)) : [w.camPos.clone(), ...R.path.map((p) => new THREE.Vector3(...p))];
     this.curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal'); this.len = this.curve.getLength(); this.s = 0;
     this.speed = 0; this.target = R.speed ?? K().speed; this.face = R.face || 'fwd'; this.faceK = this.face === 'back' ? 1 : 0;
     this.marks = (R.marks || []).map((m) => ({ ...m, done: false })).sort((a, b) => a.at - b.at);
     this.blocks = []; this.clack = 0;
+    if (girls) { const c = { back: 2.6, side: 0, up: 1.45, ahead: 8, lookUp: 0.9, ease: 1.6, ...(R.cam || {}) }; this.cam = c; this.camNow = { ...c }; }
     g.combat = true; g.riding = true; g.settled = true;
     // the girls jump up into the cart from below the picture (out of cover, up and shooting from now on)
     // (away: not in the picture yet at a stage's start)
@@ -36,6 +43,9 @@ export class Ride {
     if (R.vehicle) this.vehicle(R.vehicle);
     sfx.whoosh(0); g.post.shake(0.6);
   }
+  // where a girl's feet are on her own run (girls: spread apart across the way), and the way she faces
+  girlSpot(slot, out) { const sp = (this.R.girls?.spread ?? 1.1) / 2; return this.at(this.s, slot ? sp : -sp, null, out); }
+  heading(out) { return out.copy(this.tg || this.curve.getTangentAt(0)); }
   // a point on the path s metres along, x to the side (right of the way on), y above it (or at y if abs)
   at(s, x = 0, y = null, out = new THREE.Vector3()) {
     const u = Math.max(0, Math.min(1, s / this.len)), t = this.curve.getTangentAt(Math.min(0.999, u));
@@ -52,6 +62,23 @@ export class Ride {
     this.speed += (this.target - this.speed) * Math.min(1, dt * 1.6);
     this.s = Math.min(this.len, this.s + this.speed * dt);
     for (const m of this.marks) if (!m.done && this.s >= m.at) { m.done = true; this.mark(m); }
+    // the girls' own run: the camera where the marks put it about them (behind, beside, ahead), looking where they direct
+    if (this.girls) {
+      const u = this.s / this.len, tg = this.curve.getTangentAt(Math.min(0.999, u)), P = this.curve.getPointAt(u, V2), c = this.camNow, to = this.cam, e = Math.min(1, dt * (to.ease ?? 1.6));
+      // round them, never through them: how far and from which side ease apart (the shorter way round), at least clear of the girls
+      const rNow = Math.hypot(c.back, c.side), aNow = Math.atan2(c.side, c.back), rTo = Math.max(K().girlsCamMin ?? 2.6, Math.hypot(to.back ?? 0, to.side ?? 0)), aTo = Math.atan2(to.side ?? 0, to.back ?? 0);
+      let da = aTo - aNow; da = Math.atan2(Math.sin(da), Math.cos(da));
+      const r = Math.max(K().girlsCamMin ?? 2.6, rNow + (rTo - rNow) * e), ang = aNow + da * e;
+      c.back = Math.cos(ang) * r; c.side = Math.sin(ang) * r;
+      for (const k of ['up', 'ahead', 'lookUp']) c[k] += ((to[k] ?? 0) - c[k]) * e;
+      w.camPos.set(P.x - tg.x * c.back - tg.z * c.side, P.y + c.up, P.z - tg.z * c.back + tg.x * c.side);
+      w.lookAt.set(P.x + tg.x * c.ahead, P.y + c.lookUp, P.z + tg.z * c.ahead);
+      w.rideBank = 0; this.tg = tg;
+      for (const b of this.blocks) if (!b.done && this.s >= b.at - 1.0) { b.done = true; if (!b.q.broken) this.crash(b); }
+      for (const a of g.actors) { if (!a.alive || !a.def || a.rideChaser) continue; V.subVectors(a.root.position, P); if (V.dot(tg) < -k.behind) { a.alive = false; a.dispose(); } }
+      if (this.s >= this.len - 0.01) this.end();
+      return;
+    }
     // the camera on the path; looking ahead, or round behind (it swings round through the side)
     const u = this.s / this.len, tg = this.curve.getTangentAt(Math.min(0.999, u));
     this.curve.getPointAt(u, w.camPos);
@@ -85,6 +112,7 @@ export class Ride {
   }
 
   mark(m) {
+    if (m.cam && this.girls) this.cam = { ...this.cam, ...m.cam };   // (the girls' own run: the camera goes round them)
     const g = this.g;
     if (m.spawn) for (const e of m.spawn) {
       const ahead = e.ahead ?? 14, P = this.at(this.s + ahead, e.x ?? rnd(-1, 1));

@@ -21,6 +21,7 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
 const PL = () => T.combat.player;
 
+const MZ = new THREE.Vector3(), HD = new THREE.Vector3();
 export class Player {
   constructor(game, charId, slot, prof = { xp: 0, bag: [] }) {
     this.game = game;
@@ -28,7 +29,7 @@ export class Player {
     this.c = C.characters[charId];
     this.slot = slot;           // 0 = 1P (left), 1 = 2P (right)
     this.side = slot ? 1 : -1;
-    this.mirror = (slot === 1) !== (this.c.drawnSide === 'right');
+    this.mirror = this.mirror0 = (slot === 1) !== (this.c.drawnSide === 'right');
     const st = buildStats(charId, prof.xp, prof.bag);
     this.w = st.w; this.a = st.a; this.lv = st.lv;
     this.maxHp = st.hp; this.hp = this.maxHp;
@@ -102,6 +103,33 @@ export class Player {
     this.group.position.set(-W / 2 * k, -H / 2 * k, -D);
     this.group.scale.set(k, k, k);
   }
+  // in the place (DESIGN「这是轨道射击」: the two of them in the 3D scene - standing on its floor where the shot puts them, seen from
+  // wherever the camera is, hidden by what stands in front of them, drawn with the world; the shot's players.world: { m: her standing
+  // height in metres, behind: metres behind her cover (toward the camera), at: [[x, z], [x, z]] instead of her cover }); else on the
+  // camera as before (1 unit = 1 screen px)
+  toWorld(on) {
+    if (!!this.inWorld === on) return;
+    const w = this.game.world; this.group.removeFromParent(); (on ? w.scene : w.camera).add(this.group);
+    if (on) { this.inWorld = true; this.group.traverse((o) => { o.layers.set(0); if (o.material) o.material.depthTest = true; }); } else this.unworld();
+  }
+  unworld() {   // (back on the camera: a new place, or a shot without it)
+    this.inWorld = false; this.mirror = this.mirror0; if (this.hero) this.hero.view = null; this.fovAt = null; this.group.rotation.set(0, 0, 0);
+    this.group.traverse((o) => { o.layers.set(1); if (o.material) o.material.depthTest = false; });
+  }
+  worldSpot(Wd, out) {
+    const w = this.game.world, cam = w.camera, at = Wd.at?.[this.slot], cv = w.covers?.[this.slot], R = this.game.ride;
+    if (R.on && R.girls) return R.girlSpot(this.slot, out);   // (their own run: on the way, src/battle/ride.js)
+    if (at) return out.set(at[0], 0, at[1]);
+    if (cv) { out.set(cv.m.position.x, 0, cv.m.position.z); const dx = cam.position.x - out.x, dz = cam.position.z - out.z, d = Math.hypot(dx, dz) || 1; return out.set(out.x + dx / d * (Wd.behind ?? 0.45), 0, out.z + dz / d * (Wd.behind ?? 0.45)); }
+    return out.set(cam.position.x + (this.slot ? 0.7 : -0.7), 0, cam.position.z - 2.4);
+  }
+  // start a move (tuning/layout.json moves: hop, dash, dive; o: { dx, dy, h, t, delay }); where it ends is where she stays until the
+  // stop's shot places her again (settle)
+  move(kind, o = {}) {
+    const M = T.layout.moves?.[kind]; if (!M || this.state === 'down' || this.state === 'away') return;
+    this.mv = { t: -(o.delay || 0), T: o.t ?? M.t, h: o.h ?? M.h ?? 0, dx: o.dx || 0, dy: o.dy || 0, frames: M.frames || [] };
+  }
+  settle() { this.mv = null; this.baseShift = 0; this.y0 = 0; }
   setPose(p) {
     if (this.hero) { this.pose = p; return; }   // the heroine shows cover / fire herself (heroine.js)
     const FALLBACK = { runB: 'run', down: 'hurt', peek: 'cover', taunt: 'cover', recoil: 'aim', aimOut: 'aim', active: 'aim', activeOut: 'aimOut' };
@@ -114,6 +142,10 @@ export class Player {
     this.soft.kick(0.6);
   }
   muzzlePos() {
+    if (this.hero && this.inWorld) {   // (in the place: her muzzle where it is in the world, on the screen)
+      const m = this.hero.muzzle(), s = this.game.world.project(this.group.localToWorld(MZ.set(m.x, m.y, 0)));
+      return { x: s.x, y: this.H - s.y };
+    }
     if (this.hero) return this.hero.muzzle();
     const m = this.poses[this.pose];
     if (!m) return { x: this.baseX, y: this.H * 0.3 };
@@ -254,6 +286,18 @@ export class Player {
       else if (this.tauntT > 0) pose = 'taunt';
       else if (this.peekT < 0) { pose = 'peek'; if (this.peekT < -PL().peekHold) this.peekT = rr(PL().peekEvery); }
     }
+    // a move she is making in the place (DESIGN「女主动起来」: a hop up / down a step, a dash to another spot, a dive into cover): its
+    // pictures over whatever she was doing, an arc, a slide (tuning/layout.json moves)
+    let mvX = 0, mvY = 0;
+    if (this.mv) {
+      const M = this.mv; M.t += dt;
+      if (M.t >= 0) {
+        const p = Math.min(1, M.t / M.T), e = p * p * (3 - 2 * p);
+        for (const [at, name] of M.frames) if (p >= at) pose = name;
+        mvX = M.dx * e * (this.frame?.w || this.W); mvY = (M.h * 4 * p * (1 - p) + M.dy * e) * this.H;
+        if (p >= 1) { this.mv = null; this.y0 += M.dy * this.H; this.baseShift = (this.baseShift || 0) + M.dx * (this.frame?.w || this.W); }
+      }
+    }
     this.setPose(pose);
     this.kick = Math.max(0, this.kick - dt * 10);
     this.pop += (1 - this.pop) * Math.min(1, dt * 18);
@@ -263,7 +307,7 @@ export class Player {
     this.place();   // (the scope's narrower view: her size stays)
     this.cineK = (this.cineK || 0) + ((g.cineOn || g.walkOn ? 1 : 0) - (this.cineK || 0)) * Math.min(1, dt * 5);
     this.cineK = Math.max(this.cineK, Lv ? 1 - Lv.show : 0);
-    if (Lv && this.frame) this.baseX = this.frame.x + this.frame.w * Lv.x[this.slot];
+    if (Lv && this.frame) this.baseX = this.frame.x + this.frame.w * Lv.x[this.slot] + (this.baseShift || 0);
     const out = this.cineK * this.cineK * (3 - 2 * this.cineK) * this.H * 1.05;
     if (this.hero) {
       // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze
@@ -281,13 +325,31 @@ export class Player {
       // eased in and out, she grows about her body line and sinks until her knees sit on the bottom of the screen
       const Wk = T.layout.walk;
       this.walkK = (this.walkK || 0) + ((this.state === 'run' ? 1 : 0) - (this.walkK || 0)) * Math.min(1, dt * Wk.ease);
-      const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = (1 + (Wk.zoom - 1) * wk) * (Lv?.scale ?? 1);
+      const wk = this.walkK * this.walkK * (3 - 2 * this.walkK), zoom = (1 + (Wk.zoom - 1) * wk) * (Lv?.scale[this.slot] ?? 1);
       // the shot: her size, a rise, and sunk below the bottom edge so only her upper body shows (crop: share of her standing height)
-      const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom) + (Lv ? Lv.crop * this.hero.standH() * zoom - Lv.y * this.H : 0);
+      const sink = wk * (this.bottom + this.hero.standH() * Wk.knee * zoom) + (Lv ? Lv.crop[this.slot] * this.hero.standH() * zoom - Lv.y[this.slot] * this.H : 0);
       this.hero.setReady(this.charge >= 1 && !this.activeOn && g.combat && this.state !== 'down' && this.state !== 'away');
+      const Wd = g.shot?.players?.world;
+      this.toWorld(!!Wd);
+      if (Wd) {   // (in the place: her feet on its floor, turned to the camera, her height in metres; the moves in metres of her size)
+        const cam = g.world.camera, P = this.worldSpot(Wd, this.group.position), k = (Wd.m ?? 1.5) / this.hero.standH();   // (screen offsets below: in her own height, x2)
+        this.group.rotation.set(0, Math.atan2(cam.position.x - P.x, cam.position.z - P.z), 0);
+        // which side of her the camera is on: her picture from behind, from the side or from the front if she has one (heroine.js view;
+        // drawn from her right, so not mirrored then); she faces along her run, or away from the camera at a stop
+        const R = g.ride, hd = R.on && R.girls ? R.heading(HD) : HD.set(P.x - cam.position.x, 0, P.z - cam.position.z).normalize();
+        const tx = cam.position.x - P.x, tz = cam.position.z - P.z, tl = Math.hypot(tx, tz) || 1, fw = (hd.x * tx + hd.z * tz) / tl, rt = (-hd.z * tx + hd.x * tz) / tl;
+        const view = fw > 0.55 ? 'front' : fw < -0.55 ? 'back' : 'side';
+        this.hero.view = view; this.mirror = view === 'back' ? this.mirror0 : rt < 0 && view === 'side';
+        this.group.scale.setScalar(k);
+        this.hero.setSet(g.shot?.players?.set || 'cover');
+        this.hero.update(dt, t, { state: this.state, pose: this.pose, zoom: 1, x: (mvX + shake) / this.H * this.hero.standH() * 2, y: (run * 0.5 + hop + mvY) / this.H * this.hero.standH() * 2,
+          lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0, dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away' && this.cineK < 0.99,
+          opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1, flash: this.activeOn ? 0.03 + 0.03 * Math.sin(t * 12) : 0 });
+        return;
+      }
       this.hero.setSet(g.shot?.players?.set || 'cover');
       this.hero.update(dt, t, {
-        state: this.state, pose: this.pose, zoom, x: this.baseX + shake, y: this.bottom - sink + this.y0 + run + hop - (this.state === 'down' ? this.H * 0.02 : 0) - out,
+        state: this.state, pose: this.pose, zoom, x: this.baseX + shake + mvX, y: this.bottom - sink + this.y0 + run + hop + mvY - (this.state === 'down' ? this.H * 0.02 : 0) - out,
         lean: this.state === 'run' ? 0.025 : this.state === 'reload' ? 0.03 : 0,
         dark: this.state === 'down' ? 0.35 : 0, visible: this.state !== 'away',
         opacity: this.invuln > 0 && this.state !== 'hurt' ? 0.65 + 0.35 * Math.abs(Math.sin(t * 25)) : 1,

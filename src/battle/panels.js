@@ -14,6 +14,7 @@ import { shadowTex, COL } from './fx.js';
 import { Physics, physicsReady } from './physics.js';
 import { FR } from '../core/particles.js';
 import { shotOf } from './shot.js';
+import { buildScenery } from './scenery.js';
 
 const tmpV = new THREE.Vector3(), tmpV3 = new THREE.Vector3(), TMPC = new THREE.Color(), FIT_F = new THREE.Vector3(), FIT_R = new THREE.Vector3();
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -39,16 +40,27 @@ const INK_FRAG = `
 uniform sampler2D tColor; uniform sampler2D tDepth; uniform vec2 texel; uniform float near; uniform float far; uniform float time; uniform vec3 ink; uniform float paper;
 uniform vec3 gTint; uniform float gK; uniform float gSat;
 uniform float dark; uniform vec4 lamps[4];   // (a dark room: how dark, and up to four lit lamps: screen x, y, radius, strength)
+uniform float lensK; uniform float aspect;   // (the bulge: Panels.lens)
 varying vec2 vUv;
 ${NOISE_GLSL}
 float lin(vec2 uv) { float z = texture2D(tDepth, uv).x; return near * far / (far - z * (far - near)); }
+// the place seen through a bulge (DESIGN「这是轨道射击」, user 2026-10-20: not true perspective - the far end where the monsters are
+// swells to fill the picture, the near walls and floor bend away round the edges): a screen point -> where in the plain picture it shows
+vec2 lensUv(vec2 uv) {
+  if (lensK < 0.001) return uv;
+  vec2 p = (uv - 0.5) * vec2(aspect, 1.0); float R = 0.5 * length(vec2(aspect, 1.0)), rs = length(p) / R;
+  if (rs < 1e-5) return uv;
+  float rr = atanh(min(0.999, rs * tanh(lensK))) / lensK;
+  return 0.5 + p * (rr / rs) / vec2(aspect, 1.0);
+}
 void main(){
-  vec3 c = texture2D(tColor, vUv).rgb;
-  float d = lin(vUv);
+  vec2 uv = lensUv(vUv);
+  vec3 c = texture2D(tColor, uv).rgb;
+  float d = lin(uv);
   if (d < far * 0.98) {
     // creases and silhouettes: how much the depth bends here, relative to its distance
-    float l = lin(vUv - vec2(texel.x, 0.0)), r = lin(vUv + vec2(texel.x, 0.0));
-    float u = lin(vUv + vec2(0.0, texel.y)), b = lin(vUv - vec2(0.0, texel.y));
+    float l = lin(uv - vec2(texel.x, 0.0)), r = lin(uv + vec2(texel.x, 0.0));
+    float u = lin(uv + vec2(0.0, texel.y)), b = lin(uv - vec2(0.0, texel.y));
     float lap = abs(l + r + u + b - 4.0 * d) / d;
     float jump = max(max(abs(l - d), abs(r - d)), max(abs(u - d), abs(b - d))) / d;
     float e = max(smoothstep(0.012, 0.03, lap), smoothstep(0.06, 0.14, jump));
@@ -132,7 +144,7 @@ export class PanelWorld {
     this.panels = true;
     const set = this.set = C.sets[setId];
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(52, 16 / 9, 0.05, 120);
+    this.camera = new THREE.PerspectiveCamera(52, 16 / 9, 0.05, 320);   // (far enough for the scenery: the sky and the far buildings out of the windows, scenery.js)
     this.scene.add(this.camera);
     this.scene.background = new THREE.Color(set.sky || '#2a1830');
     this.scene.fog = new THREE.Fog(set.fog || '#8a6070', set.fogNear ?? 8, set.fogFar ?? 34);
@@ -164,7 +176,9 @@ export class PanelWorld {
     this.inkU = { tColor: { value: this.rt.texture }, tDepth: { value: this.rt.depthTexture }, texel: { value: new THREE.Vector2() }, near: { value: 0.05 }, far: { value: 120 },
       time: { value: 0 }, ink: { value: new THREE.Color(set.ink || '#2a1420') }, paper: { value: set.paper ?? 0.06 },
       gTint: { value: new THREE.Color(1, 1, 1) }, gK: { value: 0 }, gSat: { value: 1 },
-      dark: { value: this.dark }, lamps: { value: Array.from({ length: 4 }, () => new THREE.Vector4(0, 0, 0, 0)) } };   // (w = 0: no lamp)
+      dark: { value: this.dark }, lamps: { value: Array.from({ length: 4 }, () => new THREE.Vector4(0, 0, 0, 0)) },   // (w = 0: no lamp)
+      lensK: { value: 0 }, aspect: { value: 16 / 9 } };
+    this.lensK = set.lens ?? 0;   // (the bulge: how hard the middle swells, lensMap; a place's own, 0 = plain perspective)
     this.grade(this.anomaly);
     this.inkScene = new THREE.Scene();
     this.inkCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -195,8 +209,10 @@ export class PanelWorld {
       const zc = z0 - (i + 0.5) * bay;
       for (let r = 0; r < rows; r++) {
         const kl = KL2?.[i * rows + r], kr = KR2?.[i * rows + r], yc = (r + 0.5) * rh;
-        if (KL) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); this.wallB.push({ m: l, on: 'left', key: kl, zc, yc, rh }); }
-        if (KR) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); this.wallB.push({ m: rr, on: 'right', key: kr, zc, yc, rh }); }
+        // (a stretch with no wall on a side - a covered walkway open to the sky, a gallery: hall.open: [{ on, z0, z1 }], DESIGN「总纲」)
+        const open = (on) => (Hd.open || []).some((o) => o.on === on && zc <= Math.max(o.z0, o.z1) && zc >= Math.min(o.z0, o.z1));
+        if (KL && !open('left')) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); this.wallB.push({ m: l, on: 'left', key: kl, zc, yc, rh }); }
+        if (KR && !open('right')) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); this.wallB.push({ m: rr, on: 'right', key: kr, zc, yc, rh }); }
       }
       // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
       const cut = (Hd.shafts || []).find((s) => s.at === 'ceil' && Math.abs(s.z - zc) < bay / 2);   // (a shaft above: the ceiling round its hole)
@@ -299,6 +315,7 @@ export class PanelWorld {
     // the props are real things (src/battle/physics.js: they rock when shot, fly when broken, tumble and bounce off the room)
     this.phys = physicsReady() ? new Physics(Hd, this.root) : null;
     for (const p of S.props || []) this.makeProp(p);
+    if (S.scenery) this.root.add(buildScenery(S.scenery));   // (the big pieces beyond the hall: buildings, towers, far layers - src/battle/scenery.js)
     // the anomaly wave starts where the evil energy hits (set "anomalyFrom", default the far end) and runs outward from there
     this.root.updateMatrixWorld(true);
     const from = new THREE.Vector3(...(S.anomalyFrom || [0, h / 2, z1]));
@@ -341,6 +358,12 @@ export class PanelWorld {
     cam.fov = this.baseFov; cam.aspect = this.camera.aspect; cam.near = this.camera.near; cam.far = this.camera.far; cam.updateProjectionMatrix();
     const fw = new THREE.Vector3(), ray = new THREE.Ray(), hit = new THREE.Vector3(), floor = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
     for (const list of Object.values(this.coverSets)) for (const cv of list) {
+      if (cv.c.at) {   // (a cover with its own place in the room: the girls go to it, DESIGN「这是轨道射击」 - not laid out from the screen)
+        const st = cv.st, hh = cv.c.h ?? 1, m = cv.m, [x, z] = cv.c.at;
+        m.position.set(x, 0, z); m.rotation.y = Math.atan2(st.cam[0] - x, st.cam[2] - z); m.scale.set((cv.c.flip ? -1 : 1) * hh, hh, hh);
+        cv.sh.position.set(x, 0.02, z); cv.sh.scale.setScalar(hh); cv.w = hh * cv.ar; cv.h = hh; cv.def.x = x; cv.def.z = z; cv.def.h = hh;
+        continue;
+      }
       const p = players[cv.slot]; if (!p || !p.H) continue;
       const st = cv.st, H = p.H, W = p.W, SP = shotOf(st), Pl = SP.players || {}, sc = Pl.scale ?? 1;
       cam.fov = this.baseFov - (SP.cam?.zoom || 0); cam.updateProjectionMatrix();   // (that stop's shot: its scope narrows the view)
@@ -365,9 +388,11 @@ export class PanelWorld {
       const m = cv.m;
       m.position.set(hit.x, 0, hit.z);
       m.rotation.y = Math.atan2(cam.position.x - hit.x, cam.position.z - hit.z);
-      m.scale.set((cv.c.flip ? -1 : 1) * hh, hh, hh);
+      // wider than her, showing past both her sides (DESIGN「掩体」): a narrow drawing is let out sideways, up to stretch times
+      const wantW = (kw * L.w) / H * 2 * depth * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)), sx2 = Math.min(L.stretch ?? 1.4, Math.max(1, wantW / (hh * cv.ar)));
+      m.scale.set((cv.c.flip ? -1 : 1) * hh * sx2, hh, hh);
       cv.sh.position.set(hit.x, 0.02, hit.z); cv.sh.scale.setScalar(hh);
-      cv.w = hh * cv.ar; cv.h = hh;
+      cv.w = hh * cv.ar * sx2; cv.h = hh;
       cv.def.x = hit.x; cv.def.z = hit.z; cv.def.h = hh;
     }
     this.clearProps();
@@ -457,10 +482,15 @@ export class PanelWorld {
 
   // ---------------------------------------------------------------- the ways between places
   // a passage behind a doorway (way: { id, wall: end | back, x0, x1, y0, y1 (metres), depth, door }): floor, walls and ceiling in the
-  // place's own pictures, darker, black at its far end
+  // place's own pictures, darker, black at its far end. In a side wall (wall: left | right, z0, z1 along it instead of x0, x1; DESIGN
+  // 「总纲」: the monsters come in by the doors too, not only through holes they break) the wall is cut open there and the passage goes
+  // off sideways - the same passage, turned (its group's local -z is always the way out of the place)
   buildWay(wy) {
-    const Hd = this.set.hall, back = wy.wall === 'back', zw = back ? Hd.z0 : Hd.z1, dir = back ? 1 : -1, D = wy.depth ?? 2.6;
-    const w = wy.x1 - wy.x0, hh = wy.y1 - wy.y0, xc = (wy.x0 + wy.x1) / 2, g = new THREE.Group(); g.position.set(xc, wy.y0, zw); this.root.add(g);
+    const Hd = this.set.hall, side = wy.wall === 'left' || wy.wall === 'right', back = wy.wall === 'back', D = wy.depth ?? 2.6;
+    const zw = side ? (wy.z0 + wy.z1) / 2 : back ? Hd.z0 : Hd.z1, dir = side ? -1 : back ? 1 : -1;
+    const w = side ? Math.abs(wy.z1 - wy.z0) : wy.x1 - wy.x0, hh = wy.y1 - wy.y0, xc = side ? (wy.wall === 'left' ? Hd.x0 : Hd.x1) : (wy.x0 + wy.x1) / 2, g = new THREE.Group();
+    g.position.set(xc, wy.y0, zw); if (side) { g.rotation.y = wy.wall === 'left' ? Math.PI / 2 : -Math.PI / 2; this.cutWallRect(wy.wall, Math.min(wy.z0, wy.z1), Math.max(wy.z0, wy.z1), wy.y0, wy.y1); }
+    this.root.add(g);
     const fk = [].concat(Hd.floor)[0], wk = [].concat(Hd.left || Hd.right || Hd.floor)[0], ck = [].concat(Hd.ceil || Hd.floor)[0];
     const dim = (m, k) => { m.material.color.setScalar(k); return m; };
     const fl = dim(board(fk, w, D, { uv: [w / Hd.tile, D / Hd.tile] }), 0.55); fl.rotation.x = -Math.PI / 2; fl.position.set(0, 0.01, dir * D / 2); g.add(fl);
@@ -468,14 +498,15 @@ export class PanelWorld {
     for (const s of [-1, 1]) { const sw = dim(board(wk, D, hh, { uv: [D / (Hd.bay || 4), hh / Hd.h] }), 0.38); sw.rotation.y = -s * Math.PI / 2; sw.position.set(s * w / 2, hh / 2, dir * D / 2); g.add(sw); }
     const cap = new THREE.Mesh(new THREE.PlaneGeometry(w + 0.4, hh + 0.4), new THREE.MeshBasicMaterial({ color: 0x050307, side: THREE.DoubleSide }));
     cap.position.set(0, hh / 2, dir * D); g.add(cap);
-    const W = this.ways[wy.id] = { ...wy, g, zw, dir, D, xc, w, hh, leaves: [], k: 0 };
+    const W = this.ways[wy.id] = { ...wy, g, zw, dir, D, xc, w, hh, leaves: [], k: 0, side };
     if (wy.door) this.buildDoor(W);
   }
   // a door in the doorway (door: { kind: slide | swing, k: [leaf pictures], side, open }): sliding fusuma, iron doors swinging on hinges
   buildDoor(W) {
     const d = W.door, keys = [].concat(d.k), n = keys.length, lw = W.w / n;
     keys.forEach((k, i) => {
-      const m = board(k, lw, W.hh, {}), piv = new THREE.Group(), sx = n > 1 ? (i ? 1 : -1) : (d.side ?? 1);
+      const m = board(k, lw, W.hh, { alpha: true }), piv = new THREE.Group(), sx = n > 1 ? (i ? 1 : -1) : (d.side ?? 1);
+      if (tex[`${k}_x`]) this.flips.push({ m, key: k, alt: `${k}_x`, side: 0, p: 0, d: 0 });   // (it turns with the place: its anomaly picture)
       if (W.dir > 0) m.rotation.y = Math.PI;   // (in a back wall: its painted side toward the room)
       if (d.kind === 'swing') { piv.position.set(sx * W.w / 2, W.hh / 2, -W.dir * 0.03); m.position.set(-sx * lw / 2, 0, 0); }
       else piv.position.set((i - (n - 1) / 2) * lw, W.hh / 2, -W.dir * 0.03);
@@ -504,6 +535,10 @@ export class PanelWorld {
   // where a way is, for walking through it: in front of it in the room (front, eye height), its doorway, deep in its passage (far)
   wayPoints(id) {
     const W = this.ways?.[id]; if (!W) return null;
+    if (W.side) {   // (a side door: its passage's own frame, out to the room)
+      W.g.updateMatrixWorld(true); const at = (lz) => W.g.localToWorld(new THREE.Vector3(0, 1.15, lz)).toArray();
+      return { front: at(1.1), door: at(0), far: at(-(W.D - 0.5)), W };
+    }
     const y = W.y0 + 1.15, z = W.zw;
     return { front: [W.xc, y, z - W.dir * 1.1], door: [W.xc, y, z], far: [W.xc, y, z + W.dir * (W.D - 0.5)], W };
   }
@@ -566,6 +601,21 @@ export class PanelWorld {
     return g;
   }
   // a hole right through a side wall at (z, y), an opening size metres across: the board there is replaced by the pieces round it
+  // a doorway's rectangle cut out of a side wall (it may span two bays): each board it reaches is put back as the pieces round it
+  cutWallRect(on, za, zb, ya, yb) {
+    const Hd = this.set.hall, bay = Hd.bay, x = on === 'left' ? Hd.x0 : Hd.x1, s = on === 'left' ? -1 : 1;
+    for (const B of this.wallB.filter((b) => b.on === on && b.m.visible && b.zc + bay / 2 > za && b.zc - bay / 2 < zb && b.yc + b.rh / 2 > ya && b.yc - b.rh / 2 < yb)) {
+      B.m.visible = false;
+      const Z0 = B.zc - bay / 2, Z1 = B.zc + bay / 2, Y0 = B.yc - B.rh / 2, Y1 = B.yc + B.rh / 2, z0c = Math.max(Z0, za), z1c = Math.min(Z1, zb), y0c = Math.max(Y0, ya), y1c = Math.min(Y1, yb);
+      for (const [z0, z1, y0, y1] of [[Z0, Z1, y1c, Y1], [Z0, Z1, Y0, y0c], [Z0, z0c, y0c, y1c], [z1c, Z1, y0c, y1c]]) {
+        if (z1 - z0 < 0.01 || y1 - y0 < 0.01) continue;
+        const w = z1 - z0, hh = y1 - y0, u0 = s < 0 ? (Z1 - z1) / bay : (z0 - Z0) / bay, v0 = (y0 - Y0) / B.rh;
+        const m = board(B.key, w, hh, { alpha: B.m.material.transparent, uv: [w / bay, hh / B.rh], uv0: [u0, v0] });
+        const t = B.m.material.map; if (t) { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.needsUpdate = true; m.material.map = t; }
+        m.position.set(x, (y0 + y1) / 2, (z0 + z1) / 2); m.rotation.y = B.m.rotation.y; this.root.add(m);
+      }
+    }
+  }
   cutWall(on, z, y, size) {
     const Hd = this.set.hall, bay = Hd.bay, r = size / 2, B = this.wallB.find((b) => b.on === on && Math.abs(b.zc - z) <= bay / 2 && Math.abs(b.yc - y) <= b.rh / 2);
     if (!B) return;
@@ -913,14 +963,24 @@ export class PanelWorld {
     if (this.rt.width !== w || this.rt.height !== h) { this.rt.setSize(w, h); this.rt.depthTexture.image.width = w; this.rt.depthTexture.image.height = h; this.inkU.texel.value.set(1 / w, 1 / h); }
     this.inkU.near.value = this.camera.near; this.inkU.far.value = this.camera.far;
     r.setRenderTarget(this.rt); r.clear(); this.camera.layers.set(0); r.render(this.scene, this.camera);   // the heroines (layer 1) come after, see Game.render
+    this.inkU.lensK.value = this.lensK || 0; this.inkU.aspect.value = w / h;
     r.setRenderTarget(target); r.render(this.inkScene, this.inkCam);
   }
 
   // ---------------------------------------------------------------- screen <-> world
-  ndc(sx, sy) { return new THREE.Vector2(sx / this.game.W * 2 - 1, -(sy / this.game.H) * 2 + 1); }
+  // the bulge (lensK, the INK_FRAG lensUv): a point of the plain picture <-> where it shows on screen (screen px, y down); the aim, the
+  // picking and everything pinned to the world on screen go through these, so what is seen is what is hit
+  lensMap(sx, sy, inverse) {
+    const k = this.lensK || 0, W = this.game.W, H = this.game.H; if (k < 0.001 || !W) return [sx, sy];
+    const a = W / H, px = (sx / W - 0.5) * a, py = sy / H - 0.5, R = 0.5 * Math.hypot(a, 1), r = Math.hypot(px, py) / R;
+    if (r < 1e-6) return [sx, sy];
+    const r2 = inverse ? Math.atanh(Math.min(0.999, r * Math.tanh(k))) / k : Math.tanh(k * Math.min(r, 3)) / Math.tanh(k);
+    const s = r2 / r; return [(px * s / a + 0.5) * W, (py * s + 0.5) * H];
+  }
+  ndc(sx, sy) { [sx, sy] = this.lensMap(sx, sy, true); return new THREE.Vector2(sx / this.game.W * 2 - 1, -(sy / this.game.H) * 2 + 1); }
   rayFrom(sx, sy) { this.ray.setFromCamera(this.ndc(sx, sy), this.camera); return this.ray.ray; }
   screenToWorld(sx, sy, dist) { const r = this.rayFrom(sx, sy); return r.origin.clone().addScaledVector(r.direction, dist); }
-  project(p) { const v = tmpV.copy(p).project(this.camera); return { x: (v.x + 1) / 2 * this.game.W, y: (1 - v.y) / 2 * this.game.H, z: v.z }; }
+  project(p) { const v = tmpV.copy(p).project(this.camera), [x, y] = this.lensMap((v.x + 1) / 2 * this.game.W, (1 - v.y) / 2 * this.game.H, false); return { x, y, z: v.z }; }
   pick(sx, sy, meshes) {
     this.ray.setFromCamera(this.ndc(sx, sy), this.camera);
     for (const h of this.ray.intersectObjects(meshes, false)) if (h.uv) return h;

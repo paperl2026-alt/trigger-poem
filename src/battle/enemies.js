@@ -19,6 +19,12 @@ const STEP = 1 / 12;
 const V = new THREE.Vector3();
 
 
+const SZ = new THREE.Vector3(), SZ2 = new THREE.Vector3(), HEAL_A = new THREE.Vector3();
+// the floor under a point of the screen (px, y down): where the shot puts something that stands, found through the place's camera
+function floorAt(world, game, sx, sy) {
+  const r = world.rayFrom?.(sx, sy); if (!r || r.direction.y > -1e-3) return null;
+  const t = -r.origin.y / r.direction.y; return t > 0 ? r.origin.clone().addScaledVector(r.direction, t).setY(0) : null;
+}
 export class Actor {
   constructor(game, key, h, pivot = 'bottom') {
     this.game = game;
@@ -104,6 +110,30 @@ export class Actor {
   hitMeshes() { return this.alive ? [this.mesh] : []; }
   stepped(t) { const s = Math.floor((t + this.seed) / STEP); const changed = s !== this.lastStep; this.lastStep = s; return changed; }
   distToCam() { const c = this.game.world.camPos; return Math.hypot(this.root.position.x - c.x, this.root.position.z - c.z); }
+  // its size on the screen is the shot's to say, not the camera's (DESIGN「总纲」: like a film, each layer its own perspective - the
+  // monsters big, their whole shape seen, never smaller than the sights, never filling the picture): the shot's compose.size gives the
+  // share of the screen's height it stands at for where its feet are on the screen ([[feet y, share], ...], y from the top; between
+  // them in proportion); a flyer, a swarm or a thrown thing compose.fly. It stands on the place's floor where it is; only its size is
+  // the shot's (it grows or shrinks about its feet, its hits with it), eased so it never pops. Bosses keep their own size.
+  sizeFloor(dt) {
+    const g = this.game, cam = g.world?.camera, Cm = g.shot?.compose; if (!cam || !Cm || !this.h || this === g.boss || this.type === 'boss') return;
+    const p = this.root.position, d = SZ.copy(p).sub(cam.position).dot(cam.getWorldDirection(SZ2));
+    let k = 1;
+    if (d > 0.5) {
+      const share = this.h / (2 * d * Math.tan((cam.fov * Math.PI) / 360));   // (its own height's share of the screen, as the camera sees it)
+      let want;
+      if (this.def?.screen) want = this.def.screen;   // (a kind that must be seen at once: the boss's healers)
+      else if (this instanceof Projectile || this.beh === 'flyer' || this.def?.swarm) want = Cm.fly ?? 0.14;
+      else {
+        const fy = g.world.project(p).y / g.H, S = Cm.size || [[0.35, 0.16], [0.7, 0.34]];
+        want = fy <= S[0][0] ? S[0][1] : fy >= S[S.length - 1][0] ? S[S.length - 1][1] : 0;
+        for (let i = 1; i < S.length && !want; i++) if (fy <= S[i][0]) want = S[i - 1][1] + (S[i][1] - S[i - 1][1]) * (fy - S[i - 1][0]) / (S[i][0] - S[i - 1][0]);
+      }
+      k = Math.min(Cm.maxK ?? 2.8, Math.max(Cm.minK ?? 0.5, want / Math.max(1e-4, share)));
+    }
+    this.sizeK = (this.sizeK || 1) + (k - (this.sizeK || 1)) * Math.min(1, dt * 3);
+    this.root.scale.setScalar(this.sizeK);
+  }
   baseUpdate(dt, t) {
     const rdt = this.game.rdt ?? dt;   // (dt is the enemies' slower time, Game.update; the drawing itself lives in real time)
     this.flash = Math.max(0, this.flash - rdt * 6);
@@ -116,6 +146,7 @@ export class Actor {
     }
     this.game.world.lightAt(this.root.position, this.litC);
     this.u.lit.value.lerp(this.litC, Math.min(1, dt * 8));
+    this.sizeFloor(rdt);
     if (this.stepped(t)) { // stop-motion "boil"
       this.boilZ = rnd(-0.014, 0.014);
       this.boilX = rnd(-0.012, 0.012) * this.w;
@@ -333,7 +364,9 @@ export class Enemy extends Actor {
       const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
-      if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
+      const Cm = game.shot?.compose, front = Cm?.front && floorAt(world, game, (Cm.zone ? Cm.zone[0] + (Cm.zone[1] - Cm.zone[0]) * (this.targetSlot ? rr([0.55, 0.95]) : rr([0.05, 0.45])) : 0.5) * game.W, Cm.front * game.H);
+      if (this.beh === 'walker' && front) this.goal.copy(front);   // (the shot's front line: where it stops is a place on the screen - compose.front)
+      else if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
         const c = world.camPos, cd = cov.x !== undefined ? Math.hypot(cov.x - c.x, cov.z - c.z) : 2.8, qd = Math.hypot(q.x - c.x, q.z - c.z) || 1;
         const k = Math.min(1, (cd + (bp.goalBeforeCover ?? 1.1)) / qd);
         this.goal.set(c.x + (q.x - c.x) * k, 0, c.z + (q.z - c.z) * k);
@@ -418,8 +451,9 @@ export class Enemy extends Actor {
         ease: ceil ? Ease.outBounce : Ease.outQuad, onDone: () => { g.fx.puff(P, 5, COL.bone, 0.7); sfx.thud(0); if (walker) this.play('walk', 7); ready(); } });
     } else if ((s.from === 'door' || s.from === 'stairs') && this.game.world.wayPoints?.(s.way || 'end')) {
       // out of the dark of the passage behind a doorway, into the room to its spot; down the stairs first when the doorway is at their top
-      const g = this.game, W = g.world.wayPoints(s.way || 'end'), j = rnd(-0.25, 0.25) * W.W.w, y0 = W.W.y0;
-      const pts = [new THREE.Vector3(W.far[0] + j, y0, W.far[2]), new THREE.Vector3(W.door[0] + j, y0, W.door[2])];
+      const g = this.game, W = g.world.wayPoints(s.way || 'end'), j = rnd(-0.25, 0.25) * W.W.w, y0 = W.W.y0, jx = W.W.side ? 0 : j, jz = W.W.side ? j : 0;   // (spread across the doorway's width)
+      const pts = [new THREE.Vector3(W.far[0] + jx, y0, W.far[2] + jz), new THREE.Vector3(W.door[0] + jx, y0, W.door[2] + jz)];
+      if (W.W.leaves?.length) g.world.door(s.way || 'end', true, 0.35);   // (its door slides / swings open as it comes)
       const st = g.world.set.hall.stairs?.[0];
       if (y0 > 0.3 && st) pts.push(new THREE.Vector3(st.x + j * 0.5, 0, st.z0 + 0.2));
       pts.push(new THREE.Vector3(s.x, s.y || 0, s.z));
@@ -438,9 +472,55 @@ export class Enemy extends Actor {
   }
 
   hitMeshes() { return this.alive && this.state !== 'statue' ? [this.mesh] : []; }
+  // out of the girls' corners (DESIGN「总纲」: the near layer, the fight and the far layer each in their own place, nothing piled up):
+  // one whose feet are low on the screen (near) and off to the side, where the girls are, is drawn back toward the middle of the
+  // picture (tuning/layout.json monster clear: band of the screen's width it keeps to, belowY the feet height from which it counts,
+  // pull how fast)
+  keepClear(dt) {
+    const g = this.game, Cm = g.shot?.compose, w = g.world; if (!Cm?.zone || !g.W || this.beh === 'crawler' || this.escortT) return;
+    const L = { band: Cm.zone, belowY: Cm.clearBelow ?? 0.5, pull: Cm.pull ?? 2.5 };
+    const s = w.project(this.root.position); if (s.z > 1) return;
+    const cam = w.camera, P = this.root.position; cam.getWorldDirection(SZ2); const rx = -SZ2.z / (Math.hypot(SZ2.x, SZ2.z) || 1), rz = SZ2.x / (Math.hypot(SZ2.x, SZ2.z) || 1);
+    // and never on top of another one: two whose pictures overlap much step apart across the screen (the nearer one moves)
+    if (this.beh !== 'flyer') for (const o of g.actors) {
+      if (o === this || !o.alive || !o.def || o.beh === 'flyer' || o.beh === 'crawler' || o.boss || !o.root) continue;
+      const q = w.project(o.root.position), half = ((this.w * (this.sizeK || 1)) + (o.w * (o.sizeK || 1))) * 0.5;
+      const dx = s.x - q.x, ppm = g.H / (2 * Math.max(0.5, SZ.copy(P).sub(cam.position).dot(SZ2)) * Math.tan((cam.fov * Math.PI) / 360));   // (px per metre at its depth)
+      if (Math.abs(dx) < half * ppm * 0.7 && Math.abs(s.y - q.y) < g.H * 0.12 && s.z < q.z) {
+        const push = (dx >= 0 ? 1 : -1) * Math.min(1, dt * 2) * 0.6;
+        P.x += rx * push; P.z += rz * push;
+      }
+    }
+    if (s.y / g.H < L.belowY) return;
+    const fx = s.x / g.W; if (fx >= L.band[0] && fx <= L.band[1]) return;
+    const side = (P.x - cam.position.x) * rx + (P.z - cam.position.z) * rz, k = Math.min(1, dt * (L.pull ?? 2.5));
+    P.x -= rx * side * k; P.z -= rz * side * k;
+  }
+  // a healer the boss called up (src/battle/thing.js heal): it floats to its place beside her and feeds her through its tube - a stream
+  // of light from it to her - until it is shot down; it never attacks
+  healTick(dt, t) {
+    const B = this.healer, g = this.game, P = this.root.position;
+    if (!B.alive || B.grief) { this.alive = false; g.fx.puff(this.center(), 8, 0xffd0e8, 1); this.dispose(); return; }
+    // (out beside her and in front of her, clear of her outline - the player must see them at once)
+    const bp = B.root.position, A = HEAL_A.set(bp.x + this.healSide * (B.w * 0.62 + 1.6), (B.S.float ? bp.y - B.h * 0.2 : 0) + B.h * (0.35 + 0.08 * Math.sin(t * 1.7 + this.seed)), bp.z + 4.5);
+    P.lerp(A, Math.min(1, dt * 2.2));
+    this.attached = P.distanceTo(A) < 1.2 && !B.mutating;
+    this.play(this.attached && this.frames?.channel ? 'channel' : 'fly', 6);
+    if (this.attached) {
+      const a = this.center(), b = B.center(), fx = g.fx, d = a.distanceTo(b);
+      this.healAcc = (this.healAcc || 0) + dt * 45;
+      while (this.healAcc >= 1) {
+        this.healAcc -= 1; const k = Math.random();
+        fx.wAdd.emit({ x: a.x + (b.x - a.x) * k * 0.15, y: a.y + (b.y - a.y) * k * 0.15, z: a.z + (b.z - a.z) * k * 0.15, vx: (b.x - a.x) / (d / 6), vy: (b.y - a.y) / (d / 6), vz: (b.z - a.z) / (d / 6),
+          life: d / 6, size: 0.32, size1: 0.12, color: [0.55, 1, 0.75], a: 1, a1: 0.3, frame: 1 });
+      }
+    }
+  }
   update(dt, t) {
     this.baseUpdate(dt, t);
+    if (this.healer) { if (this.alive) this.healTick(dt, t); return; }
     if (!this.alive || this.state === 'scripted' || this.state === 'statue') return;
+    this.keepClear(dt);
     const g = this.game;
     // alive it is a kinematic body going where it goes: it shoves the props in its way, what flies bounces off it (src/battle/physics.js)
     if (!this.kinOn && g.world.phys) { this.kinOn = true; this.kinPh = g.world.phys; g.world.phys.follow(this.root, this.w * 0.6, this.h * 0.85, this.pivot); }

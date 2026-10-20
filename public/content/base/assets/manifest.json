@@ -4895,6 +4895,64 @@
   "src": "assets/jig/cat_run.png",
   "w": 985
  },
+ "jig/cat_run_front": {
+  "h": 1501,
+  "src": "assets/jig/cat_run_front.png",
+  "w": 1002
+ },
+ "jig/cat_run_front_w0": {
+  "data": true,
+  "h": 1501,
+  "src": "assets/jig/cat_run_front_w0.png",
+  "w": 1002
+ },
+ "jig/cat_run_front_w1": {
+  "data": true,
+  "h": 1501,
+  "src": "assets/jig/cat_run_front_w1.png",
+  "w": 1002
+ },
+ "jig/cat_run_front_w2": {
+  "data": true,
+  "h": 1501,
+  "src": "assets/jig/cat_run_front_w2.png",
+  "w": 1002
+ },
+ "jig/cat_run_front_w3": {
+  "data": true,
+  "h": 1501,
+  "src": "assets/jig/cat_run_front_w3.png",
+  "w": 1002
+ },
+ "jig/cat_run_side": {
+  "h": 1469,
+  "src": "assets/jig/cat_run_side.png",
+  "w": 1014
+ },
+ "jig/cat_run_side_w0": {
+  "data": true,
+  "h": 1469,
+  "src": "assets/jig/cat_run_side_w0.png",
+  "w": 1014
+ },
+ "jig/cat_run_side_w1": {
+  "data": true,
+  "h": 1469,
+  "src": "assets/jig/cat_run_side_w1.png",
+  "w": 1014
+ },
+ "jig/cat_run_side_w2": {
+  "data": true,
+  "h": 1469,
+  "src": "assets/jig/cat_run_side_w2.png",
+  "w": 1014
+ },
+ "jig/cat_run_side_w3": {
+  "data": true,
+  "h": 1469,
+  "src": "assets/jig/cat_run_side_w3.png",
+  "w": 1014
+ },
  "jig/cat_run_w0": {
   "data": true,
   "h": 1441,
@@ -5126,6 +5184,64 @@
   "h": 1512,
   "src": "assets/jig/pink_run.png",
   "w": 1012
+ },
+ "jig/pink_run_front": {
+  "h": 1505,
+  "src": "assets/jig/pink_run_front.png",
+  "w": 1024
+ },
+ "jig/pink_run_front_w0": {
+  "data": true,
+  "h": 1505,
+  "src": "assets/jig/pink_run_front_w0.png",
+  "w": 1024
+ },
+ "jig/pink_run_front_w1": {
+  "data": true,
+  "h": 1505,
+  "src": "assets/jig/pink_run_front_w1.png",
+  "w": 1024
+ },
+ "jig/pink_run_front_w2": {
+  "data": true,
+  "h": 1505,
+  "src": "assets/jig/pink_run_front_w2.png",
+  "w": 1024
+ },
+ "jig/pink_run_front_w3": {
+  "data": true,
+  "h": 1505,
+  "src": "assets/jig/pink_run_front_w3.png",
+  "w": 1024
+ },
+ "jig/pink_run_side": {
+  "h": 1472,
+  "src": "assets/jig/pink_run_side.png",
+  "w": 1024
+ },
+ "jig/pink_run_side_w0": {
+  "data": true,
+  "h": 1472,
+  "src": "assets/jig/pink_run_side_w0.png",
+  "w": 1024
+ },
+ "jig/pink_run_side_w1": {
+  "data": true,
+  "h": 1472,
+  "src": "assets/jig/pink_run_side_w1.png",
+  "w": 1024
+ },
+ "jig/pink_run_side_w2": {
+  "data": true,
+  "h": 1472,
+  "src": "assets/jig/pink_run_side_w2.png",
+  "w": 1024
+ },
+ "jig/pink_run_side_w3": {
+  "data": true,
+  "h": 1472,
+  "src": "assets/jig/pink_run_side_w3.png",
+  "w": 1024
  },
  "jig/pink_run_w0": {
   "data": true,

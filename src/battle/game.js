@@ -100,7 +100,7 @@ export class Game {
     this.clearActors(); this.boss = null; this.etw.clear(); this.acts.clear(); this.mv.clear();
     this.addGimmicks();
     this.fx.clear(); this.vfx.clear();
-    for (const p of this.players) { old.camera.remove(p.group); this.world.camera.add(p.group); }
+    for (const p of this.players) { p.group.removeFromParent(); if (p.inWorld) p.unworld(); this.world.camera.add(p.group); }
     this.world.scene.add(this.fx.wNorm.mesh, this.fx.wAdd.mesh);
     if (old.dispose) old.dispose();
     this.camPlaced = false;
@@ -211,6 +211,7 @@ export class Game {
     this.S = S;
     this.stationId = id;
     this.shot = shotOf(S); this.cues.stop();   // (its shot: tuning/shots.json; the last stop's cues are over)
+    for (const p of this.players) p.settle();   // (where a move left them: the new stop's shot places them)
     this.combat = false;
     if (this.chase.mode === 'block' || this.chase.mode === 'prowl') this.chase.mode = null;
     // the covers fold away first; only then do the girls get up and move on (DESIGN: nobody runs through a cover)
@@ -1068,7 +1069,7 @@ export class Game {
   }
 
   // returns true when nobody got hurt (blocked by cover / missed)
-  playerAttacked({ kind, dmg, from, heavy, slot = 0 }) {
+  playerAttacked({ kind, dmg, from, heavy, slot = 0, rattle }) {
     if (from?.escortT && this.escort.going) { this.escort.hit(dmg, from); return false; }   // (it went for what they guard: escort.js)
     // what it leaves on her screen if it gets through (src/ui/scars.js: the monster's / the thrown thing's scar, else its kind's)
     const D = from?.def?.scar ? from.def : from?.kind && C.projectiles[from.kind]?.scar ? C.projectiles[from.kind] : null;
@@ -1080,7 +1081,8 @@ export class Game {
       const cov = this.world.covers[p.slot], through = kind === 'ram' || kind === 'shot' || kind === 'melee';
       const shielded = !through && !p.exposed && !(cov && cov.broken);
       if (shielded) {
-        this.coverHit(p, from, heavy);
+        this.coverHit(p, from, heavy, rattle);   // (rattle: it shakes hard as if it would give, and holds - nothing gets through)
+        if (rattle) continue;
         if (!heavy || !p.damage(dmg * T.combat.cover.chip)) continue;
       } else if (!p.damage(dmg)) continue;
       hurt = true; p.lastHit = hitMark;
@@ -1093,10 +1095,11 @@ export class Game {
     if (this.combat && this.allDown()) this.gameOver();
     return !hurt;
   }
-  coverHit(p, from, heavy) {
+  coverHit(p, from, heavy, rattle) {
     const cov = this.world.covers[p.slot];
     if (!cov) return;
     const mesh = cov.mesh || cov.m, CV = T.combat.cover;
+    if (rattle) { this.world.rockCover?.(cov, 0.42); if (mesh.material?.uniforms) mesh.material.uniforms.flash.value = 0.8; sfx.coverHit(); this.post.shake(p.slot === 0 ? 0.9 : 0.5); return; }
     if (cov.hp !== undefined && !cov.broken) {
       cov.hp -= heavy ? CV.heavy : CV.hit;
       if (cov.hp <= 0 && this.world.breakCover) { this.world.breakCover(cov); this.hud.gl.stickers.say(p, 'coverBroken'); }

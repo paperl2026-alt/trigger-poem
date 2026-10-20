@@ -20,17 +20,19 @@ export function shotFrom(spec, cur) {
   return { ...merge(cur, spec || {}), kind: cur.kind };
 }
 
-// what is on screen now, easing toward the shot: the girls' places (x per slot, share of the HUD frame), size, rise, how far they are
-// sunk below the bottom (crop, share of her standing height), shown (0..1); the bottom-middle strip's rise; the lens
+// what is on screen now, easing toward the shot, each girl on her own (DESIGN「女主动起来」: one up the stairs and one below, one leaning
+// on a pillar, one further off...): her place (x, share of the HUD frame), size (scale), rise (y, share of the screen height), how far
+// she is sunk below the bottom (crop, share of her standing height) - each [1P, 2P] or one number for both; shown (0..1); the
+// bottom-middle strip's rise; the lens
+const two = (v, d) => (Array.isArray(v) ? [v[0] ?? d, v[1] ?? v[0] ?? d] : [v ?? d, v ?? d]);
 export class Live {
-  constructor() { this.x = [0.27, 0.73]; this.scale = 1; this.y = 0; this.crop = 0; this.show = 1; this.mid = 0; this.zoom = 0; this.lens = 0; this.hud = 1; }
+  constructor() { this.x = [0.27, 0.73]; this.scale = [1, 1]; this.y = [0, 0]; this.crop = [0, 0]; this.show = 1; this.mid = 0; this.zoom = 0; this.lens = 0; this.hud = 1; }
   snap(s) { this.ease(s, 99); }
   ease(s, dt) {
     const k = Math.min(1, dt * 4), P = s.players || {}, H = s.hud || {}, Cm = s.cam || {};
-    const to = (a, b) => a + (b - a) * k;
-    const X = P.x || [0.27, 0.73];
-    this.x = [to(this.x[0], X[0]), to(this.x[1], X[1])];
-    this.scale = to(this.scale, P.scale ?? 1); this.y = to(this.y, P.y ?? 0); this.crop = to(this.crop, P.crop ?? 0);
+    const to = (a, b) => a + (b - a) * k, both = (cur, v, d) => { const w = two(v, d); return [to(cur[0], w[0]), to(cur[1], w[1])]; };
+    this.x = both(this.x, P.x || [0.27, 0.73], 0.5);
+    this.scale = both(this.scale, P.scale, 1); this.y = both(this.y, P.y, 0); this.crop = both(this.crop, P.crop, 0);
     this.show = to(this.show, P.show === false ? 0 : 1);
     this.mid = to(this.mid, H.mid ?? 0); this.hud = to(this.hud, H.show === false ? 0 : 1);
     this.zoom = to(this.zoom, Cm.zoom ?? 0); this.lens = to(this.lens, Cm.lens ?? 0);

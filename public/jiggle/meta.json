@@ -104,5 +104,29 @@
   "w": 1024,
   "h": 1536,
   "canvasH": 1536
+ },
+ "cat_run_front": {
+  "src": "r72/cat_run_front_a",
+  "w": 1002,
+  "h": 1501,
+  "canvasH": 1536
+ },
+ "cat_run_side": {
+  "src": "r72/cat_run_side_a",
+  "w": 1014,
+  "h": 1469,
+  "canvasH": 1536
+ },
+ "pink_run_front": {
+  "src": "r72/pink_run_front_b",
+  "w": 1024,
+  "h": 1505,
+  "canvasH": 1536
+ },
+ "pink_run_side": {
+  "src": "r72/pink_run_side_a",
+  "w": 1024,
+  "h": 1472,
+  "canvasH": 1536
  }
 }
