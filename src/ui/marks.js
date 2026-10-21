@@ -1,6 +1,10 @@
 // The special-attack markers' drawn pieces (docs/DESIGN.md「攻击分三种」, the user's round-8 mockup): a heart with wings (the crest), a
 // small heart (a moon on the hide belt), and the whole marker as a still picture for the lesson cards. Plain canvas drawing: crisp shapes,
-// a dark ink outline and a soft glow, no generated lettering. The moving rings themselves are a shader (src/battle/fx.js ORBIT_FRAG).
+// a dark ink outline and a soft glow, no generated lettering. The moving rings themselves are a shader (src/battle/fx.js ORBIT_FRAG). In the
+// game the 3D structures (src/battle/marks3d.js) stand in for both wherever the thing's place in the world is known; the lesson cards
+// draw those structures (markIcon).
+import { shapes } from '../battle/marks3d.js';
+
 export const MARK = {
   kill: { fill: '#ff2a4a', lite: '#ffa0b8', wing: '#ffffff', vein: '#ffb3c6', ink: '#1c0510', glow: 'rgba(255,42,74,0.85)' },
   hide: { fill: '#9b3dff', lite: '#e0b6ff', wing: '#f6eeff', vein: '#cfa8ff', ink: '#14061f', glow: 'rgba(176,77,255,0.85)' },
@@ -56,12 +60,7 @@ export function smallHeart(g, cx, cy, s, P) {
   heartPath(g, cx, cy, s); g.lineWidth = s * 0.2; g.strokeStyle = P.ink; g.lineJoin = 'round'; g.stroke(); g.shadowBlur = 0;
   heart(g, cx, cy, s, P, s * 0.1); g.restore();
 }
-function sparkle(g, x, y, s, col) {
-  g.save(); g.fillStyle = col; g.shadowColor = col; g.shadowBlur = s;
-  g.beginPath(); g.moveTo(x, y - s); g.quadraticCurveTo(x, y, x + s, y); g.quadraticCurveTo(x, y, x, y + s); g.quadraticCurveTo(x, y, x - s, y); g.quadraticCurveTo(x, y, x, y - s); g.fill();
-  g.restore();
-}
-// a little dark monster for the icon (the belt goes round it)
+// a little dark monster for the icon (the structure goes round it)
 function blob(g, x, y, s) {
   g.save(); g.fillStyle = '#2a1636'; g.strokeStyle = '#f2e6ff'; g.lineWidth = s * 0.07; g.lineJoin = 'round';
   g.beginPath(); g.moveTo(x - s * 0.5, y + s * 0.45); g.quadraticCurveTo(x - s * 0.62, y - s * 0.2, x - s * 0.42, y - s * 0.42); g.lineTo(x - s * 0.5, y - s * 0.75);
@@ -79,40 +78,63 @@ export function markCanvas(piece) {
   return c;
 }
 
-// the whole marker as a still picture (a lesson card's icon): the ring with its crest, or the belt going round a little monster (no words)
+// the whole marker as a still picture (a lesson card's icon): the 3D structures the game puts on the things themselves (src/battle/marks3d.js,
+// the same edge lists), turned a little and seen from the front - nearer edges brighter, corners glowing - round a little monster:
+// 'kill' the icosahedron cage, 'hide' the twisted mucube and the cone from it toward you, 'shot' the tetrahedron round a flying thing
 export function markIcon(kind) {
-  const W = 280, H = 216, c = document.createElement('canvas'), g = c.getContext('2d'), P = MARK[kind];
+  const W = 280, H = 216, c = document.createElement('canvas'), g = c.getContext('2d'), S = shapes();
   c.width = W; c.height = H;
-  const cx = W / 2, cy = H * 0.6;
-  g.lineCap = 'round';
-  const line = (path, w, far) => {   // one glowing line with its ink band under it
-    g.save(); g.globalAlpha = far ? 0.5 : 1;
-    path(); g.strokeStyle = P.ink; g.lineWidth = w * 2.6; g.stroke();
-    g.shadowColor = P.glow; g.shadowBlur = w * 3; path(); g.strokeStyle = P.fill; g.lineWidth = w * 1.4; g.stroke();
-    g.shadowBlur = 0; path(); g.strokeStyle = '#fff'; g.lineWidth = w * 0.45; g.stroke(); g.restore();
+  const cx = W / 2, cy = H * 0.5;
+  // a point turned about y then x, onto the canvas: [x, y, depth -1 (far) .. 1 (near)]
+  const turn = (x, y, z, ax, ay, s, ox, oy) => { const x1 = x * Math.cos(ay) + z * Math.sin(ay), z1 = -x * Math.sin(ay) + z * Math.cos(ay); return [ox + x1 * s, oy - (y * Math.cos(ax) - z1 * Math.sin(ax)) * s, y * Math.sin(ax) + z1 * Math.cos(ax)]; };
+  const wire = (E, ax, ay, s, col, w, ox = cx, oy = cy) => {
+    const seg = []; for (let i = 0; i < E.length; i += 6) { const a = turn(E[i], E[i + 1], E[i + 2], ax, ay, s, ox, oy), b = turn(E[i + 3], E[i + 4], E[i + 5], ax, ay, s, ox, oy); seg.push([a, b, (a[2] + b[2]) / 2]); }
+    seg.sort((p, q) => p[2] - q[2]);   // (far first)
+    g.save(); g.lineCap = 'round';
+    for (const [a, b, z] of seg) {
+      const k = 0.5 + 0.5 * z, path = () => { g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); };
+      g.globalAlpha = 0.35 + 0.65 * k;
+      path(); g.shadowBlur = 0; g.strokeStyle = '#14061f'; g.lineWidth = w * 2.2; g.stroke();
+      path(); g.shadowColor = col; g.shadowBlur = w * 3; g.strokeStyle = col; g.lineWidth = w; g.stroke();
+      if (k > 0.55) { path(); g.shadowBlur = 0; g.strokeStyle = '#fff'; g.lineWidth = w * 0.35; g.stroke(); }
+    }
+    g.restore();
+  };
+  const dots = (V, ax, ay, s, col, r, ox = cx, oy = cy) => {
+    g.save(); g.globalCompositeOperation = 'lighter';
+    for (const v of V) {
+      const [x, y, z] = turn(v[0], v[1], v[2], ax, ay, s, ox, oy), rr = r * (0.7 + 0.3 * (0.5 + 0.5 * z)), gr = g.createRadialGradient(x, y, 0, x, y, rr);
+      gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.35, col); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, rr, 0, Math.PI * 2); g.fill();
+    }
+    g.restore();
   };
   if (kind === 'kill') {
-    const r = H * 0.34;
-    line(() => { g.beginPath(); g.arc(cx, cy, r, 0, Math.PI * 2); }, 6);
-    g.save(); g.setLineDash([9, 8]); g.strokeStyle = P.fill; g.lineWidth = 3; g.beginPath(); g.arc(cx, cy, r * 0.8, 0, Math.PI * 2); g.stroke(); g.restore();
-    for (let k = 0; k < 4; k++) {   // the arrowheads pointing in
-      const a = k * Math.PI / 2 + Math.PI / 4, ux = Math.cos(a), uy = Math.sin(a), px = -uy, py = ux, R0 = r * 1.12, R1 = r * 0.86, w = r * 0.13;
-      g.beginPath(); g.moveTo(cx + ux * R0 + px * w, cy + uy * R0 + py * w); g.lineTo(cx + ux * R1, cy + uy * R1); g.lineTo(cx + ux * R0 - px * w, cy + uy * R0 - py * w); g.closePath();
-      g.lineWidth = 5; g.strokeStyle = P.ink; g.lineJoin = 'round'; g.stroke(); g.fillStyle = '#fff'; g.fill();
-    }
-    wingedHeart(g, cx, cy - r - 2, 50, P);
-    sparkle(g, cx - r * 0.95, cy + r * 0.55, 12, '#fff'); sparkle(g, cx + r * 0.75, cy + r * 0.85, 9, '#fff'); sparkle(g, cx + r * 1.05, cy - r * 0.2, 7, '#fff');
+    blob(g, cx, cy + H * 0.04, H * 0.42);
+    wire(S.ico, 0.45, 0.6, H * 0.4, '#ff3a6a', 4.5); dots(S.icoV, 0.45, 0.6, H * 0.4, '#ffd0e0', 9);
+  } else if (kind === 'shot') {
+    // a thrown thing: a ball, the tetrahedron spinning round it
+    g.save(); const gr = g.createRadialGradient(cx - 8, cy - 8, 2, cx, cy, H * 0.13); gr.addColorStop(0, '#fff3c8'); gr.addColorStop(0.6, '#e0703a'); gr.addColorStop(1, '#5a1a10');
+    g.fillStyle = gr; g.strokeStyle = '#14061f'; g.lineWidth = 4; g.beginPath(); g.arc(cx, cy, H * 0.13, 0, Math.PI * 2); g.stroke(); g.fill(); g.restore();
+    wire(S.tet, 1.1, 0.35, H * 0.44, '#ff5a8a', 4.5); dots(S.tetV, 1.1, 0.35, H * 0.44, '#ffffff', 16);
   } else {
-    const rx = W * 0.46, ry = rx * 0.36, tilt = -0.28;
-    const half = (a0, a1) => () => { g.beginPath(); g.ellipse(cx, cy, rx, ry, tilt, a0, a1); };
-    line(half(Math.PI, Math.PI * 2), 5, true);     // the far half, behind the monster
-    blob(g, cx, cy - H * 0.06, H * 0.5);
-    line(half(0, Math.PI), 6.5);                   // the near half, in front
-    g.save(); g.setLineDash([10, 9]); g.strokeStyle = P.lite; g.lineWidth = 2.5; g.beginPath(); g.ellipse(cx, cy, rx * 0.88, ry * 0.88, tilt, 0, Math.PI); g.stroke(); g.restore();
-    const at = (a) => { const x = Math.cos(a) * rx, y = Math.sin(a) * ry; return [cx + x * Math.cos(tilt) - y * Math.sin(tilt), cy + x * Math.sin(tilt) + y * Math.cos(tilt)]; };
-    smallHeart(g, ...at(Math.PI * 1.25), 22, P);
-    smallHeart(g, ...at(Math.PI * 0.15), 30, P);
-    wingedHeart(g, ...at(Math.PI * 0.62), 40, P);
+    // the cone: its mouth round the monster, its tip toward you (the bottom of the card, near: drawn over the cage); rings racing down it
+    const my = cy - H * 0.14, tip = [cx - W * 0.16, H * 0.98], R = H * 0.2;
+    blob(g, cx, my, H * 0.3);
+    g.save(); g.globalAlpha = 0.75; wire(S.mu, 0.5, 0.45, H * 0.27, '#8a2ad8', 2.2, cx, my); g.restore();
+    const ring = (k, w) => {
+      const x = cx + (tip[0] - cx) * k, y = my + (tip[1] - my) * k, rr = R * (1 - k) + 2;
+      g.beginPath(); g.ellipse(x, y, rr, rr * 0.38, 0, 0, Math.PI * 2); g.shadowBlur = 0; g.strokeStyle = '#14061f'; g.lineWidth = w * 2.2; g.stroke();
+      g.shadowColor = '#c070ff'; g.shadowBlur = w * 3; g.strokeStyle = '#c070ff'; g.lineWidth = w; g.stroke(); g.shadowBlur = 0;
+    };
+    g.save(); g.lineCap = 'round';
+    for (let i = 0; i < 12; i++) {
+      const a = i / 12 * Math.PI * 2, x = cx + Math.cos(a) * R, y = my + Math.sin(a) * R * 0.38;
+      g.globalAlpha = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(a));
+      g.beginPath(); g.moveTo(x, y); g.lineTo(...tip); g.shadowBlur = 0; g.strokeStyle = '#14061f'; g.lineWidth = 5; g.stroke();
+      g.shadowColor = '#b04dff'; g.shadowBlur = 8; g.strokeStyle = '#b04dff'; g.lineWidth = 2.4; g.stroke();
+    }
+    g.globalAlpha = 1; ring(0, 3.5); g.restore();
+    g.save(); for (const k of [0.3, 0.6]) { g.globalAlpha = 1 - k * 0.6; ring(k, 3); } g.restore();
   }
   return c;
 }

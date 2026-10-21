@@ -39,19 +39,19 @@
       "title": { "zh": "教学 2 · 击落和躲避", "en": "LESSON 2 · SHOOT DOWN & HIDE", "ja": "レッスン2・撃ち落とす＆隠れる" },
       "rows": [
         {
-          "icon": "markKill",
+          "icon": "markShot",
           "text": {
-            "zh": "飞过来的东西套着一个一缩一放的红色光环：躲没用，朝环里打一枪就能打下来，不用瞄得很准",
-            "en": "Anything flying at you sits in a pulsing RED RING: hiding won't help, shoot anywhere inside the ring to knock it down",
-            "ja": "飛んでくる物には脈打つ赤い輪：隠れても無駄、輪の中を撃てば撃ち落とせる"
+            "zh": "飞过来的东西外面转着一个红色四面体线框（角上亮着光球）：躲没用，朝框里打一枪就能打下来，不用瞄得很准",
+            "en": "Anything flying at you has a spinning RED TETRAHEDRON round it (lights on its corners): hiding won't help, shoot anywhere inside it to knock it down",
+            "ja": "飛んでくる物には回る赤い四面体（角に光の玉）：隠れても無駄、その中を撃てば撃ち落とせる"
           }
         },
         {
           "icon": "markHide",
           "text": {
-            "zh": "被紫色光带绕着转、还时不时爆闪的怪要放打不掉的大招：射击没用，松开左键躲好",
-            "en": "A monster circled by a flaring VIOLET BELT is about to unleash something you can't shoot down: let go and hide",
-            "ja": "紫の帯がまわって時々フレアするモンスターは撃ち落とせない大技：撃っても無駄、指を離して隠れよう"
+            "zh": "身上转着紫色线框、还有一道紫色光锥从它指向你的怪，要放打不掉的大招：射击没用，松开左键躲好",
+            "en": "A monster with a VIOLET CAGE turning round it and a violet CONE pointing from it at you is about to unleash something you can't shoot down: let go and hide",
+            "ja": "紫の籠が回り、紫の光の円錐がこちらを指すモンスターは撃ち落とせない大技：撃っても無駄、指を離して隠れよう"
           }
         },
         {
@@ -73,9 +73,9 @@
         {
           "icon": "markKill",
           "text": {
-            "zh": "被红色光环套住的怪在准备冲过来：躲没用，趁它冲之前快打掉（打得够多也能把它打断）",
-            "en": "A monster inside a RED RING is about to ram you: hiding won't help, kill it before it comes (enough hits also break it off)",
-            "ja": "赤い輪に囲まれたモンスターは突進してくる：隠れても無駄、来る前に倒せ（十分当てれば止められる）"
+            "zh": "被红色二十面体笼子套住的怪在准备冲过来：躲没用，趁它冲之前快打掉（笼子转得越快、收得越紧，就越快来了；打得够多也能把它打断）",
+            "en": "A monster inside a RED ICOSAHEDRON CAGE is about to ram you: hiding won't help, kill it before it comes (the faster the cage spins and the tighter it closes, the nearer it is; enough hits also break it off)",
+            "ja": "赤い二十面体の籠に囲まれたモンスターは突進してくる：隠れても無駄、来る前に倒せ（籠が速く回って縮むほど近い。十分当てれば止められる）"
           }
         },
         {
@@ -84,9 +84,9 @@
         }
       ],
       "note": {
-        "zh": "红色光环：快打　紫色光带：快躲　其他的：躲着就挡得住。",
-        "en": "Red ring: kill it fast. Violet belt: hide. Everything else: cover stops it.",
-        "ja": "赤い輪は速攻、紫の帯は隠れる、それ以外は隠れれば防げる。"
+        "zh": "红色笼子：快打　紫色光锥：快躲　其他的：躲着就挡得住。",
+        "en": "Red cage: kill it fast. Violet cone: hide. Everything else: cover stops it.",
+        "ja": "赤い籠は速攻、紫の円錐は隠れる、それ以外は隠れれば防げる。"
       }
     },
     "skill": {
@@ -133,9 +133,9 @@
         {
           "icon": "markHide",
           "text": {
-            "zh": "红色光环快打、紫色光带快躲，照学过的来",
-            "en": "Red ring: kill fast. Violet belt: hide. Just like you learned",
-            "ja": "赤い輪は速攻、紫の帯は隠れる。習った通りに"
+            "zh": "紫色光锥快躲，照学过的来；它的弱点周围飘着发光的碎光点，光点往弱点里收的时候就快打",
+            "en": "Violet cone: hide, just like you learned. Its weak point is ringed by glittering motes: when they pour into it, shoot it now",
+            "ja": "紫の円錐は隠れる、習った通りに。弱点のまわりには光の粒が舞う。粒が弱点に吸い込まれたら速攻"
           }
         },
         {

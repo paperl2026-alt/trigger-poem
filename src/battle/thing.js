@@ -34,6 +34,7 @@ import { Actor, Enemy } from './enemies.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
 import { FR } from '../core/particles.js';
+import { Mark3D } from './marks3d.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
@@ -78,7 +79,7 @@ export class TheThing extends Actor {
     this.mesh = paperMesh(t, this.w, { pivot, segs: this.relief ? [64, Math.max(8, Math.round(64 / this.ar))] : null });
     if (this.relief) setRelief(this.mesh, tex[meta[key].relief], Math.min(this.w, this.h) * 0.12);
     this.mesh.userData.owner = this; this.mesh.userData.texKey = key;
-    this.dm = new DamageMap(1 / this.ar, 512); attachDamage(this.mesh, this.dm, true);
+    this.dm = new DamageMap(1 / this.ar, 512); attachDamage(this.mesh, this.dm, true); this.coreHurt = 0;
     this.u = this.mesh.material.uniforms;
     this.u.outlineOn.value = 1; this.u.mapTexel.value.set(1 / t.image.width, 1 / t.image.height);
     this.u.dmgStyle.value = this.def.coreGlow ? 1 : 0;   // (her core lights up as it is hurt: paper.js)
@@ -204,7 +205,7 @@ export class TheThing extends Actor {
     const dmg = info.dmg * (D.coreMul ?? 1) * (this.S.guarded ? D.throw?.exposedMul ?? 2 : 1);   // (a form open only for moments: those moments hurt it more)
     info.dealt = dmg; this.lastHitBy = info.by;
     this.paint(info);   // (no white flash of the whole of her: the core itself changes colour as it is hurt - user 2026-10-21)
-    if (this.def.coreGlow) { const c = this.core(); if (c) { this.dm.blob(c[0], c[1], (c[2] ?? 0.11) * this.h / this.w * 1.15, '0,255,0', 0.045); this.dm.tex.needsUpdate = true; } }   // (the whole core, a little more each hit)
+    if (this.def.coreGlow) { const c = this.core(); if (c) { this.dm.blob(c[0], c[1], (c[2] ?? 0.11) * this.h / this.w * 1.15, '0,255,0', 0.045); this.dm.tex.needsUpdate = true; this.coreHurt = (this.coreHurt || 0) + 1; } }   // (the whole core, a little more each hit)
     const p = this.uvToWorld(info.uv.u, info.uv.v);
     this.mist(p);
     // a lunge being gathered breaks off when its core is hit enough
@@ -241,7 +242,23 @@ export class TheThing extends Actor {
     this.later(this.def.stunTime, () => { this.state = 'idle'; this.play('idle', 3); });
     this.timer = this.def.stunTime + 0.8;
   }
-  endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } }
+  endWindup() { if (this.lock) { this.lock.remove(); this.lock = null; } if (this.mark3) { this.mark3.remove(); this.mark3 = null; } this.markKill = false; }
+  // her own warning: a blow to hide from - the star of octahedra round her, cones to the girls it goes for (marks3d.js bossHide); one to
+  // stop by shooting - no structure on her (it hid her: user 2026-10-21), the motes round her core pour into it instead (motesTick)
+  // (its own clock, dur seconds to the blow: the move sets this.timer on to after it - the next move - as soon as it starts)
+  markUp(threat, slot, dur) {
+    const g = this.game; this.lock = g.fx.lock(threat, slot, { quiet: true }); this.markEl = 0; this.markDur = dur || 1;
+    const hide = threat === 'hide' || threat === 'heavy'; this.markKill = !hide;
+    this.mark3 = hide ? new Mark3D(g.world.scene, 'bossHide') : null; this.markSlot = slot;
+  }
+  markP() { return Math.max(0, Math.min(1, (this.markEl || 0) / (this.markDur || 1))); }
+  markTick(dt, t, p) {
+    const g = this.game, M = this.mark3; if (!M) return;
+    const fx = g.fx, s = this.markSlot;
+    M.root.visible = !g.cineOn;
+    const c = this.uvToWorld(0.5, this.S.float ? 0.55 : 0.68), to = s === -1 ? [fx.victimAt(0, new THREE.Vector3()), fx.victimAt(1, new THREE.Vector3())] : fx.victimAt(s, new THREE.Vector3());
+    M.set(c, this.S.h * 0.3, p, t, to, fx.res(), dt);
+  }
   // where the AI partner aims (src/core/input.js): the core, on screen (y down like screenBox)
   aimAt() { const c = this.core(); if (!c || !this.weakNow()) return null; const g = this.game, sc = g.world.project(this.uvToWorld(c[0], c[1])); return { x: sc.x, y: sc.y }; }
   // the ring round the core (the small kill ring: shoot inside it), gone while it attacks or changes
@@ -263,7 +280,8 @@ export class TheThing extends Actor {
     }
   }
   // a ribbon of light streaming off her core as she moves (user 2026-10-21, a picture of golden light trails: the weak point found by
-  // its trail; still, only a few sparks drift off it) - def.coreTrail: colors, perM (sparks a metre moved), idle (a second standing)
+  // its trail; still, only a few sparks drift off it) - def.coreTrail: colors, perM (sparks a metre moved), idle (a second standing).
+  // Fine sparks, spread round it (big soft ones heaped up into a round patch of light on her: user 2026-10-21)
   trailTick(dt, k = 1) {   // (k: dimmer while the core is shut - it still shows where it is)
     const g = this.game, T = this.def.coreTrail, c = this.core(); if (!c) return;
     const p = this.uvToWorld(c[0], c[1]), last = this.trailAt || p.clone(), d = Math.min(3, p.distanceTo(last)), s = this.h * (c[2] ?? 0.11);
@@ -272,10 +290,35 @@ export class TheThing extends Actor {
     while (this.trailAcc >= 1) {
       this.trailAcc -= 1;
       const q = last.clone().lerp(p, Math.random()), col = cols[Math.floor(Math.random() * cols.length)], star = Math.random() < 0.22;
-      g.fx.wAdd.emit({ x: q.x + rnd(-0.2, 0.2) * s, y: q.y + rnd(-0.2, 0.2) * s, z: q.z + rnd(-0.1, 0.1) * s, vx: rnd(-0.3, 0.3), vy: rnd(0.15, 0.55), vz: rnd(-0.3, 0.3),
-        drag: 0.6, life: rnd(0.9, 1.6), size: s * (star ? rnd(0.4, 0.65) : rnd(0.25, 0.5)), size1: s * rnd(0.05, 0.15), rot: rnd(0, 6.28), color: [col.r, col.g, col.b], a: 0.95 * k, a1: 0, frame: star ? FR.STAR : FR.GLOW });
+      g.fx.wAdd.emit({ x: q.x + rnd(-0.6, 0.6) * s, y: q.y + rnd(-0.6, 0.6) * s, z: q.z + rnd(-0.2, 0.2) * s, vx: rnd(-0.3, 0.3), vy: rnd(0.15, 0.55), vz: rnd(-0.3, 0.3),
+        drag: 0.6, life: rnd(0.9, 1.6), size: s * (star ? rnd(0.16, 0.28) : rnd(0.06, 0.14)), size1: s * rnd(0.02, 0.05), rot: rnd(0, 6.28), color: [col.r, col.g, col.b], a: 0.95 * k, a1: 0, frame: star ? FR.STAR : FR.GLOW });
     }
     this.trailAt = p.clone();
+  }
+  // her weak point told by its glitter (user 2026-10-21: no structure round it - that hid her - and no round patch of light either: fine
+  // motes floating and glowing round it): tiny lights in bright shifting colours swirling about the core, more and brighter the more it
+  // is hurt (coreHurt: hits there this form) and while it is open; while she gathers a blow to be shot down (a kill wind-up) they come
+  // from further out and pour into it, faster and thicker as the blow comes - shoot here
+  motesTick(dt, t, open) {
+    const g = this.game, c = this.core(); if (!c) return;
+    const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), hurt = Math.min(1, (this.coreHurt || 0) / 30);
+    const kill = this.markKill ? this.markP() : -1, cam = g.world.camPos, col = this.moteCol || (this.moteCol = new THREE.Color());
+    const tx = cam.x - p.x, tz = cam.z - p.z, tl = Math.hypot(tx, tz) || 1, fx = tx / tl, fz = tz / tl;   // (toward the camera: a little in front of her)
+    const rate = (open ? 30 : 10) * (1 + hurt * 1.6) + (kill >= 0 ? 30 + kill * 60 : 0);
+    this.moteAcc = (this.moteAcc || 0) + Math.min(40, rate * dt);
+    while (this.moteAcc >= 1) {
+      this.moteAcc -= 1;
+      const a = rnd(0, 6.28), ca = Math.cos(a), sa = Math.sin(a), pour = kill >= 0 && Math.random() < 0.7;
+      const rr = s * (pour ? rnd(1.3, 2.4) : rnd(0.15, 1.05)), side = -fz, sideZ = fx;   // (the screen's sideways, in the world)
+      col.setHSL((t * 0.08 + Math.random() * 0.6 + hurt * 0.3) % 1, 1, rnd(0.6, 0.78));
+      const x = p.x + side * ca * rr + fx * s * 0.25, y = p.y + sa * rr, z = p.z + sideZ * ca * rr + fz * s * 0.25;
+      let vx, vy, vz;
+      if (pour) { const v = rr * rnd(1.4, 2.0) * (1 + kill * 1.5); vx = -side * ca * v; vy = -sa * v; vz = -sideZ * ca * v; }   // (into the core)
+      else { const v = s * rnd(0.25, 0.7); vx = -side * sa * v; vy = ca * v + s * 0.18; vz = -sideZ * sa * v; }   // (swirling round it, drifting up)
+      const star = Math.random() < 0.18 + hurt * 0.1;
+      g.fx.wAdd.emit({ x, y, z, vx, vy, vz, drag: pour ? 0.2 : 0.9, life: pour ? rnd(0.4, 0.6) : rnd(0.6, 1.3), size: s * (star ? rnd(0.18, 0.3) : rnd(0.07, 0.15)) * (1 + hurt * 0.5),
+        size1: s * rnd(0.01, 0.04), rot: rnd(0, 6.28), vrot: rnd(-3, 3), color: [col.r, col.g, col.b], a: 0.95, a1: 0, frame: star ? FR.STAR : FR.GLOW });
+    }
   }
   // a hit on the core: a spray of blood mist (her own blood colours: def.coreSmoke.blood) and a few drops
   mist(p) {
@@ -302,6 +345,7 @@ export class TheThing extends Actor {
     this.tickT = (this.tickT || 0) - dt;
     this.markCore(wk && this.core() && !g.cineOn); this.mistT = (this.mistT || 0) - dt; this.u.time.value = t;
     if (this.def.coreTrail && this.core() && !g.cineOn && !this.mutating && !this.grief) this.trailTick(dt, wk ? 1 : 0.35); else this.trailAt = null;
+    if (this.def.coreGlow && this.core() && !g.cineOn && !this.mutating && !this.grief) this.motesTick(dt, t, wk);
     this.exposedT = Math.max(0, (this.exposedT || 0) - dt);
     const H = this.def.heal, on = (this.healers || []).filter((e) => e.alive && e.attached).length;
     if (H && on && !this.mutating && this.hp < this.maxHp) {
@@ -315,7 +359,8 @@ export class TheThing extends Actor {
     this.inner.scale.y += ((1 + Math.sin(t * 2.1) * 0.025) - this.inner.scale.y) * Math.min(1, dt * 6);
     if (this.lock) {
       const wc = this.center(), c = g.world.project(wc), b = g.box(this);
-      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, 1 - this.timer / this.timer0), t, this.timer, b, wc);
+      const pk = this.markP(); this.markEl = (this.markEl || 0) + dt;
+      this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), pk, t, Math.max(0, this.markDur - this.markEl), b, wc); this.markTick(dt, t, pk);
       this.timer -= dt;
       return;
     }
@@ -405,7 +450,7 @@ export class TheThing extends Actor {
     const g = this.game;
     this.state = 'windup'; this.timer = this.timer0 = time; this.poise = 0;
     this.pose(pose || 'windup', 'windup');
-    this.lock = g.fx.lock(threat, slot);
+    this.markUp(threat, slot, time);
     g.fx.charge(this, threat === 'hide' ? 0xff4fc8 : 0xffb04a);
     sfx.warn();
     this.later(time, () => { this.endWindup(); then(); });
@@ -510,7 +555,7 @@ export class TheThing extends Actor {
       pts.push(to);
       const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
       this.state = 'dash'; this.play('move', 9); sfx.roar();
-      this.lock = g.fx.lock('kill', slot); this.timer = this.timer0 = D.time + 2.4 + rr(this.def.rest);   // (the red mark rides with it; the next move after it is back)
+      this.timer = this.timer0 = D.time + 2.4 + rr(this.def.rest); this.markUp('kill', slot, this.timer0);   // (the red mark rides with it; the next move after it is back)
       g.etw.run(D.time, (e) => { if (this.zz === Z) curve.getPointAt(e, P); }, { onDone: () => {
         if (this.zz !== Z || !this.alive) return;
         this.zz = null; this.endWindup(); this.attackPose(0.6);

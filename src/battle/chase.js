@@ -506,7 +506,7 @@ export class Chase {
   // her scream: a long wind-up with the purple ring (hide!), then a blast that hits whoever is out
   scream(she) {
     const g = this.g; she.pose('scream'); she.state = 'stuck'; she.timer = 3.4; she.after = 'stalk';
-    const lock = g.fx.lock('hide', -1); sound('sheLaugh'); g.hud.gl.hold?.('danger');
+    const lock = g.fx.lock('hide', -1, { mark: 'bossHide' }); sound('sheLaugh');   // (her own 3D warning, as a boss's: marks3d.js) g.hud.gl.hold?.('danger');
     const t0 = performance.now();
     const upd = () => { if (!she.alive) { lock.remove(); return; } const c = g.world.project(she.center()), b = she.screenBox(), k = Math.min(1, (performance.now() - t0) / 2600);
       lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.5), k, performance.now() / 1000, 2.6 * (1 - k), b, she.center()); if (k < 1) requestAnimationFrame(upd); };

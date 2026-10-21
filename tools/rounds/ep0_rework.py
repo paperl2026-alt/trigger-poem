@@ -299,7 +299,7 @@ def yard(S, B):
     B["slide"] = {"legs": 6, "lateral": 3.2, "time": 0.42, "pause": 0.38, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26}
     # (her core: a ribbon of golden light streams off it as she moves, and it lights up in bright, shifting colours the more it is hurt;
     # a hit there sprays blood mist - user 2026-10-21: the watercolour smoke alone was too vague)
-    B.pop("coreSmoke", None); B["coreTrail"] = {"colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 32, "idle": 16}; B["coreGlow"] = True
+    B.pop("coreSmoke", None); B["coreTrail"] = {"colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 48, "idle": 26}; B["coreGlow"] = True
     B["charge"] = {"time": 4.6, "shifts": 3, "poise": 150, "dmg": 34}
     B["summonMax"] = 6
     B["texts"].update({

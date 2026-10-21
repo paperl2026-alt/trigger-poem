@@ -100,12 +100,28 @@ void main(){
     if (dmgStyle > 0.5) {
       // a boss's core (user 2026-10-21): the more it is hit there, the more it changes - never darker: bright, high-contrast colours
       // running through it, a metallic glint sweeping across, so it is easier to find the more it is hurt
+      // - not a round patch (user 2026-10-21): fine grains of light drifting up over it, each twinkling in its own colour, more of them
+      // lit the more it is hurt, fewer toward its edge; only a faint wash of the colour under them
       float k2 = smoothstep(0.06, 0.85, max(hv, d.g + (n - 0.5) * 0.3));
       vec3 iri = 0.5 + 0.5 * cos(6.2832 * (vec3(0.0, 0.33, 0.67) + hv * 1.3 + (q.x - q.y) * 1.6 + time * 0.22));
       float sh = pow(max(0.0, sin((q.x * 1.3 - q.y * 0.7) * 8.0 - time * 2.6)), 8.0);
       vec3 metal = mix(iri * (0.85 + 0.35 * n2), vec3(1.0), sh * 0.75);
-      col = mix(col, max(col, metal), k2 * 0.9);
-      col += metal * k2 * 0.25 * (0.5 + 0.5 * sin(time * 5.0 + n * 6.0));
+      col = mix(col, max(col, metal), k2 * 0.22);
+      float gr = 0.0; vec3 gc = vec3(0.0);
+      for (int L = 0; L < 2; L++) {   // (two layers of grains, drifting at different speeds)
+        float fl = float(L), sc = 40.0 + fl * 28.0;
+        vec2 gq = q * sc + vec2(sin(time * 0.5 + fl * 2.0) * 0.6, -time * (0.9 + fl * 0.6));
+        vec2 cell = floor(gq), f = fract(gq) - 0.5;
+        float h = hash12(cell + fl * 17.0), h2 = hash12(cell + 31.7 + fl * 5.0);
+        vec2 off = (vec2(h, h2) - 0.5) * 0.55;
+        float tw = 0.45 + 0.55 * sin(time * (3.0 + h * 6.0) + h2 * 40.0);
+        float on = step(1.0 - k2 * 0.85, h2) * tw;
+        float dot1 = smoothstep(0.3, 0.0, length(f - off));
+        gr = max(gr, dot1 * on);
+        gc += (0.5 + 0.5 * cos(6.2832 * (vec3(0.0, 0.33, 0.67) + h + time * 0.3))) * dot1 * on;
+      }
+      col = max(col, mix(gc, vec3(1.0), 0.3) * 1.5 * gr + col * (1.0 - gr));
+      col += gc * 0.45 + metal * sh * k2 * 0.2;
     } else {
     float k = smoothstep(0.15, 0.7, hv);
     float lum = dot(col, vec3(0.3, 0.5, 0.2));

@@ -14,6 +14,7 @@ import * as THREE from 'three';
 import { sfx, sound } from '../core/audio.js';
 import { NOISE_GLSL } from '../core/paper.js';
 import { COL } from './fx.js';
+import { Mark3D } from './marks3d.js';
 import { tr } from '../core/i18n.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -151,7 +152,8 @@ export class WormBoss {
     // sacs pulse with the rot inside; the core glows once it is all that is left
     for (const s of this.segs) if (s.live) s.sac.material.uniforms.glow.value = 0.35 + 0.25 * Math.sin(t * 3 + s.phase);
     this.core.material.uniforms.glow.value = half ? 0.5 + 0.4 * Math.sin(t * 6) : 0.1;
-    if (this.lock) { const c = g.world.project(this.head.position), b = this.screenBox(); this.lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.3), Math.min(1, this.rearT / W.rear), t, W.rear - this.rearT, b, this.head.position); this.rearT += dt; }
+    if (this.lock) { const c = g.world.project(this.head.position), b = this.screenBox(); this.lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.3), Math.min(1, this.rearT / W.rear), t, W.rear - this.rearT, b, this.head.position); this.rearT += dt;
+      this.mark3?.set(this.head.position, this.hr * 1.3, Math.min(1, this.rearT / W.rear), t, [g.fx.victimAt(0, new THREE.Vector3()), g.fx.victimAt(1, new THREE.Vector3())], g.fx.res(), dt); }
   }
   // the body: each segment on the trail so many metres behind the head, facing along it
   place() {
@@ -182,11 +184,12 @@ export class WormBoss {
   rear() {
     const g = this.game, W = this.def.worm;
     this.state = 'rear'; this.rearT = 0;
-    this.lock = g.fx.lock('hide', -1); sound('dollScreech', { pos: this.head.position.clone() }) || sfx.roar();
+    this.lock = g.fx.lock('hide', -1, { quiet: true }); this.mark3?.remove(); this.mark3 = new Mark3D(g.world.scene, 'bossHide');   // (its own 3D warning: marks3d.js)
+    sound('dollScreech', { pos: this.head.position.clone() }) || sfx.roar();
     g.tweens.to(this.teeth.scale, { x: 1.6, y: 1.6, z: 1 }, W.rear * 0.8);
     g.etw.wait(W.rear, () => {
       if (!this.alive) return;
-      this.lock?.remove(); this.lock = null;
+      this.lock?.remove(); this.lock = null; this.mark3?.remove(); this.mark3 = null;
       const from = this.head.position.clone(), cam = g.world.camPos, to = V.copy(cam).add(V2.subVectors(from, cam).setY(0).normalize().multiplyScalar(2.2)).setY(cam.y + 0.1).clone();
       this.strike = { from, to, t: 0, go: 0.28, hold: 0.25, back: 0.6, hit: false };
       this.state = 'strike'; sfx.whoosh(0);
@@ -249,7 +252,7 @@ export class WormBoss {
 
   // ---- the end: it comes apart, every segment falling as a body of its own
   die() {
-    const g = this.game; this.alive = false; this.lock?.remove(); this.lock = null;
+    const g = this.game; this.alive = false; this.lock?.remove(); this.lock = null; this.mark3?.remove(); this.mark3 = null;
     g.cues.run(this.def.cues?.die);   // (bosses.json cues.die)
     sfx.roar(); g.post.flash(1, 0xffffff); g.post.shake(2); g.post.styleBurst(1.0, [6, 1, 5, 2], 0.16, 0x200a00, 0xffe0a0);
     const ph = this.phys = g.world.phys, P = this.head.position.clone();
@@ -269,7 +272,7 @@ export class WormBoss {
   }
   dispose() {
     if (this.removed) return;
-    this.removed = true; this.lock?.remove();
+    this.removed = true; this.lock?.remove(); this.mark3?.remove();
     for (const b of this.bodies || []) this.phys?.remove(b);   // (the physics of the place it died in, not of wherever the game is now)
     this.root.parent?.remove(this.root);
     for (const m of this.mats) m.dispose(); for (const geo of this.geos) geo.dispose();

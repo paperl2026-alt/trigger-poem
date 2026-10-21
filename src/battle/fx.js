@@ -310,7 +310,7 @@ const RINGW_FRAG = `uniform vec3 col; uniform float a; uniform float r0; varying
 void main(){ vec2 q = vUv - 0.5; float d = length(q) * 2.0; float w = 0.08;
   float k = smoothstep(r0 - w, r0, d) * smoothstep(r0 + w * 0.5, r0, d); float inner = smoothstep(r0, 0.0, d) * 0.15;
   gl_FragColor = vec4(mix(col, vec3(1.0), k * 0.6), (k + inner) * a); }`;
-const TV4 = new THREE.Vector3();
+const TV4 = new THREE.Vector3(), TV5 = new THREE.Vector3();
 const MT = {}, TV = new THREE.Vector3(), TV2 = new THREE.Vector3(), TV3 = new THREE.Vector3(), RING_Q = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), Math.PI / 2);
 const markTex = (k) => MT[k] || (MT[k] = (() => { const t = new THREE.CanvasTexture(markCanvas(k)); t.colorSpace = THREE.NoColorSpace; return t; })());
 const ar = (m) => { const t = m.material.uniforms.map.value; return t ? t.image.height / t.image.width : 1; };
@@ -667,12 +667,18 @@ export class FX {
   //                    like a solar flare (a white-hot flash, a glint, a loop of light leaping off it), more often as the hit comes
   // The hearts and wings are drawn by src/ui/marks.js (the lesson cards use the same drawing). A flying thing gets the small ring; its
   // circle is also where a shot counts (Game.targetsAt). slot: who it is after (0 / 1), -1 = everyone.
-  lock(type = 'kill', slot = 0) {
+  lock(type = 'kill', slot = 0, opts = {}) {
     const kind = type === 'hide' || type === 'heavy' ? 'hide' : type === 'shot' ? 'shot' : type === 'guard' ? 'guard' : 'kill';
-    return this.orbit(kind, slot);
+    if (opts.quiet) {   // (no rings, no hearts: a boss tells it itself - marks3d.js bossHide, thing.js motesTick; the warning still counts:
+      // the screen edge, the girls' hiding, the AI)
+      const live = this.live, L = { type: kind, slot, p: 0, left: 9, x: 0, y: 0, r: 0, set(x, y, size, p, t, left) { L.x = x; L.y = y; L.r = size * 1.3; L.p = p; L.left = left ?? 9; }, remove() { live.delete(L); } };
+      live.add(L); return L;
+    }
+    return this.orbit(kind, slot, opts.mark);
   }
   shotLock(slot) { return this.orbit('shot', slot); }
-  orbit(kind, slot) {
+  // mark: the 3D structure, when it is not the one a monster gets (a boss's own: 'bossHide', marks3d.js)
+  orbit(kind, slot, mark) {
     const game = this.game, fx = this, g = new THREE.Group(), hide = kind === 'hide', small = kind === 'shot';
     const col = new THREE.Color(hide ? 0xb04dff : kind === 'guard' ? 0xffd860 : 0xff2a4a);   // (guard: what the girls keep safe, escort.js)
     const U = { col: { value: col }, a: { value: 0 }, time: { value: 0 }, p: { value: 0 }, hide: { value: hide ? 1 : 0 }, tilt: { value: -0.35 }, squash: { value: 0.36 },
@@ -718,14 +724,21 @@ export class FX {
           kw = 2 * zv * Math.tan(cam.fov * Math.PI / 360) / H;
         }
         // the 3D structure (marks3d.js: the icosahedron cage, the cone and the twisted mucube, the tetrahedron, the graphene shell) takes
-        // the flat ring's place wherever the thing's place in the world is known; the winged heart stays with it
-        if (wc && !M3) { M3 = new Mark3D(game.world.scene, hide ? 'hide' : small ? 'shot' : kind === 'guard' ? 'guard' : 'kill'); L.m3 = M3; }
-        if (M3) { M3.root.visible = !!wc && ck > 0.3; if (wc) M3.set(wc, r * kw * (hide ? 0.8 : 0.9), p, t, hide ? fx.victimAt(slot, TV4) : null, fx.res(), dt); }
+        // the flat ring's place and the winged hearts' wherever the thing's place in the world is known
+        if (wc && !M3) { M3 = new Mark3D(game.world.scene, mark || (hide ? 'hide' : small ? 'shot' : kind === 'guard' ? 'guard' : 'kill')); L.m3 = M3; }
+        if (M3) {
+          M3.root.visible = !!wc && ck > 0.3;
+          const to = !hide ? null : mark === 'bossHide' && slot === -1 ? [fx.victimAt(0, TV4), fx.victimAt(1, TV5)] : fx.victimAt(slot, TV4);
+          if (wc) M3.set(wc, r * kw * (hide ? 0.8 : 0.9), p, t, to, fx.res(), dt);
+        }
         if (R3) R3.g.visible = !!wc && !M3;
         U.inner3.value = R3 && wc ? 1 : 0; ring.visible = !(R3 && wc) && !(M3 && wc);
         if (R3 && wc && !hide) R3.set(wc, r * kw, t, p, U.a.value, 0, cam);
         // the winged heart's quad is centred a little above the heart itself (marks.js markCanvas: the heart at 0.593 of its height)
-        if (crest && !hide) {
+        const flat = !(M3 && wc);   // (the 3D structure is there: no flat winged heart, no heart moons - user 2026-10-21)
+        if (crest) crest.visible = flat;
+        for (const m of moons) m.visible = flat;
+        if (crest && !hide && flat) {
           const img = crest.material.uniforms.map.value.image, w = Math.max(H * 0.15, r * 1.6), h = w * img.height / img.width;
           crest.scale.set(w, h, 1); crest.position.set(0, r + h * 0.093, 0); crest.rotation.z = 0;
           const u = crest.material.uniforms; u.time.value = t; u.shine.value = 1; u.boil.value = 0.25; u.a.value = born * ck; u.flash.value = urgent && beat > 0.85 ? 0.5 : 0;
@@ -750,10 +763,10 @@ export class FX {
         if (real) {
           R3.set(wc, r * kw, t, p, U.a.value, U.flare.value, cam, U.tilt.value, U.squash.value);
           // the eruption: a glint where the belt is nearest you
-          if (flareK === 0) { const P = R3.at(U.flareA.value, TV3); if (R3.far(P, cam)) R3.at(U.flareA.value + Math.PI, P); fx.star(P, r * kw * 0.9, COL.white); fx.star(P, r * kw * 0.45, COL.white); }
+          if (flareK === 0 && !M3) { const P = R3.at(U.flareA.value, TV3); if (R3.far(P, cam)) R3.at(U.flareA.value + Math.PI, P); fx.star(P, r * kw * 0.9, COL.white); fx.star(P, r * kw * 0.45, COL.white); }
         }
         // the moons riding the tilted belt, bigger and brighter on the near half; on the far half they go behind the monster
-        moons.forEach((m, k) => {
+        if (flat) moons.forEach((m, k) => {
           const img = m.material.uniforms.map.value.image;
           const ang = -t * (1.3 + p * 2.2) + k * 2.1;
           let ex = Math.cos(ang) * r * 1.1, ey = Math.sin(ang) * r * 1.1 * U.squash.value, near = 0.5 - 0.5 * Math.sin(ang), c = Math.cos(U.tilt.value), sn = Math.sin(U.tilt.value);

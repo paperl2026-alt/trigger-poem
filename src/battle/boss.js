@@ -150,8 +150,8 @@ export class MascotFloat extends BossBase {
     if (this.poseT <= 0 && !this.busy && !this.armor) this.setFrame(this.prefix + 'idle');
     if (this.stompLock) {
       this.stompT += dt;
-      const s = g.world.project(this.uvToWorld(0.5, 0.05));
-      this.stompLock.set(s.x, g.H - s.y, g.H * 0.18, Math.min(1, this.stompT / this.stompDur), t);
+      const wc = this.center(), s = g.world.project(wc);
+      this.stompLock.set(s.x, g.H - s.y, g.H * 0.18, Math.min(1, this.stompT / this.stompDur), t, this.stompDur - this.stompT, g.box(this), wc);
       g.post.u.warn.value = 0.35 + 0.35 * Math.abs(Math.sin(t * (6 + this.stompT * 6)));
     }
     if (this.staggerT > 0 || this.busy || this.armor) return;
@@ -187,7 +187,7 @@ export class MascotFloat extends BossBase {
     const S = this.def.stomp;
     this.stompDur = this.ph(S.windup);
     this.stompT = 0;
-    this.stompLock = this.lock = g.fx.lock('heavy', -1);
+    this.stompLock = this.lock = g.fx.lock('heavy', -1, { mark: 'bossHide' });   // (a boss's own 3D warning: marks3d.js)
     sfx.warn(); setTimeout(() => sfx.warn(), 300);
     g.warnSlam();
     g.etw.to(P, { y: S.height }, this.stompDur * 0.85, { ease: Ease.outCubic });

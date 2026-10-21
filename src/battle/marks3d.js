@@ -9,6 +9,12 @@
 //   shot   (a thrown thing)   a tetrahedron spinning round it on two axes, a ball of light on every corner
 //   guard  (keep it safe)     a graphene shell (the dual of a geodesic sphere: hexagons and twelve pentagons) round what the girls guard;
 //                             where it is hit the shell flares
+// and a boss's own (user 2026-10-21: the bosses had kept the flat rings and winged hearts - "we are a 3D game; there are many ways to
+// combine polyhedra, why not one for the boss"), driven by the boss itself (thing.js, worm.js; boss.js and the stalker of chase.js through
+// fx.js):
+//   bossHide  the compound of three octahedra (a star of 24 edges) round her upper body, a small octahedron turning the other way inside
+//             it, and a cone from her to EACH girl the blow goes for, rings racing down them
+// (a boss's blow to be shot down has no structure: one on her weak point hid her - user 2026-10-21; thing.js motesTick tells it)
 // Owned by fx.js (orbit: alongside the screen ring it always had, wherever the thing's place in the world is known).
 import * as THREE from 'three';
 import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
@@ -20,7 +26,7 @@ const edgesOf = (geo) => { const e = new THREE.EdgesGeometry(geo, 1); const a = 
 const verts = (geo) => { const p = geo.attributes.position, seen = new Map(); for (let i = 0; i < p.count; i++) { const k = `${p.getX(i).toFixed(3)},${p.getY(i).toFixed(3)},${p.getZ(i).toFixed(3)}`; if (!seen.has(k)) seen.set(k, [p.getX(i), p.getY(i), p.getZ(i)]); } return [...seen.values()]; };
 
 let CACHE = null;
-function shapes() {
+export function shapes() {   // (also drawn still on the lesson cards: src/ui/marks.js markIcon)
   if (CACHE) return CACHE;
   const ico = new THREE.IcosahedronGeometry(1, 0), icoV = verts(ico);
   const tet = new THREE.TetrahedronGeometry(1, 0), tetV = verts(tet);
@@ -57,7 +63,13 @@ function shapes() {
   }
   const gra = []; for (const fs of edgeFaces.values()) if (fs.length === 2) gra.push(...cent[fs[0]].toArray(), ...cent[fs[1]].toArray());
   geo.dispose();
-  CACHE = { ico: edgesOf(ico), icoV, tet: edgesOf(tet), tetV, cone, mu: muE, gra, graV: cent.map((v) => v.toArray()) };
+  // the bosses': three octahedra turned 45 degrees about x, y and z (their compound)
+  const oct = new THREE.OctahedronGeometry(1, 0), octE = edgesOf(oct), octV = verts(new THREE.OctahedronGeometry(1, 0));
+  const turned = (e, ax) => { const m = new THREE.Matrix4().makeRotationAxis(ax, Math.PI / 4), v = new THREE.Vector3(), o = [];
+    for (let i = 0; i < e.length; i += 3) { v.set(e[i], e[i + 1], e[i + 2]).applyMatrix4(m); o.push(v.x, v.y, v.z); } return o; };
+  const oct3 = [...turned(octE, new THREE.Vector3(1, 0, 0)), ...turned(octE, new THREE.Vector3(0, 1, 0)), ...turned(octE, new THREE.Vector3(0, 0, 1))];
+  const oct3V = []; for (const ax of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) { const m = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(...ax), Math.PI / 4); for (const p of octV) oct3V.push(new THREE.Vector3(...p).applyMatrix4(m).toArray()); }
+  CACHE = { ico: edgesOf(ico), icoV, tet: edgesOf(tet), tetV, cone, mu: muE, gra, graV: cent.map((v) => v.toArray()), oct: octE, oct3, oct3V };
   return CACHE;
 }
 
@@ -80,7 +92,9 @@ const nodes = (pts, color, size, order) => {
   const m = new THREE.PointsMaterial({ map: dotTex(), color, size, sizeAttenuation: false, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
   const P = new THREE.Points(g, m); P.renderOrder = order + 0.1; P.frustumCulled = false; return P;
 };
-const COLORS = { kill: 0xff3a6a, hide: 0xb04dff, shot: 0xff5a8a, guard: 0xffd060 };
+const COLORS = { kill: 0xff3a6a, hide: 0xb04dff, shot: 0xff5a8a, guard: 0xffd060, bossHide: 0xb04dff };
+const INK = 0x1a0612;   // (a dark band under a boss's structure: it reads on a bright pink room too)
+const ringLines = () => { const r = [], N = 20; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2, b = (i + 1) / N * Math.PI * 2; r.push(Math.cos(a), Math.sin(a), 0, Math.cos(b), Math.sin(b), 0); } return r; };
 const tmp = new THREE.Vector3(), tmp2 = new THREE.Vector3(), Q = new THREE.Quaternion(), Z = new THREE.Vector3(0, 0, 1);
 
 export class Mark3D {
@@ -91,6 +105,11 @@ export class Mark3D {
     if (kind === 'kill') { this.cage = add(lines(S.ico, col, 2.6, 22)); this.dots = add(nodes(S.icoV, 0xffd0e0, 9, 22)); this.cage.add(this.dots); this.root.remove(this.dots); }
     else if (kind === 'shot') { this.cage = add(lines(S.tet, col, 2.2, 22)); this.dots = add(nodes(S.tetV, 0xffffff, 14, 22)); this.cage.add(this.dots); this.root.remove(this.dots); }
     else if (kind === 'guard') { this.cage = add(lines(S.gra, col, 1.6, 22)); this.dots = add(nodes(S.graV, 0xfff0c0, 5, 22)); this.cage.add(this.dots); this.root.remove(this.dots); }
+    else if (kind === 'bossHide') {
+      this.cage = add(lines(S.oct3, col, 2.2, 22)); this.ink = lines(S.oct3, INK, 6, 21.8); this.cage.add(this.ink); this.dots = add(nodes(S.oct3V, 0xe8c8ff, 9, 22)); this.cage.add(this.dots); this.root.remove(this.dots);
+      this.inner = add(lines(S.oct, 0xe0a0ff, 1.6, 22));
+      this.S = S; this.col = col; this.cones = [];   // (one per girl it goes for: made as they are needed)
+    }
     else {   // hide: the cone toward her and the twisted mucube round it
       this.cone = add(lines(S.cone, col, 1.5, 22));
       this.rings = [0, 1, 2].map(() => { const r = []; const N = 20; for (let i = 0; i < N; i++) { const a = i / N * Math.PI * 2, b = (i + 1) / N * Math.PI * 2; r.push(Math.cos(a), Math.sin(a), 0, Math.cos(b), Math.sin(b), 0); } return add(lines(r, 0xc070ff, 1.8, 22)); });
@@ -105,7 +124,8 @@ export class Mark3D {
     for (const o of this.parts) if (o.material?.resolution) o.material.resolution.copy(res);
     this.flare = Math.max(0, this.flare - dt * 3);
     const a = Math.min(1, 0.55 + p * 0.45 + this.flare);
-    for (const o of this.parts) { o.material.opacity = a; if (o.children[0]) o.children[0].material.opacity = a; }
+    for (const o of this.parts) { o.material.opacity = a; for (const ch of o.children) ch.material.opacity = a; }
+    if (this.ink) { const m = this.ink.material; m.opacity = a * 0.55; m.resolution.copy(res); }
     if (this.kind === 'kill') {
       this.spin += dt * (0.6 + p * p * 7);
       const s = r * (1.25 - 0.3 * p) * (1 + Math.sin(t * (4 + p * 10)) * 0.04);
@@ -116,6 +136,30 @@ export class Mark3D {
       this.spin += dt * (2.2 + p * 4);
       this.cage.scale.setScalar(r * 1.7); this.cage.rotation.set(this.spin, this.spin * 1.6, 0);
       this.dots.material.size = 12 + Math.sin(t * 9) * 3 + p * 6;
+    } else if (this.kind === 'bossHide') {
+      this.spin += dt * (0.4 + p * 2.2);
+      this.cage.scale.setScalar(r); this.cage.rotation.set(this.spin * 0.45, this.spin, Math.sin(t * 0.6) * 0.5);
+      this.cage.material.linewidth = 3 + p * 3 + this.flare * 3;
+      this.inner.scale.setScalar(r * 0.42); this.inner.rotation.set(-this.spin * 1.3, -this.spin * 0.9, 0);
+      this.dots.material.size = 9 + p * 10;
+      // the cones: from her to every girl the blow goes for (to: one point or a list)
+      const T = to ? (Array.isArray(to) ? to : [to]) : [];
+      while (this.cones.length < T.length) {
+        const cone = lines(this.S.cone, this.col, 1.6, 22), rings = [0, 1, 2].map(() => lines(ringLines(), 0xc070ff, 1.8, 22));
+        this.root.add(cone); this.parts.push(cone); for (const m of rings) { this.root.add(m); this.parts.push(m); }
+        this.cones.push({ cone, rings });
+      }
+      this.cones.forEach((C, j) => {
+        const on = j < T.length; C.cone.visible = on; for (const m of C.rings) m.visible = on; if (!on) return;
+        const d = tmp.copy(T[j]).sub(c), L = d.length() || 1;
+        Q.setFromUnitVectors(Z, tmp2.copy(d).divideScalar(L));
+        C.cone.quaternion.copy(Q); C.cone.scale.set(r * 0.55, r * 0.55, L); C.cone.material.resolution?.copy(res);
+        C.rings.forEach((m, i) => {
+          const k = ((t * (0.5 + p * 1.6) + i / 3) % 1);
+          m.quaternion.copy(Q); m.position.copy(d).multiplyScalar(k); const rr = r * 0.55 * (1 - k) + 0.05; m.scale.set(rr, rr, 1);
+          m.material.opacity = a * (1 - k * 0.7) * 0.8; m.material.resolution?.copy(res);
+        });
+      });
     } else if (this.kind === 'guard') {
       this.spin += dt * 0.35;
       this.cage.scale.setScalar(r * 1.35); this.cage.rotation.set(0.3, this.spin, 0);
@@ -135,6 +179,7 @@ export class Mark3D {
       this.cage.scale.setScalar(r * 0.95); this.cage.rotation.set(this.spin * 0.5, this.spin, Math.sin(t * 0.7) * 0.6);
       this.cage.material.opacity = a * 0.6;
     }
+    if (this.ink) this.ink.material.linewidth = this.cage.material.linewidth + 4;
   }
   hit() { this.flare = 1; }
   remove() {

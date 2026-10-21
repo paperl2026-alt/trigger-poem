@@ -95,7 +95,7 @@
     "heal": { "stage": 3, "type": "drip", "n": 2, "max": 3, "rate": 14 },
     "drift": "slide",
     "slide": { "legs": 6, "lateral": 3.2, "time": 0.42, "pause": 0.38, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26 },
-    "coreTrail": { "colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 32, "idle": 16 },
+    "coreTrail": { "colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 48, "idle": 26 },
     "coreGlow": true
   }
 }
