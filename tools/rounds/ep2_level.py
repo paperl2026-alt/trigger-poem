@@ -458,7 +458,7 @@ def act_wave(sid, i, e):
     for S in SETS.values():
         if sid in S["stations"]: S["stations"][sid]["waves"].insert(i, [e]); return
 act_wave("gk1", 1, {"t": 0.3, "act": "squabble", "of": ["surippa", "surippa"], "x": 0.2, "z": -5.8})
-act_wave("hr1", 1, {"t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5, "time": 9, "summon": "futon"})
+act_wave("hr1", 1, {"t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5})   # (no clock: user 2026-10-21 - shown, then cleared)
 act_wave("ku2", 1, {"t": 0.6, "act": "transform", "k": "prop/ep2s_kura_mino", "h": 1.3, "x": 0.6, "z": -7.0, "of": "karakasa"})
 # the story's close-ups and comic panels (user 2026-10-21: a close-up where the story wants it - not on every big one, not never; a long
 # stage like this one has plenty of them; a close-up is a comic page of its own, not the camera dragged through the fight: cues.js
@@ -467,6 +467,9 @@ def stop(sid):
     return next(S["stations"][sid] for S in SETS.values() if sid in S["stations"])
 def beat(sid, *cues):
     st = stop(sid); st.setdefault("on", {}).setdefault("arrive", []).extend(cues)
+# (the great hall's ritual told by a close look at the ring, then cleared like any others: user 2026-10-21)
+stop("hr1")["waves"][1].append({"t": 0.7, "storyboard": {"lead": 0.3, "shots": [{"cam": [3.5, 2.3, -3.4], "look": [0.3, 0.1, -8.5], "zoom": 6, "to": {"cam": [3.2, 2.15, -3.9]},
+    "show": ["kokeshi"], "hold": 2.2, "cap": L("小芥子围着法阵在念咒……", "the kokeshi are chanting round a circle...", "こけしが魔法陣を囲んで唱えている……")}]}})
 beat("sh1", {"at": 1.6, "say": "shaft", "who": "pink"}, {"at": 3.8, "say": "shaft", "who": "cat"})
 beat("kn1", {"at": 1.8, "say": "dawn", "who": "pink"}, {"at": 4.0, "say": "dawn", "who": "cat"})
 stop("sh1")["pause"] = 6.0; stop("kn1")["pause"] = 6.0   # (long enough for the two of them to have their word)

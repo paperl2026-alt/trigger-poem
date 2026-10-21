@@ -120,7 +120,8 @@ def gallery_mouth(S):
     .stretch) and springs back with the door right there - and the door is a mouth (enemy door_mouth, R81: it stands as the door, frames
     .disguise, and wakes): it spits honey, clamps shut, and spews a flood of it (hide); shot to bits, the real door is behind it"""
     st = S["stations"]; last = st["ga2b"]; ex = last.pop("exit")
-    st["ga3"] = {"via": [[0, 1.5, -11]], "cam": [0, 1.45, -15], "look": [0, 1.3, -21], "stretch": {"k": 2.6, "dur": 4.2, "at": 0.8},
+    # (user 2026-10-21: too close to the door - shoot it from further back; what it does could not be read: a hint once it is shown)
+    st["ga3"] = {"via": [[0, 1.5, -8]], "cam": [0, 1.45, -11], "look": [0, 1.6, -21], "stretch": {"k": 2.6, "dur": 4.2, "at": 0.8}, "hint": "ep1DoorMouth",
                  "covers": [{"k": "cover/ep1_gallery1", "side": -1}, {"k": "cover/ep1_gallery2", "side": 1}],
                  "waves": [[{"type": "door_mouth", "x": 0, "z": round(S["hall"]["z1"] + 0.12, 2), "from": "statue", "wake": 0.8,
                              "closeup": {"hold": 2.0, "say": "scare", "color": "#5a1a24", "k": "enemy/door_mouth_open", "title": {"zh": "噬人门", "en": "THE MAW DOOR", "ja": "喰らい扉"},
@@ -132,6 +133,12 @@ def knight_planks(S):
     left over the gap - and the monsters crowding onto it break it): hall.planks (PanelWorld: opened by that walk, game.js bridge);
     the stop's second wave a pack of ghouls coming over at once - they squeeze onto the planks, three on it and it goes (Game.planksTick)"""
     S["hall"]["planks"] = {"z0": -7.75, "z1": -10, "x": -2.0, "w": 1.6, "n": 3, "station": "gd2"}   # (x: where the stop's view crosses the gap)
+    # (user 2026-10-21: the close-up came after two knights were already shot to bits - the first armour to come alive is the one shown:
+    # the nearer, right one, woken first by the kills)
+    for e in S["stations"]["gd1"]["waves"][0]:
+        if e.get("type") == "armor" and e.get("x", 0) > 0:
+            e["closeup"] = {"hold": 1.8, "say": "scare", "color": "#4a3218", "title": {"zh": "铠甲活了", "en": "THE ARMOUR WAKES", "ja": "鎧が動いた"},
+                            "sub": {"zh": "沿墙摆着的那一排", "en": "the row along the wall", "ja": "壁際に並んでいたあの鎧"}}
     for pr in S.get("props", []):
         if abs(pr["z"] + 9) < 0.01 and abs(pr["x"]) < 0.1: pr["z"] = -13   # (the fountain out of the gap)
     pack = [(-3.4, -14.5), (-0.6, -15), (-2.0, -14), (-2.8, -15.2), (-1.0, -13.8)]
@@ -154,7 +161,13 @@ def acts(D):
     nursery, little dolls stepping out until it is down; a ghoul running for the kitchen wall to blow itself up and hole it"""
     put = lambda sid, st, i, e: D[sid]["stations"][st]["waves"].insert(i, [e])
     put("ep1_shop", "sh2", 1, {"t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -11.5})
-    put("ep1_garden", "gd1", 1, {"t": 0.3, "act": "ritual", "of": "shade_mourner", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5, "time": 9, "summon": "armor"})
+    # (the knights' hall: four little dolls kneeling round a circle - user 2026-10-21: four mourner shades with their phantoms were
+    # sixteen tough figures, coming close, nothing to read; then: no nine seconds to beat, the player can hardly see the circle anyway -
+    # a close-up tells there is one, and they are cleared like any others: a storyboard shot of the ring, then they come)
+    D["ep1_garden"]["stations"]["gd1"]["waves"].insert(1, [{"t": 0.3, "act": "ritual", "of": "dollkin", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5},
+        {"t": 0.7, "storyboard": {"lead": 0.3, "shots": [{"cam": [3.4, 2.4, 0.6], "look": [0.2, 0.1, -4.5], "zoom": 6, "to": {"cam": [3.1, 2.25, 0.1]},
+                                                         "show": ["dollkin", "armor"], "hold": 2.2,
+                                                         "cap": {"zh": "人偶围着法阵在念咒……", "en": "the dolls are chanting round a circle...", "ja": "人形たちが魔法陣を囲んで唱えている……"}}]}}])
     put("ep1_nursery", "nu2", 1, {"t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -10.5, "minion": "dollkin", "every": 3, "max": 5})
     put("ep1_oven", "ov2", 1, {"t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1})
 

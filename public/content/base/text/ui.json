@@ -93,6 +93,7 @@
     "sheTrap": { "zh": "她到灯笼下面时打断锁链!", "en": "DROP THE LANTERN ON HER!", "ja": "真下に来たら鎖を撃って!" },
     "sheDoor": { "zh": "打插销，把门甩上!", "en": "SHOOT THE LATCH - SLAM IT!", "ja": "かんぬきを撃って閉めて!" },
     "sheStone": { "zh": "她走到石灯笼旁边时把它推倒!", "en": "TOPPLE THE STONE LANTERN ON HER!", "ja": "石灯籠を倒して下敷きに!" },
+    "ep1DoorMouth": { "zh": "张嘴时打!咬紧牙关打不动，鼓起来就躲!", "en": "SHOOT WHEN IT GAPES! DUCK WHEN IT PUFFS UP!", "ja": "口を開けたら撃て!膨らんだら隠れろ!" },
     "sheLure": { "zh": "打响那座钟引开她!", "en": "RING THAT CLOCK - LURE HER!", "ja": "時計を鳴らして気を逸らして!" },
     "sheRun": { "zh": "打她让她倒下! 打不死的!", "en": "KNOCK HER DOWN - SHE WON'T DIE!", "ja": "撃って転ばせて! 倒せない!" },
     "outfitLock": { "zh": "通关第 2 话解锁浴衣", "en": "Clear Ep.2 for a yukata", "ja": "第2話クリアで浴衣" },

@@ -597,7 +597,7 @@ export class Game {
     this.lensM.position.set(0, 0, -d); this.lensM.scale.set(h * cam.aspect * 1.02, h * 1.02, 1);
     this.lensM.material.opacity = k; this.lensM.visible = k > 0.01;
   }
-  hint(key) { if (this.cineOn) { this.tweens.wait(0.3, () => this.hint(key)); return; } this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }   // (not over a close look: after it)
+  hint(key) { if (this.cineOn || this.vigOn || this.board) { this.tweens.wait(0.3, () => this.hint(key)); return; } this.hud.gl.hold('hint', { text: t(key), dur: 4.5 }); }   // (not over a close look: after it)
   // a spawner's hole got blocked (Gimmick topple)
   sealSpawner(id) {
     const s = (this.spawners || []).find((x) => x.id === id && x.live); if (!s) return;

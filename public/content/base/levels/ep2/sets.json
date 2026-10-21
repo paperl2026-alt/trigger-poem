@@ -778,7 +778,24 @@
             { "t": 0, "type": "katashiro", "count": 18, "x": 0, "z": -9, "y": 3.2, "spread": 6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5, "time": 9, "summon": "futon" }
+            { "t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5 },
+            {
+              "t": 0.7,
+              "storyboard": {
+                "lead": 0.3,
+                "shots": [
+                  {
+                    "cam": [3.5, 2.3, -3.4],
+                    "look": [0.3, 0.1, -8.5],
+                    "zoom": 6,
+                    "to": { "cam": [3.2, 2.15, -3.9] },
+                    "show": ["kokeshi"],
+                    "hold": 2.2,
+                    "cap": { "zh": "小芥子围着法阵在念咒……", "en": "the kokeshi are chanting round a circle...", "ja": "こけしが魔法陣を囲んで唱えている……" }
+                  }
+                ]
+              }
+            }
           ],
           [
             { "t": 0, "type": "chochin", "x": -2.5, "z": -11, "y": 1.2, "from": "drop" },

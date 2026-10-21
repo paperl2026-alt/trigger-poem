@@ -932,6 +932,26 @@
   "src": "assets/enemy/armor_b_crouch_rd.png",
   "w": 512
  },
+ "enemy/armor_b_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9513,
+  "h": 534,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_b_disguise_rd",
+  "src": "assets/enemy/armor_b_disguise.webp",
+  "w": 546
+ },
+ "enemy/armor_b_disguise_rd": {
+  "h": 501,
+  "src": "assets/enemy/armor_b_disguise_rd.png",
+  "w": 512
+ },
  "enemy/armor_b_hurt": {
   "anchor": "bottom",
   "figH": 0.9513,
@@ -1072,6 +1092,26 @@
   "src": "assets/enemy/armor_c_crouch_rd.png",
   "w": 512
  },
+ "enemy/armor_c_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_c_disguise_rd",
+  "src": "assets/enemy/armor_c_disguise.webp",
+  "w": 550
+ },
+ "enemy/armor_c_disguise_rd": {
+  "h": 492,
+  "src": "assets/enemy/armor_c_disguise_rd.png",
+  "w": 512
+ },
  "enemy/armor_c_hurt": {
   "anchor": "bottom",
   "figH": 0.9507,
@@ -1170,6 +1210,26 @@
  "enemy/armor_crouch_rd": {
   "h": 488,
   "src": "assets/enemy/armor_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/armor_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/armor_disguise_rd",
+  "src": "assets/enemy/armor_disguise.webp",
+  "w": 554
+ },
+ "enemy/armor_disguise_rd": {
+  "h": 488,
+  "src": "assets/enemy/armor_disguise_rd.png",
   "w": 512
  },
  "enemy/armor_hurt": {
@@ -1552,6 +1612,26 @@
   "src": "assets/enemy/bat_windup_rd.png",
   "w": 512
  },
+ "enemy/chandelier_b_disguise": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_b_disguise_rd",
+  "src": "assets/enemy/chandelier_b_disguise.webp",
+  "w": 587
+ },
+ "enemy/chandelier_b_disguise_rd": {
+  "h": 488,
+  "src": "assets/enemy/chandelier_b_disguise_rd.png",
+  "w": 512
+ },
  "enemy/chandelier_b_fire": {
   "anchor": "center",
   "figH": 0.9177,
@@ -1672,6 +1752,26 @@
   "src": "assets/enemy/chandelier_b_windup_rd.png",
   "w": 512
  },
+ "enemy/chandelier_c_disguise": {
+  "anchor": "center",
+  "figH": 0.9168,
+  "h": 553,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_c_disguise_rd",
+  "src": "assets/enemy/chandelier_c_disguise.webp",
+  "w": 572
+ },
+ "enemy/chandelier_c_disguise_rd": {
+  "h": 495,
+  "src": "assets/enemy/chandelier_c_disguise_rd.png",
+  "w": 512
+ },
  "enemy/chandelier_c_fire": {
   "anchor": "center",
   "figH": 0.9168,
@@ -1790,6 +1890,26 @@
  "enemy/chandelier_c_windup_rd": {
   "h": 495,
   "src": "assets/enemy/chandelier_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/chandelier_disguise": {
+  "anchor": "center",
+  "figH": 0.9177,
+  "h": 559,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/chandelier_disguise_rd",
+  "src": "assets/enemy/chandelier_disguise.webp",
+  "w": 585
+ },
+ "enemy/chandelier_disguise_rd": {
+  "h": 489,
+  "src": "assets/enemy/chandelier_disguise_rd.png",
   "w": 512
  },
  "enemy/chandelier_fire": {

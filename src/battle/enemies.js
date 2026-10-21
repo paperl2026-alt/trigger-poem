@@ -569,6 +569,7 @@ export class Enemy extends Actor {
       const b = this.screenBox();
       this.lock.set(c.x, g.H - c.y, Math.max(40, (b.y1 - b.y0) * 0.5), Math.min(1, this.timer0 > 0 ? 1 - this.timer / this.timer0 : 1), t, this.timer, b, wc);
     }
+    this.clangT = (this.clangT || 0) - dt;
     this.tell(dt, t);
   }
 
@@ -817,7 +818,12 @@ export class Enemy extends Actor {
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
     } else if (this.state === 'windup') {
       this.inner.rotation.z = -0.06;
+      // (params.swell: it puffs up as it gathers - the door's cheeks full of honey, twice as full for its big spew - user 2026-10-21:
+      // its attacks could not be read; let out with a squash when it goes)
+      const sw = bp.swell;
+      if (sw) { const p = 1 - Math.max(0, this.timer) / this.timer0, k = sw * p * (this.blasting ? 2 : 1); this.inner.scale.set(1 + k + Math.sin(t * 34) * 0.012 * p, 1 + k * 0.7, 1); }
       if (this.timer <= 0) {
+        if (sw) { this.inner.scale.set(1 - sw * 0.5, 1 + sw * 0.5, 1); this.game.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.35, { ease: Ease.outBack }); }
         this.endWindup();
         this.play('throw');
         if (this.blasting) this.blast();
@@ -940,7 +946,10 @@ export class Enemy extends Actor {
       return;
     }
     let dmg = info.dmg;
-    if (this.def.hides && this.state === 'hide') dmg *= this.bp.hiddenDmgMul ?? 0.5;
+    if (this.def.hides && this.state === 'hide') {
+      dmg *= this.bp.hiddenDmgMul ?? 0.5;
+      if (this.bp.hideClang) { this.game.fx.star(this.uvToWorld(info.uv.u, info.uv.v), 0.45, COL.white); if ((this.clangT || 0) <= 0) { sfx.clang?.(); this.clangT = 0.2; } }   // (the door's teeth clenched: shots clang off - half gets through)
+    }
     // throwing: it shrugs most of it off (DESIGN: the volley gets out, the player turns to shoot the things flying at her)
     const braced = this.beh === 'thrower' && (this.state === 'windup' || this.state === 'thrown');
     if (braced) dmg *= this.bp.throwArmor ?? 0.2;
@@ -1047,16 +1056,34 @@ export class Enemy extends Actor {
         g.breakoutAt(tx, Hd.z1);
       } });
   }
-  // a statue comes to life: it cracks, shakes the dust off, takes its colour back and goes
+  // a statue comes to life: it cracks, shakes the dust off, takes its colour back and goes. One standing as the ordinary thing it was
+  // (frames.disguise: the chandelier, the armour on its plinth, the gallery's door - user 2026-10-21: grey stone was not read as anything)
+  // first shudders where it is, harder and harder, dust off it, a creak; then it turns: the drawing of the thing melts slowly into the
+  // monster's (a long crossfade), it squashes and springs up, ink bursts off it, a roar - and it goes
   wake() {
-    if (!this.alive || this.state !== 'statue') return;
+    if (!this.alive || this.state !== 'statue' || this.shuddering) return;
     const g = this.game, P = this.root.position;
-    this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
-    if (this.frames.disguise) { this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); sfx.roar(); g.post.shake(1.2); }   // (the door shows what it is)
-    sfx.tear(0); sfx.thud(0); g.post.shake(0.6); g.fx.puff(P, 10, COL.bone, 1.1); g.fx.confetti(this.center(), 16, 1.2, [COL.bone, COL.paper]);
-    g.tweens.to(this.u.tintAmt, { value: 0 }, 0.5);
-    this.inner.position.x = 0;
-    g.etw.run(0.45, (e) => { this.inner.position.x = Math.sin(e * 40) * 0.05 * (1 - e); }, { onDone: () => { this.inner.position.x = 0; this.statueReady?.(); } });
+    const turn = () => {
+      this.shuddering = false; this.inner.position.x = 0; this.inner.rotation.z = 0;
+      if (!this.alive) return;
+      this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
+      if (this.frames.disguise) {
+        this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); this.blendT = 0.55;
+        this.inner.scale.set(1.12, 0.84, 1); g.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.5, { ease: Ease.outBack });
+        g.fx.ink(this.center(), 22, 1.6, COL.violet); sfx.roar(); g.post.shake(1.2);
+      }
+      sfx.tear(0); sfx.thud(0); g.post.shake(0.6); g.fx.puff(P, 10, COL.bone, 1.1); g.fx.confetti(this.center(), 16, 1.2, [COL.bone, COL.paper]);
+      g.tweens.to(this.u.tintAmt, { value: 0 }, 0.5);
+      g.etw.run(0.45, (e) => { this.inner.position.x = Math.sin(e * 40) * 0.05 * (1 - e); }, { onDone: () => { this.inner.position.x = 0; this.statueReady?.(); } });
+    };
+    if (!this.frames.disguise) { turn(); return; }
+    this.shuddering = true; sfx.creak?.() || sfx.thud(0);
+    const D = this.bp.shudder ?? 1.1;
+    g.etw.run(D, (e) => {
+      const k = e * e;
+      this.inner.position.x = Math.sin(e * D * 55) * 0.04 * k; this.inner.rotation.z = Math.sin(e * D * 37) * 0.035 * k;
+      if (Math.random() < 0.12 + k * 0.3) g.fx.puff(this.uvToWorld(Math.random(), Math.random() * 0.9), 2, COL.bone, 0.6);
+    }, { onDone: turn });
   }
   // 幻影洗牌: n figures, only this one real; spawned once it is up, reshuffled after it loses a share of its HP
   makePhantoms() {

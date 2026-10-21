@@ -194,7 +194,9 @@
   - `phantoms: { n, shuffle, hits }`：出场后站在 n - 1 个幻影（`Phantom`：同一张图、同样的动作、偏一个位置）中间；幻影挨打只闪不掉血，挨 hits 下化掉；真身每掉 shuffle 的血，所有人淡出、重新排位置淡入；真身死了幻影一起化掉；幻影不算这一波的怪（`checkWave`）；
   - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
 - 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
-- 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）；怪的 `frames.disguise` 有的话摆设不是灰石头，而是那张图原样（画廊尽头的门 `door_mouth`：先是门，醒了换成 `rise` 那帧、吼一声）。
+- 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）；怪的 `frames.disguise` 有的话摆设不是灰石头，而是那件东西正常的样子（画廊尽头的门 `door_mouth`、R83 的吊灯 / 展示铠甲 `<variant>_disguise`，和醒来那帧同一张画布）：醒来先抖 `params.shudder`（1.1）秒、越抖越厉害、身上掉灰（`shuddering`，期间还是摆设），再换成 `rise` / `idle` 那帧、交叉淡化放慢到 0.55 秒（`blendT`）、压扁弹起、溅墨、吼一声。
+- 扔东西的怪的参数（enemies.json `params`）：`swell` 蓄力时整个鼓起来（憋大招时两倍），出手时压扁弹回；`throwArmor` 蓄力 / 刚扔完时吃的伤害比例（默认 0.2；门怪 1：张嘴就打得动）；`hideClang` 缩着时（`hides`）挨打冒白星、叮一声（`hiddenDmgMul` 默认一半）。
+- 怪的演出（`src/battle/acts.js`）的角色按数据摆的位置生成（`free`：不被挪到看得清的地方，圈就是圈）；`ritual` 不限时：`release`（1.5）秒后、特写播完才放开，像普通的怪一样打，最后一个倒下法阵碎；交代法阵的是同一波里的 `storyboard`（一格游戏里的镜头 + 底边字幕，`show` 只留念咒的那几个和墙边的铠甲）。
 - 怪的 `blast.collapse`：大招打下来之后地面塌掉（`Game.collapse`）。`collapse` 在多场景小关里掉进下一个场景；单场景小关里，下一个站点写了 `enter` 就掉进它（坑道的巨影把两人打落到第 2 个点），否则这一小关结束。
 - 场景被拉长（站点 `stretch: { k, dur, at }`，`PanelWorld.stretch`）：走到这个站点的路上，整个场景（`root`）以镜头为中心沿纵深拉到 k 倍（`at` 时最长），再猛地弹回（视野角跟着变）；走路时长用 `dur`。
 - 池塘和雨（第 2 话中庭）：场景 `hall.pond: { y, x0, x1, z0, z1, col, glow }` 一片水面（`POND_FRAG`：暗色水、晃动的灯光、一格格各自节拍的雨点涟漪、跟场景一样的雾）；`set.rain: { n, speed, a, wind, dry }` 镜头周围一盒雨丝（`PanelWorld.makeRain / rainTick`，跟着镜头绕回，`dry` = 有屋顶的廊下不下）。`hall.open` 敞开的那段有天花板时自动立柱子、拉一道矮栏杆。怪的 `from: 'water'`：从水面下升起来（水花）。波次条目写 `free: true` 就不让站点构图挪位置（池塘里的怪）。

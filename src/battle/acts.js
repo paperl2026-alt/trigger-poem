@@ -1,9 +1,9 @@
 // What monsters do besides coming at the girls (docs/DESIGN.md「停留点不只是一个镜头、一种打法」 怪的演出, user 2026-10-20: rituals,
 // summoning, self-sacrifice, wrecking the place, playing with it, comedy, things turning into monsters, purified things coming back):
 // little scenes a wave can stage. A wave entry with "act" (and no "type": the act spawns its own cast; they count in the wave):
-//   ritual:    { act, of, n, x, z, r, time, summon }  n of them in a ring round a glowing circle on the floor, chanting, not fighting;
-//              all down before time runs out and the circle breaks; too late and it erupts: the summoned one (summon) rises out of it
-//              (up close), the ring wakes up and fights
+//   ritual:    { act, of, n, x, z, r, release }  n of them in a ring round a glowing circle on the floor, chanting; no clock (user
+//              2026-10-21: no nine seconds to beat - the circle is told by a close-up, a storyboard cue in the same wave): `release`
+//              seconds on (after the close-up) they come at the girls like any others; the last one down and the circle breaks
 //   summon:    { act, of, x, z, minion, every, max }  a summoner beside a portal it holds open: every few seconds another one comes out
 //              of it, until the summoner is down
 //   sacrifice: { act, of, x, z, at: wall | cover, side }  it runs for a wall (or a cover) and blows itself up there: a hole right through
@@ -50,7 +50,7 @@ export class Acts {
   // ---- helpers
   spawn(type, x, z, o = {}) {
     const g = this.g; g.pendingSpawns++;
-    const a = g.spawnEnemy({ type, x, z, y: o.y, from: o.from });
+    const a = g.spawnEnemy({ type, x, z, y: o.y, from: o.from, free: true });   // (where the scene puts it: a ring is a ring - not moved to a clearer spot)
     g.pendingSpawns--; return a;
   }
   hold(a, pose = 'idle') { a.state = 'scripted'; a.play?.(a.frames?.[pose] ? pose : 'idle'); }
@@ -67,26 +67,19 @@ export class Acts {
     const circle = this.floorMesh(x, z, r * 1.3, 0xff3a8a);
     for (let i = 0; i < n; i++) { const a = i / n * Math.PI * 2, m = this.spawn(e.of, x + Math.cos(a) * r, z + Math.sin(a) * r); this.hold(m, 'windup'); m.ritual = true; cast.push(m); G.fx.puff(m.root.position, 6, COL.violet, 1); }
     sound('roar') || sfx.roar(); G.hud.gl.stickers.say(G.players[0], 'scare', 0.8);
-    let t = 0, over = false;
-    const time = e.time ?? 9;
+    let t = 0, over = false, free = false;
     return {
       update: (dt, tt) => {
         if (over) return false;
-        t += dt; const k = Math.min(1, t / time);
+        t += dt; const k = Math.min(1, t / 9);
+        if (!free && t > (e.release ?? 1.5) && !G.board && !G.vigOn) { free = true; for (const m of cast) this.release(m); }
         circle.material.opacity = Math.min(1, t * 2) * (0.5 + 0.5 * k) * (0.8 + 0.2 * Math.sin(tt * 8));
         circle.rotation.z += dt * (0.4 + k * 3); circle.scale.setScalar(1 + k * 0.15);
         if (Math.random() < dt * 20) G.fx.wAdd.emit({ x: x + rnd(-r, r), y: 0.1, z: z + rnd(-r, r), vy: 1.5 + k * 3, life: 0.8, size: 0.08, size1: 0.01, color: [1, 0.3, 0.6], a: 1, a1: 0, frame: 1 });
-        for (const m of cast) if (m.alive) m.inner.position.y = Math.abs(Math.sin(tt * 4 + m.seed)) * 0.08;
-        if (cast.every((m) => !m.alive)) {   // stopped in time: the circle breaks
+        if (!free) for (const m of cast) if (m.alive) m.inner.position.y = Math.abs(Math.sin(tt * 4 + m.seed)) * 0.08;
+        if (cast.every((m) => !m.alive)) {   // the last of them down: the circle breaks
           over = true; G.fx.shockRing(new THREE.Vector3(x, 0, z), r * 2, 0xffffff, 0.5); sfx.shatter(0); G.post.flash(0.3, 0xffffff);
           G.hud.gl.stickers.say(G.players[Math.random() < 0.5 ? 0 : 1], 'stagger', 1); this.dropMesh(circle); return false;
-        }
-        if (k >= 1) {   // too late: it erupts; the summoned one rises out of it, up close
-          over = true; G.post.flash(0.8, 0xff3a8a); G.post.shake(1.6); G.post.styleBurst(1.0, [1, 3, 5], 0.14, 0x1a0010, 0xff3a8a); sfx.slam();
-          G.fx.pillar(new THREE.Vector3(x, 0, z), 7, r * 0.8, 0xff5aa8, 1.2); G.fx.shockRing(new THREE.Vector3(x, 0, z), r * 3, 0xff5aa8, 0.7);
-          for (const m of cast) this.release(m);
-          if (e.summon) { const b = this.spawn(e.summon, x, z, { from: 'burrow' }); G.tweens.wait(0.5, () => G.closeup(b, { hold: 1.8 })); }
-          this.dropMesh(circle); return false;
         }
         return true;
       },
