@@ -65,7 +65,7 @@ export class Cues {
   say(c) {
     const g = this.g, P = g.players.filter((p) => p.state !== 'away' && (p.slot === 0 || g.p2on()));
     if (!P.length) return;
-    const who = c.who === 'both' ? P : c.who != null ? P.filter((p) => p.slot === c.who) : [P[Math.floor(Math.random() * P.length)]];
+    const who = c.who === 'both' ? P : c.who != null ? P.filter((p) => p.slot === c.who || p.id === c.who) : [P[Math.floor(Math.random() * P.length)]];   // (who: a slot, or the girl herself: 'pink' / 'cat')
     // (not in the very first frame of a stage: the HUD lays itself out first)
     g.tweens.wait(0.05, () => { for (const p of who) g.hud.gl.stickers.say(p, c.say, 1, !!c.force); });
   }

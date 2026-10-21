@@ -36,6 +36,7 @@ function createWindow() {
     webPreferences: { backgroundThrottling: false, contextIsolation: true, offscreen: !!selfTest, preload: path.join(__dirname, 'preload.cjs') },
   });
   Menu.setApplicationMenu(null);
+  if (selfTest) win.webContents.setAudioMuted(true);   // (the check runs silent: the user may be playing at the same time)
   win.once('ready-to-show', () => { if (!selfTest) win.show(); });
   win.loadURL(`app://game/${page}${selfTest ? (page.includes('?') ? '&' : '?') + 'play&skip' : ''}`);
   if (selfTest) {

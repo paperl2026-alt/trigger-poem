@@ -12,6 +12,7 @@ const FRAG = `
 uniform sampler2D tDiffuse; uniform float time; uniform float aspect;
 uniform float flash; uniform vec3 flashColor; uniform float chroma; uniform float blur; uniform vec2 center;
 uniform float madness; uniform float hurt; uniform float dim; uniform float grain; uniform float wipe; uniform float warn; uniform vec3 warnColor;
+uniform float fade; uniform vec3 fadeColor;   // (the picture fading out to a colour: the end of a run, src/battle/ride.js outro)
 uniform vec4 focus; uniform vec4 edgeA; uniform vec4 edgeB; uniform float impact; uniform float style; uniform vec3 styleA; uniform vec3 styleB; uniform vec2 px;
 uniform sampler2D tPrev; uniform float hasPrev;
 varying vec2 vUv;
@@ -120,6 +121,7 @@ void main(){
   if (impact > 0.5) { float l = dot(c, vec3(0.3, 0.59, 0.11)); float k = step(0.42, l); if (impact > 1.5) k = 1.0 - k;
     c = mix(vec3(0.07, 0.0, 0.05), vec3(1.0, 0.96, 0.98), k); }
   c = mix(c, flashColor, flash);
+  c = mix(c, fadeColor, fade);
   // paper-tear wipe (transition): torn edge sweeping across
   if (wipe > 0.0) {
     float edgeN = fbm(vec2(vUv.y * 9.0, 0.0)) * 0.12;
@@ -142,7 +144,7 @@ export class Post {
     this.u = {
       tDiffuse: { value: this.rt.texture }, time: { value: 0 }, aspect: { value: 1 },
       flash: { value: 0 }, flashColor: { value: new THREE.Color(1, 1, 1) }, chroma: { value: 0 }, blur: { value: 0 }, center: { value: new THREE.Vector2(0.5, 0.5) },
-      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, focus: { value: new THREE.Vector4(0, 0, 0, 0) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
+      madness: { value: 0 }, hurt: { value: 0 }, dim: { value: 0 }, grain: { value: 0.045 }, wipe: { value: 0 }, fade: { value: 0 }, fadeColor: { value: new THREE.Color(0, 0, 0) }, warn: { value: 0 }, warnColor: { value: new THREE.Color(0.69, 0.36, 1) }, focus: { value: new THREE.Vector4(0, 0, 0, 0) }, edgeA: { value: new THREE.Vector4() }, edgeB: { value: new THREE.Vector4() },
       tPrev: { value: null }, hasPrev: { value: 0 },
       impact: { value: 0 }, style: { value: 0 }, styleA: { value: new THREE.Color(0.12, 0.0, 0.08) }, styleB: { value: new THREE.Color(1.0, 0.45, 0.2) }, px: { value: new THREE.Vector2(0.001, 0.001) },
     };

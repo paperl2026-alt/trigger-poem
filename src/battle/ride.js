@@ -16,6 +16,10 @@
 //     screen and out - the girls are out of the first-person picture; ride.js Insert) }; block.out: a hall.ways
 //     id - the thing is flung out of that doorway into the way (a rigid body: it tumbles and lands across it)
 //   a mark with t instead of at: that many seconds after the run began (the opening, before it moves)
+//   ride.outro: { at (metres before the end), time, speed, color } - no stopping at the end: flat out, the HUD gone, the picture fading
+//   out (post fade) before the next step's comic takes over (user 2026-10-21: the chase stopped dead at the end)
+//   foe: { k, at: [x, z] | ahead, x, h, life, step } - the thing itself standing there to be shot at, nothing getting through (sparks, a
+//   clang, its picture flinching): the girls find out it is not to be beaten here (user 2026-10-21: they talk back, try a few shots, go)
 //   ride.carry: what the marks send BEHIND them runs after the camera (moved on as far as it goes, its own moves on top); what comes from
 //   ahead stays where it is, the run slowing for it (hold) - user 2026-10-20, after The House of the Dead 2: the camera stops at an
 //   encounter, the monsters come at it
@@ -74,6 +78,11 @@ export class Ride {
     const g = this.g, w = g.world, R = this.R, k = K();
     if (g.lull) return;
     this.t += dt;
+    const O = R.outro;
+    if (O && !this.outroOn && this.len - this.s <= (O.at ?? 12)) {   // (the end: flat out into a fade, never a dead stop)
+      this.outroOn = true; this.hold = null; this.target = Math.max(this.target, O.speed ?? this.target);
+      g.post.u.fadeColor.value.set(O.color ?? '#000000'); g.tweens.to(g.post.u.fade, { value: 1 }, O.time ?? 0.9); g.hud.show(false);
+    }
     if (this.hold) {   // (held: what the mark sent beaten, or the time up -> on again)
       const Hd = this.hold; Hd.t += dt;
       if (Hd.t > Hd.max || !Hd.list.some((a) => a.alive)) { this.target = Hd.resume; this.hold = null; } else this.target = k.holdSpeed ?? 1.2;
@@ -154,6 +163,7 @@ export class Ride {
     }
     if (m.block) this.block(m.block);
     if (m.hole) this.hole(m.hole);
+    if (m.foe) this.foe(m.foe);
     if (m.bossSay) {   // (the thing chasing them says its line - bosses.json / text/stickers.json bosses.<who>.<kind> - in its voice, its slab up top)
       const B = m.bossSay, W = g.W, H = g.H;
       g.hud.gl.stickers.boss({ id: B.who, tag: B.tag ?? '？？？', screenBox: () => ({ x0: W * 0.4, x1: W * 0.6, y0: H * 0.2, y1: H * 0.6 }) }, B.kind);
@@ -166,7 +176,7 @@ export class Ride {
     if (m.cut) this.cut(m.cut);
     // the rest of the mark is a director's cue (cues.js: say, sfx, shake, burst, hint, mv, act, cam ...); a line a moment late (not in the
     // very first frame of a stage: the HUD lays itself out first)
-    const { at: _a, t: _t, spawn: _s, block: _b, face: _f, speed: _v, done: _d, hold: _h, cut: _c, hole: _o, glimpse: _g, bossSay: _y, insert: _n, ...cue } = m;
+    const { at: _a, t: _t, spawn: _s, block: _b, face: _f, speed: _v, done: _d, hold: _h, cut: _c, hole: _o, glimpse: _g, bossSay: _y, insert: _n, foe: _e, ...cue } = m;
     if (cue.say) { const { say, ...rest } = cue; g.cues.run(rest); g.tweens.wait(0.6, () => g.cues.run({ say, who: cue.who, force: true })); } else g.cues.run(cue);
   }
   // a cut hidden in smoke (user 2026-10-20: not a smooth swing round - "a lot of smoke or particles making a sudden screen, and when it
@@ -219,11 +229,40 @@ export class Ride {
     m.scale.set(h * t.image.width / t.image.height * (G.flip ? -1 : 1), h, 1);
     const c = g.world.camPos, P = G.at ? new THREE.Vector3(G.at[0], 0, G.at[1]) : this.at(this.s + (G.ahead ?? -6), G.x ?? 0);   // (at: [x, z] in the place)
     const Q = V2.set(c.x - P.x, 0, c.z - P.z).normalize().multiplyScalar(G.lunge ?? 1.5).add(P).clone();   // (it lunges at them)
-    m.position.set(P.x, h / 2, P.z); g.world.scene.add(m);
+    m.position.set(P.x, h / 2, P.z); m.renderOrder = 5; g.world.scene.add(m);   // (after the holes it broke out of: they are behind it)
     g.tweens.run(G.life ?? 3, (e) => {
       m.material.opacity = Math.min(1, e * 8, (1 - e) * 4);
       const k = 1 - Math.pow(1 - Math.min(1, e * 2), 3); m.position.x = P.x + (Q.x - P.x) * k; m.position.z = P.z + (Q.z - P.z) * k;
     }, { onDone: () => { m.removeFromParent(); m.material.dispose(); } });
+  }
+  // the thing standing there, shot at: a picture in the place that takes the shots and shrugs them off (an actor of sorts: Game shoots
+  // what g.actors offers; no def, so no wave, no lock, no blast counts it), stepping slowly closer; gone after life seconds
+  foe(F) {
+    const g = this.g, t = TEX[F.k]; if (!t) return;
+    const h = F.h ?? 3.2, w = h * t.image.width / t.image.height, c = g.world.camPos;
+    const mat = new THREE.MeshBasicMaterial({ map: t, transparent: true, depthWrite: false, alphaTest: 0.05, color: 0xffffff, side: THREE.DoubleSide });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat), P = F.at ? new THREE.Vector3(F.at[0], 0, F.at[1]) : this.at(this.s + (F.ahead ?? -5), F.x ?? 0);
+    m.position.set(P.x, h / 2, P.z); m.rotation.y = Math.atan2(c.x - P.x, c.z - P.z); m.userData.texKey = F.k; m.renderOrder = 5; g.world.scene.add(m);
+    const dir = V2.set(c.x - P.x, 0, c.z - P.z).normalize().clone(), t0 = { k: 0, tick: 0 };
+    const a = { alive: true, removed: false, prop: true, foe: true, root: m, mesh: m,
+      hitMeshes: () => (a.alive ? [m] : []),
+      center: () => m.position.clone(),
+      uvToWorld: (u, v) => m.localToWorld(new THREE.Vector3((u - 0.5) * w, (v - 0.5) * h, 0.05)),
+      screenBox: () => { const q = [[-w / 2, -h / 2], [w / 2, h / 2]].map(([x, y]) => g.world.project(m.localToWorld(new THREE.Vector3(x, y, 0)))); return { x0: Math.min(q[0].x, q[1].x), x1: Math.max(q[0].x, q[1].x), y0: Math.min(q[0].y, q[1].y), y1: Math.max(q[0].y, q[1].y) }; },
+      hit: (info) => {   // (nothing gets through: sparks off it, a clang now and then, it flinches a little and comes on)
+        info.dealt = 0; const p = a.uvToWorld(info.uv?.u ?? 0.5, info.uv?.v ?? 0.5);
+        g.fx.star(p, 0.5, 0xffffff); g.fx.confetti(p, 2, 0.8, [0xffffff, 0xd8c8b0]); t0.k = 1;
+        if (t0.tick <= 0) { sfx.clang(); t0.tick = 0.2; }
+      },
+      update: (dt) => {
+        t0.tick -= dt; t0.k = Math.max(0, t0.k - dt * 6);
+        m.position.addScaledVector(dir, (F.step ?? 0.15) * dt);
+        m.scale.setScalar(1 + 0.02 * t0.k + 0.015 * Math.sin(performance.now() / 260)); mat.color.setRGB(1, 1 - 0.35 * t0.k, 1 - 0.35 * t0.k);
+      },
+      dispose: () => { a.removed = true; m.removeFromParent(); mat.dispose(); m.geometry.dispose(); },
+    };
+    g.actors.push(a);
+    g.tweens.wait(F.life ?? 6, () => { if (!a.alive) return; a.alive = false; g.tweens.run(0.4, (e) => { mat.opacity = 1 - e; }, { onDone: () => a.dispose() }); });
   }
   // a cut-in: a slanted comic panel with a girl's face (her colour striped behind her), sliding in from her side, a moment, sliding out
   insert(I) {

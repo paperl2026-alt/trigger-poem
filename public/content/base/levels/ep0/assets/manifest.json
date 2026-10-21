@@ -129,6 +129,51 @@
   "src": "assets/boss/qq_s1_move_rd.png",
   "w": 548
  },
+ "boss/qq_s1_pound_down": {
+  "anchor": "bottom",
+  "figH": 0.904,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "boss/qq_s1_pound_down_rd",
+  "src": "assets/boss/qq_s1_pound_down.webp",
+  "w": 561
+ },
+ "boss/qq_s1_pound_down_rd": {
+  "h": 485,
+  "src": "assets/boss/qq_s1_pound_down_rd.png",
+  "w": 512
+ },
+ "boss/qq_s1_pound_up": {
+  "anchor": "bottom",
+  "core": [
+   0.72,
+   0.77,
+   0.11
+  ],
+  "figH": 0.9661,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "boss/qq_s1_pound_up_rd",
+  "src": "assets/boss/qq_s1_pound_up.webp",
+  "w": 561
+ },
+ "boss/qq_s1_pound_up_rd": {
+  "h": 485,
+  "src": "assets/boss/qq_s1_pound_up_rd.png",
+  "w": 512
+ },
  "boss/qq_s1_windup": {
   "anchor": "bottom",
   "figH": 0.9492,
@@ -248,6 +293,51 @@
   "h": 519,
   "src": "assets/boss/qq_s2_move_rd.png",
   "w": 548
+ },
+ "boss/qq_s2_throw_fling": {
+  "anchor": "bottom",
+  "core": [
+   0.12,
+   0.3,
+   0.1
+  ],
+  "figH": 0.9576,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "boss/qq_s2_throw_fling_rd",
+  "src": "assets/boss/qq_s2_throw_fling.webp",
+  "w": 574
+ },
+ "boss/qq_s2_throw_fling_rd": {
+  "h": 484,
+  "src": "assets/boss/qq_s2_throw_fling_rd.png",
+  "w": 512
+ },
+ "boss/qq_s2_throw_wind": {
+  "anchor": "bottom",
+  "figH": 0.9227,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "boss/qq_s2_throw_wind_rd",
+  "src": "assets/boss/qq_s2_throw_wind.webp",
+  "w": 574
+ },
+ "boss/qq_s2_throw_wind_rd": {
+  "h": 484,
+  "src": "assets/boss/qq_s2_throw_wind_rd.png",
+  "w": 512
  },
  "boss/qq_s2_windup": {
   "anchor": "bottom",
@@ -369,6 +459,51 @@
   "src": "assets/boss/qq_s3_move_rd.png",
   "w": 548
  },
+ "boss/qq_s3_slide": {
+  "anchor": "bottom",
+  "core": [
+   0.22,
+   0.3,
+   0.1
+  ],
+  "figH": 0.628,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "boss/qq_s3_slide_rd",
+  "src": "assets/boss/qq_s3_slide.webp",
+  "w": 571
+ },
+ "boss/qq_s3_slide_rd": {
+  "h": 487,
+  "src": "assets/boss/qq_s3_slide_rd.png",
+  "w": 512
+ },
+ "boss/qq_s3_strike": {
+  "anchor": "bottom",
+  "figH": 0.965,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "boss/qq_s3_strike_rd",
+  "src": "assets/boss/qq_s3_strike.webp",
+  "w": 571
+ },
+ "boss/qq_s3_strike_rd": {
+  "h": 487,
+  "src": "assets/boss/qq_s3_strike_rd.png",
+  "w": 512
+ },
  "boss/qq_s3_windup": {
   "anchor": "bottom",
   "figH": 0.8655,
@@ -489,6 +624,26 @@
   "src": "assets/boss/qq_s4_move_rd.png",
   "w": 546
  },
+ "boss/qq_s4_summon": {
+  "anchor": "center",
+  "figH": 0.9338,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "boss/qq_s4_summon_rd",
+  "src": "assets/boss/qq_s4_summon.webp",
+  "w": 564
+ },
+ "boss/qq_s4_summon_rd": {
+  "h": 494,
+  "src": "assets/boss/qq_s4_summon_rd.png",
+  "w": 512
+ },
  "boss/qq_s4_windup": {
   "anchor": "center",
   "figH": 0.9173,
@@ -528,6 +683,26 @@
   "h": 523,
   "src": "assets/boss/qq_s5_attack_rd.png",
   "w": 548
+ },
+ "boss/qq_s5_gather": {
+  "anchor": "center",
+  "figH": 0.9315,
+  "h": 555,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "boss/qq_s5_gather_rd",
+  "src": "assets/boss/qq_s5_gather.webp",
+  "w": 582
+ },
+ "boss/qq_s5_gather_rd": {
+  "h": 488,
+  "src": "assets/boss/qq_s5_gather_rd.png",
+  "w": 512
  },
  "boss/qq_s5_hurt": {
   "anchor": "center",
@@ -608,6 +783,26 @@
   "h": 523,
   "src": "assets/boss/qq_s5_move_rd.png",
   "w": 548
+ },
+ "boss/qq_s5_release": {
+  "anchor": "center",
+  "figH": 0.9315,
+  "h": 555,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "boss/qq_s5_release_rd",
+  "src": "assets/boss/qq_s5_release.webp",
+  "w": 582
+ },
+ "boss/qq_s5_release_rd": {
+  "h": 488,
+  "src": "assets/boss/qq_s5_release_rd.png",
+  "w": 512
  },
  "boss/qq_s5_windup": {
   "anchor": "center",
@@ -2818,6 +3013,11 @@
   "src": "assets/ep0/cut_cat_lookback_b.webp",
   "w": 783
  },
+ "ep0/cut_cat_retort_c": {
+  "h": 760,
+  "src": "assets/ep0/cut_cat_retort_c.webp",
+  "w": 1024
+ },
  "ep0/cut_cat_startled_a": {
   "h": 1024,
   "src": "assets/ep0/cut_cat_startled_a.webp",
@@ -2836,6 +3036,11 @@
  "ep0/cut_pink_lookback_b": {
   "h": 755,
   "src": "assets/ep0/cut_pink_lookback_b.webp",
+  "w": 1024
+ },
+ "ep0/cut_pink_retort_a": {
+  "h": 773,
+  "src": "assets/ep0/cut_pink_retort_a.webp",
   "w": 1024
  },
  "ep0/cut_pink_startled_a": {

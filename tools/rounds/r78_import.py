@@ -23,16 +23,22 @@ def put(man, key, im):
     man[key] = {"src": f"assets/{key}.webp", "w": im.width, "h": im.height}; print(key, im.size)
 
 
-if __name__ == "__main__":
-    want = set(sys.argv[1:])
+def run(raw, want=()):   # (round 79's retort faces come in the same way: r79_import.py)
     man = packs.manifest()
-    for f in sorted(RAW.glob("*.png")):
+    for f in sorted(raw.glob("*.png")):
         n = f.stem
         if want and n not in want: continue
-        if n.startswith("cat_startled") and not (RAW / "seal" / f.name).exists(): continue   # (its seal not put right)
-        im = Image.open(RAW / "seal" / f.name if (RAW / "seal" / f.name).exists() else f).convert("RGBA"); im = im.crop(im.getchannel("A").point(lambda x: 255 if x > 24 else 0).getbbox())
-        if n.startswith("pink_"): im = im.crop((0, 0, im.width, round(im.height * 0.56)))   # (above the waist)
+        if n in SEALED and not (raw / "seal" / f.name).exists(): continue   # (its seal not put right)
+        im = Image.open(raw / "seal" / f.name if (raw / "seal" / f.name).exists() else f).convert("RGBA"); im = im.crop(im.getchannel("A").point(lambda x: 255 if x > 24 else 0).getbbox())
+        if n.startswith("pink_") or n.startswith("cat_retort"): im = im.crop((0, 0, im.width, round(im.height * 0.56)))   # (above the waist; the cat girl's tail below it)
         if n.startswith("qq_corner"): im = im.crop((int(im.width * 0.012), 0, im.width, im.height))   # (the outline drawn along the cut)
         key = f"boss/qq_chase_{n[3:]}" if n.startswith("qq_") else f"ep0/cut_{n}"
         put(man, key, im)
     man.save(); print("ok")
+
+
+SEALED = {"cat_startled_a", "cat_startled_b", "cat_retort_a", "cat_retort_b"}   # (the cat girl's pictures showing the back of her paw: only with the
+# canonical seal on, art/raw/rNN/seal/)
+
+if __name__ == "__main__":
+    run(RAW, set(sys.argv[1:]))

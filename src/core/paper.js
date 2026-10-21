@@ -39,7 +39,7 @@ void main(){
 export const FOG = { color: { value: new THREE.Color(0, 0, 0) }, density: { value: 0 } };
 
 const FRAG = `
-uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg; uniform float dmgSolid;
+uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg; uniform float dmgSolid; uniform float dmgStyle;
 uniform sampler2D map2; uniform float mixK; uniform vec2 blurDir;   // (the frame before, blended out with a smear: Actor.setFrame)
 uniform float flash; uniform vec3 tint; uniform float tintAmt; uniform float opacity; uniform float dark;
 uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float sliceOn; uniform float aspect;
@@ -97,6 +97,16 @@ void main(){
     // worst ones thin out to semi-transparent with a glowing rim (never gone: the shape and the hit area stay); burns go amber
     vec3 d = texture2D(dmg, vUv).rgb;
     float hv = d.r + (n - 0.5) * 0.3 + (n2 - 0.5) * 0.1;
+    if (dmgStyle > 0.5) {
+      // a boss's core (user 2026-10-21): the more it is hit there, the more it changes - never darker: bright, high-contrast colours
+      // running through it, a metallic glint sweeping across, so it is easier to find the more it is hurt
+      float k2 = smoothstep(0.06, 0.85, max(hv, d.g + (n - 0.5) * 0.3));
+      vec3 iri = 0.5 + 0.5 * cos(6.2832 * (vec3(0.0, 0.33, 0.67) + hv * 1.3 + (q.x - q.y) * 1.6 + time * 0.22));
+      float sh = pow(max(0.0, sin((q.x * 1.3 - q.y * 0.7) * 8.0 - time * 2.6)), 8.0);
+      vec3 metal = mix(iri * (0.85 + 0.35 * n2), vec3(1.0), sh * 0.75);
+      col = mix(col, max(col, metal), k2 * 0.9);
+      col += metal * k2 * 0.25 * (0.5 + 0.5 * sin(time * 5.0 + n * 6.0));
+    } else {
     float k = smoothstep(0.15, 0.7, hv);
     float lum = dot(col, vec3(0.3, 0.5, 0.2));
     vec3 tintc = mix(col, vec3(lum) * vec3(1.05, 0.74, 1.12) + vec3(0.1, 0.03, 0.12), 0.7);
@@ -110,6 +120,7 @@ void main(){
     col = mix(col, col * vec3(1.12, 0.86, 0.62) + vec3(0.1, 0.04, 0.0), smoothstep(0.12, 0.8, sc) * 0.6);
     am *= 1.0 - 0.35 * smoothstep(0.55, 1.0, sc);
     col += vec3(1.0, 0.5, 0.12) * d.b * smoothstep(0.2, 0.6, sc) * (0.6 + 1.1 * n2);
+    }
   } else if (useDmg > 0.5) {
     vec3 d = texture2D(dmg, vUv).rgb;
     float hv = d.r + (n - 0.5) * 0.32 + (n2 - 0.5) * 0.12;
@@ -156,7 +167,7 @@ function blankTex() {
 export function paperMaterial(map, aspect = 1) {
   return new THREE.ShaderMaterial({
     uniforms: {
-      map: { value: map }, map2: { value: map }, mixK: { value: 1 }, blurDir: { value: new THREE.Vector2(0, 0) }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 },
+      map: { value: map }, map2: { value: map }, mixK: { value: 1 }, blurDir: { value: new THREE.Vector2(0, 0) }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 }, dmgStyle: { value: 0 },
       outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) }, outlineW: { value: 1 },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
       dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },

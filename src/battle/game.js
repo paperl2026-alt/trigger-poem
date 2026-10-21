@@ -168,7 +168,7 @@ export class Game {
       if (this.G.skipComics || !meta[st.door.frame] || !meta[st.door.leaf]) { this.afterComic = true; this.nextStep(); return; }
       this.hud.show(false);
       stopMusic();
-      const play = () => playDoor(st.door, () => { this.post.u.wipe.value = 0; this.afterComic = true; this.nextStep(); });
+      const play = () => playDoor(st.door, () => { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.afterComic = true; this.nextStep(); });
       if (this.camPlaced) this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: play }); else play();
       return;
     }
@@ -176,11 +176,12 @@ export class Game {
       if (this.G.skipComics || !Comic.ready(st.comic)) { this.afterComic = true; this.nextStep(); return; }
       this.hud.show(false);
       stopMusic();
-      const play = () => this.comic.play(st.comic, () => { this.post.u.wipe.value = 0; this.afterComic = true; this.nextStep(); });
+      const play = () => this.comic.play(st.comic, () => { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.afterComic = true; this.nextStep(); });
       if (this.camPlaced) this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: play }); else play();
       return;
     }
     this.stage = st;
+    this.post.u.fade.value = 0;   // (a run that faded out before a skipped comic)
     this.skipDoor = false;   // (a door is skipped only right after the hole / the fall that leads past it)
     // (a stage straight after a stage in another place, episode 2's small stages: the camera walks there, the place changes on the way)
     const walkIn = !!st.places && this.camPlaced && !this.afterComic && !!this.setId && placeOf(st, this.run.station) !== this.setId;
@@ -229,7 +230,7 @@ export class Game {
       // painted stations: push forward into the painting, the next one glides in
       const first = !this.camPlaced || this.afterComic;
       this.camPlaced = true; this.afterComic = false;
-      this.post.u.wipe.value = 0;
+      this.post.u.wipe.value = 0; this.post.u.fade.value = 0;
       this.settleAnomaly(S);
       this.music(boss);
       this.setAll('run');
@@ -240,7 +241,7 @@ export class Game {
     // cover (DESIGN「进小关的第一个点直接蹲好」: no running in, no looking at the floor)
     if (!this.camPlaced || this.afterComic) {
       this.camPlaced = true; this.afterComic = false;
-      this.post.u.wipe.value = 0;
+      this.post.u.wipe.value = 0; this.post.u.fade.value = 0;
       this.settleAnomaly(S);
       this.music(boss);
       // (a stage that starts with a run, episode 2: from where it comes in, along the run's path)
@@ -254,13 +255,13 @@ export class Game {
       return;
     }
     // episode 2: a stretch run looking back at her (station chase, src/battle/chase.js); arrives at the end of it
-    if (S.chase) { this.post.u.wipe.value = 0; this.settleAnomaly(S); this.world.setCovers(S.covers); this.chase.run(S, () => this.arrive(S, boss)); return; }
+    if (S.chase) { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.settleAnomaly(S); this.world.setCovers(S.covers); this.chase.run(S, () => this.arrive(S, boss)); return; }
     // a high-speed stretch: the cart / float / lift carries them along the path (src/battle/ride.js); arrives at its end
-    if (S.ride) { this.post.u.wipe.value = 0; this.settleAnomaly(S); this.ride.run(S, () => this.arrive(S, boss)); return; }
+    if (S.ride) { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.settleAnomaly(S); this.ride.run(S, () => this.arrive(S, boss)); return; }
     // something behind them: the view whips round where they stand (DESIGN「演出」 背后出现敌人)
-    if (S.whip) { this.post.u.wipe.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
+    if (S.whip) { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.setAll('cover'); this.settled = true; this.whip(S, () => this.arrive(S, boss)); return; }
     const pts = [this.world.camPos.toArray(), ...(S.via || []), S.cam];
-    this.post.u.wipe.value = 0;
+    this.post.u.wipe.value = 0; this.post.u.fade.value = 0;
     // the calm after-school world until the invasion station; invaded from then on
     this.settleAnomaly(S);
     this.music(false);
@@ -695,7 +696,7 @@ export class Game {
     this.combat = false;
     this.clearProjectiles();
     this.players.forEach((p) => { if (p.activeOn) p.endActive(false); });
-    const back = () => { this.post.u.wipe.value = 0; this.hud.show(true); this.enterCover(null, true); then && then(); };
+    const back = () => { this.post.u.wipe.value = 0; this.post.u.fade.value = 0; this.hud.show(true); this.enterCover(null, true); then && then(); };
     if (!id || this.G.skipComics || !Comic.ready(id)) { back(); return; }
     this.tweens.to(this.post.u.wipe, { value: 1 }, 0.35, { ease: Ease.inQuad, onDone: () => { this.hud.show(false); this.comic.play(id, back); } });
   }
@@ -831,7 +832,7 @@ export class Game {
             this.setAll('cover'); this.tweens.wait(0.4, () => this.nextStep());
           });
         });
-      } else this.tweens.wait(1.7, () => this.nextStep());
+      } else this.tweens.wait(quiet ? 0.15 : 1.7, () => this.nextStep());   // (a run that faded out: straight on)
     }
   }
   spawnBoss(id) {

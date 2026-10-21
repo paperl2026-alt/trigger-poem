@@ -12,21 +12,21 @@
     "zone": { "x": [-5.5, 5.5], "z": [-16, -11] },
     "stages": [
       { "at": 1, "h": 8.4, "pattern": ["approach"], "core": [0.62, 0.81, 0.11] },
-      { "at": 0.817, "h": 9.4, "pattern": ["throw", "drift", "throw", "throw", "drift"], "core": [0.17, 0.21, 0.11], "guarded": true },
+      { "at": 0.83, "h": 9.4, "pattern": ["throw", "throw", "drift", "throw"], "core": [0.17, 0.21, 0.11], "guarded": true },
       {
-        "at": 0.586,
+        "at": 0.62,
         "h": 10.8,
-        "pattern": ["drift", "zigzag", "drift", "zigzag"],
+        "pattern": ["slide"],
         "summon": [{ "type": "chair", "from": "pop", "x": -2, "z": -1 }, { "type": "chair", "from": "pop", "x": 2, "z": -1.5 }],
         "core": [0.55, 0.38, 0.11],
-        "open": ["windup", "dash", "hurt", "back"]
+        "open": ["slide", "windup", "hurt", "back"]
       },
       {
-        "at": 0.363,
+        "at": 0.33,
         "h": 10.1,
         "float": true,
         "y": 5.1,
-        "pattern": ["heal", "drift", "volley", "heal", "drift", "lunge", "drift"],
+        "pattern": ["heal", "volley", "drift", "lunge", "heal", "volley"],
         "core": [0.33, 0.8, 0.11],
         "summon": [
           { "type": "chair", "from": "burrow", "x": -4, "z": -3 },
@@ -37,12 +37,12 @@
         ]
       },
       {
-        "at": 0.253,
+        "at": 0.22,
         "h": 8.8,
         "float": true,
         "y": 5.7,
         "core": [0.2, 0.63, 0.11],
-        "pattern": ["drift", "charge"],
+        "pattern": ["charge", "drift"],
         "summon": [{ "type": "book", "x": -2, "y": 2.4, "z": -2 }, { "type": "paper", "x": 2, "y": 2.2, "z": -2.5 }],
         "cores": [[0.32, 0.65, 0.09], [0.73, 0.46, 0.09], [0.39, 0.82, 0.08], [0.19, 0.37, 0.08], [0.69, 0.27, 0.08]]
       }
@@ -70,9 +70,9 @@
         "ja": "投げる瞬間だけ弱点が開く──飛んでくる物を落として狙え!"
       },
       "h3": {
-        "zh": "Z 字冲过来了：路上打够伤害就能把她打回去！",
-        "en": "SHE ZIGZAGS IN - DEAL ENOUGH DAMAGE ON THE WAY TO KNOCK HER BACK!",
-        "ja": "ジグザグに突っ込んでくる──途中で削りきれば押し返せる!"
+        "zh": "她左右滑步逼近，核心一直露着：打够伤害就把她打回起点！",
+        "en": "SHE SLIDES IN SIDE TO SIDE, CORE OPEN - HIT IT HARD ENOUGH TO THROW HER BACK!",
+        "ja": "左右に滑りながら迫ってくる──コアを削りきれば振り出しに戻せる!"
       },
       "h4": {
         "zh": "点滴瓶在给她回血：先打掉它们！血回满她会退回上一形态！",
@@ -93,6 +93,9 @@
     "charge": { "time": 4.6, "shifts": 3, "poise": 150, "dmg": 34 },
     "summonMax": 6,
     "heal": { "stage": 3, "type": "drip", "n": 2, "max": 3, "rate": 14 },
-    "weave": { "legs": 4, "lateral": 2.4, "leg": 0.75, "pause": 0.3, "near": 6.5, "topY": 0.06, "windup": 0.9, "dmg": 16, "back": 1.8 }
+    "drift": "slide",
+    "slide": { "legs": 6, "lateral": 3.2, "time": 0.42, "pause": 0.38, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26 },
+    "coreTrail": { "colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 32, "idle": 16 },
+    "coreGlow": true
   }
 }

@@ -115,6 +115,23 @@ def bend(name, a, sr, key):   # a boss's voice bent a little (voices.<who>.fx), 
         y = np.concatenate([y, np.zeros(len(wet) - len(y))]) + wet * 0.22 * np.abs(y).max()
         f = int(0.3 * sr); y[-f:] *= np.linspace(1, 0, f)
         return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
+    if name == "glitchGrow":   # (user 2026-10-21, the prologue boss: "each line starts normal, then modulates into something abnormal and
+        # twisted by its end") - her own voice at first; then ever lower and slower (the tape dragging), a metallic ring, driven and crushed
+        # creeping in, the last syllables caught and repeated; a short hall
+        n = len(a); u = np.linspace(0, 1, n); e = np.clip((u - 0.22) / 0.78, 0, 1) ** 1.6   # (how far gone, along the line)
+        pos = np.cumsum(1.0 - 0.32 * e); pos = pos[pos < n - 1]   # (the read head slowing: the pitch sinks, the end drawn out)
+        y = np.interp(pos, np.arange(n), a); m = len(y); e2 = np.interp(np.arange(m), pos, e[:len(pos)])
+        wet = MV.ring(y, sr, 70, 1.0) * 0.45 + MV.drive(y, 5.0) * 0.55
+        k = 4; wet = np.repeat(wet[::k], k)[:m]
+        y = y * (1 - e2) + wet * e2 * 0.9
+        for _ in range(3):   # (caught: a few slivers near the end repeated)
+            L = int(rng.uniform(0.04, 0.08) * sr); s = int(rng.uniform(0.7, 0.92) * (m - L))
+            if s > 0: y = np.concatenate([y[:s + L], y[s:s + L], y[s:]])
+        q = int(0.6 * sr); ir = rng.standard_normal(q) * np.exp(-np.linspace(0, 9, q))
+        w2 = MV.signal.fftconvolve(y, ir); w2 = w2 / (np.abs(w2).max() + 1e-9)
+        y = np.concatenate([y, np.zeros(len(w2) - len(y))]) + w2 * 0.12 * np.abs(y).max()
+        f = int(0.2 * sr); y[-f:] *= np.linspace(1, 0, f)
+        return (y * (10 ** (-1 / 20) / max(1e-6, np.abs(y).max()))).astype(np.float32)
     if name == "glitch":   # a possessed schoolgirl on a broken PA: a touch higher, the first syllable caught, a metallic ring, crushed, a short hall
         y = MV.tape(a, 1.0)
         y = MV.stutter(y, sr, rng)

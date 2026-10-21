@@ -13,7 +13,15 @@
 //   weave     (drift, when its data has weave: user 2026-10-20 "a snaking Z back and forth AT the girls, and in range it hits them - not a
 //             target sliding to and fro") slanting legs at one girl, a stamp at each turn, nearer each time; in range (or its head off the
 //             top of the picture) it rears up - a red mark, hide - and strikes; then backs off in two slanting steps to where it fights from
-// Only its core takes damage (a ring marks it), and nothing gets through while it attacks (DESIGN「Boss」, 2026-10-18).
+//   slide     (3, user 2026-10-21 with a drawing) from the far end of her ground she slides side to side at one girl, quick and straight,
+//             nearer with every slide, her core open; enough damage and she is thrown straight back to where she started, and starts
+//             again; not stopped, she gets to them and strikes through any cover. Never nearer than the picture holds her (sizeOk).
+// Only its core takes damage, and nothing gets through while it attacks (DESIGN「Boss」, 2026-10-18). The core is not ringed: now and
+// then a puff of watercolour smoke wells out of it in the boss's own colours (def.coreSmoke), or - def.coreTrail, the prologue's - a ribbon
+// of golden light streams off it as she moves; a hit there sprays a mist of blood, and with def.coreGlow the core itself changes colour
+// the more it is hurt (bright, iridescent, a metallic glint: paper.js dmgStyle) - a hit anywhere else only glances (user 2026-10-21). Her attacks have key frames of their own
+// per form (R80: pound_up / pound_down, throw_wind / throw_fling, slide / strike, summon, gather / release; pose() falls back to the
+// old windup / attack when a form has none); a frame can carry its own core (manifest core: [u, v, r]).
 // Hits change its colour, never hole it (paper.js solid damage). Between stages it convulses, splashes ooze and the next mutation grows out
 // (no comic: the fight keeps its rhythm).
 import * as THREE from 'three';
@@ -25,6 +33,7 @@ import { tr } from '../core/i18n.js';
 import { Actor, Enemy } from './enemies.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
+import { FR } from '../core/particles.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
@@ -72,6 +81,7 @@ export class TheThing extends Actor {
     this.dm = new DamageMap(1 / this.ar, 512); attachDamage(this.mesh, this.dm, true);
     this.u = this.mesh.material.uniforms;
     this.u.outlineOn.value = 1; this.u.mapTexel.value.set(1 / t.image.width, 1 / t.image.height);
+    this.u.dmgStyle.value = this.def.coreGlow ? 1 : 0;   // (her core lights up as it is hurt: paper.js)
     this.inner.add(this.mesh);
     this.prefix = `${this.def.sprite || 'boss/qq'}_s${n + 1}_`; this.anim = null; this.play('idle', 3);
     this.root.position.y = S.float ? S.y : 0;
@@ -174,7 +184,8 @@ export class TheThing extends Actor {
   hitMeshes() { return this.alive && !this.grief ? [this.mesh] : []; }   // (down and grieving: not a target any more, only her child's things)
   // (S.guarded: open only for moments - exposedT; S.open: open only in these states, e.g. while it rushes and when knocked back)
   weakNow() { return !this.mutating && !this.grief && this.state !== 'attack' && (!this.S.guarded || this.exposedT > 0) && (!this.S.open || this.S.open.includes(this.state)); }
-  core() { const C = this.S.cores; return C ? C[(this.coreI || 0) % C.length] : this.S.core; }
+  core() { const C = this.S.cores; if (C) return C[(this.coreI || 0) % C.length]; return meta[this.mesh?.userData.texKey]?.core || this.S.core; }
+  pose(name, alt, fps = 8) { this.play(tex[this.prefix + name] ? name : alt, fps); }   // (a key frame of this form's, else the old one)
   onCore(uv) {
     const c = this.core(); if (!c) return true;
     return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11);
@@ -192,15 +203,15 @@ export class TheThing extends Actor {
     if (!this.weakNow() || !this.onCore(info.uv)) { this.glance(info); return; }
     const dmg = info.dmg * (D.coreMul ?? 1) * (this.S.guarded ? D.throw?.exposedMul ?? 2 : 1);   // (a form open only for moments: those moments hurt it more)
     info.dealt = dmg; this.lastHitBy = info.by;
-    this.paint(info);
-    this.flash = Math.max(this.flash, 0.7);
-    const p = this.uvToWorld(info.uv.u, info.uv.v), fx = this.game.fx;
-    fx.ink(p, 8, 2.6, COL.hot); fx.star(p, 2.5, COL.pink);
+    this.paint(info);   // (no white flash of the whole of her: the core itself changes colour as it is hurt - user 2026-10-21)
+    if (this.def.coreGlow) { const c = this.core(); if (c) { this.dm.blob(c[0], c[1], (c[2] ?? 0.11) * this.h / this.w * 1.15, '0,255,0', 0.045); this.dm.tex.needsUpdate = true; } }   // (the whole core, a little more each hit)
+    const p = this.uvToWorld(info.uv.u, info.uv.v);
+    this.mist(p);
     // a lunge being gathered breaks off when its core is hit enough
     if (this.state === 'windup' && this.move === 'lunge' && info.stagger) { this.poise += info.stagger; if (this.poise >= D.lunge.poise) this.interrupt(); }
     this.hp -= dmg; this.stageDmg = (this.stageDmg || 0) + dmg;
     // (a zigzag rush knocked back by enough damage on the way; a charge broken by enough damage before it is full)
-    if (this.zz) { this.zz.dmg += dmg; if (this.zz.dmg >= D.zigzag.poise) this.repel(); }
+    if (this.zz) { this.zz.dmg += dmg; if (this.zz.dmg >= (this.move === 'slide' ? D.slide : D.zigzag).poise) this.repel(); }
     if (this.chg && this.state === 'windup') { this.chg.dmg += dmg; if (this.chg.dmg >= D.charge.poise) { this.chg = null; this.interrupt(); } }
     if (D.ritual && !this.keeps) this.hp = Math.max(this.hp, 1);   // (her child's things come out before her end)
     this.game.onHit(this, info.kind, info);
@@ -234,12 +245,46 @@ export class TheThing extends Actor {
   // where the AI partner aims (src/core/input.js): the core, on screen (y down like screenBox)
   aimAt() { const c = this.core(); if (!c || !this.weakNow()) return null; const g = this.game, sc = g.world.project(this.uvToWorld(c[0], c[1])); return { x: sc.x, y: sc.y }; }
   // the ring round the core (the small kill ring: shoot inside it), gone while it attacks or changes
-  markCore(on, t) {
+  // (not a ring: now and then watercolour smoke wells out of the core in her own colours, faint - def.coreSmoke: colors, every, n, a)
+  markCore(on) {
     const g = this.game;
-    if (!on) { if (this.coreMark) { this.coreMark.remove(); this.coreMark = null; } return; }
-    if (!this.coreMark) this.coreMark = g.fx.orbit('shot', -1);
-    const c = this.core(), wc = this.uvToWorld(c[0], c[1]), sc = g.world.project(wc), top = g.world.project(this.uvToWorld(c[0], c[1] + (c[2] ?? 0.11)));
-    this.coreMark.set(sc.x, g.H - sc.y, Math.max(18, Math.abs(top.y - sc.y)), 0.2, t, 9, null, null);
+    if (this.coreMark) { this.coreMark.remove(); this.coreMark = null; }
+    if (!on) { this.smokeT = 0.2; this.trailAt = null; return; }
+    if (this.def.coreTrail) return;   // (the trail: update, always)
+    this.smokeT = (this.smokeT ?? 0.2) - (g.rdt || 0.016);
+    if (this.smokeT > 0) return;
+    const S = this.def.coreSmoke || {}, c = this.core(); this.smokeT = rr(S.every || [0.7, 1.3]);
+    const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), cam = g.world.camPos;
+    const toCam = new THREE.Vector3(cam.x - p.x, 0, cam.z - p.z).normalize(), cols = (S.colors || ['#ff6aa8', '#a46bff', '#ff9a6a', '#6ac8ff']).map((h) => new THREE.Color(h));
+    for (let i = 0; i < (S.n ?? 7); i++) {
+      const col = cols[i % cols.length], a = rnd(0, 6.28), v = rnd(0.25, 0.8) * s;
+      g.fx.wNorm.emit({ x: p.x + toCam.x * 0.25 + Math.cos(a) * s * 0.25, y: p.y + Math.sin(a) * s * 0.25, z: p.z + toCam.z * 0.25, vx: Math.cos(a) * v + toCam.x * 0.2, vy: Math.sin(a) * v + 0.25 * s, vz: toCam.z * 0.2,
+        drag: 1.4, life: rnd(1.0, 1.7), size: s * rnd(0.5, 0.9), size1: s * rnd(2.2, 3.4), rot: rnd(0, 6.28), vrot: rnd(-0.6, 0.6), color: [col.r, col.g, col.b], a: S.a ?? 0.4, a1: 0, frame: FR.SMOKE });
+    }
+  }
+  // a ribbon of light streaming off her core as she moves (user 2026-10-21, a picture of golden light trails: the weak point found by
+  // its trail; still, only a few sparks drift off it) - def.coreTrail: colors, perM (sparks a metre moved), idle (a second standing)
+  trailTick(dt, k = 1) {   // (k: dimmer while the core is shut - it still shows where it is)
+    const g = this.game, T = this.def.coreTrail, c = this.core(); if (!c) return;
+    const p = this.uvToWorld(c[0], c[1]), last = this.trailAt || p.clone(), d = Math.min(3, p.distanceTo(last)), s = this.h * (c[2] ?? 0.11);
+    const cols = this.trailCols || (this.trailCols = (T.colors || ['#ffd27a', '#ffb347', '#fff2c0']).map((h) => new THREE.Color(h)));
+    this.trailAcc = (this.trailAcc || 0) + Math.min(60, (d * (T.perM ?? 18) + dt * (T.idle ?? 6)) * (0.5 + 0.5 * k));
+    while (this.trailAcc >= 1) {
+      this.trailAcc -= 1;
+      const q = last.clone().lerp(p, Math.random()), col = cols[Math.floor(Math.random() * cols.length)], star = Math.random() < 0.22;
+      g.fx.wAdd.emit({ x: q.x + rnd(-0.2, 0.2) * s, y: q.y + rnd(-0.2, 0.2) * s, z: q.z + rnd(-0.1, 0.1) * s, vx: rnd(-0.3, 0.3), vy: rnd(0.15, 0.55), vz: rnd(-0.3, 0.3),
+        drag: 0.6, life: rnd(0.9, 1.6), size: s * (star ? rnd(0.4, 0.65) : rnd(0.25, 0.5)), size1: s * rnd(0.05, 0.15), rot: rnd(0, 6.28), color: [col.r, col.g, col.b], a: 0.95 * k, a1: 0, frame: star ? FR.STAR : FR.GLOW });
+    }
+    this.trailAt = p.clone();
+  }
+  // a hit on the core: a spray of blood mist (her own blood colours: def.coreSmoke.blood) and a few drops
+  mist(p) {
+    const g = this.game, S = this.def.coreSmoke || {}, s = this.h * ((this.core()?.[2]) ?? 0.11), cols = (S.blood || ['#c8102e', '#ff3b5c', '#7a0018']).map((h) => new THREE.Color(h));
+    if ((this.mistT || 0) > 0) return; this.mistT = 0.07;
+    for (let i = 0; i < 4; i++) { const col = cols[i % cols.length], a = rnd(0, 6.28), v = rnd(0.6, 1.6) * s;
+      g.fx.wNorm.emit({ x: p.x, y: p.y, z: p.z, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vz: rnd(0, 0.6), drag: 2.5, life: rnd(0.5, 0.9), size: s * 0.35, size1: s * rnd(1.2, 1.8),
+        rot: rnd(0, 6.28), vrot: rnd(-1, 1), color: [col.r, col.g, col.b], a: 0.5, a1: 0, frame: FR.SMOKE }); }
+    g.fx.confetti(p, 3, 1.2, [0xc8102e, 0xff3b5c]);
   }
   later(s, fn) { const q = this.seq; this.game.etw.wait(s, () => { if (this.alive && q === this.seq) fn(); }); }
 
@@ -255,7 +300,8 @@ export class TheThing extends Actor {
     const wk = this.weakNow();
     this.u.outlineCol.value.setRGB(1, 1, 1);
     this.tickT = (this.tickT || 0) - dt;
-    this.markCore(wk && this.core() && !g.cineOn, t);
+    this.markCore(wk && this.core() && !g.cineOn); this.mistT = (this.mistT || 0) - dt; this.u.time.value = t;
+    if (this.def.coreTrail && this.core() && !g.cineOn && !this.mutating && !this.grief) this.trailTick(dt, wk ? 1 : 0.35); else this.trailAt = null;
     this.exposedT = Math.max(0, (this.exposedT || 0) - dt);
     const H = this.def.heal, on = (this.healers || []).filter((e) => e.alive && e.attached).length;
     if (H && on && !this.mutating && this.hp < this.maxHp) {
@@ -304,6 +350,12 @@ export class TheThing extends Actor {
   // ---------------------------------------------------------------- moves
   drift() {
     if (this.def.weave) { this.weave(); return; }
+    if (this.def.drift === 'slide') {   // (a quick slide aside where she stands - not at them, not to and fro: user 2026-10-21)
+      const g = this.game, Z = this.zone, P = this.root.position, x = P.x > (Z.x[0] + Z.x[1]) / 2 ? rnd(Z.x[0], Z.x[0] * 0.4) : rnd(Z.x[1] * 0.4, Z.x[1]);
+      this.state = 'move'; this.pose('slide', 'move'); this.inner.scale.x = Math.abs(this.inner.scale.x) * (x < P.x ? 1 : -1);
+      g.etw.to(P, { x }, 0.55, { ease: Ease.inOutCubic, onDone: () => { this.inner.scale.x = Math.abs(this.inner.scale.x); if (this.alive && this.state === 'move') { this.state = 'idle'; this.play('idle', 3); } } });
+      this.timer = 0.55 + rr(this.def.rest); return;
+    }
     const g = this.game, Z = this.zone, P = this.root.position;
     let x = rnd(Z.x[0], Z.x[1]); if (Math.abs(x - P.x) < 1.5) x = P.x > 0 ? Z.x[0] * 0.7 : Z.x[1] * 0.7;
     const z = rnd(Z.z[0], Z.z[1]), d = Math.hypot(x - P.x, z - P.z), time = Math.max(1.2, d / this.def.speed);
@@ -349,17 +401,17 @@ export class TheThing extends Actor {
       });
     });
   }
-  windup(time, threat, slot, then) {
+  windup(time, threat, slot, then, pose) {
     const g = this.game;
     this.state = 'windup'; this.timer = this.timer0 = time; this.poise = 0;
-    this.play('windup');
+    this.pose(pose || 'windup', 'windup');
     this.lock = g.fx.lock(threat, slot);
     g.fx.charge(this, threat === 'hide' ? 0xff4fc8 : 0xffb04a);
     sfx.warn();
     this.later(time, () => { this.endWindup(); then(); });
   }
-  attackPose(dur) {
-    this.state = 'attack'; this.play('attack');
+  attackPose(dur, pose) {
+    this.state = 'attack'; this.pose(pose || 'attack', 'attack');
     this.later(dur, () => { if (this.state === 'attack') { this.state = 'idle'; this.play('idle', 3); } });
   }
   volley() {
@@ -420,7 +472,7 @@ export class TheThing extends Actor {
     this.state = 'idle';
     this.windup(D.windup, 'hide', -1, () => {
       for (let i = 0; i < D.slams; i++) this.later(i * D.gap, () => {
-        this.attackPose(D.gap); sfx.slam(); g.post.shake(1.5); g.G.stop(0.05);
+        this.attackPose(D.gap, 'pound_down'); sfx.slam(); g.post.shake(1.5); g.G.stop(0.05);
         for (const cv of g.world.covers || []) if (cv) g.fx.confetti(cv.m.position.clone().setY(cv.h * 0.8), 10, 1.6, [COL.bone, COL.paper]);
         g.playerAttacked({ kind: 'ranged', dmg: D.dmg, from: this, slot: -1, rattle: true });   // (hidden: the cover shakes as if it would give, and holds)
       });
@@ -428,20 +480,20 @@ export class TheThing extends Actor {
         this.state = 'move'; this.play('move', 4);
         g.etw.to(this.root.position, { x: home.x, z: home.z }, D.back, { ease: Ease.inOutQuad, onDone: () => { if (this.alive && this.state === 'move') { this.state = 'idle'; this.play('idle', 3); } } });
       });
-    });
+    }, 'pound_up');
     this.timer = D.windup + D.slams * D.gap + D.back + 0.6 + rr(this.def.rest);
   }
   // (2) things thrown one after another; its weak point opens only for a moment at each throw
   throw() {
     const g = this.game, D = this.def.throw, n = Math.round(rr(D.shots)), kinds = this.def.volley.projectiles;
-    this.state = 'throwing'; this.play('windup');
+    this.state = 'throwing'; this.pose('throw_wind', 'windup');
     for (let i = 0; i < n; i++) this.later(0.5 + i * D.gap, () => {
-      this.play('attack'); this.exposedT = D.expose; this.flash = Math.max(this.flash, 0.4);
+      this.pose('throw_fling', 'attack'); this.exposedT = D.expose;
       const c = this.core(); g.fx.glint(this.uvToWorld(c[0], c[1]), 0xffffff, 1.4); sfx.tink?.(0);
       const from = this.uvToWorld(rnd(0.35, 0.65), rnd(0.45, 0.7));
       g.spawnProjectile(kinds[(i + this.stage) % kinds.length], from, { slot: g.pickTarget(from.x - g.world.camPos.x), time: D.flight, curve: rnd(-2, 2), dmg: D.dmg });
       sfx.throwIt(0);
-      this.later(D.expose, () => { if (this.state === 'throwing') this.play('windup'); });
+      this.later(D.expose, () => { if (this.state === 'throwing') this.pose('throw_wind', 'windup'); });
     });
     this.later(0.6 + n * D.gap, () => { if (this.state === 'throwing') { this.state = 'idle'; this.play('hurt'); this.exposedT = D.after ?? 1.5; this.later(D.after ?? 1.5, () => { if (this.state === 'idle') this.play('idle', 3); }); } });   // (spent: open a little longer)
     this.timer = 0.8 + n * D.gap + (D.after ?? 1.5) + rr(this.def.rest);
@@ -469,12 +521,52 @@ export class TheThing extends Actor {
     });
     this.timer = D.windup + 1;
   }
+  slide() {
+    const g = this.game, D = this.def.slide, Z = this.zone, P = this.root.position, c = g.world.camPos;
+    const home = this.slideHome || (this.slideHome = new THREE.Vector3((Z.x[0] + Z.x[1]) / 2, P.y, Z.z[0]));   // (the start: the far end of her ground)
+    if (Math.hypot(P.x - home.x, P.z - home.z) > 0.6) { this.slideBack(home, Math.max(0.6, Math.hypot(P.x - home.x, P.z - home.z) / 14)); return; }
+    const alive = (s) => g.players[s] && g.players[s].state !== 'down' && g.players[s].state !== 'away';
+    const slot = alive(0) ? 0 : 1, cov = g.world.covers?.[slot];   // (the drawing: at 1P)
+    const gx = cov ? cov.def.x : c.x + (slot ? 1 : -1), gz = (cov ? cov.def.z : c.z - 2) - D.near;
+    const Zz = this.zz = { dmg: 0, home: home.clone() };
+    this.state = 'slide'; this.timer = 99;
+    let i = 0, side = Math.random() < 0.5 ? -1 : 1;
+    const step = () => {
+      if (this.zz !== Zz || !this.alive) return;
+      const k = (i + 1) / D.legs, to = new THREE.Vector3(gx + side * D.lateral * (1 - 0.35 * k), P.y, home.z + (gz - home.z) * k);
+      if (i >= D.legs || !this.sizeOk(to)) { this.slideStrike(slot, Zz); return; }
+      this.pose('slide', 'move'); this.inner.scale.x = Math.abs(this.inner.scale.x) * (to.x < P.x ? 1 : -1);   // (drawn sliding to the left)
+      g.etw.to(P, { x: to.x, z: to.z }, D.time, { ease: Ease.inOutCubic, onDone: () => {
+        if (this.zz !== Zz || !this.alive) return;
+        this.inner.scale.x = Math.abs(this.inner.scale.x); this.play('idle', 3); sfx.thud?.(0); g.post.shake(0.3);
+        i++; side = -side; this.later(D.pause, step);
+      } });
+    };
+    this.later(0.35, step);
+  }
+  // (the whole of her inside the picture there: her top below its top edge - a paper figure is never blown up past the screen)
+  sizeOk(to) { const g = this.game, top = g.world.project(new THREE.Vector3(to.x, to.y + (this.S.float ? this.S.h * 0.55 : this.S.h * 1.02), to.z)); return top.y > g.H * 0.05; }
+  slideStrike(slot, Zz) {
+    const g = this.game, D = this.def.slide;
+    this.windup(D.windup, 'kill', slot, () => {   // (the red mark: it comes through any cover)
+      if (this.zz !== Zz || !this.alive) return;
+      this.zz = null; this.attackPose(0.7, 'strike'); sfx.slam(); g.post.shake(1.6); g.G.stop(0.08);
+      g.playerAttacked({ kind: 'ram', dmg: D.dmg, from: this, slot, heavy: true });
+      this.later(0.7, () => this.slideBack(Zz.home, 1.0));
+    }, 'strike');
+  }
+  slideBack(home, time) {   // (straight back to where she started; her core still open on the way)
+    const g = this.game, P = this.root.position;
+    this.state = 'back'; this.play('move', 4); this.timer = 99;
+    g.etw.to(P, { x: home.x, z: home.z }, time, { ease: Ease.outCubic, onDone: () => { if (!this.alive) return; if (this.state === 'back') { this.state = 'idle'; this.play('idle', 3); } this.timer = rr(this.def.rest); } });
+  }
   repel() {   // (knocked back home in the middle of its rush)
     const g = this.game, Z = this.zz; this.zz = null; this.seq++; this.endWindup();
     this.state = 'hurt'; this.play('hurt'); this.flash = 1;
     g.fx.stamp('don', g.W * 0.5, g.H * 0.68, 0.26, 0); g.post.shake(1.1); sfx.roar(); g.G.stop(0.12);
     g.hud.gl.stickers.say(g.players.find((p) => p.state === 'out') || g.players[0], 'stagger');
-    g.etw.to(this.root.position, { x: Z.home.x, z: Z.home.z }, 0.55, { ease: Ease.outQuad });
+    const far = Math.hypot(this.root.position.x - Z.home.x, this.root.position.z - Z.home.z);   // (all the way back to her start)
+    g.etw.to(this.root.position, { x: Z.home.x, z: Z.home.z }, Math.max(0.55, far / 12), { ease: Ease.outQuad });
     this.later(this.def.stunTime, () => { this.state = 'idle'; this.play('idle', 3); });
     this.timer = this.def.stunTime + 0.8;
   }
@@ -490,11 +582,11 @@ export class TheThing extends Actor {
     });
     this.windup(D.time, 'kill', -1, () => {
       if (!this.chg) return;
-      this.chg = null; this.attackPose(0.9);
+      this.chg = null; this.attackPose(0.9, 'release');
       sfx.slam(); sfx.madness(); g.post.flash(0.7, 0xff3a5a); g.post.shake(1.8);
       const p = this.center(); g.fx.confetti(p, 50, 6, [COL.hot, COL.pink, COL.white]); g.fx.star(p, 8, COL.hot);
       g.playerAttacked({ kind: 'ram', dmg: D.dmg, from: this, heavy: true, slot: -1 });
-    });
+    }, 'gather');
     this.timer = D.time + 1.6 + rr(this.def.rest);
   }
   // (4) healers out of her body, one each side and above: kill them, or they feed her back (def.heal: rate per healer, max, type)
@@ -503,7 +595,7 @@ export class TheThing extends Actor {
     this.healers = (this.healers || []).filter((e) => e.alive);
     const n = Math.min(H.n, H.max - this.healers.length);
     if (n <= 0) { this.volley(); return; }
-    this.attackPose(0.8); sfx.roar(); this.flash = 0.6;
+    this.attackPose(0.8, 'summon'); sfx.roar();
     for (let i = 0; i < n; i++) this.later(0.3 + i * 0.5, () => {
       const c = this.center(), side = (this.healN = (this.healN || 0) + 1) % 2 ? -1 : 1;   // (left, right, left...)
       const e = g.spawnEnemy({ type: H.type, x: c.x, y: c.y, z: c.z + 0.5, free: true });
@@ -522,7 +614,7 @@ export class TheThing extends Actor {
     const g = this.game, list = this.S.summon || this.def.summon;
     const up = g.actors.filter((a) => a.alive && a !== this && a.def && !a.boss && a.type !== 'boss').length;
     if (up >= (this.def.summonMax ?? 99)) { this.volley(); return; }   // (enough of them about: it throws instead)
-    this.attackPose(0.8); sfx.roar();
+    this.attackPose(0.8, 'summon'); sfx.roar();
     list.forEach((s, i) => this.later(0.4 + i * 0.7, () => g.spawnEnemy({ ...s })));
     this.timer = 1.2 + list.length * 0.7 + this.def.summonRest;
   }

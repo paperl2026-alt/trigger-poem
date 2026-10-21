@@ -89,7 +89,7 @@
               "z": -14,
               "from": "door",
               "sprite": "ghoul",
-              "hp": 7200,
+              "hp": 5040,
               "tough": true,
               "move": "walk",
               "far": 17,
@@ -908,7 +908,7 @@
         "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -7.5, "hp": 1440, "from": "ceiling" }
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -7.5, "hp": 1008, "from": "ceiling" }
           ],
           [
             { "t": 0, "type": "crawler", "x": -1.67, "z": -6.5, "move": "zigzag", "from": "door", "way": "d1" },

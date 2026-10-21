@@ -33,7 +33,8 @@ def madame(B):
     # (how long each form lasts, on the auto-player: about 6, 63 and 49 damage a second in the three -> about a minute each; the diary's
     # share is its six pages)
     B["hp"] = 4160
-    B["weave"] = {"legs": 3, "lateral": 1.8, "leg": 0.8, "pause": 0.35, "near": 5.0, "topY": 0.06, "windup": 1.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave)
+    B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 1.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
+    B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
     B["madame"] = {
         "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相），chunk 每打对一页扣她最大血量的比例、stun 僵住几秒、cut 打错那页割人的伤害、coreMul 直接打她的伤害倍数；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
@@ -126,6 +127,13 @@ def main():
     # (the rooms from how they were before this rework, so running it again gives the same: git BASE)
     f = L / "sets.json"; D = json.loads(subprocess.run(["git", "show", f"{BASE}:public/content/base/levels/ep1/sets.json"], cwd=ROOT, capture_output=True, check=True).stdout.decode("utf-8"))
     places(D)
+    # (the monsters' health 70% of what it was - user 2026-10-21: the episode chokes on how many are up at once, and they were tough;
+    # the kinds' own in levels/ep1/enemies.json were lowered the same once, by hand)
+    for S in D.values():
+        for st in (S.get("stations") or {}).values() if isinstance(S, dict) else ():
+            for w in st.get("waves", []) if isinstance(st, dict) else ():
+                for e in w if isinstance(w, list) else ():
+                    if isinstance(e.get("hp"), (int, float)) and e["hp"] > 10: e["hp"] = int(round(e["hp"] * 0.7))
     packs.dump(f, D)
     print("ep1 madame:", [s["pattern"] for s in B["madame"]["stages"]], "rooms:", list(ROOMS))
 

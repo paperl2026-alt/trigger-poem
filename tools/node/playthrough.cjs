@@ -52,6 +52,7 @@ app.whenReady().then(async () => {
     catch (e) { return new Response('not found', { status: 404 }); }
   });
   const win = new BrowserWindow({ width: 1480, height: 833, show: false, webPreferences: { backgroundThrottling: false, offscreen: true } });
+  win.webContents.setAudioMuted(true);   // (heard by nobody: the game's sound runs and is counted, the speakers stay quiet - the user may be playing)
   win.webContents.setFrameRate(60);
   win.webContents.on('console-message', (e, level, message, line, src) => { if (level >= 2) log('console', level, message, `${src}:${line}`); });
   const q = `play&auto${NOSKIP ? '' : '&skip'}&ep=${ep}&step=${step}${TEAM ? `&team=${TEAM}` : ''}${STATION ? `&station=${STATION}` : ''}`;

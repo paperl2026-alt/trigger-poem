@@ -282,7 +282,7 @@
         "covers": [{ "k": "cover/lockers", "side": -1 }, { "k": "cover/desks", "side": 1 }],
         "waves": [
           [
-            { "t": 0.4, "type": "shoe", "x": -1.56, "z": -10, "move": "walk", "from": "door", "way": "c1" },
+            { "t": 0.4, "type": "shoe", "x": -1.56, "z": -10, "move": "walk", "from": "door", "way": "c2" },
             { "t": 1.4, "type": "shoe", "x": 1.56, "z": -11, "move": "walk", "from": "door", "way": "c2" }
           ],
           [
@@ -296,14 +296,14 @@
           ],
           [
             { "t": 0, "type": "frame", "x": -1.5, "z": -12, "from": "wall" },
-            { "t": 1.0, "type": "shoe", "x": 1.56, "z": -10, "move": "walk", "from": "door", "way": "c1" },
+            { "t": 1.0, "type": "shoe", "x": 1.56, "z": -10, "move": "walk", "from": "door", "way": "c2" },
             { "t": 1.8, "type": "chair", "z": -22, "move": "zigzag" }
           ],
           [
             { "t": 0, "type": "horn", "x": 0, "z": -11, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "chair", "x": -1.56, "z": -11, "move": "zigzag", "from": "door", "way": "c1" },
+            { "t": 0, "type": "chair", "x": -1.56, "z": -11, "move": "zigzag", "from": "door", "way": "c2" },
             { "t": 0.6, "type": "chair", "x": 1.56, "z": -11.5, "move": "zigzag", "from": "door", "way": "c2" },
             { "t": 1.4, "type": "desk", "z": -22, "move": "charge" },
             { "t": 2.4, "type": "book", "x": 2.0, "z": -11.5, "y": 2.2, "from": "outside" }
@@ -311,7 +311,7 @@
           [
             { "t": 0, "type": "clock", "x": -1.56, "z": -12, "from": "door", "way": "c2" },
             { "t": 0.8, "type": "frame", "x": -1.5, "z": -12.5, "from": "wall" },
-            { "t": 1.6, "type": "shoe", "x": 0.0, "z": -10, "move": "burrow", "from": "door", "way": "c1" },
+            { "t": 1.6, "type": "shoe", "x": 0.0, "z": -10, "move": "burrow", "from": "door", "way": "c2" },
             { "t": 2.4, "type": "shoe", "z": -22, "move": "burrow" },
             { "t": 3.2, "type": "paper", "x": 2.0, "z": -11, "y": 2.3, "from": "outside" }
           ]
@@ -327,14 +327,14 @@
         "covers": [{ "k": "cover/cart", "side": -1 }, { "k": "cover/bookcase", "side": 1 }],
         "waves": [
           [
-            { "t": 0.3, "type": "chair", "x": -1.56, "z": -15, "move": "zigzag", "from": "door", "way": "c2" },
+            { "t": 0.3, "type": "chair", "x": -1.56, "z": -15, "move": "zigzag", "from": "door", "way": "c3" },
             { "t": 0.9, "type": "shoe", "x": 1.56, "z": -15.5, "move": "walk", "from": "door", "way": "c3" },
             { "t": 1.5, "type": "chair", "z": -22 },
             { "t": 2.1, "type": "desk", "x": -1.04, "z": -15, "move": "hop", "from": "door", "way": "c3" },
             { "t": 2.7, "type": "paper", "x": 2.0, "z": -16, "y": 2.2, "from": "outside" }
           ],
           [
-            { "t": 0, "type": "clock", "x": 0.0, "z": -16, "from": "door", "way": "c2" },
+            { "t": 0, "type": "clock", "x": 0.0, "z": -16, "from": "door", "way": "c3" },
             { "t": 0.8, "type": "paper", "x": 2.0, "z": -16, "y": 2.0, "from": "outside" },
             { "t": 1.4, "type": "paper", "x": 2.0, "z": -16.5, "y": 2.4, "from": "outside" }
           ],
@@ -348,18 +348,18 @@
             { "t": 2.4, "type": "shoe", "z": -22, "move": "burrow" }
           ],
           [
-            { "t": 0, "type": "desk", "x": -1.56, "z": -15, "from": "door", "way": "c2" },
+            { "t": 0, "type": "desk", "x": -1.56, "z": -15, "from": "door", "way": "c3" },
             { "t": 0.4, "type": "desk", "x": 1.56, "z": -15.5, "from": "door", "way": "c3" },
             { "t": 0.9, "type": "chair", "z": -22 },
             { "t": 1.4, "type": "chair", "x": -1.3, "z": -16, "from": "door", "way": "c3" },
-            { "t": 1.9, "type": "shoe", "x": 1.3, "z": -15, "from": "door", "way": "c2" },
+            { "t": 1.9, "type": "shoe", "x": 1.3, "z": -15, "from": "door", "way": "c3" },
             { "t": 2.4, "type": "shoe", "z": -22, "move": "burrow" }
           ],
           [
             { "t": 0, "type": "horn", "x": 0, "z": -16, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "desk", "x": 0.0, "z": -16, "move": "charge", "from": "door", "way": "c2" },
+            { "t": 0, "type": "desk", "x": 0.0, "z": -16, "move": "charge", "from": "door", "way": "c3" },
             { "t": 0.8, "type": "chair", "x": -1.56, "z": -15.5, "move": "zigzag", "from": "door", "way": "c3" },
             { "t": 1.6, "type": "book", "x": 2.0, "z": -16, "y": 2.2, "from": "outside" },
             { "t": 2.4, "type": "clock", "z": -22 },
@@ -518,8 +518,16 @@
                 { "k": "ep0/cut_cat_startled_b", "side": 1, "life": 1.2, "delay": 1.05 }
               ]
             },
-            { "t": 0.7, "bossSay": { "who": "qq", "kind": "intro" } },
-            { "t": 2.6, "cut": { "face": "fwd", "whip": true }, "speed": 7 },
+            {
+              "t": 1.5,
+              "foe": { "k": "boss/qq_s1_idle0", "at": [0, 2.0], "h": 3.3, "life": 12.4, "step": 0.12 }
+            },
+            { "t": 1.6, "bossSay": { "who": "qq", "kind": "intro" } },
+            { "t": 5.6, "say": "retort", "who": "pink", "insert": { "k": "ep0/cut_pink_retort_a", "side": -1, "life": 1.7 } },
+            { "t": 8.0, "say": "retort", "who": "cat", "insert": { "k": "ep0/cut_cat_retort_c", "side": 1, "life": 1.7 } },
+            { "t": 10.4, "bossSay": { "who": "qq", "kind": "shrug" }, "shake": 0.8, "sfx": "roar" },
+            { "t": 13.0, "say": "retreat" },
+            { "t": 13.9, "cut": { "face": "fwd", "whip": true }, "speed": 7 },
             {
               "at": 5,
               "spawn": [
@@ -566,7 +574,7 @@
               "sfx": "roar",
               "insert": { "k": "ep0/cut_pink_lookback_a", "side": -1, "life": 1.4, "delay": 0.5 }
             },
-            { "at": 41.8, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack" },
+            { "at": 40.8, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "pink" },
             {
               "at": 43,
               "spawn": [
@@ -598,7 +606,7 @@
               "sfx": "roar",
               "insert": { "k": "ep0/cut_cat_lookback_a", "side": 1, "life": 1.4, "delay": 0.5 }
             },
-            { "at": 66.2, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack" },
+            { "at": 65.2, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "cat" },
             {
               "at": 68,
               "spawn": [
@@ -636,7 +644,7 @@
               "sfx": "roar",
               "insert": { "k": "ep0/cut_pink_lookback_a", "side": -1, "life": 1.4, "delay": 0.5 }
             },
-            { "at": 92.6, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack" },
+            { "at": 91.6, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "pink" },
             {
               "at": 95,
               "spawn": [
@@ -668,12 +676,12 @@
               "sfx": "roar",
               "insert": { "k": "ep0/cut_cat_lookback_a", "side": 1, "life": 1.4, "delay": 0.5 }
             },
-            { "at": 118.0, "cut": { "face": "fwd", "whip": true }, "speed": 10, "say": "lookBack" },
-            { "at": 122, "say": "deadEnd", "who": 0 }
+            { "at": 117.0, "cut": { "face": "fwd", "whip": true }, "speed": 12, "say": "deadEnd", "who": "cat" }
           ],
           "carry": true,
           "face": "back",
-          "lean": 0.22
+          "lean": 0.22,
+          "outro": { "at": 10, "time": 0.8, "speed": 12, "color": "#000000" }
         },
         "cam": [0, 1.25, -144],
         "look": [0, 1.2, -160],

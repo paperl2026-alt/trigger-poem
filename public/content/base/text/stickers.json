@@ -351,6 +351,30 @@
             { "zh": "呜呜，好高……不敢看下面！", "en": "Waah, so high... I can't look down!", "ja": "うぅ、たかい……したみれないよぉ！" },
             { "zh": "背后是它，前面是窗……只能跳了！", "en": "It's behind us, the window's ahead... we have to jump!", "ja": "うしろはあれ、まえはまど……とぶしかないよ！" }
           ]
+        },
+        "retort": {
+          "lines": [
+            {
+              "zh": "哈？风纪委员了不起啊？裙子长短关你什么事！",
+              "en": "Huh? So what if you're on the discipline committee? My skirt's none of your business!",
+              "ja": "はぁ？風紀委員だからなに？スカートの長さなんて関係ないでしょ！"
+            },
+            { "zh": "你那个样子才最违反校规吧！", "en": "You're the one breaking every rule, looking like that!", "ja": "そのかっこうがいちばん校則違反でしょ！" },
+            { "zh": "放学后是我的自由时间！让开！", "en": "After school is my free time! Out of the way!", "ja": "放課後はわたしの自由時間なの！どいて！" },
+            { "zh": "限定周边今天就截止了，没空陪你玩！", "en": "The limited merch ends today - no time to play with you!", "ja": "限定グッズきょうまでなの、あそんでるひまないの！" },
+            { "zh": "这么多眼睛……先吃我一梭子再说！", "en": "So many eyes... eat a full clip first!", "ja": "目、多すぎ……とりあえず、これでもくらえ！" },
+            { "zh": "校规校规烦死了！我要开枪了哦！", "en": "Rules, rules, so annoying! I'm gonna shoot, okay?!", "ja": "校則、校則ってうるさい！うっちゃうからね！" }
+          ]
+        },
+        "retreat": {
+          "lines": [
+            { "zh": "不行，完全打不动！先跑！", "en": "No good, it's not even scratched! Run first!", "ja": "だめ、ぜんぜん効いてない！いったんにげよう！" },
+            { "zh": "子弹被吃掉了！？这不公平啦！", "en": "It ate my bullets!? That's not fair!", "ja": "弾、たべられた！？ずるいよぉ！" },
+            { "zh": "撤退撤退！作战失败了啦！", "en": "Retreat, retreat! The plan failed!", "ja": "撤退、撤退！作戦失敗！" },
+            { "zh": "打不过的就先跑，这才叫聪明！", "en": "If you can't win, run - that's smart!", "ja": "かてないならにげる、それがかしこいの！" },
+            { "zh": "呜……它反而更生气了！", "en": "Ugh... I only made it angrier!", "ja": "うぅ……よけいおこらせちゃった！" },
+            { "zh": "换个地方再打！这边！", "en": "We'll fight somewhere else! This way!", "ja": "場所かえてたたかお！こっち！" }
+          ]
         }
       },
       "cat": {
@@ -738,6 +762,34 @@
             { "zh": "落地的时候记得弯膝盖喵。", "en": "Bend your knees when you land, nya.", "ja": "着地はひざをまげるにゃ。" },
             { "zh": "没路了？那就开一条路喵！", "en": "No way out? Then we make one, nya!", "ja": "みちがない？なら、つくるにゃ！" }
           ]
+        },
+        "retort": {
+          "lines": [
+            { "zh": "说教的话，等你变回人再说喵。", "en": "Lecture me once you're human again, nya.", "ja": "お説教は、人間にもどってからにするにゃ。" },
+            { "zh": "猫可不归风纪委员管喵。", "en": "Cats don't answer to the discipline committee, nya.", "ja": "猫は風紀委員の管轄外にゃ。" },
+            {
+              "zh": "被附身了还这么啰嗦……让我把它打出来喵！",
+              "en": "Possessed and still nagging... let me knock it out of you, nya!",
+              "ja": "とりつかれてもうるさいにゃ……たたき出してやるにゃ！"
+            },
+            { "zh": "那东西在你背上喵……别动，我帮你拿掉！", "en": "That thing's on your back, nya... hold still, I'll get it off!", "ja": "背中のそれ……じっとしてるにゃ、とってやるにゃ！" },
+            {
+              "zh": "哼，眼睛多了不起喵？我也有四只……算上眼镜的话。",
+              "en": "Hmph, lots of eyes, so what? I've got four... counting glasses, nya.",
+              "ja": "ふん、目が多いのがえらいにゃ？こっちも四つあるにゃ……メガネこみで。"
+            },
+            { "zh": "校则第一条？那第二条是「别惹猫」喵。", "en": "Rule one? Then rule two is \"don't mess with the cat\", nya.", "ja": "校則第一条？なら第二条は「猫にさからうな」にゃ。" }
+          ]
+        },
+        "retreat": {
+          "lines": [
+            { "zh": "……啧，伤不到它喵。先撤，找机会。", "en": "...Tch, can't hurt it, nya. Fall back, wait for a chance.", "ja": "……ちっ、効かないにゃ。いったんひいて、すきを待つにゃ。" },
+            { "zh": "硬碰硬是笨蛋才干的喵，跑！", "en": "Only idiots go head-on, nya - run!", "ja": "正面からはバカのやることにゃ、にげるにゃ！" },
+            { "zh": "这里太窄了，施展不开喵！", "en": "It's too cramped here to fight, nya!", "ja": "ここはせますぎて、たたかえないにゃ！" },
+            { "zh": "绕开它！到外面再收拾它喵！", "en": "Go round it! We'll deal with it outside, nya!", "ja": "まわりこむにゃ！外でかたづけるにゃ！" },
+            { "zh": "猫的战术：打不过就溜喵。", "en": "Cat tactics: can't win, slip away, nya.", "ja": "猫の戦術：かてないならにげるにゃ。" },
+            { "zh": "别愣着！它要扑过来了喵！", "en": "Don't just stand there! It's about to pounce, nya!", "ja": "ぼーっとするにゃ！とびかかってくるにゃ！" }
+          ]
         }
       }
     },
@@ -920,6 +972,13 @@
             { "zh": "跑也没用的……我……全都看得见……", "en": "Running is useless... I... can see everything...", "ja": "逃げても……むだです……ぜんぶ……見えています……" },
             { "zh": "头发的颜色……违规……违规违规违规……", "en": "Hair colour... violation... violation violation violation...", "ja": "髪の色……違反……違反違反違反……" },
             { "zh": "一个……都不许……离开学校……", "en": "Not one... of you... leaves this school...", "ja": "ひとりも……学校から……出しません……" }
+          ]
+        },
+        "shrug": {
+          "lines": [
+            { "zh": "……没用的。校规，是不会受伤的。", "en": "...Useless. School rules don't get hurt.", "ja": "……むだです。校則は、きずつきません。" },
+            { "zh": "违反校规的子弹……全部没收。", "en": "Bullets that break the rules... all confiscated.", "ja": "校則違反の弾は……ぜんぶ、没収です。" },
+            { "zh": "就这点程度？……要好好接受指导呢。", "en": "Is that all? ...You need proper guidance.", "ja": "その程度ですか……しっかり、指導しないといけませんね。" }
           ]
         }
       },
