@@ -952,6 +952,7 @@ export class HudGL {
   update(dt, t) {
     const g = this.game;
     this.L.set(g.W, g.H, g.G.frame, this.B.scale ?? 1);
+    this.g.visible = this.visible && !this.game.board;   // (a storyboard's shots: nothing of the HUD over them, its words neither)
     if (!this.visible) return;
     this.space.begin();   // what is taken this frame (HUD, boss bar, the girls); pop-ups below find their places around it
     for (const p of this.panels) p.update(dt, t);

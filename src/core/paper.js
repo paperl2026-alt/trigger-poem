@@ -1,6 +1,7 @@
 // Paper cut-out material: one shader carries every hit / kill look.
 //  - damage map (per sprite canvas):  R = holes and cuts, G = scorch, B = heat glow ("solid" sprites: R = how hurt, never holed)
 //  - dissolve: burn-away from an origin with an ember edge
+//  - crack: lines of light branching out across it from that origin before it goes (a boss / an elite dying: crack 0..1, crackCol)
 //  - slice: keep one side of a line (uv space) with a glowing cut edge
 //  - flash / tint for hit feedback, "boil" jitter is done by the owner on the mesh
 import * as THREE from 'three';
@@ -42,6 +43,7 @@ const FRAG = `
 uniform sampler2D map; uniform sampler2D dmg; uniform float useDmg; uniform float dmgSolid; uniform float dmgStyle;
 uniform sampler2D map2; uniform float mixK; uniform vec2 blurDir;   // (the frame before, blended out with a smear: Actor.setFrame)
 uniform float flash; uniform vec3 tint; uniform float tintAmt; uniform float opacity; uniform float dark;
+uniform float crack; uniform vec3 crackCol;
 uniform float dissolve; uniform vec2 dOrigin; uniform vec3 slice; uniform float sliceOn; uniform float aspect;
 uniform float seed; uniform float time; uniform vec3 edgeColor;
 uniform vec3 lit; uniform vec3 fogColor; uniform float fogDensity; uniform float useFog;
@@ -164,6 +166,16 @@ void main(){
     col = mix(col, vec3(1.0), cm * coreHit * 0.85);
     col += coreCol * cm * coreHit * 0.5;
   }
+  if (crack > 0.0) {
+    // dying (thing.js die, Game.eliteDeath - the research's death effects): thin cracks of light winding out from where it breaks, smaller
+    // ones branching off them nearer in; it darkens a little behind them. Only lines, no glow over the whole of it
+    float cd = distance(q, dOrigin * vec2(aspect, 1.0)) + (n - 0.5) * 0.2, reach = crack * 1.5;
+    float c1 = smoothstep(0.03, 0.0, abs(fbm(q * 3.2 + seed) - 0.5));
+    float c2 = smoothstep(0.025, 0.0, abs(fbm(q * 7.5 + seed * 1.7 + 3.0) - 0.5)) * smoothstep(reach * 0.75, reach * 0.25, cd);
+    float line = max(c1, c2 * 0.8) * smoothstep(reach, reach - 0.1, cd);
+    col *= 1.0 - smoothstep(reach, 0.0, cd) * 0.3;
+    col += crackCol * line * (1.6 + 0.8 * n2) + line * 0.4;
+  }
   if (dissolve > 0.0) {
     float dd = distance(q, dOrigin * vec2(aspect, 1.0)) * 0.9 + n * 0.55;
     float e = dd - dissolve * 1.6;
@@ -198,7 +210,7 @@ export function paperMaterial(map, aspect = 1) {
       map: { value: map }, map2: { value: map }, mixK: { value: 1 }, blurDir: { value: new THREE.Vector2(0, 0) }, dmg: { value: blankTex() }, useDmg: { value: 0 }, dmgSolid: { value: 0 }, dmgStyle: { value: 0 },
       outlineOn: { value: 0 }, mapTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) }, outlineCol: { value: new THREE.Color(1, 1, 1) }, outlineW: { value: 1 },
       flash: { value: 0 }, tint: { value: new THREE.Color(1, 1, 1) }, tintAmt: { value: 0 }, opacity: { value: 1 }, dark: { value: 0 },
-      dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) },
+      dissolve: { value: 0 }, dOrigin: { value: new THREE.Vector2(0.5, 0.5) }, crack: { value: 0 }, crackCol: { value: new THREE.Color(1, 0.35, 0.65) },
       slice: { value: new THREE.Vector3() }, sliceOn: { value: 0 }, aspect: { value: aspect },
       seed: { value: Math.random() * 50 }, time: { value: 0 }, edgeColor: { value: new THREE.Color(1, 0.35, 0.7) },
       lit: { value: new THREE.Color(1, 1, 1) }, fogColor: FOG.color, fogDensity: FOG.density, useFog: { value: 1 },

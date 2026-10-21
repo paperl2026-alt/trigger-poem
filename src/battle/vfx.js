@@ -18,6 +18,13 @@
 //           { n, color, size: [a, b], life: [a, b], a, dist: [a, b] metres ahead }
 //   circle  a magic circle drawn in the air in front of it while it gathers (o.life: its wind-up), turning faster and faster; it flares
 //           when the attack goes off, fizzles when it is cut short { r, color, spin }
+//   beam    a blast of light with body from it toward the girls (o.to; research: R-Type's charged blast - a column of light, rings of
+//           light racing along it, glowing at both ends): it shoots out, holds, thins away { r, color, core, rings, time, speed, short }
+//   cone    a cone of fire with body from its mouth toward the girls (the research's flame cone), licking forward { r0, r1, color, core,
+//           time, short }. Both are real volumes (VOL_FRAG marches through them), so they read from the side and head-on alike, and stop
+//           `short` metres before the girls (the stream's particles do the last stretch), aimed `aside` metres past the lens toward the girl
+//           on the far side of the frame (head-on it would be a haze). Only the monsters' and bosses' blows use them -
+//           never the girls' own weapons
 // play(name, at, { n: the way it faces (a wall's normal, a blow's direction), scale, color, to, life }) -> { arrive (s: when a stream gets
 // to the girls), stop(flare) }; trail(name, at, dt, { dir }) for things that move (a thrown thing's fire or smoke); update(dt) every frame.
 import * as THREE from 'three';
@@ -31,6 +38,42 @@ const C3 = new THREE.Color(), UP = new THREE.Vector3(0, 1, 0), D = new THREE.Vec
 const rgb = (hex) => { C3.set(hexNum(hex)); return [C3.r, C3.g, C3.b]; };
 const F2 = new THREE.Vector3(), R2 = new THREE.Vector3(), U2 = new THREE.Vector3();
 
+// a beam / cone of light with body (VFX.vol), in the cylinder's own space (y 0 at its foot .. 1 at its far end, its radius r0 .. r1): from
+// where the camera's ray enters its box to the back face, 12 steps, light gathered where it passes - thick in the middle, white in the core,
+// noise streaming along it, rings of light racing out along a beam; a fire cone licks forward, white-hot near the mouth
+const VOL_VERT = `varying vec3 vL; varying vec3 vW;
+void main(){ vL = position; vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`;
+const VOL_FRAG = `uniform float time, a, rings, fire, speed, len, r0, r1; uniform vec3 c1, c2, camL; varying vec3 vL; varying vec3 vW;
+float h1(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(h1(i), h1(i + vec2(1, 0)), f.x), mix(h1(i + vec2(0, 1)), h1(i + vec2(1, 1)), f.x), f.y); }
+void main(){
+  vec3 d = vL - camL; float rm = max(r0, r1);
+  vec3 lo = (vec3(-rm, 0.0, -rm) - camL) / d, hi = (vec3(rm, 1.0, rm) - camL) / d;
+  vec3 tn = min(lo, hi); float t0 = clamp(max(max(tn.x, tn.y), tn.z), 0.0, 1.0);
+  float stepW = length(vW - cameraPosition) * (1.0 - t0) / 12.0;
+  float acc = 0.0, hot = 0.0;
+  for (int i = 0; i < 12; i++) {
+    vec3 p = camL + d * mix(t0, 1.0, (float(i) + 0.5) / 12.0);
+    float R = mix(r0, r1, p.y), q = length(p.xz) / R;
+    if (q >= 1.0 || p.y < 0.0 || p.y > 1.0) continue;
+    float ends = smoothstep(0.0, 0.04, p.y) * smoothstep(1.0, 0.8, p.y);
+    float flow = n2(vec2(p.x * 5.0 / R, p.y * len * 1.4 - time * speed * 3.0)) * 0.5 + n2(vec2(p.z * 5.0 / R + 7.0, p.y * len * 2.2 - time * speed * 4.5)) * 0.5;
+    float k, h;
+    if (fire > 0.5) {
+      float f2 = n2(vec2((p.x + p.z) * 9.0 / R, p.y * len * 4.0 - time * speed * 7.0));   // (tongues: finer, faster)
+      float lick = smoothstep(0.3, 0.62, flow * 0.65 + f2 * 0.35 + (1.0 - p.y) * 0.32 - q * 0.35);
+      k = lick * (1.0 - q * q) * (1.0 - p.y * 0.45) * 3.0; h = k * (1.0 - q) * (1.0 - p.y * 0.7) * 1.4;
+    } else {
+      float core = exp(-q * q * 10.0), ring = rings > 0.0 ? smoothstep(0.8, 1.0, fract(p.y * rings * len * 0.15 - time * speed)) * smoothstep(0.35, 0.85, q) : 0.0;
+      k = (1.0 - q * q) * (0.3 + 0.7 * flow) * 0.6 + core * 1.2 + ring * 1.2; h = core * 1.2 + ring * 0.6;
+    }
+    float w = ends * stepW / max(0.05, R);
+    acc += k * w; hot += h * w;
+  }
+  float I = 1.0 - exp(-acc * 0.9);
+  vec3 col = mix(c2, c1, clamp(hot / max(acc, 1e-3), 0.0, 1.0));
+  gl_FragColor = vec4(col * I * a * 1.3, 1.0);
+}`;
 // the magic circle: rings, a band of runes, a turning broken ring and a six-pointed star, drawn round as it gathers (draw 0..1)
 const CIRCLE_FRAG = `
 uniform vec3 col; uniform float draw, alpha, flare, time; varying vec2 vUv;
@@ -56,7 +99,7 @@ void main() {
 const CIRCLE_VERT = `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 
 export class VFX {
-  constructor(game) { this.g = game; this.acc = new Map(); this.jobs = []; this.circles = []; }
+  constructor(game) { this.g = game; this.acc = new Map(); this.jobs = []; this.circles = []; this.vols = []; }
   get P() { return T.vfx || {}; }
 
   play(name, at, o = {}) {
@@ -68,6 +111,8 @@ export class VFX {
     }
     if (V.veil) { const W = V.veil; this.jobs.push({ wait: W.delay ?? h.arrive, fn: () => this.veil(W, s) }); }
     if (V.circle) h.circles.push(this.circle(V.circle, at, o.life ?? V.circle.life ?? 1.5, s));
+    if (V.beam && o.to) this.vol(false, V.beam, at, o.to, s);
+    if (V.cone && o.to) this.vol(true, V.cone, at, o.to, s);
     if (V.flash) { const F = V.flash; fx.wAdd.emit({ x: at.x, y: at.y, z: at.z, life: F.life ?? 0.18, size: (F.size ?? 2) * s, size1: (F.size ?? 2) * s * 1.4, color: rgb(o.color ?? F.color ?? '#fff0d0'), a: 1, a1: 0, frame: FR.GLOW }); }
     if (V.flash2d) g.post.flash(V.flash2d[0], hexNum(V.flash2d[1]));
     if (V.shake) g.post.shake(V.shake * Math.min(1.5, s));
@@ -147,6 +192,7 @@ export class VFX {
   }
   end(c, flare) { if (!c.end) { c.end = 1e-4; c.flare = !!flare; } }
   update(dt) {
+    this.volTick(dt);
     for (let i = this.jobs.length - 1; i >= 0; i--) {
       const j = this.jobs[i];
       if (j.fn) { j.wait -= dt; if (j.wait <= 0) { this.jobs.splice(i, 1); j.fn(); } continue; }
@@ -167,8 +213,43 @@ export class VFX {
       }
     }
   }
+  // a beam / a cone (beam, cone above): a closed cylinder (its foot at `at`, its far end toward `to`, the wide end there for a cone) whose
+  // back faces march the camera's ray through it (VOL_FRAG); it reaches out in a moment, holds `time`, thins away
+  vol(cone, B, at, to, s) {
+    // (aimed past the lens, down at the girl on the far side of the frame - `aside` metres - so it is seen along its length: one coming
+    // straight at the camera is only a haze)
+    const cam = this.g.world.camera, R = new THREE.Vector3(1, 0, 0).applyQuaternion(cam.quaternion), side = Math.sign(at.clone().sub(cam.position).dot(R)) || 1;
+    const end = to.clone().addScaledVector(R, -side * (B.aside ?? 1.1)); end.y -= 0.4;
+    const dir = end.sub(at), L = dir.length() - (B.short ?? 1.6); if (L < 0.5) return;
+    dir.normalize();
+    const r0 = (cone ? B.r0 ?? 0.1 : B.r ?? 0.3) * s, r1 = (cone ? B.r1 ?? 0.9 : B.r ?? 0.3) * s;
+    const geo = new THREE.CylinderGeometry(r1, r0, 1, 24, 1, false); geo.translate(0, 0.5, 0);
+    const U = { time: { value: 0 }, a: { value: 0 }, c1: { value: new THREE.Color(hexNum(B.core ?? '#ffffff')) }, c2: { value: new THREE.Color(hexNum(B.color ?? '#a070ff')) },
+      rings: { value: cone ? 0 : B.rings ?? 4 }, fire: { value: cone ? 1 : 0 }, speed: { value: B.speed ?? (cone ? 2.4 : 3.2) }, len: { value: L },
+      r0: { value: r0 }, r1: { value: r1 }, camL: { value: new THREE.Vector3() } };
+    const m = new THREE.Mesh(geo, new THREE.ShaderMaterial({ uniforms: U, vertexShader: VOL_VERT, fragmentShader: VOL_FRAG, transparent: true, depthWrite: false,
+      blending: THREE.AdditiveBlending, side: THREE.BackSide }));
+    m.position.copy(at); m.quaternion.setFromUnitVectors(UP, dir); m.scale.set(1, 0.01, 1); m.renderOrder = 18; m.frustumCulled = false;
+    this.g.world.scene.add(m);
+    this.vols.push({ m, U, L, t: 0, T: B.time ?? 0.5, grow: B.grow ?? 0.12, at: at.clone(), end: at.clone().addScaledVector(dir, L), col: rgb(B.color ?? '#a070ff') });
+  }
+  volTick(dt) {
+    const fx = this.g.fx, cam = this.g.world.camera;
+    for (let i = this.vols.length - 1; i >= 0; i--) {
+      const v = this.vols[i]; v.t += dt; v.U.time.value = v.t;
+      const out = Math.min(1, v.t / v.grow), fade = Math.min(1, Math.max(0, (v.t - v.grow - v.T) / 0.28)), thin = 1 - fade * 0.7;
+      v.m.scale.set(thin, Math.max(0.01, out) * v.L, thin); v.U.len.value = v.m.scale.y; v.U.a.value = Math.min(1, out * 1.5) * (1 - fade);
+      v.m.updateMatrixWorld(); v.m.worldToLocal(v.U.camL.value.copy(cam.position));
+      // glowing at both ends while it holds
+      if (fade < 1 && Math.random() < dt * 30) for (const p of [v.at, v.end]) fx.wAdd.emit({ x: p.x, y: p.y, z: p.z, life: 0.16, size: 0.7, size1: 1.1, color: v.col, a: 0.7 * (1 - fade), a1: 0, frame: FR.GLOW });
+      if (fade >= 1) { v.m.removeFromParent(); v.m.geometry.dispose(); v.m.material.dispose(); this.vols.splice(i, 1); }
+    }
+  }
   // a new place: what was pouring / hanging there is gone
-  clear() { this.jobs.length = 0; for (const c of this.circles) { c.m.removeFromParent(); c.m.geometry.dispose(); c.m.material.dispose(); } this.circles.length = 0; }
+  clear() {
+    this.jobs.length = 0; for (const c of this.circles) { c.m.removeFromParent(); c.m.geometry.dispose(); c.m.material.dispose(); } this.circles.length = 0;
+    for (const v of this.vols) { v.m.removeFromParent(); v.m.geometry.dispose(); v.m.material.dispose(); } this.vols.length = 0;
+  }
   // a moving thing's trail (its preset's emission rate per second: rate), e.g. a thrown fireball, a smoking shell
   trail(name, at, dt, o = {}) {
     const V = this.P[name]; if (!V || !at) return;

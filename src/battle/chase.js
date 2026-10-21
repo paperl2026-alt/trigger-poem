@@ -561,7 +561,7 @@ export class Chase {
   }
   // the time earned: a little clock beside the stage name (drawn by the program), the twelve hours filling up
   drawMeter(force) {
-    const g = this.g, show = g.ep?.id === 'ep2' && g.combat !== undefined && (this.mode || this.meter > 0);
+    const g = this.g, show = g.ep?.id === 'ep2' && g.combat !== undefined && (this.mode || this.meter > 0) && !g.vigOn && !g.board;   // (not over a close-up's page)
     let el = this.ui;
     if (!el) { el = this.ui = document.createElement('canvas'); el.className = 'tmeter'; el.width = el.height = 128; document.getElementById('ui').appendChild(el); }
     el.classList.toggle('on', !!show);

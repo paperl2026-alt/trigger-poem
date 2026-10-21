@@ -474,8 +474,14 @@ for S in SETS.values():   # (no checkpoints inside a stage: each stretch between
     for st in S["stations"].values(): st.pop("cp", None)
 beat("rc1", {"at": 0.4, "insert": {"k": "enemy/she_a_walk0", "side": 1, "life": 1.3}, "sound": "snipFar"})        # (behind them in the dark corridor: her blades)
 beat("nk1", {"at": 0.4, "insert": {"k": "enemy/she_a_stare", "side": -1, "life": 1.3}, "sound": "snipFar"})       # (out on the walkway in the rain, she is there again)
-beat("nk3", {"at": 10.6, "vignette": {"k": "enemy/she_a_walk0", "color": "#243a52", "title": L("她蹚着水过来了", "SHE'S WADING ACROSS", "水を渡ってくる"),
-                                         "sub": L("雨里，从池子对面", "through the rain, from the far bank", "雨の中、池の向こうから")}})
+# (the first storyboarded close-up - user 2026-10-21: a close-up is shots, a pose of its own, rise and fall - she wades across: the pond in
+# the rain with nothing in it, held; cut to her geta stepping down into the water; cut to her face up close, one eye through the wet hair, a
+# little bell; the first shot again - now she is standing out in the pond - and the fight starts. Painted shots: R82, tools/rounds/r82_import.py)
+beat("nk3", {"at": 0.0, "storyboard": {"lead": 0.7, "shots": [
+    {"cam": [4.6, 0.55, -24.5], "look": [10, 1.0, -33], "zoom": 8, "to": {"cam": [4.85, 0.5, -25.0]}, "hold": 1.7},
+    {"k": "comic/ep2s_she_feet", "hold": 1.1, "push": [1.0, 1.04], "focus": [0.45, 0.62], "sfx": "splash"},
+    {"k": "comic/ep2s_she_face", "hold": 1.8, "push": [1.02, 1.1], "focus": [0.62, 0.5], "sfx": "bellSmall"},
+    {"cam": [4.85, 0.5, -25.0], "look": [10, 1.0, -33], "zoom": 8, "show": ["she"], "hold": 1.4}]}})   # (the first shot again: now she is in it)
 KW = next((w for w in SETS["ep2_kura"]["hall"].get("ways", []) if w["id"] == "back"), None)
 if KW: beat("ku1", {"at": 1.3, "vignette": {"k": "ep2/door_kura_r", "color": "#3a2a22", "title": L("被锁在里面了", "LOCKED IN", "閉じ込められた"),
                                                "sub": L("门从外面闩上了", "barred from the outside", "外から閂をかけられた")}})
@@ -490,7 +496,7 @@ PLACES = ["ep2_genkan", "ep2_kyakushitsu", "ep2_rouka", "ep2_furo", "ep2_hiroma"
 allst = {k for s in SETS.values() for k in s["stations"]}
 assert set(ORDER) == allst, (set(ORDER) ^ allst)
 
-DOC = ("第 2 话「钟楼惊宿」九个小关（docs/DESIGN.md「第 2 话」，src/battle/chase.js；由 tools/rounds/ep2_level.py 生成，不要手改）：十个地方连成一条路，"
+DOC = ("第 2 话「钟楼惊宿」十个小关（docs/DESIGN.md「第 2 话」，src/battle/chase.js；由 tools/rounds/ep2_level.py 生成，不要手改）：十个地方连成一条路，"
        "镜头自己走过去（Game.passThrough：两人退出画面，转向出口，开门，走进门洞后面的过道 hall.ways，或上楼梯 hall.stairs、爬梯子、钻她剪开的洞，在过道的黑暗里换成下一个地方，从那边的过道 / 洞 / 天窗走出来）；站点 leave 怎么离开上一个地方（way、via、steps、hole、exit），arrive 怎么进来（way、from、hole、at、look）；hall.shafts 天花板 / 地板上的竖井。站点多了：chase 倒跑、block 路障、hide 躲藏点、"
        "she 她在这一站巡游、dial 钟楼表盘决战；leave 怎么离开上一个地方（hole 她剪开的墙洞）；state 这个地方这时停没停电；cp 检查点；fire 到了就触发的机关；"
        "swap 换掉一块墙的图。机关多了 drop / trap / door / lure / read / node / toll / free / collapse，block: true 是挡路的东西，on: floor 平放在地上。")

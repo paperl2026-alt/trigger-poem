@@ -522,6 +522,7 @@ export class TheThing extends Actor {
       this.armor = false; this.attackPose(0.8);
       sfx.slam(); sfx.madness(); g.post.flash(0.6, 0xff3aa0); g.post.shake(1.6);
       const p = this.center(); g.fx.confetti(p, 50, 6, [COL.pink, COL.hot, COL.white]); g.fx.star(p, 8, COL.pink);
+      const cam = g.world.camera; g.vfx.play('bossBlast', p, { to: cam.position.clone().add(cam.getWorldDirection(new THREE.Vector3()).multiplyScalar(1.1)).add(new THREE.Vector3(0, -0.35, 0)) });   // (a column of light at them: vfx.js beam)
       g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.6, 0.3, 0);
       g.playerAttacked({ kind: 'ranged', dmg: D.dmg, from: this, heavy: true, slot: -1 });
     });
@@ -748,9 +749,13 @@ export class TheThing extends Actor {
     if (!calm) g.post.styleBurst(1.0, [6, 1, 5, 2], 0.16, 0x200010, 0xffe0f0);
     g.fx.pillar(P, this.S.h * 2.2, this.S.h * 0.18, calm ? 0xfff6e8 : 0xffd0f0, calm ? 3 : 1.6);
     for (let i = 0; i < 10; i++) g.tweens.wait(i * 0.2, () => { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.2, 0.9)); if (calm) { g.fx.confetti(q, 14, 1.5, [COL.white, COL.pink]); g.fx.star(q, 2, COL.white); return; } g.fx.confetti(q, 40, 5); g.fx.star(q, 5, COL.pink); sfx.shatter(rnd(-0.5, 0.5)); g.post.shake(0.8); });
-    g.tweens.wait(1.2, () => {
+    // torn apart: cracks of light run out across her from her weak point, and she burns away from there (the research's death effects)
+    const c = this.core() || [0.5, 0.6];
+    this.u.dOrigin.value.set(c[0], c[1]);
+    // (after the first flash of the burst, so they are seen; she burns a moment after they have run all over her)
+    if (!calm) { this.u.crackCol.value.setHex(0xff4f9a); g.tweens.run(1.0, (e) => { this.u.crack.value = e; }, { ease: Ease.outCubic, delay: 0.5 }); }
+    g.tweens.wait(calm ? 1.2 : 1.6, () => {
       sfx.burnOut(0);
-      this.u.dOrigin.value.set(0.5, 0.6);
       g.tweens.run(2.2, (e) => { this.u.dissolve.value = e; }, { onDone: () => this.dispose() });
     });
     if (!calm && this.game.hud.gl.stickers.D.bosses?.[this.id]?.end) this.closeUp('end', { dist: this.S.h * 1.1, v: 0.6, min: 3.4, orbit: 0.4, dolly: -8 });   // (the room closing in on her)   // (her last words, up close)

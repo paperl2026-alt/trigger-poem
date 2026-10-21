@@ -27,6 +27,7 @@ import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { playDoor } from '../ui/door.js';
 import { vignette } from '../ui/vignette.js';
+import { Storyboard } from '../ui/storyboard.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
@@ -1275,10 +1276,56 @@ export class Game {
   // camera dragged through it"): the page turns to a comic panel of the thing (src/ui/vignette.js); the fight waits meanwhile - nothing
   // moves, nothing comes at the girls (cinePause, lull) - and goes on from where it was
   vignette(o, then) {
-    if (this.vigOn) { then?.(); return; }
+    if (this.vigOn || this.board) { then?.(); return; }
     this.vigOn = true; this.cinePause = true; this.cineSubject = null; this.lull = true;
     sound('panel') || sfx.panel?.();
     vignette(this.hud.root, o, () => { this.vigOn = false; if (!this.cineOn) { this.cinePause = false; this.lull = false; } then?.(); });
+  }
+  // 分镜 (user 2026-10-21: a close-up told in shots - framing, a pose of its own, rise and fall - not the game's picture pasted on a page):
+  // film bars, then the shots one after another with hard cuts (src/ui/storyboard.js): a shot in the game itself - the camera put at { cam,
+  // look } (to: { cam, look }: it drifts there over the hold; zoom narrows the view) - or a painted one made for the moment; sfx / shake as
+  // it cuts in. The fight is held still meanwhile and the HUD and the girls are out of the frame (cineOn, cinePause, lull); a shot in the
+  // game shows only what it names (show: ['she'] / monster types: the rest of the fight is out of the shot); at the end a hard cut back to
+  // where the camera was
+  storyboard(o, then) {
+    if (this.vigOn || this.board) { then?.(); return; }
+    const w = this.world, home = { cam: w.camPos.clone(), look: w.lookAt.clone(), zoom: w.cineZoom || 0 }, shots = o.shots || [];
+    const B = this.board = new Storyboard(this.hud.root, shots);
+    ++this.cineQ; this.cineOn = true; this.cinePause = true; this.cineSubject = null; this.lull = true;
+    let i = 0; const hidden = [];
+    const cast = (s) => {
+      for (const [a, v, o] of hidden.splice(0)) { a.root.visible = v; if (o != null) a.u.outlineOn.value = o; }
+      if (s?.k || !s?.cam) return;
+      const keep = new Set(s.show || []);
+      for (const a of this.actors) {   // (what stays in the shot loses its "can be shot" outline: a film's shot, not the game's)
+        if (!a.root) continue;
+        const out = (a instanceof Enemy || a === this.chase.she) && !keep.has(a.type) && !(keep.has('she') && a === this.chase.she);
+        hidden.push([a, a.root.visible, a.u?.outlineOn ? a.u.outlineOn.value : null]); if (out) a.root.visible = false; if (a.u?.outlineOn) a.u.outlineOn.value = 0;
+      }
+    };
+    const next = () => {
+      if (i >= shots.length) {
+        cast(null); B.remove(); this.board = null;
+        w.camPos.copy(home.cam); w.lookAt.copy(home.look); w.cineZoom = home.zoom;
+        this.cineEnd(); if (!this.vigOn) this.lull = false; then?.(); return;
+      }
+      const s = shots[i++], hold = s.hold ?? 1;
+      B.show(s); cast(s);
+      if (!s.k && s.cam) {
+        w.camPos.set(...s.cam); w.lookAt.set(...s.look); w.cineZoom = s.zoom ?? 0;
+        if (s.to) {
+          const c0 = w.camPos.clone(), l0 = w.lookAt.clone(), c1 = new THREE.Vector3(...(s.to.cam || s.cam)), l1 = new THREE.Vector3(...(s.to.look || s.look));
+          this.tweens.run(hold, (e) => { w.camPos.lerpVectors(c0, c1, e); w.lookAt.lerpVectors(l0, l1, e); }, { ease: Ease.inOutQuad });
+        }
+      }
+      if (s.sfx) sound(s.sfx) || sfx[s.sfx]?.();
+      if (s.shake) this.post.shake(s.shake);
+      this.tweens.wait(hold, next);
+    };
+    // (the bars in first and the HUD gone: a beat of the place as it was, framed - and the painted shots decoded by then, so no cut is
+    // ever to an empty frame; 1.5 s at most)
+    let go = false; const start = () => { if (!go) { go = true; this.tweens.wait(o.lead ?? 0.5, next); } };
+    Promise.all(B.pre.map((im) => im.decode().catch(() => {}))).then(start); setTimeout(start, 1500);
   }
   dropIn(a) {
     a.alive = false; a.endWindup?.(); this.etw.kill(a.root.position); a.u.outlineOn.value = 0;
@@ -1331,7 +1378,7 @@ export class Game {
     const edt = dt * (T.combat.pace ?? 1), hold = !!this.cinePause, subj = this.cineSubject;
     this.rdt = dt;
     this.etw.update(edt);
-    if (!hold) this.chase.update(dt);
+    if (!hold) this.chase.update(dt); else this.chase.drawMeter(false);   // (its little clock off a close-up's page)
     this.ride.update(dt);
     this.acts.update(edt, now);
     if (!hold) this.escort.update(dt, now);

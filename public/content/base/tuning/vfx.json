@@ -1,5 +1,5 @@
 {
-  "_doc": "场景破坏和怪物特效的预设（docs/DESIGN.md「场景破坏和怪物特效」，src/battle/vfx.js）。每个预设由几种成分组合：flash 爆开的闪光（color、size 米、life 秒）；debris 碎块，真刚体（n 块数、size 大小倍数、colors 颜色、k 往外推的力、up 往上的力）；dust 尘土（n 团数、size [最小, 最大] 米、grow 长大到几倍、life [最短, 最长] 秒、color、rise 上升速度、spread 散开多远、a 浓度）；sparks 火星（n、speed、color、life）；embers 余烬（n、color、life、rise）；fire 火舌（n、size、life、color）；ring 地上一圈冲击波（r、color、s 秒）；shake 震屏；flash2d 整屏一闪 [强度, 颜色]；sound 声音；scale 整体大小。怪的大招另有三种成分：stream 从怪喷向两人的火 / 烟 / 泡沫 / 光（kind fire / smoke / foam / glow、n、time 喷多久、speed 米每秒、size、grow 飞到时长大几倍、colors、spread 到两人那头散多宽、a），喷到时才算伤害；veil 喷到后糊在镜头前慢慢散的烟 / 泡沫（n、color、size、life、a、dist 镜头前几米）；circle 蓄力时怪身前画出来的法阵（r 半径米、color、spin 转速），越转越快，出招时一亮炸开，被打断就灭。trail 类（rate 每秒几团、kind fire / smoke / glow / ink、color、size、life、grow、rise、a）给飞行中的东西拖尾。关卡包和模组可以加自己的预设或改某一项；怪物数据里 blast.vfx、飞行物 trail 按名字调用。",
+  "_doc": "场景破坏和怪物特效的预设（docs/DESIGN.md「场景破坏和怪物特效」，src/battle/vfx.js）。每个预设由几种成分组合：flash 爆开的闪光（color、size 米、life 秒）；debris 碎块，真刚体（n 块数、size 大小倍数、colors 颜色、k 往外推的力、up 往上的力）；dust 尘土（n 团数、size [最小, 最大] 米、grow 长大到几倍、life [最短, 最长] 秒、color、rise 上升速度、spread 散开多远、a 浓度）；sparks 火星（n、speed、color、life）；embers 余烬（n、color、life、rise）；fire 火舌（n、size、life、color）；ring 地上一圈冲击波（r、color、s 秒）；shake 震屏；flash2d 整屏一闪 [强度, 颜色]；sound 声音；scale 整体大小。怪的大招另有三种成分：stream 从怪喷向两人的火 / 烟 / 泡沫 / 光（kind fire / smoke / foam / glow、n、time 喷多久、speed 米每秒、size、grow 飞到时长大几倍、colors、spread 到两人那头散多宽、a），喷到时才算伤害；veil 喷到后糊在镜头前慢慢散的烟 / 泡沫（n、color、size、life、a、dist 镜头前几米）；circle 蓄力时怪身前画出来的法阵（r 半径米、color、spin 转速），越转越快，出招时一亮炸开，被打断就灭；beam 从怪冲向两人的光柱（r 半径米、color、core 中心的颜色、rings 沿柱子往外跑的光环几道、time 停多久、speed 光环跑多快、short 在两人前几米停住，剩下一段交给 stream 的粒子）；cone 从怪嘴里喷出的火焰锥（r0 嘴边半径、r1 远端半径、color、core、time、short）。beam / cone 是真体积（从侧面、正面看都有厚度），只给怪和 Boss 的大招用，不用在两人自己的武器上；bossBlast 是 Boss 大爆发（快躲）的光柱（thing.js burst）。trail 类（rate 每秒几团、kind fire / smoke / glow / ink、color、size、life、grow、rise、a）给飞行中的东西拖尾。关卡包和模组可以加自己的预设或改某一项；怪物数据里 blast.vfx、飞行物 trail 按名字调用。",
   "vfx": {
     "wallBreak": {
       "flash": { "color": "#ffe0b0", "size": 2.2, "life": 0.16 },
@@ -50,7 +50,8 @@
       "embers": { "n": 18, "color": "#ff8030", "life": [1.2, 2.2], "rise": 1.2 },
       "flash2d": [0.25, "#ff8a40"],
       "shake": 1.1,
-      "sound": "slam"
+      "sound": "slam",
+      "cone": { "r0": 0.1, "r1": 0.9, "color": "#ff7a20", "core": "#fff0b0", "time": 0.6 }
     },
     "incenseSmoke": {
       "stream": { "kind": "smoke", "n": 40, "time": 0.8, "speed": 6, "size": [0.3, 0.5], "grow": 3.5, "colors": ["#8a8098", "#a49ab0", "#6a6078"], "spread": 1.4, "a": 0.6, "a1": 0.45 },
@@ -78,7 +79,8 @@
       "embers": { "n": 14, "color": "#c080ff", "life": [1.0, 2.0], "rise": 1.2 },
       "flash2d": [0.3, "#a060ff"],
       "shake": 1.2,
-      "sound": "slam"
+      "sound": "slam",
+      "beam": { "r": 0.28, "color": "#8a40ff", "core": "#f0e0ff", "rings": 4, "time": 0.35 }
     },
     "curseCharge": { "circle": { "r": 0.9, "color": "#ff4060", "spin": -0.9 } },
     "curseMagic": {
@@ -87,7 +89,13 @@
       "sparks": { "n": 18, "speed": 6, "color": "#ff7090", "life": 0.45 },
       "flash2d": [0.28, "#ff4060"],
       "shake": 1.1,
-      "sound": "slam"
+      "sound": "slam",
+      "beam": { "r": 0.25, "color": "#ff3a6a", "core": "#ffe0e8", "rings": 4, "time": 0.35 }
+    },
+    "bossBlast": {
+      "beam": { "r": 0.5, "color": "#ff4fb0", "core": "#ffffff", "rings": 6, "time": 0.5, "speed": 4, "short": 2.0 },
+      "flash": { "color": "#ff8ad0", "size": 2.4, "life": 0.25 },
+      "sparks": { "n": 26, "speed": 9, "color": "#ff9ad8", "life": 0.5 }
     },
     "breach": {
       "debris": { "n": 20, "size": 1.4, "colors": ["#c88a30", "#8a5a20", "#f0c060"], "k": 0.6, "up": 3.0 },

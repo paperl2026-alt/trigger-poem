@@ -16,10 +16,13 @@
 //   insert: { k: <picture>, side: -1 | 1, w, h, y, life, color }   a slanted comic panel cut in from one side (ride.js insert)
 //   vignette: { k: <picture>, title, sub, color, crop, side, dur }   a close-up: a comic page of its own, the fight waiting (Game.vignette;
 //     user 2026-10-21: a close-up is its own little scene, not the camera dragged through the fight); holds the timeline like cam
+//   storyboard: { shots: [{ cam, look, to, zoom, hold, sfx, shake } | { k: <painted shot>, hold, push, focus, pan, cap, sfx }], lead }
+//     a close-up told in shots, hard cuts between them (Game.storyboard, src/ui/storyboard.js); holds the timeline like cam
 //   shot: <preset> | { kind, ... }   the stop's shot changes from here (tuning/shots.json; shot.js)
 //   girls: { move: hop | dash | dive, who: 0 | 1 | 'both', dx, dy, h, t, delay: [1P, 2P] } | 'settle'   the two of them move in the place
 //     (DESIGN「女主动起来」: a hop up or down a step, a dash across, a dive into cover; tuning/layout.json moves; player.js move)
-// timeline(list, then): cues with at (seconds from the start) in order; a cue with a cam holds the timeline until the camera is back.
+// timeline(list, then): cues with at (seconds from the start) in order; a cue with a cam (a vignette, a storyboard) holds the timeline
+// until it is over.
 import * as THREE from 'three';
 import { sfx, sound, playMusic, stopMusic } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
@@ -65,6 +68,7 @@ export class Cues {
     // (the wave events of before: Game.waveEvent does them, as it always did)
     if (c.turn || c.mutate || c.gimmick || c.collapse || c.spawner || c.wake) g.waveEvent({ turn: c.turn, mutate: c.mutate, gimmick: c.gimmick, collapse: c.collapse, spawner: c.spawner, wake: c.wake });
     if (c.vignette) { g.vignette(c.vignette, () => then?.()); return; }
+    if (c.storyboard) { g.storyboard(c.storyboard, () => then?.()); return; }
     if (c.cam) { this.cam(c.cam, then); return; }
     then?.();
   }
@@ -96,7 +100,7 @@ export class Cues {
       const c = L[i++], wait = Math.max(0, (c.at ?? 0) - (performance.now() / 1000 - t0 - held));
       g.tweens.wait(wait, () => {
         if (q !== this.q) return;
-        if (c.cam) { const s = performance.now() / 1000; this.run(c, () => { held += performance.now() / 1000 - s; next(); }); } else { this.run(c); next(); }
+        if (c.cam || c.vignette || c.storyboard) { const s = performance.now() / 1000; this.run(c, () => { held += performance.now() / 1000 - s; next(); }); } else { this.run(c); next(); }
       });
     };
     next();

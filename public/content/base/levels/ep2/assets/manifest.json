@@ -14,6 +14,16 @@
   "src": "assets/comic/ep2p_rules.webp",
   "w": 1920
  },
+ "comic/ep2s_she_face": {
+  "h": 1080,
+  "src": "assets/comic/ep2s_she_face.webp",
+  "w": 1920
+ },
+ "comic/ep2s_she_feet": {
+  "h": 1080,
+  "src": "assets/comic/ep2s_she_feet.webp",
+  "w": 1920
+ },
  "cover/ep2_chika1": {
   "h": 503,
   "relief": "cover/ep2_chika1_rd",
