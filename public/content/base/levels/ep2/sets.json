@@ -111,7 +111,6 @@
         "cam": [-2.3, 1.7, 1.0],
         "look": [2.2, -0.3, -9.5],
         "covers": [{ "k": "cover/ep2_genkan1", "side": -1 }, { "k": "cover/ep2_genkan2", "side": 1 }],
-        "cp": true,
         "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "waves": [
           [
@@ -237,6 +236,26 @@
         "say": "real"
       },
       "ky1": { "cam": [0.6, 1.15, -1.4], "look": [-1.0, 1.5, 2.0], "pause": 1.4, "say": "photo" },
+      "kh2": {
+        "cam": [-1.0, 1.3, -2.0],
+        "look": [2.2, 0.8, 0.4],
+        "pause": 8.5,
+        "on": {
+          "arrive": [
+            { "at": 0.5, "say": "breath", "who": "pink" },
+            { "at": 2.6, "say": "breath", "who": "cat" },
+            {
+              "at": 4.6,
+              "vignette": {
+                "k": "ep2/d_slippersa",
+                "color": "#3a2a30",
+                "title": { "zh": "被剪成两半的拖鞋", "en": "SLIPPERS CUT IN TWO", "ja": "真っ二つのスリッパ" },
+                "sub": { "zh": "每间客房门口都是", "en": "at every guest room's door", "ja": "どの客室の前にも" }
+              }
+            }
+          ]
+        }
+      },
       "kh1": {
         "leave": { "way": "back" },
         "arrive": { "way": "end", "at": [-0.8, 1.15, -6.1], "look": [0, 1.1, 2.0] },
@@ -433,7 +452,6 @@
         "cam": [0, 1.15, -4.0],
         "look": [0, 1.1, 2.0],
         "covers": [{ "k": "cover/ep2_rouka2", "side": -1 }, { "k": "cover/ep2_rouka4", "side": 1, "fall": 1.6 }],
-        "cp": true,
         "state": 1,
         "block": { "form": "a", "dist": 11, "hint": "sheBlock" },
         "waves": [
@@ -537,7 +555,6 @@
         "cam": [0, 1.15, -1.8],
         "look": [0, 1.0, -7.9],
         "covers": [{ "k": "cover/ep2_furo1", "side": -1 }, { "k": "cover/ep2_furo2", "side": 1 }],
-        "cp": true,
         "state": 0,
         "turn": { "to": 1, "hit": true, "dur": 1.2, "wait": 0.1 },
         "she": { "form": "a", "at": [0, -6.6], "wake": 1.6, "burst": true },
@@ -754,7 +771,6 @@
         "cam": [-4.5, 1.75, 0.6],
         "look": [3.6, -0.3, -15.5],
         "covers": [{ "k": "cover/ep2_hiroma1", "side": -1 }, { "k": "cover/ep2_hiroma2", "side": 1 }],
-        "cp": true,
         "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "she": { "form": "a", "at": [4.0, -15], "wake": 9 },
         "waves": [
@@ -800,7 +816,6 @@
         "cam": [4.4, 1.75, -7.6],
         "look": [-3.4, -0.3, -18.2],
         "covers": [{ "k": "cover/ep2_hiroma3", "side": -1 }, { "k": "cover/ep2_hiroma4", "side": 1 }],
-        "cp": true,
         "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "block": { "form": "a", "dist": 13, "hint": "sheBlock" },
         "waves": [
@@ -973,12 +988,32 @@
       }
     ],
     "stations": {
-      "nk1": {
+      "nk0": {
         "leave": { "way": "end" },
-        "arrive": { "way": "back", "at": [0, 1.15, 1.0], "look": [0, 1.1, 5.0] },
+        "arrive": { "way": "back", "at": [0, 1.15, 1.0], "look": [0, 1.1, -25.0] },
+        "cam": [0.4, 1.2, -1.2],
+        "look": [-14, 3.5, -14],
+        "pause": 8.0,
+        "on": {
+          "arrive": [
+            { "at": 0.5, "say": "rain", "who": "pink" },
+            { "at": 2.6, "say": "rain", "who": "cat" },
+            {
+              "at": 4.4,
+              "vignette": {
+                "k": "ep2/nakaniwa_outside1",
+                "crop": [0.55, 0.0, 0.8, 0.4],
+                "color": "#22324a",
+                "title": { "zh": "钟楼", "en": "THE BELL TOWER", "ja": "鐘楼" },
+                "sub": { "zh": "时之钟就挂在那上面", "en": "the Time Bell hangs up there", "ja": "時の鐘はあそこに" }
+              }
+            }
+          ]
+        }
+      },
+      "nk1": {
         "cam": [0, 1.15, -21.5],
         "look": [0, 1.1, 2],
-        "cp": true,
         "chase": {
           "path": [[0.2, 1.15, 0.0], [-0.3, 1.15, -5.5], [0.3, 1.15, -11.5], [0, 1.15, -17]],
           "face": "back",
@@ -1003,7 +1038,6 @@
         "cam": [-0.9, 1.5, -16.5],
         "look": [13, 0.2, -30.0],
         "covers": [{ "k": "cover/ep2_nakaniwa1", "side": -1 }, { "k": "cover/ep2_nakaniwa2", "side": 1 }],
-        "cp": true,
         "she": { "form": "a", "at": [10.0, -33.0], "wake": 11 },
         "hint": "sheStone",
         "shot": { "kind": "cover", "cam": { "zoom": 6 } },
@@ -1055,7 +1089,7 @@
     "props": [
       { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 0.92, "z": -14.87 },
       { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": 1.13, "z": -3.93 },
-      { "k": "prop/ep2s_nakaniwa_watering", "h": 0.6, "x": 1.04, "z": -1.66 },
+      { "k": "prop/ep2s_nakaniwa_watering", "h": 0.6, "x": -0.89, "z": -23.35 },
       { "k": "prop/ep2s_nakaniwa_koi", "h": 0.55, "x": -1.14, "z": -9.57, "solid": true },
       { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 1.13, "z": -7.79 },
       { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": -0.81, "z": -18.75 },
@@ -1113,8 +1147,8 @@
         "y": 0.8,
         "z": -5.0,
         "w": 0.9,
-        "station": "ku2",
-        "mark": true,
+        "station": "ku1b",
+        "shoot": false,
         "do": [{ "read": "ep2Ledger" }]
       },
       {
@@ -1178,11 +1212,20 @@
           ]
         }
       },
+      "ku1b": {
+        "via": [[-0.6, 1.2, -3.0]],
+        "cam": [-0.9, 1.3, -3.4],
+        "look": [-2.2, 0.7, -5.0],
+        "walkSpeed": 1.2,
+        "pause": 8.0,
+        "on": {
+          "arrive": [{ "at": 0.4, "fire": ["ledger"] }, { "at": 3.6, "say": "ledger", "who": "pink" }, { "at": 5.8, "say": "ledger", "who": "cat" }]
+        }
+      },
       "ku2": {
         "cam": [-1.8, 1.7, 0.4],
         "look": [1.6, -0.3, -11.0],
         "covers": [{ "k": "cover/ep2_kura1", "side": -1 }, { "k": "cover/ep2_kura2", "side": 1 }],
-        "cp": true,
         "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "waves": [
           [
@@ -1251,7 +1294,7 @@
       { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": -2.39, "z": -9.97 },
       { "k": "prop/ep2s_kura_boxes", "h": 0.9, "x": -2.18, "z": -6.92 },
       { "k": "prop/ep2s_kura_kame", "h": 0.9, "x": 2.42, "z": -5.93 },
-      { "k": "prop/ep2s_kura_mino", "h": 1.4, "x": -2.29, "z": -2.9 },
+      { "k": "prop/ep2s_kura_mino", "h": 1.4, "x": -2.21, "z": -1.87 },
       { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": 2.42, "z": -4.91 }
     ]
   },
@@ -1359,12 +1402,20 @@
       }
     ],
     "stations": {
-      "ch1": { "cam": [0, 1.2, -1.0], "look": [0, 1.1, -28.0], "enter": { "from": [0, 5.4, 0], "dur": 1.0, "shake": 1.4 }, "pause": 1.0, "say": "scare" },
+      "ch1": {
+        "cam": [0, 1.2, -1.0],
+        "look": [0, 1.1, -28.0],
+        "enter": { "from": [0, 5.4, 0], "dur": 1.0, "shake": 1.4 },
+        "pause": 6.5,
+        "say": "scare",
+        "on": {
+          "arrive": [{ "at": 2.0, "say": "cave", "who": "pink" }, { "at": 4.2, "say": "cave", "who": "cat" }]
+        }
+      },
       "ch2": {
         "cam": [0, 1.2, -13.5],
         "look": [0, 1.1, -28.0],
         "covers": [{ "k": "cover/ep2_chika1", "side": -1 }, { "k": "cover/ep2_chika2", "side": 1 }],
-        "cp": true,
         "she": { "form": "kaiko", "at": [0, -25.0], "wake": 4.5 },
         "waves": [
           [
@@ -1513,13 +1564,15 @@
         "arrive": { "from": [0, 1.2, 1.7], "at": [0, 1.2, -1.0], "look": [0, 1.2, -6.0] },
         "cam": [0, 1.2, -2.0],
         "look": [0, 1.2, -6.0],
-        "pause": 1.0,
-        "sfx": "ropeCreak"
+        "pause": 6.0,
+        "sfx": "ropeCreak",
+        "on": {
+          "arrive": [{ "at": 1.6, "say": "shaft", "who": "pink" }, { "at": 3.8, "say": "shaft", "who": "cat" }]
+        }
       },
       "sh2": {
         "cam": [0, 10.4, -2.0],
         "look": [0, 1.0, -2.6],
-        "cp": true,
         "chase": {
           "path": [[0, 3.2, -2.0], [0, 5.6, -2.0], [0, 8.0, -2.0]],
           "face": "down",
@@ -1790,9 +1843,12 @@
         "arrive": { "from": [0, -1.4, 5.0], "at": [0, 1.4, 4.3], "look": [0, 1.3, 0], "steps": 6 },
         "cam": [0, 1.4, 4.6],
         "look": [0, 1.3, 0],
-        "pause": 1.4,
+        "pause": 6.0,
         "sfx": "bellToll",
-        "say": "scare"
+        "say": "scare",
+        "on": {
+          "arrive": [{ "at": 1.8, "say": "dawn", "who": "pink" }, { "at": 4.0, "say": "dawn", "who": "cat" }]
+        }
       },
       "kn1c": {
         "needs": "crow",
@@ -1847,7 +1903,6 @@
       "kn2": {
         "cam": [0, 1.4, 4.6],
         "look": [0, 1.3, 0],
-        "cp": true,
         "dial": { "center": [0, 0, 0], "r": 4.6, "forms": ["a", "c", "e"], "perForm": 4 },
         "waves": [
           [

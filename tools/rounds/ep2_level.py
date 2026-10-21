@@ -208,6 +208,12 @@ S["stations"].update({
 # ================================================================ 2'. the room in the dark: hiding in the closet
 S = SETS["ep2_kyakushitsu"]; H = S["hall"]
 S["stations"].update({
+  # (a quiet stretch after it - user 2026-10-21: the stage has its rise and fall, not running and fighting all the time; a walk, a look,
+  # a word between them, and the next small stage loads meanwhile: out of the closet, catching their breath, the slippers cut in half)
+  "kh2": {"cam": [-1.0, 1.3, -2.0], "look": [2.2, 0.8, 0.4], "pause": 8.5,
+          "on": {"arrive": [{"at": 0.5, "say": "breath", "who": "pink"}, {"at": 2.6, "say": "breath", "who": "cat"},
+                            {"at": 4.6, "vignette": {"k": "ep2/d_slippersa", "color": "#3a2a30", "title": L("被剪成两半的拖鞋", "SLIPPERS CUT IN TWO", "真っ二つのスリッパ"),
+                                                     "sub": L("每间客房门口都是", "at every guest room's door", "どの客室の前にも")}}]}},
   "kh1": {"leave": {"way": "back"}, "arrive": {"way": "end", "at": [xe, 1.15, round(H["z1"] + 0.9, 2)], "look": [0, 1.1, H["z0"]]},
           "state": 1, "cam": [-1.9, 1.0, -2.6], "look": [2.7, 1.0, -3.0], "hide": {"form": "a", "from": [xe, H["z1"] + 0.6], "at": [0.6, -3.2], "stabs": 6}},
 })
@@ -258,7 +264,12 @@ gm(S, id="amado", k="prop/ep2_amado", on="stand", x=0, y=0, z=-9.5, w=2.8, stati
 gm(S, id="amado2", k="prop/ep2_amado", on="stand", x=0, y=0, z=-15.8, w=2.8, station="nk1", mark=True, shut=True, do=[{"sound": "amado"}, {"door": {"hold": 4}}])
 gm(S, id="shishi", k="prop/ep2_shishi", on="stand", x=1.3, y=0, z=-18.5, w=0.9, station="nk1", mark=True, do=[{"sound": "shishiOdoshi"}, {"lure": {"t": 6}}])
 S["stations"] = {
-  "nk1": {"leave": {"way": "end"}, "arrive": {"way": "back", "at": [0, 1.15, round(H["z0"] - 1.0, 2)], "look": [0, 1.1, H["z0"] + 3]}, "cam": [0, 1.15, -21.5], "look": [0, 1.1, 2], "cp": True, "chase": {"path": [[0.2, 1.15, 0.0], [-0.3, 1.15, -5.5], [0.3, 1.15, -11.5], [0, 1.15, -17]], "face": "back", "form": "a", "dist": 8,
+  "nk0": {"leave": {"way": "end"}, "arrive": {"way": "back", "at": [0, 1.15, round(H["z0"] - 1.0, 2)], "look": [0, 1.1, H["z1"]]},
+          "cam": [0.4, 1.2, -1.2], "look": [-14, 3.5, -14], "pause": 8.0,
+          "on": {"arrive": [{"at": 0.5, "say": "rain", "who": "pink"}, {"at": 2.6, "say": "rain", "who": "cat"},
+                            {"at": 4.4, "vignette": {"k": "ep2/nakaniwa_outside1", "crop": [0.55, 0.0, 0.8, 0.4], "color": "#22324a",
+                                                     "title": L("钟楼", "THE BELL TOWER", "鐘楼"), "sub": L("时之钟就挂在那上面", "the Time Bell hangs up there", "時の鐘はあそこに")}}]}},
+  "nk1": {"cam": [0, 1.15, -21.5], "look": [0, 1.1, 2], "cp": True, "chase": {"path": [[0.2, 1.15, 0.0], [-0.3, 1.15, -5.5], [0.3, 1.15, -11.5], [0, 1.15, -17]], "face": "back", "form": "a", "dist": 8,
                    "speed": 1.35, "herSpeed": 2.5, "hint": "sheDoor"}},
   "nk2": {"cam": [1.1, 0.95, -23.4], "look": [-0.4, 1.0, -12], "hide": {"form": "a", "from": [0, -11], "at": [0.1, -20.2], "stabs": 6}},
   # (out of hiding: the umbrellas come down the walkway in the rain, the lanterns with them, and she comes back from the storehouse's door)
@@ -281,7 +292,7 @@ if KR:
     H["ways"] = [w for w in H.get("ways", []) if w["id"] != "back"] + [{"id": "back", "wall": "back", "x0": round(-W6 / 2 + (1 - KR[1]) * W6, 2), "x1": round(-W6 / 2 + (1 - KR[0]) * W6, 2),
         "y0": round((1 - KR[3]) * h6, 2), "y1": round((1 - KR[2]) * h6, 2), "door": {"kind": "swing", "k": ["ep2/door_kura_r", "ep2/door_kura_l"]}}]
 KB = next((w for w in H.get("ways", []) if w["id"] == "back"), None)
-gm(S, id="ledger", k="prop/ep2_ledger", on="stand", x=-2.2, y=0.8, z=-5.0, w=0.9, station="ku2", mark=True, do=[{"read": "ep2Ledger"}])
+gm(S, id="ledger", k="prop/ep2_ledger", on="stand", x=-2.2, y=0.8, z=-5.0, w=0.9, station="ku1b", shoot=False, do=[{"read": "ep2Ledger"}])
 gm(S, id="wadokei", k="prop/ep2_clock_wadokei", on="stand", x=2.3, y=0, z=-8.5, w=1.0, station="ku2", do=[{"read": "ep2Clocks"}, {"sound": "clocksAll"}])
 # (DESIGN「总纲」 处处有小巧思 - the storehouse's wall of clocks: its great pendulum clock struck in the fight, every clock in the room
 # strikes and time stands still for the monsters a few seconds: src/battle/game.js timeStop)
@@ -290,6 +301,9 @@ gm(S, id="hatch", k="prop/ep2_hatch", on="floor", x=0, z=-6.5, w=1.4, hp=30, sta
 S["stations"] = {
   "ku1": {"leave": {"way": "end", "steps": 4}, "arrive": {"way": "back", "at": [round((KB["x0"] + KB["x1"]) / 2, 2) if KB else 0, 1.2, round(H["z0"] - 1.3, 2)], "look": [0, 1.2, H["z1"]]},
           "cam": [0, 1.2, -2.0], "look": [0, 1.2, H["z1"]], "pause": 1.0, "say": "scare", "slam": "back"},
+  # (the quiet before the clocks: the ledger on the chest read, what it tells talked over)
+  "ku1b": {"via": [[-0.6, 1.2, -3.0]], "cam": [-0.9, 1.3, -3.4], "look": [-2.2, 0.7, -5.0], "walkSpeed": 1.2, "pause": 8.0,
+           "on": {"arrive": [{"at": 0.4, "fire": ["ledger"]}, {"at": 3.6, "say": "ledger", "who": "pink"}, {"at": 5.8, "say": "ledger", "who": "cat"}]}},
   "ku2": {"cam": [-1.8, 1.7, 0.4], "look": [1.6, -0.3, -11.0], "covers": cov("kura", 1, 2), "cp": True, "shot": {"kind": "cover", "cam": {"zoom": 8}},
           "waves": [[{"t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "pop"}, {"t": 0.6, "type": "kokeshi", "x": 2, "z": -8.5, "from": "pop"}, {"t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "pop"}],
                     [{"t": 0, "sound": "clocksAll", "hint": "ep2Ushimitsu"}, kat(18, 0, -8, 2.6, 0.8), {"t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8}],
@@ -305,7 +319,8 @@ for i, (x, kk) in enumerate(((-1.5, "cover/ep2_chika3"), (0.05, "prop/ep2_cocoon
 gm(S, id="kero1", k="prop/ep2_kerosene", on="stand", x=1.7, y=0, z=-9.0, w=0.8, station="ch3", mark=True, do=[{"trap": {"r": 3.2, "kill": True}}])
 gm(S, id="kero2", k="prop/ep2_candles", on="stand", x=-1.8, y=0, z=-4.0, w=0.9, station="ch3", mark=True, do=[{"trap": {"r": 3.6, "kill": True}}])
 S["stations"] = {
-  "ch1": {"cam": [0, 1.2, -1.0], "look": [0, 1.1, H["z1"]], "enter": {"from": [0, round(J.PLACES["chika"]["h"] + 1.6 - 1.2, 2), 0], "dur": 1.0, "shake": 1.4}, "pause": 1.0, "say": "scare"},
+  "ch1": {"cam": [0, 1.2, -1.0], "look": [0, 1.1, H["z1"]], "enter": {"from": [0, round(J.PLACES["chika"]["h"] + 1.6 - 1.2, 2), 0], "dur": 1.0, "shake": 1.4}, "pause": 6.5, "say": "scare",
+          "on": {"arrive": [{"at": 2.0, "say": "cave", "who": "pink"}, {"at": 4.2, "say": "cave", "who": "cat"}]}},
   "ch2": {"cam": [0, 1.2, -13.5], "look": [0, 1.1, H["z1"]], "covers": cov("chika", 1, 2), "cp": True, "she": {"form": "kaiko", "at": [0, -25.0], "wake": 4.5},
           "waves": [[kat(14, 0, -18, 2.6, 0.5)], [{"t": 0, "type": "surippa", "count": 6, "x": 0, "z": -19, "spread": 5, "every": 0.3}]]},
   "ch2b": {"cam": [0, 1.2, -10.8], "look": [0, 1.1, 2.0], "covers": cov("chika", 1, 2), "block": {"form": "kaiko", "dist": 13, "herSpeed": 0.45, "turnAt": 5.0, "hint": "sheBlock"},
@@ -452,6 +467,11 @@ def stop(sid):
     return next(S["stations"][sid] for S in SETS.values() if sid in S["stations"])
 def beat(sid, *cues):
     st = stop(sid); st.setdefault("on", {}).setdefault("arrive", []).extend(cues)
+beat("sh1", {"at": 1.6, "say": "shaft", "who": "pink"}, {"at": 3.8, "say": "shaft", "who": "cat"})
+beat("kn1", {"at": 1.8, "say": "dawn", "who": "pink"}, {"at": 4.0, "say": "dawn", "who": "cat"})
+stop("sh1")["pause"] = 6.0; stop("kn1")["pause"] = 6.0   # (long enough for the two of them to have their word)
+for S in SETS.values():   # (no checkpoints inside a stage: each stretch between two of them is a small stage now - user 2026-10-21)
+    for st in S["stations"].values(): st.pop("cp", None)
 beat("rc1", {"at": 0.4, "insert": {"k": "enemy/she_a_walk0", "side": 1, "life": 1.3}, "sound": "snipFar"})        # (behind them in the dark corridor: her blades)
 beat("nk1", {"at": 0.4, "insert": {"k": "enemy/she_a_stare", "side": -1, "life": 1.3}, "sound": "snipFar"})       # (out on the walkway in the rain, she is there again)
 beat("nk3", {"at": 10.6, "vignette": {"k": "enemy/she_a_walk0", "color": "#243a52", "title": L("她蹚着水过来了", "SHE'S WADING ACROSS", "水を渡ってくる"),
@@ -464,7 +484,7 @@ for wave in stop("ku2")["waves"]:   # (the hour of the ox: every clock in the st
                                                                                               "sub": L("满屋的钟一起敲响", "every clock in the room strikes", "部屋中の時計が一斉に鳴る")}})
 beat("ch3", {"at": 0.3, "insert": {"k": "enemy/kaiko_lunge", "side": -1, "life": 1.4}})                         # (the silkworm comes for them)
 beat("sh2", {"at": 0.6, "insert": {"k": "enemy/she_c_climb0", "side": 1, "life": 1.4}, "sound": "ropeCreak"})    # (down the shaft: she climbs after them)
-ORDER = ["gk0", "gk1", "gk2", "ky0", "ky1", "ro0", "ro1", "fu0", "fu1", "rc1", "rc2", "kh1", "hr0", "hr1", "hr2", "nk1", "nk2", "nk3", "ku1", "ku2", "ku3",
+ORDER = ["gk0", "gk1", "gk2", "ky0", "ky1", "ro0", "ro1", "fu0", "fu1", "rc1", "rc2", "kh1", "kh2", "hr0", "hr1", "hr2", "nk0", "nk1", "nk2", "nk3", "ku1", "ku1b", "ku2", "ku3",
          "ch1", "ch2", "ch2b", "ch3", "ch4", "sh1", "sh2", "sh3", "kn1", "kn1c", "kn2"]
 PLACES = ["ep2_genkan", "ep2_kyakushitsu", "ep2_rouka", "ep2_furo", "ep2_hiroma", "ep2_nakaniwa", "ep2_kura", "ep2_chika", "ep2_shoro", "ep2_kane"]
 allst = {k for s in SETS.values() for k in s["stations"]}
@@ -483,11 +503,12 @@ E["ep2"]["set"] = "ep2_genkan"
 STAGES = [   # (id, name, its places, its stops)
     ("genkan", L("玄关", "ENTRANCE HALL", "玄関"), ["genkan"], ["gk0", "gk1", "gk2"]),
     ("room", L("客房与浴场", "ROOM AND BATH", "客室と湯殿"), ["kyakushitsu", "rouka", "furo"], ["ky0", "ky1", "ro0", "ro1", "fu0", "fu1"]),
-    ("run", L("逃回客房", "BACK TO THE ROOM", "客室へ逃げろ"), ["rouka", "kyakushitsu"], ["rc1", "rc2", "kh1"]),
+    ("run", L("逃回客房", "BACK TO THE ROOM", "客室へ逃げろ"), ["rouka", "kyakushitsu"], ["rc1", "rc2", "kh1", "kh2"]),
     ("hiroma", L("大广间", "BANQUET HALL", "大広間"), ["hiroma"], ["hr0", "hr1", "hr2"]),
-    ("nakaniwa", L("雨中渡廊", "RAINY WALKWAY", "雨の渡り廊下"), ["nakaniwa"], ["nk1", "nk2", "nk3"]),
-    ("kura", L("土藏", "STOREHOUSE", "蔵"), ["kura"], ["ku1", "ku2", "ku3"]),
-    ("chika", L("地底", "UNDERGROUND", "地下"), ["chika"], ["ch1", "ch2", "ch2b", "ch3", "ch4"]),
+    ("nakaniwa", L("雨中渡廊", "RAINY WALKWAY", "雨の渡り廊下"), ["nakaniwa"], ["nk0", "nk1", "nk2", "nk3"]),
+    ("kura", L("土藏", "STOREHOUSE", "蔵"), ["kura"], ["ku1", "ku1b", "ku2", "ku3"]),
+    ("chika", L("地底", "UNDERGROUND", "地下"), ["chika"], ["ch1", "ch2", "ch2b"]),
+    ("kerosene", L("灯油与烛火", "OIL AND CANDLES", "灯油と蝋燭"), ["chika"], ["ch3", "ch4"]),
     ("shoro", L("钟楼竖井", "BELL TOWER SHAFT", "鐘楼"), ["shoro"], ["sh1", "sh2", "sh3"]),
     ("kane", L("时之钟", "THE TIME BELL", "時の鐘"), ["kane"], ["kn1", "kn1c", "kn2"]),
 ]
@@ -496,7 +517,7 @@ steps = [{"comic": "ep2_open"}, {"comic": "ep2_rules"}]   # (the house rules: th
 for i, (sid, name, pl, sts) in enumerate(STAGES):
     nxt = [f"ep2_{STAGES[i + 1][2][0]}"] if i + 1 < len(STAGES) and STAGES[i + 1][2][0] not in pl else []   # (loaded before the walk there)
     st = {"stage": sid, "set": f"ep2_{pl[0]}", "places": [f"ep2_{p}" for p in pl] + nxt, "stations": sts, "name": name,
-          "thumb": f"ui/sel_thumb_ep2_{sid}" if have(f"ui/sel_thumb_ep2_{sid}") else "ui/sel_thumb_ep2_inn"}
+          "thumb": next((k for k in (f"ui/sel_thumb_ep2_{sid}", f"ui/sel_thumb_ep2_{pl[0]}") if have(k)), "ui/sel_thumb_ep2_inn")}
     if any(s in sts for s in ("fu1", "rc1", "rc2", "kh1", "hr1", "hr2", "nk1", "nk2", "nk3", "ku3", "ch2", "ch2b", "ch3", "sh2", "sh3", "kn2")):
         st.update({"she": "she", "kaiko": "kaiko"})
     st["shots"] = ["geta", "scissors", "pins", "crane"]

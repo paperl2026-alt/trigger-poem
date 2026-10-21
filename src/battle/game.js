@@ -113,7 +113,11 @@ export class Game {
   }
   // a stage through several places (src/core/groups.js stageKeysAt): the places behind are let go, the next one starts loading
   streamPlaces(id) {
-    const keys = new Set([...coreKeys(), ...stageKeysAt(this.ep, this.stage, id), ...outfitKeys(this.run.team, (c) => SAVE.chars[c]?.outfit)]);
+    // (in this small stage's last place, the next one's pictures come too: they load while the two of them walk, look round and talk
+    // there, and the next stage starts without a loading bar - user 2026-10-21: the quiet stretches between the runs carry the loading)
+    const st = this.stage, nx = stageFrom(this.ep, this.stepIdx + 1), last = st.places.indexOf(id) >= st.places.length - 2;
+    const ahead = nx && last ? stageKeysAt(this.ep, nx, nx.places?.[0]) : [];
+    const keys = new Set([...coreKeys(), ...stageKeysAt(this.ep, this.stage, id), ...outfitKeys(this.run.team, (c) => SAVE.chars[c]?.outfit), ...ahead]);
     releaseExcept(keys); loadKeys(keys);
   }
   get W() { return this.G.W; }
@@ -1187,6 +1191,24 @@ export class Game {
   }
   // the hit sounds go up a semitone every combat.feel.comboPitch.per hits of the combo (up to max)
   comboRate() { const P = T.combat.feel.comboPitch; return Math.pow(2, Math.min(P.max, Math.floor(this.combo / P.per)) / 12); }
+  // the camera's own way through a fight (DESIGN「战斗中的镜头」, user 2026-10-21 - restrained, never in the way of the aim; the big moves
+  // stay for the moments nobody fights: a boss's entrance, thing.js intro): what the fight is about this moment, for PanelWorld.update to
+  // lean toward - every monster up (one gathering a blow, an elite, the boss count more) - the most urgent blow about to land and on which
+  // side of the picture it is (its horizon tilts that way, the view closes in on it a touch), and how crowded it is (the view opens out)
+  director() {
+    const D = this.world.direct || (this.world.direct = { pts: [], urgent: 0, side: 0, swarm: 0, on: false });
+    D.pts.length = 0; D.urgent = 0; D.side = 0; D.swarm = 0;
+    const S = this.S || {};
+    D.on = !!(this.combat && !this.cineOn && !this.vigOn && !this.walkOn && !S.chase && !S.ride && !S.escort && !S.dial && !S.hide);
+    if (!D.on) return;
+    let n = 0;
+    for (const a of this.actors) {
+      if (!a.alive || a.prop || a.state === 'statue' || a.state === 'scripted' || !(a instanceof Enemy || a === this.boss)) continue;
+      D.pts.push(a.center(), a === this.boss || a.def?.elite ? 2.2 : a.state === 'windup' ? 2.0 : 1); n++;
+    }
+    for (const L of this.fx.live || []) if ((L.type === 'hide' || L.type === 'kill') && L.p > D.urgent) { D.urgent = L.p; D.side = Math.sign(L.x - this.W / 2); }
+    D.swarm = Math.min(1, Math.max(0, (n - 6) / 6));
+  }
   // the plank bridge (PanelWorld.planks: DESIGN 第 1 话 骑士厅 - the monsters crowding onto it break it): the walkers coming up to it
   // squeeze onto it; n of them on it at once and it breaks - they drop into the dark (counted as kills: wave events wait for kills),
   // and so does any that walks into the gap after
@@ -1317,6 +1339,7 @@ export class Game {
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
     if (this.combat && !this.boss && !hold) { this.updateSpawners(edt); this.checkWave(); }
     this.fx.update(dt, now); this.vfx.update(dt); if (this.combat && !hold) { this.morph.update(edt); this.planksTick(edt); this.stuckTick(edt); }
+    this.director();
     this.live.ease(this.shot, dt);
     this.danger(dt);
     this.lens();

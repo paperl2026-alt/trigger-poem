@@ -1091,7 +1091,25 @@
         "retreat_3": "voice/pink/retreat_3.ogg",
         "retreat_4": "voice/pink/retreat_4.ogg",
         "retreat_5": "voice/pink/retreat_5.ogg",
-        "retreat_6": "voice/pink/retreat_6.ogg"
+        "retreat_6": "voice/pink/retreat_6.ogg",
+        "breath_1": "voice/pink/breath_1.ogg",
+        "breath_2": "voice/pink/breath_2.ogg",
+        "breath_3": "voice/pink/breath_3.ogg",
+        "rain_1": "voice/pink/rain_1.ogg",
+        "rain_2": "voice/pink/rain_2.ogg",
+        "rain_3": "voice/pink/rain_3.ogg",
+        "ledger_1": "voice/pink/ledger_1.ogg",
+        "ledger_2": "voice/pink/ledger_2.ogg",
+        "ledger_3": "voice/pink/ledger_3.ogg",
+        "cave_1": "voice/pink/cave_1.ogg",
+        "cave_2": "voice/pink/cave_2.ogg",
+        "cave_3": "voice/pink/cave_3.ogg",
+        "shaft_1": "voice/pink/shaft_1.ogg",
+        "shaft_2": "voice/pink/shaft_2.ogg",
+        "shaft_3": "voice/pink/shaft_3.ogg",
+        "dawn_1": "voice/pink/dawn_1.ogg",
+        "dawn_2": "voice/pink/dawn_2.ogg",
+        "dawn_3": "voice/pink/dawn_3.ogg"
       }
     },
     "cat": {
@@ -1373,7 +1391,25 @@
         "retreat_3": "voice/cat/retreat_3.ogg",
         "retreat_4": "voice/cat/retreat_4.ogg",
         "retreat_5": "voice/cat/retreat_5.ogg",
-        "retreat_6": "voice/cat/retreat_6.ogg"
+        "retreat_6": "voice/cat/retreat_6.ogg",
+        "breath_1": "voice/cat/breath_1.ogg",
+        "breath_2": "voice/cat/breath_2.ogg",
+        "breath_3": "voice/cat/breath_3.ogg",
+        "rain_1": "voice/cat/rain_1.ogg",
+        "rain_2": "voice/cat/rain_2.ogg",
+        "rain_3": "voice/cat/rain_3.ogg",
+        "ledger_1": "voice/cat/ledger_1.ogg",
+        "ledger_2": "voice/cat/ledger_2.ogg",
+        "ledger_3": "voice/cat/ledger_3.ogg",
+        "cave_1": "voice/cat/cave_1.ogg",
+        "cave_2": "voice/cat/cave_2.ogg",
+        "cave_3": "voice/cat/cave_3.ogg",
+        "shaft_1": "voice/cat/shaft_1.ogg",
+        "shaft_2": "voice/cat/shaft_2.ogg",
+        "shaft_3": "voice/cat/shaft_3.ogg",
+        "dawn_1": "voice/cat/dawn_1.ogg",
+        "dawn_2": "voice/cat/dawn_2.ogg",
+        "dawn_3": "voice/cat/dawn_3.ogg"
       }
     },
     "madame": {

@@ -137,7 +137,8 @@ const picsFor = (ep, st, station) => new Set([...coreKeys(), ...(st ? stageKeysA
 function startRun(epId = 'ep0', step = 0, station = null) {
   const ep0 = C.episodes[epId] || C.episodes.ep0;
   // a long stage's checkpoint (episode 2): the retry gives it; starting that stage again from the select screen resumes there too
-  const cp = SAVE.eps[epId]?.cp; if (!station && cp && cp.step === step) station = cp.station;
+  // (only a stop of that stage: episode 2 has no checkpoints inside its stages any more - an old save's may point anywhere)
+  const cp = SAVE.eps[epId]?.cp; if (!station && cp && cp.step === step && ep0.steps[step]?.stations?.includes(cp.station)) station = cp.station;
   needPics(picsFor(ep0, stageAt(ep0, step), station), () => beginRun(ep0, step, station));   // (the ending: the last stage's place)
 }
 function beginRun(ep, step, station = null) {

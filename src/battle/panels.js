@@ -112,6 +112,7 @@ function holeTex(through = false) {   // (through: the middle see-through, only 
   return HS[Math.floor(Math.random() * HS.length)];
 }
 
+const STEER_V = new THREE.Vector3();
 // the pond's water (hall.pond): dark, its light wobbling, rain rings opening and fading in a grid of cells, each on its own beat; fogged
 const POND_VERT = `varying vec2 vP; varying float vD;
 void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz; vec4 mv = viewMatrix * w; vD = -mv.z; gl_Position = projectionMatrix * mv; }`;
@@ -1076,13 +1077,34 @@ export class PanelWorld {
     cam.position.x += g.post.shakeX * 0.06;
     cam.position.y += g.post.shakeY * 0.06;
     cam.lookAt(this.lookAt);
+    // the fight's own direction (Game.director): the view leans a little toward where the fight is, slowly, a few degrees at most; the
+    // girls' figures move the same way on the screen (Player: steerPx) so they stay behind their covers. The horizon tilts toward a blow
+    // about to land and the view closes in on it a touch; a swarm opens it out a touch (small: the covers do not follow those)
+    const D = this.direct, Sv = this.steer || (this.steer = { yaw: 0, pitch: 0, roll: 0, fov: 0 });
+    let ty = 0, tp = 0, tr = 0, tf = 0;
+    if (D?.on) {
+      if (D.pts.length) {
+        cam.updateMatrixWorld(); const inv = cam.matrixWorldInverse; let sy = 0, sp = 0, sw = 0;
+        for (let i = 0; i < D.pts.length; i += 2) {
+          const v = STEER_V.copy(D.pts[i]).applyMatrix4(inv); if (v.z > -0.5) continue;
+          const yw = Math.atan2(v.x, -v.z), pt = Math.atan2(v.y, -v.z); if (Math.abs(yw) > 0.8) continue;
+          sy += yw * D.pts[i + 1]; sp += pt * D.pts[i + 1]; sw += D.pts[i + 1];
+        }
+        if (sw) { ty = Math.max(-0.055, Math.min(0.055, sy / sw * 0.4)); tp = Math.max(-0.03, Math.min(0.025, sp / sw * 0.3)); }
+      }
+      tr = D.side * D.urgent * 0.03; tf = -D.urgent * 1.5 + D.swarm * 2;
+    }
+    const ks = Math.min(1, dt * 0.8), kq = Math.min(1, dt * 2);
+    Sv.yaw += (ty - Sv.yaw) * ks; Sv.pitch += (tp - Sv.pitch) * ks; Sv.roll += (tr - Sv.roll) * kq; Sv.fov += (tf - Sv.fov) * kq;
+    cam.rotateY(-Sv.yaw); cam.rotateX(Sv.pitch);
+    this.steerPx = -Math.tan(Sv.yaw) * (g.H / 2) / Math.tan(THREE.MathUtils.degToRad(cam.fov / 2));   // (how far the girls move with it, px)
     cam.rotateY(-this.look.x * 0.09);
     cam.rotateX(-this.look.y * 0.06);
     // banking with the aim (Mirage Feathers' tilted horizon: the camera leans a little into where she aims) and the shake's roll; a
     // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
-    cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
+    cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0) + Sv.roll);   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
     this.punch = (this.punch || 0) * Math.exp(-dt * 7);
-    const fov = this.baseFov + this.fovKick + (this.stretchFov || 0) - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
+    const fov = this.baseFov + this.fovKick + (this.stretchFov || 0) + Sv.fov - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }

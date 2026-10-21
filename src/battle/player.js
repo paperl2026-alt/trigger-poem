@@ -308,7 +308,7 @@ export class Player {
     this.place();   // (the scope's narrower view: her size stays)
     this.cineK = (this.cineK || 0) + ((g.cineOn || g.walkOn ? 1 : 0) - (this.cineK || 0)) * Math.min(1, dt * 5);
     this.cineK = Math.max(this.cineK, Lv ? 1 - Lv.show : 0);
-    if (Lv && this.frame) this.baseX = this.frame.x + this.frame.w * Lv.x[this.slot] + (this.baseShift || 0);
+    if (Lv && this.frame) this.baseX = this.frame.x + this.frame.w * Lv.x[this.slot] + (this.baseShift || 0) + (g.world.steerPx || 0);   // (the camera leaning with the fight: she stays behind her cover, PanelWorld steer)
     const out = this.cineK * this.cineK * (3 - 2 * this.cineK) * this.H * 1.05;
     if (this.hero) {
       // Fever look: her colour, stronger with every level; full Fever = the light keeps running; skill = full blaze

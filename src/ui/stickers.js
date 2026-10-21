@@ -15,7 +15,8 @@ const rnd = (a, b) => a + Math.random() * (b - a);
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 const PRIO = { down: 9, skill: 8, coverBroken: 7, low: 7, revive: 6, stagger: 6, fever: 6, join: 5, ready: 5, combo: 4, kill: 3,
   scare: 7, bridge: 7, rot: 6, real: 5, photo: 5, armor: 5,
-  sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8, flee: 6, lookBack: 7, deadEnd: 8, retort: 7, retreat: 7 };   // (flee / lookBack / deadEnd / retort / retreat: the prologue's chase, ride.js)   // (episode 2: she, src/battle/chase.js say)
+  sheSeen: 7, runNow: 6, hush: 7, trapHit: 6, grabbed: 8, bell: 8, flee: 6, lookBack: 7, deadEnd: 8, retort: 7, retreat: 7,
+  breath: 7, rain: 7, ledger: 7, cave: 7, shaft: 7, dawn: 7 };   // (episode 2's quiet stretches between the runs: talk, ep2_level.py)   // (flee / lookBack / deadEnd / retort / retreat: the prologue's chase, ride.js)   // (episode 2: she, src/battle/chase.js say)
 const TAG = { kill: 'K.O.', combo: 'COMBO', low: 'DANGER', fever: 'FEVER',
   ready: 'SKILL OK', skill: 'SKILL', revive: 'REVIVE', down: 'DOWN', coverBroken: 'BREAK', stagger: 'BREAK', join: 'JOIN', windup: 'WARNING', callout: 'NOTICE' };
 // fewer, longer lines (user 2026-10-19 batch 23): small talk waits this long after her last line (by priority: <= 4 / 5)
@@ -102,6 +103,7 @@ export class Stickers {
   }
   say(p, kind, chance = 1, force = false) {
     if (!p || Math.random() > chance) return;
+    if (!this.hud.L?.f) { this.game.tweens.wait(0.1, () => this.say(p, kind, 1, force)); return; }   // (the very first frame of a stage: the HUD lays itself out first - a run started on a chase)
     if (!force && this.game.shot?.hud?.bubbles === false) return;   // (tuning/shots.json: not every shot has the girls' bubbles)
     const H = this.her[p.slot], set = this.D.heroines[p.id]?.[kind];
     if (!H || !set) return;

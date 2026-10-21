@@ -375,6 +375,48 @@
             { "zh": "呜……它反而更生气了！", "en": "Ugh... I only made it angrier!", "ja": "うぅ……よけいおこらせちゃった！" },
             { "zh": "换个地方再打！这边！", "en": "We'll fight somewhere else! This way!", "ja": "場所かえてたたかお！こっち！" }
           ]
+        },
+        "breath": {
+          "lines": [
+            { "zh": "……走、走了吗？心脏快跳出来了……", "en": "...Is she... gone? My heart's about to jump out...", "ja": "……い、行った？心臓、飛び出しそう……" },
+            { "zh": "腿还在抖……刚才真的差点就……", "en": "My legs are still shaking... that was so close...", "ja": "足、まだ震えてる……さっき、ほんとに危なかった……" },
+            { "zh": "不要再有剪刀声了……拜托……", "en": "No more snipping sounds... please...", "ja": "もうハサミの音、やめて……お願い……" }
+          ]
+        },
+        "rain": {
+          "lines": [
+            { "zh": "雨好大……鞋子要湿透了啦。", "en": "It's pouring... my shoes are getting soaked.", "ja": "雨、すごい……靴がびしょびしょになっちゃう。" },
+            { "zh": "院子里的灯笼……是谁点的呀……", "en": "The lanterns in the garden... who lit them...?", "ja": "庭の提灯……誰が点けたの……？" },
+            { "zh": "那座钟楼，从这里都能看见呢。", "en": "You can see that bell tower from here.", "ja": "あの鐘楼、ここからでも見えるね。" }
+          ]
+        },
+        "ledger": {
+          "lines": [
+            { "zh": "这是……账本？名字下面都画了红圈……", "en": "Is this... a ledger? There are red circles under all the names...", "ja": "これ……帳簿？名前の下に、全部赤い丸……" },
+            { "zh": "「双子要吃饭了」……什么意思啊……", "en": "'The twins must be fed'... what does that mean...", "ja": "「双子にご飯を」……どういう意味……？" },
+            { "zh": "这些客人……最后都去哪了……", "en": "All these guests... where did they end up...", "ja": "このお客さんたち……最後、どこに行ったの……" }
+          ]
+        },
+        "cave": {
+          "lines": [
+            { "zh": "好冷……这里是冰窖吗？", "en": "So cold... is this an ice cellar?", "ja": "寒い……ここ、氷室？" },
+            { "zh": "帷幕后面……好像有很大的东西在呼吸……", "en": "Behind that curtain... something huge is breathing...", "ja": "幕の向こう……大きなものが息してる……" },
+            { "zh": "到处都是丝……黏黏的……", "en": "Threads everywhere... all sticky...", "ja": "そこら中、糸……ねばねば……" }
+          ]
+        },
+        "shaft": {
+          "lines": [
+            { "zh": "要坐这个上去？绳子看起来好旧……", "en": "We're riding this up? The rope looks so old...", "ja": "これで上がるの？ロープ、すごく古そう……" },
+            { "zh": "上面就是钟楼……快到了吧？", "en": "The bell tower's up there... we're nearly there, right?", "ja": "上が鐘楼……もうすぐ、だよね？" },
+            { "zh": "别往下看……别往下看……", "en": "Don't look down... don't look down...", "ja": "下見ちゃだめ……下見ちゃだめ……" }
+          ]
+        },
+        "dawn": {
+          "lines": [
+            { "zh": "好大的钟……地上这个是钟面吗？", "en": "What a huge bell... is the floor a clock face?", "ja": "大きな鐘……床、これ時計の文字盤？" },
+            { "zh": "镇子还在雾里……天快亮了呢。", "en": "The town's still in the fog... it's almost dawn.", "ja": "町はまだ霧の中……もうすぐ朝だね。" },
+            { "zh": "敲响它，一切就结束了吧？", "en": "Ring it, and it's all over, right?", "ja": "これを鳴らせば、全部終わるんだよね？" }
+          ]
         }
       },
       "cat": {
@@ -789,6 +831,52 @@
             { "zh": "绕开它！到外面再收拾它喵！", "en": "Go round it! We'll deal with it outside, nya!", "ja": "まわりこむにゃ！外でかたづけるにゃ！" },
             { "zh": "猫的战术：打不过就溜喵。", "en": "Cat tactics: can't win, slip away, nya.", "ja": "猫の戦術：かてないならにげるにゃ。" },
             { "zh": "别愣着！它要扑过来了喵！", "en": "Don't just stand there! It's about to pounce, nya!", "ja": "ぼーっとするにゃ！とびかかってくるにゃ！" }
+          ]
+        },
+        "breath": {
+          "lines": [
+            { "zh": "嘘……脚步声远了。先别出声喵。", "en": "Shh... her steps are fading. Stay quiet, nya.", "ja": "しっ……足音、遠のいたにゃ。まだ声は出さないで。" },
+            { "zh": "她在找我们。不能一直躲在这里喵。", "en": "She's hunting us. We can't hide here forever, nya.", "ja": "あいつ、探してるにゃ。ずっとここには隠れていられないにゃ。" },
+            { "zh": "门口那些拖鞋……全被剪成两半了喵。", "en": "Those slippers at the doors... all cut in half, nya.", "ja": "戸口のスリッパ……全部、真っ二つにゃ。" }
+          ]
+        },
+        "rain": {
+          "lines": [
+            { "zh": "雨声盖住了脚步声，小心喵。", "en": "The rain covers footsteps. Careful, nya.", "ja": "雨の音で足音が消されるにゃ。気をつけて。" },
+            {
+              "zh": "钟楼上那口钟……这家人世世代代敲的就是它喵。",
+              "en": "That bell up there... this family has rung it for generations, nya.",
+              "ja": "あの鐘……この家が代々鳴らしてきたやつにゃ。"
+            },
+            { "zh": "池子里有什么在动……别看太久喵。", "en": "Something's moving in the pond... don't stare too long, nya.", "ja": "池で何か動いたにゃ……あんまり見ないほうがいいにゃ。" }
+          ]
+        },
+        "ledger": {
+          "lines": [
+            { "zh": "订房的人……全是被骗来的喵。", "en": "Everyone who booked... they were all lured here, nya.", "ja": "予約した客……みんな騙されて来たにゃ。" },
+            { "zh": "女将生的双胞胎……一个就是那把剪刀喵。", "en": "The landlady's twins... one of them is that pair of scissors, nya.", "ja": "女将の双子……片方があのハサミにゃ。" },
+            { "zh": "另一个养在地底下……得小心了喵。", "en": "The other one is kept underground... we have to be careful, nya.", "ja": "もう片方は地下で飼われてる……用心するにゃ。" }
+          ]
+        },
+        "cave": {
+          "lines": [
+            { "zh": "蚕丝……这家以前是养蚕的喵。", "en": "Silk... this house used to raise silkworms, nya.", "ja": "絹糸……この家、昔はお蚕さまを飼ってたにゃ。" },
+            { "zh": "祭坛上点着蜡烛……还有灯油的味道喵。", "en": "Candles lit on the altar... and a smell of lamp oil, nya.", "ja": "祭壇に蝋燭……灯油の匂いもするにゃ。" },
+            { "zh": "别吵醒它……脚步放轻喵。", "en": "Don't wake it... walk softly, nya.", "ja": "起こすにゃよ……そっと歩くにゃ。" }
+          ]
+        },
+        "shaft": {
+          "lines": [
+            { "zh": "她会顺着井爬上来喵。准备好喵。", "en": "She'll climb up the shaft after us, nya. Get ready.", "ja": "あいつ、井戸を登ってくるにゃ。構えて。" },
+            { "zh": "齿轮间那里能躲一下喵。", "en": "We can hide in the gear loft up there, nya.", "ja": "歯車の部屋なら隠れられるにゃ。" },
+            { "zh": "天快亮了……撑到明け六つ喵。", "en": "Dawn's coming... hold out until the dawn bell, nya.", "ja": "もうすぐ夜明けにゃ……明け六つまで粘るにゃ。" }
+          ]
+        },
+        "dawn": {
+          "lines": [
+            { "zh": "十二支的刻度……这就是阵喵。", "en": "The twelve hours round the floor... this is the circle, nya.", "ja": "十二支の目盛り……これが陣にゃ。" },
+            { "zh": "把时针推到明け六つ，再敲钟喵。", "en": "Push the hand round to dawn, then ring the bell, nya.", "ja": "針を明け六つまで進めて、鐘を鳴らすにゃ。" },
+            { "zh": "她来了……最后一次了喵。", "en": "She's coming... this is the last time, nya.", "ja": "来たにゃ……これで最後にゃ。" }
           ]
         }
       }
