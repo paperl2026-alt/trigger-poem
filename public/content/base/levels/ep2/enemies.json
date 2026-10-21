@@ -89,7 +89,8 @@
     },
     "moves": ["walk", "charge", "walk"],
     "scar": "splat",
-    "scarColor": "#f4f0e6"
+    "scarColor": "#f4f0e6",
+    "elite": true
   },
   "kokeshi": {
     "beh": "thrower",
@@ -159,5 +160,22 @@
     "frames": { "all": ["sleep", "wake", "crawl", "windup", "lunge", "hurt"] },
     "scar": "splat",
     "scarColor": "#f8f6ee"
+  },
+  "katashiro_big": {
+    "beh": "flyer",
+    "name": { "zh": "大形代", "en": "Great Paper Doll", "ja": "大形代" },
+    "sprite": "katashiro",
+    "variants": ["katashiro"],
+    "hp": 160,
+    "dmg": 12,
+    "h": 2.0,
+    "windup": 0.8,
+    "poise": 60,
+    "first": "fly0",
+    "params": { "homeX": 2.0, "swayX": 1.4, "swayY": 0.5, "wanderEvery": [0.35, 0.8], "wanderPull": 3.4, "hoverFirst": [2.5, 5.5], "hoverAgain": [4, 7] },
+    "frames": { "fly": ["fly0", "fly1"], "idle": ["idle"], "windup": ["windup"], "dive": ["dive"], "hurt": ["hurt"] },
+    "scar": "paper",
+    "_doc": "两只形代纸人叠在一起胀成的大纸人（DESIGN「总纲」 两只合体成新的；第 2 话大广间：src/battle/morph.js merge）。",
+    "elite": true
   }
 }

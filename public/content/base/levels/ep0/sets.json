@@ -117,7 +117,10 @@
             { "t": 1.2, "type": "chair", "from": "door", "way": "dfront" },
             { "t": 2.0, "type": "desk", "x": -3.4, "z": -4.0, "from": "pop" }
           ],
-          [{ "t": 0, "type": "shoe", "from": "door", "way": "dfront" }],
+          [
+            { "t": 0.8, "act": "transform", "k": "prop/desk2", "h": 0.95, "x": 0.85, "z": -2.8, "of": "desk" },
+            { "t": 0.4, "type": "shoe", "from": "door", "way": "dfront" }
+          ],
           [
             { "t": 0, "type": "desk", "x": 1.7, "z": -1.6, "from": "pop" },
             { "t": 0.6, "type": "book", "x": -4.5, "z": -1.0, "y": 2.2, "from": "outside" },
@@ -284,6 +287,9 @@
           [
             { "t": 0.4, "type": "shoe", "x": -1.56, "z": -10, "move": "walk", "from": "door", "way": "c2" },
             { "t": 1.4, "type": "shoe", "x": 1.56, "z": -11, "move": "walk", "from": "door", "way": "c2" }
+          ],
+          [
+            { "t": 0.3, "act": "squabble", "of": ["chair", "chair"], "x": -0.5, "z": -9.0 }
           ],
           [
             { "t": 0, "type": "book", "x": 2.0, "z": -11, "y": 2.2, "from": "outside" }

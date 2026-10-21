@@ -11,7 +11,11 @@
 //   act: <kind> + its fields (ritual / summon / sacrifice / squabble / transform: acts.js)
 //   spawn: [wave entries], turn, mutate, gimmick, collapse, spawner, wake          the old wave events (Game.waveEvent)
 //   swap: { <board>: <board> }, fire: [gimmick ids]
-//   cam: { on: 'boss' | <monster type> | [x, y, z], dist, up, side, zoom, orbit, dolly, title (a text), hold, in, out, lull }   a close look
+//   cam: { on: 'boss' | <monster type> | [x, y, z], dist, up, side, zoom, orbit, dolly, title (a text), hold, in, out, pause }   a close look;
+//     the fight held still while it lasts (pause: false only where nothing is fighting anyway - user 2026-10-21)
+//   insert: { k: <picture>, side: -1 | 1, w, h, y, life, color }   a slanted comic panel cut in from one side (ride.js insert)
+//   vignette: { k: <picture>, title, sub, color, crop, side, dur }   a close-up: a comic page of its own, the fight waiting (Game.vignette;
+//     user 2026-10-21: a close-up is its own little scene, not the camera dragged through the fight); holds the timeline like cam
 //   shot: <preset> | { kind, ... }   the stop's shot changes from here (tuning/shots.json; shot.js)
 //   girls: { move: hop | dash | dive, who: 0 | 1 | 'both', dx, dy, h, t, delay: [1P, 2P] } | 'settle'   the two of them move in the place
 //     (DESIGN「女主动起来」: a hop up or down a step, a dash across, a dive into cover; tuning/layout.json moves; player.js move)
@@ -54,11 +58,13 @@ export class Cues {
     if (c.mv) g.mv.play(c.mv);
     if (c.vfx) { const V = typeof c.vfx === 'string' ? { name: c.vfx } : c.vfx; g.vfx.play(V.name, V.at ? v3(V.at) : g.world.lookAt.clone(), { scale: V.scale }); }
     if (c.act) g.acts.start(c);
+    if (c.insert) g.ride.insert(c.insert);
     if (c.swap) for (const [from, to] of Object.entries(c.swap)) g.world.swapBoard?.(from, to);
     if (c.fire) for (const id of c.fire) g.actors.find((a) => a.g?.id === id && !a.spent)?.fire();
     if (c.spawn) for (const e of c.spawn) g.spawnEnemy(e);
     // (the wave events of before: Game.waveEvent does them, as it always did)
     if (c.turn || c.mutate || c.gimmick || c.collapse || c.spawner || c.wake) g.waveEvent({ turn: c.turn, mutate: c.mutate, gimmick: c.gimmick, collapse: c.collapse, spawner: c.spawner, wake: c.wake });
+    if (c.vignette) { g.vignette(c.vignette, () => then?.()); return; }
     if (c.cam) { this.cam(c.cam, then); return; }
     then?.();
   }
@@ -78,7 +84,7 @@ export class Cues {
     else if (o.on) on = g.actors.filter((a) => a.alive && a.type === o.on).sort((a, b) => a.distToCam() - b.distToCam())[0] || null;
     if (!on) { then?.(); return; }
     g.cine({ on, dist: o.dist ?? 3, up: o.up ?? 0, side: o.side ?? 0, v: o.v ?? 0.55, zoom: o.zoom, orbit: o.orbit, dolly: o.dolly,
-      title: o.title ? tr(o.title) : null, in: o.in ?? 0.8, hold: o.hold ?? 2, out: o.out ?? 0.7, lull: o.lull !== false, face: o.face }, () => then?.());
+      title: o.title ? tr(o.title) : null, in: o.in ?? 0.8, hold: o.hold ?? 2, out: o.out ?? 0.7, lull: o.lull !== false, pause: o.pause !== false, face: o.face }, () => then?.());
   }
   // cues in order by their at (seconds since the start); a close look holds the rest until it is over
   timeline(list, then) {

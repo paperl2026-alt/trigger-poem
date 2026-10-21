@@ -83,6 +83,7 @@ export class TheThing extends Actor {
     this.u = this.mesh.material.uniforms;
     this.u.outlineOn.value = 1; this.u.mapTexel.value.set(1 / t.image.width, 1 / t.image.height);
     this.u.dmgStyle.value = this.def.coreGlow ? 1 : 0;   // (her core lights up as it is hurt: paper.js)
+    this.u.coreCol.value.set((this.def.coreTrail?.colors || this.def.coreSmoke?.colors || ['#ffe08a'])[0]);
     this.inner.add(this.mesh);
     this.prefix = `${this.def.sprite || 'boss/qq'}_s${n + 1}_`; this.anim = null; this.play('idle', 3);
     this.root.position.y = S.float ? S.y : 0;
@@ -207,7 +208,7 @@ export class TheThing extends Actor {
     this.paint(info);   // (no white flash of the whole of her: the core itself changes colour as it is hurt - user 2026-10-21)
     if (this.def.coreGlow) { const c = this.core(); if (c) { this.dm.blob(c[0], c[1], (c[2] ?? 0.11) * this.h / this.w * 1.15, '0,255,0', 0.045); this.dm.tex.needsUpdate = true; this.coreHurt = (this.coreHurt || 0) + 1; } }   // (the whole core, a little more each hit)
     const p = this.uvToWorld(info.uv.u, info.uv.v);
-    this.mist(p);
+    this.mist(p); this.strobeT = 0.3;   // (the weak point strobes where it is hit: beatTick)
     // a lunge being gathered breaks off when its core is hit enough
     if (this.state === 'windup' && this.move === 'lunge' && info.stagger) { this.poise += info.stagger; if (this.poise >= D.lunge.poise) this.interrupt(); }
     this.hp -= dmg; this.stageDmg = (this.stageDmg || 0) + dmg;
@@ -320,6 +321,33 @@ export class TheThing extends Actor {
         size1: s * rnd(0.01, 0.04), rot: rnd(0, 6.28), vrot: rnd(-3, 3), color: [col.r, col.g, col.b], a: 0.95, a1: 0, frame: star ? FR.STAR : FR.GLOW });
     }
   }
+  // her weak point plain from the start (user 2026-10-21: "you still have to guess, or wait for the AI to hit it"): as the old light-gun
+  // games show a boss's weak spot - House of the Dead's boss card, the glowing, beating cores of R-Type - it always holds a faint light,
+  // and beats with light (paper.js coreBeat: a pulse from it, a ring of motes thrown off); when a form begins it is shown off - quick
+  // strong beats and bursts of stars for a few seconds; open, it beats faster than shut; where it is hit it strobes (coreHit)
+  beatTick(dt, open) {
+    const g = this.game, U = this.u, c = this.core();
+    if (!c || this.mutating || this.grief || g.cineOn || !this.alive) { U.coreOn.value = 0; U.coreBeat.value = 0; U.coreHit.value = 0; return; }
+    U.coreAt.value.set(c[0], c[1], c[2] ?? 0.11, this.ar);
+    if (this.revealStage !== this.stage) { this.revealStage = this.stage; this.revealT = 3.5; this.beatT = 9; }
+    this.revealT = Math.max(0, (this.revealT || 0) - dt);
+    const rev = this.revealT > 0, per = rev ? 0.5 : open ? 1.1 : 1.9;
+    this.beatT = (this.beatT || 0) + dt;
+    if (this.beatT >= per) {
+      this.beatT = 0;
+      const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), col = U.coreCol.value, n = rev ? 18 : open ? 12 : 7;
+      for (let i = 0; i < n; i++) {
+        const a = i / n * Math.PI * 2 + rnd(-0.15, 0.15), v = s * rnd(1.4, 2.2) * (rev ? 1.4 : 1);
+        g.fx.wAdd.emit({ x: p.x, y: p.y, z: p.z, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vz: 0, drag: 2.2, life: rnd(0.45, 0.7), size: s * rnd(0.1, 0.18), size1: s * 0.03,
+          rot: rnd(0, 6.28), color: [col.r, col.g, col.b], a: rev ? 1 : open ? 0.9 : 0.6, a1: 0, frame: Math.random() < 0.3 ? FR.STAR : FR.GLOW });
+      }
+      if (rev) g.fx.star(p, s * 1.6, COL.white);
+    }
+    U.coreOn.value = open || rev ? 1 : 0.6;
+    U.coreBeat.value = Math.exp(-this.beatT * 5) * (rev ? 1.5 : open ? 1 : 0.55);
+    this.strobeT = Math.max(0, (this.strobeT || 0) - dt);
+    U.coreHit.value = this.strobeT > 0 && Math.floor(this.strobeT * 30) % 2 === 0 ? 1 : 0;
+  }
   // a hit on the core: a spray of blood mist (her own blood colours: def.coreSmoke.blood) and a few drops
   mist(p) {
     const g = this.game, S = this.def.coreSmoke || {}, s = this.h * ((this.core()?.[2]) ?? 0.11), cols = (S.blood || ['#c8102e', '#ff3b5c', '#7a0018']).map((h) => new THREE.Color(h));
@@ -346,6 +374,7 @@ export class TheThing extends Actor {
     this.markCore(wk && this.core() && !g.cineOn); this.mistT = (this.mistT || 0) - dt; this.u.time.value = t;
     if (this.def.coreTrail && this.core() && !g.cineOn && !this.mutating && !this.grief) this.trailTick(dt, wk ? 1 : 0.35); else this.trailAt = null;
     if (this.def.coreGlow && this.core() && !g.cineOn && !this.mutating && !this.grief) this.motesTick(dt, t, wk);
+    this.beatTick(dt, wk);
     this.exposedT = Math.max(0, (this.exposedT || 0) - dt);
     const H = this.def.heal, on = (this.healers || []).filter((e) => e.alive && e.attached).length;
     if (H && on && !this.mutating && this.hp < this.maxHp) {

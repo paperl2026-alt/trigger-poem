@@ -505,13 +505,14 @@ export class Chase {
   }
   // her scream: a long wind-up with the purple ring (hide!), then a blast that hits whoever is out
   scream(she) {
-    const g = this.g; she.pose('scream'); she.state = 'stuck'; she.timer = 3.4; she.after = 'stalk';
+    const g = this.g; she.pose('scream'); she.state = 'stuck'; she.timer = 5.4; she.after = 'stalk';
     const lock = g.fx.lock('hide', -1, { mark: 'bossHide' }); sound('sheLaugh');   // (her own 3D warning, as a boss's: marks3d.js) g.hud.gl.hold?.('danger');
     const t0 = performance.now();
-    const upd = () => { if (!she.alive) { lock.remove(); return; } const c = g.world.project(she.center()), b = she.screenBox(), k = Math.min(1, (performance.now() - t0) / 2600);
-      lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.5), k, performance.now() / 1000, 2.6 * (1 - k), b, she.center()); if (k < 1) requestAnimationFrame(upd); };
+    const upd = () => { if (!she.alive) { lock.remove(); return; } const c = g.world.project(she.center()), b = she.screenBox(), k = Math.min(1, (performance.now() - t0) / 4600);
+      lock.set(c.x, g.H - c.y, Math.max(60, (b.y1 - b.y0) * 0.5), k, performance.now() / 1000, 4.6 * (1 - k), b, she.center()); if (k < 1) requestAnimationFrame(upd); };
     upd();
-    g.tweens.wait(2.6, () => { lock.remove(); if (!she.alive) return; sound('roar'); g.fx.soundWave?.(she); g.post.shake(1.4);
+    g.tweens.wait(4.6, () => { lock.remove(); if (!she.alive) return; sound('roar');   // (the long wind-up: hiding needs time - user 2026-10-21, +2 s for a boss's)
+    g.fx.soundWave?.(she); g.post.shake(1.4);
       g.playerAttacked({ kind: 'blast', dmg: 26, from: she, heavy: true, slot: -1 }); });
   }
   updateBlock(dt) {
@@ -555,7 +556,7 @@ export class Chase {
   // a close look at her (Game.cine, DESIGN「要给玩家看的东西放慢、特写」): her line (text/stickers.json bosses.she.<kind>) held as long as it is said
   closeUp(she, kind, o = {}, then) {
     let n = 0;
-    this.g.cine({ on: she, v: 0.7, dist: 3, up: 0.1, in: 0.7, out: 0.7, lull: true, ...o,
+    this.g.cine({ on: she, v: 0.7, dist: 3, up: 0.1, in: 0.7, out: 0.7, pause: true, ...o,   // (the fight held still: user 2026-10-21)
       during: () => { o.during?.(); if (kind) n = this.g.hud.gl.stickers.boss(she, kind) || 0; }, hold: () => Math.max(o.min ?? 2.6, n + 0.3) }, then);
   }
   // the time earned: a little clock beside the stage name (drawn by the program), the twelve hours filling up

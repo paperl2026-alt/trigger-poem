@@ -33,7 +33,7 @@ def madame(B):
     # (how long each form lasts, on the auto-player: about 6, 63 and 49 damage a second in the three -> about a minute each; the diary's
     # share is its six pages)
     B["hp"] = 4160
-    B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 1.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
+    B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
     B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
     B["madame"] = {
@@ -115,10 +115,57 @@ def enter(wave, sid, ways, trick, far, rnd, k):
         if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 2.6, "hp": 2400}}}
         if trick == "merge" and ty == "dollkin": e["morph"] = {"merge": {"with": "dollkin", "into": "doll", "after": 4}}
 
+def gallery_mouth(S):
+    """the gallery's far door (DESIGN 第 1 话 按总纲重做时各处加的巧思): walked to after the fight, the gallery stretches away (PanelWorld
+    .stretch) and springs back with the door right there - and the door is a mouth (enemy door_mouth, R81: it stands as the door, frames
+    .disguise, and wakes): it spits honey, clamps shut, and spews a flood of it (hide); shot to bits, the real door is behind it"""
+    st = S["stations"]; last = st["ga2b"]; ex = last.pop("exit")
+    st["ga3"] = {"via": [[0, 1.5, -11]], "cam": [0, 1.45, -15], "look": [0, 1.3, -21], "stretch": {"k": 2.6, "dur": 4.2, "at": 0.8},
+                 "covers": [{"k": "cover/ep1_gallery1", "side": -1}, {"k": "cover/ep1_gallery2", "side": 1}],
+                 "waves": [[{"type": "door_mouth", "x": 0, "z": round(S["hall"]["z1"] + 0.12, 2), "from": "statue", "wake": 0.8,
+                             "closeup": {"hold": 2.0, "say": "scare", "color": "#5a1a24", "k": "enemy/door_mouth_open", "title": {"zh": "噬人门", "en": "THE MAW DOOR", "ja": "喰らい扉"},
+                                         "sub": {"zh": "尽头那扇门，是张嘴", "en": "the door at the end was a mouth", "ja": "突き当たりの扉は、口だった"}}}]],
+                 "shot": {"kind": "cover", "cam": {"zoom": 10}}, "exit": ex}
+
+def knight_planks(S):
+    """the knights' hall (DESIGN 第 1 话 骑士厅: on the way to the second stop the floor ahead caves in right across - a strip of planks is
+    left over the gap - and the monsters crowding onto it break it): hall.planks (PanelWorld: opened by that walk, game.js bridge);
+    the stop's second wave a pack of ghouls coming over at once - they squeeze onto the planks, three on it and it goes (Game.planksTick)"""
+    S["hall"]["planks"] = {"z0": -7.75, "z1": -10, "x": -2.0, "w": 1.6, "n": 3, "station": "gd2"}   # (x: where the stop's view crosses the gap)
+    for pr in S.get("props", []):
+        if abs(pr["z"] + 9) < 0.01 and abs(pr["x"]) < 0.1: pr["z"] = -13   # (the fountain out of the gap)
+    pack = [(-3.4, -14.5), (-0.6, -15), (-2.0, -14), (-2.8, -15.2), (-1.0, -13.8)]
+    S["stations"]["gd2"]["waves"].insert(1, [{"t": round(i * 0.45, 2), "type": "ghoul", "x": x, "z": z, "move": "walk"} for i, (x, z) in enumerate(pack)])
+
+def tunnel_fall(S):
+    """the honey tunnel (DESIGN 第 1 话: knocked by a big one down a deeper pit, into the next stretch): the first stop's last wave a brute
+    (shadow_brute) bursting out of the floor and bringing it down with its blow (blast.collapse: Game.collapse) - they fall into the second
+    stop, landing from above (its enter)"""
+    st = S["stations"]
+    st["pt1"]["waves"].append([{"t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow",
+                                "closeup": {"hold": 1.8, "color": "#2a1c30", "title": {"zh": "巨影", "en": "THE GREAT SHADOW", "ja": "巨きな影"},
+                                "sub": {"zh": "从坑道底下钻了出来", "en": "up out of the tunnel floor", "ja": "坑道の底から這い出てきた"}}}])
+    st["pt2"]["enter"] = {"from": [0, 6, -6.2], "dur": 0.75, "shake": 1.6, "sfx": "thud"}
+
+def acts(D):
+    """the monsters' own play (DESIGN「停留点不只是一个镜头、一种打法」 怪的演出, src/battle/acts.js), a wave of its own at some stops, placed
+    where the stop's corner view looks: two scooplings squabbling in the gelateria (shoot one, both turn on the girls); four mourners in a
+    ring round a circle in the greenhouse - all down before it is done, or an armour rises out of it; a doll holding a portal open in the
+    nursery, little dolls stepping out until it is down; a ghoul running for the kitchen wall to blow itself up and hole it"""
+    put = lambda sid, st, i, e: D[sid]["stations"][st]["waves"].insert(i, [e])
+    put("ep1_shop", "sh2", 1, {"t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -11.5})
+    put("ep1_garden", "gd1", 1, {"t": 0.3, "act": "ritual", "of": "shade_mourner", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5, "time": 9, "summon": "armor"})
+    put("ep1_nursery", "nu2", 1, {"t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -10.5, "minion": "dollkin", "every": 3, "max": 5})
+    put("ep1_oven", "ov2", 1, {"t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1})
+
 def places(D):
     import random
     R = random.Random(11)
     for sid, spec in ROOMS.items(): room(sid, D[sid], spec, R.random)
+    gallery_mouth(D["ep1_gallery"])
+    knight_planks(D["ep1_garden"])
+    tunnel_fall(D["ep1_pit"])
+    acts(D)
 
 def main():
     f = L / "bosses.json"; B = packs.load(f)

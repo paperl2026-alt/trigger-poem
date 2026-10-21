@@ -28,7 +28,7 @@
       {
         "stage": "gallery",
         "set": "ep1_gallery",
-        "stations": ["ga0", "ga1", "ga2", "ga2b"],
+        "stations": ["ga0", "ga1", "ga2", "ga2b", "ga3"],
         "name": { "zh": "画廊", "en": "GALLERY", "ja": "回廊" },
         "thumb": "ui/sel_thumb_ep1_gallery"
       },

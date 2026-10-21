@@ -112,6 +112,40 @@ function holeTex(through = false) {   // (through: the middle see-through, only 
   return HS[Math.floor(Math.random() * HS.length)];
 }
 
+// the pond's water (hall.pond): dark, its light wobbling, rain rings opening and fading in a grid of cells, each on its own beat; fogged
+const POND_VERT = `varying vec2 vP; varying float vD;
+void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vP = w.xz; vec4 mv = viewMatrix * w; vD = -mv.z; gl_Position = projectionMatrix * mv; }`;
+const POND_FRAG = `uniform float time; uniform vec3 col; uniform vec3 glow; uniform vec3 fogColor; uniform float fogDensity; varying vec2 vP; varying float vD;
+float h1(vec2 p){ return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453); }
+void main(){
+  vec2 p = vP;
+  float w = sin(p.x * 1.3 + time * 0.5 + sin(p.y * 0.7) * 2.0) * 0.5 + sin(p.y * 1.9 - time * 0.35) * 0.5;
+  vec3 c = col * (0.85 + 0.2 * w);
+  float s = pow(max(0.0, sin(p.x * 0.55 + sin(p.y * 2.4 + time * 1.3) * 0.35)), 24.0);
+  c += glow * s * 0.45;
+  float rings = 0.0;
+  for (int L = 0; L < 2; L++) {
+    vec2 q = p * (2.2 + float(L) * 1.3) + float(L) * 7.3; vec2 id = floor(q), f = fract(q) - 0.5; float h = h1(id + float(L));
+    float tt = fract(time * (0.9 + h * 0.6) + h); vec2 o = (vec2(h, h1(id + 3.1)) - 0.5) * 0.5;
+    float r = length(f - o); rings += smoothstep(0.035, 0.0, abs(r - tt * 0.42)) * (1.0 - tt);
+  }
+  c += vec3(0.55, 0.68, 0.9) * rings * 0.45;
+  float fg = 1.0 - exp(-fogDensity * fogDensity * vD * vD);
+  gl_FragColor = vec4(mix(c, fogColor, fg), 0.94);
+}`;
+// a loose plank of the plank bridge: pale worn wood, its grain, nail holes at the ends (it has to stand out over the dark of the gap)
+let BOARD = null;
+function boardTex() {
+  if (BOARD) return BOARD;
+  const c = document.createElement('canvas'); c.width = 128; c.height = 512; const g = c.getContext('2d');
+  g.fillStyle = '#d6a874'; g.fillRect(0, 0, 128, 512);
+  const gr = g.createLinearGradient(0, 0, 128, 0); gr.addColorStop(0, 'rgba(90,50,20,0.45)'); gr.addColorStop(0.12, 'rgba(0,0,0,0)'); gr.addColorStop(0.88, 'rgba(0,0,0,0)'); gr.addColorStop(1, 'rgba(90,50,20,0.5)');
+  g.fillStyle = gr; g.fillRect(0, 0, 128, 512);
+  g.strokeStyle = 'rgba(110,64,28,0.5)'; g.lineWidth = 1.4;
+  for (let k = 0; k < 9; k++) { const x = 10 + Math.random() * 108; g.beginPath(); g.moveTo(x, 0); g.bezierCurveTo(x + 8, 170, x - 8, 340, x + 4, 512); g.stroke(); }
+  g.fillStyle = '#4a2a14'; for (const y of [28, 484]) for (const x of [34, 94]) { g.beginPath(); g.arc(x, y, 5, 0, Math.PI * 2); g.fill(); }
+  BOARD = new THREE.CanvasTexture(c); BOARD.colorSpace = THREE.SRGBColorSpace; return BOARD;
+}
 // the drawbridge's deck: old planks side by side, two iron bands with rivets (drawn by the program)
 let PLANKS = null;
 function plankTex() {
@@ -214,6 +248,11 @@ export class PanelWorld {
         if (KL && !open('left')) { const l = board(kl, bay, rh, { alpha: keyed(kl) }); l.position.set(x0, yc, zc); l.rotation.y = Math.PI / 2; put(l, zc); flip(l, kl, 1); this.wallB.push({ m: l, on: 'left', key: kl, zc, yc, rh }); }
         if (KR && !open('right')) { const rr = board(kr, bay, rh, { alpha: keyed(kr) }); rr.position.set(x1, yc, zc); rr.rotation.y = -Math.PI / 2; put(rr, zc); flip(rr, kr, -1); this.wallB.push({ m: rr, on: 'right', key: kr, zc, yc, rh }); }
       }
+      // (an open stretch under a roof - the garden walkway: posts at the bay's ends and a low handrail, so the roof stands on something)
+      for (const [on, x] of [['left', x0], ['right', x1]]) if (KC && (Hd.open || []).some((o) => o.on === on && zc <= Math.max(o.z0, o.z1) && zc >= Math.min(o.z0, o.z1))) {
+        for (const z of [zc + bay / 2, zc - bay / 2]) put(rod(new THREE.Vector3(x, 0, z), new THREE.Vector3(x, h, z), 0.08), zc);
+        put(rod(new THREE.Vector3(x, 0.85, zc + bay / 2), new THREE.Vector3(x, 0.85, zc - bay / 2), 0.045), zc);
+      }
       // ceiling, one bay at a time (so it folds with the rest); open sky when the set has none
       const cut = (Hd.shafts || []).find((s) => s.at === 'ceil' && Math.abs(s.z - zc) < bay / 2);   // (a shaft above: the ceiling round its hole)
       if (KC && cut) for (const [a, b, c2, d] of holeRects(x0, x1, zc + bay / 2, zc - bay / 2, cut)) {
@@ -244,6 +283,29 @@ export class PanelWorld {
       this.chains = [-1, 1].map((sd) => { const m = rod(new THREE.Vector3((x0 + x1) / 2 + sd * (W / 2 - 0.3), L - 0.1, B.z1 + 0.02), new THREE.Vector3(sd < 0 ? x0 + 0.06 : x1 - 0.06, top, az), 0.05); R.add(m); return m; });
       R.add(g); this.bridge = g;
       this.gate = { open: false, need: B.seals ?? 2, got: 0 };
+    }
+    // a plank bridge (hall.planks = { z0, z1, x, w, n }: DESIGN 第 1 话 骑士厅, the floor broken right across): loose planks laid over the
+    // gap between z0 and z1, rope rails on posts; the monsters coming over squeeze onto it, and n of them on it at once break it
+    // (Game.planksTick, breakPlanks): the planks drop into the dark with whatever stands on them
+    if (Hd.planks) {
+      const P = Hd.planks, L2 = P.z0 - P.z1, g = new THREE.Group(); g.position.set(P.x ?? 0, 0, (P.z0 + P.z1) / 2);
+      const n = Math.max(4, Math.round(L2 / 0.34)), pl = L2 / n, mat = new THREE.MeshBasicMaterial({ map: boardTex() });
+      for (let i = 0; i < n; i++) {
+        const m = new THREE.Mesh(new THREE.BoxGeometry(P.w * rnd(0.9, 1.04), 0.07, pl * 0.84), mat);
+        m.position.set(rnd(-0.06, 0.06), rnd(-0.05, 0), -L2 / 2 + pl * (i + 0.5)); m.rotation.set(rnd(-0.03, 0.03), rnd(-0.06, 0.06), rnd(-0.04, 0.04)); g.add(m);
+      }
+      for (const sd of [-1, 1]) {
+        const x = sd * P.w / 2;
+        for (const z of [-L2 / 2, L2 / 2]) g.add(rod(new THREE.Vector3(x, -0.3, z), new THREE.Vector3(x, 0.8, z), 0.045));
+        for (let k = 0; k < 6; k++) { const za = -L2 / 2 + L2 * k / 6, zb = -L2 / 2 + L2 * (k + 1) / 6, sag = (u) => 0.78 - Math.sin(u * Math.PI) * 0.18;
+          g.add(rod(new THREE.Vector3(x, sag(k / 6), za), new THREE.Vector3(x, sag((k + 1) / 6), zb), 0.02)); }
+      }
+      // the broken edge of the floor on the far side of the gap, facing the camera: the gap reads as a pit, not a stripe
+      const ec = document.createElement('canvas'); ec.width = 8; ec.height = 64; const eg = ec.getContext('2d'), egr = eg.createLinearGradient(0, 0, 0, 64);
+      egr.addColorStop(0, '#b07a48'); egr.addColorStop(0.12, '#5a3418'); egr.addColorStop(1, '#140804'); eg.fillStyle = egr; eg.fillRect(0, 0, 8, 64);
+      const edge = new THREE.Mesh(new THREE.PlaneGeometry(W, 1.4), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(ec) }));
+      edge.position.set((x0 + x1) / 2 - (P.x ?? 0), -0.7, -L2 / 2 + 0.01); g.add(edge); this.plankEdge = edge;
+      g.visible = false; R.add(g); this.planks = { ...P, x: P.x ?? 0, g, broken: false, open: false };   // (there once the floor caves in: openPlanks)
     }
     // a wall behind where the girls came in too (a station that looks back: the view whips round, Game.whip); back: true = the other
     // version of the end wall, or its own pictures
@@ -285,6 +347,16 @@ export class PanelWorld {
     for (const o of Hd.holes || []) this.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z), o.size ?? 1.6, false, true);   // (built with the place: no burst)
     // (the drawbridge's gap: no floor there)
     if (Hd.bridge) for (const t of this.tiles) if (t.z < Hd.bridge.z0 - 0.05 && t.z > Hd.bridge.z1 + 0.05) t.g.visible = false;
+    // a pond round the place (hall.pond: { y, x0, x1, z0, z1, col, glow }: DESIGN 第 2 话 the garden open to the rain): dark water just
+    // under the boards, the lanterns' light wobbling on it, rain rings opening all over it; the monsters can rise out of it (from: 'water')
+    if (Hd.pond) {
+      const P = Hd.pond, pw = (P.x1 ?? 16) - (P.x0 ?? -16), pl = (P.z0 ?? z0) - (P.z1 ?? z1);
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(pw, pl), new THREE.ShaderMaterial({ vertexShader: POND_VERT, fragmentShader: POND_FRAG, transparent: true, depthWrite: false,
+        uniforms: { time: { value: 0 }, col: { value: new THREE.Color(P.col || '#0c1a2a') }, glow: { value: new THREE.Color(P.glow || '#ffb060') }, fogColor: FOG.color, fogDensity: FOG.density } }));
+      m.rotation.x = -Math.PI / 2; m.position.set(((P.x0 ?? -16) + (P.x1 ?? 16)) / 2, P.y ?? -0.08, ((P.z0 ?? z0) + (P.z1 ?? z1)) / 2); m.renderOrder = -1; R.add(m); this.pond = m;
+    }
+    // rain (set.rain: { n, speed, a, wind, dry }: streaks falling round the camera; dry: the strip under a roof stays dry - the walkway)
+    if (S.rain) this.makeRain(S.rain, Hd);
     // under the floor: the void the folds open onto
     const v = new THREE.Mesh(new THREE.PlaneGeometry(W * 3, L * 2), new THREE.MeshBasicMaterial({ color: S.void || '#1a0820', fog: false }));
     v.rotation.x = -Math.PI / 2; v.position.set(0, -1.4, (z0 + z1) / 2); R.add(v);
@@ -719,6 +791,63 @@ export class PanelWorld {
     }, { ease: Ease.inOutQuad, onDone: () => { this.bob = 0; this.fovKick = 0; onDone && onDone(); } });
   }
 
+  makeRain(o, Hd) {
+    const n = o.n ?? 1600, pos = new Float32Array(n * 6), g = new THREE.BufferGeometry(), B = [13, 9, 15];
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const m = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: o.color ?? 0xc8d8ff, transparent: true, opacity: o.a ?? 0.32, depthWrite: false }));
+    m.frustumCulled = false; m.renderOrder = 14; this.root.add(m);
+    const at = new Float32Array(n * 3); for (let i = 0; i < n; i++) { at[i * 3] = rnd(-B[0], B[0]); at[i * 3 + 1] = rnd(0, B[1]); at[i * 3 + 2] = rnd(-B[2], B[2]); }
+    this.rain = { m, pos, at, n, B, speed: o.speed ?? 10, len: o.len ?? 0.5, wind: o.wind ?? 0.12, dry: o.dry ? [Hd.x0 - 0.15, Hd.x1 + 0.15, Hd.h] : null };
+  }
+  rainTick(dt) {
+    const R = this.rain; if (!R) return;
+    const c = this.camPos, { at, pos, B, len, wind, dry } = R, v = R.speed * dt;
+    for (let i = 0; i < R.n; i++) {
+      let y = at[i * 3 + 1] - v; if (y < 0) y += B[1]; at[i * 3 + 1] = y;
+      // (the drops live in a box round the camera: wrapped by where it is now)
+      const x = c.x + ((((at[i * 3] - c.x) % (2 * B[0])) + 3 * B[0]) % (2 * B[0])) - B[0], z = c.z + ((((at[i * 3 + 2] - c.z) % (2 * B[2])) + 3 * B[2]) % (2 * B[2])) - B[2];
+      const k = i * 6, wet = !dry || x < dry[0] || x > dry[1] || y > dry[2];
+      pos[k] = x; pos[k + 1] = wet ? y : -50; pos[k + 2] = z; pos[k + 3] = x + wind * len; pos[k + 4] = wet ? y + len : -50; pos[k + 5] = z;
+    }
+    R.m.geometry.attributes.position.needsUpdate = true;
+  }
+  // the floor caves in right across, all but a strip of planks (the second stop's walk: game.js bridge; or at once, starting there)
+  openPlanks(now) {
+    const B = this.planks; if (!B || B.open) return; B.open = true; B.g.visible = true; const g = this.game;
+    for (const t of this.tiles) {
+      if (!(t.z < B.z0 - 0.05 && t.z > B.z1 + 0.05)) continue;
+      if (now) { t.g.visible = false; continue; }
+      const d = rnd(0, 0.35), T = rnd(0.8, 1.2);
+      g.tweens.to(t.g.position, { y: -7 }, T, { delay: d, ease: Ease.inQuad, onDone: () => { t.g.visible = false; } });
+      g.tweens.to(t.g.rotation, { x: rnd(-0.8, 0.8), z: rnd(-0.6, 0.6) }, T, { delay: d });
+    }
+    if (!now) { const c = new THREE.Vector3(B.x, 0.1, (B.z0 + B.z1) / 2); g.fx.puff(c, 18, COL.bone, 2.2); g.fx.confetti(c, 30, 2.6, [COL.bone, COL.paper]); }
+  }
+  // the plank bridge gives way (Game.planksTick): the planks and the rails drop into the dark, turning as they go
+  breakPlanks() {
+    const B = this.planks; if (!B || B.broken) return; B.broken = true;
+    const g = this.game; sfx.tear(0); sfx.slam(); sfx.thud(0); g.post.shake(1.5); g.G.stop(0.08);
+    B.g.children.forEach((m) => {
+      if (m === this.plankEdge) return;   // (the floor's broken edge stays)
+      const d = rnd(0, 0.3), T = rnd(0.9, 1.4);
+      g.tweens.to(m.position, { y: m.position.y - rnd(6, 9) }, T, { delay: d, ease: Ease.inQuad });
+      g.tweens.to(m.rotation, { x: m.rotation.x + rnd(-2, 2), z: m.rotation.z + rnd(-1.5, 1.5) }, T, { delay: d });
+    });
+    g.fx.confetti(new THREE.Vector3(B.x, 0.1, (B.z0 + B.z1) / 2), 26, 2.2, [COL.bone, COL.paper]);
+    g.fx.puff(new THREE.Vector3(B.x, 0.1, (B.z0 + B.z1) / 2), 12, COL.bone, 1.4);
+  }
+  // the place stretches away as she walks it (DESIGN 第 1 话: the gallery's far door looks near, and the nearer she walks the longer the
+  // gallery grows): all of the place scaled along its length about the camera, out to o.k times its length by o.at of the walk (the far
+  // door going away however she walks), then it springs back - the door is suddenly right there
+  stretch(o, dur) {
+    const R = this.root, k1 = o.k ?? 2.5, at = o.at ?? 0.8, g = this.game;
+    const set = (s) => { R.scale.z = s; R.position.z = this.camPos.z * (1 - s); this.stretchFov = (s - 1) * 7; };
+    sfx.creak?.(); sfx.madness?.();
+    g.tweens.run(dur, (e, k) => set(k < at ? 1 + (k1 - 1) * Ease.inOutQuad(k / at) : 1 + (k1 - 1) * (1 - Ease.inQuad((k - at) / (1 - at)))), {
+      onDone: () => { set(1); this.stretchFov = 0; } });
+    g.tweens.wait(dur * at, () => { sfx.whoosh(0); g.post.shake(1.0); g.post.flash(0.15, 0xffffff); });
+  }
+
   // ---------------------------------------------------------------- covers: the current station's, out of the level
   // arriving: this station's covers are the ones that count, and they are drawn over the heroines (who kneel behind them)
   setCovers() {
@@ -917,6 +1046,7 @@ export class PanelWorld {
 
   update(dt, t) {
     const g = this.game, cam = this.camera;
+    this.rainTick(dt); if (this.pond) this.pond.material.uniforms.time.value = t;
     this.updateAnomaly(dt);
     this.ambient(dt);
     if (this.phys) {   // (the props' bodies; their shadows stay under them on the floor; a cover that took a blow rocks back and up)
@@ -952,7 +1082,7 @@ export class PanelWorld {
     // tough kill punches the view in for a moment (punch, degrees: Game.onKill)
     cam.rotateZ(g.post.shakeR - this.look.x * 0.035 + (this.rideBank || 0));   // (rideBank: leaning into the bends at speed, src/battle/ride.js)
     this.punch = (this.punch || 0) * Math.exp(-dt * 7);
-    const fov = this.baseFov + this.fovKick - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
+    const fov = this.baseFov + this.fovKick + (this.stretchFov || 0) - (this.cineZoom || 0) - this.punch - (this.game?.live?.zoom || 0);   // (zoom: the shot's scope)
     if (Math.abs(cam.fov - fov) > 0.01) { cam.fov = fov; cam.updateProjectionMatrix(); }
     cam.updateMatrixWorld();
     for (const c of this.covers) if (c) { c.dm.update(dt); const u = c.m.material.uniforms; u.flash.value = Math.max(0, u.flash.value - dt * 5); }

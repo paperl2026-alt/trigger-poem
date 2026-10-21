@@ -140,14 +140,20 @@ gm(S, id="case", k="prop/ep2_case_doll", kx="prop/ep2_case_empty", on="stand", x
        {"t": 3.0, "twitch": {"n": 4, "amp": 0.08, "every": 0.14}}, {"t": 3.1, "sfx": "dollScreech"}, {"t": 4.2, "flicker": 0.7}, {"t": 4.55, "swap": True},
        {"t": 5.2, "sound": "shoji"}, {"t": 5.8, "say": "scare"}])
 gm(S, id="cage", k="prop/ep2_cage", kx="prop/ep2_cage_open", on="stand", x=2.9, y=0, z=-7.0, w=0.9, ry=-60, station="gk1", do=[{"free": True}, {"flip": True}])
+# (DESIGN「总纲」 处处有小巧思 - the shoe cabinet by the wall: in the fight the slippers keep pouring out of it until it is shot over onto
+# its own doors, which seals it and flattens whatever is in front of it: a spawner + a topple seal, like episode 1's cold store shelf)
+gm(S, id="getabako", k="prop/ep2s_genkan_getabox", on="stand", x=3.0, y=0, z=-5.3, w=1.1, ry=-90, hp=5, station="gk1", needs="geta", mark=True,
+   do=[{"topple": 1.5, "seal": "geta", "crush": {"r": 2.2, "dmg": 700}}, {"sound": "woodBreak"}])
 gm(S, id="bell", k="prop/ep2_bell_desk", on="stand", x=2.4, y=0.95, z=-2.6, w=0.3, station="gk1", do=[{"sound": "bellSmall"}, {"say": "real"}])
 S["stations"] = {
   "gk0": {"cam": [0, 1.25, 1.8], "look": [0, 1.2, -9], "pause": 1.4, "sfx": "bellSmall", "say": "real"},
-  "gk1": {"cam": [0.2, 1.2, -1.0], "look": [1.2, 1.15, -9], "covers": cov("genkan", 1, 2), "cp": True,
+  # (DESIGN「总纲」 rooms seen from a corner, across - user 2026-10-21 "do episode 2": not straight down the room)
+  "gk1": {"cam": [-2.3, 1.7, 1.0], "look": [2.2, -0.3, -9.5], "covers": cov("genkan", 1, 2), "cp": True, "shot": {"kind": "cover", "cam": {"zoom": 8}},
           "waves": [[{"t": 0, "type": "surippa", "x": -1.6, "z": -5.5, "from": "statue", "wake": 2.5}, {"t": 0, "type": "surippa", "x": 0.2, "z": -6.0, "from": "statue", "wake": 3.2},
                      {"t": 0, "type": "surippa", "x": 1.5, "z": -5.8, "from": "statue", "wake": 3.9}],
                     [kat(14, 0, -6.5), {"t": 2, "type": "surippa", "count": 4, "x": 0, "z": -7.5, "spread": 3, "every": 0.35}],
-                    [{"t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "pop"}, {"t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "pop"}, kat(12, 0, -7, 2.6, 2.5)]]},
+                    [{"t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "pop"}, {"t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "pop"}, kat(12, 0, -7, 2.6, 2.5),
+                     {"t": 1.5, "spawner": {"id": "geta", "type": ["surippa"], "side": 1, "z": -5.3, "every": 2.4, "first": 0.5, "sealAfter": 3, "hint": "getaHint", "remind": 12}}]]},
   "gk2": {"via": [[0, 1.2, -5]], "cam": [0, 1.3, -6.6], "look": [-2.7, 1.3, -5.2], "pause": 1.0, "focus": {"gimmick": "case", "dist": 2.3, "up": 0.05, "v": 0.55, "hold": 6.8},
           "sfx": "snipFar"},
 }
@@ -207,6 +213,10 @@ S["stations"].update({
 })
 # ================================================================ 5. the banquet hall: shadows on the shoji, dolls from the skylight; the blocked doors
 S, H, d0, d1 = place("hiroma", True)
+# (its side walls' fusuma: two doorways the dolls and slippers slide open and pour out of - DESIGN「总纲」 the monsters by the doors)
+FUSUMA2 = {"kind": "slide", "k": ["ep2/door_fusuma", "ep2/door_fusuma"]}
+H["ways"] = H.get("ways", []) + [{"id": "d1", "wall": "left", "z0": -14.4, "z1": -12.6, "y0": 0, "y1": 2.3, "depth": 3, "door": FUSUMA2},
+                                 {"id": "d2", "wall": "right", "z0": -6.2, "z1": -4.4, "y0": 0, "y1": 2.3, "depth": 3, "door": FUSUMA2}]
 for i, (x, z) in enumerate(((-2.2, -8.0), (2.4, -12.0))):
     gm(S, id=f"bigl{i}", k="prop/ep2_lantern_big", on="hang", x=x, y=3.4, z=z, w=1.0, station="hr1", mark=True, do=[{"drop": {"t": 0.5}}, {"trap": {"r": 2.6, "down": 9}}])
 for i, (x, z, a) in enumerate(((-4.6, -10.0, 1.4), (4.6, -13.0, -1.4))):
@@ -217,18 +227,31 @@ gm(S, id="pclock", k="prop/ep2_clock_pillar", on="stand", x=-4.3, y=0, z=-12.5, 
 S["stations"] = {
   "hr0": {"leave": {"hole": {"on": "right", "x": 2.7, "z": -3.0, "y": 1.2, "size": 2.6}, "exit": [3.6, 1.15, -3.0]},
           "arrive": {"hole": {"on": "left", "z": 0.6, "y": 1.3, "size": 2.6}, "from": [round(H["x0"] - 0.9, 2), 1.2, 0.6], "at": [round(H["x0"] + 1.2, 2), 1.2, 0.4], "look": [0, 1.2, -16]}, "cam": [-1.0, 1.2, -1.2], "look": [0, 1.2, -16], "pause": 1.2, "sfx": "stab", "say": "scare"},
-  "hr1": {"cam": [0, 1.2, -2.0], "look": [0, 1.2, -16], "covers": cov("hiroma", 1, 2), "cp": True, "she": {"form": "a", "at": [4.0, -15], "wake": 9},
+  "hr1": {"cam": [-4.5, 1.75, 0.6], "look": [3.6, -0.3, -15.5], "covers": cov("hiroma", 1, 2), "cp": True, "shot": {"kind": "cover", "cam": {"zoom": 8}}, "she": {"form": "a", "at": [4.0, -15], "wake": 9},
           "waves": [[kat(18, 0, -9, 3.2, 0, 6, "ceiling")], [{"t": 0, "type": "chochin", "x": -2.5, "z": -11, "y": 1.2}, {"t": 0.8, "type": "chochin", "x": 2.5, "z": -11.5, "y": 1.2},
                      {"t": 1.6, "type": "karakasa", "x": 0, "z": -12, "from": "pop"}],
                     [{"t": 0, "type": "futon", "x": -1.8, "z": -12, "from": "pop"}, {"t": 0.6, "type": "kokeshi", "x": 2.2, "z": -13, "from": "pop"}, kat(16, 0, -10, 3.0, 2, 6, "ceiling")],
                     [{"t": 0, "type": "karakasa", "x": -2, "z": -12, "from": "pop"}, {"t": 0.6, "type": "karakasa", "x": 2, "z": -12.5, "from": "pop"},
-                     {"t": 1.4, "type": "chochin", "x": 0, "z": -13, "y": 1.8}, {"t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3}]]},
-  "hr2": {"cam": [0, 1.2, -9.5], "look": [0, 1.2, H["z1"]], "covers": cov("hiroma", 3, 4), "cp": True, "block": {"form": "a", "dist": 13, "hint": "sheBlock"},
+                     {"t": 1.4, "type": "chochin", "x": 0, "z": -13, "y": 1.8}, {"t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3},
+                     # (DESIGN「总纲」 处处有小巧思 - two paper dolls left alone a moment fold into one great one: src/battle/morph.js merge)
+                     {"t": 2, "type": "katashiro", "count": 4, "x": 0, "z": -10, "y": 2.8, "spread": 4, "every": 0.25, "from": "ceiling",
+                      "morph": {"merge": {"with": "katashiro", "into": "katashiro_big", "after": 2.5}}}]]},
+  "hr2": {"cam": [4.4, 1.75, -7.6], "look": [-3.4, -0.3, -18.2], "covers": cov("hiroma", 3, 4), "cp": True, "shot": {"kind": "cover", "cam": {"zoom": 8}}, "block": {"form": "a", "dist": 13, "hint": "sheBlock"},
           "waves": [[{"t": 0, "type": "futon", "x": -2.4, "z": -15, "from": "pop"}, {"t": 0.8, "type": "futon", "x": 2.4, "z": -15.2, "from": "pop"}],
                     [kat(16, 0, -14, 3.0, 0, 6, "ceiling"), {"t": 2, "type": "surippa", "count": 5, "x": 0, "z": -15, "spread": 5, "every": 0.3}]]},
 }
 # ================================================================ 6. the rainy walkway: the run (shutters, stone lanterns, the bamboo fountain), hiding
 S, H, d0, d1 = place("nakaniwa", True)
+# (DESIGN 第 2 话 每话都用上: the garden open to the rain - user 2026-10-21 "do episode 2": its second half has no railing walls, only posts
+# and a low rail; the walkway runs over a pond in the rain - rain rings on it, the lanterns' light - the panorama of the garden beyond;
+# the last stop looks across the pond, the monsters rise out of the water and float in over it)
+H["open"] = [{"on": "left", "z0": -11.0, "z1": -25.5}, {"on": "right", "z0": -11.0, "z1": -25.5}]
+H["pond"] = {"y": -0.12, "x0": -27, "x1": 27, "z0": 4.0, "z1": -48.0}
+# (the garden beyond, far off: its two pictures pushed out and widened, a third across the far end - the last stop looks out at a slant)
+O1, O2 = H["outside"], "ep2/nakaniwa_outside2"
+H["outsideAt"] = [{"k": O1, "x": -27.5, "z": -12, "ry": math.pi / 2, "w": 100, "yk": 0.3}, {"k": O2, "x": 27.5, "z": -16, "ry": -math.pi / 2, "w": 100, "yk": 0.3},
+                  {"k": O1, "x": 6, "z": -48.5, "ry": 0, "w": 100, "yk": 0.3}]
+S["rain"] = {"n": 1800, "speed": 11, "a": 0.3, "dry": True}
 for i, (x, z, a) in enumerate(((-1.3, -6.0, -1.3), (1.3, -13.0, 1.3))):
     gm(S, id=f"ishi{i}", k="prop/ep2_ishidoro", on="stand", x=x, y=0, z=z, w=0.9, station="nk1", mark=True, do=[{"topple": a}, {"sound": "stoneLantern"}, {"trap": {"r": 2.4, "down": 8}}])
 gm(S, id="amado", k="prop/ep2_amado", on="stand", x=0, y=0, z=-9.5, w=2.8, station="nk1", mark=True, shut=True, do=[{"sound": "amado"}, {"door": {"hold": 5}}])
@@ -239,15 +262,16 @@ S["stations"] = {
                    "speed": 1.35, "herSpeed": 2.5, "hint": "sheDoor"}},
   "nk2": {"cam": [1.1, 0.95, -23.4], "look": [-0.4, 1.0, -12], "hide": {"form": "a", "from": [0, -11], "at": [0.1, -20.2], "stabs": 6}},
   # (out of hiding: the umbrellas come down the walkway in the rain, the lanterns with them, and she comes back from the storehouse's door)
-  "nk3": {"cam": [0, 1.15, -13.0], "look": [0, 1.1, H["z1"]], "covers": cov("nakaniwa", 1, 2), "cp": True, "she": {"form": "a", "at": [1.4, H["z1"] + 1.2], "wake": 11},
-          "hint": "sheStone",
-          "waves": [[{"t": 0, "type": "karakasa", "x": -1.2, "z": -19, "from": "pop"}, {"t": 0.7, "type": "karakasa", "x": 1.2, "z": -20, "from": "pop"}, kat(12, 0, -19, 2.4, 1.5)],
-                    [{"t": 0, "type": "chochin", "x": -1.0, "z": -21, "y": 1.3}, {"t": 0.8, "type": "chochin", "x": 1.0, "z": -21.5, "y": 1.6},
-                     {"t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -20, "spread": 2.2, "every": 0.3}],
-                    [{"t": 0, "type": "futon", "x": 0, "z": -21, "from": "pop"}, {"t": 0.8, "type": "karakasa", "x": -1.3, "z": -20.5, "from": "pop"},
-                     {"t": 1.4, "type": "karakasa", "x": 1.3, "z": -20.5, "from": "pop"}, kat(14, 0, -20, 2.5, 3)]]},
+  # (the walkway's open side: the camera at its rail looking out across the pond - the rain, the garden; she wades in from the far bank)
+  "nk3": {"cam": [-0.9, 1.5, -16.5], "look": [13, 0.2, -30.0], "covers": cov("nakaniwa", 1, 2), "cp": True, "she": {"form": "a", "at": [10.0, -33.0], "wake": 11},
+          "hint": "sheStone", "shot": {"kind": "cover", "cam": {"zoom": 6}},
+          "waves": [[{"t": 0, "type": "karakasa", "x": 5.0, "z": -21.0, "from": "water", "free": True}, {"t": 0.7, "type": "karakasa", "x": 8.0, "z": -26.0, "from": "water", "free": True}, kat(12, 8, -24, 2.4, 1.5, 6, "outside")],
+                    [{"t": 0, "type": "chochin", "x": 6.0, "z": -22.0, "y": 1.6, "from": "outside", "free": True}, {"t": 0.8, "type": "chochin", "x": 9.5, "z": -27.0, "y": 2.0, "from": "outside", "free": True},
+                     {"t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -24.5, "spread": 1.4, "every": 0.3, "from": "door", "way": "end"}],
+                    [{"t": 0, "type": "futon", "x": 5.5, "z": -23.5, "from": "water", "free": True}, {"t": 0.8, "type": "karakasa", "x": 4.0, "z": -19.5, "from": "water", "free": True},
+                     {"t": 1.4, "type": "karakasa", "x": 8.5, "z": -28.0, "from": "water", "free": True}, kat(14, 8, -24, 2.5, 3, 6, "outside")]]},
 }
-for i, (x, z, a) in enumerate(((-1.25, -17.5, -1.3), (1.25, -21.0, 1.3))):
+for i, (x, z, a) in enumerate(((4.0, -22.5, 1.3), (6.5, -29.0, -1.3))):   # (the last stop's: out on the pond's stones, where she wades by)
     gm(S, id=f"ishi{i + 2}", k="prop/ep2_ishidoro", on="stand", x=x, y=0, z=z, w=0.9, station="nk3", mark=True, do=[{"topple": a}, {"sound": "stoneLantern"}, {"trap": {"r": 2.6, "down": 8}}])
 # ================================================================ 7. the storehouse: locked in, the truth, the clocks; the floor hatch
 S, H, d0, d1 = place("kura", True)
@@ -259,15 +283,18 @@ if KR:
 KB = next((w for w in H.get("ways", []) if w["id"] == "back"), None)
 gm(S, id="ledger", k="prop/ep2_ledger", on="stand", x=-2.2, y=0.8, z=-5.0, w=0.9, station="ku2", mark=True, do=[{"read": "ep2Ledger"}])
 gm(S, id="wadokei", k="prop/ep2_clock_wadokei", on="stand", x=2.3, y=0, z=-8.5, w=1.0, station="ku2", do=[{"read": "ep2Clocks"}, {"sound": "clocksAll"}])
+# (DESIGN「总纲」 处处有小巧思 - the storehouse's wall of clocks: its great pendulum clock struck in the fight, every clock in the room
+# strikes and time stands still for the monsters a few seconds: src/battle/game.js timeStop)
+gm(S, id="bigclock", k="prop/ep2_clock_pillar", on="stand", x=-2.4, y=0, z=-8.6, w=0.8, ry=40, station="ku3", mark=True, do=[{"freeze": 4.5}])
 gm(S, id="hatch", k="prop/ep2_hatch", on="floor", x=0, z=-6.5, w=1.4, hp=30, station="ku3", mark=True, block=True, do=[{"sound": "woodBreak"}, {"collapse": True}])
 S["stations"] = {
   "ku1": {"leave": {"way": "end", "steps": 4}, "arrive": {"way": "back", "at": [round((KB["x0"] + KB["x1"]) / 2, 2) if KB else 0, 1.2, round(H["z0"] - 1.3, 2)], "look": [0, 1.2, H["z1"]]},
           "cam": [0, 1.2, -2.0], "look": [0, 1.2, H["z1"]], "pause": 1.0, "say": "scare", "slam": "back"},
-  "ku2": {"cam": [0, 1.2, -1.8], "look": [0, 1.2, H["z1"]], "covers": cov("kura", 1, 2), "cp": True,
+  "ku2": {"cam": [-1.8, 1.7, 0.4], "look": [1.6, -0.3, -11.0], "covers": cov("kura", 1, 2), "cp": True, "shot": {"kind": "cover", "cam": {"zoom": 8}},
           "waves": [[{"t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "pop"}, {"t": 0.6, "type": "kokeshi", "x": 2, "z": -8.5, "from": "pop"}, {"t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "pop"}],
                     [{"t": 0, "sound": "clocksAll", "hint": "ep2Ushimitsu"}, kat(18, 0, -8, 2.6, 0.8), {"t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8}],
                     [{"t": 0, "type": "futon", "x": 0, "z": -9, "from": "pop"}, {"t": 1, "type": "karakasa", "x": -2, "z": -8.5, "from": "pop"}, {"t": 1.5, "type": "karakasa", "x": 2, "z": -8.5, "from": "pop"}]]},
-  "ku3": {"cam": [0, 1.2, -3.6], "look": [0, 0.2, -6.5], "covers": cov("kura", 3, 4), "hint": "ep2Hatch", "block": {"form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch"},
+  "ku3": {"cam": [1.7, 1.8, -2.2], "look": [-1.2, -0.5, -9.0], "covers": cov("kura", 3, 4), "shot": {"kind": "cover", "cam": {"zoom": 8}}, "hint": "ep2Hatch", "block": {"form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch"},
           "waves": [[kat(16, 0, -8, 2.4)], [{"t": 0, "type": "kokeshi", "x": -2, "z": -9, "from": "pop"}, {"t": 0.5, "type": "kokeshi", "x": 2, "z": -9, "from": "pop"}], [kat(20, 0, -8.5, 2.6)]]},
 }
 # ================================================================ 8. the cave: the silkworm, the kerosene
@@ -322,6 +349,19 @@ gm(S, id="striker", k="prop/ep2_striker", on="hang", x=-2.5, y=4.1, z=0.15, w=2.
 gm(S, id="hand", k="prop/ep2_hand", on="floor", x=0, z=-1.3, w=0.55, station="kn2", shoot=False, hand=True)
 S["stations"] = {
   "kn1": {"leave": {"via": [[0, 10.6, -1.5]], "steps": 9}, "arrive": {"from": [0, -1.4, 5.0], "at": [0, 1.4, 4.3], "look": [0, 1.3, 0], "steps": 6}, "cam": [0, 1.4, 4.6], "look": [0, 1.3, 0], "pause": 1.4, "sfx": "bellToll", "say": "scare"},
+  # (DESIGN 第 2 话 每话都用上 - 护卫: the crow they let out of its cage in the entrance hall flies to the bell; the paper dolls and the
+  # lanterns go for it over the town; it comes from far off (inside the town's pictures round the chamber) - the camera at the chamber's
+  # edge looking out, a scope's narrow view - and
+  # lands on the bell, which rings once. Only when it was let out: needs crow)
+  "kn1c": {"needs": "crow", "shot": "escort", "cam": [1.2, 1.5, 5.4], "look": [-5, 6.2, -10],
+           "escort": {"who": "prop/ep2_crow", "path": [[-16, 9, -17], [-10, 8.2, -13], [-4, 7.2, -9], [1, 6.2, -5.5], [2, 5.4, -2.5], [0.3, 4.9, -0.4]],
+                      "speed": 1.1, "hp": 420, "h": 1.3, "loop": 0, "name": L("乌鸦", "THE CROW", "カラス")},
+           "on": {"arrive": [{"at": 0, "cam": {"on": [-16, 9, -17], "dist": 4.0, "up": 0.2, "hold": 2.4, "orbit": 0.4, "dolly": 6, "title": L("乌鸦", "THE CROW", "カラス")}, "sound": "crow"},
+                             {"at": 0.4, "mv": {"slam": L("带它到钟那里", "GET IT TO THE BELL", "鐘まで連れてって"), "sub": L("别让纸人碰到它", "KEEP THE DOLLS OFF IT", "人形を近づけないで")}}],
+                  "clear": [{"at": 0, "sound": "bellToll", "say": "real"}]},
+           "waves": [[{"t": 0, "type": "katashiro", "count": 10, "ahead": 9, "side": 0, "y": 8, "spread": 4, "every": 0.15}],
+                     [{"t": 0, "type": "chochin", "ahead": 7, "side": -2.5, "y": 7}, {"t": 0.8, "type": "chochin", "ahead": 11, "side": 2.5, "y": 7.5},
+                      {"t": 1.5, "type": "katashiro", "count": 12, "ahead": 12, "side": 0, "y": 8, "spread": 4, "every": 0.12}]]},
   "kn2": {"cam": [0, 1.4, 4.6], "look": [0, 1.3, 0], "cp": True, "dial": {"center": [0, 0, 0], "r": 4.6, "forms": ["a", "c", "e"], "perForm": 4},
           "waves": [[kat(12, 0, -2, 2.6, 4, 5)], [kat(14, 0, -2, 2.8, 6, 6)], [{"t": 0, "type": "chochin", "x": -2, "z": -2, "y": 2.0}, {"t": 1, "type": "chochin", "x": 2, "z": -2, "y": 2.2}],
                     [kat(16, 0, -1, 2.8, 8, 6)]]},
@@ -365,6 +405,15 @@ def scatter(S, k):
 for k in ("genkan", "kyakushitsu", "rouka", "furo", "hiroma", "nakaniwa", "kura", "chika", "shoro", "kane"):
     scatter(SETS[f"ep2_{k}"], k)
 
+# the place used against the monsters too (DESIGN「总纲」 地形能用 - user 2026-10-21 "do episode 2"): whatever drops or tips over onto her
+# (lanterns, screens, stone lanterns, the lift's weights) crushes the monsters under it as well (src/battle/gimmick.js crush)
+for S in SETS.values():
+    for g in S["gimmicks"]:
+        do = g.get("do", []); trap = next((e["trap"] for e in do if "trap" in e), None)
+        if trap and not trap.get("kill"):
+            for e in do:
+                if "drop" in e or "topple" in e: e.setdefault("crush", {"r": trap.get("r", 2.4), "dmg": 700})
+
 # where each monster comes in from (DESIGN「怪要有合理的入场」, user 2026-10-19 batch 23: many small ones appeared out of nowhere on a
 # flat floor; in 3D they can pour down the stairs, out of the rooms): only the ones that had none or popped up from the floor. door = out of
 # the passage behind that doorway (way end / back), stairs = down the genkan stairs, wall = through a side wall (the paper shoji of the
@@ -373,9 +422,8 @@ ENTER = {
     "gk1": {"katashiro": {"from": "door"}, "surippa": {"from": "stairs"}, "kokeshi": {"from": "stairs"}},
     "rc2": {"surippa": {"from": "door", "way": "back"}, "katashiro": {"from": "door", "way": "back"}, "karakasa": {"from": "wall"}},
     "fu1": {"katashiro": {"from": "ceiling"}, "surippa": {"from": "wall"}},
-    "hr1": {"chochin": {"from": "drop"}, "karakasa": {"from": "wall"}, "futon": {"from": "wall"}, "kokeshi": {"from": "door"}, "surippa": {"from": "door"}},
-    "hr2": {"futon": {"from": "wall"}, "surippa": {"from": "door"}},
-    "nk3": {"karakasa": {"from": "door"}, "katashiro": {"from": "door"}, "chochin": {"from": "drop"}, "surippa": {"from": "door"}, "futon": {"from": "door"}},
+    "hr1": {"chochin": {"from": "drop"}, "karakasa": {"from": "wall"}, "futon": {"from": "wall"}, "kokeshi": {"from": "door", "way": "d2"}, "surippa": {"from": "door", "way": "d1"}},
+    "hr2": {"futon": {"from": "wall"}, "surippa": {"from": "door", "way": "d1"}, "kokeshi": {"from": "door", "way": "d2"}},
     "ku2": {"kokeshi": {"from": "statue", "wake": 0.8}, "katashiro": {"from": "ceiling"}, "chochin": {"from": "drop"}, "futon": {"from": "wall"}, "karakasa": {"from": "wall"}},
     "ku3": {"katashiro": {"from": "ceiling"}, "kokeshi": {"from": "statue", "wake": 0.6}},
     "ch2": {"katashiro": {"from": "ceiling"}, "surippa": {"from": "wall"}},
@@ -388,8 +436,36 @@ for S in SETS.values():
             for e in wave:
                 how = ENTER.get(sid, {}).get(e.get("type"))
                 if how and e.get("from") in (None, "pop"): e.update(how)
+# the monsters' own play (DESIGN「停留点不只是一个镜头、一种打法」 怪的演出, src/battle/acts.js), a wave of its own, where the stop's corner
+# view looks: two slippers squabbling in the entrance hall; kokeshi in a ring round a circle in the banquet hall - all down in time, or a
+# futon rises out of it; in the storehouse a straw raincoat hanging there shudders and turns into an umbrella yokai
+def act_wave(sid, i, e):
+    for S in SETS.values():
+        if sid in S["stations"]: S["stations"][sid]["waves"].insert(i, [e]); return
+act_wave("gk1", 1, {"t": 0.3, "act": "squabble", "of": ["surippa", "surippa"], "x": 0.2, "z": -5.8})
+act_wave("hr1", 1, {"t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5, "time": 9, "summon": "futon"})
+act_wave("ku2", 1, {"t": 0.6, "act": "transform", "k": "prop/ep2s_kura_mino", "h": 1.3, "x": 0.6, "z": -7.0, "of": "karakasa"})
+# the story's close-ups and comic panels (user 2026-10-21: a close-up where the story wants it - not on every big one, not never; a long
+# stage like this one has plenty of them; a close-up is a comic page of its own, not the camera dragged through the fight: cues.js
+# vignette, src/ui/vignette.js; the little slanted panels cut in on a run: insert)
+def stop(sid):
+    return next(S["stations"][sid] for S in SETS.values() if sid in S["stations"])
+def beat(sid, *cues):
+    st = stop(sid); st.setdefault("on", {}).setdefault("arrive", []).extend(cues)
+beat("rc1", {"at": 0.4, "insert": {"k": "enemy/she_a_walk0", "side": 1, "life": 1.3}, "sound": "snipFar"})        # (behind them in the dark corridor: her blades)
+beat("nk1", {"at": 0.4, "insert": {"k": "enemy/she_a_stare", "side": -1, "life": 1.3}, "sound": "snipFar"})       # (out on the walkway in the rain, she is there again)
+beat("nk3", {"at": 10.6, "vignette": {"k": "enemy/she_a_walk0", "color": "#243a52", "title": L("她蹚着水过来了", "SHE'S WADING ACROSS", "水を渡ってくる"),
+                                         "sub": L("雨里，从池子对面", "through the rain, from the far bank", "雨の中、池の向こうから")}})
+KW = next((w for w in SETS["ep2_kura"]["hall"].get("ways", []) if w["id"] == "back"), None)
+if KW: beat("ku1", {"at": 1.3, "vignette": {"k": "ep2/door_kura_r", "color": "#3a2a22", "title": L("被锁在里面了", "LOCKED IN", "閉じ込められた"),
+                                               "sub": L("门从外面闩上了", "barred from the outside", "外から閂をかけられた")}})
+for wave in stop("ku2")["waves"]:   # (the hour of the ox: every clock in the storehouse strikes - the great one up close)
+    if any(e.get("hint") == "ep2Ushimitsu" for e in wave): wave.append({"t": 0.2, "vignette": {"k": "prop/ep2_clock_wadokei", "color": "#3a2a22", "title": L("丑三时", "THE HOUR OF THE OX", "丑三つ時"),
+                                                                                              "sub": L("满屋的钟一起敲响", "every clock in the room strikes", "部屋中の時計が一斉に鳴る")}})
+beat("ch3", {"at": 0.3, "insert": {"k": "enemy/kaiko_lunge", "side": -1, "life": 1.4}})                         # (the silkworm comes for them)
+beat("sh2", {"at": 0.6, "insert": {"k": "enemy/she_c_climb0", "side": 1, "life": 1.4}, "sound": "ropeCreak"})    # (down the shaft: she climbs after them)
 ORDER = ["gk0", "gk1", "gk2", "ky0", "ky1", "ro0", "ro1", "fu0", "fu1", "rc1", "rc2", "kh1", "hr0", "hr1", "hr2", "nk1", "nk2", "nk3", "ku1", "ku2", "ku3",
-         "ch1", "ch2", "ch2b", "ch3", "ch4", "sh1", "sh2", "sh3", "kn1", "kn2"]
+         "ch1", "ch2", "ch2b", "ch3", "ch4", "sh1", "sh2", "sh3", "kn1", "kn1c", "kn2"]
 PLACES = ["ep2_genkan", "ep2_kyakushitsu", "ep2_rouka", "ep2_furo", "ep2_hiroma", "ep2_nakaniwa", "ep2_kura", "ep2_chika", "ep2_shoro", "ep2_kane"]
 allst = {k for s in SETS.values() for k in s["stations"]}
 assert set(ORDER) == allst, (set(ORDER) ^ allst)
@@ -413,7 +489,7 @@ STAGES = [   # (id, name, its places, its stops)
     ("kura", L("土藏", "STOREHOUSE", "蔵"), ["kura"], ["ku1", "ku2", "ku3"]),
     ("chika", L("地底", "UNDERGROUND", "地下"), ["chika"], ["ch1", "ch2", "ch2b", "ch3", "ch4"]),
     ("shoro", L("钟楼竖井", "BELL TOWER SHAFT", "鐘楼"), ["shoro"], ["sh1", "sh2", "sh3"]),
-    ("kane", L("时之钟", "THE TIME BELL", "時の鐘"), ["kane"], ["kn1", "kn2"]),
+    ("kane", L("时之钟", "THE TIME BELL", "時の鐘"), ["kane"], ["kn1", "kn1c", "kn2"]),
 ]
 assert [s for st in STAGES for s in st[3]] == ORDER
 steps = [{"comic": "ep2_open"}, {"comic": "ep2_rules"}]   # (the house rules: their own page, round 65)

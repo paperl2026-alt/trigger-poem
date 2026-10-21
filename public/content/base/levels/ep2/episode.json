@@ -106,7 +106,7 @@
         "stage": "kane",
         "set": "ep2_kane",
         "places": ["ep2_kane"],
-        "stations": ["kn1", "kn2"],
+        "stations": ["kn1", "kn1c", "kn2"],
         "name": { "zh": "时之钟", "en": "THE TIME BELL", "ja": "時の鐘" },
         "thumb": "ui/sel_thumb_ep2_kane",
         "she": "she",

@@ -64,6 +64,12 @@
       "flash": { "color": "#ffffff", "size": 1.0, "life": 0.16 },
       "shake": 0.8
     },
+    "honeySpray": {
+      "stream": { "kind": "foam", "n": 55, "time": 0.6, "speed": 9, "size": [0.2, 0.35], "grow": 3.2, "colors": ["#ffd27a", "#f0a830", "#c87418"], "spread": 1.0, "a": 0.85, "a1": 0.55 },
+      "veil": { "n": 12, "color": "#f2b040", "size": [0.5, 1.0], "life": [2.4, 3.6], "a": 0.35, "dist": [1.8, 3.2] },
+      "flash": { "color": "#ffe8a0", "size": 1.0, "life": 0.16 },
+      "shake": 0.8
+    },
     "darkCharge": { "circle": { "r": 1.0, "color": "#b060ff", "spin": 0.7 } },
     "darkMagic": {
       "stream": { "kind": "glow", "n": 45, "time": 0.3, "speed": 14, "size": [0.12, 0.26], "grow": 3.0, "colors": ["#c080ff", "#8a40ff", "#ffffff"], "spread": 1.2, "a": 1 },

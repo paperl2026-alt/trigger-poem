@@ -85,7 +85,7 @@ export class Acts {
           over = true; G.post.flash(0.8, 0xff3a8a); G.post.shake(1.6); G.post.styleBurst(1.0, [1, 3, 5], 0.14, 0x1a0010, 0xff3a8a); sfx.slam();
           G.fx.pillar(new THREE.Vector3(x, 0, z), 7, r * 0.8, 0xff5aa8, 1.2); G.fx.shockRing(new THREE.Vector3(x, 0, z), r * 3, 0xff5aa8, 0.7);
           for (const m of cast) this.release(m);
-          if (e.summon) { const b = this.spawn(e.summon, x, z, { from: 'burrow' }); G.cine({ on: b, dist: 3, up: -0.3, in: 0.5, hold: 1.8, out: 0.5, lull: true, dolly: 10 }); }
+          if (e.summon) { const b = this.spawn(e.summon, x, z, { from: 'burrow' }); G.tweens.wait(0.5, () => G.closeup(b, { hold: 1.8 })); }
           this.dropMesh(circle); return false;
         }
         return true;
@@ -165,7 +165,7 @@ export class Acts {
     return {
       update: (dt, tt) => {
         t += dt;
-        if (phase === 0 && t > (e.t ?? 1.2)) { phase = 1; if (e.look !== false) G.cine({ on: q.m.position.clone().setY((e.h ?? 1.2) * 0.6), dist: 2.6, in: 0.5, hold: 2.2, out: 0.5, lull: true }); sfx.creak?.(); }
+        if (phase === 0 && t > (e.t ?? 1.2)) { phase = 1; sfx.creak?.(); G.hud.gl.stickers.say(G.players[0], 'scare', 0.7); }
         if (phase === 1) {   // it shudders, harder and harder
           q.m.rotation.z = Math.sin(tt * 40) * 0.06 * Math.min(1, (t - (e.t ?? 1.2)) / 1.2);
           if (t > (e.t ?? 1.2) + 1.6) {

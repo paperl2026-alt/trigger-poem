@@ -47,6 +47,7 @@ uniform float seed; uniform float time; uniform vec3 edgeColor;
 uniform vec3 lit; uniform vec3 fogColor; uniform float fogDensity; uniform float useFog;
 uniform sampler2D relief; uniform float reliefOn; uniform float reliefAmt; uniform vec2 reliefTexel; uniform vec2 softSize; uniform vec3 lightL;
 uniform float outlineOn; uniform vec2 mapTexel; uniform vec3 outlineCol; uniform float outlineW;
+uniform float coreOn; uniform vec4 coreAt; uniform float coreBeat; uniform float coreHit; uniform vec3 coreCol;   // (a boss's weak point: thing.js)
 varying vec2 vUv; varying float vFogDepth;
 ${NOISE_GLSL}
 void main(){
@@ -152,6 +153,17 @@ void main(){
     float edge = smoothstep(0.8, 0.95, sc);
     col += vec3(1.0, 0.42, 0.07) * d.b * (ring * 1.5 + edge * 2.6) * (0.5 + 1.1 * n2);
   }
+  if (coreOn > 0.0) {
+    // a boss's weak point (thing.js beat, user 2026-10-21: it has to be plain from the start): a faint light always in it, a beat of
+    // light out of it now and then, and where it is hit it strobes - only there (no white flash of the whole of her), its edge broken up
+    vec2 dq = vec2((vUv.x - coreAt.x) * coreAt.w, vUv.y - coreAt.y);
+    float cd = length(dq) / max(coreAt.z, 1e-3) + (n - 0.5) * 0.5 + (n2 - 0.5) * 0.25;
+    float cm = smoothstep(1.2, 0.25, cd);
+    vec3 cc = mix(coreCol, vec3(1.0), 0.3);
+    col += cc * cm * (0.14 + coreBeat * (0.6 + 0.5 * n2)) * coreOn;
+    col = mix(col, vec3(1.0), cm * coreHit * 0.85);
+    col += coreCol * cm * coreHit * 0.5;
+  }
   if (dissolve > 0.0) {
     float dd = distance(q, dOrigin * vec2(aspect, 1.0)) * 0.9 + n * 0.55;
     float e = dd - dissolve * 1.6;
@@ -194,6 +206,7 @@ export function paperMaterial(map, aspect = 1) {
       softD: { value: Array.from({ length: 6 }, () => new THREE.Vector3()) }, softSize: { value: new THREE.Vector2(1, 1) },
       relief: { value: blankTex() }, reliefOn: { value: 0 }, reliefAmt: { value: 0 }, reliefTexel: { value: new THREE.Vector2(1 / 256, 1 / 256) },
       lightL: { value: new THREE.Vector3(-0.45, 0.55, 0.75) },
+      coreOn: { value: 0 }, coreAt: { value: new THREE.Vector4(0.5, 0.5, 0.1, 1) }, coreBeat: { value: 0 }, coreHit: { value: 0 }, coreCol: { value: new THREE.Color(1, 0.85, 0.5) },
     },
     vertexShader: VERT, fragmentShader: FRAG, transparent: true, depthWrite: false, side: THREE.DoubleSide,
   });

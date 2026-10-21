@@ -1,0 +1,43 @@
+/* 特写 (src/ui/vignette.js): a comic page of its own - paper and halftone like the manga pages (manga.css), one slanted panel in ink with
+   the thing in it, a smaller detail panel, the name on a black plate with a white edge and a red shadow like the HUD's. Quiet motion:
+   in, a slow push while it holds, out. Units: --u = 1% of the 16:9 frame height (hud.css). */
+#hud .vig { position: absolute; inset: 0; z-index: 50; pointer-events: none; opacity: 0; overflow: hidden;
+  background: #f3f1ee radial-gradient(circle, #0002 1.2px, transparent 1.8px) 0 0 / 9px 9px; transition: opacity 0.18s ease-out; }
+#hud .vig.on { opacity: 1; }
+#hud .vig.out { opacity: 0; transition: opacity 0.28s ease-in; }
+
+/* the main panel: slanted, an ink frame round it (the panel's own background is the frame; its ground sits inside) */
+#hud .vig-panel { position: absolute; background: #121012; }
+#hud .vig-main { left: 6%; right: 12%; top: 7%; bottom: 9%;
+  clip-path: polygon(4% 0, 100% 0, 96% 100%, 0 100%); transform: translateX(5%); transition: transform 0.32s cubic-bezier(0.2, 1, 0.3, 1); }
+#hud .vig.flip .vig-main { left: 12%; right: 6%; clip-path: polygon(0 0, 96% 0, 100% 100%, 4% 100%); transform: translateX(-5%); }
+#hud .vig.on .vig-main { transform: none; }
+/* its ground: the thing's own colour, lighter where it stands, a few soft speed lines from behind it, the halftone over all */
+#hud .vig-ground { position: absolute; inset: calc(0.7 * var(--u)); clip-path: inherit;
+  background:
+    radial-gradient(circle, #0000001f 1.3px, transparent 2px) 0 0 / 8px 8px,
+    repeating-conic-gradient(from 0deg at 62% 58%, #ffffff14 0deg 2deg, #0000 2deg 9deg),
+    radial-gradient(ellipse at 62% 62%, color-mix(in srgb, var(--col) 40%, #fff) 0%, var(--col) 55%, color-mix(in srgb, var(--col) 70%, #000) 100%); }
+#hud .vig-img { position: absolute; right: 8%; bottom: 0; height: 104%; max-width: 70%; object-fit: contain; object-position: bottom center;
+  transform-origin: 50% 80%; filter: drop-shadow(0 0 calc(0.5 * var(--u)) #fff) drop-shadow(calc(0.8 * var(--u)) calc(0.8 * var(--u)) 0 #00000055);
+  animation: vigPush var(--dur) linear forwards; }
+#hud .vig.flip .vig-img { right: auto; left: 8%; }
+@keyframes vigPush { from { transform: scale(1); } to { transform: scale(1.06); } }
+
+/* the detail: a smaller panel over the main one's lower corner, leaning the other way */
+#hud .vig-detail { right: 4%; bottom: 7%; height: 34%; aspect-ratio: var(--ar, 1); max-width: 34%; background-repeat: no-repeat; background-color: #f3f1ee;
+  border: calc(0.7 * var(--u)) solid #121012; box-shadow: 0 0 0 calc(0.4 * var(--u)) #fff; transform: rotate(3deg) translateY(12%); opacity: 0;
+  transition: transform 0.3s 0.18s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.2s 0.18s; }
+#hud .vig.flip .vig-detail { right: auto; left: 4%; transform: rotate(-3deg) translateY(12%); }
+#hud .vig.on .vig-detail { transform: rotate(3deg); opacity: 1; }
+#hud .vig.flip.on .vig-detail { transform: rotate(-3deg); }
+
+/* the name: the HUD's slanted plate, sliding in a moment after the panel */
+#hud .vig-plate { position: absolute; left: 4%; bottom: 13%; display: flex; flex-direction: column; gap: calc(0.6 * var(--u)); padding: calc(1 * var(--u)) calc(3.2 * var(--u));
+  background: #121012; color: #fff; font-style: italic; transform: rotate(-3deg) skewX(-8deg) translateX(-18%); opacity: 0;
+  box-shadow: 0 0 0 calc(0.5 * var(--u)) #fff, calc(1.2 * var(--u)) calc(1.2 * var(--u)) 0 calc(0.5 * var(--u)) #d8141e;
+  transition: transform 0.3s 0.12s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.2s 0.12s; }
+#hud .vig.flip .vig-plate { left: auto; right: 4%; }
+#hud .vig.on .vig-plate { transform: rotate(-3deg) skewX(-8deg); opacity: 1; }
+#hud .vig-plate b { font-size: calc(6 * var(--u)); line-height: 1; letter-spacing: 0.02em; }
+#hud .vig-plate span { font-size: calc(2.4 * var(--u)); line-height: 1.2; font-weight: 700; opacity: 0.92; }

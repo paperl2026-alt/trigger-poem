@@ -3,7 +3,7 @@
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { alphaAt, meta, url } from '../core/assets.js';
-import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote, musicBeat } from '../core/audio.js';
+import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote, musicBeat, cry } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
 import { World } from './world.js';
 import { PlateWorld } from './plates.js';
@@ -26,6 +26,7 @@ import { shotOf, shotFrom, Live } from './shot.js';
 import { Hud } from '../ui/hud.js';
 import { Comic } from '../ui/comic.js';
 import { playDoor } from '../ui/door.js';
+import { vignette } from '../ui/vignette.js';
 import { AICtrl, PadCtrl, KeyCtrl } from '../core/input.js';
 import { SET } from '../core/settings.js';
 import { SAVE, persist, levelOf, openStage, maxLv } from '../core/save.js';
@@ -206,6 +207,8 @@ export class Game {
   station(id) { return C.sets[this.setOfStation?.[id] || this.setId]?.stations?.[id] || this.world.level.set.stations[id]; }
   goStation(id, boss) {
     const S = this.station(id);
+    // (a stop only some runs have: needs 'crow' = the crow was let out of its cage in the entrance hall - DESIGN 第 2 话; else on to the next)
+    if (S?.needs === 'crow' && !this.chase?.crow && this.stationQ.length) { this.goStation(this.stationQ.shift(), boss); return; }
     // a checkpoint inside a long stage (episode 2): a retry starts here, and so does the next run from the select screen until it is cleared
     if (S?.cp && !boss) { this.cpStation = id; const r = SAVE.eps[this.ep.id] || (SAVE.eps[this.ep.id] = { open: true, cleared: false, best: null }); r.cp = { step: this.stepIdx, station: id }; persist(); }
     // the boss's stop: the mechanisms the earlier stops of this place fire on their own are done by now (the studio's portraits stand
@@ -241,6 +244,7 @@ export class Game {
     // cover (DESIGN「进小关的第一个点直接蹲好」: no running in, no looking at the floor)
     if (!this.camPlaced || this.afterComic) {
       this.camPlaced = true; this.afterComic = false;
+      this.world.place(S.cam, S.look); this.warmPlace();   // (the stage's place up to the graphics card while the comic / wipe still covers it)
       this.post.u.wipe.value = 0; this.post.u.fade.value = 0;
       this.settleAnomaly(S);
       this.music(boss);
@@ -269,13 +273,15 @@ export class Game {
     let len = 0;
     for (let k = 1; k < pts.length; k++) len += Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][2] - pts[k - 1][2]);
     const go = () => this.arrive(S, boss);
-    const dur = Math.max(1.6, len / (S.waves?.length ? 6.5 : S.walkSpeed ?? 2.6));   // (a walk-through stretch: slowly, looking round)
+    const dur = S.stretch?.dur ?? Math.max(1.6, len / (S.waves?.length ? 6.5 : S.walkSpeed ?? 2.6));   // (a walk-through stretch: slowly, looking round)
     if (pts.length < 2 || len < 0.05) { this.world.place(S.cam, S.look); go(); } else this.world.travel(pts, S.look, dur, go);
     // a plank bridge over a broken floor (docs/DESIGN.md 第 1 话: Sweet Home's planks break after a few steps): it cracks half-way
     // a ghost grabs the view and drags it off to another part of the house (docs/DESIGN.md 第 1 话: Sweet Home's ghosts carry people off)
     if (S.grab) this.grabbed(dur, S.grab);
+    // the place stretching away as they walk it (PanelWorld.stretch: the gallery whose door will not come nearer)
+    if (S.stretch) { this.world.stretch?.(S.stretch, dur); this.tweens.wait(dur * 0.35, () => this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], 'scare')); }
     if (S.bridge) this.tweens.wait(dur * 0.5, () => {
-      sfx.tear(0); sfx.thud(0); this.post.shake(1.3); this.G.stop(0.12);
+      sfx.tear(0); sfx.thud(0); this.post.shake(1.3); this.G.stop(0.12); this.world.openPlanks?.();   // (the knights' hall: the floor ahead caves in, a strip of planks left)
       this.players.forEach((p) => { this.hud.setFace(p.slot, 'scared', 1.2); p.soft.kick(1.4); });
       this.hud.gl.stickers.say(this.players[Math.random() < 0.5 || !this.p2on() ? 0 : 1], 'bridge');
     });
@@ -305,8 +311,8 @@ export class Game {
       const inw = E.way ? this.world.wayPoints?.(E.way) : null, start = E.from || inw?.far;
       if (E.hole) this.world.addHole(E.hole.on, new THREE.Vector3(E.hole.x ?? 0, E.hole.y ?? 1.1, E.hole.z ?? 0), E.hole.size ?? 2.4, true);
       this.camPlaced = true; this.afterComic = false;
-      if (!start) { this.world.place(E.at, E.look); this.blackout(false); this.walkOn = false; this.goStation(id, boss); return; }
-      this.world.place(start, inw ? inw.door : E.at); this.blackout(false);
+      if (!start) { this.world.place(E.at, E.look); this.warmPlace(); this.blackout(false); this.walkOn = false; this.goStation(id, boss); return; }
+      this.world.place(start, inw ? inw.door : E.at); this.warmPlace(); this.blackout(false);
       const p2 = [start, ...(inw ? [inw.door] : []), E.at];
       const walk = () => this.world.travel(p2, E.look, Math.max(1.2, len(p2) / 2.3), () => { this.walkOn = false; this.goStation(id, boss); }, { steps: E.steps });
       if (inw?.W.leaves.length) this.tweens.wait(0.3, () => this.world.door(E.way, true, 0.75, walk)); else this.tweens.wait(0.2, walk);
@@ -351,6 +357,7 @@ export class Game {
     if (!w.camPos) { o.during?.(); this.tweens.wait(o.hold ?? 2, () => then && then()); return; }
     const q = ++this.cineQ, tw = this.tweens, home = { cam: w.camPos.clone(), look: w.lookAt.clone() }, cam = new THREE.Vector3(), at = new THREE.Vector3();
     this.cineOn = true; if (o.lull) this.lull = true;
+    if (o.pause) { this.cinePause = true; this.cineSubject = o.on?.root ? o.on : null; this.lull = true; }   // (the fight held still but for what is shown: Game.update)
     this.cineTitle = o.title || null;   // (words in the black bars: glhud.js marquee)
     // k: how far into the hold. o.orbit (radians): the camera goes round it that far over the hold; o.dolly (degrees): the view widens that
     // much over the hold while the camera closes in to keep it the same size (a dolly zoom: the room stretches out behind it); o.up < 0:
@@ -381,11 +388,11 @@ export class Game {
           if (q !== this.cineQ) return;
           const c1 = w.camPos.clone(), l1 = w.lookAt.clone(), z1 = w.cineZoom || 0;
           tw.run(o.out ?? 0.7, (e) => { w.camPos.lerpVectors(c1, home.cam, e); w.lookAt.lerpVectors(l1, home.look, e); w.cineZoom = z1 * (1 - e); },
-            { ease: Ease.inOutCubic, onDone: () => { if (q === this.cineQ) this.cineEnd(); if (o.lull) this.lull = false; then && then(); } });
+            { ease: Ease.inOutCubic, onDone: () => { if (q === this.cineQ) this.cineEnd(); if (o.lull || o.pause) this.lull = false; then && then(); } });
         } });
       } });
   }
-  cineEnd() { this.cineOn = false; this.cineTitle = null; if (this.world.cineZoom) this.world.cineZoom = 0; }
+  cineEnd() { this.cineOn = false; this.cinePause = !!this.vigOn; this.cineSubject = null; this.cineTitle = null; if (this.world.cineZoom) this.world.cineZoom = 0; }
   // the lights go: hard flickers of black over s seconds (Gimmick flicker)
   flicker(s) {
     let el = document.querySelector('#ui .flicker');
@@ -395,6 +402,20 @@ export class Game {
     this.tweens.wait(s, () => { el.style.opacity = '0'; });
   }
   // a blink of black (through a doorway): in, then(), out
+  // the new place up to the graphics card while the screen is still dark (user 2026-10-21: "where it stalls, a plain transition, and on
+  // once it is loaded"): every picture of the place and of what stands in it uploaded, its shaders built - the stall of the first frame
+  // (the pictures decoded and uploaded on the main thread) happens in the dark of the passage, not on the place
+  warmPlace() {
+    const r = this.G.renderer, ups = new Set(), w = this.world;
+    w.scene.traverse((o) => {
+      for (const m of [].concat(o.material || [])) {
+        for (const v of Object.values(m)) if (v?.isTexture) ups.add(v);
+        if (m.uniforms) for (const k in m.uniforms) { const v = m.uniforms[k].value; if (v?.isTexture) ups.add(v); }
+      }
+    });
+    for (const t of ups) { try { r.initTexture(t); } catch (e) { /* (not ready: it goes up when first drawn) */ } }
+    try { r.compile(w.scene, w.camera); } catch (e) { /* (a material that cannot be built yet: built when drawn) */ }
+  }
   blackout(on, then) {
     let el = document.querySelector('#ui .blackout');
     if (!el) { el = document.createElement('div'); el.className = 'blackout'; document.getElementById('ui').appendChild(el); }
@@ -485,7 +506,9 @@ export class Game {
       a.alive = false; a.endWindup?.(); this.etw.kill(a.root.position);
       this.tweens.to(a.root.position, { y: -8 }, 1.2, { delay: 0.2 + Math.random() * 0.4, ease: Ease.inQuad, onDone: () => a.dispose() });
     }
-    if (this.setOfStation && this.stationQ.length) {   // (a stage through several places: they land in the next one, its first stop's enter)
+    // (a stage through several places: they land in the next one, its first stop's enter; or the next stop of this place, written to be
+    // landed in from above - the tunnel's brute knocks them down a deeper pit: enter)
+    if (this.stationQ.length && (this.setOfStation || this.station(this.stationQ[0])?.enter)) {
       const on = () => this.blackout(true, () => { this.camPlaced = false; this.blackout(false); this.goStation(this.stationQ.shift(), false); });
       if (this.world.collapse) this.world.collapse(on); else on();
       return;
@@ -1164,6 +1187,84 @@ export class Game {
   }
   // the hit sounds go up a semitone every combat.feel.comboPitch.per hits of the combo (up to max)
   comboRate() { const P = T.combat.feel.comboPitch; return Math.pow(2, Math.min(P.max, Math.floor(this.combo / P.per)) / 12); }
+  // the plank bridge (PanelWorld.planks: DESIGN 第 1 话 骑士厅 - the monsters crowding onto it break it): the walkers coming up to it
+  // squeeze onto it; n of them on it at once and it breaks - they drop into the dark (counted as kills: wave events wait for kills),
+  // and so does any that walks into the gap after
+  planksTick(dt) {
+    const B = this.world.planks; if (!B) return;
+    if (!B.open) { if (this.stationId === B.station) this.world.openPlanks(true); else return; }   // (a run started at that stop)
+    const on = [];
+    for (const a of this.actors) {
+      if (!a.alive || (a.beh !== 'walker' && a.beh !== 'thrower') || a.state === 'statue' || a.state === 'scripted') continue;
+      const P = a.root.position;
+      if (!B.broken && P.z < B.z0 + 1.4 && P.z > B.z1 - 1.4) { const hw = B.w / 2 - 0.2, cx = Math.max(B.x - hw, Math.min(B.x + hw, P.x)); P.x += (cx - P.x) * Math.min(1, dt * 5); }
+      if (P.z < B.z0 + 0.1 && P.z > B.z1 - 0.1 && P.y < 0.3) on.push(a);
+    }
+    if (B.broken) { for (const a of on) this.dropIn(a); return; }
+    if (on.length >= (B.n ?? 3)) {
+      this.world.breakPlanks(); for (const a of on) this.dropIn(a);
+      this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], 'bridge');
+    }
+  }
+  // no stop can lock up (2026-10-21: episode 1's gallery and episode 2's garden hung in long runs under load, monsters alive that could
+  // not be reached): a monster out of sight or unshootable for 20 s - under the floor, behind the camera, off the picture, never risen -
+  // or not hit once in 30 s (somewhere the shots do not reach it) is let go, counted as killed so the wave and its events go on; never a
+  // statue waiting to wake, one in a scene, or while something is escorted
+  stuckTick(dt) {
+    for (const a of this.actors) {
+      if (!a.alive || !(a instanceof Enemy) || a.state === 'statue' || a.state === 'scripted' || this.escort?.going) { if (a) a.stuckT = 0; continue; }
+      const P = a.root.position, s = this.world.project(a.center());
+      const seen = s.z < 1 && s.x > -this.W * 0.1 && s.x < this.W * 1.1 && s.y > -this.H * 0.1 && s.y < this.H * 1.1 && P.y > -3 && a.hitMeshes().length > 0;
+      a.stuckT = seen ? 0 : (a.stuckT || 0) + dt; a.idleT = (a.idleT || 0) + dt;
+      if (a.stuckT > 20 || a.idleT > 30) {
+        console.warn('stuck monster let go', a.type, a.state, a.stuckT > 20 ? 'unseen' : 'never hit', P.toArray().map((v) => +v.toFixed(1)));
+        a.alive = false; a.endWindup?.(); this.etw.kill(P); this.onKill(a, 'gone', false); a.dispose();
+      }
+    }
+  }
+  // time stands still (DESIGN 第 2 话 土藏 - the wall of clocks: the great clock struck): every monster held where it is for s seconds
+  // (Enemy.kick.freeze: it gets next to no time, no judder), greyed blue; then it moves on as if nothing happened
+  timeStop(s) {
+    this.post.flash(0.4, 0xd8e4ff); this.post.shake(0.7); sound('clocksAll');
+    for (const a of this.actors) if (a.alive && a instanceof Enemy) {
+      const k = a.kick || (a.kick = { sq: 0, sqV: 0, lean: 0, leanV: 0, tilt: 0, tiltV: 0, freeze: 0, w: 0 }); k.freeze = Math.max(k.freeze, s); k.w = 0;
+      a.u.tint.value.setRGB(0.7, 0.78, 0.92); this.tweens.to(a.u.tintAmt, { value: 0.55 }, 0.2);
+      this.tweens.wait(s, () => this.tweens.to(a.u.tintAmt, { value: 0 }, 0.4));
+    }
+    this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], 'real');
+  }
+  // an elite down (enemies.json elite: DESIGN 怪的演出 - elites die their own way): the world holds still a beat, a burst of light and
+  // pieces, a ring along the floor. No close look of its own (user 2026-10-21: a close look only where the story wants one, and then with
+  // the fight held still - Game.closeup, a wave entry's closeup)
+  eliteDeath(a) {
+    const p = a.center();
+    this.G.stop(0.14); this.post.flash(0.35, 0xffffff); this.post.shake(1.2);
+    this.vfx.play('explosion', p); this.fx.shockRing(p.clone().setY(0.05), Math.max(3, a.h * 2), 0xffffff, 0.6);
+    this.fx.confetti(p, 50, 3.5, [COL.hot, COL.white, COL.gold]); this.fx.star(p, Math.max(2, a.h * 1.5), COL.white); sfx.slam();
+  }
+  // a close-up of one of them where the story wants it (a wave entry's closeup: { hold, title, sub, color, crop, k }, when it has come in /
+  // woken): a comic page of its own (Game.vignette), its picture as it is now, its name
+  closeup(a, o = {}) {
+    if (!a.alive) return;
+    this.vignette({ k: o.k || a.mesh.userData.texKey, title: o.title || a.def?.name, sub: o.sub, color: o.color, crop: o.crop, side: o.side, dur: o.hold });
+    if (o.say) this.tweens.wait(0.6, () => this.hud.gl.stickers.say(this.players[this.p2on() && Math.random() < 0.5 ? 1 : 0], o.say, 1));
+  }
+  // 特写 (user 2026-10-21: "a close-up is a scene of its own, a comic panel showing one thing - not the rest frozen in a mess and the
+  // camera dragged through it"): the page turns to a comic panel of the thing (src/ui/vignette.js); the fight waits meanwhile - nothing
+  // moves, nothing comes at the girls (cinePause, lull) - and goes on from where it was
+  vignette(o, then) {
+    if (this.vigOn) { then?.(); return; }
+    this.vigOn = true; this.cinePause = true; this.cineSubject = null; this.lull = true;
+    sound('panel') || sfx.panel?.();
+    vignette(this.hud.root, o, () => { this.vigOn = false; if (!this.cineOn) { this.cinePause = false; this.lull = false; } then?.(); });
+  }
+  dropIn(a) {
+    a.alive = false; a.endWindup?.(); this.etw.kill(a.root.position); a.u.outlineOn.value = 0;
+    cry(a.type, 'die', 0, a.center());
+    this.onKill(a, 'fall', false);
+    this.tweens.to(a.root.position, { y: -8 }, 1.1, { delay: Math.random() * 0.15, ease: Ease.inQuad, onDone: () => a.dispose() });
+    this.tweens.to(a.inner.rotation, { z: (Math.random() - 0.5) * 2.4 }, 1.1);
+  }
   onKill(target, how, crit) {
     const by = target.lastHitBy;
     if (target instanceof Projectile) return;
@@ -1203,17 +1304,19 @@ export class Game {
       if (p.ctrl) p.ctrl.update(dt, this, pads);
       p.update(dt, now);
     }
-    const edt = dt * (T.combat.pace ?? 1);
+    // (a close look that holds the fight, Game.closeup: every monster but the one shown stands still - none starts at the girls, what
+    // they threw hangs where it is - the spawners and the waves wait; the one shown and the little plays go on, its coming in with them)
+    const edt = dt * (T.combat.pace ?? 1), hold = !!this.cinePause, subj = this.cineSubject;
     this.rdt = dt;
     this.etw.update(edt);
-    this.chase.update(dt);
+    if (!hold) this.chase.update(dt);
     this.ride.update(dt);
     this.acts.update(edt, now);
-    this.escort.update(dt, now);
-    for (const a of this.actors) a.update(a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
+    if (!hold) this.escort.update(dt, now);
+    for (const a of this.actors) a.update(hold && a !== subj ? 1e-5 : a.kick?.freeze > 0 ? edt * 0.06 : edt, now);   // (one held still by a hit: Enemy.feel)
     for (let i = this.actors.length - 1; i >= 0; i--) if (this.actors[i].removed) this.actors.splice(i, 1);
-    if (this.combat && !this.boss) { this.updateSpawners(edt); this.checkWave(); }
-    this.fx.update(dt, now); this.vfx.update(dt); if (this.combat) this.morph.update(edt);
+    if (this.combat && !this.boss && !hold) { this.updateSpawners(edt); this.checkWave(); }
+    this.fx.update(dt, now); this.vfx.update(dt); if (this.combat && !hold) { this.morph.update(edt); this.planksTick(edt); this.stuckTick(edt); }
     this.live.ease(this.shot, dt);
     this.danger(dt);
     this.lens();

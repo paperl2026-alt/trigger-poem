@@ -15,7 +15,8 @@
 //   { swap: true } it is kx at once (no page turn: it changed while the lights were out)
 //   the place used against the monsters (DESIGN「总纲」 处处有小巧思: a chandelier brought down on the boss, a gas oven blown up beside them):
 //   { crush: { r, dmg, stun } } where it lands (with drop), every monster within r metres is hit for dmg and the boss stunned stun seconds
-//   (bosses take it whole: Boss.crushed); { blast: { r, dmg, vfx } } it blows up where it is: the same, out of the blast (tuning/vfx.json)
+//   (bosses take it whole: Boss.crushed); { blast: { r, dmg, vfx } } it blows up where it is: the same, out of the blast (tuning/vfx.json);
+//   { freeze: seconds } time stands still - every monster held where it is, greyed (Game.timeStop: the storehouse's great clock)
 import { Actor } from './enemies.js';
 import { tex } from '../core/assets.js';
 import { sfx, sound } from '../core/audio.js';
@@ -81,9 +82,12 @@ export class Gimmick extends Actor {
       sfx.tear(0);
       g.tweens.to(this.root.rotation, { z: e.topple }, 0.7, { ease: Ease.inQuad, onDone: () => {
         sfx.slam(); g.post.shake(1.1); g.fx.puff(this.root.position, 12, 0xd8c8b0, 1.3); g.sealSpawner(e.seal);
+        // (tipped onto the monsters beside it: where its top lands - crush, like a dropped thing; DESIGN「总纲」 地形能用)
+        if (e.crush) { const P = this.root.position, s = e.topple > 0 ? -1 : 1; this.harm(P.clone().set(P.x + s * this.h * 0.55, 0.5, P.z), e.crush); }
       } });
     }
     if (e.gate) g.world.gateHit?.();
+    if (e.freeze) g.timeStop(e.freeze);   // (the storehouse's great clock: time stands still, Game.timeStop)
     if (e.twitch) this.twitch(e.twitch);
     if (e.flicker) g.flicker(e.flicker);
     if (e.swap && this.g.kx) this.setFrame(this.g.kx);

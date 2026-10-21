@@ -1,5 +1,5 @@
 {
-  "_doc": "第 2 话关卡包的 sets（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "_doc": "第 2 话「钟楼惊宿」九个小关（docs/DESIGN.md「第 2 话」，src/battle/chase.js；由 tools/rounds/ep2_level.py 生成，不要手改）：十个地方连成一条路，镜头自己走过去（Game.passThrough：两人退出画面，转向出口，开门，走进门洞后面的过道 hall.ways，或上楼梯 hall.stairs、爬梯子、钻她剪开的洞，在过道的黑暗里换成下一个地方，从那边的过道 / 洞 / 天窗走出来）；站点 leave 怎么离开上一个地方（way、via、steps、hole、exit），arrive 怎么进来（way、from、hole、at、look）；hall.shafts 天花板 / 地板上的竖井。站点多了：chase 倒跑、block 路障、hide 躲藏点、she 她在这一站巡游、dial 钟楼表盘决战；leave 怎么离开上一个地方（hole 她剪开的墙洞）；state 这个地方这时停没停电；cp 检查点；fire 到了就触发的机关；swap 换掉一块墙的图。机关多了 drop / trap / door / lure / read / node / toll / free / collapse，block: true 是挡路的东西，on: floor 平放在地上。",
   "ep2_genkan": {
     "panels": true,
     "seed": 31,
@@ -76,6 +76,24 @@
         "do": [{ "free": true }, { "flip": true }]
       },
       {
+        "id": "getabako",
+        "k": "prop/ep2s_genkan_getabox",
+        "on": "stand",
+        "x": 3.0,
+        "y": 0,
+        "z": -5.3,
+        "w": 1.1,
+        "ry": -90,
+        "hp": 5,
+        "station": "gk1",
+        "needs": "geta",
+        "mark": true,
+        "do": [
+          { "topple": 1.5, "seal": "geta", "crush": { "r": 2.2, "dmg": 700 } },
+          { "sound": "woodBreak" }
+        ]
+      },
+      {
         "id": "bell",
         "k": "prop/ep2_bell_desk",
         "on": "stand",
@@ -90,15 +108,19 @@
     "stations": {
       "gk0": { "cam": [0, 1.25, 1.8], "look": [0, 1.2, -9], "pause": 1.4, "sfx": "bellSmall", "say": "real" },
       "gk1": {
-        "cam": [0.2, 1.2, -1.0],
-        "look": [1.2, 1.15, -9],
+        "cam": [-2.3, 1.7, 1.0],
+        "look": [2.2, -0.3, -9.5],
         "covers": [{ "k": "cover/ep2_genkan1", "side": -1 }, { "k": "cover/ep2_genkan2", "side": 1 }],
         "cp": true,
+        "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "waves": [
           [
             { "t": 0, "type": "surippa", "x": -1.6, "z": -5.5, "from": "statue", "wake": 2.5 },
             { "t": 0, "type": "surippa", "x": 0.2, "z": -6.0, "from": "statue", "wake": 3.2 },
             { "t": 0, "type": "surippa", "x": 1.5, "z": -5.8, "from": "statue", "wake": 3.9 }
+          ],
+          [
+            { "t": 0.3, "act": "squabble", "of": ["surippa", "surippa"], "x": 0.2, "z": -5.8 }
           ],
           [
             { "t": 0, "type": "katashiro", "count": 14, "x": 0, "z": -6.5, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "door" },
@@ -107,7 +129,21 @@
           [
             { "t": 0, "type": "kokeshi", "x": -1.8, "z": -7.0, "from": "stairs" },
             { "t": 0.8, "type": "kokeshi", "x": 1.8, "z": -7.2, "from": "stairs" },
-            { "t": 2.5, "type": "katashiro", "count": 12, "x": 0, "z": -7, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door" }
+            { "t": 2.5, "type": "katashiro", "count": 12, "x": 0, "z": -7, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door" },
+            {
+              "t": 1.5,
+              "spawner": {
+                "id": "geta",
+                "type": ["surippa"],
+                "side": 1,
+                "z": -5.3,
+                "every": 2.4,
+                "first": 0.5,
+                "sealAfter": 3,
+                "hint": "getaHint",
+                "remind": 12
+              }
+            }
           ]
         ]
       },
@@ -143,9 +179,9 @@
     ],
     "props": [
       { "k": "prop/ep2s_genkan_umbrella", "h": 1.0, "x": -3.03, "z": -6.62 },
-      { "k": "prop/ep2s_genkan_hibachi", "h": 0.6, "x": 3.0, "z": -5.35 },
-      { "k": "prop/ep2s_genkan_umbrella", "h": 1.0, "x": -2.8, "z": -9.0 },
-      { "k": "prop/ep2s_genkan_hibachi", "h": 0.6, "x": -2.71, "z": -3.59 }
+      { "k": "prop/ep2s_genkan_hibachi", "h": 0.6, "x": 2.8, "z": -9.0 },
+      { "k": "prop/ep2s_genkan_tanuki", "h": 0.8, "x": 2.6, "z": -0.03 },
+      { "k": "prop/ep2s_genkan_getabox", "h": 0.5, "x": -3.05, "z": -8.82 }
     ]
   },
   "ep2_kyakushitsu": {
@@ -233,7 +269,8 @@
     "props": [
       { "k": "prop/ep2s_kyakushitsu_chabudai", "h": 0.55, "x": 2.18, "z": -2.24 },
       { "k": "prop/ep2s_kyakushitsu_zaisu", "h": 0.6, "x": 2.2, "z": -3.48 },
-      { "k": "prop/ep2s_kyakushitsu_chabudai", "h": 0.55, "x": 2.0, "z": 0.36 }
+      { "k": "prop/ep2s_kyakushitsu_andon", "h": 0.95, "x": 2.0, "z": 0.36 },
+      { "k": "prop/ep2s_kyakushitsu_zabuton", "h": 0.45, "x": -1.85, "z": -4.47 }
     ]
   },
   "ep2_rouka": {
@@ -281,7 +318,7 @@
         "w": 0.7,
         "station": "rc1",
         "mark": true,
-        "do": [{ "drop": { "t": 0.4 } }, { "trap": { "r": 2.4, "down": 8 } }]
+        "do": [{ "drop": { "t": 0.4 }, "crush": { "r": 2.4, "dmg": 700 } }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
         "id": "lan1",
@@ -293,7 +330,7 @@
         "w": 0.7,
         "station": "rc1",
         "mark": true,
-        "do": [{ "drop": { "t": 0.4 } }, { "trap": { "r": 2.4, "down": 8 } }]
+        "do": [{ "drop": { "t": 0.4 }, "crush": { "r": 2.4, "dmg": 700 } }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
         "id": "lan2",
@@ -305,7 +342,7 @@
         "w": 0.7,
         "station": "rc1",
         "mark": true,
-        "do": [{ "drop": { "t": 0.4 } }, { "trap": { "r": 2.4, "down": 8 } }]
+        "do": [{ "drop": { "t": 0.4 }, "crush": { "r": 2.4, "dmg": 700 } }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
         "id": "noren",
@@ -385,6 +422,11 @@
           "speed": 1.25,
           "herSpeed": 2.4,
           "hint": "sheTrap"
+        },
+        "on": {
+          "arrive": [
+            { "at": 0.4, "insert": { "k": "enemy/she_a_walk0", "side": 1, "life": 1.3 }, "sound": "snipFar" }
+          ]
         }
       },
       "rc2": {
@@ -437,8 +479,12 @@
     "props": [
       { "k": "prop/ep2s_rouka_bucket", "h": 0.45, "x": 0.95, "z": -15.72 },
       { "k": "prop/ep2s_rouka_vase", "h": 0.9, "x": 1.35, "z": -11.79 },
-      { "k": "prop/ep2s_rouka_bucket", "h": 0.45, "x": -0.92, "z": -6.32 },
-      { "k": "prop/ep2s_rouka_vase", "h": 0.9, "x": -1.17, "z": -18.01 }
+      { "k": "prop/ep2s_rouka_towels", "h": 0.5, "x": -0.92, "z": -6.32 },
+      { "k": "prop/ep2s_rouka_tray", "h": 0.8, "x": -1.17, "z": -18.01 },
+      { "k": "prop/ep2s_rouka_bucket", "h": 0.45, "x": -1.3, "z": -1.53 },
+      { "k": "prop/ep2s_rouka_vase", "h": 0.9, "x": -0.98, "z": -9.54 },
+      { "k": "prop/ep2s_rouka_towels", "h": 0.5, "x": -1.31, "z": -19.38 },
+      { "k": "prop/ep2s_rouka_tray", "h": 0.8, "x": -1.31, "z": -13.16 }
     ]
   },
   "ep2_furo": {
@@ -531,7 +577,8 @@
     "props": [
       { "k": "prop/ep2s_furo_oke", "h": 0.55, "x": -1.87, "z": -2.65 },
       { "k": "prop/ep2s_furo_stool", "h": 0.35, "x": -1.9, "z": -0.21 },
-      { "k": "prop/ep2s_furo_yuzu", "h": 0.35, "x": -2.05, "z": -6.4 }
+      { "k": "prop/ep2s_furo_yuzu", "h": 0.35, "x": -2.05, "z": -6.4 },
+      { "k": "prop/ep2s_furo_bottles", "h": 0.4, "x": 2.03, "z": -2.15 }
     ]
   },
   "ep2_hiroma": {
@@ -565,7 +612,27 @@
       "back": ["ep2/hiroma_back1"],
       "ways": [
         { "id": "end", "wall": "end", "x0": -2.18, "x1": 2.13, "y0": 0.0, "y1": 2.68 },
-        { "id": "back", "wall": "back", "x0": 5.05, "x1": 5.97, "y0": 2.48, "y1": 3.27 }
+        { "id": "back", "wall": "back", "x0": 5.05, "x1": 5.97, "y0": 2.48, "y1": 3.27 },
+        {
+          "id": "d1",
+          "wall": "left",
+          "z0": -14.4,
+          "z1": -12.6,
+          "y0": 0,
+          "y1": 2.3,
+          "depth": 3,
+          "door": { "kind": "slide", "k": ["ep2/door_fusuma", "ep2/door_fusuma"] }
+        },
+        {
+          "id": "d2",
+          "wall": "right",
+          "z0": -6.2,
+          "z1": -4.4,
+          "y0": 0,
+          "y1": 2.3,
+          "depth": 3,
+          "door": { "kind": "slide", "k": ["ep2/door_fusuma", "ep2/door_fusuma"] }
+        }
       ]
     },
     "gimmicks": [
@@ -579,7 +646,7 @@
         "w": 1.0,
         "station": "hr1",
         "mark": true,
-        "do": [{ "drop": { "t": 0.5 } }, { "trap": { "r": 2.6, "down": 9 } }]
+        "do": [{ "drop": { "t": 0.5 }, "crush": { "r": 2.6, "dmg": 700 } }, { "trap": { "r": 2.6, "down": 9 } }]
       },
       {
         "id": "bigl1",
@@ -591,7 +658,7 @@
         "w": 1.0,
         "station": "hr1",
         "mark": true,
-        "do": [{ "drop": { "t": 0.5 } }, { "trap": { "r": 2.6, "down": 9 } }]
+        "do": [{ "drop": { "t": 0.5 }, "crush": { "r": 2.6, "dmg": 700 } }, { "trap": { "r": 2.6, "down": 9 } }]
       },
       {
         "id": "byobu0",
@@ -603,7 +670,7 @@
         "w": 2.6,
         "station": "hr1",
         "mark": true,
-        "do": [{ "topple": 1.4 }, { "trap": { "r": 3.2, "down": 7 } }]
+        "do": [{ "topple": 1.4, "crush": { "r": 3.2, "dmg": 700 } }, { "trap": { "r": 3.2, "down": 7 } }]
       },
       {
         "id": "byobu1",
@@ -615,7 +682,7 @@
         "w": 2.6,
         "station": "hr1",
         "mark": true,
-        "do": [{ "topple": -1.4 }, { "trap": { "r": 3.2, "down": 7 } }]
+        "do": [{ "topple": -1.4, "crush": { "r": 3.2, "dmg": 700 } }, { "trap": { "r": 3.2, "down": 7 } }]
       },
       {
         "id": "zen0",
@@ -684,14 +751,18 @@
         "say": "scare"
       },
       "hr1": {
-        "cam": [0, 1.2, -2.0],
-        "look": [0, 1.2, -16],
+        "cam": [-4.5, 1.75, 0.6],
+        "look": [3.6, -0.3, -15.5],
         "covers": [{ "k": "cover/ep2_hiroma1", "side": -1 }, { "k": "cover/ep2_hiroma2", "side": 1 }],
         "cp": true,
+        "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "she": { "form": "a", "at": [4.0, -15], "wake": 9 },
         "waves": [
           [
             { "t": 0, "type": "katashiro", "count": 18, "x": 0, "z": -9, "y": 3.2, "spread": 6, "every": 0.12, "from": "ceiling" }
+          ],
+          [
+            { "t": 0.3, "act": "ritual", "of": "kokeshi", "n": 4, "r": 1.8, "x": 0.3, "z": -8.5, "time": 9, "summon": "futon" }
           ],
           [
             { "t": 0, "type": "chochin", "x": -2.5, "z": -11, "y": 1.2, "from": "drop" },
@@ -700,22 +771,37 @@
           ],
           [
             { "t": 0, "type": "futon", "x": -1.8, "z": -12, "from": "wall" },
-            { "t": 0.6, "type": "kokeshi", "x": 2.2, "z": -13, "from": "door" },
+            { "t": 0.6, "type": "kokeshi", "x": 2.2, "z": -13, "from": "door", "way": "d2" },
             { "t": 2, "type": "katashiro", "count": 16, "x": 0, "z": -10, "y": 3.0, "spread": 6, "every": 0.12, "from": "ceiling" }
           ],
           [
             { "t": 0, "type": "karakasa", "x": -2, "z": -12, "from": "wall" },
             { "t": 0.6, "type": "karakasa", "x": 2, "z": -12.5, "from": "wall" },
             { "t": 1.4, "type": "chochin", "x": 0, "z": -13, "y": 1.8, "from": "drop" },
-            { "t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3, "from": "door" }
+            { "t": 3, "type": "surippa", "count": 6, "x": 0, "z": -11, "spread": 5, "every": 0.3, "from": "door", "way": "d1" },
+            {
+              "t": 2,
+              "type": "katashiro",
+              "count": 4,
+              "x": 0,
+              "z": -10,
+              "y": 2.8,
+              "spread": 4,
+              "every": 0.25,
+              "from": "ceiling",
+              "morph": {
+                "merge": { "with": "katashiro", "into": "katashiro_big", "after": 2.5 }
+              }
+            }
           ]
         ]
       },
       "hr2": {
-        "cam": [0, 1.2, -9.5],
-        "look": [0, 1.2, -18.25],
+        "cam": [4.4, 1.75, -7.6],
+        "look": [-3.4, -0.3, -18.2],
         "covers": [{ "k": "cover/ep2_hiroma3", "side": -1 }, { "k": "cover/ep2_hiroma4", "side": 1 }],
         "cp": true,
+        "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "block": { "form": "a", "dist": 13, "hint": "sheBlock" },
         "waves": [
           [
@@ -724,7 +810,7 @@
           ],
           [
             { "t": 0, "type": "katashiro", "count": 16, "x": 0, "z": -14, "y": 3.0, "spread": 6, "every": 0.12, "from": "ceiling" },
-            { "t": 2, "type": "surippa", "count": 5, "x": 0, "z": -15, "spread": 5, "every": 0.3, "from": "door" }
+            { "t": 2, "type": "surippa", "count": 5, "x": 0, "z": -15, "spread": 5, "every": 0.3, "from": "door", "way": "d1" }
           ]
         ]
       }
@@ -748,8 +834,12 @@
     "props": [
       { "k": "prop/ep2s_hiroma_taru", "h": 0.85, "x": 5.44, "z": -5.66 },
       { "k": "prop/ep2s_hiroma_shamisen", "h": 1.1, "x": -5.54, "z": -6.91 },
-      { "k": "prop/ep2s_hiroma_taru", "h": 0.85, "x": -5.49, "z": -14.13 },
-      { "k": "prop/ep2s_hiroma_shamisen", "h": 1.1, "x": 5.17, "z": -4.2 }
+      { "k": "prop/ep2s_hiroma_ozen", "h": 0.45, "x": -5.49, "z": -14.13 },
+      { "k": "prop/ep2s_hiroma_lantern", "h": 1.3, "x": 5.17, "z": -4.2 },
+      { "k": "prop/ep2s_hiroma_taru", "h": 0.85, "x": 5.43, "z": -0.91 },
+      { "k": "prop/ep2s_hiroma_shamisen", "h": 1.1, "x": 5.27, "z": -9.43 },
+      { "k": "prop/ep2s_hiroma_ozen", "h": 0.45, "x": 5.16, "z": -2.87 },
+      { "k": "prop/ep2s_hiroma_lantern", "h": 1.3, "x": -5.37, "z": -16.61 }
     ]
   },
   "ep2_nakaniwa": {
@@ -783,13 +873,16 @@
       "back": ["ep2/nakaniwa_back1"],
       "outside": "ep2/nakaniwa_outside1",
       "outsideAt": [
-        { "k": "ep2/nakaniwa_outside1", "x": -15.6, "z": -11.5, "ry": 1.5707963267948966, "w": 64, "yk": 0.32 },
-        { "k": "ep2/nakaniwa_outside2", "x": 15.6, "z": -11.5, "ry": -1.5707963267948966, "w": 64, "yk": 0.32 }
+        { "k": "ep2/nakaniwa_outside1", "x": -27.5, "z": -12, "ry": 1.5707963267948966, "w": 100, "yk": 0.3 },
+        { "k": "ep2/nakaniwa_outside2", "x": 27.5, "z": -16, "ry": -1.5707963267948966, "w": 100, "yk": 0.3 },
+        { "k": "ep2/nakaniwa_outside1", "x": 6, "z": -48.5, "ry": 0, "w": 100, "yk": 0.3 }
       ],
       "ways": [
         { "id": "end", "wall": "end", "x0": -0.59, "x1": 0.59, "y0": 0.59, "y1": 2.07 },
         { "id": "back", "wall": "back", "x0": -0.65, "x1": 0.65, "y0": 0.24, "y1": 2.08 }
-      ]
+      ],
+      "open": [{ "on": "left", "z0": -11.0, "z1": -25.5 }, { "on": "right", "z0": -11.0, "z1": -25.5 }],
+      "pond": { "y": -0.12, "x0": -27, "x1": 27, "z0": 4.0, "z1": -48.0 }
     },
     "gimmicks": [
       {
@@ -802,7 +895,7 @@
         "w": 0.9,
         "station": "nk1",
         "mark": true,
-        "do": [{ "topple": -1.3 }, { "sound": "stoneLantern" }, { "trap": { "r": 2.4, "down": 8 } }]
+        "do": [{ "topple": -1.3, "crush": { "r": 2.4, "dmg": 700 } }, { "sound": "stoneLantern" }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
         "id": "ishi1",
@@ -814,7 +907,7 @@
         "w": 0.9,
         "station": "nk1",
         "mark": true,
-        "do": [{ "topple": 1.3 }, { "sound": "stoneLantern" }, { "trap": { "r": 2.4, "down": 8 } }]
+        "do": [{ "topple": 1.3, "crush": { "r": 2.4, "dmg": 700 } }, { "sound": "stoneLantern" }, { "trap": { "r": 2.4, "down": 8 } }]
       },
       {
         "id": "amado",
@@ -858,25 +951,25 @@
         "id": "ishi2",
         "k": "prop/ep2_ishidoro",
         "on": "stand",
-        "x": -1.25,
+        "x": 4.0,
         "y": 0,
-        "z": -17.5,
+        "z": -22.5,
         "w": 0.9,
         "station": "nk3",
         "mark": true,
-        "do": [{ "topple": -1.3 }, { "sound": "stoneLantern" }, { "trap": { "r": 2.6, "down": 8 } }]
+        "do": [{ "topple": 1.3, "crush": { "r": 2.6, "dmg": 700 } }, { "sound": "stoneLantern" }, { "trap": { "r": 2.6, "down": 8 } }]
       },
       {
         "id": "ishi3",
         "k": "prop/ep2_ishidoro",
         "on": "stand",
-        "x": 1.25,
+        "x": 6.5,
         "y": 0,
-        "z": -21.0,
+        "z": -29.0,
         "w": 0.9,
         "station": "nk3",
         "mark": true,
-        "do": [{ "topple": 1.3 }, { "sound": "stoneLantern" }, { "trap": { "r": 2.6, "down": 8 } }]
+        "do": [{ "topple": -1.3, "crush": { "r": 2.6, "dmg": 700 } }, { "sound": "stoneLantern" }, { "trap": { "r": 2.6, "down": 8 } }]
       }
     ],
     "stations": {
@@ -894,6 +987,11 @@
           "speed": 1.35,
           "herSpeed": 2.5,
           "hint": "sheDoor"
+        },
+        "on": {
+          "arrive": [
+            { "at": 0.4, "insert": { "k": "enemy/she_a_stare", "side": -1, "life": 1.3 }, "sound": "snipFar" }
+          ]
         }
       },
       "nk2": {
@@ -902,30 +1000,44 @@
         "hide": { "form": "a", "from": [0, -11], "at": [0.1, -20.2], "stabs": 6 }
       },
       "nk3": {
-        "cam": [0, 1.15, -13.0],
-        "look": [0, 1.1, -25.0],
+        "cam": [-0.9, 1.5, -16.5],
+        "look": [13, 0.2, -30.0],
         "covers": [{ "k": "cover/ep2_nakaniwa1", "side": -1 }, { "k": "cover/ep2_nakaniwa2", "side": 1 }],
         "cp": true,
-        "she": { "form": "a", "at": [1.4, -23.8], "wake": 11 },
+        "she": { "form": "a", "at": [10.0, -33.0], "wake": 11 },
         "hint": "sheStone",
+        "shot": { "kind": "cover", "cam": { "zoom": 6 } },
         "waves": [
           [
-            { "t": 0, "type": "karakasa", "x": -1.2, "z": -19, "from": "door" },
-            { "t": 0.7, "type": "karakasa", "x": 1.2, "z": -20, "from": "door" },
-            { "t": 1.5, "type": "katashiro", "count": 12, "x": 0, "z": -19, "y": 2.4, "spread": 3.0, "every": 0.12, "from": "door" }
+            { "t": 0, "type": "karakasa", "x": 5.0, "z": -21.0, "from": "water", "free": true },
+            { "t": 0.7, "type": "karakasa", "x": 8.0, "z": -26.0, "from": "water", "free": true },
+            { "t": 1.5, "type": "katashiro", "count": 12, "x": 8, "z": -24, "y": 2.4, "spread": 6, "every": 0.12, "from": "outside" }
           ],
           [
-            { "t": 0, "type": "chochin", "x": -1.0, "z": -21, "y": 1.3, "from": "drop" },
-            { "t": 0.8, "type": "chochin", "x": 1.0, "z": -21.5, "y": 1.6, "from": "drop" },
-            { "t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -20, "spread": 2.2, "every": 0.3, "from": "door" }
+            { "t": 0, "type": "chochin", "x": 6.0, "z": -22.0, "y": 1.6, "from": "outside", "free": true },
+            { "t": 0.8, "type": "chochin", "x": 9.5, "z": -27.0, "y": 2.0, "from": "outside", "free": true },
+            { "t": 1.6, "type": "surippa", "count": 6, "x": 0, "z": -24.5, "spread": 1.4, "every": 0.3, "from": "door", "way": "end" }
           ],
           [
-            { "t": 0, "type": "futon", "x": 0, "z": -21, "from": "door" },
-            { "t": 0.8, "type": "karakasa", "x": -1.3, "z": -20.5, "from": "door" },
-            { "t": 1.4, "type": "karakasa", "x": 1.3, "z": -20.5, "from": "door" },
-            { "t": 3, "type": "katashiro", "count": 14, "x": 0, "z": -20, "y": 2.5, "spread": 3.0, "every": 0.12, "from": "door" }
+            { "t": 0, "type": "futon", "x": 5.5, "z": -23.5, "from": "water", "free": true },
+            { "t": 0.8, "type": "karakasa", "x": 4.0, "z": -19.5, "from": "water", "free": true },
+            { "t": 1.4, "type": "karakasa", "x": 8.5, "z": -28.0, "from": "water", "free": true },
+            { "t": 3, "type": "katashiro", "count": 14, "x": 8, "z": -24, "y": 2.5, "spread": 6, "every": 0.12, "from": "outside" }
           ]
-        ]
+        ],
+        "on": {
+          "arrive": [
+            {
+              "at": 10.6,
+              "vignette": {
+                "k": "enemy/she_a_walk0",
+                "color": "#243a52",
+                "title": { "zh": "她蹚着水过来了", "en": "SHE'S WADING ACROSS", "ja": "水を渡ってくる" },
+                "sub": { "zh": "雨里，从池子对面", "en": "through the rain, from the far bank", "ja": "雨の中、池の向こうから" }
+              }
+            }
+          ]
+        }
       }
     },
     "music": null,
@@ -933,6 +1045,7 @@
     "reverb": 0.12,
     "exit": [-0.0, 1.15, -25.6],
     "entry": { "at": [0.0, 1.15, 1.75], "look": [0, 1.1, -25.0] },
+    "rain": { "n": 1800, "speed": 11, "a": 0.3, "dry": true },
     "decals": [
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.05, "z": -5.55, "w": 0.7, "r": -2.45 },
       { "k": "ep2/d_slippersa", "on": "floor", "x": 0.71, "z": -10.6, "w": 0.64, "r": 1.2 },
@@ -942,8 +1055,12 @@
     "props": [
       { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 0.92, "z": -14.87 },
       { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": 1.13, "z": -3.93 },
-      { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 1.04, "z": -1.66 },
-      { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": -1.14, "z": -9.57 }
+      { "k": "prop/ep2s_nakaniwa_watering", "h": 0.6, "x": 1.04, "z": -1.66 },
+      { "k": "prop/ep2s_nakaniwa_koi", "h": 0.55, "x": -1.14, "z": -9.57, "solid": true },
+      { "k": "prop/ep2s_nakaniwa_bonsai", "h": 0.8, "x": 1.13, "z": -7.79 },
+      { "k": "prop/ep2s_nakaniwa_bench", "h": 0.6, "x": -0.81, "z": -18.75 },
+      { "k": "prop/ep2s_nakaniwa_watering", "h": 0.6, "x": -0.96, "z": -3.02 },
+      { "k": "prop/ep2s_nakaniwa_koi", "h": 0.55, "x": 1.12, "z": -10.5, "solid": true }
     ]
   },
   "ep2_kura": {
@@ -1012,6 +1129,19 @@
         "do": [{ "read": "ep2Clocks" }, { "sound": "clocksAll" }]
       },
       {
+        "id": "bigclock",
+        "k": "prop/ep2_clock_pillar",
+        "on": "stand",
+        "x": -2.4,
+        "y": 0,
+        "z": -8.6,
+        "w": 0.8,
+        "ry": 40,
+        "station": "ku3",
+        "mark": true,
+        "do": [{ "freeze": 4.5 }]
+      },
+      {
         "id": "hatch",
         "k": "prop/ep2_hatch",
         "on": "floor",
@@ -1033,13 +1163,27 @@
         "look": [0, 1.2, -11.5],
         "pause": 1.0,
         "say": "scare",
-        "slam": "back"
+        "slam": "back",
+        "on": {
+          "arrive": [
+            {
+              "at": 1.3,
+              "vignette": {
+                "k": "ep2/door_kura_r",
+                "color": "#3a2a22",
+                "title": { "zh": "被锁在里面了", "en": "LOCKED IN", "ja": "閉じ込められた" },
+                "sub": { "zh": "门从外面闩上了", "en": "barred from the outside", "ja": "外から閂をかけられた" }
+              }
+            }
+          ]
+        }
       },
       "ku2": {
-        "cam": [0, 1.2, -1.8],
-        "look": [0, 1.2, -11.5],
+        "cam": [-1.8, 1.7, 0.4],
+        "look": [1.6, -0.3, -11.0],
         "covers": [{ "k": "cover/ep2_kura1", "side": -1 }, { "k": "cover/ep2_kura2", "side": 1 }],
         "cp": true,
+        "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "waves": [
           [
             { "t": 0, "type": "kokeshi", "x": -2, "z": -8, "from": "statue", "wake": 0.8 },
@@ -1047,9 +1191,21 @@
             { "t": 1.4, "type": "kokeshi", "x": 0, "z": -9.5, "from": "statue", "wake": 0.8 }
           ],
           [
+            { "t": 0.6, "act": "transform", "k": "prop/ep2s_kura_mino", "h": 1.3, "x": 0.6, "z": -7.0, "of": "karakasa" }
+          ],
+          [
             { "t": 0, "sound": "clocksAll", "hint": "ep2Ushimitsu" },
             { "t": 0.8, "type": "katashiro", "count": 18, "x": 0, "z": -8, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" },
-            { "t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8, "from": "drop" }
+            { "t": 2, "type": "chochin", "x": 0, "z": -9.5, "y": 1.8, "from": "drop" },
+            {
+              "t": 0.2,
+              "vignette": {
+                "k": "prop/ep2_clock_wadokei",
+                "color": "#3a2a22",
+                "title": { "zh": "丑三时", "en": "THE HOUR OF THE OX", "ja": "丑三つ時" },
+                "sub": { "zh": "满屋的钟一起敲响", "en": "every clock in the room strikes", "ja": "部屋中の時計が一斉に鳴る" }
+              }
+            }
           ],
           [
             { "t": 0, "type": "futon", "x": 0, "z": -9, "from": "wall" },
@@ -1059,9 +1215,10 @@
         ]
       },
       "ku3": {
-        "cam": [0, 1.2, -3.6],
-        "look": [0, 0.2, -6.5],
+        "cam": [1.7, 1.8, -2.2],
+        "look": [-1.2, -0.5, -9.0],
         "covers": [{ "k": "cover/ep2_kura3", "side": -1 }, { "k": "cover/ep2_kura4", "side": 1 }],
+        "shot": { "kind": "cover", "cam": { "zoom": 8 } },
         "hint": "ep2Hatch",
         "block": { "form": "a", "dist": 12, "herSpeed": 0.5, "hint": "ep2Hatch" },
         "waves": [
@@ -1093,8 +1250,9 @@
     "props": [
       { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": -2.39, "z": -9.97 },
       { "k": "prop/ep2s_kura_boxes", "h": 0.9, "x": -2.18, "z": -6.92 },
-      { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": 2.42, "z": -5.93 },
-      { "k": "prop/ep2s_kura_boxes", "h": 0.9, "x": -2.29, "z": -2.9 }
+      { "k": "prop/ep2s_kura_kame", "h": 0.9, "x": 2.42, "z": -5.93 },
+      { "k": "prop/ep2s_kura_mino", "h": 1.4, "x": -2.29, "z": -2.9 },
+      { "k": "prop/ep2s_kura_nagamochi", "h": 0.8, "x": 2.42, "z": -4.91 }
     ]
   },
   "ep2_chika": {
@@ -1244,6 +1402,11 @@
           "speed": 0.95,
           "herSpeed": 1.7,
           "hint": "sheKerosene"
+        },
+        "on": {
+          "arrive": [
+            { "at": 0.3, "insert": { "k": "enemy/kaiko_lunge", "side": -1, "life": 1.4 } }
+          ]
         }
       },
       "ch4": { "cam": [0.6, 1.2, -23.0], "look": [2.6, 2.6, -28.0], "swap": { "ep2/chika_end1": "ep2/chika_end1_b" }, "pause": 1.4, "say": "real" }
@@ -1267,9 +1430,11 @@
       { "k": "prop/ep2s_chika_crate", "h": 0.7, "x": -3.22, "z": -10.93 },
       { "k": "prop/ep2s_chika_wheel", "h": 1.0, "x": 3.48, "z": -4.41 },
       { "k": "prop/ep2s_chika_barrel", "h": 0.8, "x": -3.44, "z": -3.01 },
-      { "k": "prop/ep2s_chika_crate", "h": 0.7, "x": 3.49, "z": -9.27 },
-      { "k": "prop/ep2s_chika_wheel", "h": 1.0, "x": 3.32, "z": -0.85 },
-      { "k": "prop/ep2s_chika_barrel", "h": 0.8, "x": -3.45, "z": -25.67 }
+      { "k": "prop/ep2s_chika_jizo", "h": 0.7, "x": 3.49, "z": -9.27, "solid": true },
+      { "k": "prop/ep2s_chika_crate", "h": 0.7, "x": 3.32, "z": -0.85 },
+      { "k": "prop/ep2s_chika_wheel", "h": 1.0, "x": -3.45, "z": -25.67 },
+      { "k": "prop/ep2s_chika_barrel", "h": 0.8, "x": -3.19, "z": -15.08 },
+      { "k": "prop/ep2s_chika_jizo", "h": 0.7, "x": 3.18, "z": -15.63, "solid": true }
     ]
   },
   "ep2_shoro": {
@@ -1315,7 +1480,7 @@
         "w": 0.7,
         "station": "sh2",
         "mark": true,
-        "do": [{ "drop": { "t": 0.6 } }, { "trap": { "r": 3.0, "down": 9 } }]
+        "do": [{ "drop": { "t": 0.6 }, "crush": { "r": 3.0, "dmg": 700 } }, { "trap": { "r": 3.0, "down": 9 } }]
       },
       {
         "id": "wt1",
@@ -1327,7 +1492,7 @@
         "w": 0.7,
         "station": "sh2",
         "mark": true,
-        "do": [{ "drop": { "t": 0.6 } }, { "trap": { "r": 3.0, "down": 9 } }]
+        "do": [{ "drop": { "t": 0.6 }, "crush": { "r": 3.0, "dmg": 700 } }, { "trap": { "r": 3.0, "down": 9 } }]
       },
       {
         "id": "wt2",
@@ -1339,7 +1504,7 @@
         "w": 0.7,
         "station": "sh2",
         "mark": true,
-        "do": [{ "drop": { "t": 0.6 } }, { "trap": { "r": 3.0, "down": 9 } }]
+        "do": [{ "drop": { "t": 0.6 }, "crush": { "r": 3.0, "dmg": 700 } }, { "trap": { "r": 3.0, "down": 9 } }]
       }
     ],
     "stations": {
@@ -1363,6 +1528,11 @@
           "speed": 0.4,
           "herSpeed": 0.85,
           "hint": "sheShaft"
+        },
+        "on": {
+          "arrive": [
+            { "at": 0.6, "insert": { "k": "enemy/she_c_climb0", "side": 1, "life": 1.4 }, "sound": "ropeCreak" }
+          ]
         }
       },
       "sh3": {
@@ -1383,7 +1553,9 @@
     ],
     "props": [
       { "k": "prop/ep2s_shoro_toolbox", "h": 0.45, "x": -2.04, "z": -3.18 },
-      { "k": "prop/ep2s_shoro_cogs", "h": 0.5, "x": -1.79, "z": -4.77 }
+      { "k": "prop/ep2s_shoro_cogs", "h": 0.5, "x": -1.79, "z": -4.77 },
+      { "k": "prop/ep2s_shoro_oilcan", "h": 0.7, "x": 1.95, "z": -2.57 },
+      { "k": "prop/ep2s_shoro_spool", "h": 0.7, "x": 1.69, "z": -0.47 }
     ]
   },
   "ep2_kane": {
@@ -1622,6 +1794,56 @@
         "sfx": "bellToll",
         "say": "scare"
       },
+      "kn1c": {
+        "needs": "crow",
+        "shot": "escort",
+        "cam": [1.2, 1.5, 5.4],
+        "look": [-5, 6.2, -10],
+        "escort": {
+          "who": "prop/ep2_crow",
+          "path": [[-16, 9, -17], [-10, 8.2, -13], [-4, 7.2, -9], [1, 6.2, -5.5], [2, 5.4, -2.5], [0.3, 4.9, -0.4]],
+          "speed": 1.1,
+          "hp": 420,
+          "h": 1.3,
+          "loop": 0,
+          "name": { "zh": "乌鸦", "en": "THE CROW", "ja": "カラス" }
+        },
+        "on": {
+          "arrive": [
+            {
+              "at": 0,
+              "cam": {
+                "on": [-16, 9, -17],
+                "dist": 4.0,
+                "up": 0.2,
+                "hold": 2.4,
+                "orbit": 0.4,
+                "dolly": 6,
+                "title": { "zh": "乌鸦", "en": "THE CROW", "ja": "カラス" }
+              },
+              "sound": "crow"
+            },
+            {
+              "at": 0.4,
+              "mv": {
+                "slam": { "zh": "带它到钟那里", "en": "GET IT TO THE BELL", "ja": "鐘まで連れてって" },
+                "sub": { "zh": "别让纸人碰到它", "en": "KEEP THE DOLLS OFF IT", "ja": "人形を近づけないで" }
+              }
+            }
+          ],
+          "clear": [{ "at": 0, "sound": "bellToll", "say": "real" }]
+        },
+        "waves": [
+          [
+            { "t": 0, "type": "katashiro", "count": 10, "ahead": 9, "side": 0, "y": 8, "spread": 4, "every": 0.15 }
+          ],
+          [
+            { "t": 0, "type": "chochin", "ahead": 7, "side": -2.5, "y": 7 },
+            { "t": 0.8, "type": "chochin", "ahead": 11, "side": 2.5, "y": 7.5 },
+            { "t": 1.5, "type": "katashiro", "count": 12, "ahead": 12, "side": 0, "y": 8, "spread": 4, "every": 0.12 }
+          ]
+        ]
+      },
       "kn2": {
         "cam": [0, 1.4, 4.6],
         "look": [0, 1.3, 0],
@@ -1652,7 +1874,7 @@
       { "k": "prop/ep2s_kane_saisen", "h": 0.7, "x": -5.17, "z": 3.78 },
       { "k": "prop/ep2s_kane_shimenawa", "h": 0.4, "x": -5.15, "z": 2.52 },
       { "k": "prop/ep2s_kane_drum", "h": 0.8, "x": 5.45, "z": -4.76 },
-      { "k": "prop/ep2s_kane_saisen", "h": 0.7, "x": 5.39, "z": -3.29 }
+      { "k": "prop/ep2s_kane_incense", "h": 0.6, "x": 5.39, "z": -3.29 }
     ]
   }
 }

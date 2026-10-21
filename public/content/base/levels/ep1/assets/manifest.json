@@ -2932,6 +2932,66 @@
   "src": "assets/enemy/doll_windup_rd.png",
   "w": 512
  },
+ "enemy/door_mouth_door": {
+  "anchor": "bottom",
+  "figH": 0.974,
+  "h": 924,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   0
+  ],
+  "relief": "enemy/door_mouth_door_rd",
+  "src": "assets/enemy/door_mouth_door.webp",
+  "w": 836
+ },
+ "enemy/door_mouth_door_rd": {
+  "h": 512,
+  "src": "assets/enemy/door_mouth_door_rd.png",
+  "w": 463
+ },
+ "enemy/door_mouth_open": {
+  "anchor": "bottom",
+  "figH": 0.974,
+  "h": 924,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   0
+  ],
+  "relief": "enemy/door_mouth_open_rd",
+  "src": "assets/enemy/door_mouth_open.webp",
+  "w": 836
+ },
+ "enemy/door_mouth_open_rd": {
+  "h": 512,
+  "src": "assets/enemy/door_mouth_open_rd.png",
+  "w": 463
+ },
+ "enemy/door_mouth_shut": {
+  "anchor": "bottom",
+  "figH": 0.974,
+  "h": 924,
+  "hit": true,
+  "pad": [
+   24,
+   24,
+   24,
+   0
+  ],
+  "relief": "enemy/door_mouth_shut_rd",
+  "src": "assets/enemy/door_mouth_shut.webp",
+  "w": 836
+ },
+ "enemy/door_mouth_shut_rd": {
+  "h": 512,
+  "src": "assets/enemy/door_mouth_shut_rd.png",
+  "w": 463
+ },
  "enemy/double_cat_b_bite": {
   "anchor": "bottom",
   "figH": 0.9516,

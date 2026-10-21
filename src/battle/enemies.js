@@ -8,7 +8,7 @@ import { tex, alphaAt, meta } from '../core/assets.js';
 import { paperMesh, DamageMap, attachDamage, setRelief } from '../core/paper.js';
 import { makeShatter } from '../core/particles.js';
 import { Ease } from '../core/tween.js';
-import { sfx, cry } from '../core/audio.js';
+import { sfx, cry, sound } from '../core/audio.js';
 import { C, T } from '../core/content.js';
 import { COL } from './fx.js';
 
@@ -429,11 +429,13 @@ export class Enemy extends Actor {
       if (this.def.phantoms && !this.phantoms) this.makePhantoms();
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
       this.timer = rr(bp.startDelay);
+      if (s.closeup) this.game.closeup(this, s.closeup);   // (shown up close, the fight held still: where the story wants it - Game.closeup)
     };
     // a statue: grey stone, no outline, not a target, until it wakes (wake: seconds, or a wave event)
     if (s.from === 'statue') {
-      P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.idle || this.frames.walk || [this.def.first])[0]);
-      this.u.outlineOn.value = 0; this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; this.statueReady = ready;
+      P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.disguise || this.frames.idle || this.frames.walk || [this.def.first])[0]);
+      this.u.outlineOn.value = 0; this.statueReady = ready;
+      if (!this.frames.disguise) { this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; }   // (disguise: not stone - a thing of the place, as it is: the gallery's door)
       if (s.wake != null) tw.wait(s.wake, () => this.wake());
       return;
     }
@@ -472,6 +474,11 @@ export class Enemy extends Actor {
       tw.run(Math.max(0.8, len / (bp.enterSpeed ?? 2.6)), (e) => curve.getPointAt(e, P), { onDone: ready });
     } else if (s.from === 'melt' && this.game.morph) {   // (out of the wall, dripping: src/battle/morph.js)
       this.game.morph.melt(this, s, ready);
+    } else if (s.from === 'water') {   // (up out of the pond, the water running off it: hall.pond)
+      const g = this.game, y0 = g.world.pond ? g.world.pond.position.y : 0;
+      P.set(s.x, y0 - this.h * 1.05, s.z); sound('splash') || sfx.popup();
+      g.fx.puff(new THREE.Vector3(s.x, y0 + 0.1, s.z), 10, 0x9fb8d8, 1.4); g.fx.confetti(new THREE.Vector3(s.x, y0 + 0.2, s.z), 16, 1.8, [0xcfe0ff, 0x8aa8d0]);
+      tw.to(P, { y: s.y || 0 }, bp.popTime * 2, { ease: Ease.outBack, onDone: ready });
     } else if (s.from === 'pop') {
       P.set(s.x, s.y || 0, s.z);
       this.inner.rotation.x = -Math.PI / 2;
@@ -879,6 +886,9 @@ export class Enemy extends Actor {
     }
     g.fx.stamp('gogogo', g.W * 0.5, g.H * 0.62, 0.26, 0);
     const hit = () => g.playerAttacked({ kind: 'ranged', dmg: B.dmg, from: this, heavy: true, slot: -1 });
+    // (blast.collapse: the blow brings the floor down under them all - Game.collapse: a stage through several places drops them into
+    // the next stop below; the tunnel's brute, DESIGN 第 1 话: knocked down a deeper pit)
+    if (B.collapse) g.etw.wait((h.arrive > 0.05 ? h.arrive : 0) + 0.45, () => { if (g.combat) g.collapse(); });
     if (h.arrive > 0.05) g.etw.wait(h.arrive * 0.8, () => { if (g.combat) hit(); }); else hit();
   }
 
@@ -923,6 +933,7 @@ export class Enemy extends Actor {
   // info: { kind: rifle | mantra | beam, dmg (final, crit already applied), crit, stagger, stun, uv, by }
   hit(info) {
     if (!this.alive) return;
+    this.idleT = 0;   // (shot at: it can be reached - Game.stuckTick)
     if (this.invul > 0) {   // (zipping aside: the shot glances off, nothing is lost)
       info.dealt = 0; this.flash = Math.max(this.flash, 0.25);
       this.game.fx.star(this.uvToWorld(info.uv.u, info.uv.v), 0.35, COL.white); sfx.miss(0);
@@ -1041,6 +1052,7 @@ export class Enemy extends Actor {
     if (!this.alive || this.state !== 'statue') return;
     const g = this.game, P = this.root.position;
     this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
+    if (this.frames.disguise) { this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); sfx.roar(); g.post.shake(1.2); }   // (the door shows what it is)
     sfx.tear(0); sfx.thud(0); g.post.shake(0.6); g.fx.puff(P, 10, COL.bone, 1.1); g.fx.confetti(this.center(), 16, 1.2, [COL.bone, COL.paper]);
     g.tweens.to(this.u.tintAmt, { value: 0 }, 0.5);
     this.inner.position.x = 0;
@@ -1107,6 +1119,7 @@ export class Enemy extends Actor {
     if (how === 'burn') sfx.burnOut(0); else if (how === 'shatter') sfx.shatter(0); else sfx.paperRip(0);
     this.game.onKill(this, how, crit);
     this.game.morph?.burst(this); this.game.morph?.puddle(this);   // (its insides climb out; it leaves a pool: src/battle/morph.js)
+    if (this.def.elite) this.game.eliteDeath(this);   // (an elite dies its own way: Game.eliteDeath)
   }
 }
 

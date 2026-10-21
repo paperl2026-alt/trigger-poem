@@ -25,7 +25,7 @@
     ],
     "volley": { "shots": [3, 5], "gap": 0.55, "flight": 1.9, "dmg": 14, "projectiles": ["furniture", "cherry", "scoop"] },
     "lunge": { "windup": 1.8, "time": 0.45, "dmg": 22, "coverDmg": 50, "poise": 120 },
-    "burst": { "windup": 2.6, "dmg": 26 },
+    "burst": { "windup": 4.6, "dmg": 26 },
     "summon": [{ "type": "bat", "x": -2, "y": 2.4, "z": -5 }],
     "texts": {
       "mutate": { "zh": "她在变!", "en": "SHE IS CHANGING!", "ja": "変わっていく!" },
@@ -116,7 +116,7 @@
       "repaint": { "time": 2.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
       "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"]
     },
-    "weave": { "legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 1.0, "dmg": 12, "back": 1.6 },
+    "weave": { "legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6 },
     "coreSmoke": { "colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28 }
   },
   "maggot": {
@@ -132,7 +132,7 @@
       "headHp": 1000,
       "coreMul": 1.0,
       "attackEvery": [3.2, 5.5],
-      "rear": 1.3,
+      "rear": 3.3,
       "biteDmg": 22,
       "spits": 3,
       "glob": "ooze"

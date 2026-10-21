@@ -51,7 +51,9 @@ def classroom(S):
           {"t": 1.4, "type": "chair", "from": "door", "way": "dfront"}),
         W({"t": 0, "type": "chair", "from": "door", "way": "dfront"}, {"t": 1.2, "type": "chair", "from": "door", "way": "dfront"},
           {"t": 2.0, "type": "desk", "x": -3.4, "z": -4.0, "from": "pop"}),
-        W({"t": 0, "type": "shoe", "from": "door", "way": "dfront"}),
+        # (the monsters' own play - DESIGN「停留点不只是一个镜头、一种打法」 怪的演出, src/battle/acts.js: a desk in the room shudders and
+        # turns into one of them, shown up close)
+        W({"t": 0.8, "act": "transform", "k": "prop/desk2", "h": 0.95, "x": 0.85, "z": -2.8, "of": "desk"}, {"t": 0.4, "type": "shoe", "from": "door", "way": "dfront"}),
         W({"t": 0, "type": "desk", "x": 1.7, "z": -1.6, "from": "pop"}, {"t": 0.6, "type": "book", "x": -4.5, "z": -1.0, "y": 2.2, "from": "outside"},
           {"t": 1.2, "type": "book", "x": -4.5, "z": -5.0, "y": 1.8, "from": "outside"}, {"t": 2.0, "type": "chair", "from": "door", "way": "dfront"}),
         W({"t": 0, "type": "board", "x": 0.2, "z": -7.0, "from": "pop"}, {"t": 1.0, "type": "chair", "from": "door", "way": "dfront"},
@@ -118,6 +120,10 @@ def corridor(S):
     # (only the doors well ahead of the camera: one beside it or just below the picture had them walking out of the bottom edge -
     # user 2026-10-21)
     entrances(st["cor1"]["waves"], ["c2"], 2.0)
+    # (the monsters' own play: two chairs out in the corridor fighting over nothing, paying the girls no heed until one is shot - then
+    # both come at them furious: acts.js squabble)
+    ws = st["cor1"]["waves"]; ws[:] = [w for w in ws if not any("act" in e for e in w)]
+    ws.insert(1, [{"t": 0.3, "act": "squabble", "of": ["chair", "chair"], "x": -0.5, "z": -9.0}])
     # 2: against the classroom side, across to the windows and the far end (where the corridor folds up when it turns)
     st["cor2"].update({"via": [[0, 1.35, -2.5], [-0.6, 1.3, -8.5]], "cam": [-1.6, 1.75, -9.6], "look": [1.4, -0.4, -26], "shot": {"kind": "cover", "cam": {"zoom": 10}}})
     entrances(st["cor2"]["waves"], ["c3"], 2.0)
@@ -291,7 +297,7 @@ def yard(S, B):
                     {"type": "shoe", "from": "burrow", "x": 0, "z": -6}]
     S5["pattern"] = ["charge", "drift"]
     S5["cores"] = [[0.32, 0.65, 0.09], [0.73, 0.46, 0.09], [0.39, 0.82, 0.08], [0.19, 0.37, 0.08], [0.69, 0.27, 0.08]]
-    B["approach"] = {"speed": 0.9, "speedUp": 3.0, "near": 9.5, "topY": 0.1, "windup": 0.8, "slams": 3, "gap": 0.55, "dmg": 14, "back": 2.2}
+    B["approach"] = {"speed": 0.9, "speedUp": 3.0, "near": 9.5, "topY": 0.1, "windup": 2.8, "slams": 3, "gap": 0.55, "dmg": 14, "back": 2.2}
     B["throw"] = {"shots": [2, 4], "gap": 1.0, "expose": 1.3, "after": 1.5, "exposedMul": 2.0, "flight": 2.1, "dmg": 14}
     B["zigzag"] = {"windup": 0.9, "legs": 5, "lateral": 2.8, "time": 3.4, "stop": 2.0, "poise": 110, "dmg": 26}
     # (between attacks only a quick slide aside where she stands - user 2026-10-21: not the small monsters' zigzag, not to and fro)

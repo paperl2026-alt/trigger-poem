@@ -85,7 +85,8 @@
       "still": ["still"]
     },
     "moves": ["walk", "walk", "charge"],
-    "scar": "claw"
+    "scar": "claw",
+    "elite": true
   },
   "doll": {
     "beh": "thrower",
@@ -242,7 +243,8 @@
     "proj": "furniture",
     "burst": 6,
     "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterRise": [1.2, 1.8], "standAfterThrow": [1.2, 2.0] },
-    "frames": { "hide": ["stand"], "rise": ["stand"], "idle": ["stand", "glide", "idle", "glide"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+    "frames": { "hide": ["stand"], "rise": ["stand"], "idle": ["stand", "glide", "idle", "glide"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] },
+    "elite": true
   },
   "shade_mourner": {
     "beh": "thrower",
@@ -283,7 +285,8 @@
     "summon": [{ "type": "doll", "x": -1.3, "z": 0.4 }, { "type": "doll", "x": 1.3, "z": 0.4 }],
     "summonMax": 3,
     "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterRise": [1.2, 1.8], "standAfterThrow": [1.4, 2.2] },
-    "frames": { "hide": ["rock"], "rise": ["rock"], "idle": ["rock", "glide", "idle", "glide"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+    "frames": { "hide": ["rock"], "rise": ["rock"], "idle": ["rock", "glide", "idle", "glide"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] },
+    "elite": true
   },
   "shade_bride": {
     "beh": "walker",
@@ -300,7 +303,8 @@
     "move": "charge",
     "params": { "recoilDist": 4.5 },
     "frames": { "idle": ["idle"], "walk": ["stand", "walk"], "crouch": ["crouch"], "leap": ["rush"], "bite": ["rush"], "recoil": ["hurt"], "hurt": ["hurt"] },
-    "scar": "claw"
+    "scar": "claw",
+    "elite": true
   },
   "dollkin": {
     "beh": "walker",
@@ -317,5 +321,47 @@
     "frames": { "idle": ["idle"], "walk": ["idle", "rise"], "crouch": ["windup"], "leap": ["throw"], "bite": ["throw"], "recoil": ["hurt"], "hurt": ["hurt"] },
     "moves": ["hop", "zigzag", "walk"],
     "scar": "bite"
+  },
+  "door_mouth": {
+    "beh": "thrower",
+    "name": { "zh": "噬人门", "en": "Maw Door", "ja": "喰らい扉" },
+    "_doc": "画廊尽头的门（DESIGN 第 1 话 按总纲重做时各处加的巧思：走廊越拉越长，门变成一张嘴；R81）：先装成那扇门（frames.disguise，from statue），醒了张嘴吐蜂蜜团、吐完咬紧牙关（hides：咬紧时伤害减半），不时憋一大口蜂蜜喷过来（blast，快躲，蓄力长）；不会走过来（stopDist）。",
+    "sprite": "door_mouth",
+    "hp": 3600,
+    "h": 2.45,
+    "windup": 1.2,
+    "poise": 90,
+    "first": "shut",
+    "hides": true,
+    "proj": "ooze",
+    "burst": 3,
+    "blast": { "dmg": 26, "vfx": "honeySpray", "windup": 3.6, "chance": 0.4 },
+    "params": { "stopDist": 99, "hideAfterThrow": [1.6, 2.4], "standAfterRise": [0.6, 1.0], "throwFrom": [0.5, 0.45] },
+    "frames": { "disguise": ["door"], "hide": ["shut"], "rise": ["open"], "idle": ["open"], "windup": ["open"], "throw": ["open"], "hurt": ["shut"] },
+    "elite": true
+  },
+  "shadow_brute": {
+    "beh": "thrower",
+    "name": { "zh": "巨影", "en": "The Great Shadow", "ja": "巨きな影" },
+    "_doc": "坑道第一个点最后钻出来的大怪（DESIGN 第 1 话：坑道里被大怪一下打落更深的坑）：守丧之影的大个子，一出来就憋一记打不掉的大招（快躲），打下来地面整个塌掉（blast.collapse），两人掉进下一个点。",
+    "sprite": "shadow",
+    "variants": ["shadow_c"],
+    "hp": 6000,
+    "h": 3.6,
+    "windup": 3.4,
+    "poise": 400,
+    "first": "hover0",
+    "hides": false,
+    "blast": { "dmg": 22, "vfx": "darkMagic", "charge": "darkCharge", "windup": 3.4, "collapse": true },
+    "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterThrow": [2.6, 3.6], "standAfterRise": [0.6, 0.9] },
+    "frames": {
+      "hide": ["hover0"],
+      "rise": ["hover0"],
+      "idle": ["hover0", "hover1", "idle", "hover1"],
+      "windup": ["windup"],
+      "throw": ["blast"],
+      "hurt": ["hurt"]
+    },
+    "elite": true
   }
 }
