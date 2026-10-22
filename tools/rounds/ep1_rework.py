@@ -39,9 +39,9 @@ def madame(B):
     B["madame"] = {
         "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，打她本人只溅火花），chunk 每打中一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
         "photo": {"dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10},
-        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2},
+        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 3.0},
         "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 6, "time": 4.0, "dmg": 18, "away": 6, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0},
-        "repaint": {"time": 2.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
+        "repaint": {"time": 3.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
         "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"],
     }
 
@@ -123,9 +123,8 @@ def gallery_mouth(S):
     # (user 2026-10-21: too close to the door - shoot it from further back; what it does could not be read: a hint once it is shown)
     st["ga3"] = {"via": [[0, 1.5, -8]], "cam": [0, 1.45, -11], "look": [0, 1.6, -21], "stretch": {"k": 2.6, "dur": 4.2, "at": 0.8}, "hint": "ep1DoorMouth",
                  "covers": [{"k": "cover/ep1_gallery1", "side": -1}, {"k": "cover/ep1_gallery2", "side": 1}],
-                 "waves": [[{"type": "door_mouth", "x": 0, "z": round(S["hall"]["z1"] + 0.12, 2), "from": "statue", "wake": 0.8,
-                             "closeup": {"hold": 2.0, "say": "scare", "color": "#5a1a24", "k": "enemy/door_mouth_open", "title": {"zh": "噬人门", "en": "THE MAW DOOR", "ja": "喰らい扉"},
-                                         "sub": {"zh": "尽头那扇门，是张嘴", "en": "the door at the end was a mouth", "ja": "突き当たりの扉は、口だった"}}}]],
+                 # (no close-up: those are the bosses' - user 2026-10-22; its hint tells how to fight it)
+                 "waves": [[{"type": "door_mouth", "x": 0, "z": round(S["hall"]["z1"] + 0.12, 2), "from": "statue", "wake": 0.8}]],
                  "shot": {"kind": "cover", "cam": {"zoom": 10}}, "exit": ex}
 
 def knight_planks(S):
@@ -133,12 +132,7 @@ def knight_planks(S):
     left over the gap - and the monsters crowding onto it break it): hall.planks (PanelWorld: opened by that walk, game.js bridge);
     the stop's second wave a pack of ghouls coming over at once - they squeeze onto the planks, three on it and it goes (Game.planksTick)"""
     S["hall"]["planks"] = {"z0": -7.75, "z1": -10, "x": -2.0, "w": 1.6, "n": 3, "station": "gd2"}   # (x: where the stop's view crosses the gap)
-    # (user 2026-10-21: the close-up came after two knights were already shot to bits - the first armour to come alive is the one shown:
-    # the nearer, right one, woken first by the kills)
-    for e in S["stations"]["gd1"]["waves"][0]:
-        if e.get("type") == "armor" and e.get("x", 0) > 0:
-            e["closeup"] = {"hold": 1.8, "say": "scare", "color": "#4a3218", "title": {"zh": "铠甲活了", "en": "THE ARMOUR WAKES", "ja": "鎧が動いた"},
-                            "sub": {"zh": "沿墙摆着的那一排", "en": "the row along the wall", "ja": "壁際に並んでいたあの鎧"}}
+    # (no close-up of the first armour to come alive: close-ups are the bosses' - user 2026-10-22)
     for pr in S.get("props", []):
         if abs(pr["z"] + 9) < 0.01 and abs(pr["x"]) < 0.1: pr["z"] = -13   # (the fountain out of the gap)
     pack = [(-3.4, -14.5), (-0.6, -15), (-2.0, -14), (-2.8, -15.2), (-1.0, -13.8)]
@@ -187,14 +181,29 @@ def acts(D):
     put = lambda sid, st, i, e: D[sid]["stations"][st]["waves"].insert(i, [e])
     put("ep1_shop", "sh2", 1, {"t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -11.5})
     # (the knights' hall: four little dolls kneeling round a circle - user 2026-10-21: four mourner shades with their phantoms were
-    # sixteen tough figures, coming close, nothing to read; then: no nine seconds to beat, the player can hardly see the circle anyway -
-    # a close-up tells there is one, and they are cleared like any others: a storyboard shot of the ring, then they come)
+    # sixteen tough figures, coming close, nothing to read; then: no nine seconds to beat, the player can hardly see the circle anyway;
+    # then: close-ups are the bosses' only, user 2026-10-22 - a hint tells there is one, and they are cleared like any others)
     D["ep1_garden"]["stations"]["gd1"]["waves"].insert(1, [{"t": 0.3, "act": "ritual", "of": "dollkin", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5},
-        {"t": 0.7, "storyboard": {"lead": 0.3, "shots": [{"cam": [3.4, 2.4, 0.6], "look": [0.2, 0.1, -4.5], "zoom": 6, "to": {"cam": [3.1, 2.25, 0.1]},
-                                                         "show": ["dollkin", "armor"], "hold": 2.2,
-                                                         "cap": {"zh": "人偶围着法阵在念咒……", "en": "the dolls are chanting round a circle...", "ja": "人形たちが魔法陣を囲んで唱えている……"}}]}}])
+        {"t": 0.9, "hint": "dollRitual"}])
     put("ep1_nursery", "nu2", 1, {"t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -10.5, "minion": "dollkin", "every": 3, "max": 5})
     put("ep1_oven", "ov2", 1, {"t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1})
+
+def chandeliers(D, h):
+    """(user 2026-10-22: the chandeliers were hung anywhere, not where a chandelier hangs - a poltergeist may move about, but it must start
+    in its place) each stop's chandeliers hang from the ceiling on their chains from the start (wave 0, a statue: a chandelier as it is,
+    enemies.json chandelier hang), and come alive when the wave they were in starts (a wake event for chandeliers only)"""
+    for S in D.values():
+        if not isinstance(S, dict) or "hall" not in S: continue
+        top = S["hall"]["h"]
+        for st in (S.get("stations") or {}).values():
+            W = st.get("waves") or []
+            for wi, w in enumerate(W):
+                for e in [e for e in w if e.get("type") == "chandelier"]:
+                    w.remove(e)
+                    c = {"type": "chandelier", "x": e.get("x", 0), "z": e["z"], "from": "statue", "y": round(top - h - 0.5, 2)}
+                    if wi == 0: c["wake"] = e.get("wake", round(e.get("t", 0) + 1.2, 2))
+                    else: w.append({"t": round(e.get("t", 0) + 0.3, 2), "wake": 1, "wakeOf": "chandelier"})
+                    W[0].append(c)
 
 def places(D):
     import random
@@ -207,6 +216,7 @@ def places(D):
     for gm in D["ep1_cold"]["gimmicks"]:   # (the shelf toppled onto the vent: 1.2 times as big - user 2026-10-22, it could not cover the hole)
         if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)
+    chandeliers(D, packs.load(L / "enemies.json")["chandelier"]["h"])
 
 def main():
     f = L / "bosses.json"; B = packs.load(f)

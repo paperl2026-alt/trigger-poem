@@ -128,8 +128,8 @@
         "covers": [{ "k": "cover/ep1_shop3", "side": -1 }, { "k": "cover/ep1_shop4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "chandelier", "x": 0.0, "z": -10.5, "from": "statue", "y": 1.5, "wake": 1.6 },
-            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -11, "from": "door", "way": "d2" }
+            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -11, "from": "door", "way": "d2" },
+            { "type": "chandelier", "x": 0.0, "z": -10.5, "from": "statue", "y": 2.1, "wake": 1.6 }
           ],
           [
             { "t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -11.5 }
@@ -300,11 +300,12 @@
         "waves": [
           [
             { "t": 0, "type": "ghoul", "x": -2.22, "z": -9, "move": "hop", "from": "door", "way": "d1" },
-            { "t": 0.8, "type": "crawler", "x": 2.22, "z": -9.5, "move": "zigzag", "from": "melt" }
+            { "t": 0.8, "type": "crawler", "x": 2.22, "z": -9.5, "move": "zigzag", "from": "melt" },
+            { "type": "chandelier", "x": 0.0, "z": -11, "from": "statue", "y": 2.3 }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": 0.0, "z": -11, "y": 1.5, "from": "ceiling" },
-            { "t": 1, "type": "bat", "count": 12, "x": 0.0, "z": -10, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door", "way": "d2" }
+            { "t": 1, "type": "bat", "count": 12, "x": 0.0, "z": -10, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door", "way": "d2" },
+            { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ],
           [
             { "t": 0, "type": "doll", "x": -2.22, "z": -10, "from": "ceiling" },
@@ -325,7 +326,9 @@
         "covers": [{ "k": "cover/ep1_gallery3", "side": -1 }, { "k": "cover/ep1_gallery4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -18, "from": "ceiling" }
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -18, "from": "ceiling" },
+            { "type": "chandelier", "x": -1.78, "z": -15, "from": "statue", "y": 2.3 },
+            { "type": "chandelier", "x": 1.78, "z": -15.5, "from": "statue", "y": 2.3 }
           ],
           [
             { "t": 0, "type": "ghoul", "x": -2.22, "z": -16, "from": "melt" },
@@ -333,9 +336,9 @@
             { "t": 2, "type": "bat", "count": 12, "x": 0.0, "z": -17, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door", "way": "d1" }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": -1.78, "z": -15, "from": "statue", "y": 1.6, "wake": 1.0 },
-            { "t": 0, "type": "chandelier", "x": 1.78, "z": -15.5, "from": "statue", "y": 1.5, "wake": 3.0 },
-            { "t": 1, "type": "crawler", "x": 0.0, "z": -16, "move": "zigzag", "from": "melt" }
+            { "t": 1, "type": "crawler", "x": 0.0, "z": -16, "move": "zigzag", "from": "melt" },
+            { "t": 0.3, "wake": 1, "wakeOf": "chandelier" },
+            { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ],
           [
             { "t": 0, "type": "doll", "x": -2.22, "z": -16, "from": "ceiling" },
@@ -373,21 +376,7 @@
         "covers": [{ "k": "cover/ep1_gallery1", "side": -1 }, { "k": "cover/ep1_gallery2", "side": 1 }],
         "waves": [
           [
-            {
-              "type": "door_mouth",
-              "x": 0,
-              "z": -20.88,
-              "from": "statue",
-              "wake": 0.8,
-              "closeup": {
-                "hold": 2.0,
-                "say": "scare",
-                "color": "#5a1a24",
-                "k": "enemy/door_mouth_open",
-                "title": { "zh": "噬人门", "en": "THE MAW DOOR", "ja": "喰らい扉" },
-                "sub": { "zh": "尽头那扇门，是张嘴", "en": "the door at the end was a mouth", "ja": "突き当たりの扉は、口だった" }
-              }
-            }
+            { "type": "door_mouth", "x": 0, "z": -20.88, "from": "statue", "wake": 0.8 }
           ]
         ],
         "shot": { "kind": "cover", "cam": { "zoom": 10 } },
@@ -499,52 +488,24 @@
         "waves": [
           [
             { "t": 0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
-            {
-              "t": 0,
-              "type": "armor",
-              "x": 5.6,
-              "z": -2.5,
-              "from": "statue",
-              "closeup": {
-                "hold": 1.8,
-                "say": "scare",
-                "color": "#4a3218",
-                "title": { "zh": "铠甲活了", "en": "THE ARMOUR WAKES", "ja": "鎧が動いた" },
-                "sub": { "zh": "沿墙摆着的那一排", "en": "the row along the wall", "ja": "壁際に並んでいたあの鎧" }
-              }
-            },
+            { "t": 0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
             { "t": 0, "type": "crawler", "x": -2.33, "z": -7, "move": "zigzag", "from": "door", "way": "d1" },
             { "t": 0.8, "type": "crawler", "x": 2.33, "z": -7.5, "move": "burrow", "from": "door", "way": "d2" },
             { "kills": 2, "wake": 1 },
-            { "kills": 3, "wake": 1 }
+            { "kills": 3, "wake": 1 },
+            { "type": "chandelier", "x": 0.0, "z": -10, "from": "statue", "y": 3.9 }
           ],
           [
             { "t": 0.3, "act": "ritual", "of": "dollkin", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5 },
-            {
-              "t": 0.7,
-              "storyboard": {
-                "lead": 0.3,
-                "shots": [
-                  {
-                    "cam": [3.4, 2.4, 0.6],
-                    "look": [0.2, 0.1, -4.5],
-                    "zoom": 6,
-                    "to": { "cam": [3.1, 2.25, 0.1] },
-                    "show": ["dollkin", "armor"],
-                    "hold": 2.2,
-                    "cap": { "zh": "人偶围着法阵在念咒……", "en": "the dolls are chanting round a circle...", "ja": "人形たちが魔法陣を囲んで唱えている……" }
-                  }
-                ]
-              }
-            }
+            { "t": 0.9, "hint": "dollRitual" }
           ],
           [
             { "t": 0, "type": "bat", "count": 20, "x": 0.0, "z": -8.5, "y": 2.9, "spread": 7.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": 0.0, "z": -10, "y": 2.4, "from": "ceiling" },
             { "t": 0.6, "type": "ghoul", "x": -3.11, "z": -8, "from": "wall" },
-            { "t": 1.3, "type": "ghoul", "x": 4.67, "z": -13, "move": "walk" }
+            { "t": 1.3, "type": "ghoul", "x": 4.67, "z": -13, "move": "walk" },
+            { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ],
           [
             { "t": 0, "type": "doll", "x": -4.67, "z": -9, "from": "ceiling" },
@@ -1008,9 +969,9 @@
         "covers": [{ "k": "cover/ep1_oven3", "side": -1 }, { "k": "cover/ep1_oven4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "chandelier", "x": 0.0, "z": -8.5, "y": 1.4, "from": "ceiling" },
             { "t": 0.6, "type": "crawler", "x": -1.67, "z": -7, "move": "zigzag", "from": "door", "way": "d1" },
-            { "t": 1.2, "type": "crawler", "x": 1.67, "z": -7.5, "move": "zigzag", "from": "door", "way": "d1" }
+            { "t": 1.2, "type": "crawler", "x": 1.67, "z": -7.5, "move": "zigzag", "from": "door", "way": "d1" },
+            { "type": "chandelier", "x": 0.0, "z": -8.5, "from": "statue", "y": 1.9, "wake": 1.2 }
           ],
           [
             { "t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1 }
@@ -1292,7 +1253,8 @@
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            }
+            },
+            { "type": "chandelier", "x": 0.0, "z": -8, "from": "statue", "y": 1.5 }
           ],
           [
             { "t": 0, "type": "doll", "x": -3.2, "z": -3, "from": "statue" },
@@ -1322,7 +1284,6 @@
             { "t": 0, "type": "bat", "count": 16, "x": 0.0, "z": -8.5, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "chandelier", "x": 0.0, "z": -8, "from": "statue", "y": 1.4, "wake": 1.0 },
             {
               "t": 0.6,
               "type": "dollkin",
@@ -1341,7 +1302,8 @@
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
-            { "t": 1.8, "type": "doll", "x": 2.13, "z": -9, "from": "ceiling" }
+            { "t": 1.8, "type": "doll", "x": 2.13, "z": -9, "from": "ceiling" },
+            { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ]
         ],
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }

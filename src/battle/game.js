@@ -783,7 +783,7 @@ export class Game {
   }
   waveEvent(e) {
     // everything else a wave event says is a director's cue (cues.js: say, mv, act, cam, burst, shake ...)
-    const { t: _t, kills: _k, turn: _tu, mutate: _m, gimmick: _g, collapse: _c, hint: _h, sound: _s, spawner: _sp, wake: _w, ...cue } = e;
+    const { t: _t, kills: _k, turn: _tu, mutate: _m, gimmick: _g, collapse: _c, hint: _h, sound: _s, spawner: _sp, wake: _w, wakeOf: _wo, ...cue } = e;
     if (Object.keys(cue).length) this.cues.run(cue);
     if (e.turn) this.turn(e.turn);
     if (e.mutate) this.mutateAll();
@@ -795,8 +795,8 @@ export class Game {
     // { spawner: { id, type: [kinds], side, z, every } }; the wave does not end while it runs (checkWave)
     if (e.spawner) this.spawners.push({ ...e.spawner, live: true, timer: e.spawner.first ?? 0.4, n: 0, kills: 0, ready: e.spawner.sealAfter ? false : true });
     if (e.wake) {   // statues come to life (all, or so many of them, nearest first; not one an event just before picked: two kill-events
-      // can go off on the same shot)
-      const st = this.actors.filter((a) => a.alive && a.state === 'statue' && !a.waking).sort((a, b) => a.distToCam() - b.distToCam());
+      // can go off on the same shot; wakeOf: only that kind - the chandeliers hanging there from the start)
+      const st = this.actors.filter((a) => a.alive && a.state === 'statue' && !a.waking && (!e.wakeOf || a.type === e.wakeOf)).sort((a, b) => a.distToCam() - b.distToCam());
       st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => { a.waking = true; this.etw.wait(i * 0.5, () => a.wake()); });
     }
   }
@@ -821,7 +821,8 @@ export class Game {
     if (this.S.dial && !this.chase.sentOff) return;   // (the last fight: over when the bell has sent her off)
     // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
     // up; the last wave of a stop is fought to the end
-    const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker), left = alive.length;
+    // (a chandelier still hanging there as it is does not hold the wave up: it wakes when its own wave starts - chandeliers in ep1_rework.py)
+    const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker && !(a.state === 'statue' && a.bp?.hang && !a.waking)), left = alive.length;
     const last = this.waveIndex >= this.S.waves.length - 1;
     // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared)
     if (last && left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });

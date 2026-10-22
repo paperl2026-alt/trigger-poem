@@ -4,7 +4,8 @@
 // the foreground glitter), every bar a stronger one; and a kit of MV pieces drawn over the game (the overlay, pixel space), called by the
 // game at its moments:
 //   wall(text)    one word repeated row after row till it fills the screen, every row its own colour, scrolling (the MVs' "アアアア")
-//   slam(text)    a huge chrome-and-candy title smashing into the middle, its shadow copies behind it
+//   slam(text)    a huge chrome-and-candy title smashing into the middle, its shadow copies behind it (drawn after the post pass, so it
+//                 stays sharp: user 2026-10-22, the red and blue blur could not be read)
 //   popups(lines) a cascade of fake system windows, one on top of the other (YAMERO's popup waterfall)
 //   label(text)   a red label bar with white letters racing across ("ネットをやめろ")
 //   tunnel(dur)   hearts rushing out of the middle at the camera (the heart tunnel)
@@ -31,7 +32,7 @@ function canvasQuad(w, h, draw) {
 export class MV {
   constructor(game) { this.g = game; this.items = []; this.beatI = -1; this.over = 0; this.toxic = 0; this.toxicT = 0; }
   get root() { return this.g.overlay; }
-  add(m, life, upd) { this.root.add(m); this.items.push({ m, t: 0, life, upd }); return m; }
+  add(m, life, upd, over) { (over || this.root).add(m); this.items.push({ m, t: 0, life, upd }); return m; }
 
   // ---- every frame: the beat, the moods (overdrive, toxic), the pieces on screen
   update(dt, t, beat) {
@@ -100,17 +101,18 @@ export class MV {
     const g = this.g, W = g.W, H = g.H, h = H * 0.22;
     const make = (fill, stroke) => canvasQuad(W * 0.9, h * 1.3, (x, w, hh) => {
       x.font = `900 ${Math.round(hh * 0.62)}px ${FONT}`; x.textAlign = 'center'; x.textBaseline = 'middle';
+      const tw = x.measureText(text).width; if (tw > w * 0.94) x.font = `900 ${Math.round(hh * 0.62 * w * 0.94 / tw)}px ${FONT}`;   // (a long one fits the width)
       const gr = x.createLinearGradient(0, hh * 0.2, 0, hh * 0.8); gr.addColorStop(0, '#ffffff'); gr.addColorStop(0.45, fill); gr.addColorStop(0.55, '#ff3a8a'); gr.addColorStop(1, '#ffd23a');
       x.lineWidth = hh * 0.09; x.strokeStyle = stroke; x.strokeText(text, w / 2, hh * 0.46); x.fillStyle = gr; x.fillText(text, w / 2, hh * 0.46);
       if (sub) { x.font = `700 ${Math.round(hh * 0.16)}px ${FONT}`; x.fillStyle = '#fff'; x.fillText(sub, w / 2, hh * 0.88); }
     });
-    const grp = new THREE.Group(), back = [0, 1, 2].map((i) => { const m = make(PAL[i + 1], '#1a0010'); m.material.opacity = 0.35; grp.add(m); return m; }), front = make('#c8f4ff', '#1a0010'); grp.add(front);
+    const grp = new THREE.Group(), back = [0, 1].map((i) => { const m = make(PAL[i + 1], '#1a0010'); m.material.opacity = 0.2; grp.add(m); return m; }), front = make('#c8f4ff', '#1a0010'); grp.add(front);
     grp.position.set(W / 2, H * 0.56, 0); this.g.post.shake(0.8);
+    back.forEach((m, i) => { m.position.set((i ? 1 : -1) * W * 0.006, -H * 0.008 * (i + 1), 0); });
     this.add(grp, life, (k) => {
-      const s = k < 0.12 ? 2.4 - 1.4 * (k / 0.12) : 1 + Math.sin(k * 30) * 0.01; grp.scale.setScalar(s);
-      back.forEach((m, i) => { m.position.set((i - 1) * W * 0.012 * Math.sin(k * 40), (i - 1) * H * 0.01, 0); });
-      for (const m of grp.children) m.material.opacity = (m === front ? 1 : 0.35) * (k > 0.75 ? (1 - k) / 0.25 : 1);
-    });
+      const s = k < 0.1 ? 1.6 - 0.6 * (k / 0.1) : 1; grp.scale.setScalar(s);
+      for (const m of grp.children) m.material.opacity = (m === front ? 1 : 0.2) * (k > 0.8 ? (1 - k) / 0.2 : 1);
+    }, this.g.hudScene);
   }
   popups(lines, n = 5, life = 1.6) {
     const g = this.g, W = g.W, H = g.H, pw = H * 0.42, ph = H * 0.16;

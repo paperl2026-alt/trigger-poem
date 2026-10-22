@@ -57,7 +57,7 @@
     "hides": false,
     "proj": "furniture",
     "burst": 3,
-    "_doc": "摆在那里时（from statue）是一盏普通的吊灯（frames.disguise，R83），醒来先抖、越抖越厉害，再慢慢化成吊灯骚灵（Enemy.wake）。",
+    "_doc": "摆在那里时（from statue）是一盏普通的吊灯（frames.disguise，R83），醒来先抖、越抖越厉害，再慢慢化成吊灯骚灵（Enemy.wake）。从一开始就用链子吊在天花板上（params.hang；2026-10-22 用户：吊灯要挂在吊东西的地方，变骚灵可以动但位置要对），它那一波开始时醒来：链子断，往下掉一点（drop 米），之后左右飘（sway）。",
     "frames": {
       "disguise": ["disguise"],
       "hide": ["hover0"],
@@ -66,7 +66,8 @@
       "windup": ["windup"],
       "throw": ["fire"],
       "hurt": ["hurt"]
-    }
+    },
+    "params": { "hang": { "drop": 0.8 }, "sway": [1.2, 0.6] }
   },
   "armor": {
     "beh": "walker",
@@ -312,8 +313,6 @@
     "hides": false,
     "proj": "cherry",
     "burst": 2,
-    "summon": [{ "type": "doll", "x": -1.3, "z": 0.4 }, { "type": "doll", "x": 1.3, "z": 0.4 }],
-    "summonMax": 3,
     "params": {
       "threat": "heavy",
       "armor": ["enter", "windup", "thrown"],

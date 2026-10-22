@@ -90,7 +90,7 @@
           }
         ],
         "chunk": 0.072,
-        "stun": 1.2
+        "stun": 3.0
       },
       "coffin": {
         "hands": "ep1/hands_crowd",
@@ -116,7 +116,7 @@
         "open": 4.0,
         "openMul": 2.0
       },
-      "repaint": { "time": 2.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
+      "repaint": { "time": 3.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
       "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"]
     },
     "weave": { "legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6 },

@@ -116,6 +116,7 @@
     "soon": { "zh": "制作中", "en": "IN PRODUCTION", "ja": "制作中" },
     "getaHint": { "zh": "拖鞋从鞋柜里涌出来了——打倒鞋柜压住它!", "en": "SLIPPERS POURING OUT OF THE SHOE CABINET - KNOCK IT OVER!", "ja": "下駄箱からスリッパが!倒してふさいで!" },
     "sealHint": { "zh": "打倒洞旁边的架子，堵住洞口!", "en": "SHOOT THE SHELF BY THE HOLE - BLOCK IT!", "ja": "穴のとなりの棚を撃って穴をふさいで!" },
+    "dollRitual": { "zh": "人偶围着法阵在念咒!先把它们打掉!", "en": "THE DOLLS ARE CHANTING ROUND A CIRCLE! SHOOT THEM DOWN!", "ja": "人形が魔法陣を囲んで唱えている!先に撃ち倒せ!" },
     "lampHint": { "zh": "打蜡烛点灯!", "en": "SHOOT THE CANDLES TO LIGHT THEM!", "ja": "ろうそくを撃って灯して!" },
     "gateHint": { "zh": "打爆两边墙上的封印，放下吊桥!", "en": "SHOOT THE TWO SEALS ON THE WALLS - DROP THE BRIDGE!", "ja": "左右の壁の封印を撃って橋を下ろして!" },
     "best": { "zh": "最短通关", "en": "BEST CLEAR", "ja": "最短クリア" },

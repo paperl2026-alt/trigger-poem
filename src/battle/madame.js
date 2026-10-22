@@ -145,7 +145,7 @@ export class Madame extends TheThing {
     r.taken = r.busy = true; r.u.outlineOn.value = 0;
     g.tweens.to(P, { x: to.x, y: to.y, z: to.z }, 0.35, { ease: Ease.inQuad, onDone: () => {
       r.gone(); if (!this.alive || this.stage !== 1 || this.mutating) return;   // (a page still on its way when the form changed: nothing)
-      g.mv.slam(tr(line.text), line.date, 1.8); g.post.styleBurst(0.5, [8, 7], 0.1);
+      g.hud.gl.note(line.date, tr(line.text)); g.post.styleBurst(0.4, [8, 7], 0.08);   // (held up to be read, not slammed: user 2026-10-22)
       this.crushed(this.maxHp * M.chunk, M.stun); sfx.tear(0);
       if (this.nextPage >= this.pages.length) this.later(1.5, () => { if (this.stage === 1) this.deal(); });
     } });
@@ -365,7 +365,8 @@ export class Madame extends TheThing {
     g.post.styleBurst(M.time, [7, 10, 2, 8, 7, 2], 0.16, 0x1a0010, 0xff5aa8);
     // her word, one syllable a beat (bosses.json madame.repaint.word)
     const word = tr(M.word) || '', parts = [...word].filter((ch) => ch.trim());
-    parts.forEach((ch, i) => g.etw.wait(0.25 + i * (M.time / (parts.length + 2)), () => { g.mv.slam(ch, '', 0.5); sfx.thud?.(0); g.post.shake(0.5); }));
+    parts.forEach((ch, i) => g.tweens.wait(0.25 + i * (M.time / (parts.length + 2)), () => { g.mv.slam(ch, '', 0.7); sfx.thud?.(0); g.post.shake(0.5); }));
+    g.tweens.wait(M.time * 0.8, () => g.mv.slam(word, '', 1.8));   // (then the whole of it, held: user 2026-10-22, too fast to read; real time, as her change is)
     // she runs like wet paint, and is painted in again, changed (her drawing dissolving away and back)
     g.tweens.run(M.time * 0.45, (e) => { this.u.dissolve.value = e; this.inner.scale.y = 1 + e * 0.15; }, { onDone: () => {
       this.setStage(n); this.inner.scale.set(1, 1, 1);

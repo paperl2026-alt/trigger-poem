@@ -206,6 +206,7 @@ export class Actor {
     this.kinPh?.unfollow(this.root);   // (the place it walked in)
     this.root.parent && this.root.parent.remove(this.root);
     if (this.shadowM) this.shadowM.parent && this.shadowM.parent.remove(this.shadowM);
+    if (this.chain) { this.chain.removeFromParent(); this.chain.geometry.dispose(); this.chain.material.dispose(); this.chain = null; }   // (a chandelier's chain)
     this.dm.dispose();
     this.mesh.material.dispose();
     this.mesh.geometry.dispose();
@@ -449,6 +450,11 @@ export class Enemy extends Actor {
       P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.disguise || this.frames.idle || this.frames.walk || [this.def.first])[0]);
       this.u.outlineOn.value = 0; this.statueReady = ready;
       if (!this.frames.disguise) { this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; }   // (disguise: not stone - a thing of the place, as it is: the gallery's door)
+      if (bp.hang) {   // (hanging from the ceiling on its chain: the chandelier - user 2026-10-22)
+        const top = lv.ceilAt(s.z), y0 = P.y + this.h * 0.97, L = Math.max(0.1, top - y0);
+        this.chain = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, L, 6), new THREE.MeshBasicMaterial({ color: 0x2a1e14 }));
+        this.chain.position.set(P.x, y0 + L / 2, P.z); this.game.world.scene.add(this.chain);
+      }
       if (s.wake != null) tw.wait(s.wake, () => this.wake());
       return;
     }
@@ -1108,6 +1114,11 @@ export class Enemy extends Actor {
       if (!this.alive) return;
       this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
       if (this.def.thaw) this.thaw();   // (frozen in ice, R86: the block bursts)
+      if (this.chain) {   // (its chain snaps: it drops and floats free)
+        const ch = this.chain; this.chain = null;
+        g.tweens.to(ch.position, { y: ch.position.y + 1.2 }, 0.4, { ease: Ease.outQuad, onDone: () => { ch.removeFromParent(); ch.geometry.dispose(); ch.material.dispose(); } });
+        g.etw.to(P, { y: P.y - (this.bp.hang.drop ?? 0.8) }, 0.7, { ease: Ease.outBack }); sfx.clang?.();
+      }
       if (this.frames.disguise) {
         this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); this.blendT = 0.55;
         this.inner.scale.set(1.12, 0.84, 1); g.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.5, { ease: Ease.outBack });

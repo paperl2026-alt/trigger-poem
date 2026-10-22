@@ -195,7 +195,7 @@
   - `phantoms: { n, shuffle, hits }`：出场后站在 n - 1 个幻影（`Phantom`：同一张图、同样的动作、偏一个位置）中间；幻影挨打只闪不掉血，挨 hits 下化掉；真身每掉 shuffle 的血，所有人淡出、重新排位置淡入；真身死了幻影一起化掉；幻影不算这一波的怪（`checkWave`）；
   - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
 - 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
-- 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）；怪的 `frames.disguise` 有的话摆设不是灰石头，而是那件东西正常的样子（画廊尽头的门 `door_mouth`、R83 的吊灯 / 展示铠甲 `<variant>_disguise`，和醒来那帧同一张画布）：醒来先抖 `params.shudder`（1.1）秒、越抖越厉害、身上掉灰（`shuddering`，期间还是摆设），再换成 `rise` / `idle` 那帧、交叉淡化放慢到 0.55 秒（`blendT`）、压扁弹起、溅墨、吼一声。
+- 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量, wakeOf: 种类 }`（近的先；`wakeOf` 只叫醒那一种）裂开活过来（`Enemy.wake`）；吊灯 `params.hang`：摆着时一根链子连到天花板（`Actor.chain`），醒来链子断、往下掉 `drop` 米再飘（`sway`），挂着没醒的不算这一波的怪（`checkWave`）——`ep1_rework.py chandeliers` 把每站的吊灯挪到第 0 波、挂在天花板下，原来那一波开始时 `wakeOf: chandelier` 叫醒；怪的 `frames.disguise` 有的话摆设不是灰石头，而是那件东西正常的样子（画廊尽头的门 `door_mouth`、R83 的吊灯 / 展示铠甲 `<variant>_disguise`，和醒来那帧同一张画布）：醒来先抖 `params.shudder`（1.1）秒、越抖越厉害、身上掉灰（`shuddering`，期间还是摆设），再换成 `rise` / `idle` 那帧、交叉淡化放慢到 0.55 秒（`blendT`）、压扁弹起、溅墨、吼一声。
 - 进场的门（`Enemy` 构造）：`from: door / stairs` 的门洞沿镜头朝向不到 `layout.json monster.doorAhead`（6）米（在镜头背后或身边）就换最远的一扇够远的门，没有就不走门（从远处走进来）。
 - 种类自己的颜色：enemies.json `tint` + `tintAmt`（每帧压上去，冻住时除外：巨影）；`thaw`：冻在冰块里的样子醒来时冰块炸开（冷库的丧尸）。
 - 波次条目 `from: 'painting', painting: <画的机关 id>`：从墙上那幅画里出来（画同时翻成空画布）：先是一团小小的黑影从画布上渗出来、胀到原大，再落到它的位置（`x`、`z`，配 `free`）、震一下、颜色回来（画室的四个影）。enemies.json `bossBar`：活着时 HUD 顶上是它自己的血条（`hud.boss`），死了收起；`params.sway: [米, 速度]`：扔东西的怪站着时左右滑 / 飘（不是一动不动的靶子）。
@@ -335,7 +335,8 @@
 
 ## MV 导演（`src/battle/mv.js`，Game 的 `mv`；数值 `tuning/combat.json mv`）
 - 跟着音乐打拍子：`audio.js musicBeat()`（录好的曲子用 `sounds.json music.<名字>.bpm`，`offset` 第一拍前的秒数；合成曲用自己的 bpm）。每拍一个小脉冲（色差一踢、前景闪粉），每小节强一点；强度乘停留点预设的 `mv`。
-- 零件（画在 overlay 上）：`wall` 一个词一行行重复铺满全屏、每行一种颜色、左右交错滚；`slam` 镀铬 + 糖果色渐变的大标题砸进画面中间、后面三层错位的影子；`popups` 假系统弹窗一个叠一个（YAMERO 的弹窗瀑布）；`label` 红底白字标签条横穿；`tunnel` 爱心一层层从中间冲向镜头；`phone` 画面挤成中间一条竖屏、两边黑底上竖排大字。
+- 零件（画在 overlay 上）：`wall` 一个词一行行重复铺满全屏、每行一种颜色、左右交错滚；`slam` 镀铬 + 糖果色渐变的大标题砸进画面中间、后面两层不动的淡影子，长的缩到屏宽（它画在后期之后的 HUD 场景里：拍子的色差、故障不压在字上——2026-10-22 用户：红蓝的字糊得看不清）；`popups` 假系统弹窗一个叠一个（YAMERO 的弹窗瀑布）；`label` 红底白字标签条横穿；`tunnel` 爱心一层层从中间冲向镜头；`phone` 画面挤成中间一条竖屏、两边黑底上竖排大字。
+- 要读的一段话不用砸字：`hud.gl.note(日期, 文字, 秒)`（glhud.js `Note`）在 HUD 上举起一张纸，深色正文按词 / 按字折行（标点不放行首），默认按字数停 4.5～9 秒（腐蜜夫人日记的真相）。
 - 什么时候：Fever 满 → `overdrive`（几秒内每小节一面字墙、爱心隧道、标签条，脉冲加强）；进新小关 → 爱心隧道；连击每 `comboEvery` → 标签条；有人残血（`lowHp`）→ 毒电波：画面扭曲加强、隔几秒一阵故障 + 像素化、错误弹窗（`text/ui.json mvToxic`）；Boss 变身 → 她名字的字墙；其余由演出指令 `mv` 在关卡数据里写。
 
 ## 危险提示、预警、挨打残留（DESIGN「攻击分三种」「攻击将至的预警」「挨打留视觉残留」）

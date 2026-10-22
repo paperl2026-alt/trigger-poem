@@ -898,6 +898,45 @@ class Damage {
   }
 }
 
+// ---------------------------------------------------------------- a page held up to be read (the lady's diary: its date and that day's
+// words; user 2026-10-22: the slammed truth was a blur of red and blue and gone too fast): paper, dark ink, plain letters, wrapped, drawn
+// after the picture's effects (no colour split, no glitch over it), held as long as it takes to read
+class Note {
+  constructor(hud) { this.hud = hud; this.m = null; this.t = 0; this.life = 0; }
+  show(date, text, life) {
+    this.drop();
+    const c = document.createElement('canvas'), x = c.getContext('2d'), CW = 1400, pad = 64, fs = 60, words = /\s/.test(text);
+    x.font = `700 ${fs}px ${FONT}`;
+    const lines = []; let cur = '';
+    for (const p of words ? text.split(/(\s+)/) : [...text]) {   // (wrapped by words, or by characters for Chinese and Japanese)
+      if (cur && x.measureText(cur + p).width > CW - pad * 2 && !/^[。，、！？!?,.…」』）)]/.test(p)) { lines.push(cur.trim()); cur = p.trimStart(); } else cur += p;   // (no line starting with a stop)
+    }
+    if (cur.trim()) lines.push(cur.trim());
+    const dh = date ? fs * 1.1 : 0, lh = fs * 1.45;
+    c.width = CW; c.height = Math.ceil(pad * 2 + dh + lines.length * lh);
+    x.fillStyle = '#f3e6c8'; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = 'rgba(150,100,50,0.18)'; for (let i = 0; i < 60; i++) x.fillRect(Math.random() * c.width, Math.random() * c.height, 4 + Math.random() * 14, 2 + Math.random() * 6);
+    x.strokeStyle = '#8a6a48'; x.lineWidth = 6; x.strokeRect(3, 3, c.width - 6, c.height - 6);
+    x.textBaseline = 'top';
+    if (date) { x.fillStyle = '#9a1a2a'; x.font = `900 ${Math.round(fs * 0.85)}px ${FONT}`; x.fillText(date, pad, pad * 0.8); }
+    x.fillStyle = '#24161a'; x.font = `700 ${fs}px ${FONT}`;
+    lines.forEach((l, i) => x.fillText(l, pad, pad + dh + i * lh));
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    this.m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: t, transparent: true, depthTest: false, depthWrite: false, opacity: 0 }));
+    this.m.renderOrder = 86; this.m.frustumCulled = false; this.m.userData.ar = c.height / c.width; this.hud.g.add(this.m);
+    this.t = 0; this.life = life ?? Math.min(9, Math.max(4.5, 2 + [...text].length * (words ? 0.06 : 0.2)));
+  }
+  drop() { if (!this.m) return; this.m.removeFromParent(); this.m.material.map.dispose(); this.m.material.dispose(); this.m.geometry.dispose(); this.m = null; }
+  update(dt) {
+    if (!this.m) return;
+    this.t += dt; const L = this.hud.L, t = this.t, k = Math.min(1, t / 0.3), out = Math.max(0, Math.min(1, (this.life - t) / 0.5));
+    if (t >= this.life) { this.drop(); return; }
+    const w = Math.min(L.W * 0.62, L.H * 1.0);
+    this.m.scale.set(w, w * this.m.userData.ar, 1); this.m.position.set(L.W / 2, L.H * 0.75 + (1 - k) * L.H * 0.03, 0); this.m.rotation.z = -0.015;
+    this.m.material.opacity = Math.min(k, out) * 0.97;
+  }
+}
+
 // ---------------------------------------------------------------- the whole HUD
 export class HudGL {
   constructor(game) {
@@ -914,6 +953,7 @@ export class HudGL {
     this.stickers = new Stickers(this);
     this.holdUI = new Hold(this);
     this.alerts = new Alerts(this);
+    this.notes = new Note(this);
     this.visible = true;
     // a close look (Game.cine): black bars come in top and bottom; the HUD steps back but the lines (stickers) and the warning overlay
     this.cine = 0; this.cineHid = null;
@@ -949,6 +989,7 @@ export class HudGL {
     this.damage.add({ heal: slot, t: performance.now() }, x, y, n, false, '#1aa86a', '+');
   }
   hold(kind, opt) { this.holdUI.show(kind, opt); }
+  note(date, text, life) { this.notes.show(date, text, life); }
   update(dt, t) {
     const g = this.game;
     this.L.set(g.W, g.H, g.G.frame, this.B.scale ?? 1);
@@ -964,6 +1005,7 @@ export class HudGL {
     this.stickers.update(dt, t);
     this.alerts.update(dt, t);
     this.holdUI.update(dt, t);
+    this.notes.update(dt);
     this.cineUpdate(dt);
   }
   cineUpdate(dt) {
