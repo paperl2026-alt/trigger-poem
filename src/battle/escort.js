@@ -4,7 +4,10 @@
 // and its own ring (fx.lock 'guard'); the monsters of the stop make for it instead of the girls (Enemy: game.escort.goal()); when it gets
 // to the end of its way the stop is won. Owned by Game (game.escort).
 //   station escort: { who: soul | <picture key>, path: [[x, y, z], ...], speed, hp, share (of a hit the girls take too), zoom (degrees
-//                     narrower), h (its size), name, door: { at: [x, y, z], h } }
+//                     narrower), h (its size), name, door: { at: [x, y, z], h }, oneShot (every monster down in one shot), touch (what
+//                     a monster getting to it takes - it is spent on it), gap (no monster comes in nearer to it than this),
+//                     follow: { dist, y, lead, lookY, ease } (the camera walks along beside it, dist metres off on the side it started
+//                     on, looking lead metres ahead of it), look: { tint, tintAmt, outlineW } (how the monsters that go for it look) }
 // door: where it is going, in sight from the start - a doorway of light standing alone out in the open (no wall: user 2026-10-22, a
 // door that was nowhere in the place opened after it; "if it turns into a door, no wall"), an arch drawn in light, a faint glow inside,
 // motes rising at its foot. When the thing gets there every monster is gone at once and nothing more comes (user 2026-10-22: it got
@@ -17,6 +20,7 @@ import { tr } from '../core/i18n.js';
 import { FR } from '../core/particles.js';
 
 const K = () => T.combat.escort;
+const FOLLOW_C = new THREE.Vector3(), FOLLOW_L = new THREE.Vector3();
 
 export class Escort {
   constructor(game) { this.g = game; this.on = false; }
@@ -37,7 +41,15 @@ export class Escort {
     } else {
       const t = tex[E.who], m = new THREE.Mesh(new THREE.PlaneGeometry(h * t.image.width / t.image.height, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
       this.root.add(m); this.sprite = m;
+      // (a soft light behind her: she stands out from the field)
+      const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c = cv.getContext('2d'), gr = c.createRadialGradient(64, 64, 4, 64, 64, 64);
+      gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(0.4, 'rgba(255,240,210,0.45)'); gr.addColorStop(1, 'rgba(255,220,170,0)'); c.fillStyle = gr; c.fillRect(0, 0, 128, 128);
+      const ht = new THREE.CanvasTexture(cv); ht.colorSpace = THREE.SRGBColorSpace;
+      this.shine = new THREE.Mesh(new THREE.PlaneGeometry(h * 1.5, h * 1.5), new THREE.MeshBasicMaterial({ map: ht, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+      this.shine.position.set(0, 0, -0.05); m.add(this.shine);   // (behind her, turning with her)
     }
+    // the camera beside her (follow): on the side of her way the stop's camera is on
+    if (E.follow) { const tg = this.curve.getTangentAt(0), cp = w.camPos; this.fside = (-tg.z * (cp.x - this.pos.x) + tg.x * (cp.z - this.pos.z)) >= 0 ? 1 : -1; }
     if (E.door) this.makeDoor(E.door);
     this.lock = g.fx.lock('guard', -1);   // (the view narrows and darkens at the edges like a scope: the shot, tuning/shots.json escort)
     g.combat = true; g.escortName = tr(E.name || '') || null;
@@ -71,7 +83,10 @@ export class Escort {
   // something got to it: it takes the blow, and the girls with it (their bond with it: share)
   hit(dmg, from) {
     const g = this.g;
-    if (!this.on || this.done || this.hurtT > 0) return;
+    if (!this.on || this.done) return;
+    // (a monster that gets to it is spent on it: it bursts there - user 2026-10-22, its bar should drop a lot, the girls' with it)
+    if (this.E.touch && from?.def && from.alive) { dmg = this.E.touch; from.alive = false; g.fx.puff(from.root.position, 10, 0xd8c8b0, 1.2); g.fx.ink(this.pos.clone(), 10, 1.2, 0x9a2a6a); from.dispose(); }
+    if (this.hurtT > 0 && !this.E.touch) return;
     this.hp = Math.max(0, this.hp - dmg); this.hurtT = 0.4; this.flash = 1;
     sfx.hurt?.(); g.post.shake(0.6); g.fx.star(this.pos.clone(), 1.2, [1, 0.5, 0.6]);
     for (const p of g.players) if (p.state !== 'down' && p.state !== 'away' && (p.slot === 0 || g.p2on())) p.damage?.(dmg * (this.E.share ?? K().share));
@@ -92,6 +107,13 @@ export class Escort {
       if (this.s >= this.len - 0.01) this.arrive();
     }
     this.root.position.copy(this.pos); this.root.position.y += Math.sin(t * 2.2) * 0.08;
+    const F = this.E.follow;
+    if (F && !g.cineOn && !g.walkOn) {   // (walking along beside her, looking a little ahead of her)
+      const w = g.world, tg = this.curve.getTangentAt(Math.min(1, this.s / this.len)), k = 1 - Math.exp(-dt * (F.ease ?? 1.6)), sd = this.fside;
+      FOLLOW_C.set(this.pos.x - tg.z * sd * F.dist, F.y ?? 1.7, this.pos.z + tg.x * sd * F.dist);
+      FOLLOW_L.set(this.pos.x + tg.x * (F.lead ?? 2), F.lookY ?? 1.1, this.pos.z + tg.z * (F.lead ?? 2));
+      w.camPos.lerp(FOLLOW_C, k); w.lookAt.lerp(FOLLOW_L, k);
+    }
     if (this.core) {
       const k = 1 + Math.sin(t * 5) * 0.08 + this.flash * 0.6;
       this.halo.scale.setScalar(k); this.halo2.scale.setScalar(1 + Math.sin(t * 2.6) * 0.15);
@@ -101,6 +123,7 @@ export class Escort {
     }
     if (this.door && !this.done && Math.random() < dt * 10) { const d = this.door.at; g.fx.wAdd.emit({ x: d.x + (Math.random() - 0.5) * 1.6, y: 0.2, z: d.z + (Math.random() - 0.5) * 0.6, vy: 0.7, life: 1.4, size: 0.07, size1: 0.01, color: [1, 0.92, 0.65], a: 0.9, a1: 0, frame: FR.GLOW }); }   // (the way home: motes of light at the door's foot)
     if (this.sprite) { this.sprite.lookAt(g.world.camera.position); this.sprite.material.color.setRGB(1, 1 - this.flash * 0.6, 1 - this.flash * 0.6); }
+    if (this.shine) this.shine.scale.setScalar(1 + Math.sin(t * 3) * 0.05 + this.flash * 0.3);
     const c = g.world.project(this.pos), b = { x0: c.x - 40, x1: c.x + 40, y0: c.y - 40, y1: c.y + 40 };
     this.lock?.set(c.x, g.H - c.y, Math.max(40, g.H * 0.05), 1 - this.hp / this.maxHp, t, 9, b, this.pos);
     g.hud.boss(g.escortName, this.hp / this.maxHp);
@@ -120,9 +143,10 @@ export class Escort {
       g.tweens.wait(1.0, () => this.end());
     } });
   }
+  // (every monster out there struck down at once: they die where they stand, in a flash - user 2026-10-22)
   clearOut() {
     const g = this.g;
-    for (const a of g.actors) if (a.alive && a.def) { a.alive = false; g.fx.puff(a.root.position, 6, 0xd8c8b0, 1); a.dispose(); }
+    for (const a of [...g.actors]) if (a.alive && a.def && !a.prop) { if (a.die && a.state !== 'statue') a.die('mantra', { uv: { u: 0.5, v: 0.5 } }); else { a.alive = false; g.fx.puff(a.root.position, 6, 0xd8c8b0, 1); a.dispose(); } }
   }
   end() {
     const g = this.g, w = g.world;

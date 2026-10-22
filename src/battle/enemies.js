@@ -382,9 +382,10 @@ export class Enemy extends Actor {
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
     // an escort stop (escort.js): it comes in along the guarded thing's way, far off, and goes for it, not for the girls
     this.escortT = !!(game.escort?.going && !s.forGirls);
+    if (this.escortT && game.escort.E?.look) this.look = game.escort.E.look;   // (dark against the field, a thick edge: escort.js)
     if (this.escortT && s.free) { const q = game.escort.pos; this.goal.set(q.x, 0, q.z); }
     if (world.fit && !s.free && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop' && s.from !== 'statue') {   // (flyers: their hovering spot, below)
-      const ML = T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
+      const ML = world.monsterLayout?.() ?? T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
       s = { ...s, x: q.x, z: q.z };
       const Cm = game.shot?.compose, front = Cm?.front && floorAt(world, game, (Cm.zone ? Cm.zone[0] + (Cm.zone[1] - Cm.zone[0]) * (this.targetSlot ? rr([0.55, 0.95]) : rr([0.05, 0.45])) : 0.5) * game.W, Cm.front * game.H);
@@ -409,7 +410,7 @@ export class Enemy extends Actor {
       const c = world.camPos, ceil = lv.ceilAt(c.z - 6);
       this.home = new THREE.Vector3(c.x + rnd(-bp.homeX, bp.homeX), Math.min(ceil - bp.ceilingGap, rr(bp.homeY)), c.z - rr(bp.homeZ));
       if (s.free && this.escortT) { const q = game.escort.pos; this.home.set(q.x + rnd(-2, 2), rr(bp.homeY) + 1, q.z + rnd(-2, 2)); }
-      else if (world.fit) world.fit(this.home, def.h, this.w * 0.8, true, { far: T.layout.monster.spawnFar, min: T.layout.monster.spawnMin });
+      else if (world.fit) { const ML = world.monsterLayout?.() ?? T.layout.monster; world.fit(this.home, def.h, this.w * 0.8, true, { far: ML.spawnFar, min: ML.spawnMin }); }
       // a painted station: stay in front of the painted walls and inside the picture
       if (world.plates) {
         const d = Math.min(c.z - this.home.z, world.maxZ() * rnd(0.6, 0.9));
@@ -581,7 +582,8 @@ export class Enemy extends Actor {
     this.invul = Math.max(0, this.invul - dt);
     if (this.def.evade) this.updateEvade(dt);
     if (this.def.bossBar && this.alive && this.state !== 'statue') g.hud.boss(tr(this.def.name || ''), this.hp / this.maxHp);   // (a stage of the boss: its own bar - user 2026-10-22)
-    if (this.def.tint && this.state !== 'statue' && !(this.kick?.freeze > 0)) { this.u.tint.value.set(this.def.tint); this.u.tintAmt.value = this.def.tintAmt ?? 0.5; }   // (a kind of its own colour: the Great Shadow - not the shadows' drawing only bigger, user 2026-10-22)
+    const TN = this.look || this.def;
+    if (TN.tint && this.state !== 'statue' && !(this.kick?.freeze > 0)) { this.u.tint.value.set(TN.tint); this.u.tintAmt.value = TN.tintAmt ?? 0.5; }   // (a kind of its own colour: the Great Shadow - not the shadows' drawing only bigger, user 2026-10-22)
     else if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
     if (this.dashPending && !this.moving && ['walk', 'stand', 'hover', 'hide'].includes(this.state)) { this.dashPending = false; this.dash(); }
     this.hurtT -= dt;
@@ -662,7 +664,7 @@ export class Enemy extends Actor {
     const col = wind ? (this.mark === 'hide' ? 0xb04dff : this.mark === 'kill' ? 0xff2a4a : 0xffa040) : this.aimedT > 0 ? 0xff5a6a : 0xffffff;
     const beat = 0.5 + 0.5 * Math.sin(t * (6 + p * 18));
     U.outlineCol.value.setHex(col).lerp(TELL_W.setRGB(1, 1, 1), wind ? (1 - beat) * 0.5 : this.aimedT > 0 ? 0.35 * beat : 0);
-    U.outlineW.value = wind ? 1.15 + p * 0.9 + beat * 0.2 : this.aimedT > 0 ? 1.3 : 1;
+    U.outlineW.value = (wind ? 1.15 + p * 0.9 + beat * 0.2 : this.aimedT > 0 ? 1.3 : 1) * (this.look?.outlineW ?? 1);
     if (wind && !this.glinted && this.timer < 0.14) {
       this.glinted = true; const fr = this.def.glintAt || this.bp.throwFrom || [0.5, 0.82];
       g.fx.glint(this.uvToWorld(fr[0], fr[1]), col, this.mark ? 1.2 : 0.8); sfx.tink?.(0);
@@ -1014,6 +1016,7 @@ export class Enemy extends Actor {
       const k = this.bp.hitPush?.[info.kind] ?? this.bp.hitPush?.rifle ?? 0.04;
       P.x += dx / d * k; P.z += dz / d * k;
     }
+    if (this.escortT && this.game.escort.going && this.game.escort.E.oneShot) dmg = Math.max(dmg, this.hp);   // (an escort: one shot each - escort.js)
     info.dealt = dmg;
     this.damage(dmg, info.kind, info);
   }
@@ -1117,7 +1120,7 @@ export class Enemy extends Actor {
       if (this.chain) {   // (its chain snaps: it drops and floats free)
         const ch = this.chain; this.chain = null;
         g.tweens.to(ch.position, { y: ch.position.y + 1.2 }, 0.4, { ease: Ease.outQuad, onDone: () => { ch.removeFromParent(); ch.geometry.dispose(); ch.material.dispose(); } });
-        g.etw.to(P, { y: P.y - (this.bp.hang.drop ?? 0.8) }, 0.7, { ease: Ease.outBack }); sfx.clang?.();
+        g.etw.to(P, { y: Math.max(0.9, P.y - (this.bp.hang.drop ?? 0.8)) }, 0.7, { ease: Ease.outBack }); sfx.clang?.();
       }
       if (this.frames.disguise) {
         this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); this.blendT = 0.55;

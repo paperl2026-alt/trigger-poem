@@ -24,7 +24,7 @@
       "x0": -5.0,
       "x1": 5.0,
       "z0": 6,
-      "z1": -15.6,
+      "z1": -20.1,
       "h": 4.2,
       "bay": 5.4,
       "tile": 5.4,
@@ -43,8 +43,8 @@
         {
           "id": "d1",
           "wall": "left",
-          "z0": -6.78,
-          "z1": -4.98,
+          "z0": -11.28,
+          "z1": -9.48,
           "y0": 0,
           "y1": 2.6,
           "depth": 3,
@@ -53,8 +53,8 @@
         {
           "id": "d2",
           "wall": "right",
-          "z0": -11.78,
-          "z1": -10.78,
+          "z0": -16.28,
+          "z1": -15.28,
           "y0": 0,
           "y1": 2.3,
           "depth": 3,
@@ -64,21 +64,21 @@
     },
     "props": [
       { "k": "prop/ep1_shop1", "h": 1.05, "x": -3.15, "z": 0.5 },
-      { "k": "prop/ep1_shop2", "h": 1.0, "x": -3.33, "z": -6.5 },
-      { "k": "prop/ep1_shop3", "h": 1.2, "x": 3.7, "z": -9 },
-      { "k": "prop/ep1_shop4", "h": 1.9, "x": -4.26, "z": -12 }
+      { "k": "prop/ep1_shop2", "h": 1.0, "x": -3.33, "z": -11.0 },
+      { "k": "prop/ep1_shop3", "h": 1.2, "x": 3.7, "z": -13.5 },
+      { "k": "prop/ep1_shop4", "h": 1.9, "x": -4.26, "z": -16.5 }
     ],
     "decals": [
       { "k": "ep1/d_drip1", "on": "right", "z": -3, "y": 2.9, "w": 1.2, "anomaly": true },
-      { "k": "ep1/d_peel", "on": "left", "z": -6, "y": 2.2, "w": 0.9, "anomaly": true },
-      { "k": "ep1/d_puddle", "on": "floor", "x": 0.6, "z": -4, "w": 1.4, "anomaly": true },
-      { "k": "ep1/d_web", "on": "left", "z": -10, "y": 3.0, "w": 1.0, "anomaly": true },
-      { "k": "ep1/d_asobo", "on": "right", "z": -13, "y": 1.8, "w": 1.3, "anomaly": true }
+      { "k": "ep1/d_peel", "on": "left", "z": -10.5, "y": 2.2, "w": 0.9, "anomaly": true },
+      { "k": "ep1/d_puddle", "on": "floor", "x": 0.6, "z": -8.5, "w": 1.4, "anomaly": true },
+      { "k": "ep1/d_web", "on": "left", "z": -14.5, "y": 3.0, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_asobo", "on": "right", "z": -17.5, "y": 1.8, "w": 1.3, "anomaly": true }
     ],
     "stations": {
       "sh1": {
         "cam": [3.8, 1.7, 4.2],
-        "look": [-3.2, -0.4, -12],
+        "look": [-3.2, -0.4, -16.5],
         "covers": [{ "k": "cover/ep1_shop1", "side": -1 }, { "k": "cover/ep1_shop2", "side": 1 }],
         "waves": [
           [
@@ -86,7 +86,7 @@
               "t": 0.6,
               "type": "ghoul",
               "x": 0.0,
-              "z": -14,
+              "z": -18.5,
               "from": "door",
               "sprite": "ghoul",
               "hp": 5040,
@@ -98,25 +98,29 @@
             }
           ],
           [
-            { "t": 0, "type": "scoopling", "x": -3.33, "z": -8, "from": "door", "way": "d1" },
-            { "t": 0.6, "type": "teacup", "x": 3.33, "z": -8.5, "from": "wall" },
-            { "t": 1.2, "type": "scoopling", "x": 0.0, "z": -9, "from": "door", "way": "d1" },
-            { "t": 2.0, "type": "doily", "count": 12, "x": 0.0, "z": -9, "y": 2.4, "spread": 4.4, "every": 0.12, "from": "ceiling" },
-            { "t": 3.0, "type": "teacup", "x": -2.22, "z": -9, "from": "door", "way": "d1" },
-            { "t": 3.6, "type": "scoopling", "x": 2.22, "z": -8.5, "from": "door", "way": "d2" },
-            { "kills": 5, "turn": { "to": 1, "from": [0, 1.2, -6], "hit": true, "dur": 2.2 }, "mutate": true }
+            { "t": 0, "type": "scoopling", "x": -3.33, "z": -12.5, "from": "door", "way": "d1" },
+            { "t": 0.6, "type": "teacup", "x": 3.33, "z": -13.0, "from": "wall" },
+            { "t": 1.2, "type": "scoopling", "x": 0.0, "z": -13.5, "from": "door", "way": "d1" },
+            { "t": 2.0, "type": "doily", "count": 12, "x": 0.0, "z": -13.5, "y": 2.4, "spread": 4.4, "every": 0.12, "from": "ceiling" },
+            { "t": 3.0, "type": "teacup", "x": -2.22, "z": -13.5, "from": "door", "way": "d1" },
+            { "t": 3.6, "type": "scoopling", "x": 2.22, "z": -13.0, "from": "door", "way": "d2" },
+            {
+              "kills": 5,
+              "turn": { "to": 1, "from": [0, 1.2, -10.5], "hit": true, "dur": 2.2 },
+              "mutate": true
+            }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -3.33, "z": -8, "from": "door", "way": "d1" },
-            { "t": 1.0, "type": "ghoul", "x": 3.33, "z": -8.5, "from": "door", "way": "d2" }
+            { "t": 0, "type": "ghoul", "x": -3.33, "z": -12.5, "from": "door", "way": "d1" },
+            { "t": 1.0, "type": "ghoul", "x": 3.33, "z": -13.0, "from": "door", "way": "d2" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0.0, "z": -8.5, "y": 2.6, "spread": 4.6, "every": 0.12, "from": "ceiling" }
+            { "t": 0, "type": "bat", "count": 16, "x": 0.0, "z": -13.0, "y": 2.6, "spread": 4.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": 3.7, "z": -8, "from": "ceiling" },
-            { "t": 0.8, "type": "crawler", "x": -2.96, "z": -8, "move": "zigzag", "from": "door", "way": "d2" },
-            { "t": 1.8, "type": "crawler", "x": 2.22, "z": -9, "move": "burrow", "from": "door", "way": "d1" }
+            { "t": 0, "type": "doll", "x": 3.7, "z": -12.5, "from": "ceiling" },
+            { "t": 0.8, "type": "crawler", "x": -2.96, "z": -12.5, "move": "walk", "from": "door", "way": "d2" },
+            { "t": 1.8, "type": "crawler", "x": 2.22, "z": -13.5, "move": "burrow", "from": "door", "way": "d1" }
           ]
         ],
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
@@ -124,35 +128,36 @@
       "sh2": {
         "via": [[0, 1.35, 0.5]],
         "cam": [-3.8, 1.7, -3.5],
-        "look": [3.2, -0.4, -20],
+        "look": [3.2, -0.4, -24.5],
         "covers": [{ "k": "cover/ep1_shop3", "side": -1 }, { "k": "cover/ep1_shop4", "side": 1 }],
         "waves": [
           [
-            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -11, "from": "door", "way": "d2" },
-            { "type": "chandelier", "x": 0.0, "z": -10.5, "from": "statue", "y": 2.1, "wake": 1.6 }
+            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -15.5, "from": "door", "way": "d2" },
+            { "type": "chandelier", "x": 0.0, "z": -15.0, "from": "statue", "y": 1.86, "wake": 1.6 }
           ],
           [
-            { "t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -11.5 }
+            { "t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -16.0 }
           ],
           [
-            { "t": 0, "type": "doll", "x": -3.33, "z": -11, "from": "ceiling" },
-            { "t": 0.5, "type": "doll", "x": 3.33, "z": -11.5, "from": "ceiling" },
-            { "t": 1.5, "type": "crawler", "x": 0.0, "z": -12.6, "move": "zigzag" }
+            { "t": 0, "type": "doll", "x": -3.33, "z": -15.5, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 3.33, "z": -16.0, "from": "ceiling" },
+            { "t": 1.5, "type": "crawler", "x": 0.0, "z": -17.1, "move": "walk" }
           ],
           [
-            { "t": 0, "type": "bat", "count": 20, "x": 0.0, "z": -12, "y": 2.6, "spread": 4.8, "every": 0.12, "from": "ceiling" },
-            { "t": 3, "type": "ghoul", "x": 0.0, "z": -12, "move": "charge", "from": "door", "way": "d2" }
+            { "t": 0, "type": "bat", "count": 20, "x": 0.0, "z": -16.5, "y": 2.6, "spread": 4.8, "every": 0.12, "from": "ceiling" },
+            { "t": 3, "type": "ghoul", "x": 0.0, "z": -16.5, "move": "charge", "from": "door", "way": "d2" }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -3.7, "z": -11, "from": "wall" },
-            { "t": 0.6, "type": "ghoul", "x": 3.7, "z": -11.5, "from": "wall" },
-            { "t": 1.5, "type": "crawler", "x": 0.0, "z": -11, "move": "walk", "from": "door", "way": "d1" }
+            { "t": 0, "type": "ghoul", "x": -3.7, "z": -15.5, "from": "wall" },
+            { "t": 0.6, "type": "ghoul", "x": 3.7, "z": -16.0, "from": "wall" },
+            { "t": 1.5, "type": "crawler", "x": 0.0, "z": -15.5, "move": "walk", "from": "door", "way": "d1" }
           ]
         ],
-        "exit": { "to": [0, 1.1, -12.4], "look": [0, 1.0, -20] },
+        "exit": { "to": [0, 1.1, -16.9], "look": [0, 1.0, -24.5] },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_gallery": {
     "panels": true,
@@ -300,8 +305,8 @@
         "waves": [
           [
             { "t": 0, "type": "ghoul", "x": -2.22, "z": -9, "move": "hop", "from": "door", "way": "d1" },
-            { "t": 0.8, "type": "crawler", "x": 2.22, "z": -9.5, "move": "zigzag", "from": "melt" },
-            { "type": "chandelier", "x": 0.0, "z": -11, "from": "statue", "y": 2.3 }
+            { "t": 0.8, "type": "crawler", "x": 2.22, "z": -9.5, "move": "walk", "from": "melt" },
+            { "type": "chandelier", "x": 0.0, "z": -11, "from": "statue", "y": 2.06 }
           ],
           [
             { "t": 1, "type": "bat", "count": 12, "x": 0.0, "z": -10, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door", "way": "d2" },
@@ -327,8 +332,8 @@
         "waves": [
           [
             { "t": 0, "type": "shadow", "x": 0.0, "z": -18, "from": "ceiling" },
-            { "type": "chandelier", "x": -1.78, "z": -15, "from": "statue", "y": 2.3 },
-            { "type": "chandelier", "x": 1.78, "z": -15.5, "from": "statue", "y": 2.3 }
+            { "type": "chandelier", "x": -1.78, "z": -15, "from": "statue", "y": 2.06 },
+            { "type": "chandelier", "x": 1.78, "z": -15.5, "from": "statue", "y": 2.06 }
           ],
           [
             { "t": 0, "type": "ghoul", "x": -2.22, "z": -16, "from": "melt" },
@@ -336,7 +341,7 @@
             { "t": 2, "type": "bat", "count": 12, "x": 0.0, "z": -17, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "door", "way": "d1" }
           ],
           [
-            { "t": 1, "type": "crawler", "x": 0.0, "z": -16, "move": "zigzag", "from": "melt" },
+            { "t": 1, "type": "crawler", "x": 0.0, "z": -16, "move": "walk", "from": "melt" },
             { "t": 0.3, "wake": 1, "wakeOf": "chandelier" },
             { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ],
@@ -358,7 +363,7 @@
           [
             { "t": 0, "type": "ghoul", "x": -2.22, "z": -1.5, "from": "door", "way": "d1" },
             { "t": 0.6, "type": "ghoul", "x": 2.22, "z": -1.0, "from": "door", "move": "hop", "way": "d2" },
-            { "t": 1.4, "type": "crawler", "x": 0.0, "z": -2, "from": "melt", "move": "zigzag" }
+            { "t": 1.4, "type": "crawler", "x": 0.0, "z": -2, "from": "melt", "move": "walk" }
           ],
           [
             { "t": 0, "type": "bat", "count": 12, "x": 0.0, "z": -1, "y": 2.6, "spread": 3.0, "every": 0.12, "from": "ceiling" },
@@ -382,7 +387,8 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } },
         "exit": { "to": [0, 1.1, -17.6], "look": [0, 1.0, -26] }
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_garden": {
     "panels": true,
@@ -489,11 +495,11 @@
           [
             { "t": 0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
             { "t": 0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
-            { "t": 0, "type": "crawler", "x": -2.33, "z": -7, "move": "zigzag", "from": "door", "way": "d1" },
+            { "t": 0, "type": "crawler", "x": -2.33, "z": -7, "move": "walk", "from": "door", "way": "d1" },
             { "t": 0.8, "type": "crawler", "x": 2.33, "z": -7.5, "move": "burrow", "from": "door", "way": "d2" },
             { "kills": 2, "wake": 1 },
             { "kills": 3, "wake": 1 },
-            { "type": "chandelier", "x": 0.0, "z": -10, "from": "statue", "y": 3.9 }
+            { "type": "chandelier", "x": 0.0, "z": -10, "from": "statue", "y": 3.66 }
           ],
           [
             { "t": 0.3, "act": "ritual", "of": "dollkin", "n": 4, "r": 2.0, "x": 0.2, "z": -4.5 },
@@ -533,7 +539,7 @@
           ],
           [
             { "t": 0, "type": "armor", "x": -2.18, "z": -11, "from": "door", "way": "d1", "morph": { "burst": { "type": "crawler", "n": 2 } } },
-            { "t": 0.8, "type": "crawler", "x": 1.56, "z": -10, "move": "zigzag", "from": "door", "way": "d2" },
+            { "t": 0.8, "type": "crawler", "x": 1.56, "z": -10, "move": "walk", "from": "door", "way": "d2" },
             { "t": 1.6, "type": "crawler", "x": -0.62, "z": -10, "move": "burrow", "from": "door", "way": "d1" }
           ],
           [
@@ -553,7 +559,8 @@
         "exit": { "to": [0, 1.1, -11.4], "look": [0, 1.0, -20] },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_cold": {
     "panels": true,
@@ -577,7 +584,7 @@
       "x0": -4.0,
       "x1": 4.0,
       "z0": 6,
-      "z1": -12.0,
+      "z1": -16.5,
       "h": 3.6,
       "bay": 4.5,
       "tile": 4.5,
@@ -589,13 +596,13 @@
       "end": ["ep1/cold_end2"],
       "ceil": ["ep1/cold_ceil1", "ep1/cold_ceil2", "ep1/cold_ceil3"],
       "door": { "frame": "ep1/door4_room", "leaf": "ep1/door4_leaf", "w": 2.1, "x": 1.15 },
-      "holes": [{ "on": "right", "z": -9.5, "y": 0.6, "size": 1.2 }],
+      "holes": [{ "on": "right", "z": -14.0, "y": 0.6, "size": 1.2 }],
       "ways": [
         {
           "id": "d1",
           "wall": "left",
-          "z0": -7.1,
-          "z1": -6.1,
+          "z0": -11.6,
+          "z1": -10.6,
           "y0": 0,
           "y1": 2.3,
           "depth": 3,
@@ -605,9 +612,9 @@
     },
     "props": [
       { "k": "prop/ep1_cold1", "h": 1.0, "x": -2.67, "z": -3 },
-      { "k": "prop/ep1_cold2", "h": 2.2, "x": 3.02, "z": -6 },
-      { "k": "prop/ep1_cold3", "h": 0.7, "x": -2.13, "z": -8.5 },
-      { "k": "prop/ep1_cold1", "h": 1.0, "x": 2.67, "z": -10 }
+      { "k": "prop/ep1_cold2", "h": 2.2, "x": 3.02, "z": -10.5 },
+      { "k": "prop/ep1_cold3", "h": 0.7, "x": -2.13, "z": -13.0 },
+      { "k": "prop/ep1_cold1", "h": 1.0, "x": 2.67, "z": -14.5 }
     ],
     "gimmicks": [
       {
@@ -616,7 +623,7 @@
         "on": "stand",
         "x": 0,
         "y": 0,
-        "z": -11.2,
+        "z": -15.7,
         "w": 1.0,
         "ry": 0,
         "station": "co2",
@@ -624,7 +631,7 @@
         "do": [
           { "sfx": "creak" },
           { "gone": true },
-          { "t": 0.6, "spawn": [{ "type": "ghoul", "x": 0, "z": -11, "from": "pop" }] }
+          { "t": 0.6, "spawn": [{ "type": "ghoul", "x": 0, "z": -15.5, "from": "pop" }] }
         ]
       },
       {
@@ -633,7 +640,7 @@
         "kx": "ep1/nb_candle",
         "on": "left",
         "y": 1.6,
-        "z": -5.0,
+        "z": -9.5,
         "w": 0.85,
         "hp": 1,
         "station": "co1",
@@ -645,7 +652,7 @@
         "kx": "ep1/nb_candle",
         "on": "right",
         "y": 1.6,
-        "z": -7.0,
+        "z": -11.5,
         "w": 0.85,
         "hp": 1,
         "station": "co1",
@@ -657,7 +664,7 @@
         "kx": "ep1/nb_candle",
         "on": "left",
         "y": 1.6,
-        "z": -9.0,
+        "z": -13.5,
         "w": 0.85,
         "hp": 1,
         "station": "co1",
@@ -668,7 +675,7 @@
         "k": "prop/ep1_cold2",
         "on": "stand",
         "x": 3.64,
-        "z": -7.9,
+        "z": -12.4,
         "w": 1.56,
         "ry": -90,
         "hp": 5,
@@ -679,55 +686,55 @@
       }
     ],
     "decals": [
-      { "k": "ep1/d_bones", "on": "floor", "x": -0.6, "z": -5, "w": 1.3, "anomaly": true },
-      { "k": "ep1/d_zutto", "on": "left", "z": -7, "y": 1.6, "w": 1.4, "anomaly": true },
-      { "k": "ep1/d_crack", "on": "right", "z": -9, "y": 2.0, "w": 1.0, "anomaly": true },
-      { "k": "ep1/d_cones", "on": "floor", "x": 0.8, "z": -9.5, "w": 1.0, "anomaly": true }
+      { "k": "ep1/d_bones", "on": "floor", "x": -0.6, "z": -9.5, "w": 1.3, "anomaly": true },
+      { "k": "ep1/d_zutto", "on": "left", "z": -11.5, "y": 1.6, "w": 1.4, "anomaly": true },
+      { "k": "ep1/d_crack", "on": "right", "z": -13.5, "y": 2.0, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_cones", "on": "floor", "x": 0.8, "z": -14.0, "w": 1.0, "anomaly": true }
     ],
     "stations": {
       "co1": {
         "cam": [2.8, 1.7, 3.8],
-        "look": [-2.2, -0.4, -14],
+        "look": [-2.2, -0.4, -18.5],
         "covers": [{ "k": "cover/ep1_cold1", "side": -1 }, { "k": "cover/ep1_cold2", "side": 1 }],
         "waves": [
           [
             { "t": 0, "type": "ghoul", "x": -2.84, "z": -3, "from": "statue" },
             { "t": 0, "type": "ghoul", "x": 2.84, "z": -3.5, "from": "statue" },
-            { "t": 0, "type": "ghoul", "x": 0.0, "z": -4.5, "from": "statue" },
+            { "t": 0, "type": "ghoul", "x": 0.0, "z": -9.0, "from": "statue" },
             { "t": 1.2, "wake": 1 },
             { "kills": 1, "wake": 1 },
             { "kills": 2, "wake": 1 }
           ],
           [
-            { "t": 0, "type": "crawler", "x": 0.0, "z": -9.0, "move": "burrow" },
-            { "t": 0.8, "type": "crawler", "x": -1.78, "z": -7.5, "move": "zigzag", "from": "door", "way": "d1" },
-            { "t": 1.6, "type": "bat", "count": 12, "x": 0.0, "z": -8.5, "y": 2.2, "spread": 3.6, "every": 0.12, "from": "ceiling" }
+            { "t": 0, "type": "crawler", "x": 0.0, "z": -13.5, "move": "burrow" },
+            { "t": 0.8, "type": "crawler", "x": -1.78, "z": -12.0, "move": "walk", "from": "door", "way": "d1" },
+            { "t": 1.6, "type": "bat", "count": 12, "x": 0.0, "z": -13.0, "y": 2.2, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -9, "from": "ceiling" }
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -13.5, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -2.49, "z": -8, "from": "ceiling" },
+            { "t": 0, "type": "doll", "x": -2.49, "z": -12.5, "from": "ceiling" },
             {
               "t": 0.6,
               "type": "ghoul",
               "x": 1.78,
-              "z": -9.0,
+              "z": -13.5,
               "move": "hop",
               "morph": {
-                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 2.6, "hp": 2400 } }
+                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
               }
             },
             {
               "t": 1.6,
               "type": "ghoul",
               "x": -1.07,
-              "z": -8.5,
+              "z": -13.0,
               "move": "charge",
               "from": "door",
               "way": "d1",
               "morph": {
-                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 2.6, "hp": 2400 } }
+                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
               }
             }
           ]
@@ -739,7 +746,7 @@
       "co2": {
         "via": [[0, 1.35, 0]],
         "cam": [-2.8, 1.7, -3.5],
-        "look": [2.2, -0.4, -16],
+        "look": [2.2, -0.4, -20.5],
         "covers": [{ "k": "cover/ep1_cold3", "side": -1 }, { "k": "cover/ep1_cold4", "side": 1 }],
         "waves": [
           [
@@ -749,7 +756,7 @@
                 "id": "vent",
                 "type": ["crawler", "ghoul"],
                 "side": 1,
-                "z": -9.5,
+                "z": -14.0,
                 "every": 3.2,
                 "first": 0.8,
                 "sealAfter": 5,
@@ -757,27 +764,28 @@
                 "remind": 14
               }
             },
-            { "t": 0.4, "type": "doll", "x": -2.84, "z": -10, "from": "ceiling" },
+            { "t": 0.4, "type": "doll", "x": -2.84, "z": -14.5, "from": "ceiling" },
             {
               "t": 1.2,
               "type": "ghoul",
               "x": -1.78,
-              "z": -9,
+              "z": -13.5,
               "from": "door",
               "move": "hop",
               "way": "d1",
               "morph": {
-                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 2.6, "hp": 2400 } }
+                "puddle": { "into": "ghoul", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
               }
             },
-            { "t": 2.0, "type": "doll", "x": 2.84, "z": -10.5, "from": "ceiling" }
+            { "t": 2.0, "type": "doll", "x": 2.84, "z": -15.0, "from": "ceiling" }
           ]
         ],
-        "exit": { "to": [1.15, 1.1, -9.0], "look": [1.15, 1.0, -16] },
+        "exit": { "to": [1.15, 1.1, -13.5], "look": [1.15, 1.0, -20.5] },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "dark": 0.85
+    "dark": 0.85,
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_oven": {
     "panels": true,
@@ -801,7 +809,7 @@
       "x0": -4.25,
       "x1": 4.25,
       "z0": 6,
-      "z1": -9.3,
+      "z1": -18.3,
       "h": 4.0,
       "bay": 5.1,
       "tile": 5.1,
@@ -819,8 +827,8 @@
         {
           "id": "d1",
           "wall": "left",
-          "z0": -6.39,
-          "z1": -5.39,
+          "z0": -15.39,
+          "z1": -14.39,
           "y0": 0,
           "y1": 2.3,
           "depth": 3,
@@ -828,7 +836,7 @@
         }
       ]
     },
-    "props": [{ "k": "prop/ep1_oven1", "h": 1.0, "x": -2.67, "z": -2 }, { "k": "prop/ep1_oven2", "h": 1.0, "x": 2.83, "z": -4.5 }],
+    "props": [{ "k": "prop/ep1_oven1", "h": 1.0, "x": -2.67, "z": -2 }, { "k": "prop/ep1_oven2", "h": 1.0, "x": 2.83, "z": -13.5 }],
     "gimmicks": [
       {
         "id": "crayon1",
@@ -847,7 +855,7 @@
         "kx": "ep1/crayon2_x",
         "on": "left",
         "y": 1.75,
-        "z": -4.2,
+        "z": -13.2,
         "w": 0.75,
         "station": "ov1",
         "do": [{ "flip": true }, { "sfx": "panel" }]
@@ -858,7 +866,7 @@
         "kx": "ep1/crayon3_x",
         "on": "right",
         "y": 1.75,
-        "z": -3.4,
+        "z": -12.4,
         "w": 0.75,
         "station": "ov1",
         "do": [{ "flip": true }, { "sfx": "panel" }]
@@ -869,7 +877,7 @@
         "kx": "ep1/crayon4_x",
         "on": "right",
         "y": 1.75,
-        "z": -4.6,
+        "z": -13.6,
         "w": 0.75,
         "station": "ov1",
         "do": [{ "flip": true }, { "sfx": "panel" }]
@@ -880,7 +888,7 @@
         "on": "stand",
         "x": -1.67,
         "y": 2.2,
-        "z": -14.8,
+        "z": -23.8,
         "w": 0.4,
         "station": "ov2",
         "do": [{ "sfx": "shatter" }, { "gone": true }]
@@ -891,7 +899,7 @@
         "on": "stand",
         "x": 1.67,
         "y": 2.2,
-        "z": -14.8,
+        "z": -23.8,
         "w": 0.4,
         "station": "ov2",
         "do": [{ "sfx": "shatter" }, { "gone": true }]
@@ -902,7 +910,7 @@
         "on": "stand",
         "x": -1.67,
         "y": 0.5,
-        "z": -14.8,
+        "z": -23.8,
         "w": 0.4,
         "station": "ov2",
         "do": [{ "sfx": "shatter" }, { "gone": true }]
@@ -913,7 +921,7 @@
         "on": "stand",
         "x": 1.67,
         "y": 0.5,
-        "z": -14.8,
+        "z": -23.8,
         "w": 0.4,
         "station": "ov2",
         "do": [{ "sfx": "shatter" }, { "gone": true }]
@@ -923,41 +931,41 @@
         "k": "prop/ep1_oven2",
         "on": "stand",
         "x": 2.85,
-        "z": -4.8,
+        "z": -13.8,
         "w": 1.5,
         "station": "ov1",
         "do": [{ "blast": { "r": 3.4, "dmg": 900, "vfx": "explosion" } }, { "say": "stagger" }]
       }
     ],
     "decals": [
-      { "k": "ep1/d_cherries", "on": "floor", "x": 0.4, "z": -6, "w": 1.0, "anomaly": true },
-      { "k": "ep1/d_drip4", "on": "right", "z": -8, "y": 3.0, "w": 1.2, "anomaly": true },
-      { "k": "ep1/d_smile", "on": "left", "z": -9, "y": 1.7, "w": 0.9, "anomaly": true }
+      { "k": "ep1/d_cherries", "on": "floor", "x": 0.4, "z": -15.0, "w": 1.0, "anomaly": true },
+      { "k": "ep1/d_drip4", "on": "right", "z": -17.0, "y": 3.0, "w": 1.2, "anomaly": true },
+      { "k": "ep1/d_smile", "on": "left", "z": -18.0, "y": 1.7, "w": 0.9, "anomaly": true }
     ],
     "stations": {
       "ov1": {
         "cam": [3.05, 1.7, 3.5],
-        "look": [-2.45, -0.4, -12],
+        "look": [-2.45, -0.4, -21.0],
         "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -7.5, "hp": 1008, "from": "ceiling" }
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -16.5, "hp": 1008, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -1.67, "z": -6.5, "move": "zigzag", "from": "door", "way": "d1" },
-            { "t": 0.6, "type": "crawler", "x": 1.67, "z": -7, "move": "burrow", "from": "door", "way": "d1" },
-            { "t": 1.4, "type": "ghoul", "x": -2.33, "z": -7.5, "move": "hop", "from": "door", "way": "d1" },
-            { "t": 2, "type": "ghoul", "x": 2.33, "z": -7.5, "from": "door", "way": "d1" }
+            { "t": 0, "type": "crawler", "x": -1.67, "z": -15.5, "move": "walk", "from": "door", "way": "d1" },
+            { "t": 0.6, "type": "crawler", "x": 1.67, "z": -16.0, "move": "burrow", "from": "door", "way": "d1" },
+            { "t": 1.4, "type": "ghoul", "x": -2.33, "z": -16.5, "move": "hop", "from": "door", "way": "d1" },
+            { "t": 2, "type": "ghoul", "x": 2.33, "z": -16.5, "from": "door", "way": "d1" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -2.67, "z": -8, "from": "ceiling" },
-            { "t": 0.5, "type": "doll", "x": 2.67, "z": -8.5, "from": "ceiling" },
-            { "t": 1.5, "type": "bat", "count": 12, "x": 0.0, "z": -8, "y": 2.2, "spread": 4.0, "every": 0.12, "from": "ceiling" }
+            { "t": 0, "type": "doll", "x": -2.67, "z": -17.0, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 2.67, "z": -17.5, "from": "ceiling" },
+            { "t": 1.5, "type": "bat", "count": 12, "x": 0.0, "z": -17.0, "y": 2.2, "spread": 4.0, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -8.5, "from": "ceiling" },
-            { "t": 1, "type": "ghoul", "x": -1.67, "z": -7, "from": "door", "way": "d1" },
-            { "t": 2, "type": "ghoul", "x": 1.67, "z": -7, "move": "charge", "from": "door", "way": "d1" }
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -17.5, "from": "ceiling" },
+            { "t": 1, "type": "ghoul", "x": -1.67, "z": -16.0, "from": "door", "way": "d1" },
+            { "t": 2, "type": "ghoul", "x": 1.67, "z": -16.0, "move": "charge", "from": "door", "way": "d1" }
           ]
         ],
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
@@ -965,37 +973,38 @@
       "ov2": {
         "via": [[0, 1.35, 0]],
         "cam": [-3.05, 1.7, -3],
-        "look": [2.45, -0.4, -15],
+        "look": [2.45, -0.4, -24.0],
         "covers": [{ "k": "cover/ep1_oven3", "side": -1 }, { "k": "cover/ep1_oven4", "side": 1 }],
         "waves": [
           [
-            { "t": 0.6, "type": "crawler", "x": -1.67, "z": -7, "move": "zigzag", "from": "door", "way": "d1" },
-            { "t": 1.2, "type": "crawler", "x": 1.67, "z": -7.5, "move": "zigzag", "from": "door", "way": "d1" },
-            { "type": "chandelier", "x": 0.0, "z": -8.5, "from": "statue", "y": 1.9, "wake": 1.2 }
+            { "t": 0.6, "type": "crawler", "x": -1.67, "z": -16.0, "move": "walk", "from": "door", "way": "d1" },
+            { "t": 1.2, "type": "crawler", "x": 1.67, "z": -16.5, "move": "walk", "from": "door", "way": "d1" },
+            { "type": "chandelier", "x": 0.0, "z": -17.5, "from": "statue", "y": 1.66, "wake": 1.2 }
           ],
           [
-            { "t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1 }
+            { "t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -17.0, "side": 1 }
           ],
           [
-            { "t": 0, "type": "ghoul", "x": -2.33, "z": -7.5, "move": "hop", "from": "wall" },
-            { "t": 0.6, "type": "ghoul", "x": 2.33, "z": -6.3 },
-            { "t": 1.5, "type": "bat", "count": 16, "x": 0.0, "z": -8, "y": 2.3, "spread": 4.0, "every": 0.12, "from": "door", "way": "d1" }
+            { "t": 0, "type": "ghoul", "x": -2.33, "z": -16.5, "move": "hop", "from": "wall" },
+            { "t": 0.6, "type": "ghoul", "x": 2.33, "z": -15.3 },
+            { "t": 1.5, "type": "bat", "count": 16, "x": 0.0, "z": -17.0, "y": 2.3, "spread": 4.0, "every": 0.12, "from": "door", "way": "d1" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -2.67, "z": -8.5, "from": "ceiling" },
-            { "t": 0.5, "type": "doll", "x": 2.67, "z": -8.5, "from": "ceiling" },
-            { "t": 1.2, "type": "crawler", "x": 0.0, "z": -6.3, "move": "burrow" }
+            { "t": 0, "type": "doll", "x": -2.67, "z": -17.5, "from": "ceiling" },
+            { "t": 0.5, "type": "doll", "x": 2.67, "z": -17.5, "from": "ceiling" },
+            { "t": 1.2, "type": "crawler", "x": 0.0, "z": -15.3, "move": "burrow" }
           ],
           [
-            { "t": 0, "type": "armor", "x": 0.0, "z": -8.5, "move": "walk", "from": "door", "way": "d1" },
-            { "t": 1, "type": "ghoul", "x": -2.0, "z": -7.5, "from": "door", "way": "d1" },
-            { "t": 1.6, "type": "ghoul", "x": 2.0, "z": -6.3, "move": "hop" }
+            { "t": 0, "type": "armor", "x": 0.0, "z": -17.5, "move": "walk", "from": "door", "way": "d1" },
+            { "t": 1, "type": "ghoul", "x": -2.0, "z": -16.5, "from": "door", "way": "d1" },
+            { "t": 1.6, "type": "ghoul", "x": 2.0, "z": -15.3, "move": "hop" }
           ]
         ],
-        "exit": { "to": [0, 1.1, -6.6], "look": [0, 1.0, -15] },
+        "exit": { "to": [0, 1.1, -15.6], "look": [0, 1.0, -24.0] },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_pit": {
     "panels": true,
@@ -1054,7 +1063,7 @@
           ],
           [
             { "t": 0, "type": "bat", "count": 16, "x": 0, "z": -7, "y": 3.0, "spread": 2.6, "every": 0.12, "from": "wall" },
-            { "t": 2, "type": "crawler", "x": 0, "z": -6, "move": "zigzag", "from": "wall" }
+            { "t": 2, "type": "crawler", "x": 0, "z": -6, "move": "walk", "from": "wall" }
           ],
           [
             { "t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow" }
@@ -1082,7 +1091,7 @@
           [
             { "t": 0, "type": "crawler", "x": -0.6, "z": -13, "move": "burrow", "from": "wall" },
             { "t": 0.5, "type": "crawler", "x": 0.6, "z": -13, "move": "burrow", "from": "wall" },
-            { "t": 1, "type": "crawler", "x": 0, "z": -14, "move": "zigzag", "from": "wall" },
+            { "t": 1, "type": "crawler", "x": 0, "z": -14, "move": "walk", "from": "wall" },
             { "t": 1.8, "type": "ghoul", "x": 0, "z": -15, "move": "charge", "from": "wall" }
           ]
         ],
@@ -1149,7 +1158,8 @@
         "do": [{ "gate": true }, { "sfx": "tear" }, { "gone": true }],
         "mark": true
       }
-    ]
+    ],
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_nursery": {
     "panels": true,
@@ -1168,7 +1178,7 @@
       "x0": -4.0,
       "x1": 4.0,
       "z0": 6,
-      "z1": -12.0,
+      "z1": -16.5,
       "h": 3.6,
       "bay": 4.5,
       "tile": 4.5,
@@ -1183,8 +1193,8 @@
         {
           "id": "d1",
           "wall": "right",
-          "z0": -5.3,
-          "z1": -4.3,
+          "z0": -9.8,
+          "z1": -8.8,
           "y0": 0,
           "y1": 2.3,
           "depth": 3,
@@ -1204,19 +1214,19 @@
     },
     "props": [
       { "k": "prop/ep1_nursery1", "h": 1.0, "x": -2.67, "z": -2.5 },
-      { "k": "prop/ep1_nursery2", "h": 0.9, "x": 2.49, "z": -6 },
-      { "k": "prop/ep1_nursery3", "h": 0.8, "x": -2.31, "z": -9 }
+      { "k": "prop/ep1_nursery2", "h": 0.9, "x": 2.49, "z": -10.5 },
+      { "k": "prop/ep1_nursery3", "h": 0.8, "x": -2.31, "z": -13.5 }
     ],
     "decals": [
-      { "k": "ep1/d_zutto", "on": "left", "z": -5, "y": 1.6, "w": 1.4 },
-      { "k": "ep1/d_asobo2", "on": "right", "z": -8, "y": 1.7, "w": 1.3 },
+      { "k": "ep1/d_zutto", "on": "left", "z": -9.5, "y": 1.6, "w": 1.4 },
+      { "k": "ep1/d_asobo2", "on": "right", "z": -12.5, "y": 1.7, "w": 1.3 },
       { "k": "ep1/d_hand", "on": "right", "z": -2.5, "y": 1.2, "w": 0.9 },
-      { "k": "ep1/d_cones", "on": "floor", "x": 0.6, "z": -7, "w": 1.0 }
+      { "k": "ep1/d_cones", "on": "floor", "x": 0.6, "z": -11.5, "w": 1.0 }
     ],
     "stations": {
       "nu1": {
         "cam": [2.8, 1.7, 3.8],
-        "look": [-2.2, -0.4, -14],
+        "look": [-2.2, -0.4, -18.5],
         "covers": [{ "k": "cover/ep1_nursery1", "side": -1 }, { "k": "cover/ep1_nursery2", "side": 1 }],
         "waves": [
           [
@@ -1224,7 +1234,7 @@
               "t": 0,
               "type": "dollkin",
               "x": -2.84,
-              "z": -7,
+              "z": -11.5,
               "from": "wall",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
@@ -1232,7 +1242,7 @@
               "t": 0.4,
               "type": "dollkin",
               "x": 2.84,
-              "z": -7.5,
+              "z": -12.0,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1241,7 +1251,7 @@
               "t": 0.8,
               "type": "dollkin",
               "x": 0.0,
-              "z": -8,
+              "z": -12.5,
               "from": "wall",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
@@ -1249,12 +1259,12 @@
               "t": 1.2,
               "type": "dollkin",
               "x": -1.42,
-              "z": -8.5,
+              "z": -13.0,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
-            { "type": "chandelier", "x": 0.0, "z": -8, "from": "statue", "y": 1.5 }
+            { "type": "chandelier", "x": 0.0, "z": -12.5, "from": "statue", "y": 1.26 }
           ],
           [
             { "t": 0, "type": "doll", "x": -3.2, "z": -3, "from": "statue" },
@@ -1263,7 +1273,7 @@
               "t": 0.5,
               "type": "dollkin",
               "x": 0.0,
-              "z": -7,
+              "z": -11.5,
               "from": "door",
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1272,7 +1282,7 @@
               "t": 1,
               "type": "dollkin",
               "x": 1.42,
-              "z": -7.5,
+              "z": -12.0,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1281,14 +1291,14 @@
             { "kills": 2, "wake": 1 }
           ],
           [
-            { "t": 0, "type": "bat", "count": 16, "x": 0.0, "z": -8.5, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
+            { "t": 0, "type": "bat", "count": 16, "x": 0.0, "z": -13.0, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
             {
               "t": 0.6,
               "type": "dollkin",
               "x": -3.2,
-              "z": -7,
+              "z": -11.5,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1297,12 +1307,12 @@
               "t": 1.2,
               "type": "dollkin",
               "x": 3.2,
-              "z": -7.5,
+              "z": -12.0,
               "from": "door",
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
-            { "t": 1.8, "type": "doll", "x": 2.13, "z": -9, "from": "ceiling" },
+            { "t": 1.8, "type": "doll", "x": 2.13, "z": -13.5, "from": "ceiling" },
             { "t": 0.3, "wake": 1, "wakeOf": "chandelier" }
           ]
         ],
@@ -1311,7 +1321,7 @@
       "nu2": {
         "via": [[0, 1.35, 0]],
         "cam": [-2.8, 1.7, -3.5],
-        "look": [2.2, -0.4, -16],
+        "look": [2.2, -0.4, -20.5],
         "covers": [{ "k": "cover/ep1_nursery3", "side": -1 }, { "k": "cover/ep1_nursery4", "side": 1 }],
         "waves": [
           [
@@ -1319,7 +1329,7 @@
               "t": 0,
               "type": "dollkin",
               "x": -2.84,
-              "z": -9,
+              "z": -13.5,
               "from": "door",
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1328,7 +1338,7 @@
               "t": 0.3,
               "type": "dollkin",
               "x": 2.84,
-              "z": -9,
+              "z": -13.5,
               "from": "wall",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
@@ -1336,14 +1346,14 @@
               "t": 0.6,
               "type": "dollkin",
               "x": 0.0,
-              "z": -9.0,
+              "z": -13.5,
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
               "t": 0.9,
               "type": "dollkin",
               "x": -1.42,
-              "z": -10,
+              "z": -14.5,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1352,32 +1362,32 @@
               "t": 1.2,
               "type": "dollkin",
               "x": 1.42,
-              "z": -10,
+              "z": -14.5,
               "from": "door",
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             }
           ],
           [
-            { "t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -10.5, "minion": "dollkin", "every": 3, "max": 5 }
+            { "t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -15.0, "minion": "dollkin", "every": 3, "max": 5 }
           ],
           [
-            { "t": 0, "type": "doll", "x": -2.84, "z": -10, "from": "ceiling" },
-            { "t": 0.6, "type": "doll", "x": 2.84, "z": -10.5, "from": "ceiling" },
-            { "t": 0, "type": "doll", "x": 0.0, "z": -9.5, "from": "statue", "wake": 2.0 }
+            { "t": 0, "type": "doll", "x": -2.84, "z": -14.5, "from": "ceiling" },
+            { "t": 0.6, "type": "doll", "x": 2.84, "z": -15.0, "from": "ceiling" },
+            { "t": 0, "type": "doll", "x": 0.0, "z": -14.0, "from": "statue", "wake": 2.0 }
           ],
           [
-            { "t": 0, "type": "crawler", "x": -1.42, "z": -9, "move": "zigzag", "from": "door", "way": "d1" },
-            { "t": 0.8, "type": "crawler", "x": 1.42, "z": -9, "move": "burrow", "from": "door", "way": "d2" },
-            { "t": 1.5, "type": "bat", "count": 12, "x": 0.0, "z": -10, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
+            { "t": 0, "type": "crawler", "x": -1.42, "z": -13.5, "move": "walk", "from": "door", "way": "d1" },
+            { "t": 0.8, "type": "crawler", "x": 1.42, "z": -13.5, "move": "burrow", "from": "door", "way": "d2" },
+            { "t": 1.5, "type": "bat", "count": 12, "x": 0.0, "z": -14.5, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
-            { "t": 0, "type": "shadow", "x": 0.0, "z": -11, "from": "ceiling", "breakout": 0.45 },
+            { "t": 0, "type": "shadow", "x": 0.0, "z": -15.5, "from": "ceiling", "breakout": 0.45 },
             {
               "t": 1,
               "type": "dollkin",
               "x": -2.49,
-              "z": -9,
+              "z": -13.5,
               "from": "door",
               "way": "d2",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
@@ -1386,17 +1396,18 @@
               "t": 1.4,
               "type": "dollkin",
               "x": 2.49,
-              "z": -9,
+              "z": -13.5,
               "from": "door",
               "way": "d1",
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             }
           ]
         ],
-        "exit": { "to": [0, 1.1, -8.8], "look": [0, 1.0, -16] },
+        "exit": { "to": [0, 1.1, -13.3], "look": [0, 1.0, -20.5] },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_studio": {
     "panels": true,
@@ -1664,7 +1675,8 @@
         ]
       }
     },
-    "dark": 0.6
+    "dark": 0.6,
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   },
   "ep1_nether": {
     "panels": true,
@@ -1718,17 +1730,22 @@
       },
       "ne2": {
         "shot": "escort",
-        "cam": [-12.5, 3.4, 7.5],
-        "look": [2.5, 0.6, -27],
-        "covers": [{ "k": "cover/ep1_hall1", "side": -1 }, { "k": "cover/ep1_hall2", "side": 1 }],
+        "cam": [-8.52, 1.75, 4.19],
+        "look": [-8.4, 1.3, -2.67],
         "escort": {
           "who": "ep1/soul_child",
-          "path": [[-12.6, 0.9, -2.4], [-8.6, 0.9, -3.9], [-4.7, 0.9, -5.5], [-1.7, 0.9, -7.4]],
-          "speed": 0.55,
+          "path": [[-10.5, 1.2, -2.0], [-5.5, 1.2, -3.6], [-0.5, 1.2, -5.0], [4.5, 1.2, -6.2], [8.0, 1.2, -7.0]],
+          "speed": 0.48,
           "hp": 620,
-          "h": 1.15,
-          "loop": 1,
-          "door": { "at": [-0.6, 0, -8.6], "h": 4.4 },
+          "h": 2.4,
+          "loop": 0,
+          "door": { "at": [9.4, 0, -7.6], "h": 4.4 },
+          "oneShot": true,
+          "touch": 80,
+          "share": 0.3,
+          "gap": 7.0,
+          "follow": { "dist": 6.5, "y": 1.75, "lead": 2.2, "lookY": 1.3, "ease": 1.6 },
+          "look": { "tint": "#2a0a3a", "tintAmt": 0.45, "outlineW": 2.2 },
           "name": { "zh": "孩子的灵魂", "en": "THE CHILD'S SOUL", "ja": "子どもの魂" }
         },
         "on": {
@@ -1736,7 +1753,7 @@
             {
               "at": 0,
               "cam": {
-                "on": [-12.6, 0.9, -2.4],
+                "on": [-10.5, 1.2, -2.0],
                 "dist": 3.2,
                 "up": 0.2,
                 "hold": 2.6,
@@ -1768,30 +1785,24 @@
         },
         "waves": [
           [
-            { "type": "ghoul", "ahead": 6, "side": -3, "from": "burrow" },
-            { "type": "ghoul", "ahead": 9, "side": 3, "from": "burrow" },
-            { "type": "bat", "ahead": 5, "side": 2, "y": 3.2 }
+            { "type": "ghoul", "count": 3, "every": 1.1, "ahead": 8, "side": -2.5, "from": "burrow", "h": 2.94 },
+            { "type": "scoopling", "count": 3, "every": 0.9, "t": 1.6, "ahead": -7.5, "side": -3, "from": "burrow", "h": 1.47 }
           ],
           [
-            { "type": "scoopling", "count": 4, "ahead": 5, "side": -2.5, "from": "burrow" },
-            { "type": "crawler", "ahead": -2, "side": 1.5, "from": "burrow" },
-            { "type": "bat", "ahead": 8, "side": -2, "y": 3.4 },
-            { "type": "doll", "ahead": 12, "side": 4.5 }
+            { "type": "crawler", "count": 3, "every": 1.0, "ahead": -7.5, "side": -2, "from": "burrow", "h": 1.76 },
+            { "type": "ghoul", "count": 3, "every": 1.1, "t": 1.4, "ahead": 8.5, "side": -1.5, "from": "burrow", "h": 2.94 }
           ],
           [
-            { "type": "ghoul", "ahead": 3, "side": -3, "from": "burrow" },
-            { "type": "teacup", "count": 3, "ahead": 7, "side": 2.5, "from": "burrow" },
-            { "type": "bat", "count": 2, "ahead": 6, "side": 0, "y": 3.6 },
-            { "type": "crawler", "ahead": 10, "side": -1, "from": "burrow" }
+            { "type": "teacup", "count": 4, "every": 0.7, "ahead": 8, "side": -3.5, "from": "burrow", "h": 1.37 },
+            { "type": "ghoul", "count": 2, "every": 1.2, "t": 1.4, "ahead": -8, "side": -2.5, "from": "burrow", "h": 2.94 }
           ],
           [
-            { "type": "doll", "ahead": 9, "side": -4.5 },
-            { "type": "ghoul", "ahead": 4, "side": 3, "from": "burrow" },
-            { "type": "ghoul", "ahead": 6, "side": -2, "from": "burrow" },
-            { "type": "scoopling", "count": 3, "ahead": -3, "side": 2, "from": "burrow" }
+            { "type": "scoopling", "count": 3, "every": 0.8, "ahead": -8, "side": -1.5, "from": "burrow", "h": 1.47 },
+            { "type": "crawler", "count": 3, "every": 1.0, "t": 1.0, "ahead": 8, "side": -3, "from": "burrow", "h": 1.76 }
           ]
         ]
       }
-    }
+    },
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0 }
   }
 }

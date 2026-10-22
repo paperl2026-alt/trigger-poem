@@ -989,7 +989,12 @@ export class Game {
   spawnEnemy(s) {
     if (this.boss && (this.boss.grief || !this.boss.alive)) return null;   // (nothing more of hers once she is down: spawnProjectile)
     // an escort stop: a wave entry with ahead / side comes in along the guarded thing's way (escort.place), far off, as it is
-    if (this.escort.going && (s.ahead != null || s.side != null)) { const q = this.escort.place((s.ahead ?? 8) + (Math.random() - 0.5) * 2, (s.side ?? 0) + (Math.random() - 0.5) * 1.5); s = { ...s, x: q.x, z: q.z, free: true }; }
+    if (this.escort.going && (s.ahead != null || s.side != null)) {
+      const q = this.escort.place((s.ahead ?? 8) + (Math.random() - 0.5) * 2, (s.side ?? 0) + (Math.random() - 0.5) * 1.5), P = this.escort.pos, gap = this.S.escort.gap ?? 0;
+      const d = Math.hypot(q.x - P.x, q.z - P.z);   // (never right by it: time for the player to move the sight - user 2026-10-22)
+      if (gap && d < gap) { const k = gap / Math.max(0.01, d); q.x = P.x + (q.x - P.x) * k; q.z = P.z + (q.z - P.z) * k; }
+      s = { ...s, x: q.x, z: q.z, free: true };
+    }
     const to = this.mutated && C.enemies[s.type]?.mutatesTo;   // (after the house has turned: mutateAll)
     const e = new Enemy(this, to ? { ...s, type: to, sprite: undefined } : s); this.actors.push(e); return e;
   }

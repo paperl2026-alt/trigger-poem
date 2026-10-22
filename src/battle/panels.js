@@ -978,8 +978,10 @@ export class PanelWorld {
   // half width: the heroines stand at the sides) and inside the walls. A flyer (fly) also keeps between flyY of the screen height.
   // Numbers: tuning/layout.json monster; a station's "monsterFar" (metres) keeps them nearer still. Works for any station direction.
   // o: { far, min } = how deep a spawn may / must stand (monsters close in from there: DESIGN「敌人要逼上来」)
+  // tuning/layout.json monster, with the set's own over it (sets.json "monster": the first episode's are further off - user 2026-10-22)
+  monsterLayout() { return this.set?.monster ? { ...T.layout.monster, ...this.set.monster } : T.layout.monster; }
   fit(p, h, w, fly = false, o = {}) {
-    const M = T.layout.monster, c = this.camPos, f = FIT_F.copy(this.lookAt).sub(c);
+    const M = this.monsterLayout(), c = this.camPos, f = FIT_F.copy(this.lookAt).sub(c);
     const pitch = Math.atan2(f.y, Math.hypot(f.x, f.z));
     f.y = 0; f.normalize();
     const rt = FIT_R.set(-f.z, 0, f.x), d0 = tmpV.copy(p).sub(c);

@@ -112,7 +112,7 @@ def enter(wave, sid, ways, trick, far, rnd, k):
             if ways and rnd() < 0.5: e["from"] = "door"; e["way"] = ways[i % len(ways)]["id"]
         if trick == "shed" and ty == "ghoul" and e.get("hp"): e["morph"] = {"shed": {"type": "scoopling", "every": [2.5, 4.5], "max": 3}}
         if trick == "burst" and ty == "armor": e["morph"] = {"burst": {"type": "crawler", "n": 2}}
-        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 2.6, "hp": 2400}}}
+        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 3.4, "hp": 2400}}}
         if trick == "merge" and ty == "dollkin": e["morph"] = {"merge": {"with": "dollkin", "into": "doll", "after": 4}}
 
 def gallery_mouth(S):
@@ -205,6 +205,30 @@ def chandeliers(D, h):
                     else: w.append({"t": round(e.get("t", 0) + 0.3, 2), "wake": 1, "wakeOf": "chandelier"})
                     W[0].append(c)
 
+def deepen(S, dz, cut):
+    """(user 2026-10-22: the monsters too close to the girls - they should stand further off, and big) the room made dz metres longer
+    from depth cut on (the second stop's camera): everything deeper than cut moves dz further in - the far wall, its holes and doorways,
+    props, things on the walls, the stops' cameras, views and ways on, the monsters' spots"""
+    sh = lambda z: round(z - dz, 2) if z < cut else z
+    def pts(o):   # (points [x, y, z] under these keys, a list of them under via)
+        for k in ("cam", "look", "to", "from", "at"):
+            v = o.get(k)
+            if isinstance(v, list) and len(v) == 3 and all(isinstance(a, (int, float)) for a in v): v[2] = sh(v[2])
+        if isinstance(o.get("via"), list): o["via"] = [[a, b, sh(c)] for a, b, c in o["via"]]
+    def walk(o):
+        if isinstance(o, list):
+            for v in o: walk(v)
+        elif isinstance(o, dict):
+            if "z0" in o and "z1" in o and isinstance(o["z0"], (int, float)):   # (a span: moved whole)
+                if (o["z0"] + o["z1"]) / 2 < cut: o["z0"], o["z1"] = round(o["z0"] - dz, 2), round(o["z1"] - dz, 2)
+            elif isinstance(o.get("z"), (int, float)): o["z"] = sh(o["z"])
+            pts(o)
+            for k, v in o.items():
+                if isinstance(v, (list, dict)): walk(v)
+    H = S["hall"]; H["z1"] = round(H["z1"] - dz, 2)
+    for k in ("holes", "ways", "planks", "stairs", "shafts"): walk(H.get(k))
+    for k in ("props", "gimmicks", "decals", "stations"): walk(S.get(k))
+
 def places(D):
     import random
     R = random.Random(11)
@@ -217,6 +241,16 @@ def places(D):
         if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)
     chandeliers(D, packs.load(L / "enemies.json")["chandelier"]["h"])
+    # (user 2026-10-22: the monsters too close - further off, and big: levels/ep1/enemies.json h; the shallow second stops given room)
+    for sid, dz in (("ep1_shop", 4.5), ("ep1_cold", 4.5), ("ep1_nursery", 4.5), ("ep1_oven", 9.0)):
+        S = D[sid]; deepen(S, dz, list(S["stations"].values())[1]["cam"][2])
+    for sid, S in D.items():
+        if not isinstance(S, dict) or "stations" not in S: continue
+        S["monster"] = {"spawnMin": 8.0, "spawnFar": 12.0}
+        for st in S["stations"].values():
+            for w in st.get("waves", []):
+                for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)
+                    if e.get("move") == "zigzag": e["move"] = "walk"
 
 def main():
     f = L / "bosses.json"; B = packs.load(f)

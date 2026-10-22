@@ -1,5 +1,5 @@
 {
-  "_doc": "第 1 话关卡包的 enemies（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "_doc": "第 1 话关卡包的 enemies（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。（2026-10-22 用户：怪离玩家太近，应该摆远一些、比较大：普通怪 h 都放大到 1.4 倍、吊灯 1.15 倍；扔东西的停在 8 米外、飞的悬在 7.5～10 米外；不再 Z 字横滚）",
   "ghoul": {
     "beh": "walker",
     "name": { "zh": "冰淇淋丧尸", "en": "Gelato Ghoul", "ja": "ジェラートグール" },
@@ -7,7 +7,7 @@
     "variants": ["ghoul", "ghoul_b", "ghoul_c"],
     "hp": 1120,
     "enrage": 1.2,
-    "h": 1.5,
+    "h": 2.1,
     "speed": 1.56,
     "windup": 1.0,
     "poise": 50,
@@ -27,7 +27,8 @@
     },
     "moves": ["walk", "hop", "burrow"],
     "scar": ["bite", "splat"],
-    "scarColor": "#ffc8dc"
+    "scarColor": "#ffc8dc",
+    "params": {}
   },
   "bat": {
     "beh": "flyer",
@@ -36,8 +37,18 @@
     "variants": ["bat", "bat_b", "bat_c"],
     "hp": 4,
     "dmg": 5,
-    "params": { "homeX": 2.6, "swayX": 2.2, "swayY": 0.7, "wanderEvery": [0.35, 0.8], "wanderPull": 3.4, "hoverFirst": [2.5, 5.5], "hoverAgain": [4, 7] },
-    "h": 0.8,
+    "params": {
+      "homeX": 2.6,
+      "swayX": 2.2,
+      "swayY": 0.7,
+      "wanderEvery": [0.35, 0.8],
+      "wanderPull": 3.4,
+      "hoverFirst": [2.5, 5.5],
+      "hoverAgain": [4, 7],
+      "homeZ": [7.5, 10.0],
+      "homeNear": 6.5
+    },
+    "h": 1.12,
     "windup": 0.8,
     "poise": 14,
     "first": "fly0",
@@ -50,7 +61,7 @@
     "sprite": "chandelier",
     "variants": ["chandelier", "chandelier_b", "chandelier_c"],
     "hp": 1460,
-    "h": 1.6,
+    "h": 1.84,
     "windup": 1.1,
     "poise": 60,
     "first": "hover0",
@@ -67,7 +78,7 @@
       "throw": ["fire"],
       "hurt": ["hurt"]
     },
-    "params": { "hang": { "drop": 0.8 }, "sway": [1.2, 0.6] }
+    "params": { "hang": { "drop": 0.8 }, "sway": [1.2, 0.6], "stopDist": 8.0 }
   },
   "armor": {
     "beh": "walker",
@@ -75,7 +86,7 @@
     "sprite": "armor",
     "variants": ["armor", "armor_b", "armor_c"],
     "hp": 3640,
-    "h": 1.95,
+    "h": 2.73,
     "speed": 0.84,
     "windup": 1.4,
     "poise": 110,
@@ -94,7 +105,8 @@
     },
     "moves": ["walk", "walk", "charge"],
     "scar": "claw",
-    "elite": true
+    "elite": true,
+    "params": {}
   },
   "doll": {
     "beh": "thrower",
@@ -102,7 +114,7 @@
     "sprite": "doll",
     "variants": ["doll", "doll_b", "doll_c"],
     "hp": 1340,
-    "h": 1.4,
+    "h": 1.96,
     "windup": 1.0,
     "poise": 50,
     "first": "idle",
@@ -110,7 +122,8 @@
     "proj": "cherry",
     "burst": 3,
     "_doc": "摆在那里时（from statue）是一个普通的古董瓷娃娃坐在圣代杯里（frames.disguise，R85），醒来先抖、越抖越厉害，再慢慢化成怪（Enemy.wake）。",
-    "frames": { "disguise": ["disguise"], "hide": ["hide"], "rise": ["rise"], "idle": ["idle"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] }
+    "frames": { "disguise": ["disguise"], "hide": ["hide"], "rise": ["rise"], "idle": ["idle"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] },
+    "params": { "stopDist": 8.0 }
   },
   "crawler": {
     "beh": "walker",
@@ -119,15 +132,16 @@
     "sprite": "crawler",
     "variants": ["crawler", "crawler_b", "crawler_c"],
     "hp": 840,
-    "h": 0.9,
+    "h": 1.26,
     "speed": 2.76,
     "windup": 0.9,
     "poise": 25,
     "first": "walk0",
     "frames": { "idle": ["idle"], "walk": ["walk0", "walk1"], "crouch": ["crouch"], "leap": ["bite"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] },
-    "moves": ["walk", "zigzag", "burrow"],
+    "moves": ["walk", "walk", "burrow"],
     "scar": ["claw", "splat"],
-    "scarColor": "#e8a040"
+    "scarColor": "#e8a040",
+    "params": {}
   },
   "shadow": {
     "beh": "thrower",
@@ -135,13 +149,13 @@
     "sprite": "shadow",
     "variants": ["shadow", "shadow_b", "shadow_c"],
     "hp": 2240,
-    "h": 2.1,
+    "h": 2.94,
     "windup": 2.4,
     "poise": 75,
     "first": "hover0",
     "hides": false,
     "blast": { "dmg": 30, "vfx": "darkMagic", "charge": "darkCharge" },
-    "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterThrow": [2.6, 3.6], "standAfterRise": [1.2, 1.8] },
+    "params": { "threat": "heavy", "armor": ["enter", "windup", "thrown"], "standAfterThrow": [2.6, 3.6], "standAfterRise": [1.2, 1.8], "stopDist": 8.0 },
     "frames": {
       "hide": ["hover0"],
       "rise": ["hover0"],
@@ -193,16 +207,17 @@
     "variants": ["scoopling", "scoopling_b", "scoopling_c"],
     "hp": 480,
     "dashAt": 0.5,
-    "h": 0.75,
+    "h": 1.05,
     "speed": 1.9,
     "windup": 0.9,
     "poise": 20,
     "first": "walk0",
     "frames": { "idle": ["walk0"], "walk": ["walk0", "walk1"], "crouch": ["crouch"], "leap": ["leap"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] },
-    "moves": ["hop", "walk", "zigzag"],
+    "moves": ["hop", "walk", "walk"],
     "mutatesTo": "ghoul",
     "scar": "splat",
-    "scarColor": "#fff0c0"
+    "scarColor": "#fff0c0",
+    "params": {}
   },
   "teacup": {
     "beh": "walker",
@@ -211,16 +226,17 @@
     "variants": ["teacup", "teacup_b", "teacup_c"],
     "hp": 480,
     "dashAt": 0.5,
-    "h": 0.7,
+    "h": 0.98,
     "speed": 1.7,
     "windup": 0.9,
     "poise": 20,
     "first": "stand",
     "frames": { "idle": ["stand"], "walk": ["stand", "air"], "crouch": ["crouch"], "leap": ["leap"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] },
-    "moves": ["hop", "zigzag", "hop"],
+    "moves": ["hop", "walk", "hop"],
     "mutatesTo": "crawler",
     "scar": "splat",
-    "scarColor": "#a0602a"
+    "scarColor": "#a0602a",
+    "params": {}
   },
   "doily": {
     "beh": "flyer",
@@ -229,8 +245,18 @@
     "variants": ["doily", "doily_b", "doily_c"],
     "hp": 4,
     "dmg": 5,
-    "params": { "homeX": 2.6, "swayX": 2.2, "swayY": 0.7, "wanderEvery": [0.35, 0.8], "wanderPull": 3.4, "hoverFirst": [2.5, 5.5], "hoverAgain": [4, 7] },
-    "h": 0.65,
+    "params": {
+      "homeX": 2.6,
+      "swayX": 2.2,
+      "swayY": 0.7,
+      "wanderEvery": [0.35, 0.8],
+      "wanderPull": 3.4,
+      "hoverFirst": [2.5, 5.5],
+      "hoverAgain": [4, 7],
+      "homeZ": [7.5, 10.0],
+      "homeNear": 6.5
+    },
+    "h": 0.91,
     "windup": 0.8,
     "poise": 12,
     "first": "fly0",
@@ -355,14 +381,15 @@
     "variants": ["doll", "doll_b", "doll_c"],
     "hp": 530,
     "dashAt": 0.5,
-    "h": 0.85,
+    "h": 1.19,
     "speed": 1.8,
     "windup": 0.9,
     "poise": 20,
     "first": "idle",
     "frames": { "idle": ["idle"], "walk": ["idle", "rise"], "crouch": ["windup"], "leap": ["throw"], "bite": ["throw"], "recoil": ["hurt"], "hurt": ["hurt"] },
-    "moves": ["hop", "zigzag", "walk"],
-    "scar": "bite"
+    "moves": ["hop", "walk", "walk"],
+    "scar": "bite",
+    "params": {}
   },
   "door_mouth": {
     "beh": "thrower",

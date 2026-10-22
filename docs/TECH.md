@@ -180,7 +180,7 @@
 - 伤害随机（`weapon.vary` / `active.vary: [lo, hi]`：每一下各乘一个随机倍数，Fever 的伤害累计按平均算）：猫娘每发 38.5（地雷妹 7 发）× 1.2～1.8、镭射每跳 × 0.85～1.25（DESIGN「灵能攻击流」）。暴击按人（`weapon.crit: { rate, mul, lvRate, lvMul }`：准头 Fever 0～3 级的暴击率、倍率，熟练度每级加多少；没写的用 tuning/fever.json 和 economy.json mastery 的；`Fever.critRate` / `critMul`，`buildStats`）。
 
 ## 怪怎么逼近、场景破坏（`src/battle/enemies.js`、`src/battle/panels.js`）
-- 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`，波次写 `far` 能更远；2026-10-18 拉近到 5.5～8.5 米），再逼过来；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。
+- 出场：地上的怪和飞的怪至少站在 `tuning/layout.json monster.spawnMin` 米外（最多 `spawnFar`，波次写 `far` 能更远；2026-10-18 拉近到 5.5～8.5 米；场景自己的 `sets.json monster` 盖在上面，`PanelWorld.monsterLayout()`：第 1 话 8～12 米），再逼过来；第 1 话的房间加深用 `ep1_rework.py deepen(S, dz, cut)`（比第二站镜头更深的东西——尽头墙、墙上的洞和门洞、道具、墙上的机关、各站镜头 / 视线 / 去路、怪的位置——整体往里挪 dz 米）；波次写 `near: true` 就按原来的规矩（站在看得清的近处）。
 - 波次里单只怪还能写 `hp`（这一只的血量）、`tough: true`（不吃硬直、挨打不后退；怪的定义里也能写）。
 - 逐帧动画放慢、补帧（2026-10-20 用户：换帧太快，老游戏那样慢一倍、中间程序补）：`Enemy.tickAnim` 按 `combat.json anim.rate`（0.5）播；`setFrame` 换帧时旧帧进 `paper.js` 的 `map2`，`mixK` 在 `anim.blend` 秒里从 0 到 1，新旧两帧沿移动方向各拖一点残影交叉淡化。Z 字翻滚（`hop(zig)`）在它冲她那条线的两侧来回（摆幅 `rollSide`、每下前进 `rollStep`，`tuning/behaviors.json`）。
 - `move`（波次单独写 > 这种怪的 `moves`[第几个造型] > `move` > 按行为模板默认）：
@@ -360,6 +360,7 @@
 
 ## 远处护卫（`src/battle/escort.js`，Game 的 `escort`；数值 `tuning/combat.json escort`）
 - 站点 `escort: { who: soul | <图 key>, path: [[x,y,z]...], speed, hp, share, h, name, loop, door: { at, h } }`（`door`：要去的地方，一开始就看得见：一道立在空地上的光门（画布上画的拱形光，加色、不吃雾），门脚冒光点；到了：所有怪当场消散、不再出怪（`Game.escortDone` + `clearOut`），它飘进门里、门整个亮起来，再过这一站；2026-10-22 用户：灵魂太远、去哪不清楚、到了还刷怪、之后凭空开门 → 第 1 话的路线拉到镜头前 9～18 米，`ep1_soul.py`；它进了光门之后照旧是开门进夫人画室的那一步（2026-10-22 用户：开门的切入动画不要去掉）），预设 `escort`（两人拿狙击的姿势、退到两边只露肩膀以上；2026-10-22 起不再收窄视野、没有镜筒暗角：飞的怪都飞出视野了）。护卫时飞的怪俯冲向它、冲完回到它上方（不往镜头这边靠：用户 2026-10-22，怪不是都去打孩子了吗）。护卫目标沿 `path` 走，有自己的血条（Boss 条）和金色保护环（`fx.lock('guard')`）；走到头这一站就赢了（`Game.escortDone`，剩下的怪一起消失）。
+- 站点 escort 还可以写：`oneShot`（护卫期间冲它的怪一枪一个，`Enemy.hit`）、`touch`（怪碰到它就按这个扣、那只怪当场炸掉，`escort.hit`）、`gap`（出来的怪离它至少几米，`Game.spawnEnemy` 往外推）。预设 `escort` 现在是两人不上画面（`players.show: false`）、没有掩体、子弹无限（`ammo: infinite`）。`follow: { dist, y, lead, lookY, ease }`：镜头跟着它走（每帧把 `world.camPos` / `lookAt` 缓到它那条路的法线方向 `dist` 米外、看它前方 `lead` 米，站在站点镜头原来那一侧；特写时不动），站点的 `cam` / `look` 写成跟拍的起点（`ep1_soul.py` 算出来）；`look: { tint, tintAmt, outlineW }`：冲它的怪的样子（压暗的颜色、描边加粗倍数，`Enemy.look`，盖过种类的 `tint`）；它是图的话背后一团加色柔光。到了门边 `clearOut`：场上的怪当场倒下（`die`，不是悄悄消失）。
 - 波次在它走的时候循环（从第 `loop` 波起）；波次条目写 `ahead`（沿它的路往前几米，负数在它后面）/ `side`（离路几米）就从那里出来，不经过「挪到看得清的地方」。护卫期间出来的怪都冲它去（`Enemy.escortT`：走过去咬它、扔东西砸它；`forGirls: true` 的照旧打两人），打到它的伤害由 `Game.playerAttacked` 转给 `escort.hit`：它掉血，两人各掉 `share` 比例；它倒下会缓一会儿、剩 40% 血再起来，两人各掉 `fallDmg`。
 
 ## 高速段 ride（`src/battle/ride.js`，Game 的 `ride`；数值 `tuning/combat.json ride`；DESIGN「停留点不只是一个镜头、一种打法」）
