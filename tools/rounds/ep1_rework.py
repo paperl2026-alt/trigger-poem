@@ -146,7 +146,7 @@ def tunnel_fall(S):
     st = S["stations"]
     # (no close-up of its own: the shadows were seen long before - user 2026-10-22, a close-up only at the first sight of a thing; its
     # colour of its own: enemies.json tint)
-    st["pt1"]["waves"].append([{"t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow"}])
+    st["pt1"]["waves"].append([{"t": 0, "type": "larva_queen", "x": 0, "z": -7.5, "from": "burrow"}])   # (the tunnel's own great one: R91)
     st["pt2"]["enter"] = {"from": [0, 6, -6.2], "dur": 0.75, "shake": 1.6, "sfx": "thud"}
 
 def studio_shades(S):
@@ -189,6 +189,62 @@ def acts(D):
     put("ep1_nursery", "nu2", 1, {"t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -10.5, "minion": "dollkin", "every": 3, "max": 5})
     put("ep1_oven", "ov2", 1, {"t": 0.3, "act": "sacrifice", "of": "ghoul", "x": 0.4, "z": -8.0, "side": 1})
 
+# (user 2026-10-22: one kind of monster to a room, none repeated from room to room - each room its own kind; docs/DESIGN.md 第 1 话「一屋一种怪」)
+#   set: (its kind, its other form - the same thing before it turned - or None, at most so many of its kind to a wave, hp of one made of
+#         another monster's place - None: its own)
+ONE_KIND = {
+    "ep1_shop":    ("ghoul", "scoopling", 3, None),       # (the gelato ghouls; before the shop turns, the little scoops they turn into)
+    "ep1_gallery": ("chandelier", None, 1, None),         # (the poltergeist chandeliers, hanging along the middle; the maw door at the end)
+    "ep1_garden":  ("armor", None, 1, 2300),              # (the knights' hall: the armour along the walls coming alive)
+    "ep1_nursery": ("dollkin", "doll", 4, None),          # (the dolls: the little ones walking, the coupe dolls throwing)
+    "ep1_cold":    ("popsicle", None, 3, None),           # (the popsicle skeletons, R90: frozen in the ice at first, out of the vent)
+    "ep1_oven":    ("ginger", None, 3, None),             # (the burnt gingerbread, R91; the one that runs at the wall and bursts too)
+    "ep1_pit":     ("larva", "larva_queen", 3, None),     # (the honey larvae, R91, and the great one that brings the floor down)
+}
+KEEP = {"door_mouth", "double_pink", "double_cat"}         # (a room's own set piece, not one of its monsters)
+
+def one_kind(D):
+    """every monster of each room in ONE_KIND made into the room's kind (or dropped past the cap); fliers become walkers (a swarm a few of
+    them), the shop's small things its little scoops (they still turn into gelato ghouls when the shop turns), the acts' casts too"""
+    # (the knights' hall's planks first: three armours step onto them, and they go - Game.planksTick)
+    pk = D["ep1_garden"]["stations"]["gd2"]["waves"][1]
+    pk[:] = [{**{k: v for k, v in e.items() if k not in ("move",)}, "type": "armor", "hp": 2300} for e in pk if e.get("type")][:3]
+    for sid, (kind, other, cap, hp) in ONE_KIND.items():
+        S = D[sid]
+        for st in S["stations"].values():
+            for w in st.get("waves", []):
+                n = 0; out = []
+                cw = max([cap] + [e["kills"] for e in w if not e.get("type") and e.get("kills")])   # (enough to kill for its kill-events)
+                for e in w:
+                    if e.get("act"):
+                        if e["act"] == "ritual": e["of"] = kind; e["n"] = 3; e["r"] = 2.4   # (knights kneeling round the circle)
+                        elif isinstance(e.get("of"), str) and e["of"] not in (kind, other): e["of"] = kind   # (the oven's runner: one of its own)
+                        out.append(e); continue
+                    if "spawner" in e: e["spawner"]["type"] = [kind]; out.append(e); continue
+                    ty = e.get("type")
+                    if not ty or ty in KEEP: out.append(e); continue
+                    if ty in (kind, other): out.append(e); n += 1 if ty == kind and not e.get("hp") and e.get("from") != "statue" else 0; continue   # (a statue standing there is not one of the wave's)
+                    if sid == "ep1_shop" and ty in ("teacup", "doily"): ty2 = other          # (the small things of the shop: its scoops)
+                    elif sid == "ep1_shop" and ty == "chandelier": continue                  # (no chandeliers in the shop: the gallery's)
+                    else: ty2 = kind
+                    if ty2 == kind:
+                        if n >= cw: continue
+                        n += 1
+                    c = {k: v for k, v in e.items() if k not in ("type", "morph", "y", "hp", "move", "count", "every", "spread", "hole")}
+                    c["type"] = ty2
+                    if e.get("morph"):   # (the room's own trick goes on with its kind: the cold store's puddles run together into a big one of it)
+                        c["morph"] = {k: {**m, **({"into": ty2} if m.get("into") not in (kind, other) else {}), **({"with": ty2} if m.get("with") and m["with"] not in (kind, other) else {})} for k, m in e["morph"].items()}
+                    if e.get("count") and ty2 != "chandelier": c["count"] = min(e["count"], 2 if ty2 == "armor" else 3); c["every"] = e.get("every", 0.5)
+                    if ty2 == "chandelier": c["x"] = round(max(-1.5, min(1.5, e.get("x", 0))), 2); c.pop("from", None); c.pop("way", None)
+                    elif hp and ty2 == kind: c["hp"] = hp
+                    out.append(c)
+                # (a wave event waiting for so many kills: never more than the wave has left to kill - else, with the others gone, the
+                # statues it wakes would wait for ever: the knights' hall's first stop; none to kill: after a while instead)
+                can = sum(e.get("count", 1) for e in out if e.get("type") and e.get("from") != "statue")
+                for e in out:
+                    if not e.get("type") and e.get("kills") and e["kills"] > can: e.pop("kills"); e["t"] = 6.0 if can else 2.0
+                w[:] = out
+
 def chandeliers(D, h):
     """(user 2026-10-22: the chandeliers were hung anywhere, not where a chandelier hangs - a poltergeist may move about, but it must start
     in its place) each stop's chandeliers hang from the ceiling on their chains from the start (wave 0, a statue: a chandelier as it is,
@@ -205,6 +261,19 @@ def chandeliers(D, h):
                     if wi == 0: c["wake"] = e.get("wake", round(e.get("t", 0) + 1.2, 2))
                     else: w.append({"t": round(e.get("t", 0) + 0.3, 2), "wake": 1, "wakeOf": "chandelier"})
                     W[0].append(c)
+            # (not in a bunch: at most four to a stop, one after another down the ceiling in front of the camera, 2.5 m apart if there is
+            # room, left and right of the middle by turns)
+            hung = sorted([e for e in W[0] if e.get("type") == "chandelier"], key=lambda e: -e["z"]) if W else []
+            for e in hung[4:]: W[0].remove(e)
+            hung = hung[:4]
+            if hung and st.get("cam") and st.get("look"):   # (from 8 m off - no nearer than the rest: user 2026-10-22 - as many as there is room for)
+                c, sg = st["cam"][2], (1 if st["look"][2] > st["cam"][2] else -1)
+                a0 = c + sg * 8.0; lim = (S["hall"]["z0"] - 2.5) if sg > 0 else (S["hall"]["z1"] + 2.5)
+                room = max(0.0, (lim - a0) * sg); keep = max(1, min(len(hung), 1 + int(room // 2.2)))
+                for e in hung[keep:]: W[0].remove(e)
+                hung = hung[:keep]; gap = min(2.5, room / max(1, len(hung) - 1))
+                for i, e in enumerate(sorted(hung, key=lambda e: abs(e["z"] - c))):
+                    e["z"] = round(a0 + sg * gap * i, 2); e["x"] = round((-1.3 if i % 2 == 0 else 1.3), 2)
 
 def deepen(S, dz, cut):
     """(user 2026-10-22: the monsters too close to the girls - they should stand further off, and big) the room made dz metres longer
@@ -241,6 +310,7 @@ def places(D):
     for gm in D["ep1_cold"]["gimmicks"]:   # (the shelf toppled onto the vent: 1.2 times as big - user 2026-10-22, it could not cover the hole)
         if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)
+    one_kind(D)
     chandeliers(D, packs.load(L / "enemies.json")["chandelier"]["h"])
     # (user 2026-10-22: the monsters too close - further off, and big: levels/ep1/enemies.json h; the shallow second stops given room)
     for sid, dz in (("ep1_shop", 4.5), ("ep1_cold", 4.5), ("ep1_nursery", 4.5), ("ep1_oven", 9.0)):

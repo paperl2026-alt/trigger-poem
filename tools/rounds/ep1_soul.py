@@ -47,11 +47,12 @@ NE2 = {
     ]},
     # (a steady stream of ground monsters, from ahead of her and from behind by turns - the sight swung back and forth; one shot each;
     # none of them flying, none throwing; each comes up out of the honey well clear of her - escort gap - and walks at her)
-    "waves": [   # (in from the right edge of the frame - ahead of her - and the left - behind her - by turns, on the far side of her way)
-        wave({"type": "ghoul", "count": 3, "every": 1.1, "ahead": 8, "side": -2.5, "from": "burrow"}, {"type": "scoopling", "count": 3, "every": 0.9, "t": 1.6, "ahead": -7.5, "side": -3, "from": "burrow"}),
-        wave({"type": "crawler", "count": 3, "every": 1.0, "ahead": -7.5, "side": -2, "from": "burrow"}, {"type": "ghoul", "count": 3, "every": 1.1, "t": 1.4, "ahead": 8.5, "side": -1.5, "from": "burrow"}),
-        wave({"type": "teacup", "count": 4, "every": 0.7, "ahead": 8, "side": -3.5, "from": "burrow"}, {"type": "ghoul", "count": 2, "every": 1.2, "t": 1.4, "ahead": -8, "side": -2.5, "from": "burrow"}),
-        wave({"type": "scoopling", "count": 3, "every": 0.8, "ahead": -8, "side": -1.5, "from": "burrow"}, {"type": "crawler", "count": 3, "every": 1.0, "t": 1.0, "ahead": 8, "side": -3, "from": "burrow"}),
+    "waves": [   # (in from the right edge of the frame - ahead of her - and the left - behind her - by turns, on the far side of her way;
+                 # the netherworld's own kind: the tar guests, R91 - user 2026-10-22, one kind to a place)
+        wave({"type": "tar", "count": 3, "every": 1.1, "ahead": 8, "side": -2.5, "from": "burrow"}, {"type": "tar", "count": 3, "every": 0.9, "t": 1.6, "ahead": -7.5, "side": -3, "from": "burrow"}),
+        wave({"type": "tar", "count": 3, "every": 1.0, "ahead": -7.5, "side": -2, "from": "burrow"}, {"type": "tar", "count": 3, "every": 1.1, "t": 1.4, "ahead": 8.5, "side": -1.5, "from": "burrow"}),
+        wave({"type": "tar", "count": 4, "every": 0.7, "ahead": 8, "side": -3.5, "from": "burrow"}, {"type": "tar", "count": 2, "every": 1.2, "t": 1.4, "ahead": -8, "side": -2.5, "from": "burrow"}),
+        wave({"type": "tar", "count": 3, "every": 0.8, "ahead": -8, "side": -1.5, "from": "burrow"}, {"type": "tar", "count": 3, "every": 1.0, "t": 1.0, "ahead": 8, "side": -3, "from": "burrow"}),
     ],
 }
 

@@ -4437,6 +4437,846 @@
   "src": "assets/enemy/ghoul_walk1_rd.png",
   "w": 512
  },
+ "enemy/ginger_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_bite_rd",
+  "src": "assets/enemy/ginger_b_bite.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_bite_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_crouch_rd",
+  "src": "assets/enemy/ginger_b_crouch.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_crouch_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_hurt_rd",
+  "src": "assets/enemy/ginger_b_hurt.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_hurt_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_leap_rd",
+  "src": "assets/enemy/ginger_b_leap.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_leap_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_walk0_rd",
+  "src": "assets/enemy/ginger_b_walk0.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_walk0_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9507,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_b_walk1_rd",
+  "src": "assets/enemy/ginger_b_walk1.webp",
+  "w": 549
+ },
+ "enemy/ginger_b_walk1_rd": {
+  "h": 492,
+  "src": "assets/enemy/ginger_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_bite": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_bite_rd",
+  "src": "assets/enemy/ginger_bite.webp",
+  "w": 557
+ },
+ "enemy/ginger_bite_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_bite_rd",
+  "src": "assets/enemy/ginger_c_bite.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_bite_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_crouch_rd",
+  "src": "assets/enemy/ginger_c_crouch.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_crouch_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_hurt_rd",
+  "src": "assets/enemy/ginger_c_hurt.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_hurt_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_leap_rd",
+  "src": "assets/enemy/ginger_c_leap.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_leap_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_walk0_rd",
+  "src": "assets/enemy/ginger_c_walk0.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_walk0_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9479,
+  "h": 518,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ginger_c_walk1_rd",
+  "src": "assets/enemy/ginger_c_walk1.webp",
+  "w": 569
+ },
+ "enemy/ginger_c_walk1_rd": {
+  "h": 466,
+  "src": "assets/enemy/ginger_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_crouch_rd",
+  "src": "assets/enemy/ginger_crouch.webp",
+  "w": 557
+ },
+ "enemy/ginger_crouch_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_hurt_rd",
+  "src": "assets/enemy/ginger_hurt.webp",
+  "w": 557
+ },
+ "enemy/ginger_hurt_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_leap": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_leap_rd",
+  "src": "assets/enemy/ginger_leap.webp",
+  "w": 557
+ },
+ "enemy/ginger_leap_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_leap_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_walk0_rd",
+  "src": "assets/enemy/ginger_walk0.webp",
+  "w": 557
+ },
+ "enemy/ginger_walk0_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/ginger_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9482,
+  "h": 522,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/ginger_walk1_rd",
+  "src": "assets/enemy/ginger_walk1.webp",
+  "w": 557
+ },
+ "enemy/ginger_walk1_rd": {
+  "h": 480,
+  "src": "assets/enemy/ginger_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_bite_rd",
+  "src": "assets/enemy/larva_b_bite.webp",
+  "w": 612
+ },
+ "enemy/larva_b_bite_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_crouch_rd",
+  "src": "assets/enemy/larva_b_crouch.webp",
+  "w": 612
+ },
+ "enemy/larva_b_crouch_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_hurt_rd",
+  "src": "assets/enemy/larva_b_hurt.webp",
+  "w": 612
+ },
+ "enemy/larva_b_hurt_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_leap_rd",
+  "src": "assets/enemy/larva_b_leap.webp",
+  "w": 612
+ },
+ "enemy/larva_b_leap_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_walk0_rd",
+  "src": "assets/enemy/larva_b_walk0.webp",
+  "w": 612
+ },
+ "enemy/larva_b_walk0_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/larva_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.707,
+  "h": 529,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_b_walk1_rd",
+  "src": "assets/enemy/larva_b_walk1.webp",
+  "w": 612
+ },
+ "enemy/larva_b_walk1_rd": {
+  "h": 443,
+  "src": "assets/enemy/larva_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/larva_bite": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_bite_rd",
+  "src": "assets/enemy/larva_bite.webp",
+  "w": 582
+ },
+ "enemy/larva_bite_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_bite_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_bite_rd",
+  "src": "assets/enemy/larva_c_bite.webp",
+  "w": 555
+ },
+ "enemy/larva_c_bite_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_crouch_rd",
+  "src": "assets/enemy/larva_c_crouch.webp",
+  "w": 555
+ },
+ "enemy/larva_c_crouch_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_hurt_rd",
+  "src": "assets/enemy/larva_c_hurt.webp",
+  "w": 555
+ },
+ "enemy/larva_c_hurt_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_leap_rd",
+  "src": "assets/enemy/larva_c_leap.webp",
+  "w": 555
+ },
+ "enemy/larva_c_leap_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_walk0_rd",
+  "src": "assets/enemy/larva_c_walk0.webp",
+  "w": 555
+ },
+ "enemy/larva_c_walk0_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/larva_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.7946,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/larva_c_walk1_rd",
+  "src": "assets/enemy/larva_c_walk1.webp",
+  "w": 555
+ },
+ "enemy/larva_c_walk1_rd": {
+  "h": 485,
+  "src": "assets/enemy/larva_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/larva_crouch": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_crouch_rd",
+  "src": "assets/enemy/larva_crouch.webp",
+  "w": 582
+ },
+ "enemy/larva_crouch_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/larva_hurt": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_hurt_rd",
+  "src": "assets/enemy/larva_hurt.webp",
+  "w": 582
+ },
+ "enemy/larva_hurt_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/larva_leap": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_leap_rd",
+  "src": "assets/enemy/larva_leap.webp",
+  "w": 582
+ },
+ "enemy/larva_leap_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_leap_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_blast": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_blast_rd",
+  "src": "assets/enemy/larva_queen_blast.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_blast_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_blast_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_hover0": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_hover0_rd",
+  "src": "assets/enemy/larva_queen_hover0.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_hover0_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_hover0_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_hover1": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_hover1_rd",
+  "src": "assets/enemy/larva_queen_hover1.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_hover1_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_hover1_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_hurt_rd",
+  "src": "assets/enemy/larva_queen_hurt.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_hurt_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_idle": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_idle_rd",
+  "src": "assets/enemy/larva_queen_idle.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_idle_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_idle_rd.png",
+  "w": 512
+ },
+ "enemy/larva_queen_windup": {
+  "anchor": "bottom",
+  "figH": 0.8978,
+  "h": 548,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/larva_queen_windup_rd",
+  "src": "assets/enemy/larva_queen_windup.webp",
+  "w": 618
+ },
+ "enemy/larva_queen_windup_rd": {
+  "h": 454,
+  "src": "assets/enemy/larva_queen_windup_rd.png",
+  "w": 512
+ },
+ "enemy/larva_walk0": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_walk0_rd",
+  "src": "assets/enemy/larva_walk0.webp",
+  "w": 582
+ },
+ "enemy/larva_walk0_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/larva_walk1": {
+  "anchor": "bottom",
+  "figH": 0.7431,
+  "h": 502,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/larva_walk1_rd",
+  "src": "assets/enemy/larva_walk1.webp",
+  "w": 582
+ },
+ "enemy/larva_walk1_rd": {
+  "h": 442,
+  "src": "assets/enemy/larva_walk1_rd.png",
+  "w": 512
+ },
  "enemy/p_candle": {
   "figH": 0.9091,
   "h": 396,
@@ -4664,6 +5504,366 @@
   "h": 396,
   "src": "assets/enemy/p_wafer_rd.png",
   "w": 369
+ },
+ "enemy/popsicle_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_bite_rd",
+  "src": "assets/enemy/popsicle_b_bite.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_bite_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_crouch_rd",
+  "src": "assets/enemy/popsicle_b_crouch.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_crouch_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_hurt_rd",
+  "src": "assets/enemy/popsicle_b_hurt.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_hurt_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_leap_rd",
+  "src": "assets/enemy/popsicle_b_leap.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_leap_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_walk0_rd",
+  "src": "assets/enemy/popsicle_b_walk0.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_walk0_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.8891,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_b_walk1_rd",
+  "src": "assets/enemy/popsicle_b_walk1.webp",
+  "w": 590
+ },
+ "enemy/popsicle_b_walk1_rd": {
+  "h": 477,
+  "src": "assets/enemy/popsicle_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_bite": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_bite_rd",
+  "src": "assets/enemy/popsicle_bite.webp",
+  "w": 547
+ },
+ "enemy/popsicle_bite_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_bite_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_bite_rd",
+  "src": "assets/enemy/popsicle_c_bite.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_bite_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_crouch_rd",
+  "src": "assets/enemy/popsicle_c_crouch.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_crouch_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_hurt_rd",
+  "src": "assets/enemy/popsicle_c_hurt.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_hurt_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_leap_rd",
+  "src": "assets/enemy/popsicle_c_leap.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_leap_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_walk0_rd",
+  "src": "assets/enemy/popsicle_c_walk0.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_walk0_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9181,
+  "h": 550,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/popsicle_c_walk1_rd",
+  "src": "assets/enemy/popsicle_c_walk1.webp",
+  "w": 595
+ },
+ "enemy/popsicle_c_walk1_rd": {
+  "h": 473,
+  "src": "assets/enemy/popsicle_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_crouch_rd",
+  "src": "assets/enemy/popsicle_crouch.webp",
+  "w": 547
+ },
+ "enemy/popsicle_crouch_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_hurt_rd",
+  "src": "assets/enemy/popsicle_hurt.webp",
+  "w": 547
+ },
+ "enemy/popsicle_hurt_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_leap": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_leap_rd",
+  "src": "assets/enemy/popsicle_leap.webp",
+  "w": 547
+ },
+ "enemy/popsicle_leap_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_leap_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_walk0_rd",
+  "src": "assets/enemy/popsicle_walk0.webp",
+  "w": 547
+ },
+ "enemy/popsicle_walk0_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/popsicle_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9506,
+  "h": 526,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/popsicle_walk1_rd",
+  "src": "assets/enemy/popsicle_walk1.webp",
+  "w": 547
+ },
+ "enemy/popsicle_walk1_rd": {
+  "h": 492,
+  "src": "assets/enemy/popsicle_walk1_rd.png",
+  "w": 512
  },
  "enemy/scoopling_b_bite": {
   "anchor": "bottom",
@@ -5863,6 +7063,366 @@
  "enemy/shadow_windup_rd": {
   "h": 427,
   "src": "assets/enemy/shadow_windup_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_bite_rd",
+  "src": "assets/enemy/tar_b_bite.webp",
+  "w": 568
+ },
+ "enemy/tar_b_bite_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_crouch_rd",
+  "src": "assets/enemy/tar_b_crouch.webp",
+  "w": 568
+ },
+ "enemy/tar_b_crouch_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_hurt_rd",
+  "src": "assets/enemy/tar_b_hurt.webp",
+  "w": 568
+ },
+ "enemy/tar_b_hurt_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_leap_rd",
+  "src": "assets/enemy/tar_b_leap.webp",
+  "w": 568
+ },
+ "enemy/tar_b_leap_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_walk0_rd",
+  "src": "assets/enemy/tar_b_walk0.webp",
+  "w": 568
+ },
+ "enemy/tar_b_walk0_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/tar_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.949,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_b_walk1_rd",
+  "src": "assets/enemy/tar_b_walk1.webp",
+  "w": 568
+ },
+ "enemy/tar_b_walk1_rd": {
+  "h": 478,
+  "src": "assets/enemy/tar_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/tar_bite": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_bite_rd",
+  "src": "assets/enemy/tar_bite.webp",
+  "w": 570
+ },
+ "enemy/tar_bite_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_bite_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_bite_rd",
+  "src": "assets/enemy/tar_c_bite.webp",
+  "w": 556
+ },
+ "enemy/tar_c_bite_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_crouch_rd",
+  "src": "assets/enemy/tar_c_crouch.webp",
+  "w": 556
+ },
+ "enemy/tar_c_crouch_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_hurt_rd",
+  "src": "assets/enemy/tar_c_hurt.webp",
+  "w": 556
+ },
+ "enemy/tar_c_hurt_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_leap_rd",
+  "src": "assets/enemy/tar_c_leap.webp",
+  "w": 556
+ },
+ "enemy/tar_c_leap_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_walk0_rd",
+  "src": "assets/enemy/tar_c_walk0.webp",
+  "w": 556
+ },
+ "enemy/tar_c_walk0_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/tar_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.8729,
+  "h": 551,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_c_walk1_rd",
+  "src": "assets/enemy/tar_c_walk1.webp",
+  "w": 556
+ },
+ "enemy/tar_c_walk1_rd": {
+  "h": 507,
+  "src": "assets/enemy/tar_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/tar_crouch": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_crouch_rd",
+  "src": "assets/enemy/tar_crouch.webp",
+  "w": 570
+ },
+ "enemy/tar_crouch_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/tar_hurt": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_hurt_rd",
+  "src": "assets/enemy/tar_hurt.webp",
+  "w": 570
+ },
+ "enemy/tar_hurt_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/tar_leap": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_leap_rd",
+  "src": "assets/enemy/tar_leap.webp",
+  "w": 570
+ },
+ "enemy/tar_leap_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_leap_rd.png",
+  "w": 512
+ },
+ "enemy/tar_walk0": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_walk0_rd",
+  "src": "assets/enemy/tar_walk0.webp",
+  "w": 570
+ },
+ "enemy/tar_walk0_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/tar_walk1": {
+  "anchor": "bottom",
+  "figH": 0.936,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/tar_walk1_rd",
+  "src": "assets/enemy/tar_walk1.webp",
+  "w": 570
+ },
+ "enemy/tar_walk1_rd": {
+  "h": 477,
+  "src": "assets/enemy/tar_walk1_rd.png",
   "w": 512
  },
  "enemy/teacup_air": {

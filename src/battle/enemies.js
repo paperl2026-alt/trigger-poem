@@ -21,6 +21,7 @@ const V = new THREE.Vector3();
 
 
 const SZ = new THREE.Vector3(), SZ2 = new THREE.Vector3(), HEAL_A = new THREE.Vector3();
+const SWAY_F = new THREE.Vector3(), SWAY_O = new THREE.Vector3(), SWAY_D = new THREE.Vector3();
 // the floor under a point of the screen (px, y down): where the shot puts something that stands, found through the place's camera
 function floorAt(world, game, sx, sy) {
   const r = world.rayFrom?.(sx, sy); if (!r || r.direction.y > -1e-3) return null;
@@ -155,7 +156,22 @@ export class Actor {
     this.tickAnim(this.kick?.freeze > 0 ? 0 : rdt);   // (held still by a hit: Enemy.feel)
     if (this.billboard) {
       const c = this.game.world.camera.position, p = this.root.position;
-      this.root.rotation.y = Math.atan2(c.x - p.x, c.z - p.z);
+      let yaw = Math.atan2(c.x - p.x, c.z - p.z);
+      // (moving in the room, not slid about flat - user 2026-10-22, the first episode: it turns a little toward the way it is going,
+      // its relief showing as it turns, and a walker bobs with its steps)
+      if (this.game.world.set?.monster?.perspective && this instanceof Enemy && this.alive && this.state !== 'statue') {
+        const lp = this.lastP || (this.lastP = p.clone()), vx = (p.x - lp.x) / Math.max(1e-3, dt), vz = (p.z - lp.z) / Math.max(1e-3, dt), sp = Math.hypot(vx, vz);
+        lp.copy(p);
+        let want = 0;
+        if (sp > 0.25 && sp < 30) { const d = Math.atan2(vx, vz) - yaw; want = Math.max(-0.75, Math.min(0.75, Math.atan2(Math.sin(d), Math.cos(d)))); }
+        this.yawOff = (this.yawOff || 0) + (want - (this.yawOff || 0)) * Math.min(1, dt * 4);
+        yaw += this.yawOff;
+        if (this.beh === 'walker') {
+          this.stride = (this.stride || 0) + Math.min(sp, 30) * dt;
+          this.mesh.position.y = sp > 0.25 && sp < 30 ? Math.abs(Math.sin(this.stride * Math.PI / 0.8)) * this.h * 0.035 : this.mesh.position.y * 0.85;
+        }
+      }
+      this.root.rotation.y = yaw;
     }
     this.game.world.lightAt(this.root.position, this.litC);
     this.u.lit.value.lerp(this.litC, Math.min(1, dt * 8));
@@ -453,7 +469,7 @@ export class Enemy extends Actor {
     if (s.from === 'statue') {
       P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.disguise || this.frames.idle || this.frames.walk || [this.def.first])[0]);
       this.u.outlineOn.value = 0; this.statueReady = ready;
-      if (!this.frames.disguise) { this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; }   // (disguise: not stone - a thing of the place, as it is: the gallery's door)
+      if (!this.frames.disguise) { const T0 = this.def.statueTint; if (T0) { this.u.tint.value.set(T0[0]); this.u.tintAmt.value = T0[1]; } else { this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; } }   // (disguise: not stone - a thing of the place, as it is: the gallery's door; statueTint: its own - frozen in ice)
       if (bp.hang) {   // (hanging from the ceiling on its chain: the chandelier - user 2026-10-22)
         const top = lv.ceilAt(s.z), y0 = P.y + this.h * 0.97, L = Math.max(0.1, top - y0);
         this.chain = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, L, 6), new THREE.MeshBasicMaterial({ color: 0x2a1e14 }));
@@ -860,16 +876,28 @@ export class Enemy extends Actor {
       if (this.timer <= 0) { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterRise); }
     } else if (this.state === 'stand') {
       this.inner.rotation.z = Math.sin(t * 1.7 + this.seed) * 0.04;
-      if (bp.sway) { const S = bp.sway; this.swayX ??= this.root.position.x; this.root.position.x = this.swayX + Math.sin(t * (S[1] ?? 0.8) + this.seed) * S[0]; }   // (not a still target: it rolls / floats from side to side)
+      if (bp.sway) {   // (not a still target: it drifts about in front of them - nearer and further, across, up and down; user 2026-10-22: in 3D,
+        // not slid from side to side) - added a step at a time, so it goes on from wherever it stands
+        const S = bp.sway, a = t * (S[1] ?? 0.8) + this.seed, w = this.game.world, P = this.root.position;
+        const f = SWAY_F.subVectors(w.lookAt, w.camPos).setY(0).normalize(), o = SWAY_O.set(-f.z, 0, f.x).multiplyScalar(Math.sin(a) * S[0] * 0.55).addScaledVector(f, Math.sin(a * 0.7 + 1) * S[0] * 0.9);
+        o.y = this.pivot === 'center' || P.y > 0.5 ? Math.sin(a * 1.3) * 0.18 : 0;
+        if (this.swayPrev) P.add(SWAY_D.subVectors(o, this.swayPrev));
+        (this.swayPrev ||= new THREE.Vector3()).copy(o);
+      }
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
     } else if (this.state === 'windup') {
-      this.inner.rotation.z = -0.06;
+      this.inner.rotation.z = -0.06; this.swayPrev = null;
+      // (params.rear: [lean, metres] it rears back and draws back as it gathers, and springs forward with the throw - user 2026-10-22:
+      // not puffed up bigger, in 3D)
+      const R = bp.rear;
+      if (R) { const p = 1 - Math.max(0, this.timer) / this.timer0, e = p * p * (3 - 2 * p); this.inner.rotation.x = -R[0] * e; this.inner.position.z = -R[1] * e; }
       // (params.swell: it puffs up as it gathers - the door's cheeks full of honey, twice as full for its big spew - user 2026-10-21:
       // its attacks could not be read; let out with a squash when it goes)
       const sw = bp.swell;
       if (sw) { const p = 1 - Math.max(0, this.timer) / this.timer0, k = sw * p * (this.blasting ? 2 : 1); this.inner.scale.set(1 + k + Math.sin(t * 34) * 0.012 * p, 1 + k * 0.7, 1); }
       if (this.timer <= 0) {
         if (sw) { this.inner.scale.set(1 - sw * 0.5, 1 + sw * 0.5, 1); this.game.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.35, { ease: Ease.outBack }); }
+        if (bp.rear) { this.inner.rotation.x = bp.rear[0] * 0.5; this.inner.position.z = bp.rear[1] * 0.6; this.game.etw.to(this.inner.rotation, { x: 0 }, 0.45, { ease: Ease.outBack }); this.game.etw.to(this.inner.position, { z: 0 }, 0.45, { ease: Ease.outQuad }); }   // (flung forward with it)
         this.endWindup();
         this.play('throw');
         if (this.blasting) this.blast();
