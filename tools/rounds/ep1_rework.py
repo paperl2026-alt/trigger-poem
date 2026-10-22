@@ -330,6 +330,33 @@ APPARITIONS = {
 }
 SHADE = {"zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影"}
 
+def cold_vent(S):
+    """(user 2026-10-22: the cold store's hole was tiny and nothing came out of it - why shoot the shelf at all; asked before was a bigger
+    shelf, not a smaller hole) the vent a hole a popsicle skeleton can climb out of: 2 m across, its bottom on the floor (the spawner's
+    monsters climb out of it: Enemy vent); the shelf beside it as wide as the hole (standing, just under the ceiling), tipping over its
+    corner (Gimmick topple) to lie along the wall right over it; nothing else stands in front of the hole or where the shelf falls"""
+    H = S["hall"]; hole = H["holes"][0]; hole["size"] = 2.0; hole["y"] = 1.0
+    W = 2.0   # (its picture is 1.78 times as tall as wide: 3.56 m standing; lying, 2 m up the wall and 3.56 m along it)
+    for gm in S["gimmicks"]:
+        if gm.get("id") == "shelf": gm.update(w=W, x=round(H["x1"] - 0.4, 2), z=round(hole["z"] + 1.39 * W, 2))
+    z0, z1 = hole["z"] - 1.6, hole["z"] + 1.39 * W + 1.2
+    S["props"] = [p for p in S.get("props", []) if not (p["x"] > H["x1"] - 2.4 and z0 < p["z"] < z1)]
+
+def free_spot(S, st, x, z, across, w):
+    """(user 2026-10-22: the coffin stood right against the other things of the cold store, into them) a place for one of the child's things
+    beside the lady's shadow: across from her first, then further out or the other side, then nearer or further, at least 1.4 m from
+    every prop, every thing standing on the floor and every statue of the stop; inside the room"""
+    import math
+    H = S["hall"]
+    taken = [(p["x"], p["z"]) for p in S.get("props", [])] + [(g.get("x", 0), g["z"]) for g in S.get("gimmicks", []) if g.get("on") == "stand"]
+    taken += [(e.get("x", 0), e["z"]) for e in st["waves"][0] if e.get("from") == "statue"]
+    s = 1 if across >= 0 else -1
+    for d in (abs(across), abs(across) + 0.8, -abs(across), -abs(across) - 0.8, abs(across) + 1.6, -abs(across) - 1.6):
+        for dz in (0.3, 1.3, -0.9, 2.2):
+            px = max(H["x0"] + 0.8, min(H["x1"] - 0.8, x + s * d)); pz = z + dz
+            if all(math.hypot(px - a, pz - b) >= 1.4 for a, b in taken): return round(px, 2), round(pz, 2)
+    return round(max(H["x0"] + 0.8, min(H["x1"] - 0.8, x + across)), 2), round(z + 0.3, 2)
+
 def apparitions(D):
     """her shadow (a hidden picture, sets.json gimmicks) 9 m ahead of the place's stop, shown by the act apparition in its first wave
     (acts.js); beside it the child's thing of that place, there for good (not to shoot) - on the nearer side wall for the photo"""
@@ -346,8 +373,8 @@ def apparitions(D):
                 side = "left" if x < (H["x0"] + H["x1"]) / 2 else "right"
                 S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": side, "y": 1.9, "z": round(z, 2), "w": w, "shoot": False})
             else:
-                S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": "stand", "x": round(max(H["x0"] + 0.8, min(H["x1"] - 0.8, x + across)), 2), "z": round(z + 0.3, 2),
-                                      "w": w, "shoot": False})
+                kx, kz = free_spot(S, st, x, z, across, w)
+                S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": "stand", "x": kx, "z": kz, "w": w, "shoot": False})
         # (hold: the stop's first wave - its monsters, the statues' wakes - only once she is gone, not on a clock: Game.startWave)
         st["waves"][0].insert(0, {"t": 0.8, "act": "apparition", "hold": True, "shade": f"lady_{stn}", "say": say, "name": SHADE})
 
@@ -359,8 +386,6 @@ def places(D):
     knight_planks(D["ep1_garden"])
     tunnel_fall(D["ep1_pit"])
     studio_shades(D["ep1_studio"])
-    for gm in D["ep1_cold"]["gimmicks"]:   # (the shelf toppled onto the vent: 1.2 times as big - user 2026-10-22, it could not cover the hole)
-        if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)
     one_kind(D)
     chandeliers(D, packs.load(L / "enemies.json")["chandelier"]["h"])
@@ -376,6 +401,7 @@ def places(D):
             for w in st.get("waves", []):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)
                     if e.get("move") == "zigzag": e["move"] = "walk"
+    cold_vent(D["ep1_cold"])
     apparitions(D)   # (after the rooms are deepened: 9 m ahead of where the stop's camera ends up)
 
 def main():

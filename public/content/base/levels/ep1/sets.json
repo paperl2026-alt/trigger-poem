@@ -319,7 +319,7 @@
         "hidden": true,
         "station": "ga1"
       },
-      { "id": "keep_ga1", "k": "ep1/photo", "on": "stand", "x": 0.81, "z": -5.6, "w": 0.75, "shoot": false }
+      { "id": "keep_ga1", "k": "ep1/photo", "on": "stand", "x": 0.81, "z": -4.6, "w": 0.75, "shoot": false }
     ],
     "decals": [
       { "k": "ep1/d_drip2", "on": "left", "z": -4, "y": 3.0, "w": 1.1, "anomaly": true },
@@ -635,7 +635,7 @@
       "end": ["ep1/cold_end2"],
       "ceil": ["ep1/cold_ceil1", "ep1/cold_ceil2", "ep1/cold_ceil3"],
       "door": { "frame": "ep1/door4_room", "leaf": "ep1/door4_leaf", "w": 2.1, "x": 1.15 },
-      "holes": [{ "on": "right", "z": -14.0, "y": 0.6, "size": 1.2 }],
+      "holes": [{ "on": "right", "z": -14.0, "y": 1.0, "size": 2.0 }],
       "ways": [
         {
           "id": "d1",
@@ -649,12 +649,7 @@
         }
       ]
     },
-    "props": [
-      { "k": "prop/ep1_cold1", "h": 1.0, "x": -2.67, "z": -3 },
-      { "k": "prop/ep1_cold2", "h": 2.2, "x": 3.02, "z": -10.5 },
-      { "k": "prop/ep1_cold3", "h": 0.7, "x": -2.13, "z": -13.0 },
-      { "k": "prop/ep1_cold1", "h": 1.0, "x": 2.67, "z": -14.5 }
-    ],
+    "props": [{ "k": "prop/ep1_cold1", "h": 1.0, "x": -2.67, "z": -3 }, { "k": "prop/ep1_cold3", "h": 0.7, "x": -2.13, "z": -13.0 }],
     "gimmicks": [
       {
         "id": "coffin",
@@ -713,9 +708,9 @@
         "id": "shelf",
         "k": "prop/ep1_cold2",
         "on": "stand",
-        "x": 3.64,
-        "z": -12.4,
-        "w": 1.56,
+        "x": 3.6,
+        "z": -11.22,
+        "w": 2.0,
         "ry": -90,
         "hp": 5,
         "station": "co2",
@@ -734,7 +729,7 @@
         "hidden": true,
         "station": "co1"
       },
-      { "id": "keep_co1", "k": "ep1/coffin", "on": "stand", "x": 2.33, "z": -4.68, "w": 0.9, "shoot": false }
+      { "id": "keep_co1", "k": "ep1/coffin", "on": "stand", "x": 2.33, "z": -5.88, "w": 0.9, "shoot": false }
     ],
     "decals": [
       { "k": "ep1/d_bones", "on": "floor", "x": -0.6, "z": -9.5, "w": 1.3, "anomaly": true },

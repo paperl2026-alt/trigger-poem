@@ -406,7 +406,7 @@ export class Enemy extends Actor {
     if (world.fit && !s.free && this.beh !== 'crawler' && this.beh !== 'flyer' && s.from !== 'drop' && s.from !== 'statue') {   // (flyers: their hovering spot, below)
       const ML = world.monsterLayout?.() ?? T.layout.monster;   // (it comes from further off and closes in: DESIGN「敌人要逼上来」; a wave's far: further still)
       const q = world.fit(new THREE.Vector3(s.x ?? 0, 0, s.z ?? world.camPos.z - 6), def.h, this.w * 0.8, false, s.near ? {} : { far: s.far ?? ML.spawnFar, min: ML.spawnMin });
-      s = { ...s, x: q.x, z: q.z };
+      s = { ...s, x: s.vent ? s.x : q.x, z: s.vent ? s.z : q.z };   // (out of a hole: it comes out where the hole is, and then goes for its place - Enemy vent)
       const Cm = game.shot?.compose, front = Cm?.front && floorAt(world, game, (Cm.zone ? Cm.zone[0] + (Cm.zone[1] - Cm.zone[0]) * (this.targetSlot ? rr([0.55, 0.95]) : rr([0.05, 0.45])) : 0.5) * game.W, Cm.front * game.H);
       if (this.beh === 'walker' && front) this.goal.copy(front);   // (the shot's front line: where it stops is a place on the screen - compose.front)
       else if (this.beh === 'walker') {   // it comes straight down its clear lane toward the camera (not across the desks), to just beyond the cover
@@ -510,6 +510,12 @@ export class Enemy extends Actor {
     } else if ((s.from === 'wall' || s.from === 'ceiling') && this.game.world.addHole) {
       // it breaks in: a hole bursts open in the side wall (the side it stands on) or the ceiling, it leaps / drops down to its spot
       const g = this.game, Hd = g.world.set.hall, ceil = s.from === 'ceiling', side = s.side ?? (s.x < g.world.camPos.x ? -1 : 1);
+      if (s.vent && !ceil) {   // (out of a hole that is there already - the cold store's vent, a spawner: it climbs out of the dark of it onto the floor and comes on)
+        const vx = side < 0 ? Hd.x0 - 0.35 : Hd.x1 + 0.35; P.set(vx, 0, s.z); this.inner.scale.set(0.8, 0.6, 1); g.fx.puff(new THREE.Vector3(vx, 0.6, s.z), 6, COL.bone, 0.8); sfx.thud(0);
+        this.play(walker ? 'walk' : 'rise', 7);
+        tw.run(0.9, (e) => { P.x = vx + (s.x - vx) * e; this.inner.scale.set(0.8 + 0.2 * e, 0.6 + 0.4 * e, 1); }, { ease: Ease.outQuad, onDone: () => { this.inner.scale.set(1, 1, 1); ready(); } });
+        return;
+      }
       const sx = ceil ? s.x : side < 0 ? Hd.x0 + 0.25 : Hd.x1 - 0.25, sy = ceil ? Hd.h - 0.4 : 0.5;
       if (s.hole !== false) g.world.addHole(ceil ? 'ceil' : side < 0 ? 'left' : 'right', new THREE.Vector3(sx, ceil ? Hd.h : s.holeY ?? 1.1, s.z), s.holeSize ?? (ceil ? 1.7 : 2.0));
       P.set(sx, sy, s.z);

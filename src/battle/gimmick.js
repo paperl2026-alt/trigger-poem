@@ -81,7 +81,14 @@ export class Gimmick extends Actor {
     }
     if (e.topple) {
       sfx.tear(0);
-      g.tweens.to(this.root.rotation, { z: e.topple }, 0.7, { ease: Ease.inQuad, onDone: () => {
+      // (it tips over its bottom corner on the side it falls to, as a real cabinet does - so it lies on the floor all of it, as wide as it is
+      // tall up the wall: over the whole hole it is to stop - user 2026-10-22, the cold store's hole was not covered; not about its middle,
+      // half of it under the floor)
+      const R = this.root, P0 = R.position.clone(), ry = R.rotation.y, hw = (this.w || 1) / 2, sd = e.topple > 0 ? -1 : 1;
+      g.tweens.run(0.7, (k) => {
+        const th = e.topple * k, dx = sd * hw * (1 - Math.cos(th)), dy = hw * Math.abs(Math.sin(th));
+        R.rotation.z = th; R.position.set(P0.x + dx * Math.cos(ry), P0.y + dy, P0.z - dx * Math.sin(ry));
+      }, { ease: Ease.inQuad, onDone: () => {
         sfx.slam(); g.post.shake(1.1); g.fx.puff(this.root.position, 12, 0xd8c8b0, 1.3); g.sealSpawner(e.seal);
         // (tipped onto the monsters beside it: where its top lands - crush, like a dropped thing; DESIGN「总纲」 地形能用)
         if (e.crush) { const P = this.root.position, s = e.topple > 0 ? -1 : 1; this.harm(P.clone().set(P.x + s * this.h * 0.55, 0.5, P.z), e.crush); }

@@ -621,7 +621,8 @@ export class Game {
       const Hd = this.world.set?.hall, from = s.from || 'wall';
       const x = from === 'wall' ? (Hd ? (s.side < 0 ? Hd.x0 + 1.2 : Hd.x1 - 1.2) : s.side * 1.5) : Hd ? Hd.x0 + 0.6 + Math.random() * (Hd.x1 - Hd.x0 - 1.2) : 0;
       const z = s.z + (from === 'wall' ? 0 : (Math.random() - 0.5) * (s.spreadZ ?? 2));
-      this.spawnEnemy({ type: pick([].concat(s.type)), x, z, from, side: s.side, hole: !!s.hole && s.n === 0, holeY: s.holeY, holeSize: s.holeSize, near: true });
+      const vent = from === 'wall' && (Hd?.holes || []).some((h) => h.on === (s.side < 0 ? 'left' : 'right') && Math.abs(h.z - s.z) < 1);   // (the set's own hole there: out of it, Enemy vent)
+      this.spawnEnemy({ type: pick([].concat(s.type)), x, z, from, side: s.side, vent, hole: !!s.hole && s.n === 0, holeY: s.holeY, holeSize: s.holeSize, near: true });
       s.n++;
     }
   }
