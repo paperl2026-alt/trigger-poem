@@ -78,6 +78,9 @@
         "name": { "zh": "蜜之坑道", "en": "HONEY TUNNEL", "ja": "蜜の坑道" },
         "thumb": "ui/sel_thumb_ep1_pit"
       },
+      {
+        "door": { "frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left" }
+      },
       { "boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit" },
       {
         "stage": "soul",

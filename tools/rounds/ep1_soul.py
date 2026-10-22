@@ -63,6 +63,10 @@ if __name__ == "__main__":
     ep = packs.data_file("episodes", "ep1"); E = packs.load(ep)
     st = [s for s in E["ep1"]["steps"] if s.get("stage") != "soul"]
     i = [k for k, s in enumerate(st) if s.get("boss") == "maggot"][0]
+    # (user 2026-10-22: no door opening before the maggot - the girls walk up to the door at the honey tunnel's end, hall.door door9, and
+    # it opens onto the netherworld)
+    if not st[i - 1].get("door"):
+        st.insert(i, {"door": {"frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left"}}); i += 1
     st.insert(i + 1, {"stage": "soul", "set": "ep1_nether", "stations": ["ne2"], "name": L("灵魂的归途", "THE SOUL GOES HOME", "魂の帰り道"),
                       "thumb": st[i].get("thumb") or "ui/sel_thumb_ep1_pit"})
     # (after it the door opens into the lady's room - the soul went into the doorway of light, and the door of her studio opens: user
