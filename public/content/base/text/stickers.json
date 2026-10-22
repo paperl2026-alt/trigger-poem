@@ -1030,6 +1030,25 @@
           "lines": [
             { "zh": "说好的一家三口……全都烧掉了！", "en": "A family of three, we promised... all burned away!", "ja": "三人家族って約束したのに……全部燃えちゃった！" }
           ]
+        },
+        "seen_shop": {
+          "lines": [
+            { "zh": "欢迎光临……今天也来了可爱的新客人呢。", "en": "Welcome... such lovely new guests today.", "ja": "いらっしゃいませ……今日も可愛いお客様ね。" }
+          ]
+        },
+        "seen_garden": {
+          "lines": [
+            {
+              "zh": "那孩子最喜欢在这里玩捉迷藏……你们也陪她玩吧？",
+              "en": "She loves hide-and-seek in here... won't you play with her too?",
+              "ja": "あの子はここでかくれんぼするのが大好きなの……あなたたちも遊んであげて？"
+            }
+          ]
+        },
+        "seen_oven": {
+          "lines": [
+            { "zh": "那天……烤炉的门……我为什么没有关好……", "en": "That day... the oven door... why didn't I shut it...", "ja": "あの日……オーブンの扉……どうしてちゃんと閉めなかったの……" }
+          ]
         }
       },
       "qq": {

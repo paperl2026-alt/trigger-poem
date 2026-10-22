@@ -34,11 +34,12 @@
   },
   "cur_hover": {
     "src": "art/raw/cursor_src/cur_hover.png",
+    "stamp": false,
     "erase": [
-      140,
-      218,
-      250,
-      372
+      154,
+      231,
+      232,
+      358
     ],
     "center": [
       194,
@@ -67,6 +68,7 @@
   },
   "cur_grab": {
     "src": "art/raw/cursor_src/cur_grab.png",
+    "stamp": false,
     "erase": [
       125,
       195,
@@ -1208,5 +1210,44 @@
       388
     ],
     "png": "art/raw/r89/fixed/page_studio_mix.png"
+  },
+  "page92_intro_3": {
+    "src": "art/raw/r92/page_intro_c.png",
+    "stamp": false,
+    "auto": true,
+    "within": [
+      780,
+      320,
+      1080,
+      620
+    ],
+    "png": "art/raw/r92/fixed/page_intro_c.png"
+  },
+  "page92_end_1": {
+    "src": "art/raw/r92/page_end_a.png",
+    "auto": true,
+    "within": [
+      50,
+      160,
+      190,
+      300
+    ],
+    "png": "art/raw/r92/fixed/page_end_a.png"
+  },
+  "page93_fall_1": {
+    "src": "art/raw/r93/page_fall.png",
+    "erase": [
+      1014,
+      908,
+      1108,
+      970
+    ],
+    "center": [
+      1076,
+      941
+    ],
+    "ring": 46,
+    "rot": -112,
+    "png": "art/raw/r93/fixed/page_fall.png"
   }
 }

@@ -47,6 +47,25 @@ export class Acts {
   }
   clear() { for (const a of this.live) a.dispose?.(); this.live = []; }
 
+  // ---- apparition: the lady's shadow seen a moment (user 2026-10-22: in each place of the house her shadow jumps out once, up close,
+  // saying something - and her child's things seen on the way, not first at the end): { act, shade: its picture standing there unseen
+  // till now (sets.json gimmicks, hidden), say: her line (text/stickers.json bosses.madame), name } - it seeps up out of the dark, the fight
+  // held while the camera goes to it and she speaks (Game.introLook, her voice), then it melts away. Not a monster of the wave
+  apparition(e) {
+    const G = this.g, gm = e.shade && G.actors.find((a) => a.g?.id === e.shade && a.alive); if (!gm) return null;   // (shade, not gimmick: a wave event's gimmick fires one)
+    gm.root.visible = true; gm.billboard = true; gm.u.outlineOn.value = 0; gm.u.opacity.value = 0; gm.inner.scale.set(0.6, 0.15, 1);
+    G.fx.ink(gm.center(), 18, 1.4, COL.violet); (sfx.creak || sfx.thud)(0); G.post.shake(0.5);
+    G.tweens.run(1.0, (k) => { gm.u.opacity.value = k; gm.inner.scale.set(0.6 + 0.4 * k, 0.15 + 0.85 * k * (2 - k), 1); });
+    G.tweens.wait(0.8, () => G.introLook(gm, { say: e.say, who: 'madame', name: e.name, dist: e.dist ?? 4.4, up: e.up ?? 0.4, v: 0.6, min: 3.2 }));
+    const t0 = performance.now();
+    return { update: () => {
+      if (G.cineOn || performance.now() - t0 < 2000) return;
+      G.fx.ink(gm.center(), 14, 1.2, COL.violet);
+      G.tweens.run(0.9, (k) => { gm.u.opacity.value = 1 - k; gm.inner.scale.set(1 + k * 0.2, 1 + k * 0.35, 1); }, { onDone: () => { gm.alive = false; gm.dispose(); } });
+      return false;
+    } };
+  }
+
   // ---- helpers
   spawn(type, x, z, o = {}) {
     const g = this.g; g.pendingSpawns++;

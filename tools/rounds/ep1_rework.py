@@ -311,6 +311,40 @@ def deepen(S, dz, cut):
     for k in ("holes", "ways", "planks", "stairs", "shafts"): walk(H.get(k))
     for k in ("props", "gimmicks", "decals", "stations"): walk(S.get(k))
 
+# (user 2026-10-22: in each place of the house the lady's shadow jumps out once, up close, saying something; the child's three things
+# seen on the way, not first at the end) set -> its stop, her line, the child's thing set out there ([picture, on, across, size]) or None
+APPARITIONS = {
+    "ep1_shop":    ("sh2", "seen_shop", None),
+    "ep1_gallery": ("ga1", "photo", ("ep1/photo", "stand", 1.3, 0.75)),
+    "ep1_garden":  ("gd1", "seen_garden", None),
+    "ep1_cold":    ("co1", "coffin", ("ep1/coffin", "stand", 1.5, 0.9)),
+    "ep1_nursery": ("nu1", "diary", ("ep1/diary", "stand", 1.4, 0.6)),
+    "ep1_oven":    ("ov1", "seen_oven", None),
+}
+SHADE = {"zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影"}
+
+def apparitions(D):
+    """her shadow (a hidden picture, sets.json gimmicks) 9 m ahead of the place's stop, shown by the act apparition in its first wave
+    (acts.js); beside it the child's thing of that place, there for good (not to shoot) - on the nearer side wall for the photo"""
+    import math
+    for sid, (stn, say, thing) in APPARITIONS.items():
+        S = D[sid]; st = S["stations"][stn]; H = S["hall"]; c, l = st["cam"], st["look"]
+        fx, fz = l[0] - c[0], l[2] - c[2]; n = math.hypot(fx, fz) or 1; fx, fz = fx / n, fz / n
+        x = max(H["x0"] + 1.2, min(H["x1"] - 1.2, c[0] + fx * 9)); z = max(H["z1"] + 1.0, min(H["z0"] - 1.0, c[2] + fz * 9))
+        S.setdefault("gimmicks", []).append({"id": f"lady_{stn}", "k": "enemy/shadow_idle", "on": "stand", "x": round(x, 2), "z": round(z, 2), "w": 1.5,
+                                             "shoot": False, "hidden": True, "station": stn})
+        if thing:
+            k, on, across, w = thing
+            if on == "wall":
+                side = "left" if x < (H["x0"] + H["x1"]) / 2 else "right"
+                S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": side, "y": 1.9, "z": round(z, 2), "w": w, "shoot": False})
+            else:
+                S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": "stand", "x": round(max(H["x0"] + 0.8, min(H["x1"] - 0.8, x + across)), 2), "z": round(z + 0.3, 2),
+                                      "w": w, "shoot": False})
+        for e in st["waves"][0]:   # (the stop's first wave a little later, all of it - the statues' wakes too: she is seen alone first)
+            e["t"] = round(e.get("t", 0) + 5.0, 2)
+        st["waves"][0].insert(0, {"t": 0.8, "act": "apparition", "shade": f"lady_{stn}", "say": say, "name": SHADE})
+
 def places(D):
     import random
     R = random.Random(11)
@@ -336,6 +370,7 @@ def places(D):
             for w in st.get("waves", []):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)
                     if e.get("move") == "zigzag": e["move"] = "walk"
+    apparitions(D)   # (after the rooms are deepened: 9 m ahead of where the stop's camera ends up)
 
 def main():
     f = L / "bosses.json"; B = packs.load(f)

@@ -37,6 +37,7 @@ export class Gimmick extends Actor {
     game.world.scene.add(this.root);
     if (g.shoot === false) this.u.outlineOn.value = 0;
     if (g.appear) this.root.visible = false;   // (appear: not there until its stop - then it comes crashing down into the way)
+    if (g.hidden) this.root.visible = false;   // (hidden: unseen until something shows it - the lady's shadow, acts.js apparition)
     // a candle of a dark room: a faint glint where it is until it is lit (PanelWorld.lamp / light)
     if ((g.do || []).some((e) => e.light) && game.world.lamp) { this.root.updateMatrixWorld(true); this.lamp = game.world.lamp(this.uvToWorld(0.5, 0.92)); }
   }

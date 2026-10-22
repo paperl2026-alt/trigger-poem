@@ -1465,7 +1465,10 @@
         "shade_hostess_1": "voice/madame/shade_hostess_1.ogg",
         "shade_mourner_1": "voice/madame/shade_mourner_1.ogg",
         "shade_mother_1": "voice/madame/shade_mother_1.ogg",
-        "shade_bride_1": "voice/madame/shade_bride_1.ogg"
+        "shade_bride_1": "voice/madame/shade_bride_1.ogg",
+        "seen_shop_1": "voice/madame/seen_shop_1.ogg",
+        "seen_garden_1": "voice/madame/seen_garden_1.ogg",
+        "seen_oven_1": "voice/madame/seen_oven_1.ogg"
       }
     },
     "qq": {

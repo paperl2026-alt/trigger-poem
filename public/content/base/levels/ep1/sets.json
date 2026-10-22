@@ -132,7 +132,14 @@
         "covers": [{ "k": "cover/ep1_shop3", "side": -1 }, { "k": "cover/ep1_shop4", "side": 1 }],
         "waves": [
           [
-            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -15.5, "from": "door", "way": "d2" }
+            {
+              "t": 0.8,
+              "act": "apparition",
+              "shade": "lady_sh2",
+              "say": "seen_shop",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            { "t": 5.6, "type": "ghoul", "x": -3.33, "z": -15.5, "from": "door", "way": "d2" }
           ],
           [
             { "t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -16.0 }
@@ -156,7 +163,20 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "gimmicks": [
+      {
+        "id": "lady_sh2",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": -0.95,
+        "z": -12.04,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "sh2"
+      }
+    ]
   },
   "ep1_gallery": {
     "panels": true,
@@ -286,7 +306,19 @@
         "w": 1.05,
         "station": "ga2",
         "do": [{ "flash": true }, { "flip": true }]
-      }
+      },
+      {
+        "id": "lady_ga1",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": -0.49,
+        "z": -5.9,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "ga1"
+      },
+      { "id": "keep_ga1", "k": "ep1/photo", "on": "stand", "x": 0.81, "z": -5.6, "w": 0.75, "shoot": false }
     ],
     "decals": [
       { "k": "ep1/d_drip2", "on": "left", "z": -4, "y": 3.0, "w": 1.1, "anomaly": true },
@@ -303,10 +335,11 @@
         "covers": [{ "k": "cover/ep1_gallery1", "side": -1 }, { "k": "cover/ep1_gallery2", "side": 1 }],
         "waves": [
           [
-            { "type": "chandelier", "x": -1.3, "z": -5.2, "from": "statue", "y": 2.06, "wake": 1.2 },
-            { "type": "chandelier", "x": 1.3, "z": -12.7, "from": "statue", "y": 2.06 },
-            { "type": "chandelier", "x": 1.3, "z": -7.7, "from": "statue", "y": 2.06 },
-            { "type": "chandelier", "x": -1.3, "z": -10.2, "from": "statue", "y": 2.06 }
+            { "t": 0.8, "act": "apparition", "shade": "lady_ga1", "say": "photo", "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" } },
+            { "type": "chandelier", "x": -1.3, "z": -5.2, "from": "statue", "y": 2.06, "wake": 1.2, "t": 5.0 },
+            { "type": "chandelier", "x": 1.3, "z": -12.7, "from": "statue", "y": 2.06, "t": 5.0 },
+            { "type": "chandelier", "x": 1.3, "z": -7.7, "from": "statue", "y": 2.06, "t": 5.0 },
+            { "type": "chandelier", "x": -1.3, "z": -10.2, "from": "statue", "y": 2.06, "t": 5.0 }
           ],
           [{ "t": 0.3, "wake": 1, "wakeOf": "chandelier" }],
           [{ "t": 0.3, "wake": 1, "wakeOf": "chandelier" }],
@@ -456,6 +489,17 @@
         "w": 0.95,
         "station": "gd2",
         "do": [{ "sfx": "clang" }, { "gone": true }, { "spawn": [{ "type": "armor", "x": 2.2, "z": -14.4 }] }]
+      },
+      {
+        "id": "lady_gd1",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": 1.38,
+        "z": -2.34,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "gd1"
       }
     ],
     "decals": [
@@ -470,12 +514,19 @@
         "covers": [{ "k": "cover/ep1_garden1", "side": -1 }, { "k": "cover/ep1_garden2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
-            { "t": 0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
-            { "t": 0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor" },
-            { "t": 0.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor" },
-            { "kills": 2, "wake": 1 },
-            { "wake": 1, "t": 6.0 }
+            {
+              "t": 0.8,
+              "act": "apparition",
+              "shade": "lady_gd1",
+              "say": "seen_garden",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            { "t": 5.0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
+            { "t": 5.0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
+            { "t": 5.0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor" },
+            { "t": 5.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor" },
+            { "kills": 2, "wake": 1, "t": 5.0 },
+            { "wake": 1, "t": 11.0 }
           ],
           [
             { "t": 0.3, "act": "ritual", "of": "armor", "n": 3, "r": 2.4, "x": 0.2, "z": -4.5 },
@@ -649,7 +700,19 @@
         "do": [{ "topple": 1.5, "seal": "vent" }],
         "needs": "vent",
         "mark": true
-      }
+      },
+      {
+        "id": "lady_co1",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": 0.83,
+        "z": -4.98,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "co1"
+      },
+      { "id": "keep_co1", "k": "ep1/coffin", "on": "stand", "x": 2.33, "z": -4.68, "w": 0.9, "shoot": false }
     ],
     "decals": [
       { "k": "ep1/d_bones", "on": "floor", "x": -0.6, "z": -9.5, "w": 1.3, "anomaly": true },
@@ -664,12 +727,19 @@
         "covers": [{ "k": "cover/ep1_cold1", "side": -1 }, { "k": "cover/ep1_cold2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "x": -2.84, "z": -3, "from": "statue", "type": "popsicle" },
-            { "t": 0, "x": 2.84, "z": -3.5, "from": "statue", "type": "popsicle" },
-            { "t": 0, "x": 0.0, "z": -9.0, "from": "statue", "type": "popsicle" },
-            { "t": 1.2, "wake": 1 },
-            { "wake": 1, "t": 2.0 },
-            { "wake": 1, "t": 2.0 }
+            {
+              "t": 0.8,
+              "act": "apparition",
+              "shade": "lady_co1",
+              "say": "coffin",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            { "t": 5.0, "x": -2.84, "z": -3, "from": "statue", "type": "popsicle" },
+            { "t": 5.0, "x": 2.84, "z": -3.5, "from": "statue", "type": "popsicle" },
+            { "t": 5.0, "x": 0.0, "z": -9.0, "from": "statue", "type": "popsicle" },
+            { "t": 6.2, "wake": 1 },
+            { "wake": 1, "t": 7.0 },
+            { "wake": 1, "t": 7.0 }
           ],
           [
             { "t": 0, "x": 0.0, "z": -13.5, "type": "popsicle" },
@@ -898,6 +968,17 @@
         "w": 1.5,
         "station": "ov1",
         "do": [{ "blast": { "r": 3.4, "dmg": 900, "vfx": "explosion" } }, { "say": "stagger" }]
+      },
+      {
+        "id": "lady_ov1",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": 1.08,
+        "z": -5.28,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "ov1"
       }
     ],
     "decals": [
@@ -912,7 +993,14 @@
         "covers": [{ "k": "cover/ep1_oven1", "side": -1 }, { "k": "cover/ep1_oven2", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "x": 0.0, "z": -16.5, "from": "ceiling", "type": "ginger" }
+            {
+              "t": 0.8,
+              "act": "apparition",
+              "shade": "lady_ov1",
+              "say": "seen_oven",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            { "t": 5.0, "x": 0.0, "z": -16.5, "from": "ceiling", "type": "ginger" }
           ],
           [
             { "t": 0, "x": -1.67, "z": -15.5, "from": "door", "way": "d1", "type": "ginger" },
@@ -1191,8 +1279,9 @@
         "covers": [{ "k": "cover/ep1_nursery1", "side": -1 }, { "k": "cover/ep1_nursery2", "side": 1 }],
         "waves": [
           [
+            { "t": 0.8, "act": "apparition", "shade": "lady_nu1", "say": "diary", "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" } },
             {
-              "t": 0,
+              "t": 5.0,
               "type": "dollkin",
               "x": -2.84,
               "z": -11.5,
@@ -1200,7 +1289,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 0.4,
+              "t": 5.4,
               "type": "dollkin",
               "x": 2.84,
               "z": -12.0,
@@ -1209,7 +1298,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 0.8,
+              "t": 5.8,
               "type": "dollkin",
               "x": 0.0,
               "z": -12.5,
@@ -1217,7 +1306,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 1.2,
+              "t": 6.2,
               "type": "dollkin",
               "x": -1.42,
               "z": -13.0,
@@ -1367,7 +1456,21 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "gimmicks": [
+      {
+        "id": "lady_nu1",
+        "k": "enemy/shadow_idle",
+        "on": "stand",
+        "x": 0.83,
+        "z": -4.98,
+        "w": 1.5,
+        "shoot": false,
+        "hidden": true,
+        "station": "nu1"
+      },
+      { "id": "keep_nu1", "k": "ep1/diary", "on": "stand", "x": 2.23, "z": -4.68, "w": 0.6, "shoot": false }
+    ]
   },
   "ep1_studio": {
     "panels": true,

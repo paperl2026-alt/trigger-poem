@@ -1286,9 +1286,10 @@ export class Game {
   // saying its line) - the fight held still, the camera up close on it while it says its line, then back
   introLook(a, o = {}) {
     if (!a.alive || this.cineOn) return;
-    const who = { id: o.who || 'madame', tag: tr(a.def?.name || '') || 'BOSS', screenBox: () => a.screenBox(), center: () => a.center() };
+    const name = tr(o.name || a.def?.name || '');   // (o.name: whose it is when it is no monster of a kind - the lady's shadow, acts.js apparition)
+    const who = { id: o.who || 'madame', tag: name || 'BOSS', screenBox: () => a.screenBox(), center: () => a.center() };
     let n = 0;
-    this.cine({ on: a, v: o.v ?? 0.6, dist: o.dist ?? 3.6, up: o.up ?? 0.2, in: 0.6, out: 0.6, pause: true, still: true, title: tr(a.def?.name || '') || null,
+    this.cine({ on: a, v: o.v ?? 0.6, dist: o.dist ?? 3.6, up: o.up ?? 0.2, in: 0.6, out: 0.6, pause: true, still: true, title: name || null,
       during: () => { if (o.say) n = this.hud.gl.stickers.boss(who, o.say) || 0; }, hold: () => Math.max(o.min ?? 2.4, n + 0.4) });
   }
   closeup(a, o = {}) {
