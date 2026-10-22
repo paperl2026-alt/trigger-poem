@@ -2037,6 +2037,246 @@
   "src": "assets/enemy/chandelier_windup_rd.png",
   "w": 512
  },
+ "enemy/cherry_b_dive": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_dive_rd",
+  "src": "assets/enemy/cherry_b_dive.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_dive_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_fly0_rd",
+  "src": "assets/enemy/cherry_b_fly0.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_fly0_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_fly1_rd",
+  "src": "assets/enemy/cherry_b_fly1.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_fly1_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_hurt_rd",
+  "src": "assets/enemy/cherry_b_hurt.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_hurt_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_b_idle": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_idle_rd",
+  "src": "assets/enemy/cherry_b_idle.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_idle_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_b_windup": {
+  "anchor": "center",
+  "figH": 0.8533,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_b_windup_rd",
+  "src": "assets/enemy/cherry_b_windup.webp",
+  "w": 556
+ },
+ "enemy/cherry_b_windup_rd": {
+  "h": 502,
+  "src": "assets/enemy/cherry_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_dive": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_dive_rd",
+  "src": "assets/enemy/cherry_dive.webp",
+  "w": 562
+ },
+ "enemy/cherry_dive_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_dive_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_fly0": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_fly0_rd",
+  "src": "assets/enemy/cherry_fly0.webp",
+  "w": 562
+ },
+ "enemy/cherry_fly0_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_fly1": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_fly1_rd",
+  "src": "assets/enemy/cherry_fly1.webp",
+  "w": 562
+ },
+ "enemy/cherry_fly1_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_hurt": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_hurt_rd",
+  "src": "assets/enemy/cherry_hurt.webp",
+  "w": 562
+ },
+ "enemy/cherry_hurt_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_idle": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_idle_rd",
+  "src": "assets/enemy/cherry_idle.webp",
+  "w": 562
+ },
+ "enemy/cherry_idle_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_idle_rd.png",
+  "w": 512
+ },
+ "enemy/cherry_windup": {
+  "anchor": "center",
+  "figH": 0.8057,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/cherry_windup_rd",
+  "src": "assets/enemy/cherry_windup.webp",
+  "w": 562
+ },
+ "enemy/cherry_windup_rd": {
+  "h": 483,
+  "src": "assets/enemy/cherry_windup_rd.png",
+  "w": 512
+ },
  "enemy/crawler_b_bite": {
   "anchor": "bottom",
   "figH": 0.8899,
@@ -2395,6 +2635,366 @@
  "enemy/crawler_walk1_rd": {
   "h": 480,
   "src": "assets/enemy/crawler_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_dive": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_dive_rd",
+  "src": "assets/enemy/deathmoth_b_dive.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_dive_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_fly0": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_fly0_rd",
+  "src": "assets/enemy/deathmoth_b_fly0.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_fly0_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_fly1": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_fly1_rd",
+  "src": "assets/enemy/deathmoth_b_fly1.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_fly1_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_hurt": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_hurt_rd",
+  "src": "assets/enemy/deathmoth_b_hurt.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_hurt_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_idle": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_idle_rd",
+  "src": "assets/enemy/deathmoth_b_idle.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_idle_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_b_windup": {
+  "anchor": "center",
+  "figH": 0.9059,
+  "h": 531,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/deathmoth_b_windup_rd",
+  "src": "assets/enemy/deathmoth_b_windup.webp",
+  "w": 591
+ },
+ "enemy/deathmoth_b_windup_rd": {
+  "h": 460,
+  "src": "assets/enemy/deathmoth_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_dive": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_dive_rd",
+  "src": "assets/enemy/deathmoth_c_dive.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_dive_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_fly0": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_fly0_rd",
+  "src": "assets/enemy/deathmoth_c_fly0.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_fly0_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_fly1": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_fly1_rd",
+  "src": "assets/enemy/deathmoth_c_fly1.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_fly1_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_hurt": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_hurt_rd",
+  "src": "assets/enemy/deathmoth_c_hurt.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_hurt_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_idle": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_idle_rd",
+  "src": "assets/enemy/deathmoth_c_idle.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_idle_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_c_windup": {
+  "anchor": "center",
+  "figH": 0.8685,
+  "h": 540,
+  "hit": true,
+  "pad": [
+   21,
+   21,
+   21,
+   21
+  ],
+  "relief": "enemy/deathmoth_c_windup_rd",
+  "src": "assets/enemy/deathmoth_c_windup.webp",
+  "w": 636
+ },
+ "enemy/deathmoth_c_windup_rd": {
+  "h": 435,
+  "src": "assets/enemy/deathmoth_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_dive": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_dive_rd",
+  "src": "assets/enemy/deathmoth_dive.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_dive_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_dive_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_fly0": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_fly0_rd",
+  "src": "assets/enemy/deathmoth_fly0.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_fly0_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_fly1": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_fly1_rd",
+  "src": "assets/enemy/deathmoth_fly1.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_fly1_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_hurt": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_hurt_rd",
+  "src": "assets/enemy/deathmoth_hurt.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_hurt_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_idle": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_idle_rd",
+  "src": "assets/enemy/deathmoth_idle.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_idle_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_idle_rd.png",
+  "w": 512
+ },
+ "enemy/deathmoth_windup": {
+  "anchor": "center",
+  "figH": 0.8587,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/deathmoth_windup_rd",
+  "src": "assets/enemy/deathmoth_windup.webp",
+  "w": 556
+ },
+ "enemy/deathmoth_windup_rd": {
+  "h": 502,
+  "src": "assets/enemy/deathmoth_windup_rd.png",
   "w": 512
  },
  "enemy/doily_b_dive": {
@@ -4797,6 +5397,366 @@
   "src": "assets/enemy/ginger_walk1_rd.png",
   "w": 512
  },
+ "enemy/helm_b_dive": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_dive_rd",
+  "src": "assets/enemy/helm_b_dive.webp",
+  "w": 598
+ },
+ "enemy/helm_b_dive_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/helm_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_fly0_rd",
+  "src": "assets/enemy/helm_b_fly0.webp",
+  "w": 598
+ },
+ "enemy/helm_b_fly0_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/helm_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_fly1_rd",
+  "src": "assets/enemy/helm_b_fly1.webp",
+  "w": 598
+ },
+ "enemy/helm_b_fly1_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/helm_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_hurt_rd",
+  "src": "assets/enemy/helm_b_hurt.webp",
+  "w": 598
+ },
+ "enemy/helm_b_hurt_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/helm_b_idle": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_idle_rd",
+  "src": "assets/enemy/helm_b_idle.webp",
+  "w": 598
+ },
+ "enemy/helm_b_idle_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/helm_b_windup": {
+  "anchor": "center",
+  "figH": 0.8422,
+  "h": 545,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/helm_b_windup_rd",
+  "src": "assets/enemy/helm_b_windup.webp",
+  "w": 598
+ },
+ "enemy/helm_b_windup_rd": {
+  "h": 467,
+  "src": "assets/enemy/helm_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_dive": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_dive_rd",
+  "src": "assets/enemy/helm_c_dive.webp",
+  "w": 551
+ },
+ "enemy/helm_c_dive_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_fly0": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_fly0_rd",
+  "src": "assets/enemy/helm_c_fly0.webp",
+  "w": 551
+ },
+ "enemy/helm_c_fly0_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_fly1": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_fly1_rd",
+  "src": "assets/enemy/helm_c_fly1.webp",
+  "w": 551
+ },
+ "enemy/helm_c_fly1_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_hurt": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_hurt_rd",
+  "src": "assets/enemy/helm_c_hurt.webp",
+  "w": 551
+ },
+ "enemy/helm_c_hurt_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_idle": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_idle_rd",
+  "src": "assets/enemy/helm_c_idle.webp",
+  "w": 551
+ },
+ "enemy/helm_c_idle_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/helm_c_windup": {
+  "anchor": "center",
+  "figH": 0.8435,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/helm_c_windup_rd",
+  "src": "assets/enemy/helm_c_windup.webp",
+  "w": 551
+ },
+ "enemy/helm_c_windup_rd": {
+  "h": 505,
+  "src": "assets/enemy/helm_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/helm_dive": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_dive_rd",
+  "src": "assets/enemy/helm_dive.webp",
+  "w": 592
+ },
+ "enemy/helm_dive_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_dive_rd.png",
+  "w": 512
+ },
+ "enemy/helm_fly0": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_fly0_rd",
+  "src": "assets/enemy/helm_fly0.webp",
+  "w": 592
+ },
+ "enemy/helm_fly0_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/helm_fly1": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_fly1_rd",
+  "src": "assets/enemy/helm_fly1.webp",
+  "w": 592
+ },
+ "enemy/helm_fly1_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/helm_hurt": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_hurt_rd",
+  "src": "assets/enemy/helm_hurt.webp",
+  "w": 592
+ },
+ "enemy/helm_hurt_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/helm_idle": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_idle_rd",
+  "src": "assets/enemy/helm_idle.webp",
+  "w": 592
+ },
+ "enemy/helm_idle_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_idle_rd.png",
+  "w": 512
+ },
+ "enemy/helm_windup": {
+  "anchor": "center",
+  "figH": 0.8636,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/helm_windup_rd",
+  "src": "assets/enemy/helm_windup.webp",
+  "w": 592
+ },
+ "enemy/helm_windup_rd": {
+  "h": 457,
+  "src": "assets/enemy/helm_windup_rd.png",
+  "w": 512
+ },
  "enemy/larva_b_bite": {
   "anchor": "bottom",
   "figH": 0.707,
@@ -5277,6 +6237,366 @@
   "src": "assets/enemy/larva_walk1_rd.png",
   "w": 512
  },
+ "enemy/moth_b_dive": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_dive_rd",
+  "src": "assets/enemy/moth_b_dive.webp",
+  "w": 576
+ },
+ "enemy/moth_b_dive_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/moth_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_fly0_rd",
+  "src": "assets/enemy/moth_b_fly0.webp",
+  "w": 576
+ },
+ "enemy/moth_b_fly0_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/moth_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_fly1_rd",
+  "src": "assets/enemy/moth_b_fly1.webp",
+  "w": 576
+ },
+ "enemy/moth_b_fly1_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/moth_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_hurt_rd",
+  "src": "assets/enemy/moth_b_hurt.webp",
+  "w": 576
+ },
+ "enemy/moth_b_hurt_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/moth_b_idle": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_idle_rd",
+  "src": "assets/enemy/moth_b_idle.webp",
+  "w": 576
+ },
+ "enemy/moth_b_idle_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/moth_b_windup": {
+  "anchor": "center",
+  "figH": 0.8768,
+  "h": 544,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_b_windup_rd",
+  "src": "assets/enemy/moth_b_windup.webp",
+  "w": 576
+ },
+ "enemy/moth_b_windup_rd": {
+  "h": 484,
+  "src": "assets/enemy/moth_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_dive": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_dive_rd",
+  "src": "assets/enemy/moth_c_dive.webp",
+  "w": 589
+ },
+ "enemy/moth_c_dive_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_fly0": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_fly0_rd",
+  "src": "assets/enemy/moth_c_fly0.webp",
+  "w": 589
+ },
+ "enemy/moth_c_fly0_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_fly1": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_fly1_rd",
+  "src": "assets/enemy/moth_c_fly1.webp",
+  "w": 589
+ },
+ "enemy/moth_c_fly1_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_hurt_rd",
+  "src": "assets/enemy/moth_c_hurt.webp",
+  "w": 589
+ },
+ "enemy/moth_c_hurt_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_idle": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_idle_rd",
+  "src": "assets/enemy/moth_c_idle.webp",
+  "w": 589
+ },
+ "enemy/moth_c_idle_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/moth_c_windup": {
+  "anchor": "center",
+  "figH": 0.9137,
+  "h": 533,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/moth_c_windup_rd",
+  "src": "assets/enemy/moth_c_windup.webp",
+  "w": 589
+ },
+ "enemy/moth_c_windup_rd": {
+  "h": 463,
+  "src": "assets/enemy/moth_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/moth_dive": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_dive_rd",
+  "src": "assets/enemy/moth_dive.webp",
+  "w": 560
+ },
+ "enemy/moth_dive_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_dive_rd.png",
+  "w": 512
+ },
+ "enemy/moth_fly0": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_fly0_rd",
+  "src": "assets/enemy/moth_fly0.webp",
+  "w": 560
+ },
+ "enemy/moth_fly0_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/moth_fly1": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_fly1_rd",
+  "src": "assets/enemy/moth_fly1.webp",
+  "w": 560
+ },
+ "enemy/moth_fly1_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/moth_hurt": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_hurt_rd",
+  "src": "assets/enemy/moth_hurt.webp",
+  "w": 560
+ },
+ "enemy/moth_hurt_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/moth_idle": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_idle_rd",
+  "src": "assets/enemy/moth_idle.webp",
+  "w": 560
+ },
+ "enemy/moth_idle_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_idle_rd.png",
+  "w": 512
+ },
+ "enemy/moth_windup": {
+  "anchor": "center",
+  "figH": 0.9203,
+  "h": 552,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   18
+  ],
+  "relief": "enemy/moth_windup_rd",
+  "src": "assets/enemy/moth_windup.webp",
+  "w": 560
+ },
+ "enemy/moth_windup_rd": {
+  "h": 505,
+  "src": "assets/enemy/moth_windup_rd.png",
+  "w": 512
+ },
  "enemy/p_candle": {
   "figH": 0.9091,
   "h": 396,
@@ -5504,6 +6824,366 @@
   "h": 396,
   "src": "assets/enemy/p_wafer_rd.png",
   "w": 369
+ },
+ "enemy/plane_b_dive": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_dive_rd",
+  "src": "assets/enemy/plane_b_dive.webp",
+  "w": 572
+ },
+ "enemy/plane_b_dive_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/plane_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_fly0_rd",
+  "src": "assets/enemy/plane_b_fly0.webp",
+  "w": 572
+ },
+ "enemy/plane_b_fly0_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/plane_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_fly1_rd",
+  "src": "assets/enemy/plane_b_fly1.webp",
+  "w": 572
+ },
+ "enemy/plane_b_fly1_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/plane_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_hurt_rd",
+  "src": "assets/enemy/plane_b_hurt.webp",
+  "w": 572
+ },
+ "enemy/plane_b_hurt_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/plane_b_idle": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_idle_rd",
+  "src": "assets/enemy/plane_b_idle.webp",
+  "w": 572
+ },
+ "enemy/plane_b_idle_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/plane_b_windup": {
+  "anchor": "center",
+  "figH": 0.8078,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   19
+  ],
+  "relief": "enemy/plane_b_windup_rd",
+  "src": "assets/enemy/plane_b_windup.webp",
+  "w": 572
+ },
+ "enemy/plane_b_windup_rd": {
+  "h": 461,
+  "src": "assets/enemy/plane_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_dive": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_dive_rd",
+  "src": "assets/enemy/plane_c_dive.webp",
+  "w": 616
+ },
+ "enemy/plane_c_dive_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_fly0": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_fly0_rd",
+  "src": "assets/enemy/plane_c_fly0.webp",
+  "w": 616
+ },
+ "enemy/plane_c_fly0_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_fly1": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_fly1_rd",
+  "src": "assets/enemy/plane_c_fly1.webp",
+  "w": 616
+ },
+ "enemy/plane_c_fly1_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_hurt": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_hurt_rd",
+  "src": "assets/enemy/plane_c_hurt.webp",
+  "w": 616
+ },
+ "enemy/plane_c_hurt_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_idle": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_idle_rd",
+  "src": "assets/enemy/plane_c_idle.webp",
+  "w": 616
+ },
+ "enemy/plane_c_idle_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/plane_c_windup": {
+  "anchor": "center",
+  "figH": 0.7974,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_c_windup_rd",
+  "src": "assets/enemy/plane_c_windup.webp",
+  "w": 616
+ },
+ "enemy/plane_c_windup_rd": {
+  "h": 451,
+  "src": "assets/enemy/plane_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/plane_dive": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_dive_rd",
+  "src": "assets/enemy/plane_dive.webp",
+  "w": 599
+ },
+ "enemy/plane_dive_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_dive_rd.png",
+  "w": 512
+ },
+ "enemy/plane_fly0": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_fly0_rd",
+  "src": "assets/enemy/plane_fly0.webp",
+  "w": 599
+ },
+ "enemy/plane_fly0_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/plane_fly1": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_fly1_rd",
+  "src": "assets/enemy/plane_fly1.webp",
+  "w": 599
+ },
+ "enemy/plane_fly1_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/plane_hurt": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_hurt_rd",
+  "src": "assets/enemy/plane_hurt.webp",
+  "w": 599
+ },
+ "enemy/plane_hurt_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/plane_idle": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_idle_rd",
+  "src": "assets/enemy/plane_idle.webp",
+  "w": 599
+ },
+ "enemy/plane_idle_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_idle_rd.png",
+  "w": 512
+ },
+ "enemy/plane_windup": {
+  "anchor": "center",
+  "figH": 0.7262,
+  "h": 515,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/plane_windup_rd",
+  "src": "assets/enemy/plane_windup.webp",
+  "w": 599
+ },
+ "enemy/plane_windup_rd": {
+  "h": 440,
+  "src": "assets/enemy/plane_windup_rd.png",
+  "w": 512
  },
  "enemy/popsicle_b_bite": {
   "anchor": "bottom",
@@ -7063,6 +8743,366 @@
  "enemy/shadow_windup_rd": {
   "h": 427,
   "src": "assets/enemy/shadow_windup_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_dive": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_dive_rd",
+  "src": "assets/enemy/sugarfly_b_dive.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_dive_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_dive_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_fly0": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_fly0_rd",
+  "src": "assets/enemy/sugarfly_b_fly0.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_fly0_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_fly1": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_fly1_rd",
+  "src": "assets/enemy/sugarfly_b_fly1.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_fly1_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_hurt": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_hurt_rd",
+  "src": "assets/enemy/sugarfly_b_hurt.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_hurt_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_idle": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_idle_rd",
+  "src": "assets/enemy/sugarfly_b_idle.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_idle_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_idle_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_b_windup": {
+  "anchor": "center",
+  "figH": 0.8766,
+  "h": 543,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_b_windup_rd",
+  "src": "assets/enemy/sugarfly_b_windup.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_b_windup_rd": {
+  "h": 465,
+  "src": "assets/enemy/sugarfly_b_windup_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_dive": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_dive_rd",
+  "src": "assets/enemy/sugarfly_c_dive.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_dive_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_dive_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_fly0": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_fly0_rd",
+  "src": "assets/enemy/sugarfly_c_fly0.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_fly0_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_fly1": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_fly1_rd",
+  "src": "assets/enemy/sugarfly_c_fly1.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_fly1_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_hurt": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_hurt_rd",
+  "src": "assets/enemy/sugarfly_c_hurt.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_hurt_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_idle": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_idle_rd",
+  "src": "assets/enemy/sugarfly_c_idle.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_idle_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_idle_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_c_windup": {
+  "anchor": "center",
+  "figH": 0.9075,
+  "h": 519,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_c_windup_rd",
+  "src": "assets/enemy/sugarfly_c_windup.webp",
+  "w": 598
+ },
+ "enemy/sugarfly_c_windup_rd": {
+  "h": 444,
+  "src": "assets/enemy/sugarfly_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_dive": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_dive_rd",
+  "src": "assets/enemy/sugarfly_dive.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_dive_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_dive_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_fly0": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_fly0_rd",
+  "src": "assets/enemy/sugarfly_fly0.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_fly0_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_fly0_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_fly1": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_fly1_rd",
+  "src": "assets/enemy/sugarfly_fly1.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_fly1_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_fly1_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_hurt": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_hurt_rd",
+  "src": "assets/enemy/sugarfly_hurt.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_hurt_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_idle": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_idle_rd",
+  "src": "assets/enemy/sugarfly_idle.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_idle_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_idle_rd.png",
+  "w": 512
+ },
+ "enemy/sugarfly_windup": {
+  "anchor": "center",
+  "figH": 0.8924,
+  "h": 530,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   20
+  ],
+  "relief": "enemy/sugarfly_windup_rd",
+  "src": "assets/enemy/sugarfly_windup.webp",
+  "w": 599
+ },
+ "enemy/sugarfly_windup_rd": {
+  "h": 453,
+  "src": "assets/enemy/sugarfly_windup_rd.png",
   "w": 512
  },
  "enemy/tar_b_bite": {

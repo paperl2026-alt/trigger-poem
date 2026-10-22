@@ -125,7 +125,7 @@ def enter(wave, sid, ways, trick, far, rnd, k):
             if ways and rnd() < 0.5: e["from"] = "door"; e["way"] = ways[i % len(ways)]["id"]
         if trick == "shed" and ty == "ghoul" and e.get("hp"): e["morph"] = {"shed": {"type": "scoopling", "every": [2.5, 4.5], "max": 3}}
         if trick == "burst" and ty == "armor": e["morph"] = {"burst": {"type": "crawler", "n": 2}}
-        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 3.4, "hp": 1150}}}
+        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 3.4, "hp": 1725}}}
         if trick == "merge" and ty == "dollkin": e["morph"] = {"merge": {"with": "dollkin", "into": "doll", "after": 4}}
 
 def gallery_mouth(S):
@@ -214,6 +214,11 @@ ONE_KIND = {
     "ep1_pit":     ("larva", "larva_queen", 3, None),     # (the honey larvae, R91, and the great one that brings the floor down)
 }
 KEEP = {"door_mouth", "double_pink", "double_cat"}         # (a room's own set piece, not one of its monsters)
+# (user 2026-10-22: the flyers had all gone, and with them most of the monsters - the swarms of wafer bats were turned into the room's
+# walker and capped) each room's own small swarm flyer (R94) where the bats were, in their numbers, not counted in the room's cap; the
+# shop keeps its wafer bats and lace doilies; the studio none (its shadows one at a time)
+FLYER = {"ep1_gallery": "moth", "ep1_garden": "helm", "ep1_cold": "cherry", "ep1_nursery": "plane", "ep1_oven": "sugarfly", "ep1_pit": "deathmoth"}
+SWARM = {"bat", "doily"}
 
 def one_kind(D):
     """every monster of each room in ONE_KIND made into the room's kind (or dropped past the cap); fliers become walkers (a swarm a few of
@@ -235,8 +240,10 @@ def one_kind(D):
                     if "spawner" in e: e["spawner"]["type"] = [kind]; out.append(e); continue
                     ty = e.get("type")
                     if not ty or ty in KEEP: out.append(e); continue
+                    if ty in SWARM and sid == "ep1_shop": out.append(e); continue
+                    if ty in SWARM and sid in FLYER: out.append({**e, "type": FLYER[sid]}); continue
                     if ty in (kind, other): out.append(e); n += 1 if ty == kind and not e.get("hp") and e.get("from") != "statue" else 0; continue   # (a statue standing there is not one of the wave's)
-                    if sid == "ep1_shop" and ty in ("teacup", "doily"): ty2 = other          # (the small things of the shop: its scoops)
+                    if sid == "ep1_shop" and ty == "teacup": ty2 = other                     # (the small things of the shop: its scoops)
                     elif sid == "ep1_shop" and ty == "chandelier": continue                  # (no chandeliers in the shop: the gallery's)
                     else: ty2 = kind
                     if ty2 == kind:
@@ -252,7 +259,7 @@ def one_kind(D):
                     out.append(c)
                 # (a wave event waiting for so many kills: never more than the wave has left to kill - else, with the others gone, the
                 # statues it wakes would wait for ever: the knights' hall's first stop; none to kill: after a while instead)
-                can = sum(e.get("count", 1) for e in out if e.get("type") and e.get("from") != "statue")
+                can = sum(e.get("count", 1) for e in out if e.get("type") and e.get("from") != "statue" and e["type"] not in SWARM | set(FLYER.values()))
                 for e in out:
                     if not e.get("type") and e.get("kills") and e["kills"] > can: e.pop("kills"); e["t"] = 6.0 if can else 2.0
                 w[:] = out

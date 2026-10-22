@@ -845,7 +845,13 @@
     "surippa": { "cry": "beast", "rate": 1.15 },
     "karakasa": { "cry": "paper", "rate": 0.9 },
     "futon": { "cry": "girl", "rate": 0.85 },
-    "kokeshi": { "cry": "wood", "rate": 1.1 }
+    "kokeshi": { "cry": "wood", "rate": 1.1 },
+    "moth": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" },
+    "helm": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" },
+    "cherry": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" },
+    "plane": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" },
+    "sugarfly": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" },
+    "deathmoth": { "windup": [], "attack": [], "hurt": [], "die": [], "rate": 1.6, "cry": "paper" }
   },
   "voices": {
     "_doc": "角色语音：用 AivisSpeech（免费、在本机跑的日语语音合成，tools/voice_aivis.py）和 AivisHub 上的声音模型生成，说 text/stickers.json 里日语那一句。model = AivisHub 模型编号，voice = 模型名（署名和许可在 text/credits.json），tone = 想要的感觉。read：每个场合怎么念（style 风格 = 模型自带的几种语气，speed 语速 0.5～2，intonation 语气浓淡 0～2，tempo 快慢起伏 0～2），default 管没写到的场合，<场合>_<第几句> 只管那一句。say：这一句实际念成什么（写法会读错时改成假名，键同上）。lines：哪几句有语音文件，键是 <场合>_<第几句>（从 1 数），值是文件。radio：Boss 的台词像从旧收音机里出来（小喇叭的频段、一点失真、底下的沙沙和噼啪、两头各一声开关；src/core/audio.js radio，2026-10-20 用户）。",
