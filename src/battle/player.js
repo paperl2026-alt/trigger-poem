@@ -262,7 +262,9 @@ export class Player {
           if (this.linger <= 0 || c.hide) { this.state = 'cover'; this.coverTime = 0; this.soft.kick(0.8); }
         }
         if (this.state === 'cover') {
-          this.coverTime += dt;
+          // (firing blind from behind it is not resting there: no reload after one blind shot - user 2026-10-22, the maggot's lunge: one
+          // shot and she was made to reload before the next; only once she has let go, or is empty)
+          this.coverTime = this.blind ? 0 : this.coverTime + dt;
           if (this.ammo < this.w.mag && (this.coverTime > PL().autoReloadAfter || this.ammo === 0) && !this.gatling && g.shot?.ammo !== 'infinite') this.startReload(PL().autoReloadMul);
         }
       }
