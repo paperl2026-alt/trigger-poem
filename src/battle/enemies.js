@@ -208,7 +208,8 @@ export class Actor {
     const k = this.kick || (this.kick = { sq: 0, sqV: 0, lean: 0, leanV: 0, tilt: 0, tiltV: 0, freeze: 0, w: 0 });
     const side = (info.uv?.u ?? 0.5) < 0.5 ? -1 : 1;
     k.sqV += F.squash * w * 26; k.leanV += F.lean * w * 15; k.tiltV += -side * F.tilt * w * 17;
-    k.freeze = Math.max(k.freeze, F.freeze * w); k.w = w;
+    if (this.game.world.set?.feel?.freeze !== false) k.freeze = Math.max(k.freeze, F.freeze * w);   // (held still a moment: not in a set with feel.freeze: false)
+    k.w = w;
     return w;
   }
   paint(info) {

@@ -47,7 +47,8 @@ const G = {
   build: typeof __BUILD__ !== 'undefined' ? __BUILD__ : 'dev',
   game: null,
   padBook: new PadBook(), padCount: 0, p2pad: null,
-  stop(s) { this.hitstop = Math.max(this.hitstop, s); },
+  // (the whole picture held a moment; not in a set with feel.stop: false - user 2026-10-22: the first episode felt as if it dropped frames)
+  stop(s) { if (this.game?.world?.set?.feel?.stop === false) return; this.hitstop = Math.max(this.hitstop, s); },
 };
 G.p1ctrl = new HybridCtrl(G);
 window.__G = G; // debug handle for automated checks

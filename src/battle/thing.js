@@ -140,7 +140,7 @@ export class TheThing extends Actor {
   offer(i, gm) {
     const g = this.game, R = this.def.ritual;
     if (!this.alive || gm.mode !== 'still' || i !== this.ritualNext) return;
-    const n = ++this.ritualNext; this.stuck = 0;
+    const n = ++this.ritualNext; this.stuck = 0; this.keepHold = 9;   // (the next one waits for this one to reach her and for her line)
     gm.mode = 'offered'; gm.u.outlineOn.value = 0; gm.u.opacity.value = 1;
     if (R.names?.[i]) g.mv.slam(tr(R.names[i]), '', 1.6);   // (what it is: her child's photo, the diary, the little coffin)
     const P = gm.root.position, to = this.uvToWorld(0.5, 0.55);   // (into her arms)
@@ -149,7 +149,7 @@ export class TheThing extends Actor {
       if (!this.alive) return;
       this.flash = 1; g.post.flash(0.4, 0xfff0c8); sfx.clear();
       g.fx.confetti(to, 24, 2.4, [COL.pink, COL.white]);
-      if (n < R.items.length) { this.talkT = 0; this.say(`offer${n}`); return; }
+      if (n < R.items.length) { this.talkT = 0; this.keepHold = this.say(`offer${n}`) + 0.8; return; }
       this.rest();
     } });
   }
@@ -412,6 +412,7 @@ export class TheThing extends Actor {
         this.rowOut = true; for (const k of this.keeps) { k.root.visible = true; k.inner.scale.setScalar(0.01); }
         this.game.post.flash(0.25, 0xfff0c8); sfx.clear(); this.game.hint('madameOffer');
       }
+      this.keepHold = Math.max(0, (this.keepHold || 0) - (this.game.rdt ?? dt));   // (real time: as long as her line is heard)
       this.stuck += dt;   // (stuck on which to give her: she says it again)
       if (this.stuck > (R.hint ?? 9) && this.talkT <= 0) { this.stuck = 0; this.talkT = 4; this.say(this.ritualNext ? `offer${this.ritualNext}` : 'kneel'); }
       return;
@@ -777,7 +778,7 @@ export class Keepsake extends Gimmick {
     this.to = this.root.position.clone(); this.rate = 1; this.rateT = 0;
     this.restart(rr(S.first ?? R.fuse));
   }
-  live() { return this.alive && this.game.combat && this.mode !== 'offered' && this.root.visible && (this.mode !== 'still' || this.boss.ritualNext === this.i); }
+  live() { return this.alive && this.game.combat && this.mode !== 'offered' && this.root.visible && (this.mode !== 'still' || (this.boss.ritualNext === this.i && !(this.boss.keepHold > 0))); }
   hit(info) { if (this.live()) this.boss.keepHit(this, info); }
   // a new count to its next blow, at one of the girls
   restart(s) {
@@ -829,9 +830,11 @@ export class Keepsake extends Gimmick {
     const bp = B.root.position, cam = g.world.camera.position, dx = cam.x - bp.x, dz = cam.z - bp.z, dl = Math.hypot(dx, dz) || 1, fx = dx / dl, fz = dz / dl;
     this.ph += dt * this.sp;
     if (this.mode === 'still') {   // in a row before her, waiting to be given back: the one she wants bigger and glowing, the rest faded
-      const off = (this.i - (B.keeps.length - 1) / 2) * (R.rowGap ?? 2), on = B.ritualNext === this.i;
-      this.to.set(bp.x + fx * R.near * 1.4 - fz * off, (R.rowY ?? 2) + Math.sin(t * 1.5 + this.i) * 0.08, bp.z + fz * R.near * 1.4 + fx * off);
-      const s = this.inner.scale.x + ((on ? 1.2 : 0.8) - this.inner.scale.x) * Math.min(1, dt * 5);
+      // (R.row: [across, toward the camera] for each - beside her, not in front of her: user 2026-10-22, they hid her)
+      const RW = R.row?.[this.i], off = RW ? RW[0] : (this.i - (B.keeps.length - 1) / 2) * (R.rowGap ?? 2), fw = RW ? RW[1] : R.near * 1.4;
+      const want = B.ritualNext === this.i, on = want && !(B.keepHold > 0);
+      this.to.set(bp.x + fx * fw - fz * off, (R.rowY ?? 2) + Math.sin(t * 1.5 + this.i) * 0.08, bp.z + fz * fw + fx * off);
+      const s = this.inner.scale.x + ((want ? 1.1 : 0.75) - this.inner.scale.x) * Math.min(1, dt * 5);
       this.inner.scale.set(s, s, 1); this.u.opacity.value += ((on ? 1 : 0.7) - this.u.opacity.value) * Math.min(1, dt * 5);   // (the others still seen: three things in a row)
       if (on) glow(this, t); else this.u.outlineOn.value = 0;
     } else if (this.mode === 'guard') {   // before her core, between it and the girls

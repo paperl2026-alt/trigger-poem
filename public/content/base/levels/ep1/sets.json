@@ -156,7 +156,8 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_gallery": {
     "panels": true,
@@ -365,7 +366,8 @@
         "exit": { "to": [0, 1.1, -17.6], "look": [0, 1.0, -26] }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_garden": {
     "panels": true,
@@ -526,7 +528,8 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_cold": {
     "panels": true,
@@ -748,7 +751,8 @@
       }
     },
     "dark": 0.85,
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_oven": {
     "panels": true,
@@ -966,7 +970,8 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_pit": {
     "panels": true,
@@ -1120,7 +1125,8 @@
         "mark": true
       }
     ],
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_nursery": {
     "panels": true,
@@ -1367,7 +1373,8 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_studio": {
     "panels": true,
@@ -1636,7 +1643,8 @@
       }
     },
     "dark": 0.6,
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   },
   "ep1_nether": {
     "panels": true,
@@ -1763,6 +1771,7 @@
         ]
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
+    "feel": { "stop": false, "freeze": false }
   }
 }

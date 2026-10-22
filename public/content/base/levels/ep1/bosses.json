@@ -35,7 +35,7 @@
     "ritual": {
       "items": ["ep1/photo", "ep1/diary", "ep1/coffin"],
       "lines": ["photo", "diary", "coffin"],
-      "w": 1.6,
+      "w": 1.2,
       "near": 1.8,
       "swing": { "x": [1.8, 2.8], "speed": [0.7, 1.1], "y": [0.72, 0.5, 0.3], "first": [2.5, 5] },
       "fuse": [4.5, 7.5],
@@ -46,17 +46,18 @@
       "hint": 9,
       "rowGap": 2.6,
       "rowY": 1.2,
+      "row": [[-2.9, 0.5], [2.9, 0.5], [-4.6, 0.2]],
       "names": [
         { "zh": "全家福", "en": "THE FAMILY PHOTO", "ja": "家族写真" },
         { "zh": "写给她的日记", "en": "THE DIARY SHE WROTE TO HER", "ja": "あの子への日記" },
         { "zh": "她的小棺材", "en": "HER LITTLE COFFIN", "ja": "あの子の小さな棺" }
       ],
-      "_doc": "最后一个形态身边出来照片、日记、小棺材（docs/DESIGN.md 第 1 话 10，src/battle/thing.js ritual / Keepsake）：items 图，lines 打中时她说的台词种类（text/stickers.json bosses.madame），w 宽（米），near 挂在她身前多远；swing 来回晃（x 左右幅度、speed 快慢、y 每件的高度占她身高的比例、first 第一次倒计时）；fuse 每次倒计时秒数，pace 走得忽快忽慢的倍率；guard 隔多久有一件挡到她核心前、挡多久；strike 每件倒计时走完的一击（dmg 伤害，躲也没用，all 打两个人）；talkGap 她两句台词至少隔几秒；她倒下后（特写拍完）三件在她身前低处排成一排（rowGap 间距、rowY 高度，不挡她的脸），她要的那件发金光、只有它打得中，打中时满屏砸出它的名字（names）、飞进她怀里；hint 秒没进展她再说一遍提示"
+      "_doc": "最后一个形态身边出来照片、日记、小棺材（docs/DESIGN.md 第 1 话 10，src/battle/thing.js ritual / Keepsake）：items 图，lines 打中时她说的台词种类（text/stickers.json bosses.madame），w 宽（米），near 挂在她身前多远；swing 来回晃（x 左右幅度、speed 快慢、y 每件的高度占她身高的比例、first 第一次倒计时）；fuse 每次倒计时秒数，pace 走得忽快忽慢的倍率；guard 隔多久有一件挡到她核心前、挡多久；strike 每件倒计时走完的一击（dmg 伤害，躲也没用，all 打两个人）；talkGap 她两句台词至少隔几秒；她倒下后（特写拍完）三件在她身边低处排开（row 每件 [横着离她几米, 朝镜头几米]，没有 row 就按 rowGap 间距排一排；rowY 高度；不挡她），一件飞进她怀里、她那句话说完，下一件才亮、才打得中；她要的那件发金光、只有它打得中，打中时满屏砸出它的名字（names）、飞进她怀里；hint 秒没进展她再说一遍提示"
     },
     "coreMul": 1,
     "tag": "MADAME",
     "madame": {
-      "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，打她本人只溅火花），chunk 每打中一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
+      "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，上一页的真相读完它才亮；打她本人只溅火花），pageHp 一页要打掉多少血才撕碎，chunk 每撕碎一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
       "photo": { "dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10 },
       "diary": {
         "pages": [
@@ -90,7 +91,8 @@
           }
         ],
         "chunk": 0.072,
-        "stun": 3.0
+        "stun": 3.0,
+        "pageHp": 900
       },
       "coffin": {
         "hands": "ep1/hands_crowd",
@@ -117,7 +119,7 @@
         "openMul": 2.0
       },
       "repaint": { "time": 3.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
-      "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"]
+      "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise", "ep1/photo", "ep1/diary", "ep1/coffin"]
     },
     "weave": { "legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6 },
     "coreSmoke": { "colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28 }

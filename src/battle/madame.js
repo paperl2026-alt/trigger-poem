@@ -79,7 +79,7 @@ export class Madame extends TheThing {
   leaveForm() {
     for (const r of this.relics) if (r.alive) r.gone();
     this.relics = []; this.photo = null; this.pages = null;
-    for (const c of this.chandeliers || []) if (c.alive && !c.spent) c.act({ gone: true });
+    for (const c of this.chandeliers || []) if (c.alive) c.act({ gone: true });   // (the fallen ones too: nothing of them left lying there - user 2026-10-22)
     this.chandeliers = null;
     if (this.pit) { this.pit.removeFromParent(); this.pit.traverse((o) => { o.geometry?.dispose(); o.material?.dispose(); }); this.pit = null; }
     this.release?.(true);
@@ -130,32 +130,38 @@ export class Madame extends TheThing {
     this.nextPage = 0;
     this.pages = dates.map((d, i) => {
       const r = this.relic({ id: `page${i}`, k: pageKey(d), w: 0.9 }, (q, info) => this.pageHit(q, info)), live = r.live; r.idx = i;
-      r.live = () => live() && r.idx === this.nextPage;   // (only the next one by date: the others are not targets)
+      r.live = () => live() && r.idx === this.nextPage && !(this.pageHold > 0);   // (only the next one by date, once the last one's page is read)
       return r;
     });
     // (their places round her shuffled: the order is in the dates, not in where they are)
     const slots = this.pages.map((_, i) => i).sort(() => Math.random() - 0.5);
     this.pages.forEach((r, i) => { r.slot = slots[i]; });
   }
-  // the glowing page shot: its line slammed across, and it tears into her
-  pageHit(r) {
+  // the glowing page shot: it takes a while to tear (diary.pageHp - user 2026-10-22: one touch and it broke, two of them took half her
+  // bar); torn, its line is held up to be read and it tears into her, and the next page lights up only once that page has been read
+  pageHit(r, info) {
     const g = this.game, M = this.M.diary;
+    r.hp = (r.hp ?? M.pageHp ?? 1) - (info?.dmg || 0); if (info) info.dealt = info.dmg; r.flash = 1;
+    if (info?.uv) r.paint?.(info);
+    if (r.hp > 0) { if ((this.tickT || 0) <= 0) { (sfx.paperRip || sfx.tear)(0); this.tickT = 0.12; } g.fx.confetti(r.center(), 3, 0.8, [COL.paper, COL.white]); return; }
     this.nextPage++;
     const line = M.pages[r.idx], P = r.root.position, to = this.uvToWorld(0.5, 0.6);
     r.taken = r.busy = true; r.u.outlineOn.value = 0;
     g.tweens.to(P, { x: to.x, y: to.y, z: to.z }, 0.35, { ease: Ease.inQuad, onDone: () => {
       r.gone(); if (!this.alive || this.stage !== 1 || this.mutating) return;   // (a page still on its way when the form changed: nothing)
       g.hud.gl.note(line.date, tr(line.text)); g.post.styleBurst(0.4, [8, 7], 0.08);   // (held up to be read, not slammed: user 2026-10-22)
+      this.pageHold = (g.hud.gl.notes.life || 4) + 0.3;
       this.crushed(this.maxHp * M.chunk, M.stun); sfx.tear(0);
       if (this.nextPage >= this.pages.length) this.later(1.5, () => { if (this.stage === 1) this.deal(); });
     } });
   }
   pagesTick(dt, t) {
+    this.pageHold = Math.max(0, (this.pageHold || 0) - dt); this.tickT = (this.tickT || 0) - dt;
     for (const r of this.pages || []) {
       if (!r.alive || r.busy || r.taken) continue;
       this.orbit(r, r.slot / this.pages.length * Math.PI * 2, dt, t, 3.0, 0.35 + 0.12 * (r.slot % 3));
       // the one to shoot: bigger, a pulsing gold edge; the rest faded back
-      const on = r.idx === this.nextPage, s = r.inner.scale.x + ((on ? 1.3 : 0.8) - r.inner.scale.x) * Math.min(1, dt * 6);
+      const on = r.idx === this.nextPage && !(this.pageHold > 0), s = r.inner.scale.x + ((on ? 1.3 : 0.8) - r.inner.scale.x) * Math.min(1, dt * 6);
       r.inner.scale.set(s, s, 1); r.u.opacity.value += ((on ? 1 : 0.4) - r.u.opacity.value) * Math.min(1, dt * 6);
       if (on) glow(r, t); else r.u.outlineOn.value = 0;
     }
@@ -182,7 +188,7 @@ export class Madame extends TheThing {
   }
   hang(side) {   // a chandelier over her (shot through its chain it comes down on her: Gimmick drop + crush)
     const g = this.game, P = this.root.position, M = this.M.coffin, H = g.world.set?.hall?.h ?? 6;
-    const c = new Gimmick(g, { id: `chandelier${side}`, k: 'enemy/chandelier_idle', on: 'air', x: P.x + side * M.hangX, y: H - 1.4, z: P.z + 0.8, w: 1.8,
+    const c = new Gimmick(g, { id: `chandelier${side}`, k: 'enemy/chandelier_disguise', on: 'air', x: P.x + side * M.hangX, y: H - 1.4, z: P.z + 0.8, w: 1.8,
       do: [{ drop: { t: 0.5 }, crush: { r: M.crushR, dmg: this.maxHp * M.crush, stun: M.stun } }, { t: 0.6, say: 'stagger' }] });
     g.actors.push(c); return c;
   }
