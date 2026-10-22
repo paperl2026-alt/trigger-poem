@@ -126,6 +126,9 @@ export class Actor {
   // the shot's (it grows or shrinks about its feet, its hits with it), eased so it never pops. Bosses keep their own size.
   sizeFloor(dt) {
     const g = this.game, cam = g.world?.camera, Cm = g.shot?.compose; if (!cam || !Cm || !this.h || this === g.boss || this.type === 'boss') return;
+    // (seen as it really is from there, nearer bigger - user 2026-10-22: a 3D game, not things slid about and scaled: a solid thing
+    // thrown, and every monster of a set with monster.perspective - the first episode)
+    if (this.solid || (g.world.set?.monster?.perspective && this instanceof Enemy)) { if (this.sizeK !== 1) { this.sizeK = 1; this.root.scale.setScalar(1); } return; }
     if (!(this instanceof Enemy || this instanceof Projectile)) return;   // (monsters and what they throw only: not the place's things, a boss's relics)
     const p = this.root.position, d = SZ.copy(p).sub(cam.position).dot(cam.getWorldDirection(SZ2));
     let k = 1;
@@ -1270,15 +1273,55 @@ export class Projectile extends Actor {
     this.dmg = opts.dmg || enemyHit();
     this.lock = game.fx.lock('shot', this.targetSlot);
     game.world.scene.add(this.root);
+    // a solid thing (projectiles.json solid; user 2026-10-22: a flat picture spinning looked wrong, at least five seconds to shoot it, nearer
+    // bigger): its back as well and a dark rim between the two (it has thickness when it turns edge-on), tumbling end over end about its
+    // own cross axis; lifted up first (rise seconds, lift metres), then lobbed in a slow arc (time seconds in all); its shadow on the floor
+    this.solid = P.solid || null;
+    if (this.solid) {
+      // (the back flat: its relief would be lit from behind once it is turned round, and go dark)
+      const t = this.u.map.value, back = paperMesh(t, this.w, { pivot: 'center' });
+      back.rotation.y = Math.PI; back.material.uniforms.outlineOn.value = 1; back.material.uniforms.mapTexel.value.copy(this.u.mapTexel.value);
+      this.mesh.add(back); this.back = back;
+      this.rimMat = new THREE.MeshBasicMaterial({ map: t, alphaTest: 0.5, color: this.solid.rim || 0x4a2a1c, side: THREE.DoubleSide });
+      // (the rim behind the front - its relief stands out in front - and the back behind the rim)
+      const th = this.solid.thick ?? Math.min(this.w, this.h) * 0.14, rg = new THREE.PlaneGeometry(this.w, this.h);
+      for (let i = 0; i < 5; i++) { const m = new THREE.Mesh(rg, this.rimMat); m.position.z = -(i + 1) / 6 * th; this.mesh.add(m); }
+      back.position.z = -th;
+      this.rimGeo = rg;
+      this.T = Math.max(this.T, P.time ?? 5); this.rise = P.rise ?? 0.8;
+      this.lift = this.from.clone().add(new THREE.Vector3(0, P.lift ?? 0.9, 0));
+      this.ctrl = this.lift.clone().lerp(this.to, 0.5).add(new THREE.Vector3((Math.random() - 0.5) * bp.wobble * 0.5 + (opts.curve || 0), opts.arc ?? P.arc ?? 2.6, 0));
+      this.shade = new THREE.Mesh(new THREE.CircleGeometry(1, 20), new THREE.MeshBasicMaterial({ color: 0x1a0a10, transparent: true, opacity: 0.4, depthWrite: false }));
+      this.shade.rotation.x = -Math.PI / 2; this.shade.renderOrder = 2; game.world.scene.add(this.shade);
+    }
+  }
+  dispose() {
+    if (this.shade) { this.shade.removeFromParent(); this.shade.geometry.dispose(); this.shade.material.dispose(); this.shade = null; }
+    if (this.back) { this.back.geometry.dispose(); this.back.material.dispose(); this.rimGeo.dispose(); this.rimMat.dispose(); this.back = null; }
+    super.dispose();
   }
   update(dt, tt) {
     this.baseUpdate(dt, tt);
     if (!this.alive) return;
     this.t += dt;
     const k = Math.min(1, this.t / this.T);
-    const a = this.from, b = this.ctrl, c = this.to, m = 1 - k;
-    this.root.position.set(m * m * a.x + 2 * m * k * b.x + k * k * c.x, m * m * a.y + 2 * m * k * b.y + k * k * c.y, m * m * a.z + 2 * m * k * b.z + k * k * c.z);
-    this.inner.rotation.z += this.spin * dt;
+    if (this.solid) {   // (lifted, then lobbed; end over end, winding up while it is lifted; its shadow under it)
+      const R = this.rise, P = this.root.position;
+      if (this.t < R) { const e = this.t / R; P.lerpVectors(this.from, this.lift, e * e * (3 - 2 * e)); }
+      else {
+        const j = Math.min(1, (this.t - R) / (this.T - R)), a = this.lift, b = this.ctrl, c = this.to, m = 1 - j;
+        P.set(m * m * a.x + 2 * m * j * b.x + j * j * c.x, m * m * a.y + 2 * m * j * b.y + j * j * c.y, m * m * a.z + 2 * m * j * b.z + j * j * c.z);
+      }
+      this.inner.rotation.x += (this.solid.spin ?? 5) * dt * Math.min(1, this.t / R);
+      this.inner.rotation.y = Math.sin(this.t * 1.3 + this.seed) * 0.5;
+      const up = Math.max(0, P.y), s = this.w * 0.45 * (1 + up * 0.12);
+      this.shade.position.set(P.x, 0.03, P.z); this.shade.scale.set(s, s, 1); this.shade.material.opacity = 0.42 / (1 + up * 0.35);
+      const bu = this.back.material.uniforms; bu.flash.value = this.flash; bu.lit.value.copy(this.u.lit.value);
+    } else {
+      const a = this.from, b = this.ctrl, c = this.to, m = 1 - k;
+      this.root.position.set(m * m * a.x + 2 * m * k * b.x + k * k * c.x, m * m * a.y + 2 * m * k * b.y + k * k * c.y, m * m * a.z + 2 * m * k * b.z + k * k * c.z);
+      this.inner.rotation.z += this.spin * dt;
+    }
     if (this.kind === 'orb') this.inner.scale.setScalar(1 + Math.sin(tt * 20) * 0.06);
     const TR = C.projectiles[this.kind]?.trail; if (TR) this.game.vfx.trail(TR, this.root.position, dt, { key: this });   // (its fire / smoke / glow behind it)
     const s = this.game.world.project(this.root.position);
@@ -1287,7 +1330,7 @@ export class Projectile extends Actor {
     this.sightX = s.x; this.sightY = s.y; this.sightR = Math.max(this.game.H * T.combat.sightMin, (box.y1 - box.y0) * T.combat.sightK);
     this.lock.set(s.x, this.game.H - s.y, this.sightR, k, tt, undefined, box, this.root.position);
     if (k >= 1) {
-      this.alive = false;
+      this.alive = false; if (this.shade) this.shade.visible = false;
       this.lock.remove(); this.lock = null;
       const blocked = this.game.playerAttacked({ kind: 'shot', dmg: this.dmg, from: this, slot: this.targetSlot });   // (hiding does not help: shoot it down)
       // stopped by the cover: it drops in front of it and bounces about (the physics), or falls away
@@ -1298,9 +1341,9 @@ export class Projectile extends Actor {
   }
   hit(info) {
     if (!this.alive) return;
-    this.alive = false;
+    this.alive = false; if (this.shade) this.shade.visible = false;
     this.lastHitBy = info.by;
-    this.lock.remove(true); this.lock = null; this.u.outlineOn.value = 0;
+    this.lock.remove(true); this.lock = null; this.u.outlineOn.value = 0; if (this.back) this.back.material.uniforms.outlineOn.value = 0;
     info.dealt = 0;
     this.game.onHit(this, info.kind, info);
     if (this.kind === 'takoyaki') sfx.thud(0); else sfx.shatter(0);

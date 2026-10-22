@@ -139,6 +139,7 @@
     - 敌方时钟 `etw`：怪物、Boss、飞行物、刷怪按 `tuning/combat.json` pace 慢放（画面动画仍是实时）；
     - 教学卡 `teach`：停留点写 `lesson` 的先弹卡（`text/lessons.json`，`hud.lesson`），只第一次；
     - 飞行物自带准星：子弹打在准星圈里就算击落（`targetsAt`，`tuning/combat.json` sightMin / sightK）；
+    - 实心的飞行物（`projectiles.json` 里写了 `solid: { spin, rim, thick }` 的种类，现在只有第 1 话包里的：家具、樱桃、冰淇淋球，和它自己那份蜂蜜、纸飞机、漫画）：正面是带浮雕的纸片（图有 `_rd` 就有体积，第 1 话的 `p_*` 用 `tools/relief.py` 生成过），背后五层深色的边（`rim` 色，`thick` 米厚）和一张平的背面（浮雕的背面翻过来会被照黑），绕自己的横轴一圈圈翻（`spin` 弧度 / 秒），左右略摆；先举起来（`rise` 秒、`lift` 米），再走一条抛物线（`arc` 米高），从出手到打到人至少 `time` 秒（比扔它的那边给的时间长就用它）；地上一团跟着它的影子；不缩放（`sizeFloor`），真透视。
     - 奖励 `applyRewards`：不评级；通关固定 + 击杀、首通、满级换伍德刀盾、书包倍率（道具等级 `SAVE.itemLv`），记录最短全通关时间，首通给 `reward` 道具（读档时 `initSave` 也会补发已通关大关的 `reward`：奖励道具是后加的，之前通关的存档拿不到）；
     - 每个小关可以有自己的场景（`episodes.json` 步骤写 `set`）：`useSet` 换场景时把两位主角、粒子挂到新场景上，旧场景 `dispose`；从中途开始（选关选了后面的小关）直接建那一关的场景；
     - `interlude(id, then)`：战斗中插一页漫画（Boss 变身），停火、播完让两人回掩体，再交给 `then`；
@@ -324,7 +325,7 @@
 - 站点写 `shot: "<预设>"` 或 `shot: { kind, 要改的项 }`；没写按站点推断（`ride` 有车 → ride、没车 → run，`escort` → escort，`cine` → cine，其余 cover）。`Game.goStation` 换预设，`Game.shot` 是当前的；`Game.live`（`Live`）每帧把屏幕上的东西缓过去（两人的位置、大小、下沉、显隐，中下 HUD，视野，暗角），换预设是挪过去，不是跳。
 - 用到预设的地方：`player.js`（位置、大小、下沉、显隐、一直探身、不装弹、攻击模式）、`heroine.js setSet`（姿势组：`rig.sets.<组>: { cover, fire, actions }` 指向 rig 里的条目，没有就用 cover / fire）、`glhud.js`（中下那条 `Top` 的高度，Dodge 跟着；`hud.show: false` 和特写一样退下；`lens` 暗角）、`stickers.js`（`bubbles: false` 不冒气泡，指令里的台词 `force` 例外）、`panels.js` / `world.js`（视野减 `live.zoom`）、`Game.arrive`（`cover: false` 不摆掩体）、`mv.js`（每拍强度乘 `mv`）。
 
-- **构图**（`compose`，DESIGN「总纲」：像拍电影，各层各用各的透视）：交战层的怪在画面上多大、停在哪、待在哪一块，按镜头定，不按那台相机的透视——`size: [[脚在画面的高度, 占画面高度的比例], ...]`（`Enemy.sizeFloor`：怪仍站在场景的地上，只是绕脚缩放到这个大小，判定跟着变；飞的 / 成群的 / 扔过来的 `fly`；Boss 不管），`front` 地上的怪停步的前线（画面高度比例，`floorAt` 从画面反算到地上），`zone` 怪待的横向范围（近处的不进两人所在的两侧，`Enemy.keepClear`；两只的图叠得多时近的那只往旁边让）。默认在 `cover` / `open` / `corner` 预设里，站点可以改。
+- **构图**（`compose`，DESIGN「总纲」：像拍电影，各层各用各的透视）：交战层的怪在画面上多大、停在哪、待在哪一块，按镜头定，不按那台相机的透视——`size: [[脚在画面的高度, 占画面高度的比例], ...]`（`Enemy.sizeFloor`：怪仍站在场景的地上，只是绕脚缩放到这个大小，判定跟着变；飞的 / 成群的 / 扔过来的 `fly`；Boss 不管；场景 `sets.json monster.perspective`（第 1 话）的怪、`solid` 的飞行物不缩放，就按真透视，近大远小——2026-10-22 用户：这是 3D 游戏，不是平移加缩放），`front` 地上的怪停步的前线（画面高度比例，`floorAt` 从画面反算到地上），`zone` 怪待的横向范围（近处的不进两人所在的两侧，`Enemy.keepClear`；两只的图叠得多时近的那只往旁边让）。默认在 `cover` / `open` / `corner` 预设里，站点可以改。
 - **每人单独摆**：`players` 的 `x`、`scale`、`y`、`crop` 都可以写 `[1P, 2P]`（楼梯上一个在上一个在下、一个靠柱子一个站远……），一个数就是两人一样（`Live` 每人各自缓过去）。
 - **两人进到场景里**（`players.world: { m 身高米数, behind 站在掩体前几米, at: [[x, z], [x, z]] }`，`player.js toWorld`）：立绘组从镜头上摘下挂进场景（第 0 层，和场景一起画，会被前面的东西挡住、跟着调色），脚踩地、朝着镜头；镜头在她哪一边就换哪张图（`heroine.view`：`<姿势>_side`、`<姿势>_front`，侧面图按从右边拍画的，镜头在左边时镜像），枪口位置从场景投回屏幕。
 - **动作片段**（`tuning/layout.json moves`，演出指令 `girls: { move: hop | dash | dive, who, dx, dy, delay }`，`player.move`）：她有图就换上起跳 / 空中 / 落地 / 奔跑，在画面里走一条弧、挪过去；新站点开始时归位（`settle`）。

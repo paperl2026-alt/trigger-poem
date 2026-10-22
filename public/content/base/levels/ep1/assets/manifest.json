@@ -4447,6 +4447,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_candle_rd",
   "src": "assets/enemy/p_candle.webp",
   "w": 316
  },
@@ -4460,8 +4461,19 @@
    18,
    18
   ],
+  "relief": "enemy/p_candle_b_rd",
   "src": "assets/enemy/p_candle_b.webp",
   "w": 322
+ },
+ "enemy/p_candle_b_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_candle_b_rd.png",
+  "w": 322
+ },
+ "enemy/p_candle_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_candle_rd.png",
+  "w": 316
  },
  "enemy/p_chair": {
   "figH": 0.9008,
@@ -4473,6 +4485,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_chair_rd",
   "src": "assets/enemy/p_chair.webp",
   "w": 396
  },
@@ -4486,8 +4499,19 @@
    18,
    18
   ],
+  "relief": "enemy/p_chair_b_rd",
   "src": "assets/enemy/p_chair_b.webp",
   "w": 358
+ },
+ "enemy/p_chair_b_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_chair_b_rd.png",
+  "w": 358
+ },
+ "enemy/p_chair_rd": {
+  "h": 363,
+  "src": "assets/enemy/p_chair_rd.png",
+  "w": 396
  },
  "enemy/p_cherry": {
   "figH": 0.9091,
@@ -4499,6 +4523,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_cherry_rd",
   "src": "assets/enemy/p_cherry.webp",
   "w": 382
  },
@@ -4512,8 +4537,19 @@
    18,
    18
   ],
+  "relief": "enemy/p_cherry_b_rd",
   "src": "assets/enemy/p_cherry_b.webp",
   "w": 345
+ },
+ "enemy/p_cherry_b_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_cherry_b_rd.png",
+  "w": 345
+ },
+ "enemy/p_cherry_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_cherry_rd.png",
+  "w": 382
  },
  "enemy/p_cup": {
   "figH": 0.9024,
@@ -4525,6 +4561,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_cup_rd",
   "src": "assets/enemy/p_cup.webp",
   "w": 396
  },
@@ -4538,7 +4575,18 @@
    18,
    18
   ],
+  "relief": "enemy/p_cup_b_rd",
   "src": "assets/enemy/p_cup_b.webp",
+  "w": 396
+ },
+ "enemy/p_cup_b_rd": {
+  "h": 392,
+  "src": "assets/enemy/p_cup_b_rd.png",
+  "w": 396
+ },
+ "enemy/p_cup_rd": {
+  "h": 369,
+  "src": "assets/enemy/p_cup_rd.png",
   "w": 396
  },
  "enemy/p_scoop": {
@@ -4551,6 +4599,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_scoop_rd",
   "src": "assets/enemy/p_scoop.webp",
   "w": 396
  },
@@ -4564,7 +4613,18 @@
    18,
    18
   ],
+  "relief": "enemy/p_scoop_b_rd",
   "src": "assets/enemy/p_scoop_b.webp",
+  "w": 396
+ },
+ "enemy/p_scoop_b_rd": {
+  "h": 348,
+  "src": "assets/enemy/p_scoop_b_rd.png",
+  "w": 396
+ },
+ "enemy/p_scoop_rd": {
+  "h": 376,
+  "src": "assets/enemy/p_scoop_rd.png",
   "w": 396
  },
  "enemy/p_wafer": {
@@ -4577,6 +4637,7 @@
    18,
    18
   ],
+  "relief": "enemy/p_wafer_rd",
   "src": "assets/enemy/p_wafer.webp",
   "w": 369
  },
@@ -4590,8 +4651,19 @@
    18,
    18
   ],
+  "relief": "enemy/p_wafer_b_rd",
   "src": "assets/enemy/p_wafer_b.webp",
   "w": 357
+ },
+ "enemy/p_wafer_b_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_wafer_b_rd.png",
+  "w": 357
+ },
+ "enemy/p_wafer_rd": {
+  "h": 396,
+  "src": "assets/enemy/p_wafer_rd.png",
+  "w": 369
  },
  "enemy/scoopling_b_bite": {
   "anchor": "bottom",

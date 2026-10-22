@@ -27,12 +27,13 @@ def madame(B):
     B["beh"] = "madame"
     S1, S2, S3 = B["stages"]
     S1["pattern"] = ["drift", "volley", "drift", "lunge", "volley"]; S1["projectiles"] = ["furniture"]
-    S2["pattern"] = ["drift", "volley", "drift", "volley", "lunge"]; S2["projectiles"] = ["plane", "manga"]; S2["shots"] = [5, 8]
+    S2["pattern"] = ["drift", "volley", "drift", "volley", "lunge"]; S2["projectiles"] = ["plane", "manga"]; S2["shots"] = [3, 4]   # (fewer: each takes five seconds to come now - projectiles.json solid)
     S2.pop("summon", None)
     S3["pattern"] = ["drift", "drag", "drift", "volley", "drag", "burst"]; S3.pop("summon", None)
     # (how long each form lasts, on the auto-player: about 6, 63 and 49 damage a second in the three -> about a minute each; the diary's
     # share is its six pages: shots at her do nothing there - user 2026-10-22)
     B["hp"] = 4160
+    B["volley"]["shots"] = [2, 3]   # (each throw five seconds in the air now: user 2026-10-22, at least five seconds to shoot it)
     B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
     B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
@@ -246,7 +247,7 @@ def places(D):
         S = D[sid]; deepen(S, dz, list(S["stations"].values())[1]["cam"][2])
     for sid, S in D.items():
         if not isinstance(S, dict) or "stations" not in S: continue
-        S["monster"] = {"spawnMin": 8.0, "spawnFar": 12.0}
+        S["monster"] = {"spawnMin": 8.0, "spawnFar": 12.0, "perspective": True}   # (perspective: seen as they really are, no size floor - Actor.sizeFloor)
         for st in S["stations"].values():
             for w in st.get("waves", []):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)

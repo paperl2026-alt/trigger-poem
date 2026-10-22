@@ -1,12 +1,74 @@
 {
-  "_doc": "第 1 话关卡包的 projectiles（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。",
+  "_doc": "第 1 话关卡包的 projectiles（格式和本体的同名文件一样，docs/TECH.md「关卡包」）。solid：真的一件东西（正反两面 + 中间一圈深色的边，绕自己的横轴翻），spin 每秒翻几弧度；time 从出手到打到人至少几秒，rise 先举起来几秒、lift 举多高，arc 抛物线多高（2026-10-22 用户：飞行物至少给 5 秒去打、要近大远小，旋转的平面图看着怪）。",
   "furniture": {
     "keys": ["p_chair", "p_cup", "p_candle", "p_chair_b", "p_cup_b", "p_candle_b"],
-    "size": 0.7,
+    "size": 1.0,
     "spin": 4,
+    "solid": { "spin": 5.5, "rim": "#4a2a1c" },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.8,
     "scar": "crack",
     "trail": "smokeTrail"
   },
-  "cherry": { "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"], "size": 0.45, "spin": 8, "scar": "splat", "scarColor": "#d01830" },
-  "scoop": { "keys": ["p_scoop", "p_scoop_b"], "size": 0.55, "spin": 3, "scar": "splat", "scarColor": "#ffe0f0" }
+  "cherry": {
+    "keys": ["p_cherry", "p_cherry_b", "p_wafer", "p_wafer_b"],
+    "size": 0.65,
+    "spin": 8,
+    "scar": "splat",
+    "scarColor": "#d01830",
+    "solid": { "spin": 7, "rim": "#5a1018" },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.6
+  },
+  "scoop": {
+    "keys": ["p_scoop", "p_scoop_b"],
+    "size": 0.75,
+    "spin": 3,
+    "scar": "splat",
+    "scarColor": "#ffe0f0",
+    "solid": { "spin": 4, "rim": "#6a4048" },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.6
+  },
+  "ooze": {
+    "keys": ["p_ooze", "p_ooze_b"],
+    "size": 0.95,
+    "spin": -2,
+    "scar": "splat",
+    "scarColor": "#e0a020",
+    "trail": "glowTrail",
+    "solid": { "spin": 3, "rim": "#6a3a08" },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.6
+  },
+  "plane": {
+    "keys": ["p_plane"],
+    "size": 0.7,
+    "spin": 1.5,
+    "scar": "paper",
+    "solid": { "spin": 1.2, "rim": "#8a8a90", "thick": 0.02 },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.0
+  },
+  "manga": {
+    "keys": ["p_manga"],
+    "size": 1.0,
+    "spin": -5,
+    "scar": "paper",
+    "solid": { "spin": 4.5, "rim": "#3a3040" },
+    "time": 5.2,
+    "rise": 0.9,
+    "lift": 1.0,
+    "arc": 2.6
+  }
 }
