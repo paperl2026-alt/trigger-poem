@@ -94,3 +94,19 @@ def prompt(name):
 
 JOBS = {f"R93_{n}": [(f"art/raw/r93/{n}_{v}.png", [src(n), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
                       prompt(n) + f" Try {v}.", "OPAQUE") for v in "abc"] for n in FIX}
+
+# (user 2026-10-22, on open_0 b: three hands - the lump of fur under her chin still read as two paws, with the girl's hand over them: again,
+# asking outright for exactly two hands and the second lump gone)
+REDO = ("Edit reference image 1, a panel from a full-colour manga page of a game. Output the SAME picture at the same framing: keep "
+        "everything exactly as it is (the camera, the composition, the background, the colours, the line art and screentone style, the "
+        "phone, the sparkles) and keep the white-haired cat girl's face, delighted expression, hair, glasses, clothes and position exactly "
+        "as they are (reference image 2 is her design sheet). The black-haired twin-tail girl, where she is in the picture, stays exactly "
+        "as she is (reference images 3 and 4 are her design; " + OUTFIT + "). Change ONLY her hands under her chin: there, a big lump of "
+        "white fur now looks like TWO cat paws pressed together - that is wrong, she has only ONE cat paw (her spirit power is only enough "
+        "for one hand at a time). Redraw her hands so that the picture shows EXACTLY TWO hands of hers: (1) ONE big white fluffy ghost-cat "
+        "paw with red claws, curled into a soft round fist under her chin, coming out of the wide white sleeve on the viewer's LEFT; (2) "
+        "her other hand, an ordinary girl's hand with slim pale fingers and short plain nails, coming out of the sleeve on the viewer's "
+        "RIGHT and resting over the back of that paw. No second paw, no extra hand, no other lump of fur. Do not add text, do not add "
+        "effects.")
+JOBS["R93_open_0_redo"] = [(f"art/raw/r93/open_0_{v}.png", [src("open_0"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png",
+                                                             "art/ref/pink_poses.png"], REDO + f" Try {v}.", "OPAQUE") for v in "def"]
