@@ -8,7 +8,7 @@ usage: python -I tools/rounds/ep1_rework.py"""
 import json, pathlib, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
-sys.path[:0] = [str(ROOT / "tools")]
+sys.path[:0] = [str(ROOT / "tools"), str(ROOT / "tools" / "rounds")]
 import packs  # noqa: E402   (the content files' own layout)
 L = ROOT / "public" / "content" / "base" / "levels" / "ep1"
 BASE = "8f0a791"   # (the commit before the rooms were redone)
@@ -31,15 +31,15 @@ def madame(B):
     S2.pop("summon", None)
     S3["pattern"] = ["drift", "drag", "drift", "volley", "drag", "burst"]; S3.pop("summon", None)
     # (how long each form lasts, on the auto-player: about 6, 63 and 49 damage a second in the three -> about a minute each; the diary's
-    # share is its six pages)
+    # share is its six pages: shots at her do nothing there - user 2026-10-22)
     B["hp"] = 4160
     B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
     B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
     B["madame"] = {
-        "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相），chunk 每打对一页扣她最大血量的比例、stun 僵住几秒、cut 打错那页割人的伤害、coreMul 直接打她的伤害倍数；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
+        "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，打她本人只溅火花），chunk 每打中一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
         "photo": {"dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10},
-        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2, "cut": 12, "coreMul": 0.35},
+        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2},
         "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 6, "time": 4.0, "dmg": 18, "away": 6, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0},
         "repaint": {"time": 2.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
         "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_idle", "ep1/photo", "ep1/diary", "ep1/coffin"],
@@ -154,6 +154,31 @@ def tunnel_fall(S):
     st["pt1"]["waves"].append([{"t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow"}])
     st["pt2"]["enter"] = {"from": [0, 6, -6.2], "dur": 0.75, "shake": 1.6, "sfx": "thud"}
 
+def studio_shades(S):
+    """the studio's four shadows (user 2026-10-22: they came down on top of one another with bats and ghouls among them - dense,
+    unreadable, one-shotting the player; a boss's stages should be one shadow each, shown alone and saying its line, like the prologue's
+    boss): each wave only its painting turning and its shadow, the stop fought one wave to the end before the next (solo), the shadow
+    looked at as it lands (look: Game.introLook, the lady's voice)"""
+    st = S["stations"]["st1"]; st["solo"] = True
+    # (user 2026-10-22: the studio dull and dim, and nothing to shoot to light it: dim at first like the cold store, candles on the walls to
+    # shoot alight - each lights some of it - and its colour grade no heavier than the other rooms')
+    S["dark"] = 0.6; S["grade"]["k"] = 0.22; st["hint"] = "lampHint"
+    if not any(g["id"].startswith("lamp") for g in S["gimmicks"]):
+        for i, (on, z) in enumerate([("left", -4.0), ("right", -6.5), ("left", -9.5), ("right", -12.0)], 1):
+            S["gimmicks"].append({"id": f"lamp{i}", "k": "ep1/nb_candle_out", "kx": "ep1/nb_candle", "on": on, "y": 1.8, "z": z, "w": 0.85, "hp": 1,
+                                  "station": "st1", "do": [{"light": 0.15}]})
+    for w in st["waves"]:
+        keep = [e for e in w if e.get("gimmick") or str(e.get("type", "")).startswith("shade_")]
+        pic = next((e["gimmick"] for e in keep if e.get("gimmick")), None)
+        for e in keep:
+            if str(e.get("type", "")).startswith("shade_"):
+                e["look"] = {"say": e["type"], "dist": 4.6, "up": 0.4, "v": 0.55}
+                if pic:   # (out of its own painting, down to a spot in front of it: user 2026-10-22, one painting gave no shadow)
+                    e["from"] = "painting"; e["painting"] = pic; e["free"] = True; e.pop("way", None)
+                    gm = next(g for g in S["gimmicks"] if g["id"] == pic)
+                    e["x"] = round(-2.6 if gm["on"] == "left" else 2.6, 2); e["z"] = round(gm["z"] - 1.0, 2)
+        w[:] = keep
+
 def acts(D):
     """the monsters' own play (DESIGN「停留点不只是一个镜头、一种打法」 怪的演出, src/battle/acts.js), a wave of its own at some stops, placed
     where the stop's corner view looks: two scooplings squabbling in the gelateria (shoot one, both turn on the girls); four mourners in a
@@ -178,6 +203,7 @@ def places(D):
     gallery_mouth(D["ep1_gallery"])
     knight_planks(D["ep1_garden"])
     tunnel_fall(D["ep1_pit"])
+    studio_shades(D["ep1_studio"])
     for gm in D["ep1_cold"]["gimmicks"]:   # (the shelf toppled onto the vent: 1.2 times as big - user 2026-10-22, it could not cover the hole)
         if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)

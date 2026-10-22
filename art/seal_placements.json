@@ -1115,5 +1115,98 @@
     "auto": true,
     "png": "art/raw/r78/seal/cat_startled_b.png",
     "keep_frame": true
+  },
+  "page88_merge_1": {
+    "src": "art/raw/r88/page_merge.png",
+    "auto": true,
+    "within": [
+      262,
+      262,
+      392,
+      392
+    ],
+    "png": "art/raw/r88/fixed/page_merge.png"
+  },
+  "page88_merge_4": {
+    "src": "art/raw/r88/fixed/page_merge.png",
+    "auto": true,
+    "within": [
+      1060,
+      862,
+      1170,
+      941
+    ],
+    "clip": [
+      850,
+      480,
+      1660,
+      932
+    ],
+    "png": "art/raw/r88/fixed/page_merge.png"
+  },
+  "page88_studio_1": {
+    "src": "art/raw/r88/page_studio.png",
+    "center": [
+      363,
+      354
+    ],
+    "ring": 19,
+    "rot": -20,
+    "erase": [
+      352,
+      342,
+      373,
+      378
+    ],
+    "png": "art/raw/r88/fixed/page_studio.png"
+  },
+  "page89_merge_1": {
+    "src": "art/raw/r89/page_merge.png",
+    "center": [
+      325,
+      188
+    ],
+    "ring": 28,
+    "rot": -20,
+    "erase": [
+      306,
+      170,
+      338,
+      221
+    ],
+    "png": "art/raw/r89/fixed/page_merge.png"
+  },
+  "page89_merge_4": {
+    "src": "art/raw/r89/fixed/page_merge.png",
+    "auto": true,
+    "within": [
+      975,
+      780,
+      1048,
+      858
+    ],
+    "clip": [
+      850,
+      480,
+      1660,
+      932
+    ],
+    "png": "art/raw/r89/fixed/page_merge.png"
+  },
+  "page89_studio_1": {
+    "src": "art/raw/r89/page_studio_mix.png",
+    "center": [
+      607,
+      361
+    ],
+    "ring": 28,
+    "rot": -10,
+    "erase": [
+      589,
+      343,
+      618,
+      388
+    ],
+    "png": "art/raw/r89/fixed/page_studio_mix.png"
   }
 }

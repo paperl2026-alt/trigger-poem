@@ -6,7 +6,7 @@ import { setManifest, loadKeys, isLoaded, releaseExcept, setRenderer, vramMB, te
 import { coreKeys, stageFrom, stageAt, outfitKeys, stageKeysAt, placeOf } from './core/groups.js';
 import { Tweens } from './core/tween.js';
 import { Post } from './core/post.js';
-import { initAudio, sfx, preloadSounds } from './core/audio.js';
+import { initAudio, sfx, preloadSounds, setMuted } from './core/audio.js';
 import { startIntro } from './ui/intro.js';
 import { Game } from './battle/game.js';
 import { showResults } from './ui/screens.js';
@@ -273,6 +273,7 @@ async function boot() {
   gear.id = 'dbg-btn'; gear.textContent = '⚙';
   gear.onpointerdown = (e) => { e.stopPropagation(); e.preventDefault(); settings.toggle(); };
   document.body.appendChild(gear);
+  if (q.has('mute')) setMuted(true);   // (a look at it in a browser while the user may be playing: silent - user 2026-10-22)
   if (q.has('auto')) G.auto = true;
   if (q.has('skip')) G.forceSkip = true;
   if (q.has('team')) SAVE.team = q.get('team').split(',');   // test runs: ?team=cat,pink (1P, 2P)

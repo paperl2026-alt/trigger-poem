@@ -292,7 +292,7 @@
   "w": 1920
  },
  "comic/ep1p_merge": {
-  "h": 1081,
+  "h": 1079,
   "src": "assets/comic/ep1p_merge.webp",
   "w": 1920
  },
@@ -4955,248 +4955,248 @@
  },
  "enemy/shade_bride_crouch": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_crouch_rd",
   "src": "assets/enemy/shade_bride_crouch.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_crouch_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_crouch_rd.png",
   "w": 512
  },
  "enemy/shade_bride_hurt": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_hurt_rd",
   "src": "assets/enemy/shade_bride_hurt.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_hurt_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_hurt_rd.png",
   "w": 512
  },
  "enemy/shade_bride_idle": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_idle_rd",
   "src": "assets/enemy/shade_bride_idle.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_idle_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_idle_rd.png",
   "w": 512
  },
  "enemy/shade_bride_rush": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_rush_rd",
   "src": "assets/enemy/shade_bride_rush.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_rush_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_rush_rd.png",
   "w": 512
  },
  "enemy/shade_bride_stand": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_stand_rd",
   "src": "assets/enemy/shade_bride_stand.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_stand_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_stand_rd.png",
   "w": 512
  },
  "enemy/shade_bride_walk": {
   "anchor": "bottom",
-  "figH": 0.9458,
-  "h": 535,
+  "figH": 0.7937,
+  "h": 509,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_bride_walk_rd",
   "src": "assets/enemy/shade_bride_walk.webp",
-  "w": 555
+  "w": 602
  },
  "enemy/shade_bride_walk_rd": {
-  "h": 494,
+  "h": 433,
   "src": "assets/enemy/shade_bride_walk_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_glide": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_glide_rd",
   "src": "assets/enemy/shade_hostess_glide.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_glide_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_glide_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_hurt": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_hurt_rd",
   "src": "assets/enemy/shade_hostess_hurt.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_hurt_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_hurt_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_idle": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_idle_rd",
   "src": "assets/enemy/shade_hostess_idle.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_idle_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_idle_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_stand": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_stand_rd",
   "src": "assets/enemy/shade_hostess_stand.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_stand_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_stand_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_throw": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_throw_rd",
   "src": "assets/enemy/shade_hostess_throw.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_throw_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_throw_rd.png",
   "w": 512
  },
  "enemy/shade_hostess_windup": {
   "anchor": "bottom",
-  "figH": 0.9148,
-  "h": 528,
+  "figH": 0.9202,
+  "h": 514,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   20,
+   20,
+   20,
    0
   ],
   "relief": "enemy/shade_hostess_windup_rd",
   "src": "assets/enemy/shade_hostess_windup.webp",
-  "w": 554
+  "w": 604
  },
  "enemy/shade_hostess_windup_rd": {
-  "h": 488,
+  "h": 436,
   "src": "assets/enemy/shade_hostess_windup_rd.png",
   "w": 512
  },
  "enemy/shade_mother_glide": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5206,17 +5206,17 @@
   ],
   "relief": "enemy/shade_mother_glide_rd",
   "src": "assets/enemy/shade_mother_glide.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_glide_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_glide_rd.png",
   "w": 512
  },
  "enemy/shade_mother_hurt": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5226,17 +5226,17 @@
   ],
   "relief": "enemy/shade_mother_hurt_rd",
   "src": "assets/enemy/shade_mother_hurt.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_hurt_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_hurt_rd.png",
   "w": 512
  },
  "enemy/shade_mother_idle": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5246,17 +5246,17 @@
   ],
   "relief": "enemy/shade_mother_idle_rd",
   "src": "assets/enemy/shade_mother_idle.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_idle_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_idle_rd.png",
   "w": 512
  },
  "enemy/shade_mother_rock": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5266,17 +5266,17 @@
   ],
   "relief": "enemy/shade_mother_rock_rd",
   "src": "assets/enemy/shade_mother_rock.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_rock_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_rock_rd.png",
   "w": 512
  },
  "enemy/shade_mother_throw": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5286,17 +5286,17 @@
   ],
   "relief": "enemy/shade_mother_throw_rd",
   "src": "assets/enemy/shade_mother_throw.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_throw_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_throw_rd.png",
   "w": 512
  },
  "enemy/shade_mother_windup": {
   "anchor": "bottom",
-  "figH": 0.9209,
-  "h": 531,
+  "figH": 0.9346,
+  "h": 520,
   "hit": true,
   "pad": [
    20,
@@ -5306,130 +5306,130 @@
   ],
   "relief": "enemy/shade_mother_windup_rd",
   "src": "assets/enemy/shade_mother_windup.webp",
-  "w": 617
+  "w": 602
  },
  "enemy/shade_mother_windup_rd": {
-  "h": 441,
+  "h": 442,
   "src": "assets/enemy/shade_mother_windup_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_hover0": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_hover0_rd",
   "src": "assets/enemy/shade_mourner_hover0.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_hover0_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_hover0_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_hover1": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_hover1_rd",
   "src": "assets/enemy/shade_mourner_hover1.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_hover1_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_hover1_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_hurt": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_hurt_rd",
   "src": "assets/enemy/shade_mourner_hurt.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_hurt_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_hurt_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_idle": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_idle_rd",
   "src": "assets/enemy/shade_mourner_idle.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_idle_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_idle_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_wail": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_wail_rd",
   "src": "assets/enemy/shade_mourner_wail.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_wail_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_wail_rd.png",
   "w": 512
  },
  "enemy/shade_mourner_windup": {
   "anchor": "bottom",
-  "figH": 0.9508,
-  "h": 529,
+  "figH": 0.9429,
+  "h": 526,
   "hit": true,
   "pad": [
-   18,
-   18,
-   18,
+   22,
+   22,
+   22,
    0
   ],
   "relief": "enemy/shade_mourner_windup_rd",
   "src": "assets/enemy/shade_mourner_windup.webp",
-  "w": 552
+  "w": 668
  },
  "enemy/shade_mourner_windup_rd": {
-  "h": 491,
+  "h": 403,
   "src": "assets/enemy/shade_mourner_windup_rd.png",
   "w": 512
  },

@@ -1456,7 +1456,11 @@
         "offer2_2": "voice/madame/offer2_2.ogg",
         "wrong_1": "voice/madame/wrong_1.ogg",
         "wrong_2": "voice/madame/wrong_2.ogg",
-        "rest_1": "voice/madame/rest_1.ogg"
+        "rest_1": "voice/madame/rest_1.ogg",
+        "shade_hostess_1": "voice/madame/shade_hostess_1.ogg",
+        "shade_mourner_1": "voice/madame/shade_mourner_1.ogg",
+        "shade_mother_1": "voice/madame/shade_mother_1.ogg",
+        "shade_bride_1": "voice/madame/shade_bride_1.ogg"
       }
     },
     "qq": {

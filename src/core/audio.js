@@ -69,13 +69,18 @@ export function initAudio() {
   // a boss's voice as if over an old radio (user 2026-10-20: "some post-processing, like a radio"; sounds.json voices.<who>.radio): the
   // band of a small speaker with its honk, driven a little; under the line a hiss with crackles, a squelch at each end (radioBed)
   radio = ctx.createGain();
-  const rhp = ctx.createBiquadFilter(); rhp.type = 'highpass'; rhp.frequency.value = 420; rhp.Q.value = 0.8;
-  const rpk = ctx.createBiquadFilter(); rpk.type = 'peaking'; rpk.frequency.value = 1700; rpk.Q.value = 1.1; rpk.gain.value = 6;
-  const rlp = ctx.createBiquadFilter(); rlp.type = 'lowpass'; rlp.frequency.value = 3300; rlp.Q.value = 0.9;
-  const rws = ctx.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) cv[i] = Math.tanh((i / 1023 * 2 - 1) * 3) / Math.tanh(3);
+  // (2026-10-22 user: still the bare TTS, not a far-off radio voice: a narrower band, a short echo off the walls and some of the room)
+  const rhp = ctx.createBiquadFilter(); rhp.type = 'highpass'; rhp.frequency.value = 600; rhp.Q.value = 0.9;
+  const rpk = ctx.createBiquadFilter(); rpk.type = 'peaking'; rpk.frequency.value = 1500; rpk.Q.value = 1.3; rpk.gain.value = 8;
+  const rlp = ctx.createBiquadFilter(); rlp.type = 'lowpass'; rlp.frequency.value = 2600; rlp.Q.value = 1.0;
+  const rws = ctx.createWaveShaper(), cv = new Float32Array(1024); for (let i = 0; i < 1024; i++) cv[i] = Math.tanh((i / 1023 * 2 - 1) * 4) / Math.tanh(4);
   rws.curve = cv; rws.oversample = '2x';
-  const rout = ctx.createGain(); rout.gain.value = 0.8;
+  const rout = ctx.createGain(); rout.gain.value = 0.72;
   radio.connect(rhp); rhp.connect(rpk); rpk.connect(rws); rws.connect(rlp); rlp.connect(rout); rout.connect(voiceBus);
+  const rdl = ctx.createDelay(1), rfb = ctx.createGain(), rel = ctx.createGain(), rdf = ctx.createBiquadFilter();
+  rdl.delayTime.value = 0.13; rfb.gain.value = 0.32; rel.gain.value = 0.38; rdf.type = 'lowpass'; rdf.frequency.value = 1800;
+  rlp.connect(rdl); rdl.connect(rdf); rdf.connect(rfb); rfb.connect(rdl); rdf.connect(rel); rel.connect(voiceBus);   // (the echo, darker each time)
+  const rvs = ctx.createGain(); rvs.gain.value = 0.35; rlp.connect(rvs); rvs.connect(verbIn);   // (and the room round it)
   crackleBuf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
   const cd = crackleBuf.getChannelData(0);
   for (let i = 0; i < cd.length; i++) { cd[i] = (Math.random() * 2 - 1) * 0.22; if (Math.random() < 0.0005) { const a = (Math.random() * 2 - 1) * 0.9; for (let k = 0; k < 90 && i + k < cd.length; k++) cd[i + k] += a * Math.exp(-k / 18) * (Math.random() * 2 - 1); } }
@@ -84,8 +89,8 @@ function radioBed(t0, dur) {
   const s = ctx.createBufferSource(); s.buffer = crackleBuf; s.loop = true;
   const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2200; bp.Q.value = 0.6;
   const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t0);
-  g.gain.linearRampToValueAtTime(0.5, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.1);   // (the squelch, then the hiss under her)
-  g.gain.setValueAtTime(0.07, t0 + dur); g.gain.linearRampToValueAtTime(0.4, t0 + dur + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + 0.16);
+  g.gain.linearRampToValueAtTime(0.5, t0 + 0.012); g.gain.exponentialRampToValueAtTime(0.11, t0 + 0.1);   // (the squelch, then the hiss under her)
+  g.gain.setValueAtTime(0.11, t0 + dur); g.gain.linearRampToValueAtTime(0.4, t0 + dur + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur + 0.16);
   s.connect(bp); bp.connect(g); g.connect(voiceBus); s.start(t0, Math.random() * 1.5); s.stop(t0 + dur + 0.2);
   return s;
 }

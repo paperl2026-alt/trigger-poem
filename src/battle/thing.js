@@ -37,6 +37,8 @@ import { FR } from '../core/particles.js';
 import { Mark3D } from './marks3d.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
+// the thing to shoot now (her photo, the diary's next page, the keepsake she wants): its edge pulses gold
+export function glow(r, t) { const k = 0.5 + 0.5 * Math.sin(t * 7); r.u.outlineOn.value = 1; r.u.outlineCol.value.setRGB(1, 0.8 + 0.2 * k, 0.3 + 0.5 * k); r.u.outlineW.value = 1.4 + 0.6 * k; }
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
 const FRAMES = { idle: ['idle0', 'idle1'], move: ['move', 'idle0'], windup: ['windup'], attack: ['attack'], hurt: ['hurt'] };
 
@@ -95,9 +97,10 @@ export class TheThing extends Actor {
   // come out and swing back and forth before her, each on its own beat, and now and then one of them swings in front of her core and
   // takes the shots meant for her. Nothing hurts them. Each counts down, at an uneven pace, to a blow of its own at one of the girls (the
   // red "shoot it" ring: hiding does not help); a shot knocks it back and starts its count again, and she cries out (they are her child's).
-  // Her core is open in the gaps between them. When her strength is gone she sinks down and the three hang still in a row: shown to her
-  // in the right order (her words tell which) each one flies into her arms; with the last her child comes back to her and she is at rest.
-  // A wrong one floats back.
+  // Her core is open in the gaps between them. When her strength is gone she sinks down; after her close look the three come out in a
+  // low row before her (not between her face and the camera: user 2026-10-22, the book hid her), her bar gone, a hint telling what to do,
+  // and the one she wants glows gold - only it can be shot (user 2026-10-22: the bar empty, three things floating and no telling what
+  // they are): shot, its name slams across and it flies into her arms; with the last her child comes back to her and she is at rest.
   ritual() {
     const g = this.game, R = this.def.ritual, P = this.root.position;
     this.ritualNext = 0; this.stuck = 0; this.talkT = 0;
@@ -130,20 +133,16 @@ export class TheThing extends Actor {
     this.state = 'hurt'; this.play('hurt'); this.flash = 1;
     sfx.roar(); g.post.flash(0.5, 0xffffff); g.post.shake(1);
     g.etw.kill(P); g.tweens.to(P, { y: -this.S.h * 0.15 }, 1.4, { ease: Ease.outQuad });
-    for (const k of this.keeps) k.still();
-    this.stuck = 0;
+    for (const k of this.keeps) { k.still(); k.root.visible = false; }   // (out of the way of her close look; in their row when it is over: keepTick)
+    this.stuck = 0; this.rowOut = false;
     this.closeUp('kneel', { lull: true, dist: this.S.h * 0.9, v: 0.45, min: 3.5 }, () => { this.stuck = 0; });   // (on her knees, up close)
   }
   offer(i, gm) {
     const g = this.game, R = this.def.ritual;
-    if (!this.alive || gm.mode !== 'still') return;
-    if (i !== this.ritualNext) {   // not that one yet: it shakes and floats back
-      sfx.miss(); if (this.talkT <= 0) { this.talkT = 3; this.say('wrong'); }
-      g.tweens.run(0.4, (e) => { gm.inner.position.x = Math.sin(e * 40) * 0.08 * (1 - e); });
-      return;
-    }
+    if (!this.alive || gm.mode !== 'still' || i !== this.ritualNext) return;
     const n = ++this.ritualNext; this.stuck = 0;
-    gm.mode = 'offered'; gm.u.outlineOn.value = 0;
+    gm.mode = 'offered'; gm.u.outlineOn.value = 0; gm.u.opacity.value = 1;
+    if (R.names?.[i]) g.mv.slam(tr(R.names[i]), '', 1.6);   // (what it is: her child's photo, the diary, the little coffin)
     const P = gm.root.position, to = this.uvToWorld(0.5, 0.55);   // (into her arms)
     g.tweens.to(P, { x: to.x, y: to.y, z: to.z + 0.3 }, 0.9, { ease: Ease.inOutQuad, onDone: () => {
       gm.act({ gone: true });
@@ -407,8 +406,13 @@ export class TheThing extends Actor {
   keepTick(dt) {
     const R = this.def.ritual;
     this.talkT -= dt;
-    if (this.grief) {   // stuck on which to show her: she says it again
-      this.stuck += dt;
+    if (this.grief) {
+      if (!this.rowOut) {   // her close look over: they grow into their row (Keepsake.update), and what to do is told
+        if (this.game.cineOn) return;
+        this.rowOut = true; for (const k of this.keeps) { k.root.visible = true; k.inner.scale.setScalar(0.01); }
+        this.game.post.flash(0.25, 0xfff0c8); sfx.clear(); this.game.hint('madameOffer');
+      }
+      this.stuck += dt;   // (stuck on which to give her: she says it again)
       if (this.stuck > (R.hint ?? 9) && this.talkT <= 0) { this.stuck = 0; this.talkT = 4; this.say(this.ritualNext ? `offer${this.ritualNext}` : 'kneel'); }
       return;
     }
@@ -773,7 +777,7 @@ export class Keepsake extends Gimmick {
     this.to = this.root.position.clone(); this.rate = 1; this.rateT = 0;
     this.restart(rr(S.first ?? R.fuse));
   }
-  live() { return this.alive && this.game.combat && this.mode !== 'offered'; }
+  live() { return this.alive && this.game.combat && this.mode !== 'offered' && this.root.visible && (this.mode !== 'still' || this.boss.ritualNext === this.i); }
   hit(info) { if (this.live()) this.boss.keepHit(this, info); }
   // a new count to its next blow, at one of the girls
   restart(s) {
@@ -824,10 +828,12 @@ export class Keepsake extends Gimmick {
     // toward the camera from her: the things hang between her and the girls
     const bp = B.root.position, cam = g.world.camera.position, dx = cam.x - bp.x, dz = cam.z - bp.z, dl = Math.hypot(dx, dz) || 1, fx = dx / dl, fz = dz / dl;
     this.ph += dt * this.sp;
-    if (this.mode === 'still') {   // in a row before her, waiting to be shown to her (the one she is waiting for glows once it takes long)
-      const off = (this.i - (B.keeps.length - 1) / 2) * (R.rowGap ?? 2);
+    if (this.mode === 'still') {   // in a row before her, waiting to be given back: the one she wants bigger and glowing, the rest faded
+      const off = (this.i - (B.keeps.length - 1) / 2) * (R.rowGap ?? 2), on = B.ritualNext === this.i;
       this.to.set(bp.x + fx * R.near * 1.4 - fz * off, (R.rowY ?? 2) + Math.sin(t * 1.5 + this.i) * 0.08, bp.z + fz * R.near * 1.4 + fx * off);
-      if (B.ritualNext === this.i && B.stuck > (R.hint ?? 9) * 0.5) this.flash = Math.max(this.flash, 0.35 + 0.35 * Math.sin(t * 6));
+      const s = this.inner.scale.x + ((on ? 1.2 : 0.8) - this.inner.scale.x) * Math.min(1, dt * 5);
+      this.inner.scale.set(s, s, 1); this.u.opacity.value += ((on ? 1 : 0.7) - this.u.opacity.value) * Math.min(1, dt * 5);   // (the others still seen: three things in a row)
+      if (on) glow(this, t); else this.u.outlineOn.value = 0;
     } else if (this.mode === 'guard') {   // before her core, between it and the girls
       const c = B.uvToWorld(B.S.core[0], B.S.core[1]);
       this.to.set(c.x + fx * R.near, c.y, c.z + fz * R.near);

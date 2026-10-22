@@ -212,6 +212,9 @@ export class Game {
   station(id) { return C.sets[this.setOfStation?.[id] || this.setId]?.stations?.[id] || this.world.level.set.stations[id]; }
   goStation(id, boss) {
     const S = this.station(id);
+    // (a new stop starts clean: the last one's wave state and its waves still to come are not carried over - user 2026-10-22: from the
+    // soul's escort on into the studio, the first shadow was skipped and the second came twice; picked from the select screen it was fine)
+    this.waveTok = (this.waveTok || 0) + 1; this.waveLive = false; this.pendingSpawns = 0; this.waveEvents = [];
     // (a stop only some runs have: needs 'crow' = the crow was let out of its cage in the entrance hall - DESIGN 第 2 话; else on to the next)
     if (S?.needs === 'crow' && !this.chase?.crow && this.stationQ.length) { this.goStation(this.stationQ.shift(), boss); return; }
     // a checkpoint inside a long stage (episode 2): a retry starts here, and so does the next run from the select screen until it is cleared
@@ -362,7 +365,7 @@ export class Game {
     if (!w.camPos) { o.during?.(); this.tweens.wait(o.hold ?? 2, () => then && then()); return; }
     const q = ++this.cineQ, tw = this.tweens, home = { cam: w.camPos.clone(), look: w.lookAt.clone() }, cam = new THREE.Vector3(), at = new THREE.Vector3();
     this.cineOn = true; if (o.lull) this.lull = true;
-    if (o.pause) { this.cinePause = true; this.cineSubject = o.on?.root ? o.on : null; this.lull = true; }   // (the fight held still but for what is shown: Game.update)
+    if (o.pause) { this.cinePause = true; this.cineSubject = o.on?.root && !o.still ? o.on : null; this.lull = true; }   // (still: what is shown is held too)   // (the fight held still but for what is shown: Game.update)
     this.cineTitle = o.title || null;   // (words in the black bars: glhud.js marquee)
     // k: how far into the hold. o.orbit (radians): the camera goes round it that far over the hold; o.dolly (degrees): the view widens that
     // much over the hold while the camera closes in to keep it the same size (a dolly zoom: the room stretches out behind it); o.up < 0:
@@ -773,7 +776,8 @@ export class Game {
       y: s.y != null ? s.y + (Math.random() - 0.5) * 0.8 : undefined })));
     this.pendingSpawns = spawns.length;
     this.waveLive = true; this.waveKills = 0;
-    for (const s of spawns) this.etw.wait((s.t || 0) + T.combat.spawnDelay, () => { if (!this.combat) return; this.spawnEnemy(s); this.pendingSpawns--; });   // (an entry without t: at once)
+    const tok = this.waveTok;
+    for (const s of spawns) this.etw.wait((s.t || 0) + T.combat.spawnDelay, () => { if (!this.combat || tok !== this.waveTok) return; this.spawnEnemy(s); this.pendingSpawns--; });   // (an entry without t: at once)
     this.waveEvents = wave.filter((e) => !e.type && e.kills);
     for (const e of wave) if (!e.type && !e.kills) this.etw.wait(e.t || 0, () => this.combat && this.waveEvent(e));
   }
@@ -821,7 +825,7 @@ export class Game {
     const last = this.waveIndex >= this.S.waves.length - 1;
     // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared)
     if (last && left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });
-    if (left > (last ? 0 : T.combat.waveCarry ?? 0)) return;
+    if (left > (last || this.S.solo ? 0 : T.combat.waveCarry ?? 0)) return;   // (station solo: every wave fought to the end - the studio's shadows one at a time, user 2026-10-22)
     if (!last && left && this.waveEvents?.length) return;   // (this wave's kill-events still to come: it finishes first)
     // the way on still shut (a drawbridge held by seals): the fight goes on until it is worked
     if (this.waveIndex >= this.S.waves.length - 1 && !this.stationQ.length && this.world.gate && !this.world.gate.open) {
@@ -830,9 +834,10 @@ export class Game {
     }
     this.waveLive = false;
     this.waveIndex++;
-    if (this.ep.sandbox && this.waveIndex >= this.S.waves.length) { this.waveIndex = 0; this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }   // (the sound sandbox: they keep coming)
-    if (this.escort.going && this.waveIndex >= this.S.waves.length) { this.waveIndex = this.S.escort.loop ?? 0; this.etw.wait(T.combat.waveGap, () => this.combat && this.startWave()); return; }   // (they keep coming while it is on its way)
-    if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, () => this.combat && this.startWave()); return; }
+    const tok = this.waveTok, next = () => this.combat && tok === this.waveTok && this.S.waves?.[this.waveIndex] && this.startWave();   // (only for this stop)
+    if (this.ep.sandbox && this.waveIndex >= this.S.waves.length) { this.waveIndex = 0; this.etw.wait(T.combat.waveGap, next); return; }   // (the sound sandbox: they keep coming)
+    if (this.escort.going && this.waveIndex >= this.S.waves.length) { this.waveIndex = this.S.escort.loop ?? 0; this.etw.wait(T.combat.waveGap, next); return; }   // (they keep coming while it is on its way)
+    if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, next); return; }
     this.combat = false;
     this.clearProjectiles();
     const quiet = this.S.quietEnd;   // (a stop that is not won but run from - the chase: no fanfare, no "cleared!")
@@ -981,12 +986,15 @@ export class Game {
   // the place's shootable things (src/battle/gimmick.js): there for the whole set, each live at its own stop
   addGimmicks() { for (const g of this.world.set?.gimmicks || []) this.actors.push(new Gimmick(this, g)); }
   spawnEnemy(s) {
+    if (this.boss && (this.boss.grief || !this.boss.alive)) return null;   // (nothing more of hers once she is down: spawnProjectile)
     // an escort stop: a wave entry with ahead / side comes in along the guarded thing's way (escort.place), far off, as it is
     if (this.escort.going && (s.ahead != null || s.side != null)) { const q = this.escort.place((s.ahead ?? 8) + (Math.random() - 0.5) * 2, (s.side ?? 0) + (Math.random() - 0.5) * 1.5); s = { ...s, x: q.x, z: q.z, free: true }; }
     const to = this.mutated && C.enemies[s.type]?.mutatesTo;   // (after the house has turned: mutateAll)
     const e = new Enemy(this, to ? { ...s, type: to, sprite: undefined } : s); this.actors.push(e); return e;
   }
-  spawnProjectile(kind, from, opts) { const p = new Projectile(this, kind, from, opts); this.actors.push(p); return p; }
+  // (none once the boss is down or on her knees - user 2026-10-22: her end is not to be fought through, everything thrown is gone at once;
+  // a volley already on its way in later() would still put some out)
+  spawnProjectile(kind, from, opts) { if (this.boss && (this.boss.grief || !this.boss.alive)) return null; const p = new Projectile(this, kind, from, opts); this.actors.push(p); return p; }
   // which player an attack goes for: mostly the one on the attacker's side of the screen
   pickTarget(x = 0) {
     if (!this.p2on()) return 0;
@@ -1267,6 +1275,16 @@ export class Game {
   }
   // a close-up of one of them where the story wants it (a wave entry's closeup: { hold, title, sub, color, crop, k }, when it has come in /
   // woken): a comic page of its own (Game.vignette), its picture as it is now, its name
+  // its entrance looked at (a wave entry's look: { say: <line kind>, who: whose lines and voice (text/stickers.json bosses.<who>, default
+  // madame), dist, up, v, min }): like the prologue boss's forms (user 2026-10-22: a boss fight's each stage one shadow, shown alone and
+  // saying its line) - the fight held still, the camera up close on it while it says its line, then back
+  introLook(a, o = {}) {
+    if (!a.alive || this.cineOn) return;
+    const who = { id: o.who || 'madame', tag: tr(a.def?.name || '') || 'BOSS', screenBox: () => a.screenBox(), center: () => a.center() };
+    let n = 0;
+    this.cine({ on: a, v: o.v ?? 0.6, dist: o.dist ?? 3.6, up: o.up ?? 0.2, in: 0.6, out: 0.6, pause: true, still: true, title: tr(a.def?.name || '') || null,
+      during: () => { if (o.say) n = this.hud.gl.stickers.boss(who, o.say) || 0; }, hold: () => Math.max(o.min ?? 2.4, n + 0.4) });
+  }
   closeup(a, o = {}) {
     if (!a.alive) return;
     this.vignette({ k: o.k || a.mesh.userData.texKey, title: o.title || a.def?.name, sub: o.sub, color: o.color, crop: o.crop, side: o.side, dur: o.hold });
@@ -1413,7 +1431,7 @@ export class Game {
       const on = (p.slot === 0 || this.p2on()) && this.combat;
       E.set(col.r, col.g, col.b, on ? Math.min(1.2, (p.edge || 0) + (p.edgePulse || 0) * 0.6) : 0);
     }
-    if (this.boss) this.hud.boss(this.boss.alive ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp, this.boss.stage, this.boss.phases?.());
+    if (this.boss) this.hud.boss(this.boss.alive && !this.boss.grief ? tr(this.boss.name) : null, this.boss.hp / this.boss.maxHp, this.boss.stage, this.boss.phases?.());
     setIntensity(this.combat ? Math.min(1, 0.35 + this.combo * 0.006 + (active ? 0.4 : 0)) : 0.2);
     this.hud.update(dt);
   }

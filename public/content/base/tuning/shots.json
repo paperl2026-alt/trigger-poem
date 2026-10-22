@@ -59,13 +59,13 @@
       "combat": true
     },
     "escort": {
-      "_": "远处狙击护卫：望远镜视野（收窄 + 圆形镜筒暗角，压在两人下面），两人站在镜筒外两边略靠里、只露上半身和枪；没有掩体（缩下去就是装弹）",
+      "_": "护卫（两人拿着狙击的姿势；2026-10-22 用户：为啥用暗角，飞的怪都飞出视野了 → 不再收窄、没有镜筒暗角），两人站在镜筒外两边略靠里、只露上半身和枪；没有掩体（缩下去就是装弹）",
       "players": { "show": true, "x": [0.2, 0.8], "scale": 0.92, "y": 0, "crop": 0.2, "set": "scope", "out": "hold" },
       "cover": false,
       "ammo": "mag",
       "weapon": null,
       "hud": { "show": true, "mid": 0, "bubbles": false },
-      "cam": { "zoom": 20, "lens": 0.7 },
+      "cam": { "zoom": 0, "lens": 0 },
       "mv": 0.7,
       "combat": true
     },

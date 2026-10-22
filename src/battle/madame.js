@@ -3,21 +3,22 @@
 //   form 1, the PHOTO (Sweet Home: the camera that shows what is hidden in the frescoes) - the studio goes dark and she melts into it: unseen,
 //            untouchable; the photo drifts by her: shot, it flashes and she stands there, lit, for a few seconds (open to the guns); it
 //            gathers a flash of its own now and then (shoot it first, or everyone is blinded); she hurls the studio's things at them
-//   form 2, the DIARY (the torn diary pages that tell the truth date by date) - her pages swirl round her, each with a date: shot in the
-//            order of their dates, each slams its line of the truth across the screen and tears a piece out of her; a wrong one flies at the
-//            one who shot it; she flings storms of paper; shots at her do little
+//   form 2, the DIARY (the torn diary pages that tell the truth date by date) - her pages swirl round her, each with a date; the next one
+//            by date glows gold and only it can be shot (the others dim): shot, it slams its line of the truth across the screen and tears a
+//            piece out of her; shots at her only glance off (user 2026-10-22: what do the dates mean, where on her do I shoot? - no order
+//            puzzle, only the page to shoot, told by a hint); she flings storms of paper
 //   form 3, the COFFIN (the pit with the ghosts round it, a friend pulled up by the rope; the coffin's bones looking back) - the floor
 //            round her gives way into a pit, children's ghosts circling it; ghost hands rise and drag one of the girls toward it: the
 //            other shoots them off, or she falls in (gone a while, hurt); the chandeliers over her: shot down they crush her (Game.harm)
 // Between forms no warning tape, no title, no black bars (that is the prologue's): the picture goes to wet paint and datamosh, her word
 // beats across the screen one syllable at a time, and she is painted back in, changed. At the end the three things in a row before her,
-// shown to her in their order (TheThing.grieve / offer / rest): Sweet Home's ending.
+// given back to her one by one, the one she wants glowing (TheThing.grieve / offer / rest): Sweet Home's ending.
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
 import { Ease } from '../core/tween.js';
-import { TheThing, Keepsake } from './thing.js';
+import { TheThing, Keepsake, glow } from './thing.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
 
@@ -63,9 +64,12 @@ export class Madame extends TheThing {
       this.lightsOut(M.photo.dark);
       this.photo = this.relic({ id: 'photo', k: 'ep1/photo', w: 1.2 }, (r) => this.photoHit(r));
       this.photo.ready = true; this.photoFuse = rr(M.photo.fuse);
+      // (user 2026-10-22: only her outline at the start, a thing floating back and forth - what for, where to hit her? told plainly)
+      g.tweens.wait(1.5, () => g.hint('madamePhoto'));
     } else if (n === 1) {   // the diary: its pages round her
       this.lightsOut(0);
       this.deal();
+      g.tweens.wait(1.2, () => g.hint('madameDiary'));
     } else if (n === 2) {   // the coffin: the pit, the ghosts round it, the chandeliers over her
       this.lightsOut(0);
       this.pit = this.makePit();
@@ -95,6 +99,7 @@ export class Madame extends TheThing {
     r.ready = false; this.photoFuse = rr(M.fuse); this.endPhotoRing();
     g.post.flash(0.85, 0xffffff); sfx.shutter(); g.world.dark = 0;   // (the flash lights the room: she is there)
     this.exposedT = M.reveal; this.flash = 1;
+    if (!this.revealTold) { this.revealTold = true; g.tweens.wait(0.3, () => g.hint('madameReveal')); }   // (the first time: now hit her)
     this.later(M.reveal, () => { this.lightsOut(M.dark); });
     this.later(M.recharge, () => { if (this.photo === r) { r.ready = true; r.flash = 0.8; } });
   }
@@ -103,6 +108,7 @@ export class Madame extends TheThing {
     const g = this.game, r = this.photo, M = this.M.photo; if (!r?.alive) return;
     this.orbit(r, 0, dt, t, 2.2, 0.62);
     r.u.outlineOn.value = r.ready ? 1 : 0.2;
+    if (r.ready) glow(r, t);   // (what to shoot: a pulsing gold edge while it can flash)
     // its own flash gathering: the ring counts down; shot in time it flashes for them instead (photoHit)
     if (!g.combat || this.mutating || g.cineOn) { this.endPhotoRing(); return; }
     this.photoFuse -= dt;
@@ -122,36 +128,37 @@ export class Madame extends TheThing {
     const M = this.M.diary, dates = M.pages.map((p) => p.date);
     for (const r of this.pages || []) if (r.alive) r.gone();
     this.nextPage = 0;
-    this.pages = dates.map((d, i) => { const r = this.relic({ id: `page${i}`, k: pageKey(d), w: 0.9 }, (q, info) => this.pageHit(q, info)); r.idx = i; return r; });
+    this.pages = dates.map((d, i) => {
+      const r = this.relic({ id: `page${i}`, k: pageKey(d), w: 0.9 }, (q, info) => this.pageHit(q, info)), live = r.live; r.idx = i;
+      r.live = () => live() && r.idx === this.nextPage;   // (only the next one by date: the others are not targets)
+      return r;
+    });
     // (their places round her shuffled: the order is in the dates, not in where they are)
     const slots = this.pages.map((_, i) => i).sort(() => Math.random() - 0.5);
     this.pages.forEach((r, i) => { r.slot = slots[i]; });
   }
-  pageHit(r, info) {
-    const g = this.game, M = this.M.diary, by = info.by;
-    if (r.idx === this.nextPage) {   // right: the page's line slammed across, and it tears into her
-      this.nextPage++;
-      const line = M.pages[r.idx], P = r.root.position, to = this.uvToWorld(0.5, 0.6);
-      r.taken = r.busy = true; r.u.outlineOn.value = 0;
-      g.tweens.to(P, { x: to.x, y: to.y, z: to.z }, 0.35, { ease: Ease.inQuad, onDone: () => {
-        r.gone(); if (!this.alive || this.stage !== 1 || this.mutating) return;   // (a page still on its way when the form changed: nothing)
-        g.mv.slam(tr(line.text), line.date, 1.8); g.post.styleBurst(0.5, [8, 7], 0.1);
-        this.crushed(this.maxHp * M.chunk, M.stun); sfx.tear(0);
-        if (this.nextPage >= this.pages.length) this.later(1.5, () => { if (this.stage === 1) this.deal(); });
-      } });
-      return;
-    }
-    // wrong: it flies at whoever shot it
-    sfx.miss(); r.flash = 1; r.busy = true;   // (not shot again on its way: one wrong page, one cut)
-    const q = r.q = (r.q || 0) + 1, P = r.root.position, home = P.clone(), c = g.world.camPos, slot = by?.slot ?? 0;
-    g.tweens.to(P, { x: c.x + (slot ? 1 : -1) * 1.0, y: 1.5, z: c.z - 2.2 }, 0.3, { ease: Ease.inQuad, onDone: () => {
-      if (q !== r.q || !r.alive) return;
-      sfx.paperRip?.(0); g.playerAttacked({ kind: 'shot', dmg: M.cut, from: r, slot });
-      g.tweens.to(P, { x: home.x, y: home.y, z: home.z }, 0.6, { ease: Ease.outQuad, onDone: () => g.tweens.wait(M.calm ?? 1.2, () => { r.busy = false; }) });
+  // the glowing page shot: its line slammed across, and it tears into her
+  pageHit(r) {
+    const g = this.game, M = this.M.diary;
+    this.nextPage++;
+    const line = M.pages[r.idx], P = r.root.position, to = this.uvToWorld(0.5, 0.6);
+    r.taken = r.busy = true; r.u.outlineOn.value = 0;
+    g.tweens.to(P, { x: to.x, y: to.y, z: to.z }, 0.35, { ease: Ease.inQuad, onDone: () => {
+      r.gone(); if (!this.alive || this.stage !== 1 || this.mutating) return;   // (a page still on its way when the form changed: nothing)
+      g.mv.slam(tr(line.text), line.date, 1.8); g.post.styleBurst(0.5, [8, 7], 0.1);
+      this.crushed(this.maxHp * M.chunk, M.stun); sfx.tear(0);
+      if (this.nextPage >= this.pages.length) this.later(1.5, () => { if (this.stage === 1) this.deal(); });
     } });
   }
   pagesTick(dt, t) {
-    for (const r of this.pages || []) if (r.alive && !r.busy && !r.taken) this.orbit(r, r.slot / this.pages.length * Math.PI * 2, dt, t, 3.0, 0.35 + 0.12 * (r.slot % 3));
+    for (const r of this.pages || []) {
+      if (!r.alive || r.busy || r.taken) continue;
+      this.orbit(r, r.slot / this.pages.length * Math.PI * 2, dt, t, 3.0, 0.35 + 0.12 * (r.slot % 3));
+      // the one to shoot: bigger, a pulsing gold edge; the rest faded back
+      const on = r.idx === this.nextPage, s = r.inner.scale.x + ((on ? 1.3 : 0.8) - r.inner.scale.x) * Math.min(1, dt * 6);
+      r.inner.scale.set(s, s, 1); r.u.opacity.value += ((on ? 1 : 0.4) - r.u.opacity.value) * Math.min(1, dt * 6);
+      if (on) glow(r, t); else r.u.outlineOn.value = 0;
+    }
   }
   // ---- (3) the coffin
   makePit() {   // (round her: the children's ghosts circling, the little coffin she watches over; the hole itself opens under a girl: sink)
@@ -324,17 +331,17 @@ export class Madame extends TheThing {
     const g = this.game, at = (o, u = 0.5, v = 0.5) => { const s = g.world.project(o.uvToWorld(u, v)); return { x: s.x, y: s.y }; };
     if (this.dragging?.arm?.alive && this.dragging.t > 0) { const [eu, ev] = this.eyeUv(this.dragging.arm); return at(this.dragging.arm, eu, ev); }
     if (this.stage === 0 && !(this.exposedT > 0) && this.photo?.alive && this.photo.ready) return at(this.photo);
-    if (this.stage === 1) { const r = this.pages?.find((q) => q.alive && !q.busy && q.idx === this.nextPage); if (r) return at(r); }
+    if (this.stage === 1) { const r = this.pages?.find((q) => q.alive && !q.busy && q.idx === this.nextPage); return r ? at(r) : null; }
     return super.aimAt();
   }
   // ---------------------------------------------------------------- hits and the end
   weakNow() {
     if (!super.weakNow()) return false;
     if (this.stage === 0) return this.exposedT > 0;   // (unseen in the dark but for the photo's flash)
-    return true;
+    return this.stage !== 1;   // (the diary: only its pages hurt her)
   }
   hit(info) {
-    info.dmg *= this.stage === 1 ? this.M.diary.coreMul : this.stage === 2 && this.openT > 0 ? this.M.coffin.openMul : 1;
+    info.dmg *= this.stage === 2 && this.openT > 0 ? this.M.coffin.openMul : 1;
     super.hit(info);
     this.endCheck();
   }
@@ -384,7 +391,8 @@ export class Madame extends TheThing {
   die(calm) { this.leaveForm(); this.lightsOut(0); super.die(calm); }
 }
 
-// her three things for the end, straight into their row before her (no swinging, no blows: the fight is over)
+// her three things for the end, straight into their row before her (no swinging, no blows: the fight is over; unseen until her close look
+// is over: TheThing.grieve)
 class KeepRow extends Keepsake {
   constructor(game, boss, i, g) { super(game, boss, i, g); this.still(); }
 }

@@ -1010,6 +1010,26 @@
               "ja": "ああ……ここにいたのね。ママ、ずっと探してたのよ……おうちに帰りましょう。"
             }
           ]
+        },
+        "shade_hostess": {
+          "lines": [
+            { "zh": "欢迎光临……茶已经泡好了，坐下吧。", "en": "Welcome... the tea is ready. Do sit down.", "ja": "いらっしゃい……お茶が入ったわ。座って。" }
+          ]
+        },
+        "shade_mourner": {
+          "lines": [
+            { "zh": "又空了一个座位……又空了一个……", "en": "Another empty chair... another one...", "ja": "また一つ、席が空いた……また一つ……" }
+          ]
+        },
+        "shade_mother": {
+          "lines": [
+            { "zh": "嘘……宝宝睡着了，不许吵醒她。", "en": "Hush... baby's asleep. Don't you wake her.", "ja": "しーっ……あの子が寝てるの。起こさないで。" }
+          ]
+        },
+        "shade_bride": {
+          "lines": [
+            { "zh": "说好的一家三口……全都烧掉了！", "en": "A family of three, we promised... all burned away!", "ja": "三人家族って約束したのに……全部燃えちゃった！" }
+          ]
         }
       },
       "qq": {

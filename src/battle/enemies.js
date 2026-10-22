@@ -10,6 +10,7 @@ import { makeShatter } from '../core/particles.js';
 import { Ease } from '../core/tween.js';
 import { sfx, cry, sound } from '../core/audio.js';
 import { C, T } from '../core/content.js';
+import { tr } from '../core/i18n.js';
 import { COL } from './fx.js';
 
 const TELL_W = new THREE.Color();
@@ -441,6 +442,7 @@ export class Enemy extends Actor {
       if (walker) { this.state = 'walk'; this.play('walk', 7); } else if (this.def.hides) { this.state = 'hide'; this.play('hide'); } else { this.state = 'stand'; this.play('idle'); }
       this.timer = rr(bp.startDelay);
       if (s.closeup) this.game.closeup(this, s.closeup);   // (shown up close, the fight held still: where the story wants it - Game.closeup)
+      if (s.look) this.game.etw.wait(s.look.delay ?? 0.7, () => this.game.introLook(this, s.look));   // (its entrance looked at, its line said: Game.introLook)
     };
     // a statue: grey stone, no outline, not a target, until it wakes (wake: seconds, or a wave event)
     if (s.from === 'statue') {
@@ -454,7 +456,22 @@ export class Enemy extends Actor {
     if (s.from === 'scare') { P.set(s.x, s.y || 0, s.z); this.state = 'scripted'; this.setFrame(this.prefix + (this.frames.scare || [this.def.first])[0]); return; }
     if (walker) this.play('walk', 7); else this.play('rise');
     if (s.from === 'burrow' || (this.move === 'burrow' && s.from !== 'drop')) { P.set(s.x, 0, s.z); this.burrowUp(ready); return; }
-    if (s.from === 'drop') {
+    if (s.from === 'painting') {
+      // out of a portrait on the wall (the studio's shadows; user 2026-10-22: a painting turning into a shadow had no motion): as the
+      // picture empties it seeps out of the canvas, small and black, swells to its size, drops to the floor with a thud and its colour
+      // comes back
+      const g = this.game, gm = g.actors.find((a) => a.g?.id === s.painting), q = gm ? gm.root.position.clone() : new THREE.Vector3(s.x, 3.4, s.z);
+      const end = new THREE.Vector3(s.x, s.y || 0, s.z);
+      P.copy(q); P.y -= this.h * 0.4; const top = P.clone();
+      this.inner.scale.set(0.12, 0.12, 1); this.u.tint.value.setRGB(0.06, 0.0, 0.04); this.u.tintAmt.value = 1; this.play('idle');
+      tw.run(1.0, (e) => { const k = 0.12 + 0.88 * e * e; this.inner.scale.set(k, k, 1); if (Math.random() < 0.35) g.fx.ink(P.clone().setY(P.y + this.h * 0.4 * k), 2, 0.6, COL.violet); }, { onDone: () => {
+        tw.run(0.55, (e) => { P.lerpVectors(top, end, e * e); }, { onDone: () => {
+          g.post.shake(0.9); g.fx.puff(P, 10, COL.bone, 1.2); g.fx.ink(P.clone().setY(0.2), 12, 1.4, COL.violet); sfx.thud(0);
+          this.inner.scale.set(1.12, 0.86, 1); tw.to(this.inner.scale, { x: 1, y: 1 }, 0.35, { ease: Ease.outBack });
+          g.tweens.to(this.u.tintAmt, { value: 0 }, 0.6); ready();
+        } });
+      } });
+    } else if (s.from === 'drop') {
       P.set(s.x, lv.ceilAt(s.z) + 1, s.z);
       const pts = [new THREE.Vector3(0, this.h * 0.9, 0), new THREE.Vector3(0, 30, 0)];
       this.string = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0xeee2c8, transparent: true, opacity: 0.85 }));
@@ -557,6 +574,7 @@ export class Enemy extends Actor {
     if (!this.kinOn && g.world.phys) { this.kinOn = true; this.kinPh = g.world.phys; g.world.phys.follow(this.root, this.w * 0.6, this.h * 0.85, this.pivot); }
     this.invul = Math.max(0, this.invul - dt);
     if (this.def.evade) this.updateEvade(dt);
+    if (this.def.bossBar && this.alive && this.state !== 'statue') g.hud.boss(tr(this.def.name || ''), this.hp / this.maxHp);   // (a stage of the boss: its own bar - user 2026-10-22)
     if (this.def.tint && this.state !== 'statue' && !(this.kick?.freeze > 0)) { this.u.tint.value.set(this.def.tint); this.u.tintAmt.value = this.def.tintAmt ?? 0.5; }   // (a kind of its own colour: the Great Shadow - not the shadows' drawing only bigger, user 2026-10-22)
     else if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
     if (this.dashPending && !this.moving && ['walk', 'stand', 'hover', 'hide'].includes(this.state)) { this.dashPending = false; this.dash(); }
@@ -799,14 +817,18 @@ export class Enemy extends Actor {
         this.play('dive');
         sfx.whoosh(0);
         const c = g.world.camPos, f = this.fwd(), side = (this.targetSlot ? bp.diveSide : -bp.diveSide) + rnd(-bp.diveJitter, bp.diveJitter);
-        g.etw.to(P, { x: c.x - f.z * side + f.x * bp.diveStop, y: c.y - bp.diveDrop, z: c.z + f.x * side + f.z * bp.diveStop }, bp.diveTime, {
+        // (an escort: it dives at what they guard, not at the girls - user 2026-10-22, the bats still went for them)
+        const E = this.escortT && g.escort.going ? g.escort.pos : null;
+        const to = E ? { x: E.x + rnd(-0.4, 0.4), y: E.y + 0.2, z: E.z + rnd(-0.4, 0.4) } : { x: c.x - f.z * side + f.x * bp.diveStop, y: c.y - bp.diveDrop, z: c.z + f.x * side + f.z * bp.diveStop };
+        g.etw.to(P, to, bp.diveTime, {
           ease: Ease.inQuad,
           onDone: () => {
             if (!this.alive) return;
             g.playerAttacked({ kind: 'ram', dmg: this.def.dmg ?? enemyHit(), from: this, slot: this.targetSlot });   // (a ram: hiding does not help)
             this.state = 'recoil';
             this.play('fly', 14);
-            { // its next hover spot is a little nearer (never closer than near)
+            if (this.escortT && g.escort.going) { const q = g.escort.pos; this.home.set(q.x + rnd(-2, 2), this.home.y, q.z + rnd(-2, 2)); }   // (back above what they guard)
+            else { // its next hover spot is a little nearer (never closer than near)
               const c = g.world.camPos, f = this.fwd(), dep = (this.home.x - c.x) * f.x + (this.home.z - c.z) * f.z, k = Math.min(bp.homeStep, Math.max(0, dep - bp.homeNear));
               this.home.x -= f.x * k; this.home.z -= f.z * k;
             }
@@ -827,6 +849,7 @@ export class Enemy extends Actor {
       if (this.timer <= 0) { this.state = 'stand'; this.play('idle'); this.timer = rr(bp.standAfterRise); }
     } else if (this.state === 'stand') {
       this.inner.rotation.z = Math.sin(t * 1.7 + this.seed) * 0.04;
+      if (bp.sway) { const S = bp.sway; this.swayX ??= this.root.position.x; this.root.position.x = this.swayX + Math.sin(t * (S[1] ?? 0.8) + this.seed) * S[0]; }   // (not a still target: it rolls / floats from side to side)
       if (this.timer <= 0) { this.startWindup(this.def.windup); this.play('windup'); }
     } else if (this.state === 'windup') {
       this.inner.rotation.z = -0.06;
@@ -851,7 +874,7 @@ export class Enemy extends Actor {
           for (let i = 0; i < n; i++) {
             this.game.etw.wait(i * 0.16, () => {
               if (!this.alive) return;
-              this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0, ...(this.escortT && this.game.escort.going ? { at: this.game.escort.pos, escortT: true } : {}) });
+              this.game.spawnProjectile(this.def.proj, this.uvToWorld(bp.throwFrom[0], bp.throwFrom[1]), { slot: this.targetSlot, curve: n > 1 ? (i - (n - 1) / 2) * 1.6 : 0, time: this.def.projTime, ...(this.escortT && this.game.escort.going ? { at: this.game.escort.pos, escortT: true } : {}) });
               sfx.throwIt(0);
             });
           }
@@ -1165,6 +1188,7 @@ export class Enemy extends Actor {
     this.game.onKill(this, how, crit);
     this.game.morph?.burst(this); this.game.morph?.puddle(this);   // (its insides climb out; it leaves a pool: src/battle/morph.js)
     if (this.def.elite) this.game.eliteDeath(this);   // (an elite dies its own way: Game.eliteDeath)
+    if (this.def.bossBar) this.game.hud.boss(null);
   }
 }
 

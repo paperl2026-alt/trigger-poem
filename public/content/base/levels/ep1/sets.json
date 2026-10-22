@@ -1445,7 +1445,7 @@
     "sky": "#e0a878",
     "fog": "#cc9468",
     "lit": [1.08, 0.96, 0.88],
-    "grade": { "tint": [1.08, 0.94, 0.88], "k": 0.38, "sat": 1.05 },
+    "grade": { "tint": [1.08, 0.94, 0.88], "k": 0.22, "sat": 1.05 },
     "ink": "#3a2018",
     "paper": 0.05,
     "void": "#2a160c",
@@ -1536,6 +1536,54 @@
         "station": "st1",
         "shoot": false,
         "do": [{ "flash": true }, { "flip": true }, { "sfx": "madness" }]
+      },
+      {
+        "id": "lamp1",
+        "k": "ep1/nb_candle_out",
+        "kx": "ep1/nb_candle",
+        "on": "left",
+        "y": 1.8,
+        "z": -4.0,
+        "w": 0.85,
+        "hp": 1,
+        "station": "st1",
+        "do": [{ "light": 0.15 }]
+      },
+      {
+        "id": "lamp2",
+        "k": "ep1/nb_candle_out",
+        "kx": "ep1/nb_candle",
+        "on": "right",
+        "y": 1.8,
+        "z": -6.5,
+        "w": 0.85,
+        "hp": 1,
+        "station": "st1",
+        "do": [{ "light": 0.15 }]
+      },
+      {
+        "id": "lamp3",
+        "k": "ep1/nb_candle_out",
+        "kx": "ep1/nb_candle",
+        "on": "left",
+        "y": 1.8,
+        "z": -9.5,
+        "w": 0.85,
+        "hp": 1,
+        "station": "st1",
+        "do": [{ "light": 0.15 }]
+      },
+      {
+        "id": "lamp4",
+        "k": "ep1/nb_candle_out",
+        "kx": "ep1/nb_candle",
+        "on": "right",
+        "y": 1.8,
+        "z": -12.0,
+        "w": 0.85,
+        "hp": 1,
+        "station": "st1",
+        "do": [{ "light": 0.15 }]
       }
     ],
     "stations": {
@@ -1546,27 +1594,60 @@
         "waves": [
           [
             { "t": 0, "gimmick": "p1" },
-            { "t": 0, "type": "shade_hostess", "x": -3.47, "z": -4, "from": "ceiling" },
-            { "t": 2, "type": "ghoul", "x": 1.87, "z": -8, "move": "hop", "from": "door", "way": "d1" },
-            { "t": 4, "type": "bat", "count": 12, "x": 0.0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12, "from": "door", "way": "d1" }
+            {
+              "t": 0,
+              "type": "shade_hostess",
+              "x": -2.6,
+              "z": -5.0,
+              "from": "painting",
+              "look": { "say": "shade_hostess", "dist": 4.6, "up": 0.4, "v": 0.55 },
+              "painting": "p1",
+              "free": true
+            }
           ],
           [
             { "t": 0, "gimmick": "p2" },
-            { "t": 0, "type": "shade_mourner", "x": 0.0, "z": -7, "from": "ceiling" }
+            {
+              "t": 0,
+              "type": "shade_mourner",
+              "x": 2.6,
+              "z": -8.0,
+              "from": "painting",
+              "look": { "say": "shade_mourner", "dist": 4.6, "up": 0.4, "v": 0.55 },
+              "painting": "p2",
+              "free": true
+            }
           ],
           [
             { "t": 0, "gimmick": "p3" },
-            { "t": 0, "type": "shade_mother", "x": -3.47, "z": -10, "from": "ceiling" },
-            { "t": 3, "type": "ghoul", "x": 1.6, "z": -9, "move": "charge", "from": "wall" }
+            {
+              "t": 0,
+              "type": "shade_mother",
+              "x": -2.6,
+              "z": -11.0,
+              "from": "painting",
+              "look": { "say": "shade_mother", "dist": 4.6, "up": 0.4, "v": 0.55 },
+              "painting": "p3",
+              "free": true
+            }
           ],
           [
             { "t": 0, "gimmick": "p4" },
-            { "t": 0, "type": "shade_bride", "x": 3.47, "z": -13, "from": "door", "way": "d1" },
-            { "t": 2, "type": "bat", "count": 12, "x": 0.0, "z": -9, "y": 2.6, "spread": 5.0, "every": 0.12, "from": "door", "way": "d1" },
-            { "t": 3, "type": "crawler", "x": 0.0, "z": -13, "move": "zigzag" }
+            {
+              "t": 0,
+              "type": "shade_bride",
+              "x": 2.6,
+              "z": -14.0,
+              "from": "painting",
+              "look": { "say": "shade_bride", "dist": 4.6, "up": 0.4, "v": 0.55 },
+              "painting": "p4",
+              "free": true
+            }
           ]
         ],
-        "shot": { "kind": "cover", "cam": { "zoom": 10 } }
+        "shot": { "kind": "cover", "cam": { "zoom": 10 } },
+        "solo": true,
+        "hint": "lampHint"
       },
       "boss": {
         "cam": [0, 1.2, 1.5],
@@ -1620,7 +1701,8 @@
           { "at": 2.2, "say": "scare", "who": "both", "force": true }
         ]
       }
-    }
+    },
+    "dark": 0.6
   },
   "ep1_nether": {
     "panels": true,
@@ -1679,11 +1761,12 @@
         "covers": [{ "k": "cover/ep1_hall1", "side": -1 }, { "k": "cover/ep1_hall2", "side": 1 }],
         "escort": {
           "who": "ep1/soul_child",
-          "path": [[-8, 0.9, -14], [-4, 0.9, -21], [1, 0.9, -24], [5, 0.9, -30], [9, 0.9, -35], [12, 0.9, -41]],
-          "speed": 0.7,
+          "path": [[-12.6, 0.9, -2.4], [-8.6, 0.9, -3.9], [-4.7, 0.9, -5.5], [-1.7, 0.9, -7.4]],
+          "speed": 0.55,
           "hp": 620,
           "h": 1.15,
           "loop": 1,
+          "door": { "at": [-0.6, 0, -8.6], "h": 4.4 },
           "name": { "zh": "孩子的灵魂", "en": "THE CHILD'S SOUL", "ja": "子どもの魂" }
         },
         "on": {
@@ -1691,7 +1774,7 @@
             {
               "at": 0,
               "cam": {
-                "on": [-8, 0.9, -14],
+                "on": [-12.6, 0.9, -2.4],
                 "dist": 3.2,
                 "up": 0.2,
                 "hold": 2.6,
@@ -1706,7 +1789,7 @@
               "at": 0.4,
               "mv": {
                 "slam": { "zh": "护送她回家", "en": "TAKE HER HOME", "ja": "おうちまで" },
-                "sub": { "zh": "别让任何东西碰到她", "en": "LET NOTHING TOUCH HER", "ja": "なにも触れさせないで" }
+                "sub": { "zh": "送她走到那扇门", "en": "GET HER TO THAT DOOR", "ja": "あの扉まで送って" }
               }
             },
             { "at": 3.4, "say": "scare", "who": 0, "force": true }

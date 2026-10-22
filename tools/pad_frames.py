@@ -38,12 +38,12 @@ if __name__ == "__main__":
         l, t, r, b = p, p, p, (0 if bottom else p)
         nw, nh = pad_img(man.path(k), l, t, r, b)
         m["figH"] = round(m.get("figH", 1) * H / nh, 4)   # (frames without one filled their canvas: 1)
-        m["w"], m["h"], m["pad"] = nw, nh, [l, t, r, b]
+        m["w"], m["h"], m["pad"] = nw, nh, [l, t, r, b]; man[k] = m   # (set back: a level pack's manifest saves only what was set)
         rd = m.get("relief")
         if rd and rd in man:
             R = man[rd]; sx = R["w"] / W; sy = R["h"] / H
             rw, rh = pad_img(man.path(rd), round(l * sx), round(t * sy), round(r * sx), round(b * sy), edge=True)
-            R["w"], R["h"] = rw, rh
+            R["w"], R["h"] = rw, rh; man[rd] = R
         n += 1
     man.save()
     print("padded", n)
