@@ -470,6 +470,9 @@ export class Enemy extends Actor {
       P.set(s.x, s.y || 0, s.z); this.state = 'statue'; this.setFrame(this.prefix + (this.frames.disguise || this.frames.idle || this.frames.walk || [this.def.first])[0]);
       this.u.outlineOn.value = 0; this.statueReady = ready;
       if (!this.frames.disguise) { const T0 = this.def.statueTint; if (T0) { this.u.tint.value.set(T0[0]); this.u.tintAmt.value = T0[1]; } else { this.u.tint.value.setRGB(0.74, 0.72, 0.7); this.u.tintAmt.value = 0.8; } }   // (disguise: not stone - a thing of the place, as it is: the gallery's door; statueTint: its own - frozen in ice)
+      // (replacesDoor: it IS the room's door until it wakes - the real one is hidden meanwhile, never two doors in one place; it comes
+      // back when the monster is beaten: dieDoor - user 2026-10-22, the maw door showed through the real one)
+      if (this.def.replacesDoor) for (const m of this.game.world.endDoor || []) m.visible = false;
       if (bp.hang) {   // (hanging from the ceiling on its chain: the chandelier - user 2026-10-22)
         const top = lv.ceilAt(s.z), y0 = P.y + this.h * 0.97, L = Math.max(0.1, top - y0);
         this.chain = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, L, 6), new THREE.MeshBasicMaterial({ color: 0x2a1e14 }));
@@ -1142,6 +1145,7 @@ export class Enemy extends Actor {
   // monster's (a long crossfade), it squashes and springs up, ink bursts off it, a roar - and it goes
   wake() {
     if (!this.alive || this.state !== 'statue' || this.shuddering) return;
+    this.waking = true;   // (whoever woke it - a wave event or its own timer: it counts as a monster of the wave from now on, Game.checkWave)
     const g = this.game, P = this.root.position;
     const turn = () => {
       this.shuddering = false; this.inner.position.x = 0; this.inner.rotation.z = 0;
@@ -1170,6 +1174,21 @@ export class Enemy extends Actor {
       this.inner.position.x = Math.sin(e * D * 55) * 0.04 * k; this.inner.rotation.z = Math.sin(e * D * 37) * 0.035 * k;
       if (Math.random() < 0.12 + k * 0.3) g.fx.puff(this.uvToWorld(Math.random(), Math.random() * 0.9), 2, COL.bone, 0.6);
     }, { onDone: turn });
+  }
+  // the maw door beaten (replacesDoor): its jaws sag, it slumps down into a puddle of honey, ink bursting off it, while the real door
+  // fades back in where it stood
+  dieDoor() {
+    const g = this.game, D = g.world.endDoor || [], c = this.center();
+    g.fx.ink(c, 30, 2.2, COL.violet); g.fx.confetti(c, 26, 1.8, [COL.bone, COL.paper]); g.post.shake(1.2); sfx.thud(0);
+    for (const m of D) { m.visible = true; m.material.transparent = true; m.material.opacity = 0; }
+    g.tweens.run(0.25, (k) => { this.inner.scale.set(1 + 0.12 * k, 1 + 0.1 * k, 1); });
+    g.tweens.wait(0.25, () => g.tweens.run(1.3, (k) => {
+      const e = k * k;
+      this.inner.scale.set(1.12 + 0.25 * e, 1.1 * (1 - 0.95 * e), 1); this.u.opacity.value = 1 - e;
+      this.inner.position.x = Math.sin(k * 40) * 0.04 * (1 - k);
+      if (Math.random() < 0.3) g.fx.puff(this.uvToWorld(Math.random(), Math.random() * 0.3), 2, COL.bone, 0.7);
+      for (const m of D) m.material.opacity = Math.min(1, k * 1.4);
+    }, { onDone: () => { for (const m of D) m.material.opacity = 1; this.dispose(); } }));
   }
   // 幻影洗牌: n figures, only this one real; spawned once it is up, reshuffled after it loses a share of its HP
   makePhantoms() {
@@ -1212,6 +1231,9 @@ export class Enemy extends Actor {
     if (this.shadowM && this.pivot === 'center') this.shadowM.visible = false;
     const uv = info?.uv || { u: 0.5, v: 0.55 };
     const crit = info?.crit;
+    if (this.def.replacesDoor) {   // (the maw door: not flung about - it sags and melts away and the real door is there behind it)
+      this.dieDoor(); sfx.paperRip(0); this.game.onKill(this, 'knock', crit); this.game.morph?.burst(this); this.game.morph?.puddle(this); return;
+    }
     // rifle: knocked flat / shattered on a crit. mantra + beam: purified (burns away in gold) / shattered on a crit
     const how = crit ? 'shatter' : kind === 'mantra' || kind === 'beam' ? 'burn' : 'knock';
     // with the physics: knocked away by that shot (harder the heavier it was), tumbling into what is there; burning away as it flies; a

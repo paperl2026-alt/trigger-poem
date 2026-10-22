@@ -530,6 +530,11 @@ export function voice(who, kind, i, slot = 0, pr = 5, pan) {
   if (!b || b instanceof Promise) { if (b === undefined) load(f); return null; }
   return talk(who, b, pr, pan ?? (slot ? 0.25 : -0.25));
 }
+// every voice file of a kind of line loaded (a moment that must not start silent waits for it: acts.js apparition)
+export function voiceLoad(who, kind) {
+  const L = C.sounds?.voices?.[who]?.lines || {};
+  return Promise.all(Object.keys(L).filter((k) => k.startsWith(`${kind}_`)).map((k) => load(L[k])));
+}
 // how long that line is said (seconds; 0 = no voice / not loaded yet): a line's words stay up while it is said
 export function voiceLen(who, kind, i) {
   const b = BUF.get(C.sounds?.voices?.[who]?.lines?.[`${kind}_${i + 1}`]);

@@ -68,7 +68,7 @@
     "hides": false,
     "proj": "furniture",
     "burst": 3,
-    "_doc": "摆在那里时（from statue）是一盏普通的吊灯（frames.disguise，R83），醒来先抖、越抖越厉害，再慢慢化成吊灯骚灵（Enemy.wake）。从一开始就用链子吊在天花板上（params.hang；2026-10-22 用户：吊灯要挂在吊东西的地方，变骚灵可以动但位置要对），它那一波开始时醒来：链子断，往下掉一点（drop 米），之后左右飘（sway）。",
+    "_doc": "摆在那里时（from statue）是一盏普通的吊灯（frames.disguise，R83），醒来先抖、越抖越厉害，再慢慢化成吊灯骚灵（Enemy.wake）。从一开始就用链子吊在天花板上（params.hang；2026-10-22 用户：吊灯要挂在吊东西的地方，变骚灵可以动但位置要对），它那一波开始时醒来：链子断，往下掉一点（drop 米），之后左右飘（sway）。（2026-10-22 用户：吊灯变怪太慢 → 醒来前抖 0.5 秒（shudder，原来 1.1），前一盏打下来下一盏马上醒，不再隔一个波次间隔。）",
     "frames": {
       "disguise": ["disguise"],
       "hide": ["hover0"],
@@ -78,7 +78,7 @@
       "throw": ["fire"],
       "hurt": ["hurt"]
     },
-    "params": { "hang": { "drop": 0.8 }, "sway": [1.2, 0.6], "stopDist": 8.0 }
+    "params": { "hang": { "drop": 0.8 }, "sway": [1.2, 0.6], "stopDist": 8.0, "shudder": 0.5 }
   },
   "armor": {
     "beh": "walker",
@@ -394,7 +394,7 @@
   "door_mouth": {
     "beh": "thrower",
     "name": { "zh": "噬人门", "en": "Maw Door", "ja": "喰らい扉" },
-    "_doc": "画廊尽头的门（DESIGN 第 1 话 按总纲重做时各处加的巧思：走廊越拉越长，门变成一张嘴；R81）：先装成那扇门（frames.disguise，from statue），醒了张嘴吐蜂蜜团、吐完咬紧牙关（hides：咬紧时伤害减半），不时憋一大口蜂蜜喷过来（blast，快躲，蓄力长）；不会走过来（stopDist）。2026-10-21 用户：门怪没门大、看不出攻击方式 → 比墙上画的那扇门大一圈（h；2026-10-22 用户：还是小，至少 1.1 倍）；张嘴时（连蓄力）吃满伤害（throwArmor 1），蓄力时整个鼓起来、憋大口时鼓得更大（swell），咬紧时打上去叮当冒火花、只进一半（hideClang），张嘴停得久一点（standAfterRise）。",
+    "_doc": "画廊尽头的门（DESIGN 第 1 话 按总纲重做时各处加的巧思：走廊越拉越长，门变成一张嘴；R81）：先装成那扇门（frames.disguise，from statue），醒了张嘴吐蜂蜜团、吐完咬紧牙关（hides：咬紧时伤害减半），不时憋一大口蜂蜜喷过来（blast，快躲，蓄力长）；不会走过来（stopDist）。2026-10-21 用户：门怪没门大、看不出攻击方式 → 比墙上画的那扇门大一圈（h；2026-10-22 用户：还是小，至少 1.1 倍）；张嘴时（连蓄力）吃满伤害（throwArmor 1），蓄力时整个鼓起来、憋大口时鼓得更大（swell），咬紧时打上去叮当冒火花、只进一半（hideClang），张嘴停得久一点（standAfterRise）。（2026-10-22 用户：门变怪和真门穿模 → replacesDoor：它站着当门时把房间尽头真的门藏起来，只有一扇；打死后它塌下去、化成一滩，真门淡回来。）",
     "sprite": "door_mouth",
     "hp": 3600,
     "h": 4.4,
@@ -415,7 +415,8 @@
       "hideClang": true
     },
     "frames": { "disguise": ["door"], "hide": ["shut"], "rise": ["open"], "idle": ["open"], "windup": ["open"], "throw": ["open"], "hurt": ["shut"] },
-    "elite": true
+    "elite": true,
+    "replacesDoor": true
   },
   "shadow_brute": {
     "beh": "thrower",

@@ -135,11 +135,12 @@
             {
               "t": 0.8,
               "act": "apparition",
+              "hold": true,
               "shade": "lady_sh2",
               "say": "seen_shop",
               "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
             },
-            { "t": 5.6, "type": "ghoul", "x": -3.33, "z": -15.5, "from": "door", "way": "d2" }
+            { "t": 0.6, "type": "ghoul", "x": -3.33, "z": -15.5, "from": "door", "way": "d2" }
           ],
           [
             { "t": 0.3, "act": "squabble", "of": ["scoopling", "scoopling"], "x": -0.3, "z": -16.0 }
@@ -335,11 +336,18 @@
         "covers": [{ "k": "cover/ep1_gallery1", "side": -1 }, { "k": "cover/ep1_gallery2", "side": 1 }],
         "waves": [
           [
-            { "t": 0.8, "act": "apparition", "shade": "lady_ga1", "say": "photo", "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" } },
-            { "type": "chandelier", "x": -1.3, "z": -5.2, "from": "statue", "y": 2.06, "wake": 1.2, "t": 5.0 },
-            { "type": "chandelier", "x": 1.3, "z": -12.7, "from": "statue", "y": 2.06, "t": 5.0 },
-            { "type": "chandelier", "x": 1.3, "z": -7.7, "from": "statue", "y": 2.06, "t": 5.0 },
-            { "type": "chandelier", "x": -1.3, "z": -10.2, "from": "statue", "y": 2.06, "t": 5.0 }
+            {
+              "t": 0.8,
+              "act": "apparition",
+              "hold": true,
+              "shade": "lady_ga1",
+              "say": "photo",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            { "type": "chandelier", "x": -1.3, "z": -5.2, "from": "statue", "y": 2.06, "wake": 1.2 },
+            { "type": "chandelier", "x": 1.3, "z": -12.7, "from": "statue", "y": 2.06 },
+            { "type": "chandelier", "x": 1.3, "z": -7.7, "from": "statue", "y": 2.06 },
+            { "type": "chandelier", "x": -1.3, "z": -10.2, "from": "statue", "y": 2.06 }
           ],
           [{ "t": 0.3, "wake": 1, "wakeOf": "chandelier" }],
           [{ "t": 0.3, "wake": 1, "wakeOf": "chandelier" }],
@@ -517,16 +525,17 @@
             {
               "t": 0.8,
               "act": "apparition",
+              "hold": true,
               "shade": "lady_gd1",
               "say": "seen_garden",
               "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
             },
-            { "t": 5.0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
-            { "t": 5.0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
-            { "t": 5.0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor" },
-            { "t": 5.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor" },
-            { "kills": 2, "wake": 1, "t": 5.0 },
-            { "wake": 1, "t": 11.0 }
+            { "t": 0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
+            { "t": 0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
+            { "t": 0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor" },
+            { "t": 0.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor" },
+            { "kills": 2, "wake": 1 },
+            { "wake": 1, "t": 6.0 }
           ],
           [
             { "t": 0.3, "act": "ritual", "of": "armor", "n": 3, "r": 2.4, "x": 0.2, "z": -4.5 },
@@ -730,16 +739,17 @@
             {
               "t": 0.8,
               "act": "apparition",
+              "hold": true,
               "shade": "lady_co1",
               "say": "coffin",
               "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
             },
-            { "t": 5.0, "x": -2.84, "z": -3, "from": "statue", "type": "popsicle" },
-            { "t": 5.0, "x": 2.84, "z": -3.5, "from": "statue", "type": "popsicle" },
-            { "t": 5.0, "x": 0.0, "z": -9.0, "from": "statue", "type": "popsicle" },
-            { "t": 6.2, "wake": 1 },
-            { "wake": 1, "t": 7.0 },
-            { "wake": 1, "t": 7.0 }
+            { "t": 0, "x": -2.84, "z": -3, "from": "statue", "type": "popsicle" },
+            { "t": 0, "x": 2.84, "z": -3.5, "from": "statue", "type": "popsicle" },
+            { "t": 0, "x": 0.0, "z": -9.0, "from": "statue", "type": "popsicle" },
+            { "t": 1.2, "wake": 1 },
+            { "wake": 1, "t": 2.0 },
+            { "wake": 1, "t": 2.0 }
           ],
           [
             { "t": 0, "x": 0.0, "z": -13.5, "type": "popsicle" },
@@ -996,11 +1006,12 @@
             {
               "t": 0.8,
               "act": "apparition",
+              "hold": true,
               "shade": "lady_ov1",
               "say": "seen_oven",
               "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
             },
-            { "t": 5.0, "x": 0.0, "z": -16.5, "from": "ceiling", "type": "ginger" }
+            { "t": 0, "x": 0.0, "z": -16.5, "from": "ceiling", "type": "ginger" }
           ],
           [
             { "t": 0, "x": -1.67, "z": -15.5, "from": "door", "way": "d1", "type": "ginger" },
@@ -1279,9 +1290,16 @@
         "covers": [{ "k": "cover/ep1_nursery1", "side": -1 }, { "k": "cover/ep1_nursery2", "side": 1 }],
         "waves": [
           [
-            { "t": 0.8, "act": "apparition", "shade": "lady_nu1", "say": "diary", "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" } },
             {
-              "t": 5.0,
+              "t": 0.8,
+              "act": "apparition",
+              "hold": true,
+              "shade": "lady_nu1",
+              "say": "diary",
+              "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
+            },
+            {
+              "t": 0,
               "type": "dollkin",
               "x": -2.84,
               "z": -11.5,
@@ -1289,7 +1307,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 5.4,
+              "t": 0.4,
               "type": "dollkin",
               "x": 2.84,
               "z": -12.0,
@@ -1298,7 +1316,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 5.8,
+              "t": 0.8,
               "type": "dollkin",
               "x": 0.0,
               "z": -12.5,
@@ -1306,7 +1324,7 @@
               "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
             },
             {
-              "t": 6.2,
+              "t": 1.2,
               "type": "dollkin",
               "x": -1.42,
               "z": -13.0,

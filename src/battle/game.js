@@ -214,7 +214,7 @@ export class Game {
     const S = this.station(id);
     // (a new stop starts clean: the last one's wave state and its waves still to come are not carried over - user 2026-10-22: from the
     // soul's escort on into the studio, the first shadow was skipped and the second came twice; picked from the select screen it was fine)
-    this.waveTok = (this.waveTok || 0) + 1; this.waveLive = false; this.pendingSpawns = 0; this.waveEvents = [];
+    this.waveTok = (this.waveTok || 0) + 1; this.waveLive = false; this.pendingSpawns = 0; this.pendingEvents = 0; this.waveEvents = [];
     // (a stop only some runs have: needs 'crow' = the crow was let out of its cage in the entrance hall - DESIGN 第 2 话; else on to the next)
     if (S?.needs === 'crow' && !this.chase?.crow && this.stationQ.length) { this.goStation(this.stationQ.shift(), boss); return; }
     // a checkpoint inside a long stage (episode 2): a retry starts here, and so does the next run from the select screen until it is cleared
@@ -699,13 +699,13 @@ export class Game {
   }
   // the thing guarded got to the end of its way (escort.js): the stop is won - no more waves, what is left is gone (escort.end)
   escortDone() {
-    this.waveIndex = this.S.waves.length; this.waveLive = true; this.pendingSpawns = 0; this.waveEvents = [];
+    this.waveIndex = this.S.waves.length; this.waveLive = true; this.pendingSpawns = 0; this.pendingEvents = 0; this.waveEvents = [];
     for (const s of this.spawners || []) s.live = false;
   }
   // on from a stop with no fight of its own (a walk-through, the end of a chase, a hiding place): the next stop, or the stage's end
   onward(S) {
     if (this.stationQ.length) this.goStation(this.stationQ.shift(), false);
-    else { this.combat = true; this.waveLive = true; this.pendingSpawns = 0; this.waveIndex = 0; this.S = { ...S, waves: [[]] }; }   // (the stage's end: as if cleared)
+    else { this.combat = true; this.waveLive = true; this.pendingSpawns = 0; this.pendingEvents = 0; this.waveIndex = 0; this.S = { ...S, waves: [[]] }; }   // (the stage's end: as if cleared)
   }
   // the evil god breaks into the calm after-school world: a hit, the paper world tears, the light turns wrong, desks float up
   invade(then) {
@@ -766,7 +766,25 @@ export class Game {
     });
   }
   startWave() {
-    const wave = this.S.waves[this.waveIndex];
+    const all = this.S.waves[this.waveIndex];
+    // a wave entry with hold: true (the lady's shadow, acts.js apparition) is a moment of its own: the rest of the wave starts only when it
+    // is over, not on a clock (user 2026-10-22: a step not finished, nothing of the next one)
+    // (what stands in the room as a thing of it - a chandelier, a statue - is there from the start; its waking waits with the rest)
+    const hold = all.find((e) => e.hold && !e.type);
+    if (hold) {
+      const tok = this.waveTok; this.waveLive = true; this.waveKills = 0; this.pendingSpawns = 1; this.waveEvents = [];
+      const still = all.filter((e) => e.type && e.from === 'statue' && !e.count);
+      for (const s of still) this.spawnEnemy({ ...s, wake: undefined });
+      const after = [...all.filter((e) => e !== hold && !still.includes(e)), ...still.filter((s) => s.wake != null).map((s) => ({ t: s.wake, wake: 1, wakeOf: s.type }))];
+      this.etw.wait(hold.t || 0, () => {
+        if (!this.combat || tok !== this.waveTok) return;
+        this.waveEvent({ ...hold, onDone: () => { if (!this.combat || tok !== this.waveTok) return; this.pendingSpawns--; this.runWave(after); } });
+      });
+      return;
+    }
+    this.runWave(all);
+  }
+  runWave(wave) {
     // a wave lists monsters, and may list things that happen at a time { t, ... } or once so many of this wave's monsters are dead
     // { kills: n, ... }: turn: {...} the place turns real / rotten; mutate: true every monster still standing becomes its full self
     // (enemies.json mutatesTo); gimmick: id fires that mechanism of the set (a portrait empties)
@@ -779,11 +797,14 @@ export class Game {
     const tok = this.waveTok;
     for (const s of spawns) this.etw.wait((s.t || 0) + T.combat.spawnDelay, () => { if (!this.combat || tok !== this.waveTok) return; this.spawnEnemy(s); this.pendingSpawns--; });   // (an entry without t: at once)
     this.waveEvents = wave.filter((e) => !e.type && e.kills);
-    for (const e of wave) if (!e.type && !e.kills) this.etw.wait(e.t || 0, () => this.combat && this.waveEvent(e));
+    // (a wave is not over before everything it says has happened - its timed events too: user 2026-10-22, a step not finished, nothing
+    // of the next one; the gallery's chandeliers had all woken at once, their waves skipped over before their wakes came)
+    const timed = wave.filter((e) => !e.type && !e.kills); this.pendingEvents = timed.length;
+    for (const e of timed) this.etw.wait(e.t || 0, () => { if (tok !== this.waveTok) return; this.pendingEvents--; if (this.combat) this.waveEvent(e); });
   }
   waveEvent(e) {
     // everything else a wave event says is a director's cue (cues.js: say, mv, act, cam, burst, shake ...)
-    const { t: _t, kills: _k, turn: _tu, mutate: _m, gimmick: _g, collapse: _c, hint: _h, sound: _s, spawner: _sp, wake: _w, wakeOf: _wo, ...cue } = e;
+    const { t: _t, kills: _k, turn: _tu, mutate: _m, gimmick: _g, collapse: _c, hint: _h, sound: _s, spawner: _sp, wake: _w, wakeOf: _wo, hold: _ho, ...cue } = e;
     if (Object.keys(cue).length) this.cues.run(cue);
     if (e.turn) this.turn(e.turn);
     if (e.mutate) this.mutateAll();
@@ -814,16 +835,18 @@ export class Game {
     sfx.madness(); this.post.flash(0.5, 0xff8ab0);
   }
   checkWave() {
-    if (!this.waveLive || this.pendingSpawns > 0) return;
+    if (!this.waveLive || this.pendingSpawns > 0 || this.pendingEvents > 0) return;
     if (this.spawners?.some((s) => s.live)) return;
     // episode 2: the things blocking the way (gimmicks with block: true) must all be gone too
     if (this.S.block && this.actors.some((a) => a.g?.block && (!a.g.station || a.g.station === this.stationId) && !a.spent)) return;
     if (this.S.dial && !this.chase.sentOff) return;   // (the last fight: over when the bell has sent her off)
     // no idle gaps (user 2026-10-18): a wave that is not the last one hands over to the next while its last few (combat.waveCarry) are still
     // up; the last wave of a stop is fought to the end
-    // (a chandelier still hanging there as it is does not hold the wave up: it wakes when its own wave starts - chandeliers in ep1_rework.py)
-    const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker && !(a.state === 'statue' && a.bp?.hang && !a.waking)), left = alive.length;
+    // (a chandelier still hanging there as it is does not hold a wave up while a later wave of this stop is still to wake it -
+    // chandeliers in ep1_rework.py; on the stop's last wave it does: the stop is never over with a monster of it still there - user
+    // 2026-10-22, the camera turned away from chandeliers that had not even woken)
     const last = this.waveIndex >= this.S.waves.length - 1;
+    const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker && (last || !(a.state === 'statue' && a.bp?.hang && !a.waking))), left = alive.length;
     // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared)
     if (last && left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });
     if (left > (last || this.S.solo ? 0 : T.combat.waveCarry ?? 0)) return;   // (station solo: every wave fought to the end - the studio's shadows one at a time, user 2026-10-22)
@@ -838,7 +861,9 @@ export class Game {
     const tok = this.waveTok, next = () => this.combat && tok === this.waveTok && this.S.waves?.[this.waveIndex] && this.startWave();   // (only for this stop)
     if (this.ep.sandbox && this.waveIndex >= this.S.waves.length) { this.waveIndex = 0; this.etw.wait(T.combat.waveGap, next); return; }   // (the sound sandbox: they keep coming)
     if (this.escort.going && this.waveIndex >= this.S.waves.length) { this.waveIndex = this.S.escort.loop ?? 0; this.etw.wait(T.combat.waveGap, next); return; }   // (they keep coming while it is on its way)
-    if (this.waveIndex < this.S.waves.length) { this.etw.wait(left ? 0.2 : T.combat.waveGap, next); return; }
+    // (no gap before a wave that only wakes what hangs there already: the next chandelier straight away - user 2026-10-22, too slow)
+    const wakeOnly = this.S.waves[this.waveIndex]?.every((e) => !e.type && e.wake);
+    if (this.waveIndex < this.S.waves.length) { this.etw.wait(left || wakeOnly ? 0.2 : T.combat.waveGap, next); return; }
     this.combat = false;
     this.clearProjectiles();
     const quiet = this.S.quietEnd;   // (a stop that is not won but run from - the chase: no fanfare, no "cleared!")

@@ -269,9 +269,10 @@ export class PanelWorld {
     if (Hd.door && tex[Hd.door.frame]) {
       const D = Hd.door, ft = tex[D.frame], hole = meta[D.frame]?.hole || [0.26, 0.2, 0.74, 1], dw = D.w, dh = dw * ft.image.height / ft.image.width, dx = D.x || 0;
       const f = board(D.frame, dw, dh, { soft: true }); f.position.set(dx, dh / 2, z1 + 0.08); f.renderOrder = 2; put(f, z1);
+      this.endDoor = [f];   // (a monster standing in for it hides it while it lives: enemies.json replacesDoor - the gallery's maw door)
       if (tex[D.leaf]) {
         const lw = dw * (hole[2] - hole[0]), lh = dh * (hole[3] - hole[1]), l = board(D.leaf, lw, lh, { alpha: true });
-        l.position.set(dx + dw * ((hole[0] + hole[2]) / 2 - 0.5), dh * (1 - (hole[1] + hole[3]) / 2), z1 + 0.05); put(l, z1);
+        l.position.set(dx + dw * ((hole[0] + hole[2]) / 2 - 0.5), dh * (1 - (hole[1] + hole[3]) / 2), z1 + 0.05); put(l, z1); this.endDoor.push(l);
       }
     }
     // a drawbridge (hall.bridge = { z0, z1, seals }): a gap in the floor between z0 and z1, the bridge standing up on its far side (hinged

@@ -24,8 +24,11 @@ FIX = {
                "the big paw in front, the lower one of her two clasped hands under her chin",
                "her other hand, the one behind that paw, its fingers over it (the upper one of the two), clasped together with the paw under "
                "her chin in delight at the same place"),
+    # (user 2026-10-22: on the glass page's last panel the paw is far bigger than the cat girl - redrawn its right size: GLASS below)
+    "glass_2": ("glass", 2, (0.01, 0.0, 0.6, 1.0), None, None),
 }
-EP = {"fountain": "ep1", "fall": "ep1", "open": "ep2"}   # (which episode's pack each page is in: comic/<ep>p_<page>, comics.json <ep>_<page>)
+GROW = {"glass_2"}   # (a panel too narrow for the tool's shapes: the crop may reach past it on the page - only her box is pasted back)
+EP = {"fountain": "ep1", "fall": "ep1", "open": "ep2", "glass": "ep1"}   # (which episode's pack each page is in: comic/<ep>p_<page>, comics.json <ep>_<page>)
 SHAPES = (2 / 3, 1.0, 3 / 2)   # w / h the image tool makes
 
 
@@ -69,6 +72,9 @@ def boxes(name):   # -> (crop box, her box) on the page, px: the crop = her box 
         if (x1 - x0) / (y1 - y0) > want * 1.02:   # (the panel too low to grow taller: narrower instead, round her box, inside the panel)
             w = (y1 - y0) * want; cx = min(max((her[0] + her[2]) / 2, X0 + w / 2), X1 - w / 2); x0, x1 = cx - w / 2, cx + w / 2
         if x0 <= her[0] + 1 and x1 >= her[2] - 1 and y0 <= her[1] + 1 and y1 >= her[3] - 1: break
+    if name in GROW and (x1 - x0) / (y1 - y0) < min(SHAPES, key=lambda s: abs(s - (x1 - x0) / (y1 - y0))) * 0.98:
+        W = Image.open(orig(page)).size[0]; want = min(SHAPES, key=lambda s: abs(s - (x1 - x0) / (y1 - y0))); add = (y1 - y0) * want - (x1 - x0)
+        x0, x1 = max(0, x0 - add), x1 if x0 - add >= 0 else min(W, x1 + add - x0)
     return tuple(round(v) for v in (x0, y0, x1, y1)), tuple(round(v) for v in her)
 
 
@@ -93,7 +99,7 @@ def prompt(name):
 
 
 JOBS = {f"R93_{n}": [(f"art/raw/r93/{n}_{v}.png", [src(n), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
-                      prompt(n) + f" Try {v}.", "OPAQUE") for v in "abc"] for n in FIX}
+                      prompt(n) + f" Try {v}.", "OPAQUE") for v in "abc"] for n in FIX if FIX[n][3]}
 
 # (user 2026-10-22, on open_0 b: three hands - the lump of fur under her chin still read as two paws, with the girl's hand over them: again,
 # asking outright for exactly two hands and the second lump gone)
@@ -110,3 +116,17 @@ REDO = ("Edit reference image 1, a panel from a full-colour manga page of a game
         "effects.")
 JOBS["R93_open_0_redo"] = [(f"art/raw/r93/open_0_{v}.png", [src("open_0"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png",
                                                              "art/ref/pink_poses.png"], REDO + f" Try {v}.", "OPAQUE") for v in "def"]
+
+GLASS = ("Edit reference image 1, a panel from a full-colour manga page of a game. Output the SAME picture at the same framing: keep "
+         "everything exactly as it is (the camera, the composition, the stained-glass door and the room behind, the colours, the line art "
+         "and screentone style, the sparkles and the lettering) and keep the white-haired cat girl's pose, position, size, smug smiling "
+         "face, hair, glasses, clothes, tail and legs exactly as they are (reference image 2 is her design sheet). The black-haired twin-tail "
+         "girl, where she is in the picture, stays exactly as she is too (reference images 3 and 4 are her design; " + OUTFIT + "). Change "
+         "ONLY one thing: her cat paw (her raised arm beside her face, its palm with pink paw pads toward the viewer) is drawn FAR too big - "
+         "as big as her whole upper body. Redraw it at its right size, as on her design sheet: a white fluffy ghost-cat paw with red claws "
+         "about one and a half times the size of her head and no bigger, still raised beside her face in the same proud 'ta-da' gesture "
+         "with the palm and pads toward the viewer, coming out of the same wide white sleeve, the arm and sleeve in proportion to her body; "
+         "fill the space it leaves with the same background (the door, its stained glass, the sparkles). No mark or seal on the palm. Do not "
+         "add text, do not add effects.")
+JOBS["R93_glass_2"] = [(f"art/raw/r93/glass_2_{v}.png", [src("glass_2"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
+                        GLASS + f" Try {v}.", "OPAQUE") for v in "abc"]

@@ -341,9 +341,8 @@ def apparitions(D):
             else:
                 S["gimmicks"].append({"id": f"keep_{stn}", "k": k, "on": "stand", "x": round(max(H["x0"] + 0.8, min(H["x1"] - 0.8, x + across)), 2), "z": round(z + 0.3, 2),
                                       "w": w, "shoot": False})
-        for e in st["waves"][0]:   # (the stop's first wave a little later, all of it - the statues' wakes too: she is seen alone first)
-            e["t"] = round(e.get("t", 0) + 5.0, 2)
-        st["waves"][0].insert(0, {"t": 0.8, "act": "apparition", "shade": f"lady_{stn}", "say": say, "name": SHADE})
+        # (hold: the stop's first wave - its monsters, the statues' wakes - only once she is gone, not on a clock: Game.startWave)
+        st["waves"][0].insert(0, {"t": 0.8, "act": "apparition", "hold": True, "shade": f"lady_{stn}", "say": say, "name": SHADE})
 
 def places(D):
     import random

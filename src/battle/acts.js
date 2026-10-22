@@ -14,7 +14,7 @@
 // and, for every monster: purified by the cat's mantra (kill kind mantra / beam), a kind with "revert" in enemies.json leaves behind
 // what it was (a prop, a rigid body) instead of burning away (Acts.revert, from Enemy.die). Owned by Game (game.acts).
 import * as THREE from 'three';
-import { sfx, sound } from '../core/audio.js';
+import { sfx, sound, talking, voiceLoad } from '../core/audio.js';
 import { C } from '../core/content.js';
 import { COL } from './fx.js';
 
@@ -39,8 +39,8 @@ export class Acts {
   constructor(game) { this.g = game; this.live = []; }
 
   start(e) {
-    const f = this[e.act]; if (!f) { console.warn('unknown act', e.act); return; }
-    const a = f.call(this, e); if (a) this.live.push(a);
+    const f = this[e.act]; if (!f) { console.warn('unknown act', e.act); e.onDone?.(); return; }
+    const a = f.call(this, e); if (a) this.live.push(a); else e.onDone?.();   // (onDone: a wave held for it goes on - Game.startWave hold)
   }
   update(dt, t) {
     for (let i = this.live.length - 1; i >= 0; i--) if (this.live[i].update(dt, t) === false) this.live.splice(i, 1);
@@ -50,18 +50,26 @@ export class Acts {
   // ---- apparition: the lady's shadow seen a moment (user 2026-10-22: in each place of the house her shadow jumps out once, up close,
   // saying something - and her child's things seen on the way, not first at the end): { act, shade: its picture standing there unseen
   // till now (sets.json gimmicks, hidden), say: her line (text/stickers.json bosses.madame), name } - it seeps up out of the dark, the fight
-  // held while the camera goes to it and she speaks (Game.introLook, her voice), then it melts away. Not a monster of the wave
+  // held while the camera goes to it and she speaks (Game.introLook, her voice), then it melts away. Not a monster of the wave.
+  // Each step waits for the one before, not a clock (user 2026-10-22: in the nursery she was gone before she had finished): her voice
+  // loaded before she speaks, the close look only once no other is on, gone only when her line is over; then the wave holding for her
+  // goes on (e.onDone, Game.startWave hold)
   apparition(e) {
     const G = this.g, gm = e.shade && G.actors.find((a) => a.g?.id === e.shade && a.alive); if (!gm) return null;   // (shade, not gimmick: a wave event's gimmick fires one)
     gm.root.visible = true; gm.billboard = true; gm.u.outlineOn.value = 0; gm.u.opacity.value = 0; gm.inner.scale.set(0.6, 0.15, 1);
     G.fx.ink(gm.center(), 18, 1.4, COL.violet); (sfx.creak || sfx.thud)(0); G.post.shake(0.5);
     G.tweens.run(1.0, (k) => { gm.u.opacity.value = k; gm.inner.scale.set(0.6 + 0.4 * k, 0.15 + 0.85 * k * (2 - k), 1); });
-    G.tweens.wait(0.8, () => G.introLook(gm, { say: e.say, who: 'madame', name: e.name, dist: e.dist ?? 4.4, up: e.up ?? 0.4, v: 0.6, min: 3.2 }));
-    const t0 = performance.now();
-    return { update: () => {
-      if (G.cineOn || performance.now() - t0 < 2000) return;
+    let loaded = false, step = 'rise', t = 0;
+    voiceLoad('madame', e.say).then(() => { loaded = true; }, () => { loaded = true; });
+    return { update: (dt) => {
+      t += dt;
+      if (step === 'rise') {
+        if (t < 1.0 || !loaded || G.cineOn || G.vigOn || G.board) return;
+        G.introLook(gm, { say: e.say, who: 'madame', name: e.name, dist: e.dist ?? 4.4, up: e.up ?? 0.4, v: 0.6, min: 3.2 }); step = 'speak'; t = 0; return;
+      }
+      if (G.cineOn || talking('madame') || t < 0.6) return;
       G.fx.ink(gm.center(), 14, 1.2, COL.violet);
-      G.tweens.run(0.9, (k) => { gm.u.opacity.value = 1 - k; gm.inner.scale.set(1 + k * 0.2, 1 + k * 0.35, 1); }, { onDone: () => { gm.alive = false; gm.dispose(); } });
+      G.tweens.run(0.9, (k) => { gm.u.opacity.value = 1 - k; gm.inner.scale.set(1 + k * 0.2, 1 + k * 0.35, 1); }, { onDone: () => { gm.alive = false; gm.dispose(); e.onDone?.(); } });
       return false;
     } };
   }
