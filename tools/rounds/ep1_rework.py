@@ -26,21 +26,23 @@ PAGES = [
 def madame(B):
     B["beh"] = "madame"
     S1, S2, S3 = B["stages"]
-    S1["pattern"] = ["drift", "volley", "drift", "lunge", "volley"]; S1["projectiles"] = ["furniture"]
-    S2["pattern"] = ["drift", "volley", "drift", "volley", "lunge"]; S2["projectiles"] = ["plane", "manga"]; S2["shots"] = [3, 4]   # (fewer: each takes five seconds to come now - projectiles.json solid)
+    # (user 2026-10-22: a boss fight is a long hard fight - three minutes is normal - with give and take, not a target stood there to be
+    # shot at: on the auto-player she made one move every twelve seconds and the two of them lost 260 between them all fight. Now her
+    # moves come on each other's heels: throws of things to shoot down, rushes at a girl, the big one to hide from, the grabbing arm)
+    S1["pattern"] = ["volley", "drift", "lunge", "volley", "drift", "volley", "burst"]; S1["projectiles"] = ["furniture"]
+    S2["pattern"] = ["volley", "drift", "volley", "lunge", "volley", "burst"]; S2["projectiles"] = ["plane", "manga"]; S2["shots"] = [4, 5]
     S2.pop("summon", None)
-    S3["pattern"] = ["drift", "drag", "drift", "volley", "drag", "burst"]; S3.pop("summon", None)
-    # (how long each form lasts, on the auto-player: about 6, 63 and 49 damage a second in the three -> about a minute each; the diary's
-    # share is its six pages: shots at her do nothing there - user 2026-10-22)
+    S3["pattern"] = ["drag", "volley", "drift", "lunge", "drag", "volley", "burst"]; S3.pop("summon", None)
     B["hp"] = 4160
-    B["volley"]["shots"] = [2, 3]   # (each throw five seconds in the air now: user 2026-10-22, at least five seconds to shoot it)
-    B["weave"] = {"legs": 3, "lateral": 2.0, "leg": 0.45, "pause": 0.4, "near": 5.0, "topY": 0.06, "windup": 3.0, "dmg": 12, "back": 1.6}   # (her drift: thing.js weave, quick slides)
+    B["rest"] = [0.4, 0.9]
+    B["volley"]["shots"] = [3, 4]   # (each throw five seconds in the air: three or four of them to shoot down at once)
+    B["weave"] = {"legs": 2, "lateral": 2.0, "leg": 0.45, "pause": 0.3, "near": 5.0, "topY": 0.06, "windup": 1.6, "dmg": 12, "back": 1.2}   # (her drift: thing.js weave, quick slides)
     B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
     B["madame"] = {
         "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，上一页的真相读完它才亮；打她本人只溅火花），pageHp 一页要打掉多少血才撕碎，chunk 每撕碎一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
         "photo": {"dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10},
-        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 3.0, "pageHp": 900},
+        "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2, "pageHp": 700},
         "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 6, "time": 4.0, "dmg": 18, "away": 6, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0},
         "repaint": {"time": 3.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
         "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise", "ep1/photo", "ep1/diary", "ep1/coffin"],
