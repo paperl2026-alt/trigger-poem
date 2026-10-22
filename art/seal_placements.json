@@ -830,13 +830,18 @@
   },
   "r53_glass_a2": {
     "src": "art/raw/r53b/fixed/page_glass_a.png",
-    "auto": true,
-    "within": [
-      1110,
-      0,
-      1672,
-      941
+    "stamp": false,
+    "erase": [
+      1309,
+      280,
+      1384,
+      399
     ],
+    "center": [
+      1348,
+      319
+    ],
+    "ring": 54,
     "keep_frame": true,
     "png": "art/raw/r53b/fixed/page_glass_a.png"
   },
