@@ -394,8 +394,106 @@ export class Madame extends TheThing {
     if (this.stage === 0) this.photoTick(dt, t);
     if (this.stage === 1) this.pagesTick(dt, t);
     if (this.stage === 2) { this.pitTick(dt, t); this.dragTick(dt); }
+    if (this.dream) this.dreamTick(this.game.rdt ?? dt, t);   // (her end, dreamed: real time)
   }
-  die(calm) { this.leaveForm(); this.lightsOut(0); super.die(calm); }
+  die(calm) { this.leaveForm(); this.dreamDown(true); this.lightsOut(0); super.die(calm); }
+
+  // ---------------------------------------------------------------- her end, dreamed (user 2026-10-22: the three things at the end had no
+  // pressure - make the place go strange, like an animated film: memories, shadows of the past floating up, crayon drawings changing like
+  // a slide show, photos coming up and slowly turning dark and grotesque; and, laid to rest, the rising of Sweet Home's ending)
+  // While she kneels the studio dims and petals drift; picture frames float up behind and beside her (never before her face), each
+  // a slide show of what happened (bosses.json madame.dream): the happy days; with the photo given back, the oven and its fire; with the
+  // diary, the crying - and they rot, darken and flicker red, the room darker; with the little coffin they melt into light (rest)
+  grieve() { super.grieve(); this.dreamUp(); }
+  dreamUp() {
+    const D = this.M.dream; if (!D || this.dream) return;
+    const g = this.game, mk = (k) => { const t = tex[k]; return t ? new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: 0, depthWrite: false, fog: false, side: THREE.DoubleSide })) : null; };
+    this.dream = { stage: -1, frames: D.frames.map((f, i) => {
+      const m = mk(D.sets[0][i % D.sets[0].length]); if (!m) return null;
+      m.renderOrder = 3; g.world.scene.add(m);
+      return { m, f, i, k: i, next: rr(D.every) * (0.4 + i * 0.2), ph: Math.random() * 6, flick: 0 };
+    }).filter(Boolean) };
+  }
+  dreamTick(dt, t) {
+    const D = this.M.dream, R = this.dream; if (!D || !R) return;
+    const g = this.game, bp = this.root.position, cam = g.world.camera.position, dx = cam.x - bp.x, dz = cam.z - bp.z, dl = Math.hypot(dx, dz) || 1, fx = dx / dl, fz = dz / dl;
+    const stage = this.resting ? 3 : Math.min(2, this.ritualNext || 0);
+    if (stage !== R.stage) {   // (on to the next memory: the room darker, the frames' colour)
+      R.stage = stage; if (stage < 3) this.lightsOut(D.dark[stage]);
+      for (const F of R.frames) { F.next = 0.15 + F.i * 0.12; }
+      if (stage > 0 && stage < 3) { g.post.styleBurst(0.6, stage > 1 ? [7, 2, 8] : [8, 7], 0.12, 0x1a0008, stage > 1 ? 0xff2040 : 0xffa040); sfx.madness(); }
+    }
+    const tint = new THREE.Color(D.tint[Math.min(2, stage)]);
+    for (const F of R.frames) {
+      const m = F.m, [x, y, back, w] = F.f, set = D.sets[Math.min(2, stage)];
+      F.ph += dt;
+      // where it floats: beside and behind her (across x, up y, back away from the camera), drifting and bobbing; turned a little, in 3D
+      const sway = Math.sin(F.ph * 0.5 + F.i) * 0.35, bob = Math.sin(F.ph * 0.8 + F.i * 1.7) * 0.25;
+      m.position.set(bp.x - fz * (x + sway) - fx * back, y + bob, bp.z + fx * (x + sway) - fz * back);
+      m.lookAt(cam); m.rotateY(Math.sin(F.ph * 0.4 + F.i) * 0.35); m.rotateZ(Math.sin(F.ph * 0.3 + F.i * 2) * 0.06);
+      const tx = m.material.map, ar = tx?.image ? tx.image.width / tx.image.height : 1; m.scale.set(w * ar, w, 1);
+      // its slide show: a flicker, then the next picture of this memory
+      F.next -= dt;
+      if (F.next <= 0 && stage < 3) { F.next = rr(D.every); F.flick = 0.16; F.k = (F.k + 1 + Math.floor(Math.random() * 2)) % set.length;
+        const nt = tex[set[(F.k + F.i) % set.length]]; if (nt) m.material.map = nt; }
+      F.flick = Math.max(0, F.flick - dt);
+      const want = stage === 3 ? 0 : (F.flick > 0 ? 0.15 : 0.92) * (stage === 2 && Math.random() < 0.06 ? 0.4 : 1);   // (the last memories glitch)
+      m.material.opacity += (want - m.material.opacity) * Math.min(1, dt * (stage === 3 ? 1.5 : 10));
+      m.material.color.lerp(stage === 3 ? WHITE3 : tint, Math.min(1, dt * 1.2));
+      if (Math.random() < dt * (stage === 3 ? 18 : 3)) g.fx.wAdd.emit({ x: m.position.x + (Math.random() - 0.5) * w, y: m.position.y + (Math.random() - 0.5) * w, z: m.position.z, vx: 0, vy: stage === 3 ? 0.9 : 0.25, vz: 0, life: 1.6, size: 0.07, size1: 0.01, color: stage === 2 ? [1, 0.3, 0.35] : [1, 0.85, 0.9], a: 0.9, a1: 0, frame: 1 });
+    }
+    // (petals in the air round her while it lasts)
+    if (stage < 3 && Math.random() < dt * 8) { const a = Math.random() * Math.PI * 2, r = 2 + Math.random() * 4; g.fx.wAdd.emit({ x: bp.x + Math.cos(a) * r, y: 4 + Math.random() * 2, z: bp.z + Math.sin(a) * r * 0.5, vx: (Math.random() - 0.5) * 0.3, vy: -0.35, vz: 0, life: 4, size: 0.09, size1: 0.06, color: stage === 2 ? [0.7, 0.1, 0.18] : [1, 0.7, 0.82], a: 0.85, a1: 0, frame: 3 }); }
+  }
+  dreamDown(now) {
+    const R = this.dream; if (!R) return; this.dream = null;
+    for (const F of R.frames) { const m = F.m; const go = () => { m.removeFromParent(); m.geometry.dispose(); m.material.dispose(); };
+      if (now) go(); else this.game.tweens.run(1.4, (e) => { m.material.opacity *= 1 - e; m.position.y += 0.02; }, { onDone: go }); }
+  }
+  // laid to rest - the rising of Sweet Home's ending: a column of light comes down on her, her child's soul floats down out of it to her
+  // side, she says her last words, and the two of them rise together into the light and are gone (then die, calm)
+  rest() {
+    const g = this.game, P = this.root.position;
+    this.seq++; this.resting = true;
+    if (this.dream) { this.dreamTick(0, 0); g.tweens.wait(1.6, () => this.dreamDown()); }
+    this.lightsOut(0.4); g.post.flash(0.5, 0xfff6e8); sfx.clear();   // (dim enough for the light to stand out)
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.5, 18, 28, 1, true), new THREE.MeshBasicMaterial({ map: beamTex(), color: 0xfff0dc, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
+    beam.position.set(P.x, 9, P.z); beam.renderOrder = 4; g.world.scene.add(beam);
+    g.tweens.run(1.4, (e) => { beam.material.opacity = e * 0.9; });
+    const ck = tex['ep1/soul_child'];
+    // (a picture facing the camera - the place draws no sprites - at her side, in front of her: seen)
+    const ch = 1.6, child = ck ? new THREE.Mesh(new THREE.PlaneGeometry(ch * ck.image.width / ck.image.height, ch), new THREE.MeshBasicMaterial({ map: ck, transparent: true, opacity: 0, depthWrite: false, fog: false })) : null;
+    if (child) {
+      child.position.set(P.x + 2.3, 7, P.z + 1.4); child.renderOrder = 5; g.world.scene.add(child);
+      child.onBeforeRender = () => child.lookAt(g.world.camera.position);
+      g.tweens.run(2.6, (e) => { child.position.y = 7 - (7 - ch * 0.55) * (1 - (1 - e) * (1 - e)); child.material.opacity = Math.min(1, e * 2); }, { delay: 0.7 });
+    }
+    this.closeUp('rest', { lull: true, dist: this.S.h * 1.25, v: 0.5, up: 0.4, in: 1.0, out: 0.9, min: 10 });   // (she and her child, up close)
+    const lift = () => {
+      const y0 = P.y, c0 = child?.position.y ?? 0;
+      g.tweens.run(4.4, (e) => {
+        const k = e * e; P.y = y0 + k * 4.5;
+        if (child) { child.position.y = c0 + k * 4.5; child.position.x += (P.x + 1.2 - child.position.x) * 0.03; child.material.opacity = 1 - Math.max(0, (e - 0.7) / 0.3); }
+        this.u.tint.value.setRGB(1, 0.97, 0.9); this.u.tintAmt.value = e * 0.75;   // (going white in the light)
+        if (Math.random() < 0.5) { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.1, 0.9)); g.fx.wAdd.emit({ x: q.x, y: q.y, z: q.z, vx: 0, vy: 1.4, vz: 0, life: 1.6, size: 0.09, size1: 0.01, color: [1, 0.95, 0.85], a: 1, a1: 0, frame: 1 }); }
+      }, { onDone: () => {
+        if (child) g.tweens.run(0.8, (e) => { child.material.opacity = 0; }, { onDone: () => { child.removeFromParent(); child.geometry.dispose(); child.material.dispose(); } });
+        g.tweens.run(2.4, (e) => { beam.material.opacity = 0.9 * (1 - e); }, { delay: 1.2, onDone: () => { beam.removeFromParent(); beam.geometry.dispose(); beam.material.dispose(); } });
+        if (this.alive) this.die(true);
+      } });
+    };
+    g.tweens.wait(5.2, lift);
+  }
+}
+const WHITE3 = new THREE.Color(1, 1, 1);
+let BEAM = null;
+function beamTex() {   // (the column of light: bright down its middle, fading at its edges and toward the floor)
+  if (BEAM) return BEAM;
+  const c = document.createElement('canvas'); c.width = 64; c.height = 256; const x = c.getContext('2d');
+  const gv = x.createLinearGradient(0, 0, 0, 256); gv.addColorStop(0, 'rgba(255,255,255,1)'); gv.addColorStop(0.7, 'rgba(255,250,235,0.7)'); gv.addColorStop(1, 'rgba(255,240,220,0)');
+  x.fillStyle = gv; x.fillRect(0, 0, 64, 256);
+  x.globalCompositeOperation = 'destination-in'; const gh = x.createLinearGradient(0, 0, 64, 0); gh.addColorStop(0, 'rgba(0,0,0,0.25)'); gh.addColorStop(0.5, 'rgba(0,0,0,1)'); gh.addColorStop(1, 'rgba(0,0,0,0.25)'); x.fillStyle = gh; x.fillRect(0, 0, 64, 256);
+  BEAM = new THREE.CanvasTexture(c); BEAM.colorSpace = THREE.SRGBColorSpace; return BEAM;
 }
 
 // her three things for the end, straight into their row before her (no swinging, no blows: the fight is over; unseen until her close look

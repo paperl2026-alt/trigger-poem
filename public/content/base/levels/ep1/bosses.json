@@ -130,7 +130,40 @@
         "openMul": 2.0
       },
       "repaint": { "time": 3.6, "word": { "zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ" } },
-      "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise", "ep1/photo", "ep1/diary", "ep1/coffin"]
+      "dream": {
+        "sets": [
+          ["ep1/fresco1", "ep1/crayon1", "ep1/portrait1", "ep1/crayon2", "ep1/fresco3"],
+          ["ep1/crayon2", "ep1/crayon3", "ep1/crayon3", "ep1/fresco1_x", "ep1/crayon2_x"],
+          ["ep1/crayon4", "ep1/crayon4_x", "ep1/crayon3_x", "ep1/fresco1_x", "ep1/portrait1_x", "ep1/crayon1_x"]
+        ],
+        "dark": [0.3, 0.42, 0.55],
+        "tint": ["#ffffff", "#ffc890", "#ff8a92"],
+        "every": [1.6, 2.6],
+        "frames": [[-4.6, 3.6, 0.6, 1.9], [-2.9, 5.2, 1.4, 1.6], [3.0, 5.3, 1.2, 1.7], [4.7, 3.4, 0.5, 1.9], [-5.6, 1.8, -0.6, 1.4], [5.7, 2.0, -0.4, 1.4]]
+      },
+      "assets": [
+        "ep1/arm_reach",
+        "ep1/arm_grip",
+        "ep1/hands_crowd",
+        "ep1/soul_child",
+        "enemy/chandelier_disguise",
+        "ep1/fresco1",
+        "ep1/fresco1_x",
+        "ep1/fresco3",
+        "ep1/portrait1",
+        "ep1/portrait1_x",
+        "ep1/crayon1",
+        "ep1/crayon1_x",
+        "ep1/crayon2",
+        "ep1/crayon2_x",
+        "ep1/crayon3",
+        "ep1/crayon3_x",
+        "ep1/crayon4",
+        "ep1/crayon4_x",
+        "ep1/photo",
+        "ep1/diary",
+        "ep1/coffin"
+      ]
     },
     "weave": { "legs": 2, "lateral": 2.0, "leg": 0.45, "pause": 0.3, "near": 5.0, "topY": 0.06, "windup": 1.6, "dmg": 12, "back": 1.2 },
     "coreSmoke": { "colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28 }

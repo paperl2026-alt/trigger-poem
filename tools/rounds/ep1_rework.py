@@ -45,7 +45,17 @@ def madame(B):
         "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2, "pageHp": 700},
         "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 6, "time": 4.0, "dmg": 18, "away": 6, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0},
         "repaint": {"time": 3.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
-        "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise", "ep1/photo", "ep1/diary", "ep1/coffin"],
+        # dream: her end, dreamed (madame.js dreamUp): the memories in the frames floating round her, one set a step (the happy days; the
+        # oven and its fire; the crying, rotting) - the room's darkness and the frames' colour each step; every: seconds a picture is up;
+        # frames: [across, up, back from her, size] each
+        "dream": {"sets": [["ep1/fresco1", "ep1/crayon1", "ep1/portrait1", "ep1/crayon2", "ep1/fresco3"],
+                           ["ep1/crayon2", "ep1/crayon3", "ep1/crayon3", "ep1/fresco1_x", "ep1/crayon2_x"],
+                           ["ep1/crayon4", "ep1/crayon4_x", "ep1/crayon3_x", "ep1/fresco1_x", "ep1/portrait1_x", "ep1/crayon1_x"]],
+                  "dark": [0.3, 0.42, 0.55], "tint": ["#ffffff", "#ffc890", "#ff8a92"], "every": [1.6, 2.6],
+                  "frames": [[-4.6, 3.6, 0.6, 1.9], [-2.9, 5.2, 1.4, 1.6], [3.0, 5.3, 1.2, 1.7], [4.7, 3.4, 0.5, 1.9], [-5.6, 1.8, -0.6, 1.4], [5.7, 2.0, -0.4, 1.4]]},
+        "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise",
+                   "ep1/fresco1", "ep1/fresco1_x", "ep1/fresco3", "ep1/portrait1", "ep1/portrait1_x", "ep1/crayon1", "ep1/crayon1_x", "ep1/crayon2",
+                   "ep1/crayon2_x", "ep1/crayon3", "ep1/crayon3_x", "ep1/crayon4", "ep1/crayon4_x", "ep1/photo", "ep1/diary", "ep1/coffin"],
     }
 
 # ---------------------------------------------------------------- the places (DESIGN 第 1 话 按总纲重做时各处加的巧思)
