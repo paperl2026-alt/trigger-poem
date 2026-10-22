@@ -3,6 +3,7 @@
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
 import { suckInto } from './suck.js';
+import { victoryJump } from './victory.js';
 import { alphaAt, meta, url } from '../core/assets.js';
 import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote, musicBeat, cry } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
@@ -85,6 +86,9 @@ export class Game {
     this.cineOn = false; this.cineQ = 0;   // a close look (cine)
     this.walkOn = false;   // the camera walking on alone between places (passThrough): the girls out of the picture, the HUD away
     this.combo = 0; this.comboT = 0; this.maxCombo = 0; this.kills = 0;
+    // (the combo and the Fever go on from where the last run of this episode left them - the next stage picked on the select screen, the
+    // checkpoint: user 2026-10-22, every small stage started them over; a run lost is not carried: gameOver)
+    const C0 = G.carry; if (C0 && C0.ep === this.ep.id) { this.combo = C0.combo; this.comboT = T.combat.comboTime; this.players.forEach((p, i) => { if (C0.fever[p.id]) p.fever.carry(C0.fever[p.id]); }); }
     this.time = 0; this.playT = 0;
     this.camPlaced = false;
     this.assignControllers();
@@ -920,15 +924,15 @@ export class Game {
     this.clearProjectiles();
     this.players.forEach((p) => { if (p.activeOn) p.endActive(false); });
     const after = (fn) => (this.cineOn ? this.tweens.wait(0.25, () => after(fn)) : fn());   // (her last close look plays out first)
+    // (a jump of their own, facing the camera - user 2026-10-22: not the shooting pose bobbing on the spot: src/battle/victory.js)
     this.tweens.wait(3.4, () => after(() => {
       stopMusic();
       sfx.victory();
-      this.setAll('victory');
-      this.tweens.wait(1.4, () => this.nextStep());
+      victoryJump(this, this.players.filter((p) => p.slot === 0 || this.p2on() || p.ctrl?.kind === 'ai').map((p) => p.id), () => this.nextStep());
     }));
   }
   gameOver() {
-    this.combat = false;
+    this.combat = false; this.noCarry = true; this.combo = 0;
     stopMusic();
     sfx.defeat();
     this.players[0].state = 'down';
@@ -937,7 +941,7 @@ export class Game {
     this.tweens.to(this.post.u.wipe, { value: 1 }, 1.2, { delay: 0.6, ease: Ease.inQuad, onDone: () => this.G.showResults(st) });
   }
   finish() {
-    stopMusic();
+    stopMusic(); this.noCarry = true;   // (the episode over: its next run starts fresh)
     const st = this.stats(true);
     this.applyRewards(st);
     this.G.showResults(st);
@@ -999,7 +1003,10 @@ export class Game {
   }
   clearActors() { for (const a of this.actors) if (!a.removed) a.dispose(); this.actors.length = 0; }
   clearProjectiles() { for (const a of this.actors) if (a instanceof Projectile && a.alive) { a.alive = false; if (a.lock) { a.lock.remove(); a.lock = null; } a.dieShatter({ u: 0.5, v: 0.5 }, 0.6); } }
+  // (what is carried into the next run of this episode: Game constructor)
+  keepCarry() { this.G.carry = { ep: this.ep.id, combo: this.combo, fever: Object.fromEntries(this.players.map((p) => [p.id, { ...p.fever.v }])) }; }
   dispose() {
+    if (this.noCarry) this.G.carry = null; else this.keepCarry();
     listenerOff();
     this.chase.dispose();
     this.clearActors();
@@ -1451,7 +1458,10 @@ export class Game {
     if (this.combat && Math.floor(this.combo / ce) > Math.floor((this.lastCombo || 0) / ce)) this.mv.label(`${Math.floor(this.combo / ce) * ce} COMBO`);
     this.lastCombo = this.combo;
     // the combo holds outside the fight (walks, comics); in it, after comboTime without a hit it slides down, faster and faster
-    if (this.combat && this.combo > 0) {
+    // (and only while there is something to hit on the screen, not in a close look or between waves - user 2026-10-22: it slid back after
+    // two seconds; tuning combat comboTime 6)
+    this.hasTargets = !!(this.combat && !this.cineOn && !this.vigOn && !this.lull && this.actors.some((a) => a.alive && !a.prop && !a.phantom && !(a instanceof Projectile) && a.state !== 'statue' && a.hitMeshes().length));
+    if (this.combat && this.combo > 0 && this.hasTargets) {
       this.comboT -= dt;
       if (this.comboT < 0) { this.comboF = Math.min(this.comboF ?? this.combo, this.combo) - dt * T.combat.comboDrop * (1 - this.comboT * T.combat.comboAccel); this.combo = Math.max(0, Math.floor(this.comboF)); }
     }

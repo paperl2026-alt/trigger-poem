@@ -9125,6 +9125,42 @@
   "src": "assets/ui/wi_zh2.webp",
   "w": 512
  },
+ "ui/win_cat_1": {
+  "dom": true,
+  "h": 977,
+  "src": "assets/ui/win_cat_1.webp",
+  "w": 517
+ },
+ "ui/win_cat_2": {
+  "dom": true,
+  "h": 977,
+  "src": "assets/ui/win_cat_2.webp",
+  "w": 517
+ },
+ "ui/win_cat_3": {
+  "dom": true,
+  "h": 977,
+  "src": "assets/ui/win_cat_3.webp",
+  "w": 517
+ },
+ "ui/win_pink_1": {
+  "dom": true,
+  "h": 983,
+  "src": "assets/ui/win_pink_1.webp",
+  "w": 561
+ },
+ "ui/win_pink_2": {
+  "dom": true,
+  "h": 983,
+  "src": "assets/ui/win_pink_2.webp",
+  "w": 561
+ },
+ "ui/win_pink_3": {
+  "dom": true,
+  "h": 983,
+  "src": "assets/ui/win_pink_3.webp",
+  "w": 561
+ },
  "ui/ws_arrow": {
   "h": 292,
   "src": "assets/ui/ws_arrow.webp",

@@ -227,7 +227,7 @@ export class Player {
     }
     if (!busy && c) {
       if (this.a.charge.sec) this.addCharge(this.a.charge.sec * dt);
-      this.fever.update(dt);
+      this.fever.update(g.hasTargets ? dt : 0);   // (it only slides while there is something to hit: Game.hasTargets)
       if (this.activeT > 0) {
         this.activeT -= dt;
         if (this.activeT <= 0) this.endActive(false);

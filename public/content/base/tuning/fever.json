@@ -15,7 +15,7 @@
     "hurtCharge": 0.2,
     "levelHeal": 6,
     "skillHeal": 15,
-    "idleDelay": 2.5,
+    "idleDelay": 6,
     "idleDrain": 0.15,
     "idleAccel": 0.6,
     "rankBadge": ["C", "C", "B", "B", "A", "A", "S", "S", "S", "极"]

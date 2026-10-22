@@ -27,6 +27,7 @@ export class Fever {
   get critMul() { return (this.w.crit?.mul || F().critMul)[this.level('acc')]; }
   get reloadMul() { return F().reloadMul[this.level('combo')]; }
   get full() { return FEVER_KEYS.every((k) => this.level(k) >= F().maxLevel); }
+  carry(v) { for (const k of FEVER_KEYS) if (v[k] != null) this.v[k] = Math.max(this.floor, v[k]); for (const k of FEVER_KEYS) this.lv[k] = this.level(k); }   // (from the last run: Game.keepCarry)
   add(k, d) { this.v[k] = Math.max(0, Math.min(F().maxLevel + 0.999, this.v[k] + d)); }
 
   shot() {}   // shooting alone doesn't hold the Fever: hitting does
