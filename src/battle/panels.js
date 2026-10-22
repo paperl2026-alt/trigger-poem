@@ -263,7 +263,7 @@ export class PanelWorld {
     }
     // the end wall, the void behind it, the outside seen through the windows
     const ek = Hd.end ? order(Hd.end, 1, seed + 3)[0] : null;
-    if (ek) { const e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); }
+    if (ek) { const e = board(ek, W, h, { alpha: true }); e.position.set((x0 + x1) / 2, h / 2, z1); put(e, z1); flip(e, ek, 0); this.endBoard = e; }   // (endBoard: what is painted on it can come off it - the oven's door, suck.js)
     // the door this room ends at (DESIGN「门和小关的衔接」): the very door the close-up after this room opens (tools/rounds/door_room.py),
     // standing in the end wall from the start, so the girls see where they are going; hall.door = { frame, leaf, w (metres), x }
     if (Hd.door && tex[Hd.door.frame]) {

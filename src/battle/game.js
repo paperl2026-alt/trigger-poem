@@ -2,6 +2,7 @@
 // enemies, shooting rules (pierce / ramp / Fever crits / stagger), rewards at the end.
 // Numbers: content tuning/combat.json (shooting, waves) and tuning/economy.json (rank, rewards).
 import * as THREE from 'three';
+import { suckInto } from './suck.js';
 import { alphaAt, meta, url } from '../core/assets.js';
 import { sfx, sound, playMusic, stopMusic, setIntensity, warmMusic, setListener, listenerOff, setRoom, hitNote, musicBeat, cry } from '../core/audio.js';
 import { Ease, Tweens } from '../core/tween.js';
@@ -883,6 +884,7 @@ export class Game {
       // (or through the hole a monster broke in the far wall: they follow it, and the door after this room is skipped)
       const X = this.exitVia || this.S.exit, hole = !!this.exitVia?.hole;
       this.exitVia = null;
+      if (X?.suck && this.world.endBoard) { this.tweens.wait(1.2, () => suckInto(this, X.suck, () => { this.afterComic = true; this.nextStep(); })); return; }   // (pulled into the oven: suck.js)
       if (X && this.world.travel) {
         this.tweens.wait(1.2, () => {
           this.world.dropCovers?.(); this.setAll('run');

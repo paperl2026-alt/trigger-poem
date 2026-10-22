@@ -67,7 +67,7 @@ ROOMS = {
     "ep1_gallery": (8, 4.4, [("left", 0.4, False), ("right", 0.72, True)], "melt"),
     "ep1_garden":  (14, 6, [("left", 0.62, True), ("right", 0.35, True)], "burst"),
     "ep1_cold":    (8, 3.6, [("left", 0.7, False)], "puddle"),
-    "ep1_nursery": (8, 3.6, [("right", 0.6, False), ("left", 0.3, False)], "merge"),
+    "ep1_nursery": (8, 3.6, [("right", 0.6, False), ("left", 0.3, False)], None),   # (no merging little dolls: user 2026-10-22, nursery_dolls)
     "ep1_oven":    (8.5, 4.0, [("left", 0.62, False)], "blast"),
     "ep1_studio":  (12, 6, [("left", 0.3, True)], None),
 }
@@ -342,6 +342,15 @@ def cold_vent(S):
     z0, z1 = hole["z"] - 1.6, hole["z"] + 1.39 * W + 1.2
     S["props"] = [p for p in S.get("props", []) if not (p["x"] > H["x1"] - 2.4 and z0 < p["z"] < z1)]
 
+def nursery_dolls(S):
+    """(user 2026-10-22: the nursery's two dolls stood twitching far apart - looking at one the other was out of sight) the two antique dolls
+    sitting in the room (statues, R85: they turn into coupe dolls) side by side in the middle of the view, near enough to see, and both
+    come alive together at the first kill"""
+    st = S["stations"]["nu1"]; c = st["cam"]
+    w = st["waves"][1]; dolls = [e for e in w if e.get("from") == "statue"]
+    for e, x in zip(dolls, (-1.6, 1.6)): e.update(x=x, z=round(c[2] - 8.6 - (0.4 if x > 0 else 0), 2))
+    w[:] = [e for e in w if not (e.get("wake") and e.get("kills"))] + [{"kills": 1, "wake": 2}]
+
 def free_spot(S, st, x, z, across, w):
     """(user 2026-10-22: the coffin stood right against the other things of the cold store, into them) a place for one of the child's things
     beside the lady's shadow: across from her first, then further out or the other side, then nearer or further, at least 1.4 m from
@@ -401,7 +410,10 @@ def places(D):
             for w in st.get("waves", []):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)
                     if e.get("move") == "zigzag": e["move"] = "walk"
-    cold_vent(D["ep1_cold"])
+    cold_vent(D["ep1_cold"]); nursery_dolls(D["ep1_nursery"])
+    # (user 2026-10-22: not walking up to the oven and crawling in - its door bursts open and pulls them in, no girls on screen, then the
+    # comic of the fall: src/battle/suck.js) the oven's iron door on each picture of the end wall: [left, top, right, bottom], 0..1
+    D["ep1_oven"]["stations"]["ov2"]["exit"] = {"suck": {"door": {"ep1/oven_end1": [0.378, 0.36, 0.615, 0.635], "ep1/oven_end2": [0.375, 0.345, 0.605, 0.62]}}}
     apparitions(D)   # (after the rooms are deepened: 9 m ahead of where the stop's camera ends up)
 
 def main():

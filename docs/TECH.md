@@ -308,6 +308,7 @@
   - 怪破墙 / 破天花板闯进来：波次条目 `from: 'wall' | 'ceiling'`（`side` 可选，默认按它在镜头哪边），墙上 / 天花板上开洞、碎屑、震屏，它跳下来落到 `fit` 给的位置；
   - 背后出怪：站点写 `whip: true`（镜头位置不动，`look` 朝后），清完上一站不走路，低吼 + 震屏 + 一个人说「后面…?」+ 提示 `holds.json behind`，0.9 秒后镜头甩过去（`Game.whip`）；朝后的那面墙是 set `hall.back`（true = 尽头墙的另一个版本）；这个站点自己的掩体朝后摆；
   - 塌方：波次事件 `{ kills / t, collapse: true }` → `Game.collapse`：怪和两人一起掉下去（`PanelWorld.collapse`：她们周围的地砖从近到远掉落、镜头往下坠），这一小关到此结束，下一步如果是开门就跳过（`skipDoor`），下一小关的第一个站点用 `enter` 从上面掉进来；
+  - 吸进烤炉（站点 `exit: { suck: { door: { <尽头墙的图>: [左, 上, 右, 下] } } }`，`src/battle/suck.js`，2026-10-22 用户）：最后一波打完不走过去，镜头转向尽头墙上画的炉子（`PanelWorld.endBoard`）、拉近到炉子占大半个画面，炉门按那张图（腐化的 `_x` 用同一个框）上的位置从图里裁成两扇、绕外沿甩开，里面是暗色的蜜和火的漩涡（canvas 画），面粉、碎屑、火星从屋里四处被吸进去，画面越抖越快地被拖进去，黑场接下一步（掉落漫画）；期间两人和 HUD 都不出现（`cineOn`、`lull`）。第 1 话烤炉厨房第二站用它（`ep1_rework.py`）。
   - 破墙逃走：波次条目写 `breakout: 0.45`，血掉到这个比例就无敌、冲向尽头墙撞出大洞、消失（不算击杀，`Enemy.breakOut`）；这里打完后两人走进洞里（`Game.breakoutAt` 换掉 `exit`），跳过下一步的开门，下一小关的波次里它带着剩下的血（`hp`）再出现。
 - 名场面用到的东西（DESIGN「第 1 话」）：
   - **回头杀**（站点 `scare: { type, sprite, x, z, who, zoom }`，`Game.scare`；第 1 话现在改用单独一页漫画，这个演出留着备用）：怪以 `from: 'scare'` 出场，状态 `scripted`（不动、不打），镜头用 `fovKick` 慢慢推近、停音乐，`who` 那个女孩冒 `scare` 台词，`Enemy.turnAround` 按 `frames.scare` 六帧慢慢回头，露脸那一下闪白、震屏、两人吓到，然后照常开打；

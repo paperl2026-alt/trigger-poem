@@ -1254,5 +1254,28 @@
     "ring": 46,
     "rot": -112,
     "png": "art/raw/r93/fixed/page_fall.png"
+  },
+  "page_nursery_1": {
+    "src": "art/raw/seal/ep1p_nursery.png",
+    "erase": [],
+    "center": [
+      586,
+      343
+    ],
+    "ring": 46,
+    "rot": -62,
+    "png": "art/raw/seal/ep1p_nursery_fixed.png"
+  },
+  "page_nursery_4": {
+    "src": "art/raw/seal/ep1p_nursery_fixed.png",
+    "erase": [],
+    "center": [
+      1442,
+      918
+    ],
+    "ring": 44,
+    "rot": -70,
+    "squash": 0.85,
+    "png": "art/raw/seal/ep1p_nursery_fixed.png"
   }
 }

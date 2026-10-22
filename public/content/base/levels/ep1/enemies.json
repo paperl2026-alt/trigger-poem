@@ -123,7 +123,7 @@
     "burst": 3,
     "_doc": "摆在那里时（from statue）是一个普通的古董瓷娃娃坐在圣代杯里（frames.disguise，R85），醒来先抖、越抖越厉害，再慢慢化成怪（Enemy.wake）。",
     "frames": { "disguise": ["disguise"], "hide": ["hide"], "rise": ["rise"], "idle": ["idle"], "windup": ["windup"], "throw": ["throw"], "hurt": ["hurt"] },
-    "params": { "stopDist": 8.0 }
+    "params": { "stopDist": 8.0, "shudder": 0.6 }
   },
   "crawler": {
     "beh": "walker",
@@ -376,20 +376,21 @@
   },
   "dollkin": {
     "beh": "walker",
-    "name": { "zh": "小人偶", "en": "Little Doll", "ja": "ちいさな人形" },
-    "sprite": "doll",
-    "variants": ["doll", "doll_b", "doll_c"],
+    "name": { "zh": "发条丧服娃娃", "en": "Wind-up Mourning Doll", "ja": "ぜんまい喪服人形" },
+    "sprite": "dollkin",
+    "variants": ["dollkin", "dollkin_b", "dollkin_c"],
     "hp": 240,
     "dashAt": 0.5,
-    "h": 1.19,
+    "h": 1.3,
     "speed": 1.8,
     "windup": 0.9,
     "poise": 20,
-    "first": "idle",
-    "frames": { "idle": ["idle"], "walk": ["idle", "rise"], "crouch": ["windup"], "leap": ["throw"], "bite": ["throw"], "recoil": ["hurt"], "hurt": ["hurt"] },
+    "first": "walk0",
+    "frames": { "idle": ["walk0"], "walk": ["walk0", "walk1"], "crouch": ["crouch"], "leap": ["leap"], "bite": ["bite"], "recoil": ["hurt"], "hurt": ["hurt"] },
     "moves": ["hop", "walk", "walk"],
     "scar": "bite",
-    "params": {}
+    "params": {},
+    "_doc": "（2026-10-22 用户：小人偶用的是杯中人偶的图、合体前后同一张，看不出在干嘛 → R95 自己的图：黑蕾丝的发条瓷娃娃；不再合体）"
   },
   "door_mouth": {
     "beh": "thrower",

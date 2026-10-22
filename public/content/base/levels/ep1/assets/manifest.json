@@ -3717,6 +3717,366 @@
   "src": "assets/enemy/doll_windup_rd.png",
   "w": 512
  },
+ "enemy/dollkin_b_bite": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_bite_rd",
+  "src": "assets/enemy/dollkin_b_bite.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_bite_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_bite_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_b_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_crouch_rd",
+  "src": "assets/enemy/dollkin_b_crouch.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_crouch_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_b_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_hurt_rd",
+  "src": "assets/enemy/dollkin_b_hurt.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_hurt_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_b_leap": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_leap_rd",
+  "src": "assets/enemy/dollkin_b_leap.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_leap_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_leap_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_b_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_walk0_rd",
+  "src": "assets/enemy/dollkin_b_walk0.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_walk0_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_b_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9298,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   20,
+   20,
+   20,
+   0
+  ],
+  "relief": "enemy/dollkin_b_walk1_rd",
+  "src": "assets/enemy/dollkin_b_walk1.webp",
+  "w": 604
+ },
+ "enemy/dollkin_b_walk1_rd": {
+  "h": 447,
+  "src": "assets/enemy/dollkin_b_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_bite": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_bite_rd",
+  "src": "assets/enemy/dollkin_bite.webp",
+  "w": 548
+ },
+ "enemy/dollkin_bite_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_bite_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_bite": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_bite_rd",
+  "src": "assets/enemy/dollkin_c_bite.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_bite_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_bite_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_crouch": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_crouch_rd",
+  "src": "assets/enemy/dollkin_c_crouch.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_crouch_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_hurt": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_hurt_rd",
+  "src": "assets/enemy/dollkin_c_hurt.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_hurt_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_leap": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_leap_rd",
+  "src": "assets/enemy/dollkin_c_leap.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_leap_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_leap_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_walk0_rd",
+  "src": "assets/enemy/dollkin_c_walk0.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_walk0_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_c_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9312,
+  "h": 523,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_c_walk1_rd",
+  "src": "assets/enemy/dollkin_c_walk1.webp",
+  "w": 560
+ },
+ "enemy/dollkin_c_walk1_rd": {
+  "h": 478,
+  "src": "assets/enemy/dollkin_c_walk1_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_crouch": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_crouch_rd",
+  "src": "assets/enemy/dollkin_crouch.webp",
+  "w": 548
+ },
+ "enemy/dollkin_crouch_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_hurt": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_hurt_rd",
+  "src": "assets/enemy/dollkin_hurt.webp",
+  "w": 548
+ },
+ "enemy/dollkin_hurt_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_hurt_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_leap": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_leap_rd",
+  "src": "assets/enemy/dollkin_leap.webp",
+  "w": 548
+ },
+ "enemy/dollkin_leap_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_leap_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_walk0": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_walk0_rd",
+  "src": "assets/enemy/dollkin_walk0.webp",
+  "w": 548
+ },
+ "enemy/dollkin_walk0_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_walk0_rd.png",
+  "w": 512
+ },
+ "enemy/dollkin_walk1": {
+  "anchor": "bottom",
+  "figH": 0.95,
+  "h": 520,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/dollkin_walk1_rd",
+  "src": "assets/enemy/dollkin_walk1.webp",
+  "w": 548
+ },
+ "enemy/dollkin_walk1_rd": {
+  "h": 486,
+  "src": "assets/enemy/dollkin_walk1_rd.png",
+  "w": 512
+ },
  "enemy/door_mouth_door": {
   "anchor": "bottom",
   "figH": 0.974,

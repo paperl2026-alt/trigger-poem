@@ -1069,7 +1069,11 @@
             { "t": 1.6, "x": 2.0, "z": -15.3, "type": "ginger" }
           ]
         ],
-        "exit": { "to": [0, 1.1, -15.6], "look": [0, 1.0, -24.0] },
+        "exit": {
+          "suck": {
+            "door": { "ep1/oven_end1": [0.378, 0.36, 0.615, 0.635], "ep1/oven_end2": [0.375, 0.345, 0.605, 0.62] }
+          }
+        },
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
@@ -1306,88 +1310,25 @@
               "say": "diary",
               "name": { "zh": "夫人之影", "en": "The Lady's Shadow", "ja": "夫人の影" }
             },
-            {
-              "t": 0,
-              "type": "dollkin",
-              "x": -2.84,
-              "z": -11.5,
-              "from": "wall",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 0.4,
-              "type": "dollkin",
-              "x": 2.84,
-              "z": -12.0,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 0.8,
-              "type": "dollkin",
-              "x": 0.0,
-              "z": -12.5,
-              "from": "wall",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 1.2,
-              "type": "dollkin",
-              "x": -1.42,
-              "z": -13.0,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            }
+            { "t": 0, "type": "dollkin", "x": -2.84, "z": -11.5, "from": "wall" },
+            { "t": 0.4, "type": "dollkin", "x": 2.84, "z": -12.0, "from": "door", "way": "d2" },
+            { "t": 0.8, "type": "dollkin", "x": 0.0, "z": -12.5, "from": "wall" },
+            { "t": 1.2, "type": "dollkin", "x": -1.42, "z": -13.0, "from": "door", "way": "d2" }
           ],
           [
-            { "t": 0, "type": "doll", "x": -3.2, "z": -3, "from": "statue" },
-            { "t": 0, "type": "doll", "x": 3.2, "z": -3.5, "from": "statue" },
-            {
-              "t": 0.5,
-              "type": "dollkin",
-              "x": 0.0,
-              "z": -11.5,
-              "from": "door",
-              "way": "d1",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 1,
-              "type": "dollkin",
-              "x": 1.42,
-              "z": -12.0,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            { "kills": 1, "wake": 1 },
-            { "kills": 2, "wake": 1 }
+            { "t": 0, "type": "doll", "x": -1.6, "z": -4.8, "from": "statue" },
+            { "t": 0, "type": "doll", "x": 1.6, "z": -5.2, "from": "statue" },
+            { "t": 0.5, "type": "dollkin", "x": 0.0, "z": -11.5, "from": "door", "way": "d1" },
+            { "t": 1, "type": "dollkin", "x": 1.42, "z": -12.0, "from": "door", "way": "d2" },
+            { "kills": 1, "wake": 2 }
           ],
           [
             { "t": 0, "type": "plane", "count": 16, "x": 0.0, "z": -13.0, "y": 2.3, "spread": 3.6, "every": 0.12, "from": "ceiling" }
           ],
           [
             { "t": 0, "x": 0.0, "z": -12.5, "from": "statue", "wake": 1.0, "type": "dollkin" },
-            {
-              "t": 0.6,
-              "type": "dollkin",
-              "x": -3.2,
-              "z": -11.5,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 1.2,
-              "type": "dollkin",
-              "x": 3.2,
-              "z": -12.0,
-              "from": "door",
-              "way": "d1",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
+            { "t": 0.6, "type": "dollkin", "x": -3.2, "z": -11.5, "from": "door", "way": "d2" },
+            { "t": 1.2, "type": "dollkin", "x": 3.2, "z": -12.0, "from": "door", "way": "d1" },
             { "t": 1.8, "type": "doll", "x": 2.13, "z": -13.5, "from": "ceiling" }
           ]
         ],
@@ -1400,48 +1341,11 @@
         "covers": [{ "k": "cover/ep1_nursery3", "side": -1 }, { "k": "cover/ep1_nursery4", "side": 1 }],
         "waves": [
           [
-            {
-              "t": 0,
-              "type": "dollkin",
-              "x": -2.84,
-              "z": -13.5,
-              "from": "door",
-              "way": "d1",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 0.3,
-              "type": "dollkin",
-              "x": 2.84,
-              "z": -13.5,
-              "from": "wall",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 0.6,
-              "type": "dollkin",
-              "x": 0.0,
-              "z": -13.5,
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 0.9,
-              "type": "dollkin",
-              "x": -1.42,
-              "z": -14.5,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 1.2,
-              "type": "dollkin",
-              "x": 1.42,
-              "z": -14.5,
-              "from": "door",
-              "way": "d1",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            }
+            { "t": 0, "type": "dollkin", "x": -2.84, "z": -13.5, "from": "door", "way": "d1" },
+            { "t": 0.3, "type": "dollkin", "x": 2.84, "z": -13.5, "from": "wall" },
+            { "t": 0.6, "type": "dollkin", "x": 0.0, "z": -13.5 },
+            { "t": 0.9, "type": "dollkin", "x": -1.42, "z": -14.5, "from": "door", "way": "d2" },
+            { "t": 1.2, "type": "dollkin", "x": 1.42, "z": -14.5, "from": "door", "way": "d1" }
           ],
           [
             { "t": 0.3, "act": "summon", "of": "doll", "x": -0.4, "z": -15.0, "minion": "dollkin", "every": 3, "max": 5 }
@@ -1458,24 +1362,8 @@
           ],
           [
             { "t": 0, "x": 0.0, "z": -15.5, "from": "ceiling", "breakout": 0.45, "type": "dollkin" },
-            {
-              "t": 1,
-              "type": "dollkin",
-              "x": -2.49,
-              "z": -13.5,
-              "from": "door",
-              "way": "d2",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            },
-            {
-              "t": 1.4,
-              "type": "dollkin",
-              "x": 2.49,
-              "z": -13.5,
-              "from": "door",
-              "way": "d1",
-              "morph": { "merge": { "with": "dollkin", "into": "doll", "after": 4 } }
-            }
+            { "t": 1, "type": "dollkin", "x": -2.49, "z": -13.5, "from": "door", "way": "d2" },
+            { "t": 1.4, "type": "dollkin", "x": 2.49, "z": -13.5, "from": "door", "way": "d1" }
           ]
         ],
         "exit": { "to": [0, 1.1, -13.3], "look": [0, 1.0, -20.5] },
