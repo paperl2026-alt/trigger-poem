@@ -799,6 +799,14 @@
       "src": "toy",
       "files": ["sfx/toy/kill_1.ogg", "sfx/toy/kill_2.ogg", "sfx/toy/kill_3.ogg", "sfx/toy/kill_4.ogg"],
       "vol": 0.7
+    },
+    "doorOpen": {
+      "when": "开门（两个地方之间的开门特写、门洞里的门打开）",
+      "want": "真的木门打开：门闩咔哒一声，合页长长地吱呀，门扇慢慢摆开",
+      "src": "ai",
+      "files": ["sfx/ai/doorOpen_1.ogg", "sfx/ai/doorOpen_2.ogg", "sfx/ai/doorOpen_3.ogg", "sfx/ai/doorOpen_4.ogg"],
+      "from": ["doorOpen_1546187597", "doorOpen_1980903749", "doorOpen_1291385724", "doorOpen_1527783144"],
+      "vol": 0.8
     }
   },
   "monsters": {

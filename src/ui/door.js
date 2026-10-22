@@ -4,7 +4,7 @@
 // black (its manifest "hole" [x0, y0, x1, y1] = that opening, 0..1, tools/rounds/r53b_import.py), leaf = the closed door alone, stretched
 // over the hole; two leaves = the left and right halves of the leaf picture swing apart. Tap = skip.
 import { url, meta } from '../core/assets.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 
 const ease = (t) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 const clamp = (x) => Math.min(1, Math.max(0, x));
@@ -43,7 +43,7 @@ export function playDoor(d, onDone) {
   el.onpointerdown = (e) => { e.stopPropagation(); finish(); };
   const frame = (now) => {
     const t = (now - t0) / 1000;
-    if (!creaked && t >= T.open0) { creaked = true; sfx.creak(); }
+    if (!creaked && t >= T.open0) { creaked = true; sound('doorOpen') || sfx.creak(); }   // (a real door: latch, long hinge creak - sfx_specs94.py; user 2026-10-22)
     const open = ease(clamp((t - T.open0) / (T.open1 - T.open0)));
     for (const { l, sign } of leaves) l.style.transform = `rotateY(${sign * open * 100}deg)`;
     const push = clamp((t - T.push0) / (T.push1 - T.push0));

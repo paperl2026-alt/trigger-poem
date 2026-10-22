@@ -600,7 +600,7 @@ export class PanelWorld {
     const W = this.ways?.[id], g = this.game;
     if (!W || !W.leaves.length || (W.k > 0.5) === open) { then && then(); return; }
     const from = W.k, to = open ? 1 : 0, swing = W.door.kind === 'swing';
-    sound(swing ? (open ? 'doorCreak' : 'doorSlam') : 'fusumaOpen', { pos: W.g.position }) || (swing ? (open ? sfx.creak() : sfx.slam()) : sfx.panel());
+    sound(swing ? (open ? 'doorOpen' : 'doorSlam') : 'fusumaOpen', { pos: W.g.position }) || (swing ? (open ? sfx.creak() : sfx.slam()) : sfx.panel());
     g.tweens.run(dur, (e) => this.setDoor(W, from + (to - from) * e), { ease: open ? Ease.inOutCubic : Ease.inQuad, onDone: () => {
       if (!open && swing) { g.post.shake(1.0); sfx.thud(0); }
       then && then();
