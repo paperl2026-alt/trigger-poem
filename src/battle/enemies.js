@@ -366,6 +366,17 @@ export class Enemy extends Actor {
     this.goal = new THREE.Vector3(world.camPos.x + side * rr(bp.goalSpread || [0.15, 0.6]), 0, cov.z - (bp.goalBeforeCover ?? 1.1));
     world.scene.add(this.root);
     const P = this.root.position;
+    // a doorway behind the camera or right beside it is no way in (user 2026-10-22: in the nursery they came out from under the camera,
+    // from behind the girls; in the oven kitchen through 1P): a door at least layout.json monster.doorAhead metres ahead along the view,
+    // the furthest one, else in from the far end of the room
+    if ((s.from === 'door' || s.from === 'stairs') && world.wayPoints && world.camPos && world.lookAt) {
+      const c = world.camPos, f = new THREE.Vector3().subVectors(world.lookAt, c).setY(0).normalize(), need = T.layout.monster.doorAhead ?? 6;
+      const ahead = (id) => { const W = world.wayPoints(id); return W ? (W.door[0] - c.x) * f.x + (W.door[2] - c.z) * f.z : -1; };
+      if (ahead(s.way || 'end') < need) {
+        const alt = Object.keys(world.ways || {}).filter((id) => ahead(id) >= need).sort((a, b) => ahead(b) - ahead(a))[0];
+        s = alt ? { ...s, way: alt } : { ...s, from: undefined, way: undefined };
+      }
+    }
     // docs/DESIGN.md「战斗画面布局」: close enough, whole, in the middle of the screen (PanelWorld.fit)
     // an escort stop (escort.js): it comes in along the guarded thing's way, far off, and goes for it, not for the girls
     this.escortT = !!(game.escort?.going && !s.forGirls);
@@ -546,7 +557,8 @@ export class Enemy extends Actor {
     if (!this.kinOn && g.world.phys) { this.kinOn = true; this.kinPh = g.world.phys; g.world.phys.follow(this.root, this.w * 0.6, this.h * 0.85, this.pivot); }
     this.invul = Math.max(0, this.invul - dt);
     if (this.def.evade) this.updateEvade(dt);
-    if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
+    if (this.def.tint && this.state !== 'statue' && !(this.kick?.freeze > 0)) { this.u.tint.value.set(this.def.tint); this.u.tintAmt.value = this.def.tintAmt ?? 0.5; }   // (a kind of its own colour: the Great Shadow - not the shadows' drawing only bigger, user 2026-10-22)
+    else if (this.def.enrage) { const k = (this.rage() - 1) / this.def.enrage; this.u.tint.value.setRGB(1, 0.3, 0.25); this.u.tintAmt.value = 0.45 * k; if (k > 0.3 && Math.random() < dt * 4 * k) g.fx.puff(this.uvToWorld(rnd(0.3, 0.7), rnd(0.6, 0.95)), 1, COL.hot, 0.4); }
     if (this.dashPending && !this.moving && ['walk', 'stand', 'hover', 'hide'].includes(this.state)) { this.dashPending = false; this.dash(); }
     this.hurtT -= dt;
     this.poiseCD -= dt;
@@ -1056,6 +1068,11 @@ export class Enemy extends Actor {
         g.breakoutAt(tx, Hd.z1);
       } });
   }
+  // the block of ice it was frozen in bursts (enemies.json thaw: the cold store's ghouls, R86)
+  thaw() {
+    const g = this.game, P = this.center(); g.fx.confetti(P, 30, 2.2, [0xe8f6ff, 0xbfe0ff, 0xffffff]); g.post.shake(0.8); sfx.shatter(0);
+    g.world.phys?.chipsAt(P, new THREE.Vector3(0, 1, 0), 8, [0xdff2ff, 0xbfe0ff, 0xffffff], 0.6);
+  }
   // a statue comes to life: it cracks, shakes the dust off, takes its colour back and goes. One standing as the ordinary thing it was
   // (frames.disguise: the chandelier, the armour on its plinth, the gallery's door - user 2026-10-21: grey stone was not read as anything)
   // first shudders where it is, harder and harder, dust off it, a creak; then it turns: the drawing of the thing melts slowly into the
@@ -1067,6 +1084,7 @@ export class Enemy extends Actor {
       this.shuddering = false; this.inner.position.x = 0; this.inner.rotation.z = 0;
       if (!this.alive) return;
       this.state = 'enter'; this.u.outlineOn.value = 1; this.flash = 1;
+      if (this.def.thaw) this.thaw();   // (frozen in ice, R86: the block bursts)
       if (this.frames.disguise) {
         this.setFrame(this.prefix + (this.frames.rise || this.frames.idle)[0]); this.blendT = 0.55;
         this.inner.scale.set(1.12, 0.84, 1); g.etw.to(this.inner.scale, { x: 1, y: 1 }, 0.5, { ease: Ease.outBack });

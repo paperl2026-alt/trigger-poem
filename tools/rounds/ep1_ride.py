@@ -65,14 +65,15 @@ NETHER = {"panels": True, "seed": 61, "fogNear": 10, "fogFar": 60, "fogDensity":
 
 if __name__ == "__main__":
     sp = packs.data_file("sets", "ep1_pit"); raw = sp.read_bytes(); crlf = b"\r\n" in raw; D = json.loads(raw.decode("utf-8"))
-    D["ep1_mine"] = MINE; D["ep1_nether"] = NETHER
+    # (the mine cart ride is gone - user 2026-10-22: ugly, unneeded, the views swapping back and forth odd, a vehicle out of nowhere:
+    # from the tunnel straight to the netherworld; MINE stays here only as it was)
+    D.pop("ep1_mine", None); D["ep1_nether"] = NETHER
     D["ep1_pit"]["stations"].pop("pt4", None)
     t = json.dumps(D, ensure_ascii=False, indent=2) + "\n"; sp.write_bytes((t.replace("\n", "\r\n") if crlf else t).encode("utf-8"))
     ep = packs.data_file("episodes", "ep1"); raw = ep.read_bytes(); crlf2 = b"\r\n" in raw; E = json.loads(raw.decode("utf-8"))
     st = [s for s in E["ep1"]["steps"] if s.get("stage") != "mine" and s.get("boss") != "maggot"]
     i = [k for k, s in enumerate(st) if s.get("stage") == "tunnel"][0]
-    st[i + 1:i + 1] = [{"stage": "mine", "set": "ep1_mine", "stations": ["mn1"], "name": {"zh": "蜜矿矿车", "en": "HONEY MINE RIDE", "ja": "蜜の鉱山トロッコ"}, "thumb": "ui/sel_thumb_ep1_pit"},
-                       {"boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit"}]
+    st[i + 1:i + 1] = [{"boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit"}]
     E["ep1"]["steps"] = st
     t = json.dumps(E, ensure_ascii=False, indent=2) + "\n"; ep.write_bytes((t.replace("\n", "\r\n") if crlf2 else t).encode("utf-8"))
     for p in (sp, ep): subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(p)], check=True, stdin=subprocess.DEVNULL)

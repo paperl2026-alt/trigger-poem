@@ -149,9 +149,9 @@ def tunnel_fall(S):
     (shadow_brute) bursting out of the floor and bringing it down with its blow (blast.collapse: Game.collapse) - they fall into the second
     stop, landing from above (its enter)"""
     st = S["stations"]
-    st["pt1"]["waves"].append([{"t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow",
-                                "closeup": {"hold": 1.8, "color": "#2a1c30", "title": {"zh": "巨影", "en": "THE GREAT SHADOW", "ja": "巨きな影"},
-                                "sub": {"zh": "从坑道底下钻了出来", "en": "up out of the tunnel floor", "ja": "坑道の底から這い出てきた"}}}])
+    # (no close-up of its own: the shadows were seen long before - user 2026-10-22, a close-up only at the first sight of a thing; its
+    # colour of its own: enemies.json tint)
+    st["pt1"]["waves"].append([{"t": 0, "type": "shadow_brute", "x": 0, "z": -7.5, "from": "burrow"}])
     st["pt2"]["enter"] = {"from": [0, 6, -6.2], "dur": 0.75, "shake": 1.6, "sfx": "thud"}
 
 def acts(D):
@@ -178,6 +178,8 @@ def places(D):
     gallery_mouth(D["ep1_gallery"])
     knight_planks(D["ep1_garden"])
     tunnel_fall(D["ep1_pit"])
+    for gm in D["ep1_cold"]["gimmicks"]:   # (the shelf toppled onto the vent: 1.2 times as big - user 2026-10-22, it could not cover the hole)
+        if gm.get("id") == "shelf": gm["w"] = round(gm["w"] * 1.2, 2)
     acts(D)
 
 def main():
@@ -186,6 +188,9 @@ def main():
     packs.dump(f, B)
     # (the rooms from how they were before this rework, so running it again gives the same: git BASE)
     f = L / "sets.json"; D = json.loads(subprocess.run(["git", "show", f"{BASE}:public/content/base/levels/ep1/sets.json"], cwd=ROOT, capture_output=True, check=True).stdout.decode("utf-8"))
+    D.pop("ep1_mine", None)   # (the mine cart ride is gone: user 2026-10-22, tools/rounds/ep1_ride.py)
+    from ep1_soul import NE2   # (the soul's escort as tools/rounds/ep1_soul.py has it now, not as it was at BASE)
+    D["ep1_nether"]["stations"]["ne2"] = NE2
     places(D)
     # (the monsters' health 70% of what it was - user 2026-10-21: the episode chokes on how many are up at once, and they were tough;
     # the kinds' own in levels/ep1/enemies.json were lowered the same once, by hand)

@@ -195,6 +195,8 @@
   - `dmg`：它咬 / 撞一下掉多少血（没写就是 combat.enemyHit；成群的蝙蝠只掉 8）。
 - 波与波之间不留空：不是最后一波时，场上只剩 `combat.waveCarry`（1）只就开始下一波（这一波还有按击杀数触发的事件时等它们）；最后一波打完才算清场（`Game.checkWave`）。
 - 波次条目：`count: n` 一次刷一群（`spread` 米宽里排开，`every` 秒一个，飞的高度略有起伏）；`from: 'statue'` 摆设（灰色、没描边、打不中，`hitMeshes` 为空），`wake` 秒后或波次事件 `{ kills / t, wake: true | 数量 }`（近的先）裂开活过来（`Enemy.wake`）；怪的 `frames.disguise` 有的话摆设不是灰石头，而是那件东西正常的样子（画廊尽头的门 `door_mouth`、R83 的吊灯 / 展示铠甲 `<variant>_disguise`，和醒来那帧同一张画布）：醒来先抖 `params.shudder`（1.1）秒、越抖越厉害、身上掉灰（`shuddering`，期间还是摆设），再换成 `rise` / `idle` 那帧、交叉淡化放慢到 0.55 秒（`blendT`）、压扁弹起、溅墨、吼一声。
+- 进场的门（`Enemy` 构造）：`from: door / stairs` 的门洞沿镜头朝向不到 `layout.json monster.doorAhead`（6）米（在镜头背后或身边）就换最远的一扇够远的门，没有就不走门（从远处走进来）。
+- 种类自己的颜色：enemies.json `tint` + `tintAmt`（每帧压上去，冻住时除外：巨影）；`thaw`：冻在冰块里的样子醒来时冰块炸开（冷库的丧尸）。
 - 扔东西的怪的参数（enemies.json `params`）：`swell` 蓄力时整个鼓起来（憋大招时两倍），出手时压扁弹回；`throwArmor` 蓄力 / 刚扔完时吃的伤害比例（默认 0.2；门怪 1：张嘴就打得动）；`hideClang` 缩着时（`hides`）挨打冒白星、叮一声（`hiddenDmgMul` 默认一半）。
 - 怪的演出（`src/battle/acts.js`）的角色按数据摆的位置生成（`free`：不被挪到看得清的地方，圈就是圈）；`ritual` 不限时：`release`（1.5）秒后、特写播完才放开，像普通的怪一样打，最后一个倒下法阵碎；交代法阵的是同一波里的 `storyboard`（一格游戏里的镜头 + 底边字幕，`show` 只留念咒的那几个和墙边的铠甲）。
 - 怪的 `blast.collapse`：大招打下来之后地面塌掉（`Game.collapse`）。`collapse` 在多场景小关里掉进下一个场景；单场景小关里，下一个站点写了 `enter` 就掉进它（坑道的巨影把两人打落到第 2 个点），否则这一小关结束。
@@ -360,18 +362,18 @@
 - `marks`（按沿路的米数触发）：`spawn`（波次条目，位置写 `ahead` 沿路往前几米（负数 = 后面追来的，`rideChaser`，不会被甩掉）、`x` 左右、`y`），`block`（铁轨上的东西：一个场景道具，刚体，得提前打烂，不然撞上去两人各掉 `crashDmg`、减速、它被撞飞），`face`、`speed`，其余都是演出指令（`say`、`sfx`、`shake`、`burst`、`hint`、`mv`、`cam`…，见「演出指令」）。落在镜头后面 `behind` 米的怪就没了；跑到头时还在的也一起甩掉。
 - `vehicle: cart`：车头的前沿挂在镜头上、画在两人前面（挡住她们的腿），铁轨和枕木沿路铺（Tube + InstancedMesh）。
 - **讲清楚为什么动**（2026-10-20 用户两次纠正，照《死亡之屋 2》；DESIGN 序章）：`ride.carry`：只有后面追来的（`ahead` < 0）跟着镜头跑（每帧加上镜头沿路走的那段位移），前面来的待在原地、路速为它们降下来（标记点 `hold`：降到 `holdSpeed`，这一批打完或 `holdMax` 秒后恢复）；怪冲到镜头前 `ride.blast` 米以内（顺着视线量）当场爆开、攻击落下（`Ride.blast`），不会穿过镜头；标记点可以写 `t`（开跑后几秒，开场还没动的时候）代替 `at`；`hole: { on, ahead, y, size }` 墙上撞出洞（`addHole` + 碎墙特效）、`glimpse: { k, ahead | at, h, life, lunge }` 追来的那个东西露一下脸（一张图站在那、扑过来、没进灰里）、`cut: { face, color }` 转身藏在满屏的灰里（和撞墙的洞放在同一个标记点：灰就是撞出来的）、`cut.whip` 快速甩镜（带横向拖影）；转过去时背后那一侧的怪留在身后（`leave`）；`block.out: <门>` 挡路的东西从那扇门里被扔出来（门先拉开，刚体被推出去翻滚着落在路上）；`spawn` 条目写 `window` 从窗户撞进来（玻璃炸开）。`glimpse` 可以写 `delay`、`flip`（镜像）、几张排成一串（拐角探身 → 冲过来）；`insert: { k, side, life, delay }` 插入镜头：斜切的漫画格，她的颜色加斜条纹做底，脸从她那一侧滑进来再滑出（`Ride.insert`，画在 `game.overlay`）；`bossSay: { who, kind }` 追来的东西说话（`stickers.boss`，她的声音，走收音机）；`hole.at / n` 在场景件的墙上撞洞（`PanelWorld.holeAt`）。序章冲出教学楼（`ep0_rework.py dash`）：站点预设 `run` 但 `players.show: false`（两人不在画面里）；走廊是五个矩形拼成的四个弯（`corridor_walls`：并集按 0.2 米栅格化，内外交界的边合并成一段段墙，场景件 box，朝里的面贴走廊的墙图；大厅本身只出地板和天花板，它的墙藏在外面）；小怪 `hp` 4；回头看见的她和两人的脸是 R78 的图。`ride.outro: { at, time, speed, color }`：离终点 at 米起不再减速、全速，隐藏 HUD，后期 `fade` 淡到那个颜色，到终点直接下一步（漫画、门的特写结束时和下一小关开始时 `fade` 归零）；`foe: { k, at, h, life, step }`：那个东西站在那让人打——一块平面放进 `g.actors`（没有 def：不算波次、不锁定、不会爆），子弹打上去 `dealt = 0`、冒火花、叮一声、它一缩，慢慢逼近，life 秒后淡出；台词的 `who` 可以写角色（'pink' / 'cat'），切进来的脸和说话的人对得上（`cues.say`）。站点写 `quietEnd`：这一站是逃掉而不是打赢的，结束时不放过关的音效和「净化完毕」（`Game` 打完最后一波时）。
-- 第 1 话：`tools/rounds/ep1_ride.py` 生成蜜矿（ep1_mine，260 米，十五个标记）和冥界（ep1_nether，开阔地，四面漂浮岛屿远景，Boss 场）两个 set 和 episodes 里的两步。
+- 第 1 话：`tools/rounds/ep1_ride.py` 生成冥界（ep1_nether，开阔地，四面漂浮岛屿远景，Boss 场）和 episodes 里坑道后面的 Boss 那一步；原来的蜜矿矿车（ep1_mine）2026-10-22 用户删了（脚本里的 MINE 只留着原样，`ep1_rework.py` 也去掉它）。
 
 - **两人自己跑、镜头导演**（`ride.girls: { spread }`）：`path` 是两人脚下的路线，两人在场景里沿路跑（`player.js toWorld`，`ride.girlSpot`），镜头不在路上，而在她们身边由 `cam: { back, side, up, ahead, lookUp, ease }` 定的位置（`back` 负数 = 跑在她们前面回头拍，`side` 正数 = 右边），标记点的 `cam` 换位置：绕着她们转过去（距离和角度分开缓，最近 `combat.json ride.girlsCamMin`），不从人身上穿过。序章「冲出教学楼」就是这样：起跑低角度、窗外飞怪时侧拍、后面追来时跑到前面迎面拍。
 
 ## Boss：蜜蛆（`src/battle/worm.js`，数据 `bosses.json` maggot，beh `worm`；DESIGN 第 1 话 8）
 - 不是纸片：全是 3D 网格（头：球 + 一圈牙 + 嘴里的核心；身体：一节节球，背上蜜囊），自己的卡通着色器（三档光、边缘透光、环纹和叶脉噪声）+ 反向外壳描边。
-- 开阔地（set 没有侧墙：冥界）是钻地（`newBreach`）：从镜头前面 7～20 米、左右 7 米内的地上破洞钻出来，4～8 米高的弧，钻回另一个洞（有时弧往镜头这边甩）。
+- 开阔地（set 没有侧墙：冥界；2026-10-22 重做，用户：找不到弱点、贴脸、鬼畜）：状态 `under`（地下，0.6～1.2 秒）→ `rumble`（下一个洞口的地面震、冒土，`worm.rumble` 秒；`sink` 先把整条身子竖直放在那个洞下面）→ 交替 `cross`（`newBreach`：从镜头前 13～19 米、一侧 5～8 米钻出，4.5～7 米高的弧，钻进另一侧的洞，路线最后一段竖直往下一整条身长、头钻下去以后 2.5 倍速，尾巴也进地里才结束）和 `rise`（`newRise`：前方 11～15 米的洞里竖起来，到 `riseH` 米、往镜头这边探一点）→ `up`（原地摇晃，头朝镜头，`acts` 次攻击：`spitAt` 吐 `spits` 团 `glob`（`globSize`、`globTime` 秒飞到，轮流对两人）或 `spray`：`fx.lock('hide')` + `Mark3D bossHide` 憋 `rear` 秒，`honeySpray` 喷过来，`playerAttacked slot -1` `sprayDmg`）→ `sink`（沿自己的轨迹往回退：从轨迹前端吃掉，身子顺着原路缩回洞里，不会对折）。摇晃和往回退时不往轨迹里加点；动作中途从不停下。
 - 有墙的地方：从房间外（尽头墙 / 侧墙 / 天花板里）穿过一个洞（`world.addHole`，到洞口那一刻才破开、扬尘、震屏），在房间里拐两三下，从另一面的洞钻出去；身体是蛇形跟随（头走过的轨迹，每节在头后面固定米数处，朝着轨迹方向），墙是不透明、写深度的，所以墙里的那段自然看不见。
-- 招式：后仰（`fx.lock('hide')` 的紫环，`rear` 秒）→ 沿直线扑到镜头前咬（两人都挨 `heavy`，躲着的挡住）→ 回到路线；张嘴吐 `spits` 团 `glob` 飞行物。囊破一半：`stage` 2，更快、出招更勤。
-- 打：只有蜜囊吃伤害（`part.userData.sac`；`targetsAt` 把打中的网格作为 `part` 传进 `hit`），打肉弹开（隔 8 秒有人说一句 armor）；囊全破了打嘴里的核心。总血量 = 每节 `sacHp` × 节数 + `headHp`，血条照常。
+- 有墙的地方的招式（原样）：后仰（`fx.lock('hide')` 的紫环，`rear` 秒）→ 沿直线扑到镜头前咬 → 回到路线；张嘴吐 `spits` 团。囊破一半：`stage` 2，更快（开阔地：每次探头出两招）。
+- 打：蜜囊（`sacSize` × 节半径，每帧放在那一节朝镜头的一侧：`place`）吃满伤害、`sacHp` 打完就破；探头时（或囊全破了）打嘴 / 核心（核心在嘴口正中，探头时亮）× `mouthMul`；打身子 × `fleshMul`（血条总在动；隔 12 秒有人说一句 armor）。总血量 = 每节 `sacHp` × 节数 + `headHp`。颜色：身子深紫、囊亮黄（和冥界的亮色甜点背景拉开）。
 - 死：每一节和头都变成物理刚体被打散掉下来，四道地面光环、一根光柱、换画风一下，5 秒后淡出。
-- 给游戏其余部分的接口：`hitMeshes / hit / update / dispose / intro（特写：从低处仰拍、绕 0.7 弧度、推拉变焦，黑边里滚动它的名字）/ center / screenBox / aimAt（AI 打最近的蜜囊）/ uvToWorld`。
+- 给游戏其余部分的接口：`hitMeshes / hit / update / dispose / intro / center / screenBox / aimAt（AI：探头时打嘴，否则打画面里最近的蜜囊）/ uvToWorld`。`intro`（开阔地）：`scripted`（战斗没开始也动、不出招）在前方 14 米竖起来，吼一声，翻一页 `closeup.k` 的立绘（`Game.vignette`，R84 `boss/maggot_cu`），之后开打、`closeup.hint` 提示打哪；有墙的地方还是原来的仰拍 + 绕 + 推拉变焦。
 
 ## Boss：「？？？」（`src/battle/thing.js`，数据 `bosses.json` qq）
 - 只有核心吃伤害（每个形态 `core: [u, v, 半径]`，图上从左、从下的比例，半径按身高算；`markCore` 用小的快打环圈住它），别处打中只冒火花（`glance`）；出招（`attack` 状态）时什么都打不进；蓄力时打核心能打断冲撞。AI 队友瞄核心（`aimAt`）。腐蜜夫人（madame）同一套。

@@ -78,13 +78,6 @@
         "name": { "zh": "蜜之坑道", "en": "HONEY TUNNEL", "ja": "蜜の坑道" },
         "thumb": "ui/sel_thumb_ep1_pit"
       },
-      {
-        "stage": "mine",
-        "set": "ep1_mine",
-        "stations": ["mn1"],
-        "name": { "zh": "蜜矿矿车", "en": "HONEY MINE RIDE", "ja": "蜜の鉱山トロッコ" },
-        "thumb": "ui/sel_thumb_ep1_pit"
-      },
       { "boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit" },
       {
         "stage": "soul",

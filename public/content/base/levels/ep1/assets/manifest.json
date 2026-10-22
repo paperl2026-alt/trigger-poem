@@ -1,4 +1,9 @@
 {
+ "boss/maggot_cu": {
+  "h": 1000,
+  "src": "assets/boss/maggot_cu.webp",
+  "w": 661
+ },
  "boss/md_s1_attack": {
   "anchor": "bottom",
   "figH": 0.9578,
@@ -2692,6 +2697,26 @@
   "src": "assets/enemy/doily_windup_rd.png",
   "w": 512
  },
+ "enemy/doll_b_disguise": {
+  "anchor": "bottom",
+  "figH": 0.6806,
+  "h": 335,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/doll_b_disguise_rd",
+  "src": "assets/enemy/doll_b_disguise.webp",
+  "w": 574
+ },
+ "enemy/doll_b_disguise_rd": {
+  "h": 299,
+  "src": "assets/enemy/doll_b_disguise_rd.png",
+  "w": 512
+ },
  "enemy/doll_b_hide": {
   "anchor": "bottom",
   "figH": 0.6806,
@@ -2812,6 +2837,26 @@
   "src": "assets/enemy/doll_b_windup_rd.png",
   "w": 512
  },
+ "enemy/doll_c_disguise": {
+  "anchor": "bottom",
+  "figH": 0.6878,
+  "h": 362,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_c_disguise_rd",
+  "src": "assets/enemy/doll_c_disguise.webp",
+  "w": 524
+ },
+ "enemy/doll_c_disguise_rd": {
+  "h": 354,
+  "src": "assets/enemy/doll_c_disguise_rd.png",
+  "w": 512
+ },
  "enemy/doll_c_hide": {
   "anchor": "bottom",
   "figH": 0.6878,
@@ -2930,6 +2975,26 @@
  "enemy/doll_c_windup_rd": {
   "h": 354,
   "src": "assets/enemy/doll_c_windup_rd.png",
+  "w": 512
+ },
+ "enemy/doll_disguise": {
+  "anchor": "bottom",
+  "figH": 0.695,
+  "h": 423,
+  "hit": true,
+  "pad": [
+   18,
+   18,
+   18,
+   0
+  ],
+  "relief": "enemy/doll_disguise_rd",
+  "src": "assets/enemy/doll_disguise.webp",
+  "w": 549
+ },
+ "enemy/doll_disguise_rd": {
+  "h": 394,
+  "src": "assets/enemy/doll_disguise_rd.png",
   "w": 512
  },
  "enemy/doll_hide": {
@@ -3872,6 +3937,26 @@
   "src": "assets/enemy/ghoul_b_crouch_rd.png",
   "w": 512
  },
+ "enemy/ghoul_b_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9148,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_b_disguise_rd",
+  "src": "assets/enemy/ghoul_b_disguise.webp",
+  "w": 590
+ },
+ "enemy/ghoul_b_disguise_rd": {
+  "h": 458,
+  "src": "assets/enemy/ghoul_b_disguise_rd.png",
+  "w": 512
+ },
  "enemy/ghoul_b_hurt": {
   "anchor": "bottom",
   "figH": 0.9148,
@@ -4012,6 +4097,26 @@
   "src": "assets/enemy/ghoul_c_crouch_rd.png",
   "w": 512
  },
+ "enemy/ghoul_c_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9489,
+  "h": 528,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_c_disguise_rd",
+  "src": "assets/enemy/ghoul_c_disguise.webp",
+  "w": 579
+ },
+ "enemy/ghoul_c_disguise_rd": {
+  "h": 467,
+  "src": "assets/enemy/ghoul_c_disguise_rd.png",
+  "w": 512
+ },
  "enemy/ghoul_c_hurt": {
   "anchor": "bottom",
   "figH": 0.9489,
@@ -4110,6 +4215,26 @@
  "enemy/ghoul_crouch_rd": {
   "h": 471,
   "src": "assets/enemy/ghoul_crouch_rd.png",
+  "w": 512
+ },
+ "enemy/ghoul_disguise": {
+  "anchor": "bottom",
+  "figH": 0.9469,
+  "h": 527,
+  "hit": true,
+  "pad": [
+   19,
+   19,
+   19,
+   0
+  ],
+  "relief": "enemy/ghoul_disguise_rd",
+  "src": "assets/enemy/ghoul_disguise.webp",
+  "w": 573
+ },
+ "enemy/ghoul_disguise_rd": {
+  "h": 471,
+  "src": "assets/enemy/ghoul_disguise_rd.png",
   "w": 512
  },
  "enemy/ghoul_hurt": {
