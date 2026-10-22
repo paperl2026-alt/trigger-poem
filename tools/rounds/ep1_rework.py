@@ -113,7 +113,7 @@ def enter(wave, sid, ways, trick, far, rnd, k):
             if ways and rnd() < 0.5: e["from"] = "door"; e["way"] = ways[i % len(ways)]["id"]
         if trick == "shed" and ty == "ghoul" and e.get("hp"): e["morph"] = {"shed": {"type": "scoopling", "every": [2.5, 4.5], "max": 3}}
         if trick == "burst" and ty == "armor": e["morph"] = {"burst": {"type": "crawler", "n": 2}}
-        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 3.4, "hp": 2400}}}
+        if trick == "puddle" and ty == "ghoul": e["morph"] = {"puddle": {"into": "ghoul", "need": 3, "group": "coldpool", "as": {"h": 3.4, "hp": 1150}}}
         if trick == "merge" and ty == "dollkin": e["morph"] = {"merge": {"with": "dollkin", "into": "doll", "after": 4}}
 
 def gallery_mouth(S):
@@ -195,7 +195,7 @@ def acts(D):
 ONE_KIND = {
     "ep1_shop":    ("ghoul", "scoopling", 3, None),       # (the gelato ghouls; before the shop turns, the little scoops they turn into)
     "ep1_gallery": ("chandelier", None, 1, None),         # (the poltergeist chandeliers, hanging along the middle; the maw door at the end)
-    "ep1_garden":  ("armor", None, 1, 2300),              # (the knights' hall: the armour along the walls coming alive)
+    "ep1_garden":  ("armor", None, 1, None),              # (the knights' hall: the armour along the walls coming alive)
     "ep1_nursery": ("dollkin", "doll", 4, None),          # (the dolls: the little ones walking, the coupe dolls throwing)
     "ep1_cold":    ("popsicle", None, 3, None),           # (the popsicle skeletons, R90: frozen in the ice at first, out of the vent)
     "ep1_oven":    ("ginger", None, 3, None),             # (the burnt gingerbread, R91; the one that runs at the wall and bursts too)
@@ -208,7 +208,7 @@ def one_kind(D):
     them), the shop's small things its little scoops (they still turn into gelato ghouls when the shop turns), the acts' casts too"""
     # (the knights' hall's planks first: three armours step onto them, and they go - Game.planksTick)
     pk = D["ep1_garden"]["stations"]["gd2"]["waves"][1]
-    pk[:] = [{**{k: v for k, v in e.items() if k not in ("move",)}, "type": "armor", "hp": 2300} for e in pk if e.get("type")][:3]
+    pk[:] = [{**{k: v for k, v in e.items() if k not in ("move", "hp")}, "type": "armor"} for e in pk if e.get("type")][:3]
     for sid, (kind, other, cap, hp) in ONE_KIND.items():
         S = D[sid]
         for st in S["stations"].values():
@@ -313,12 +313,13 @@ def places(D):
     one_kind(D)
     chandeliers(D, packs.load(L / "enemies.json")["chandelier"]["h"])
     # (user 2026-10-22: the monsters too close - further off, and big: levels/ep1/enemies.json h; the shallow second stops given room)
+    for e in D["ep1_shop"]["stations"]["sh1"]["waves"][0]:
+        if e.get("type") == "ghoul": e["hp"] = 2150   # (x 0.7 below: 1500 - about five seconds of both of them on it; user 2026-10-22, the monsters' health)
     for sid, dz in (("ep1_shop", 4.5), ("ep1_cold", 4.5), ("ep1_nursery", 4.5), ("ep1_oven", 9.0)):
         S = D[sid]; deepen(S, dz, list(S["stations"].values())[1]["cam"][2])
     for sid, S in D.items():
         if not isinstance(S, dict) or "stations" not in S: continue
         S["monster"] = {"spawnMin": 8.0, "spawnFar": 12.0, "perspective": True}   # (perspective: seen as they really are, no size floor - Actor.sizeFloor)
-        S["feel"] = {"stop": False, "freeze": False}   # (no held frames: user 2026-10-22, it felt as if it dropped frames - G.stop, Enemy.feel)
         for st in S["stations"].values():
             for w in st.get("waves", []):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)

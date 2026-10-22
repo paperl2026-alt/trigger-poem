@@ -89,7 +89,7 @@
               "z": -18.5,
               "from": "door",
               "sprite": "ghoul",
-              "hp": 5040,
+              "hp": 1505,
               "tough": true,
               "move": "walk",
               "far": 17,
@@ -156,8 +156,7 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_gallery": {
     "panels": true,
@@ -366,8 +365,7 @@
         "exit": { "to": [0, 1.1, -17.6], "look": [0, 1.0, -26] }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_garden": {
     "panels": true,
@@ -474,8 +472,8 @@
           [
             { "t": 0, "type": "armor", "x": -5.6, "z": -1.5, "from": "statue" },
             { "t": 0, "type": "armor", "x": 5.6, "z": -2.5, "from": "statue" },
-            { "t": 0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor", "hp": 1610 },
-            { "t": 0.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor", "hp": 1610 },
+            { "t": 0, "x": -2.33, "z": -7, "from": "door", "way": "d1", "type": "armor" },
+            { "t": 0.8, "x": 2.33, "z": -7.5, "from": "door", "way": "d2", "type": "armor" },
             { "kills": 2, "wake": 1 },
             { "wake": 1, "t": 6.0 }
           ],
@@ -484,13 +482,13 @@
             { "t": 0.9, "hint": "dollRitual" }
           ],
           [
-            { "t": 0, "x": 0.0, "z": -8.5, "from": "ceiling", "type": "armor", "count": 2, "every": 0.12, "hp": 1610 }
+            { "t": 0, "x": 0.0, "z": -8.5, "from": "ceiling", "type": "armor", "count": 2, "every": 0.12 }
           ],
           [
-            { "t": 0, "x": 0.0, "z": -10, "from": "ceiling", "type": "armor", "hp": 1610 }
+            { "t": 0, "x": 0.0, "z": -10, "from": "ceiling", "type": "armor" }
           ],
           [
-            { "t": 0, "x": -4.67, "z": -9, "from": "ceiling", "type": "armor", "hp": 1610 },
+            { "t": 0, "x": -4.67, "z": -9, "from": "ceiling", "type": "armor" },
             { "t": 0, "type": "armor", "x": 5.6, "z": -4, "from": "statue", "wake": 3.5 }
           ]
         ],
@@ -502,23 +500,23 @@
         "covers": [{ "k": "cover/ep1_garden3", "side": -1 }, { "k": "cover/ep1_garden4", "side": 1 }],
         "waves": [
           [
-            { "t": 0, "x": 0.0, "z": -12, "from": "ceiling", "type": "armor", "hp": 1610 }
+            { "t": 0, "x": 0.0, "z": -12, "from": "ceiling", "type": "armor" }
           ],
           [
-            { "t": 0.0, "type": "armor", "x": -3.4, "z": -14.5, "hp": 1610 },
-            { "t": 0.45, "type": "armor", "x": -0.6, "z": -15, "hp": 1610 },
-            { "t": 0.9, "type": "armor", "x": -2.0, "z": -14, "hp": 1610 }
+            { "t": 0.0, "type": "armor", "x": -3.4, "z": -14.5 },
+            { "t": 0.45, "type": "armor", "x": -0.6, "z": -15 },
+            { "t": 0.9, "type": "armor", "x": -2.0, "z": -14 }
           ],
           [
             { "t": 0, "type": "armor", "x": -2.18, "z": -11, "from": "door", "way": "d1", "morph": { "burst": { "type": "crawler", "n": 2 } } }
           ],
           [
-            { "t": 0, "x": 0.0, "z": -12, "from": "door", "way": "d1", "type": "armor", "count": 2, "every": 0.12, "hp": 1610 }
+            { "t": 0, "x": 0.0, "z": -12, "from": "door", "way": "d1", "type": "armor", "count": 2, "every": 0.12 }
           ],
           [
-            { "t": 0, "x": 0.0, "z": -13, "from": "ceiling", "type": "armor", "hp": 1610 },
-            { "t": 1, "x": -3.11, "z": -13, "type": "armor", "hp": 1610 },
-            { "t": 1.5, "x": 3.11, "z": -10, "from": "door", "way": "d1", "type": "armor", "hp": 1610 },
+            { "t": 0, "x": 0.0, "z": -13, "from": "ceiling", "type": "armor" },
+            { "t": 1, "x": -3.11, "z": -13, "type": "armor" },
+            { "t": 1.5, "x": 3.11, "z": -10, "from": "door", "way": "d1", "type": "armor" },
             { "kills": 3, "collapse": true }
           ]
         ],
@@ -528,8 +526,7 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_cold": {
     "panels": true,
@@ -690,7 +687,7 @@
               "z": -13.5,
               "type": "popsicle",
               "morph": {
-                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
+                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 1150 } }
               }
             },
             {
@@ -701,7 +698,7 @@
               "way": "d1",
               "type": "popsicle",
               "morph": {
-                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
+                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 1150 } }
               }
             }
           ]
@@ -740,7 +737,7 @@
               "way": "d1",
               "type": "popsicle",
               "morph": {
-                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 2400 } }
+                "puddle": { "into": "popsicle", "need": 3, "group": "coldpool", "as": { "h": 3.4, "hp": 1150 } }
               }
             },
             { "t": 2.0, "x": 2.84, "z": -15.0, "from": "ceiling", "type": "popsicle" }
@@ -751,8 +748,7 @@
       }
     },
     "dark": 0.85,
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_oven": {
     "panels": true,
@@ -970,8 +966,7 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_pit": {
     "panels": true,
@@ -1125,8 +1120,7 @@
         "mark": true
       }
     ],
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_nursery": {
     "panels": true,
@@ -1373,8 +1367,7 @@
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_studio": {
     "panels": true,
@@ -1643,8 +1636,7 @@
       }
     },
     "dark": 0.6,
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   },
   "ep1_nether": {
     "panels": true,
@@ -1771,7 +1763,6 @@
         ]
       }
     },
-    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true },
-    "feel": { "stop": false, "freeze": false }
+    "monster": { "spawnMin": 8.0, "spawnFar": 12.0, "perspective": true }
   }
 }
