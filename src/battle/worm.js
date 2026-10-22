@@ -292,10 +292,13 @@ export class WormBoss {
   }
 
   // ---- hits: only the sacs (and, with every sac gone, the core in its mouth); the flesh shrugs them off
+  // (only what is above the ground: under it nothing of it can be hit - user 2026-10-22, the AI partner hit it while it was down there -
+  // and with nothing of it up, it is no target at all)
   hitMeshes() {
     if (!this.alive) return [];
-    const out = [this.skull, this.core];
-    for (const s of this.segs) { out.push(s.body); if (s.live) out.push(s.sac); }
+    const out = [], up = (m) => m.getWorldPosition(V).y > -0.15;
+    if (up(this.skull)) out.push(this.skull, this.core);
+    for (const s of this.segs) { if (up(s.body)) out.push(s.body); if (s.live && up(s.sac)) out.push(s.sac); }
     return out;
   }
   hit(info) {
@@ -380,16 +383,23 @@ export class WormBoss {
   uvToWorld() { return this.head.position; }
   center() { return this.head.position.clone(); }
   distToCam() { return this.head.position.distanceTo(this.game.world.camPos); }
-  // the part a beam sweeping past (sx, sy on the screen, y down) within r px catches: a sac still there, or the core once they are gone
+  // the part a beam sweeping past (sx, sy on the screen, y down) within r px catches - a sac, its mouth, or its flesh, as a shot would
+  // (hit() weighs it: a sac full, the mouth more, the flesh a little); a sac or the mouth before the flesh around it. Only what is above
+  // the ground (user 2026-10-22: the special did nothing to it - only the sacs counted, and only those right under the beam)
   partAt(sx, sy, r) {
-    const g = this.game; let best = null, bd = r;
-    const parts = this.liveSacs() ? this.segs.filter((s) => s.live).map((s) => s.sac) : [this.core];
-    for (const m of parts) { const s = g.world.project(m.getWorldPosition(V)); if (s.z > 1) continue; const d = Math.hypot(s.x - sx, s.y - sy); if (d < bd) { bd = d; best = m; } }
+    const g = this.game; let best = null, bd = Infinity;
+    for (const m of this.hitMeshes()) {
+      const s = g.world.project(m.getWorldPosition(V)); if (s.z > 1) continue;
+      const cam = g.world.camera, rad = m.scale.x * g.H / (2 * cam.position.distanceTo(V) * Math.tan(cam.fov * Math.PI / 360));   // (its size on the screen, px)
+      const reach = r + rad, d = Math.hypot(s.x - sx, s.y - sy) - (m.userData.sac || m.userData.core || m.userData.mouth ? r * 0.5 : 0);
+      if (d < reach && d < bd) { bd = d; best = m; }
+    }
     return best;
   }
   // the AI partner aims at its open mouth while it is up, else at the nearest sac in sight (none left: the mouth)
   aimAt() {
     const g = this.game;
+    if (!this.hitMeshes().length) return null;   // (all of it under the ground: nothing to aim at)
     if (this.state === 'up') { const s = g.world.project(this.core.getWorldPosition(V)); return { x: s.x, y: s.y }; }
     let best = null, bd = Infinity;
     for (const q of this.segs) {

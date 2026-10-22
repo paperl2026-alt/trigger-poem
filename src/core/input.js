@@ -116,7 +116,7 @@ export class AICtrl {
     this.reactT -= dt; this.hideT -= dt; this.wob += dt; this.busyT -= dt;
     // her rhythm: in for a while, then back in cover for a while (in about rate of the time)
     if (this.busyT <= 0) { this.busy = Math.random() < (A.rate ?? 0.4); this.busyT = this.busy ? 0.9 + Math.random() * 1.4 : 1.2 + Math.random() * 1.8; this.miss = Math.random() < (A.miss ?? 0.25) ? 1 : 0; }
-    if (this.target && (!this.target.alive || this.target.removed)) this.target = null;
+    if (this.target && (!this.target.alive || this.target.removed || !this.target.hitMeshes().length)) this.target = null;   // (gone under the ground: nothing to shoot)
     if ((!this.target || this.reactT < -2.5) && this.reactT <= 0) {
       let best = null, bs = -1;
       for (const a of game.actors) {
