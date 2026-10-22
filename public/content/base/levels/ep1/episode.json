@@ -90,7 +90,7 @@
         "thumb": "ui/sel_thumb_ep1_pit"
       },
       {
-        "door": { "frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left" }
+        "door": { "frame": "ep1/door10_frame", "leaf": "ep1/door10_leaf", "leaves": 1, "hinge": "left", "light": true }
       },
       { "comic": "ep1_studio" },
       {

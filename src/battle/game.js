@@ -824,6 +824,7 @@ export class Game {
     if (e.wake) {   // statues come to life (all, or so many of them, nearest first; not one an event just before picked: two kill-events
       // can go off on the same shot; wakeOf: only that kind - the chandeliers hanging there from the start)
       const st = this.actors.filter((a) => a.alive && a.state === 'statue' && !a.waking && (!e.wakeOf || a.type === e.wakeOf)).sort((a, b) => a.distToCam() - b.distToCam());
+      if (!st.length && this.pendingSpawns > 0) { const tok = this.waveTok; this.etw.wait(0.5, () => tok === this.waveTok && this.combat && this.waveEvent({ wake: e.wake, wakeOf: e.wakeOf })); }   // (not there yet: once they are)
       st.slice(0, e.wake === true ? st.length : e.wake).forEach((a, i) => { a.waking = true; this.etw.wait(i * 0.5, () => a.wake()); });
     }
   }
@@ -853,8 +854,9 @@ export class Game {
     // 2026-10-22, the camera turned away from chandeliers that had not even woken)
     const last = this.waveIndex >= this.S.waves.length - 1;
     const alive = this.actors.filter((a) => a.alive && !(a instanceof Projectile) && !a.prop && !a.phantom && !a.stalker && (last || !(a.state === 'statue' && a.bp?.hang && !a.waking))), left = alive.length;
-    // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared)
-    if (last && left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });
+    // only statues still standing and nothing left to wake them: they come to life now (else the stop could never be cleared - in any
+    // wave, not only the last: a kill-event can go off on a monster left over from the wave before, before this wave's statues are there)
+    if (left && !this.waveEvents?.some((e) => e.wake) && alive.every((a) => a.state === 'statue' && !a.waking)) this.waveEvent({ wake: true });
     if (left > (last || this.S.solo ? 0 : T.combat.waveCarry ?? 0)) return;   // (station solo: every wave fought to the end - the studio's shadows one at a time, user 2026-10-22)
     if (!last && left && this.waveEvents?.length) return;   // (this wave's kill-events still to come: it finishes first)
     // the way on still shut (a drawbridge held by seals): the fight goes on until it is worked
@@ -1028,6 +1030,16 @@ export class Game {
       const q = this.escort.place((s.ahead ?? 8) + (Math.random() - 0.5) * 2, (s.side ?? 0) + (Math.random() - 0.5) * 1.5), P = this.escort.pos, gap = this.S.escort.gap ?? 0;
       const d = Math.hypot(q.x - P.x, q.z - P.z);   // (never right by it: time for the player to move the sight - user 2026-10-22)
       if (gap && d < gap) { const k = gap / Math.max(0.01, d); q.x = P.x + (q.x - P.x) * k; q.z = P.z + (q.z - P.z) * k; }
+      // (in sight when it comes, and staying in it as the camera walks on with her: inside the middle half of the picture across, at its
+      // depth - one off to a side is brought in at the same distance, and pushed further back if that puts it too near her - user
+      // 2026-10-22: on the left they came in out of the picture, a tenth of them showing)
+      const w = this.world, c = w.camPos, fx0 = w.lookAt.x - c.x, fz0 = w.lookAt.z - c.z, fl = Math.hypot(fx0, fz0) || 1, fx = fx0 / fl, fz = fz0 / fl;
+      const tanH = Math.tan((w.camera.fov * Math.PI / 180) / 2) * w.camera.aspect * 0.5;
+      let depth = Math.max(6, (q.x - c.x) * fx + (q.z - c.z) * fz), lat = (q.x - c.x) * -fz + (q.z - c.z) * fx;
+      for (let i = 0; i < 30; i++) {
+        const L = Math.max(-depth * tanH, Math.min(depth * tanH, lat)), x = c.x + fx * depth - fz * L, z = c.z + fz * depth + fx * L;
+        q.x = x; q.z = z; if (!gap || Math.hypot(x - P.x, z - P.z) >= gap) break; depth += 0.6;
+      }
       s = { ...s, x: q.x, z: q.z, free: true };
     }
     const to = this.mutated && C.enemies[s.type]?.mutatesTo;   // (after the house has turned: mutateAll)

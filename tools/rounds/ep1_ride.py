@@ -59,7 +59,7 @@ NETHER = {"panels": True, "seed": 61, "fogNear": 10, "fogFar": 60, "fogDensity":
           "boards": [{"k": "ep1/nether_a", "x": 0, "y": -10, "z": -80, "w": 170, "sky": True}, {"k": "ep1/nether_b", "x": -78, "y": -10, "z": -20, "w": 170, "ry": 90, "sky": True},
                      {"k": "ep1/nether_b", "x": 78, "y": -10, "z": -20, "w": 170, "ry": -90, "sky": True}, {"k": "ep1/nether_a", "x": 0, "y": -10, "z": 50, "w": 170, "ry": 180, "sky": True}],
           "props": [{"k": "ep1/nb_cone", "h": 1.4, "x": -9, "z": -12}, {"k": "ep1/nb_frame", "h": 1.8, "x": 9, "z": -18}, {"k": "ep1/nb_cup", "h": 1.0, "x": -4, "z": -26},
-                    {"k": "ep1/nb_spoon", "h": 2.0, "x": 6, "z": -30}, {"k": "ep1/nb_glove", "h": 1.1, "x": 11, "z": -8}, {"k": "ep1/nb_scoop", "h": 1.2, "x": -11, "z": -32},
+                    {"k": "ep1/nb_spoon", "h": 2.0, "x": 6, "z": -30}, {"k": "ep1/nb_scoop", "h": 1.2, "x": -11, "z": -32},
                     {"k": "ep1/nb_cherry", "h": 0.9, "x": 2, "z": -38}, {"k": "ep1/nb_ribbon", "h": 1.0, "x": -6, "z": -40}],
           "stations": {"ne1": {"cam": [-5.5, 1.25, 5], "look": [4, 2.2, -22], "covers": [{"k": "cover/ep1_hall1", "side": -1}, {"k": "cover/ep1_hall2", "side": 1}]}}}
 

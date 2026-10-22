@@ -321,6 +321,31 @@
   "src": "assets/comic/ep1p_web.webp",
   "w": 1920
  },
+ "comic/ep1s_rest1": {
+  "h": 1080,
+  "src": "assets/comic/ep1s_rest1.webp",
+  "w": 1920
+ },
+ "comic/ep1s_rest2": {
+  "h": 1080,
+  "src": "assets/comic/ep1s_rest2.webp",
+  "w": 1920
+ },
+ "comic/ep1s_rest3": {
+  "h": 1080,
+  "src": "assets/comic/ep1s_rest3.webp",
+  "w": 1920
+ },
+ "comic/ep1s_rest4": {
+  "h": 1080,
+  "src": "assets/comic/ep1s_rest4.webp",
+  "w": 1920
+ },
+ "comic/ep1s_rest5": {
+  "h": 1080,
+  "src": "assets/comic/ep1s_rest5.webp",
+  "w": 1920
+ },
  "cover/ep1_cold1": {
   "h": 561,
   "relief": "cover/ep1_cold1_rd",
@@ -10660,6 +10685,22 @@
   "src": "assets/ep1/diary.webp",
   "w": 441
  },
+ "ep1/door10_frame": {
+  "h": 1024,
+  "hole": [
+   0.4232,
+   0.207,
+   0.5768,
+   0.8135
+  ],
+  "src": "assets/ep1/door10_frame.webp",
+  "w": 1536
+ },
+ "ep1/door10_leaf": {
+  "h": 1400,
+  "src": "assets/ep1/door10_leaf.webp",
+  "w": 504
+ },
  "ep1/door1_frame": {
   "h": 1024,
   "hole": [
@@ -11506,6 +11547,36 @@
   "keyed": true,
   "src": "assets/ep1/garden_wallR6_x.webp",
   "w": 1280
+ },
+ "ep1/ghost1_angel": {
+  "h": 473,
+  "src": "assets/ep1/ghost1_angel.webp",
+  "w": 430
+ },
+ "ep1/ghost1_demon": {
+  "h": 473,
+  "src": "assets/ep1/ghost1_demon.webp",
+  "w": 430
+ },
+ "ep1/ghost2_angel": {
+  "h": 506,
+  "src": "assets/ep1/ghost2_angel.webp",
+  "w": 518
+ },
+ "ep1/ghost2_demon": {
+  "h": 506,
+  "src": "assets/ep1/ghost2_demon.webp",
+  "w": 518
+ },
+ "ep1/ghost3_angel": {
+  "h": 461,
+  "src": "assets/ep1/ghost3_angel.webp",
+  "w": 449
+ },
+ "ep1/ghost3_demon": {
+  "h": 461,
+  "src": "assets/ep1/ghost3_demon.webp",
+  "w": 449
  },
  "ep1/hall_ceil1": {
   "h": 1024,
@@ -12568,6 +12639,53 @@
   "h": 900,
   "src": "assets/ep1/soul_child.webp",
   "w": 521
+ },
+ "ep1/soul_door": {
+  "h": 1200,
+  "src": "assets/ep1/soul_door.webp",
+  "w": 582
+ },
+ "ep1/soul_walk_flinch": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_flinch.webp",
+  "w": 335
+ },
+ "ep1/soul_walk_look": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_look.webp",
+  "w": 335
+ },
+ "ep1/soul_walk_walk0": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_walk0.webp",
+  "w": 335
+ },
+ "ep1/soul_walk_walk1": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_walk1.webp",
+  "w": 335
+ },
+ "ep1/soul_walk_walk2": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_walk2.webp",
+  "w": 335
+ },
+ "ep1/soul_walk_walk3": {
+  "anchor": "bottom",
+  "figH": 0.9675,
+  "h": 493,
+  "src": "assets/ep1/soul_walk_walk3.webp",
+  "w": 335
  },
  "ep1/studio_ceil1": {
   "h": 1024,

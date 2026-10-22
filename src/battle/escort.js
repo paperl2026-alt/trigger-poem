@@ -11,7 +11,11 @@
 // door: where it is going, in sight from the start - a doorway of light standing alone out in the open (no wall: user 2026-10-22, a
 // door that was nowhere in the place opened after it; "if it turns into a door, no wall"), an arch drawn in light, a faint glow inside,
 // motes rising at its foot. When the thing gets there every monster is gone at once and nothing more comes (user 2026-10-22: it got
-// there and still a wave came): it drifts into the arch and becomes it - the doorway floods with light - and the stop is won
+// there and still a wave came): it drifts into the arch and becomes it - the doorway floods with light - and the stop is won.
+// walk: <picture key prefix> - her walk as keyframes (R97: <prefix>_walk0..3, _look, _flinch; user 2026-10-22: one still picture bobbing
+// up and down was no walk): stepped through by the distance she covers, turned to the way she goes on the screen, flinching when hit.
+// door.k: a picture of the door (R97 ep1/soul_door) instead of the arch of light - the same door the close-up after the stop opens
+// (ep1/door10: her standing beside it, waiting); she walks up beside it and stops there, and the stop is won
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
 import { sfx } from '../core/audio.js';
@@ -39,8 +43,8 @@ export class Escort {
       const glow = (r, c, o) => { const m = new THREE.Mesh(new THREE.SphereGeometry(r, 20, 14), new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false })); this.root.add(m); return m; };
       this.core = glow(h * 0.18, 0xffffff, 1); this.halo = glow(h * 0.36, 0xffe8b0, 0.35); this.halo2 = glow(h * 0.6, 0xffc070, 0.12);
     } else {
-      const t = tex[E.who], m = new THREE.Mesh(new THREE.PlaneGeometry(h * t.image.width / t.image.height, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
-      this.root.add(m); this.sprite = m;
+      const t = (E.walk && tex[`${E.walk}_walk0`]) || tex[E.who], m = new THREE.Mesh(new THREE.PlaneGeometry(h * t.image.width / t.image.height, h), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
+      this.root.add(m); this.sprite = m; this.stride = 0;
       // (a soft light behind her: she stands out from the field)
       const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c = cv.getContext('2d'), gr = c.createRadialGradient(64, 64, 4, 64, 64, 64);
       gr.addColorStop(0, 'rgba(255,255,255,0.9)'); gr.addColorStop(0.4, 'rgba(255,240,210,0.45)'); gr.addColorStop(1, 'rgba(255,220,170,0)'); c.fillStyle = gr; c.fillRect(0, 0, 128, 128);
@@ -50,7 +54,7 @@ export class Escort {
     }
     // the camera beside her (follow): on the side of her way the stop's camera is on
     if (E.follow) { const tg = this.curve.getTangentAt(0), cp = w.camPos; this.fside = (-tg.z * (cp.x - this.pos.x) + tg.x * (cp.z - this.pos.z)) >= 0 ? 1 : -1; }
-    if (E.door) this.makeDoor(E.door);
+    if (E.door) { if (E.door.k && tex[E.door.k]) this.makePictureDoor(E.door); else this.makeDoor(E.door); }
     this.lock = g.fx.lock('guard', -1);   // (the view narrows and darkens at the edges like a scope: the shot, tuning/shots.json escort)
     g.combat = true; g.escortName = tr(E.name || '') || null;
   }
@@ -71,6 +75,32 @@ export class Escort {
     grp.add(arc, fill);
     grp.lookAt(new THREE.Vector3(g.world.camPos.x, D.at[1], g.world.camPos.z));
     this.root.parent.add(grp); this.door = { grp, arc, fill, map, at: new THREE.Vector3(D.at[0], D.at[1] + h * 0.42, D.at[2]) };
+  }
+  // the door as a picture standing out there (door.k), facing the camera's side of the field, a warm glow behind it and light in its cracks
+  makePictureDoor(D) {
+    const g = this.g, t = tex[D.k], h = D.h ?? 3.2, w = h * t.image.width / t.image.height;
+    const grp = new THREE.Group(); grp.position.set(...D.at);
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c = cv.getContext('2d'), gr = c.createRadialGradient(64, 64, 6, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,240,200,0.85)'); gr.addColorStop(0.45, 'rgba(255,214,150,0.35)'); gr.addColorStop(1, 'rgba(255,200,140,0)'); c.fillStyle = gr; c.fillRect(0, 0, 128, 128);
+    const map = new THREE.CanvasTexture(cv); map.colorSpace = THREE.SRGBColorSpace;
+    const glow = new THREE.Mesh(new THREE.PlaneGeometry(w * 2.2, h * 1.5).translate(0, h * 0.5, -0.05), new THREE.MeshBasicMaterial({ map, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    const pic = new THREE.Mesh(new THREE.PlaneGeometry(w, h).translate(0, h / 2, 0), new THREE.MeshBasicMaterial({ map: t, transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
+    const fill = new THREE.Mesh(new THREE.PlaneGeometry(w * 0.62, h * 0.82).translate(0, h * 0.43, 0.03), new THREE.MeshBasicMaterial({ color: 0xfff4dc, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }));
+    grp.add(glow, pic, fill);
+    grp.lookAt(new THREE.Vector3(g.world.camPos.x, D.at[1], g.world.camPos.z));
+    this.root.parent.add(grp); this.door = { grp, arc: glow, fill, map, pic: true, w, at: new THREE.Vector3(D.at[0], D.at[1] + h * 0.42, D.at[2]) };
+  }
+  // her walk (walk: keyframes): a step every so many metres, turned to where she goes on the screen; flinching while hit, looking back
+  // while held up (down)
+  stepFrames(dt) {
+    const E = this.E, m = this.sprite; if (!E.walk || !m) return;
+    const d = this.lastPos ? this.lastPos.distanceTo(this.pos) : 0, moving = d > 0.0005; (this.lastPos ||= this.pos.clone()).copy(this.pos);
+    this.stride += d;   // (by the way she has covered: her walk along the path and up to the door alike)
+    const pose = this.flash > 0.3 ? 'flinch' : this.down > 0 ? 'look' : moving ? `walk${Math.floor(this.stride / 0.32) % 4}` : 'walk0';
+    const t = tex[`${E.walk}_${pose}`]; if (t && m.material.map !== t) { m.material.map = t; m.material.needsUpdate = true; }
+    // (drawn going right: mirrored when her way runs to the left of the screen)
+    const w = this.g.world, u = Math.min(0.999, this.s / this.len), a = w.project(this.pos), b = w.project(this.curve.getPointAt(Math.min(1, u + 0.01)));
+    if (!this.done) m.scale.x = b.x < a.x ? -1 : 1;
   }
   // the monsters' goal while it is out there (Enemy: walk at it, throw at it)
   get going() { return this.on && !this.done; }
@@ -106,7 +136,8 @@ export class Escort {
       this.curve.getPointAt(this.s / this.len, this.pos);
       if (this.s >= this.len - 0.01) this.arrive();
     }
-    this.root.position.copy(this.pos); this.root.position.y += Math.sin(t * 2.2) * 0.08;
+    this.root.position.copy(this.pos); if (!this.E.walk) this.root.position.y += Math.sin(t * 2.2) * 0.08;
+    this.stepFrames(dt);
     const F = this.E.follow;
     if (F && !g.cineOn && !g.walkOn) {   // (walking along beside her, looking a little ahead of her)
       const w = g.world, tg = this.curve.getTangentAt(Math.min(1, this.s / this.len)), k = 1 - Math.exp(-dt * (F.ease ?? 1.6)), sd = this.fside;
@@ -122,6 +153,7 @@ export class Escort {
       if (Math.random() < dt * 14) g.fx.wAdd.emit({ x: this.pos.x + (Math.random() - 0.5) * 0.4, y: this.pos.y + (Math.random() - 0.5) * 0.4, z: this.pos.z, vy: 0.4, life: 0.8, size: 0.06, size1: 0.01, color: [1, 0.9, 0.6], a: 0.9, a1: 0, frame: FR.GLOW });
     }
     if (this.door && !this.done && Math.random() < dt * 10) { const d = this.door.at; g.fx.wAdd.emit({ x: d.x + (Math.random() - 0.5) * 1.6, y: 0.2, z: d.z + (Math.random() - 0.5) * 0.6, vy: 0.7, life: 1.4, size: 0.07, size1: 0.01, color: [1, 0.92, 0.65], a: 0.9, a1: 0, frame: FR.GLOW }); }   // (the way home: motes of light at the door's foot)
+    if (this.door?.pic) { const D = this.door, c = g.world.camera.position; D.grp.lookAt(c.x, D.grp.position.y, c.z); }   // (the picture door always turned to the camera walking beside her)
     if (this.sprite) { this.sprite.lookAt(g.world.camera.position); this.sprite.material.color.setRGB(1, 1 - this.flash * 0.6, 1 - this.flash * 0.6); }
     if (this.shine) this.shine.scale.setScalar(1 + Math.sin(t * 3) * 0.05 + this.flash * 0.3);
     const c = g.world.project(this.pos), b = { x0: c.x - 40, x1: c.x + 40, y0: c.y - 40, y1: c.y + 40 };
@@ -135,6 +167,14 @@ export class Escort {
     g.escortDone?.(); this.clearOut();
     const D = this.door;
     if (!D) { g.tweens.wait(1.2, () => this.end()); return; }
+    if (D.pic) {   // (beside the door, on the camera's side of it, looking at it; it glows; the close-up after the stop opens it)
+      const side = new THREE.Vector3(1, 0, 0).applyQuaternion(D.grp.quaternion), p0 = this.pos.clone(), p1 = D.grp.position.clone().addScaledVector(side, -(D.w * 0.5 + (this.sprite ? this.sprite.geometry.parameters.width * 0.55 : 0.6))).setY(this.pos.y);   // (her whole width clear of its frame)
+      g.tweens.run(1.0, (e) => this.pos.lerpVectors(p0, p1, e * e * (3 - 2 * e)), { onDone: () => {
+        g.tweens.run(1.0, (e) => { D.fill.material.opacity = e * 0.35; D.arc.scale.setScalar(1 + e * 0.25); });
+        g.tweens.wait(1.6, () => this.end());
+      } });
+      return;
+    }
     // into the door: it drifts to the doorway and fades into it; the leaves swing open on light
     const p0 = this.pos.clone();
     g.tweens.run(0.6, (e) => { this.pos.lerpVectors(p0, D.at, e * e * (3 - 2 * e)); this.root.scale.setScalar(1 - e * 0.7); }, { onDone: () => {

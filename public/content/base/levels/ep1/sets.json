@@ -1595,14 +1595,15 @@
             }
           ]
         ],
-        "shot": { "kind": "cover", "cam": { "zoom": 10 } },
+        "shot": { "kind": "cover", "cam": { "zoom": 10 }, "players": { "x": [0.28, 0.72] } },
         "solo": true,
         "hint": "lampHint"
       },
       "boss": {
         "cam": [0, 1.2, 1.5],
         "look": [0, 2.4, -14],
-        "covers": [{ "k": "cover/ep1_studio3", "side": -1 }, { "k": "cover/ep1_studio4", "side": 1 }]
+        "covers": [{ "k": "cover/ep1_studio3", "side": -1 }, { "k": "cover/ep1_studio4", "side": 1 }],
+        "shot": { "kind": "cover", "players": { "x": [0.28, 0.72] } }
       },
       "st2": {
         "shot": "cine",
@@ -1670,14 +1671,14 @@
     "grade": { "tint": [1.1, 0.95, 0.85], "k": 0.3, "sat": 1.08 },
     "ambient": { "kind": "petals", "rate": 8 },
     "hall": {
-      "x0": -14,
-      "x1": 14,
+      "x0": -34,
+      "x1": 34,
       "z0": 10,
       "z1": -44,
       "h": 14,
       "bay": 10,
       "tile": 6,
-      "tilesX": 5,
+      "tilesX": 12,
       "tileL": 6,
       "left": [],
       "right": [],
@@ -1694,7 +1695,6 @@
       { "k": "ep1/nb_frame", "h": 1.8, "x": 9, "z": -18 },
       { "k": "ep1/nb_cup", "h": 1.0, "x": -4, "z": -26 },
       { "k": "ep1/nb_spoon", "h": 2.0, "x": 6, "z": -30 },
-      { "k": "ep1/nb_glove", "h": 1.1, "x": 11, "z": -8 },
       { "k": "ep1/nb_scoop", "h": 1.2, "x": -11, "z": -32 },
       { "k": "ep1/nb_cherry", "h": 0.9, "x": 2, "z": -38 },
       { "k": "ep1/nb_ribbon", "h": 1.0, "x": -6, "z": -40 }
@@ -1711,12 +1711,14 @@
         "look": [-8.4, 1.3, -2.67],
         "escort": {
           "who": "ep1/soul_child",
+          "walk": "ep1/soul_walk",
+          "pics": ["ep1/soul_walk_walk0", "ep1/soul_walk_walk1", "ep1/soul_walk_walk2", "ep1/soul_walk_walk3", "ep1/soul_walk_look", "ep1/soul_walk_flinch"],
           "path": [[-10.5, 1.2, -2.0], [-5.5, 1.2, -3.6], [-0.5, 1.2, -5.0], [4.5, 1.2, -6.2], [8.0, 1.2, -7.0]],
           "speed": 0.48,
           "hp": 620,
           "h": 2.4,
           "loop": 0,
-          "door": { "at": [9.4, 0, -7.6], "h": 4.4 },
+          "door": { "at": [9.4, 0, -7.6], "h": 3.2, "k": "ep1/soul_door" },
           "oneShot": true,
           "touch": 80,
           "share": 0.3,

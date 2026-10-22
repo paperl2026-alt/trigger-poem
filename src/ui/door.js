@@ -2,7 +2,8 @@
 // Evil's door screens came from): on black, a doorway and its door; the door creaks slowly open onto darkness, then the view moves through
 // it. An episode step { door: { frame, leaf, leaves: 1 | 2, hinge: "left" | "right" } }: frame = the doorway picture whose opening is solid
 // black (its manifest "hole" [x0, y0, x1, y1] = that opening, 0..1, tools/rounds/r53b_import.py), leaf = the closed door alone, stretched
-// over the hole; two leaves = the left and right halves of the leaf picture swing apart. Tap = skip.
+// over the hole; two leaves = the left and right halves of the leaf picture swing apart. light: true = it opens onto warm light, not
+// darkness (the child's soul's door after the escort: ep1/door10). Tap = skip.
 import { url, meta } from '../core/assets.js';
 import { sfx, sound } from '../core/audio.js';
 
@@ -21,6 +22,7 @@ export function playDoor(d, onDone) {
   stage.style.transformOrigin = `${(hole[0] + hole[2]) * 50}% ${(hole[1] + hole[3]) * 50}%`;
   el.appendChild(stage);
   const box = document.createElement('div'); box.className = 'dhole';
+  if (d.light) box.style.background = 'radial-gradient(ellipse at 50% 60%, #fffaf0 0%, #ffe6b0 45%, #f0b060 100%)';
   Object.assign(box.style, { left: `${hole[0] * 100}%`, top: `${hole[1] * 100}%`, width: `${(hole[2] - hole[0]) * 100}%`, height: `${(hole[3] - hole[1]) * 100}%` });
   stage.appendChild(box);
   const two = (d.leaves || 1) > 1, hinge = d.hinge || 'left';

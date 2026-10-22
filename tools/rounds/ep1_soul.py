@@ -19,7 +19,9 @@ L = lambda zh, en, ja: {"zh": zh, "en": en, "ja": ja}
 # (then, a third time: still tiny, smaller than the sight - the camera walks along beside her, follow, a few metres off, across the
 # field from left to right; the door at the far end of her way, coming into view as she nears it)
 PATH = [[-10.5, 1.2, -2.0], [-5.5, 1.2, -3.6], [-0.5, 1.2, -5.0], [4.5, 1.2, -6.2], [8.0, 1.2, -7.0]]
-DOOR = {"at": [9.4, 0, -7.6], "h": 4.4}   # (a doorway of light: escort.js makeDoor)
+# (user 2026-10-22: the soul's door and the door that opens after it were nothing alike - one door, R97: ep1/soul_door out in the field,
+# ep1/door10 its close-up with her waiting beside it; she walks with keyframes of her own, walk: ep1/soul_walk)
+DOOR = {"at": [9.4, 0, -7.6], "h": 3.2, "k": "ep1/soul_door"}
 FOLLOW = {"dist": 6.5, "y": 1.75, "lead": 2.2, "lookY": 1.3, "ease": 1.6}
 _tx, _tz = PATH[1][0] - PATH[0][0], PATH[1][2] - PATH[0][2]; _n = math.hypot(_tx, _tz); _tx, _tz = _tx / _n, _tz / _n
 CAM = [round(PATH[0][0] - _tz * FOLLOW["dist"], 2), FOLLOW["y"], round(PATH[0][2] + _tx * FOLLOW["dist"], 2)]   # (where the walk-along starts: beside her, on the near side)
@@ -35,7 +37,8 @@ NE2 = {
     "shot": "escort",
     "cam": CAM, "look": LOOK,
     # (no covers, no girls on screen: the whole picture is the field - user 2026-10-22; tuning/shots.json escort)
-    "escort": {"who": WHO, "path": PATH, "speed": 0.48, "hp": 620, "h": 2.4, "loop": 0, "door": DOOR, "oneShot": True, "touch": 80, "share": 0.3, "gap": 7.0, "follow": FOLLOW,
+    "escort": {"who": WHO, "walk": "ep1/soul_walk", "pics": [f"ep1/soul_walk_{f}" for f in ("walk0", "walk1", "walk2", "walk3", "look", "flinch")],   # (pics: loaded with the stage, src/core/groups.js)
+               "path": PATH, "speed": 0.48, "hp": 620, "h": 2.4, "loop": 0, "door": DOOR, "oneShot": True, "touch": 80, "share": 0.3, "gap": 7.0, "follow": FOLLOW,
                "look": {"tint": "#2a0a3a", "tintAmt": 0.45, "outlineW": 2.2}, "name": L("孩子的灵魂", "THE CHILD'S SOUL", "子どもの魂")},
     "on": {"arrive": [
         {"at": 0, "cam": {"on": PATH[0], "dist": 3.2, "up": 0.2, "hold": 2.6, "orbit": 0.5, "dolly": 8, "title": L("孩子的灵魂", "THE CHILD'S SOUL", "子どもの魂")},
@@ -59,6 +62,10 @@ NE2 = {
 if __name__ == "__main__":
     sp = packs.data_file("sets", "ep1_nether"); D = packs.load(sp)
     D["ep1_nether"]["stations"]["ne2"] = NE2
+    # (user 2026-10-22: a hand lying by the door - a glove of the field's bits beside where her door stands: not there)
+    D["ep1_nether"]["props"] = [p for p in D["ep1_nether"].get("props", []) if p.get("k") != "ep1/nb_glove"]
+    # (the camera walking beside her looks out to the right at the end of her way: the field goes on past it, no bare edge of it in sight)
+    D["ep1_nether"]["hall"].update(x0=-34, x1=34, tilesX=12)
     packs.dump(sp, D)
     ep = packs.data_file("episodes", "ep1"); E = packs.load(ep)
     st = [s for s in E["ep1"]["steps"] if s.get("stage") != "soul"]
@@ -72,8 +79,9 @@ if __name__ == "__main__":
     # (after it the door opens into the lady's room - the soul went into the doorway of light, and the door of her studio opens: user
     # 2026-10-22, wanted back after it had been taken out)
     k = st.index(next(s for s in st if s.get("stage") == "soul"))
-    if not (k + 1 < len(st) and st[k + 1].get("door")):
-        st.insert(k + 1, {"door": {"frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left"}})
+    door = {"door": {"frame": "ep1/door10_frame", "leaf": "ep1/door10_leaf", "leaves": 1, "hinge": "left", "light": True}}
+    if k + 1 < len(st) and st[k + 1].get("door"): st[k + 1] = door
+    else: st.insert(k + 1, door)
     E["ep1"]["steps"] = st
     packs.dump(ep, E)
     print("ok", sp.relative_to(ROOT), ep.relative_to(ROOT))

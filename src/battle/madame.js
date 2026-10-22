@@ -15,12 +15,13 @@
 // given back to her one by one, the one she wants glowing (TheThing.grieve / offer / rest): Sweet Home's ending.
 import * as THREE from 'three';
 import { tex } from '../core/assets.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
 import { Ease } from '../core/tween.js';
-import { TheThing, Keepsake, glow } from './thing.js';
+import { TheThing, glow } from './thing.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
+import { Enemy } from './enemies.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 const rr = (v) => (Array.isArray(v) ? rnd(v[0], v[1]) : v);
@@ -167,14 +168,18 @@ export class Madame extends TheThing {
     }
   }
   // ---- (3) the coffin
-  makePit() {   // (round her: the children's ghosts circling, the little coffin she watches over; the hole itself opens under a girl: sink)
+  // (round her: the lost children's ghosts - the other children she took in for her own, R98 - and the little coffin she watches over; the
+  // hole itself opens under a girl: sink). User 2026-10-22: not her own child's picture again, and say what they are for: each of them
+  // keeps changing between an innocent little angel and a demon (ghosts.every); a demon is her guard - it goes round in front of her and
+  // takes the shots meant for her; shot (ghosts.hits) it turns back into an angel for a while (ghosts.calm). Angels let the shots through
+  makePit() {
     const g = this.game, P = this.root.position, root = new THREE.Group(); root.position.set(P.x, 0.02, P.z + 1.5);
-    root.userData.ghosts = [];
-    const k = tex['ep1/soul_child'];
-    for (let i = 0; i < 6 && k; i++) {
-      const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: k, transparent: true, opacity: 0.85, depthWrite: false, color: 0xe8f0ff }));
-      const h = 1.5 + (i % 3) * 0.2, ar = k.image.width / k.image.height; m.scale.set(h * ar, h, 1); root.add(m); root.userData.ghosts.push({ m, a: (i / 6) * Math.PI * 2, y: 0.8 + (i % 3) * 0.5 });
-    }
+    const GH = this.M.coffin.ghosts || {};
+    this.ghosts = [1, 2, 3].filter((i) => tex[`ep1/ghost${i}_angel`]).map((i, n) => {
+      const r = this.relic({ id: `ghost${i}`, k: `ep1/ghost${i}_angel`, w: GH.w ?? 1.25 }, (q, info) => this.ghostHit(q, info));
+      r.i = i; r.n = n; r.demon = false; r.flip = rr(GH.first ?? [1.5, 4]) + n * 1.2; r.live = () => r.alive && g.combat && !this.mutating && r.demon && !this.grief;
+      r.u.outlineOn.value = 0; return r;
+    });
     const ck = tex['ep1/coffin'];
     if (ck) { const cm = new THREE.Sprite(new THREE.SpriteMaterial({ map: ck, transparent: true, depthWrite: false })); const ch = 1.4; cm.scale.set(ch * ck.image.width / ck.image.height, ch, 1); cm.position.set(0, ch * 0.5, -1.2); root.add(cm); }
     g.world.scene.add(root); g.post.shake(0.8); sfx.creak?.();
@@ -183,8 +188,28 @@ export class Madame extends TheThing {
   pitTick(dt, t) {
     const r = this.pit; if (!r) return;
     const P = this.root.position; r.position.x += (P.x - r.position.x) * Math.min(1, dt * 1.5); r.position.z += (P.z + 1.5 - r.position.z) * Math.min(1, dt * 1.5);   // (under her wherever she goes)
-    for (const G of r.userData.ghosts) { G.a += dt * 0.45; G.m.position.set(Math.cos(G.a) * (this.M.coffin.pit + 0.4), G.y + Math.sin(t * 2 + G.a * 3) * 0.25, Math.sin(G.a) * (this.M.coffin.pit + 0.4) * 0.6); }
+    const GH = this.M.coffin.ghosts || {};
+    for (const q of this.ghosts || []) {
+      if (!q.alive) continue;
+      this.orbit(q, q.n / this.ghosts.length * Math.PI * 2, dt * (q.demon ? 1.6 : 0.8), t, GH.rad ?? 2.4, 0.45 + 0.15 * (q.n % 2));
+      q.flip -= dt;
+      if (q.flip <= 0 && !this.grief) this.ghostTurn(q, !q.demon);
+      if (q.demon) glow(q, t);
+    }
 
+  }
+  ghostTurn(q, demon, purified) {
+    const g = this.game, GH = this.M.coffin.ghosts || {}, c = q.center();
+    q.demon = demon; q.hits = GH.hits ?? 3; q.flip = rr(demon ? GH.demon ?? [6, 9] : purified ? GH.calm ?? [7, 10] : GH.angel ?? [4, 7]);
+    q.setFrame(`ep1/ghost${q.i}_${demon ? 'demon' : 'angel'}`); q.flash = 1;
+    q.inner.scale.set(1.25, 0.8, 1); g.tweens.to(q.inner.scale, { x: 1, y: 1 }, 0.4, { ease: Ease.outBack });
+    if (demon) { g.fx.ink(c, 14, 1.4, COL.violet); sound('dollScreech', { pos: c }) || sfx.madness(); if (!this.ghostTold) { this.ghostTold = true; g.hint('madameGhosts'); } }
+    else { g.fx.confetti(c, 18, 1.4, [COL.white, 0xffe8a0]); g.fx.star(c, 1.2, COL.white); if (purified) sfx.clear(); q.u.outlineOn.value = 0; }
+  }
+  ghostHit(q, info) {
+    const g = this.game; info.dealt = 0; q.flash = 1;
+    g.fx.star(q.uvToWorld(info.uv.u, info.uv.v), 0.6, COL.hot);
+    if (--q.hits <= 0) this.ghostTurn(q, false, true);   // (shot back into an angel: it lets the shots through to her again)
   }
   hang(side) {   // a chandelier over her (shot through its chain it comes down on her: Gimmick drop + crush)
     const g = this.game, P = this.root.position, M = this.M.coffin, H = g.world.set?.hall?.h ?? 6;
@@ -205,6 +230,7 @@ export class Madame extends TheThing {
     p.dragged = true;
     this.rip(arm.side, true);
     this.attackPose(0.6); sfx.roar(); g.hud.gl.stickers.say(p, 'scare');
+    if (!this.armTold) { this.armTold = true; g.hint('madameArm'); }   // (what to do, the first time: user 2026-10-22, the AI partner was gone before anyone knew)
     this.timer = M.time + A.reach_t + 1.5 + rr(this.def.rest);
   }
   armHit(r, info) {
@@ -319,8 +345,9 @@ export class Madame extends TheThing {
     this.release(true);
     g.playerAttacked({ kind: 'ram', dmg: M.dmg, from: this, slot: D.p.slot, heavy: true }); sfx.slam(); g.post.shake(1.2);
     // (the last of her goes under, the hole closes over her; later she climbs back out of the floor)
-    g.tweens.to(D.p, { y0: D.lift - (D.p.hero ? D.p.hero.standH() * 1.2 : g.H * 0.5) }, 0.35, { ease: Ease.inQuad, onDone: () => { D.p.state = 'away'; } });
-    g.tweens.wait(M.away, () => { if (D.p.state === 'away') { D.p.state = 'cover'; D.p.y0 = 0; } });
+    // (dragged under: down - the HUD counts her back like any knock-out - and up out of the floor again; user 2026-10-22: she was gone and
+    // back as if nothing had happened)
+    g.tweens.to(D.p, { y0: D.lift - (D.p.hero ? D.p.hero.standH() * 1.2 : g.H * 0.5) }, 0.35, { ease: Ease.inQuad, onDone: () => { if (D.p.state !== 'down') { D.p.state = 'down'; D.p.downT = M.away; } D.p.y0 = 0; } });
   }
 
   // the things circle her (a lazy ring in front of her, at their heights)
@@ -352,16 +379,16 @@ export class Madame extends TheThing {
     this.endCheck();
   }
   crushed(dmg, stun) { super.crushed(dmg, stun); if (this.stage === 2) this.openT = this.M.coffin.open; this.endCheck(); }
-  // her strength gone in her last form: the three things come out and hang in a row before her (TheThing.grieve, offer, rest)
+  // her strength gone in her last form: nothing more to do, only to watch (user 2026-10-22: the three things circling her to be shot back
+  // to her, the highlight not readable, floating into each other - "回忆杀直接看剧情不久好了，非得玩家点下什么呢"): she kneels, her
+  // memories play round her (the dream), then her rest, a scene of its own (rest)
   endCheck() {
     if (this.stage !== this.def.stages.length - 1 || this.grief || !this.alive || this.hp > 1) return;
-    const g = this.game, R = this.def.ritual, P = this.root.position;
     this.leaveForm();
-    this.keeps = R.items.map((k, i) => { const gm = new KeepRow(g, this, i, { id: `ritual${i}`, k, on: 'air', x: P.x, y: this.S.h * 0.5, z: P.z, w: R.w ?? 1.3, station: g.stationId }); g.actors.push(gm); return gm; });
     this.ritualNext = 0; this.stuck = 0; this.talkT = 0;
     this.grieve();
   }
-  keepTick(dt) { if (this.grief) super.keepTick(dt); }   // (no swinging things in the fight: only the row at the end)
+  keepTick() {}   // (no swinging things, no row at the end)
 
   // ---------------------------------------------------------------- between forms: repainted (not the prologue's tape and title)
   mutate(n) {
@@ -404,7 +431,23 @@ export class Madame extends TheThing {
   // While she kneels the studio dims and petals drift; picture frames float up behind and beside her (never before her face), each
   // a slide show of what happened (bosses.json madame.dream): the happy days; with the photo given back, the oven and its fire; with the
   // diary, the crying - and they rot, darken and flicker red, the room darker; with the little coffin they melt into light (rest)
-  grieve() { super.grieve(); this.dreamUp(); }
+  grieve() {
+    const g = this.game, P = this.root.position;
+    this.grief = true; this.seq++; this.endWindup(); this.markCore(false); this.armor = false; this.hp = 0;
+    g.clearProjectiles(); g.lull = true;   // (no more fight: the girls hold their fire)
+    for (const a of g.actors) if (a instanceof Enemy && a.alive) a.die('mantra', { uv: { u: 0.5, v: 0.5 } });
+    this.state = 'hurt'; this.play('hurt'); this.flash = 1;   // (on her knees, still - one picture, no shaking)
+    sfx.roar(); g.post.flash(0.5, 0xffffff); g.post.shake(1);
+    g.etw.kill(P); g.tweens.to(P, { y: -this.S.h * 0.15 }, 1.4, { ease: Ease.outQuad });
+    this.dreamUp();
+    // her memories, one after another, each with her words over it (the photo's, the diary's, the coffin's - her child's three things,
+    // seen on the way through the house); then her rest
+    const D = this.M.dream, steps = ['photo', 'diary', 'coffin'], each = D.each ?? 7;
+    this.closeUp('kneel', { lull: true, dist: this.S.h * 0.9, v: 0.45, min: 3.5 }, () => {
+      steps.forEach((kind, i) => g.tweens.wait(0.6 + i * each, () => { if (!this.alive) return; this.ritualNext = i; this.say(kind); }));
+      g.tweens.wait(0.6 + steps.length * each, () => { if (this.alive) this.rest(); });
+    });
+  }
   dreamUp() {
     const D = this.M.dream; if (!D || this.dream) return;
     const g = this.game, mk = (k) => { const t = tex[k]; return t ? new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({ map: t, transparent: true, opacity: 0, depthWrite: false, fog: false, side: THREE.DoubleSide })) : null; };
@@ -450,54 +493,25 @@ export class Madame extends TheThing {
     for (const F of R.frames) { const m = F.m; const go = () => { m.removeFromParent(); m.geometry.dispose(); m.material.dispose(); };
       if (now) go(); else this.game.tweens.run(1.4, (e) => { m.material.opacity *= 1 - e; m.position.y += 0.02; }, { onDone: go }); }
   }
-  // laid to rest - the rising of Sweet Home's ending: a column of light comes down on her, her child's soul floats down out of it to her
-  // side, she says her last words, and the two of them rise together into the light and are gone (then die, calm)
+  // laid to rest (user 2026-10-22: not the room and a beam of light, the child with her back to her mother - a scene of its own, keyframes
+  // Codex can paint): five painted shots dissolving one into the next (R98 comic/ep1s_rest1..5, Game.storyboard): the rot falling off her
+  // as she holds the photo, her face as it was, her child running to her open arms, the two of them holding each other (her last words),
+  // and the two of them coming apart into light and petals. Then she is gone (die, calm)
   rest() {
-    const g = this.game, P = this.root.position;
+    const g = this.game;
     this.seq++; this.resting = true;
-    if (this.dream) { this.dreamTick(0, 0); g.tweens.wait(1.6, () => this.dreamDown()); }
-    this.lightsOut(0.4); g.post.flash(0.5, 0xfff6e8); sfx.clear();   // (dim enough for the light to stand out)
-    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.9, 1.5, 18, 28, 1, true), new THREE.MeshBasicMaterial({ map: beamTex(), color: 0xfff0dc, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
-    beam.position.set(P.x, 9, P.z); beam.renderOrder = 4; g.world.scene.add(beam);
-    g.tweens.run(1.4, (e) => { beam.material.opacity = e * 0.9; });
-    const ck = tex['ep1/soul_child'];
-    // (a picture facing the camera - the place draws no sprites - at her side, in front of her: seen)
-    const ch = 1.6, child = ck ? new THREE.Mesh(new THREE.PlaneGeometry(ch * ck.image.width / ck.image.height, ch), new THREE.MeshBasicMaterial({ map: ck, transparent: true, opacity: 0, depthWrite: false, fog: false })) : null;
-    if (child) {
-      child.position.set(P.x + 2.3, 7, P.z + 1.4); child.renderOrder = 5; g.world.scene.add(child);
-      child.onBeforeRender = () => child.lookAt(g.world.camera.position);
-      g.tweens.run(2.6, (e) => { child.position.y = 7 - (7 - ch * 0.55) * (1 - (1 - e) * (1 - e)); child.material.opacity = Math.min(1, e * 2); }, { delay: 0.7 });
-    }
-    this.closeUp('rest', { lull: true, dist: this.S.h * 1.25, v: 0.5, up: 0.4, in: 1.0, out: 0.9, min: 10 });   // (she and her child, up close)
-    const lift = () => {
-      const y0 = P.y, c0 = child?.position.y ?? 0;
-      g.tweens.run(4.4, (e) => {
-        const k = e * e; P.y = y0 + k * 4.5;
-        if (child) { child.position.y = c0 + k * 4.5; child.position.x += (P.x + 1.2 - child.position.x) * 0.03; child.material.opacity = 1 - Math.max(0, (e - 0.7) / 0.3); }
-        this.u.tint.value.setRGB(1, 0.97, 0.9); this.u.tintAmt.value = e * 0.75;   // (going white in the light)
-        if (Math.random() < 0.5) { const q = this.uvToWorld(rnd(0.2, 0.8), rnd(0.1, 0.9)); g.fx.wAdd.emit({ x: q.x, y: q.y, z: q.z, vx: 0, vy: 1.4, vz: 0, life: 1.6, size: 0.09, size1: 0.01, color: [1, 0.95, 0.85], a: 1, a1: 0, frame: 1 }); }
-      }, { onDone: () => {
-        if (child) g.tweens.run(0.8, (e) => { child.material.opacity = 0; }, { onDone: () => { child.removeFromParent(); child.geometry.dispose(); child.material.dispose(); } });
-        g.tweens.run(2.4, (e) => { beam.material.opacity = 0.9 * (1 - e); }, { delay: 1.2, onDone: () => { beam.removeFromParent(); beam.geometry.dispose(); beam.material.dispose(); } });
-        if (this.alive) this.die(true);
-      } });
-    };
-    g.tweens.wait(5.2, lift);
+    if (this.dream) { this.dreamTick(0, 0); g.tweens.wait(1.2, () => this.dreamDown()); }
+    const line = g.hud.gl.stickers.D?.bosses?.madame?.rest?.lines?.[0], cap = line ? tr(line) : '';
+    const S = (n, o) => ({ k: `comic/ep1s_rest${n}`, ...o });
+    g.post.flash(0.5, 0xfff6e8); sfx.clear();
+    g.storyboard({ lead: 0.8, shots: [
+      S(1, { hold: 4.6, push: [1, 1.1], focus: [0.5, 0.45] }),
+      S(2, { hold: 4.2, push: [1.04, 1.16], focus: [0.5, 0.35], fade: 1.0 }),
+      S(3, { hold: 4.6, push: [1, 1.08], focus: [0.55, 0.5], fade: 1.0 }),
+      S(4, { hold: 6.0, push: [1.02, 1.12], focus: [0.5, 0.42], fade: 1.2, cap }),
+      S(5, { hold: 6.0, push: [1, 1.06], focus: [0.5, 0.4], fade: 1.4, motes: 70 }),
+    ] }, () => { if (this.alive) { this.root.visible = false; this.die(true); } });   // (back in the studio she is not there any more: only the light where she knelt)
+    g.tweens.wait(0.8 + 4.6 + 4.2 + 4.6 + 0.5, () => this.say('rest'));   // (her last words, heard over the two of them holding each other)
   }
 }
 const WHITE3 = new THREE.Color(1, 1, 1);
-let BEAM = null;
-function beamTex() {   // (the column of light: bright down its middle, fading at its edges and toward the floor)
-  if (BEAM) return BEAM;
-  const c = document.createElement('canvas'); c.width = 64; c.height = 256; const x = c.getContext('2d');
-  const gv = x.createLinearGradient(0, 0, 0, 256); gv.addColorStop(0, 'rgba(255,255,255,1)'); gv.addColorStop(0.7, 'rgba(255,250,235,0.7)'); gv.addColorStop(1, 'rgba(255,240,220,0)');
-  x.fillStyle = gv; x.fillRect(0, 0, 64, 256);
-  x.globalCompositeOperation = 'destination-in'; const gh = x.createLinearGradient(0, 0, 64, 0); gh.addColorStop(0, 'rgba(0,0,0,0.25)'); gh.addColorStop(0.5, 'rgba(0,0,0,1)'); gh.addColorStop(1, 'rgba(0,0,0,0.25)'); x.fillStyle = gh; x.fillRect(0, 0, 64, 256);
-  BEAM = new THREE.CanvasTexture(c); BEAM.colorSpace = THREE.SRGBColorSpace; return BEAM;
-}
-
-// her three things for the end, straight into their row before her (no swinging, no blows: the fight is over; unseen until her close look
-// is over: TheThing.grieve)
-class KeepRow extends Keepsake {
-  constructor(game, boss, i, g) { super(game, boss, i, g); this.still(); }
-}

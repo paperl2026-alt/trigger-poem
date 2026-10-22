@@ -40,10 +40,13 @@ def madame(B):
     B["coreSmoke"] = {"colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28}   # (honey and rose)
     for s, at in zip(B["stages"], (1, 0.865, 0.433)): s["at"] = at
     B["madame"] = {
-        "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，上一页的真相读完它才亮；打她本人只溅火花），pageHp 一页要打掉多少血才撕碎，chunk 每撕碎一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去多久才爬回来、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话。assets：这些用到、要随小关载入的图。",
+        "_doc": "腐蜜夫人三个形态（docs/DESIGN.md 第 1 话 10，src/battle/madame.js）。photo：dark 画室暗到多少、reveal 照片闪一下她现形几秒、recharge 照片多久能再闪、fuse 照片自己蓄力闪光的间隔、warn 最后几秒出快打环、blind 致盲几秒、dmg；diary：pages 纸页（日期、那页的真相；按日期下一页发金光、只有它打得中，上一页的真相读完它才亮；打她本人只溅火花），pageHp 一页要打掉多少血才撕碎，chunk 每撕碎一页扣她最大血量的比例、stun 僵住几秒；coffin：pit 坑的半径、hits 鬼手掌心的眼睛要打几下、time 拖下去要几秒、dmg 掉进坑的伤害、away 掉下去倒地几秒（HUD 倒计时）、ghosts 坑边迷途孩子的幽灵（天使 / 恶魔轮流变，恶魔挡在她身前替她挨打，打几下变回天使）、hangX 吊灯离她多远、crushR 砸到的范围、crush 砸中扣最大血量的比例、stun、open 砸中后她露出来几秒、openMul 那几秒的伤害倍数；repaint：换形态的时间和她一字一拍喊的话；dream：她跪下后的回忆（each 每段几秒，三段后就是她的安息，分镜画 comic/ep1s_rest1～5）。assets：这些用到、要随小关载入的图。",
         "photo": {"dark": 0.78, "reveal": 4.0, "recharge": 3.0, "fuse": [9, 13], "warn": 3.0, "blind": 2.4, "dmg": 10},
         "diary": {"pages": [{"date": d, "text": {"zh": z, "en": e, "ja": j}} for d, z, e, j in PAGES], "chunk": 0.072, "stun": 1.2, "pageHp": 700},
-        "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 6, "time": 4.0, "dmg": 18, "away": 6, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0},
+        "coffin": {"hands": "ep1/hands_crowd", "arm": {"reach": "ep1/arm_reach", "grip": "ep1/arm_grip", "reach_t": 0.7, "lift": 0.02, "dist": 2.6, "over": 1.3, "eye_reach": [0.745, 0.5, 0.1], "eye_grip": [0.855, 0.643, 0.075]}, "pit": 4.2, "hits": 4, "time": 6.0, "dmg": 30, "away": 7, "hangX": 1.6, "crushR": 3.4, "crush": 0.07, "stun": 3.0, "open": 4.0, "openMul": 2.0,
+                   # (the lost children's ghosts round her, R98: each turns angel / demon by turns - demon (her guard, takes the shots meant
+                   # for her) for demon s, angel for angel s, calm s after being shot back; hits to shoot one back; w size, rad how wide)
+                   "ghosts": {"w": 2.0, "rad": 3.0, "hits": 3, "first": [1.5, 4], "demon": [6, 9], "angel": [4, 7], "calm": [7, 10]}},
         "repaint": {"time": 3.6, "word": {"zh": "孩子还给我", "en": "GIVE HER BACK", "ja": "こどもをかえせ"}},
         # dream: her end, dreamed (madame.js dreamUp): the memories in the frames floating round her, one set a step (the happy days; the
         # oven and its fire; the crying, rotting) - the room's darkness and the frames' colour each step; every: seconds a picture is up;
@@ -51,9 +54,11 @@ def madame(B):
         "dream": {"sets": [["ep1/fresco1", "ep1/crayon1", "ep1/portrait1", "ep1/crayon2", "ep1/fresco3"],
                            ["ep1/crayon2", "ep1/crayon3", "ep1/crayon3", "ep1/fresco1_x", "ep1/crayon2_x"],
                            ["ep1/crayon4", "ep1/crayon4_x", "ep1/crayon3_x", "ep1/fresco1_x", "ep1/portrait1_x", "ep1/crayon1_x"]],
-                  "dark": [0.3, 0.42, 0.55], "tint": ["#ffffff", "#ffc890", "#ff8a92"], "every": [1.6, 2.6],
+                  "dark": [0.3, 0.42, 0.55], "tint": ["#ffffff", "#ffc890", "#ff8a92"], "every": [1.6, 2.6], "each": 7,
                   "frames": [[-4.6, 3.6, 0.6, 1.9], [-2.9, 5.2, 1.4, 1.6], [3.0, 5.3, 1.2, 1.7], [4.7, 3.4, 0.5, 1.9], [-5.6, 1.8, -0.6, 1.4], [5.7, 2.0, -0.4, 1.4]]},
-        "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "ep1/soul_child", "enemy/chandelier_disguise",
+        "assets": ["ep1/arm_reach", "ep1/arm_grip", "ep1/hands_crowd", "enemy/chandelier_disguise",
+                   "ep1/ghost1_angel", "ep1/ghost1_demon", "ep1/ghost2_angel", "ep1/ghost2_demon", "ep1/ghost3_angel", "ep1/ghost3_demon",
+                   "comic/ep1s_rest1", "comic/ep1s_rest2", "comic/ep1s_rest3", "comic/ep1s_rest4", "comic/ep1s_rest5",
                    "ep1/fresco1", "ep1/fresco1_x", "ep1/fresco3", "ep1/portrait1", "ep1/portrait1_x", "ep1/crayon1", "ep1/crayon1_x", "ep1/crayon2",
                    "ep1/crayon2_x", "ep1/crayon3", "ep1/crayon3_x", "ep1/crayon4", "ep1/crayon4_x", "ep1/photo", "ep1/diary", "ep1/coffin"],
     }
@@ -411,6 +416,12 @@ def places(D):
                 for e in w:   # (a monster that comes to hit them walks straight in from far off - not the sideways zigzag rolls)
                     if e.get("move") == "zigzag": e["move"] = "walk"
     cold_vent(D["ep1_cold"]); nursery_dolls(D["ep1_nursery"])
+    # (user 2026-10-22: in the studio 1P stood so far out that she covered her own HUD - both girls nearer the middle there: its fights
+    # are one big thing in the middle at a time, the shadows and the lady; tuning/shots.json players.x is 0.2 / 0.8)
+    for stn, st in D["ep1_studio"]["stations"].items():
+        if st.get("shot") == "cine": continue
+        sh = st.get("shot") if isinstance(st.get("shot"), dict) else {"kind": "cover"}
+        sh["players"] = {**sh.get("players", {}), "x": [0.28, 0.72]}; st["shot"] = sh
     # (user 2026-10-22: not walking up to the oven and crawling in - its door bursts open and pulls them in, no girls on screen, then the
     # comic of the fall: src/battle/suck.js) the oven's iron door on each picture of the end wall: [left, top, right, bottom], 0..1
     D["ep1_oven"]["stations"]["ov2"]["exit"] = {"suck": {"door": {"ep1/oven_end1": [0.378, 0.36, 0.615, 0.635], "ep1/oven_end2": [0.375, 0.345, 0.605, 0.62]}}}

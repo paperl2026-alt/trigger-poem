@@ -11,3 +11,11 @@
 #hud .sb-bar.bot { bottom: 0; display: flex; align-items: center; justify-content: center; }
 #hud .sb-cap { color: #f3f1ee; font-size: calc(3 * var(--u)); letter-spacing: 0.3em; font-weight: 700; opacity: 0; }
 #hud .sb-cap.on { opacity: 1; }
+/* a shot that dissolves in over the one before (fade), and motes of light and petals rising off it (motes): the lady's rest */
+#hud .sb-shot img.fade { opacity: 0; animation: sbPush var(--dur) linear forwards, sbFade var(--fade, 1s) ease-in-out forwards; }
+@keyframes sbFade { to { opacity: 1; } }
+#hud .sb-mote { position: absolute; width: calc(0.9 * var(--u)); height: calc(0.9 * var(--u)); border-radius: 50%; opacity: 0;
+  background: radial-gradient(circle, #fffbe8 0%, #ffd890 45%, rgba(255, 200, 120, 0) 70%); animation: sbMote 4s ease-out forwards; }
+#hud .sb-mote.petal { width: calc(1.3 * var(--u)); height: calc(0.8 * var(--u)); border-radius: 60% 0; background: #ffb6c8; }
+@keyframes sbMote { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(0.6); } 15% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(260deg) scale(1.2); } }
