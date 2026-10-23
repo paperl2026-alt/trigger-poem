@@ -3,7 +3,7 @@ import pathlib, sys, re, importlib.util
 
 # a picture of several things that tools cut apart afterwards (a sheet / a grid of items): they must stand well apart (user 2026-10-19:
 # cut-outs caught pieces of their neighbours, or lost their own parts at the cell lines). Added to every such prompt
-SHEET = re.compile(r"\b(\d+\s*x\s*\d+|grid|sheet|separate (small )?(objects|items|things|poses))\b", re.I)
+SHEET = re.compile(r"\b(\d+\s*x\s*\d+|in a grid|grid of|a sheet of|this sheet|separate (small )?(objects|items|things|poses))\b", re.I)
 GAP = (" SPACING (required): every item stays whole and well INSIDE its own cell, with wide empty gaps of plain background between "
        "items (at least a fifth of a cell) and along the picture's edges; no item may touch, overlap or reach into a neighbour's cell, "
        "no part of any item may be cut off by the picture's edge.")
