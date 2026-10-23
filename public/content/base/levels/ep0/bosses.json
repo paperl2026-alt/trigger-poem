@@ -3,7 +3,7 @@
   "qq": {
     "beh": "thing",
     "name": { "zh": "？？？", "en": "???", "ja": "？？？" },
-    "hp": 7440,
+    "hp": 22320,
     "stunTime": 1.6,
     "firstDelay": 1.6,
     "speed": 1.6,
@@ -93,7 +93,7 @@
     "zigzag": { "windup": 0.9, "legs": 5, "lateral": 2.8, "time": 3.4, "stop": 2.0, "poise": 110, "dmg": 26 },
     "charge": { "time": 5.5, "shifts": 0, "poise": 150, "dmg": 34 },
     "summonMax": 6,
-    "heal": { "stage": 3, "type": "drip", "n": 2, "max": 3, "rate": 14 },
+    "heal": { "stage": 3, "type": "drip", "n": 2, "max": 3, "rate": 42 },
     "drift": "slide",
     "slide": { "legs": 4, "lateral": 2.0, "time": 0.9, "pause": 1.0, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26 },
     "coreTrail": { "colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 48, "idle": 26 },

@@ -299,12 +299,12 @@ def yard(S, B):
     # (how long each form lasts: about 40 to 70 s each - its share of the health, the whole a little under 6000)
     # (measured on the auto-player: about 15, 19, 17, 7.5 and 15.6 damage a second in each form -> 45, 45, 50, 55 and 60 s)
     # (user 2026-10-20: "too short - at least double each form": twice that, the same shares -> about 90 to 120 s a form)
-    B["hp"] = 7440
+    B["hp"] = 22320   # (user 2026-10-23: every form went down at once, nothing to see - three times; this boss only, nothing else)
     # (the slide form thicker: a team short of damage takes a hit or two there and needs its skills - user 2026-10-21)
     for s, at in zip(B["stages"], (1, 0.83, 0.62, 0.33, 0.22)): s["at"] = at
     # (4) healers (user 2026-10-20): they feed her back; healed past where this form began, she returns to the third
     S4["pattern"] = ["heal", "volley", "drift", "lunge", "heal", "volley"]
-    B["heal"] = {"stage": 3, "type": HEALER, "n": 2, "max": 3, "rate": 14}
+    B["heal"] = {"stage": 3, "type": HEALER, "n": 2, "max": 3, "rate": 42}   # (healing in step with her HP: x3 with it)
     S4["summon"] = [{"type": "chair", "from": "burrow", "x": -4, "z": -3}, {"type": "desk", "from": "burrow", "x": 4, "z": -4},
                     {"type": "book", "from": "outside", "x": -6, "y": 3.0, "z": -5}, {"type": "paper", "from": "outside", "x": 6, "y": 2.6, "z": -4},
                     {"type": "shoe", "from": "burrow", "x": 0, "z": -6}]

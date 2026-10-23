@@ -10,7 +10,7 @@
 //   guard  (keep it safe)     a graphene shell (the dual of a geodesic sphere: hexagons and twelve pentagons) round what the girls guard;
 //                             where it is hit the shell flares
 // and a boss's own (user 2026-10-21: the bosses had kept the flat rings and winged hearts - "we are a 3D game; there are many ways to
-// combine polyhedra, why not one for the boss"), driven by the boss itself (thing.js, worm.js; boss.js and the stalker of chase.js through
+// combine polyhedra, why not one for the boss"), driven by the boss itself (thing.js; boss.js and the stalker of chase.js through
 // fx.js):
 //   bossHide  the compound of three octahedra (a star of 24 edges) round her upper body, a small octahedron turning the other way inside
 //             it, and a cone from her to EACH girl the blow goes for, rings racing down them

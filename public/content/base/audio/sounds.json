@@ -1555,11 +1555,11 @@
     "ep0_stage": {
       "files": ["bgm/ep0_stage.ogg"],
       "loopStart": 10.4348,
-      "loopEnd": 114.7826,
+      "loopEnd": 114.7726,
       "src": "ace",
-      "from": "ep0_stage_k0.75_3567008072",
-      "vol": 1.08,
-      "lufs": -12.7,
+      "from": "ep0_stage_k0.98_925263862",
+      "vol": 0.98,
+      "lufs": -11.8,
       "bpm": 92,
       "key": "A minor"
     },

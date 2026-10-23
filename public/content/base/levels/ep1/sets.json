@@ -1700,11 +1700,6 @@
       { "k": "ep1/nb_ribbon", "h": 1.0, "x": -6, "z": -40 }
     ],
     "stations": {
-      "ne1": {
-        "cam": [-5.5, 1.25, 5],
-        "look": [4, 2.2, -22],
-        "covers": [{ "k": "cover/ep1_hall1", "side": -1 }, { "k": "cover/ep1_hall2", "side": 1 }]
-      },
       "ne2": {
         "shot": "escort",
         "cam": [-8.52, 1.75, 4.19],

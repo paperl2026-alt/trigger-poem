@@ -10,7 +10,6 @@ import { Actor } from './enemies.js';
 import { COL } from './fx.js';
 import { TheThing } from './thing.js';
 import { Madame } from './madame.js';
-import { WormBoss } from './worm.js';
 
 // Numbers per boss: content bosses.json (pairs written [a, b] are [phase 1, phase 2]).
 const rnd = (a, b) => a + Math.random() * (b - a);
@@ -244,4 +243,4 @@ export class MascotFloat extends BossBase {
 }
 
 // boss behaviours by name (bosses.json "beh"); a new boss type in a pack can reuse one of these with its own numbers and art
-export const BOSSES = { float: MascotFloat, thing: TheThing, worm: WormBoss, madame: Madame };
+export const BOSSES = { float: MascotFloat, thing: TheThing, madame: Madame };

@@ -1,9 +1,4 @@
 {
- "boss/maggot_cu": {
-  "h": 1000,
-  "src": "assets/boss/maggot_cu.webp",
-  "w": 661
- },
  "boss/md_s1_attack": {
   "anchor": "bottom",
   "figH": 0.9578,

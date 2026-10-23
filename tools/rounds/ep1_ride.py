@@ -1,8 +1,8 @@
-"""Episode 1's high-speed stretch and the honey maggot's arena (user 2026-10-20: not every stop the same corridor camera; DESIGN
-「停留点不只是一个镜头、一种打法」): after the honey tunnel, a mine cart down a long honey mine (ep1_mine, station mn1: src/battle/ride.js),
-bursting out into the netherworld - wide open, melting ice-cream ground, floating islands - where the honey maggot breaks up out of the
-earth (ep1_nether, station ne1: src/battle/worm.js; the old netherworld set of commit b8ca8fb, the camera off to one side looking across).
-Writes sets/ep1.json (the two sets) and the two steps in episodes.json after the tunnel stage. Idempotent.
+"""Episode 1's netherworld (ep1_nether): wide open, melting ice-cream ground, floating islands all round (the old netherworld set of
+commit b8ca8fb); the child's soul is taken home across it (station ne2: tools/rounds/ep1_soul.py). Once there was a mine cart down a honey
+mine before it (ep1_mine: user 2026-10-22, ugly, a vehicle out of nowhere) and the honey maggot boss in it (user 2026-10-23: it did not
+belong - not the original's, out of keeping with the rest): both gone; MINE stays here only as it was.
+Writes the set (keeping its stations) and takes those two steps out of episodes.json. Idempotent.
 usage: python -I tools/rounds/ep1_ride.py"""
 import json, pathlib, subprocess, sys
 
@@ -61,20 +61,17 @@ NETHER = {"panels": True, "seed": 61, "fogNear": 10, "fogFar": 60, "fogDensity":
           "props": [{"k": "ep1/nb_cone", "h": 1.4, "x": -9, "z": -12}, {"k": "ep1/nb_frame", "h": 1.8, "x": 9, "z": -18}, {"k": "ep1/nb_cup", "h": 1.0, "x": -4, "z": -26},
                     {"k": "ep1/nb_spoon", "h": 2.0, "x": 6, "z": -30}, {"k": "ep1/nb_scoop", "h": 1.2, "x": -11, "z": -32},
                     {"k": "ep1/nb_cherry", "h": 0.9, "x": 2, "z": -38}, {"k": "ep1/nb_ribbon", "h": 1.0, "x": -6, "z": -40}],
-          "stations": {"ne1": {"cam": [-5.5, 1.25, 5], "look": [4, 2.2, -22], "covers": [{"k": "cover/ep1_hall1", "side": -1}, {"k": "cover/ep1_hall2", "side": 1}]}}}
+          "stations": {}}
 
 if __name__ == "__main__":
     sp = packs.data_file("sets", "ep1_pit"); raw = sp.read_bytes(); crlf = b"\r\n" in raw; D = json.loads(raw.decode("utf-8"))
     # (the mine cart ride is gone - user 2026-10-22: ugly, unneeded, the views swapping back and forth odd, a vehicle out of nowhere:
     # from the tunnel straight to the netherworld; MINE stays here only as it was)
-    D.pop("ep1_mine", None); D["ep1_nether"] = NETHER
+    D.pop("ep1_mine", None); D["ep1_nether"] = {**NETHER, "stations": D.get("ep1_nether", {}).get("stations", {})}
     D["ep1_pit"]["stations"].pop("pt4", None)
     t = json.dumps(D, ensure_ascii=False, indent=2) + "\n"; sp.write_bytes((t.replace("\n", "\r\n") if crlf else t).encode("utf-8"))
     ep = packs.data_file("episodes", "ep1"); raw = ep.read_bytes(); crlf2 = b"\r\n" in raw; E = json.loads(raw.decode("utf-8"))
-    st = [s for s in E["ep1"]["steps"] if s.get("stage") != "mine" and s.get("boss") != "maggot"]
-    i = [k for k, s in enumerate(st) if s.get("stage") == "tunnel"][0]
-    st[i + 1:i + 1] = [{"boss": "maggot", "set": "ep1_nether", "station": "ne1", "thumb": "ui/sel_thumb_ep1_pit"}]
-    E["ep1"]["steps"] = st
+    E["ep1"]["steps"] = [s for s in E["ep1"]["steps"] if s.get("stage") != "mine" and s.get("boss") != "maggot"]
     t = json.dumps(E, ensure_ascii=False, indent=2) + "\n"; ep.write_bytes((t.replace("\n", "\r\n") if crlf2 else t).encode("utf-8"))
     for p in (sp, ep): subprocess.run([sys.executable, "-I", str(ROOT / "tools" / "fmt_json.py"), str(p)], check=True, stdin=subprocess.DEVNULL)
     print("ok", len(MARKS), "marks", len(path()), "path points")

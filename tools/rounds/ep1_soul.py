@@ -1,9 +1,9 @@
 """Episode 1's escort (DESIGN「停留点不只是一个镜头、一种打法」 狙击护卫, user 2026-10-20: the girls far off, sniping; something out there
-to keep safe and the monsters going for it; what hits it hurts the girls too): the honey maggot had the mistress's lost child inside it -
-its core was her soul. When it falls the soul comes out and walks home across the netherworld toward the way to the studio (where the
-mother waits), and everything that crawls out of the honey goes for it. The girls are up on a floating island's edge, sniping
+to keep safe and the monsters going for it; what hits it hurts the girls too): through the door at the honey tunnel's end, the
+netherworld under the house, and in it the mistress's lost child's soul: she walks home across it toward the way to the studio (where the
+mother waits), and everything that crawls out of the honey goes for her. The girls are up on a floating island's edge, sniping
 (tuning/shots.json escort: the scope's narrow view, only their shoulders and guns).
-A new stage after the maggot: set ep1_nether, station ne2 (escort, its waves coming in along the soul's way, a close look at it first).
+A stage after the honey tunnel's door: set ep1_nether, station ne2 (escort, its waves coming in along the soul's way, a close look at it first).
 Writes into episode 1's level pack (tools/packs.py: wherever ep1_nether and episode 1 are). Idempotent.
 usage: python -I tools/rounds/ep1_soul.py"""
 import json, math, pathlib, subprocess, sys
@@ -68,14 +68,14 @@ if __name__ == "__main__":
     D["ep1_nether"]["hall"].update(x0=-34, x1=34, tilesX=12)
     packs.dump(sp, D)
     ep = packs.data_file("episodes", "ep1"); E = packs.load(ep)
-    st = [s for s in E["ep1"]["steps"] if s.get("stage") != "soul"]
-    i = [k for k, s in enumerate(st) if s.get("boss") == "maggot"][0]
-    # (user 2026-10-22: no door opening before the maggot - the girls walk up to the door at the honey tunnel's end, hall.door door9, and
-    # it opens onto the netherworld)
-    if not st[i - 1].get("door"):
-        st.insert(i, {"door": {"frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left"}}); i += 1
+    st = [s for s in E["ep1"]["steps"] if s.get("stage") != "soul" and s.get("boss") != "maggot"]   # (the maggot: gone, user 2026-10-23)
+    i = [k for k, s in enumerate(st) if s.get("stage") == "tunnel"][0]
+    # (user 2026-10-22: the girls walk up to the door at the honey tunnel's end, hall.door door9, and it opens onto the netherworld)
+    if not st[i + 1].get("door"):
+        st.insert(i + 1, {"door": {"frame": "ep1/door9_frame", "leaf": "ep1/door9_leaf", "leaves": 2, "hinge": "left"}})
+    i += 1
     st.insert(i + 1, {"stage": "soul", "set": "ep1_nether", "stations": ["ne2"], "name": L("灵魂的归途", "THE SOUL GOES HOME", "魂の帰り道"),
-                      "thumb": st[i].get("thumb") or "ui/sel_thumb_ep1_pit"})
+                      "thumb": "ui/sel_thumb_ep1_pit"})
     # (after it the door opens into the lady's room - the soul went into the doorway of light, and the door of her studio opens: user
     # 2026-10-22, wanted back after it had been taken out)
     k = st.index(next(s for s in st if s.get("stage") == "soul"))

@@ -201,7 +201,7 @@ export class Game {
     if (st.stage) {
       // (a new stage: she who chased them through the last one is gone - each stage brings her back itself: src/battle/chase.js)
       if (this.chase.she || this.chase.mode) { this.chase.mode = null; this.chase.gone(); }
-      this.boss = null;   // (a stage after a boss in the same place - the netherworld's soul after the maggot: no new place clears it, and while it is set the waves are never checked)
+      this.boss = null;   // (a stage after a boss in the same place: no new place clears it, and while it is set the waves are never checked)
       // a stage through several places (episode 2): which place each stop is in (the step's "places": [set ids]; a stop's id is looked up in them)
       this.setOfStation = null;
       if (st.places) { this.setOfStation = {}; for (const s of st.places) for (const k of Object.keys(C.sets[s]?.stations || {})) this.setOfStation[k] = s; }
@@ -1081,7 +1081,7 @@ export class Game {
   assist(sx, sy, radius) {
     let best = null, bd = radius;
     for (const a of this.actors) {
-      if (!a.alive || !a.mesh || !a.hitMeshes().length) continue;   // (a body of real 3D parts - the honey maggot's sacs - is aimed at for real)
+      if (!a.alive || !a.mesh || !a.hitMeshes().length) continue;
       const uv = this.boxUV(a, sx, sy);
       if (!uv || uv.d > bd) continue;
       best = { a, uv }; bd = uv.d;
@@ -1161,13 +1161,11 @@ export class Game {
   beamHit(p, sx, sy, R, dmg) {
     let n = 0;
     for (const a of [...this.actors]) {
-      if (!a.alive || !a.hitMeshes().length) continue;
-      // (a body of real 3D parts - the honey maggot: the part of it nearest the beam, if within reach)
-      const part = a.mesh ? null : a.partAt?.(sx, sy, R);
-      const uv = a.mesh ? this.boxUV(a, sx, sy) : part ? { u: 0.5, v: 0.5, d: 0 } : null;
+      if (!a.alive || !a.mesh || !a.hitMeshes().length) continue;
+      const uv = this.boxUV(a, sx, sy);
       if (!uv || uv.d > R) continue;
       const c = Math.random() < this.critRate(p);
-      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? this.critMul(p) : 1), uv, part, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
+      a.hit({ kind: 'beam', dmg: dmg * p.fever.dmgMul * (c ? this.critMul(p) : 1), uv, by: p, crit: c, stagger: T.combat.beam.stagger, stun: T.combat.beam.stun });
       n++;
     }
     return n;

@@ -107,17 +107,25 @@ TRACKS = {
            melody=[("G5", 4), ("Ab5", 4), ("G5", 4), ("F5", 4), ("Db5", 4), ("C5", 4), ("Db5", 4), ("C5", 4)]),
     ]),
   "ep0_stage": dict(bpm=92, key="A minor", loop=True,
-    caption="melancholic dark ambient game music, dreamy and decadent, warm layered synth pads and strings, a lonely electric piano melody, "
-            "a soft pulsing bass, light gentle percussion, slow build, eerie but beautiful, warm and mid-heavy, instrumental",
+    # (user 2026-10-23: the cover had a "dwang, dwang" like an alarm - a booming 55 Hz hit on every beat for a minute, where there is no
+    # alarm. Not in the guide: the cover's own, asked for by "a soft pulsing bass", "light gentle percussion", "slow build" - and a first
+    # remake with a held bass and "no pounding pulse..." in the caption still had it in all four takes, and a second, beatless (no drums in
+    # the guide, "no drums, no kick drum" in the caption), too: a 55 Hz kick on every beat from 48 s on - naming the drums seems to ask for
+    # them. Now the caption only says what is there, nothing of drums or beats, and the covers keep closer to the guide (k 0.95 / 0.98);
+    # still, in twelve takes, it came where the third section's string arpeggio (the one part going on the beat) began: that is gone too.
+    # A take that still booms is not used - it is made again, never patched afterwards)
+    caption="melancholic dark ambient soundscape, beatless and free-flowing, dreamy and decadent, warm layered synth pads and slow strings, "
+            "a lonely electric piano melody, a soft warm bass holding long notes, floating like a dream, eerie but beautiful, smooth and even "
+            "throughout, warm and mid-heavy, instrumental",
     sections=[
       dict(bars=4, chords=["Am", "F"], pad="strings", lead="epiano",
            melody=[("E5", 2), ("C5", 2), ("A4", 4), ("G4", 2), ("A4", 2), ("E4", 4)]),
-      dict(bars=16, chords=["Am", "F", "C", "G", "Am", "F", "Dm", "E"], drums="soft", bass="whole", pad="strings", lead="epiano",
+      dict(bars=16, chords=["Am", "F", "C", "G", "Am", "F", "Dm", "E"], bass="whole", pad="strings", lead="epiano",
            melody=[("A4", 2), ("C5", 1), ("E5", 1), ("D5", 2), ("C5", 2), ("B4", 3), ("A4", 1), ("G4", 4),
                    ("A4", 2), ("C5", 1), ("E5", 1), ("F5", 2), ("E5", 2), ("D5", 4), ("C5", 2), ("B4", 2),
                    ("C5", 2), ("B4", 1), ("A4", 1), ("G4", 2), ("A4", 2), ("F4", 4), ("E4", 4),
                    ("D4", 2), ("E4", 1), ("F4", 1), ("A4", 2), ("G#4", 2), ("A4", 8)]),
-      dict(bars=16, chords=["F", "G", "Em", "Am", "F", "G", "E", "E"], drums="soft", bass="quarter", pad="choir", arp="strings", lead="strings",
+      dict(bars=16, chords=["F", "G", "Em", "Am", "F", "G", "E", "E"], bass="whole", pad="choir", lead="strings",
            melody=[("A5", 3), ("G5", 1), ("F5", 2), ("E5", 2), ("D5", 2), ("E5", 2), ("C5", 4),
                    ("B4", 2), ("C5", 2), ("D5", 2), ("E5", 2), ("B4", 8),
                    ("A5", 3), ("G5", 1), ("F5", 2), ("E5", 2), ("D5", 2), ("C5", 2), ("B4", 4),

@@ -179,39 +179,5 @@
     },
     "weave": { "legs": 2, "lateral": 2.0, "leg": 0.45, "pause": 0.3, "near": 5.0, "topY": 0.06, "windup": 1.6, "dmg": 12, "back": 1.2 },
     "coreSmoke": { "colors": ["#ffb347", "#ff7aa8", "#ffd27a", "#c88bff"], "blood": ["#b8520a", "#ff8a3a", "#7a2a08"], "every": [0.8, 1.4], "n": 6, "a": 0.28 }
-  },
-  "maggot": {
-    "beh": "worm",
-    "name": { "zh": "蜜蛆", "en": "Honey Maggot", "ja": "蜜蛆" },
-    "worm": {
-      "segments": 18,
-      "radius": 1.35,
-      "spacing": 1.7,
-      "speed": 5.5,
-      "angry": 1.45,
-      "sacHp": 660,
-      "headHp": 3000,
-      "coreMul": 1.0,
-      "attackEvery": [3.2, 5.5],
-      "rear": 3.3,
-      "biteDmg": 22,
-      "spits": 2,
-      "glob": "ooze",
-      "_doc": "2026-10-22 用户：找不到弱点、打了不掉血、贴脸攻击、飞行道具应付不了、动作鬼畜 → 总在 11 米外；钻出来前地面先震（rumble 秒）；横穿（一道弧线跨过画面）和探头（竖起来 riseH 米、摇晃、吐 spits 团又大又慢的蜂蜜 globSize / globTime，或憋 rear 秒喷一大口 sprayDmg，躲）交替；蜜囊放大（sacSize × 节半径）、永远在朝镜头那侧；探头时嘴吃 mouthMul 倍；打身体也进 fleshMul。2026-10-22 用户：血量至少 3 倍（不像 Boss，很快打没）→ sacHp、headHp 都 ×3。",
-      "sacSize": 0.46,
-      "globSize": 0.8,
-      "globTime": 2.1,
-      "sprayDmg": 24,
-      "mouthMul": 1.5,
-      "fleshMul": 0.3,
-      "riseH": 4.4,
-      "rumble": 0.9
-    },
-    "closeup": {
-      "k": "boss/maggot_cu",
-      "hint": "maggotWeak",
-      "color": "#5a3410",
-      "sub": { "zh": "冥界里钻来钻去的那条", "en": "the one boring through the netherworld", "ja": "冥界を這い回るあれ" }
-    }
   }
 }
