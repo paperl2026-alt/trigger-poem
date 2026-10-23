@@ -18,19 +18,33 @@ HEAD = """You are an image-production worker for a game project. Your only job i
 - At the end, reply with one line per saved file: path, pixel width x height.
 """
 
+# A spec with MODE = "brief" (user 2026-10-23: GPT is an LLM, not a diffusion model - tell it the purpose, the method and the requirements
+# as you would tell an LLM; let it understand the references and draw something of its own, not pass a prompt on word for word): each step
+# is a brief; Codex writes its own prompts, looks at what it got and draws again until it is right.
+HEAD_BRIEF = """You are the lead artist making finished assets for a game: a light-gun rail shooter with two anime heroines who fight monsters on screen. Each TASK below is a brief: what the asset is, how the game uses it, its design and its requirements. Work like a careful professional artist:
+1. Read the brief and look closely at every reference image. Each brief says what to take from each reference - take only that. Never copy a reference's character, costume, face or composition unless the brief says so: what you draw is its own new design.
+2. Plan the picture and write your own detailed prompt for your image generation tool that achieves the brief (design, poses, layout, colours, line and finish). Pass reference images to the tool as referenced_image_paths where they help.
+3. Generate, then inspect the result yourself, carefully and at full size: anatomy (count heads, arms, hands, fingers, legs, eyes), anything twisted, melted, broken or lopsided, details that make no sense, the same character drawn differently from one pose to the next, missing or extra poses, anything cut off by the edges, the background, and every requirement in the brief. If anything is wrong, generate again with a corrected prompt. Up to 6 attempts per task; keep the best one that meets every requirement.
+4. Save the final PNG to the task's OUTPUT path (relative to the current working directory); keep the alpha channel when the background is transparent. Do not write code and do not create or edit any other files.
+5. At the end reply with one line per task: path, pixel width x height, attempts used, and anything you could not get right.
+"""
+
+
 def build(specs_path, only=None):
     spec = importlib.util.spec_from_file_location("specs", specs_path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    brief = getattr(mod, "MODE", "") == "brief"
     for name, steps in mod.JOBS.items():
         if only and name not in only:
             continue
-        out = [HEAD]
+        out = [HEAD_BRIEF if brief else HEAD]
         for i, st in enumerate(steps, 1):
             o, refs, p = st[0], st[1], st[2]
             if SHEET.search(p) and "SPACING (required)" not in p: p = p.rstrip() + GAP
             opaque = len(st) > 3 and st[3] == "OPAQUE"
-            out.append(f"\nSTEP {i}\nReference images: {', '.join(refs) if refs else '(none)'}\nOUTPUT: {o}\n{'Background: OPAQUE (do not request transparency)' if opaque else 'Background: transparent'}\nPROMPT:\n{p}\n")
+            out.append(f"\n{'TASK' if brief else 'STEP'} {i}\nReference images: {', '.join(refs) if refs else '(none)'}\nOUTPUT: {o}\n"
+                       f"{'Background: OPAQUE (do not request transparency)' if opaque else 'Background: transparent'}\n{'BRIEF' if brief else 'PROMPT'}:\n{p}\n")
         pathlib.Path(f"art/jobs/{name}.md").write_text("".join(out), encoding="utf-8")
         print(name, len(steps))
 

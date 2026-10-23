@@ -6,6 +6,8 @@
   1. `python -I tools/make_jobs.py tools/rounds/job_specsNN.py [任务名...]` → 生成 `art/jobs/<任务名>.md`（不进存档）；
   2. `bash tools/run_jobs.sh <并行数> 任务名...`（单个用 `tools/codex_job.sh art/jobs/X.md`）→ 图在 `art/raw/rNN/`；
   3. `python -I tools/rounds/rNN_import.py` → 进 `public/content/base/assets/` 和 `manifest.json`。
+- **模型和思考档位**（2026-10-23 用户：出的图细节扭曲、歪、错，是不是调了最低档的模型和思考？买的是最高套餐）：`tools/codex_job.sh` 用账号上最好的 `gpt-6.1-sol`、最高档 `ultra`（`CODEX_MODEL` / `CODEX_EFFORT` 可改）。之前一直被写死成 `low`。
+- **按 LLM 的方式交代**（同一天用户：GPT 是 LLM，不是扩散模型，负面提示词那套没用；它看得懂参考图，要讲清楚目的、方法、要求，提醒它画不一样的东西，不是照着参考图出一堆一样的）：新的轮次写 `MODE = "brief"`，每一步是一段需求说明（这是什么、游戏里怎么用、设计、要求、参考图各取什么不取什么、存之前查什么），`make_jobs.py` 换成 `HEAD_BRIEF`：它自己写提示词、出完自己看（手脚数、扭曲、前后不一致、出界……），不对就重画，最多 6 次。旧轮次（`PROMPT` 原样转交）不变。
 - 被拒（`*.refused.txt`）的常见原因：
   - 地雷妹设计稿的半透明粉色连衣裙 + "流口水、脸红、踢腿"之类的描述，会触发安全过滤。
   - 以前的改法是去掉设计稿参考、写成"粉色荷叶边校服衬衫 + 裙子"，结果漫画里她的衣服和设定不符（2026-10-18 用户第十七批）。**现在一律带上设定图**（`art/ref/pink_sheet.png` + `pink_poses.png`），衣服按 `tools/rounds/job_specs60.py` 的 `OUTFIT` 写（粉色连体衣 + 敞开的白色蕾丝长外套 + 薄荷水手领 + 黄色大蝴蝶结 + 腿环 + 白短袜 + 薄荷透明底的粉色厚底鞋，光腿，不是裙子、不是长袖衬衫；cute / wholesome / fully covered），每处多抽几张：R60 里 39 张被拒 7 张，其余都对得上设定。

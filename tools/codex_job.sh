@@ -5,6 +5,8 @@ CX="$(ls -t /c/Users/Administrator/AppData/Local/OpenAI/Codex/bin/*/codex.exe 2>
 JOB="$1"
 LOG="${JOB%.md}.log"
 cd "$(dirname "$0")/.."
-"$CX" exec --skip-git-repo-check -s workspace-write -c model_reasoning_effort="low" -C "$(pwd -W 2>/dev/null || pwd)" - < "$JOB" > "$LOG" 2>&1
+# the best model on the account and its highest reasoning (user 2026-10-23: the images were made at "low" - distorted, wrong, crooked;
+# the top plan is paid for): CODEX_MODEL / CODEX_EFFORT override
+"$CX" exec --skip-git-repo-check -s workspace-write -m "${CODEX_MODEL:-gpt-6.1-sol}" -c model_reasoning_effort="${CODEX_EFFORT:-ultra}" -C "$(pwd -W 2>/dev/null || pwd)" - < "$JOB" > "$LOG" 2>&1
 echo "exit=$? log=$LOG"
 tail -15 "$LOG"
