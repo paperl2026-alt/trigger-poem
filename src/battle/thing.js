@@ -28,19 +28,24 @@ import * as THREE from 'three';
 import { tex, meta } from '../core/assets.js';
 import { paperMesh, DamageMap, attachDamage, setRelief } from '../core/paper.js';
 import { Ease } from '../core/tween.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 import { tr } from '../core/i18n.js';
 import { Actor, Enemy } from './enemies.js';
 import { Gimmick } from './gimmick.js';
 import { COL } from './fx.js';
 import { FR } from '../core/particles.js';
 import { Mark3D } from './marks3d.js';
+import { WeakMark } from '../ui/weakMark.js';
 
 const rnd = (a, b) => a + Math.random() * (b - a);
 // the thing to shoot now (her photo, the diary's next page, the keepsake she wants): its edge pulses gold
 export function glow(r, t) { const k = 0.5 + 0.5 * Math.sin(t * 7); r.u.outlineOn.value = 1; r.u.outlineCol.value.setRGB(1, 0.8 + 0.2 * k, 0.3 + 0.5 * k); r.u.outlineW.value = 1.4 + 0.6 * k; }
 const rr = (r) => (Array.isArray(r) ? rnd(r[0], r[1]) : r);
 const FRAMES = { idle: ['idle0', 'idle1'], move: ['move', 'idle0'], windup: ['windup'], attack: ['attack'], hurt: ['hurt'] };
+// her weak point's radius on the screen never less than this much of its height (user 2026-10-23: bigger than the reticle - H 0.07
+// across, glhud.js - and no harder to see with her further off): coreK makes it bigger, every frame (update)
+const WEAK_MIN = 0.06;
+const ALPHA = new WeakMap();   // (her pictures' alpha, 64 across: solidAt)
 
 export class TheThing extends Actor {
   constructor(game, def) {
@@ -186,10 +191,17 @@ export class TheThing extends Actor {
   // (S.guarded: open only for moments - exposedT; S.open: open only in these states, e.g. while it rushes and when knocked back)
   weakNow() { return !this.mutating && !this.grief && this.state !== 'attack' && (!this.S.guarded || this.exposedT > 0) && (!this.S.open || this.S.open.includes(this.state)); }
   core() { const C = this.S.cores; if (C) return C[(this.coreI || 0) % C.length]; return meta[this.mesh?.userData.texKey]?.core || this.S.core; }
+  // her core's radius in the world: its own (r of [u, v, r]: of her height), times coreK - its glitter, glow and the shots that count go by it
+  coreR() { const c = this.core(); return c ? this.h * (c[2] ?? 0.11) * (this.coreK || 1) : 0; }
+  coreScale() {   // (how much bigger than its own the core must be now to be WEAK_MIN of the screen)
+    const c = this.core(), g = this.game; if (!c) return 1;
+    const p = this.uvToWorld(c[0], c[1]), a = g.world.project(p), b = g.world.project(p.clone().add(new THREE.Vector3(0, this.h * (c[2] ?? 0.11), 0))), px = Math.abs(b.y - a.y);
+    return a.z < 1 && px > 0 ? Math.max(1, g.H * WEAK_MIN / px) : 1;
+  }
   pose(name, alt, fps = 8) { this.play(tex[this.prefix + name] ? name : alt, fps); }   // (a key frame of this form's, else the old one)
   onCore(uv) {
     const c = this.core(); if (!c) return true;
-    return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11);
+    return Math.hypot((uv.u - c[0]) * this.w / this.h, uv.v - c[1]) < (c[2] ?? 0.11) * (this.coreK || 1);
   }
   glance(info) {   // a shot that does nothing: sparks and a tick
     info.dealt = 0;
@@ -271,7 +283,7 @@ export class TheThing extends Actor {
     this.smokeT = (this.smokeT ?? 0.2) - (g.rdt || 0.016);
     if (this.smokeT > 0) return;
     const S = this.def.coreSmoke || {}, c = this.core(); this.smokeT = rr(S.every || [0.7, 1.3]);
-    const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), cam = g.world.camPos;
+    const p = this.uvToWorld(c[0], c[1]), s = this.coreR(), cam = g.world.camPos;
     const toCam = new THREE.Vector3(cam.x - p.x, 0, cam.z - p.z).normalize(), cols = (S.colors || ['#ff6aa8', '#a46bff', '#ff9a6a', '#6ac8ff']).map((h) => new THREE.Color(h));
     for (let i = 0; i < (S.n ?? 7); i++) {
       const col = cols[i % cols.length], a = rnd(0, 6.28), v = rnd(0.25, 0.8) * s;
@@ -284,7 +296,7 @@ export class TheThing extends Actor {
   // Fine sparks, spread round it (big soft ones heaped up into a round patch of light on her: user 2026-10-21)
   trailTick(dt, k = 1) {   // (k: dimmer while the core is shut - it still shows where it is)
     const g = this.game, T = this.def.coreTrail, c = this.core(); if (!c) return;
-    const p = this.uvToWorld(c[0], c[1]), last = this.trailAt || p.clone(), d = Math.min(3, p.distanceTo(last)), s = this.h * (c[2] ?? 0.11);
+    const p = this.uvToWorld(c[0], c[1]), last = this.trailAt || p.clone(), d = Math.min(3, p.distanceTo(last)), s = this.coreR();
     const cols = this.trailCols || (this.trailCols = (T.colors || ['#ffd27a', '#ffb347', '#fff2c0']).map((h) => new THREE.Color(h)));
     this.trailAcc = (this.trailAcc || 0) + Math.min(60, (d * (T.perM ?? 18) + dt * (T.idle ?? 6)) * (0.5 + 0.5 * k));
     while (this.trailAcc >= 1) {
@@ -301,7 +313,7 @@ export class TheThing extends Actor {
   // from further out and pour into it, faster and thicker as the blow comes - shoot here
   motesTick(dt, t, open) {
     const g = this.game, c = this.core(); if (!c) return;
-    const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), hurt = Math.min(1, (this.coreHurt || 0) / 30);
+    const p = this.uvToWorld(c[0], c[1]), s = this.coreR(), hurt = Math.min(1, (this.coreHurt || 0) / 30);
     const kill = this.markKill ? this.markP() : -1, cam = g.world.camPos, col = this.moteCol || (this.moteCol = new THREE.Color());
     const tx = cam.x - p.x, tz = cam.z - p.z, tl = Math.hypot(tx, tz) || 1, fx = tx / tl, fz = tz / tl;   // (toward the camera: a little in front of her)
     const rate = (open ? 30 : 10) * (1 + hurt * 1.6) + (kill >= 0 ? 30 + kill * 60 : 0);
@@ -327,14 +339,14 @@ export class TheThing extends Actor {
   beatTick(dt, open) {
     const g = this.game, U = this.u, c = this.core();
     if (!c || this.mutating || this.grief || g.cineOn || !this.alive) { U.coreOn.value = 0; U.coreBeat.value = 0; U.coreHit.value = 0; return; }
-    U.coreAt.value.set(c[0], c[1], c[2] ?? 0.11, this.ar);
+    U.coreAt.value.set(c[0], c[1], (c[2] ?? 0.11) * (this.coreK || 1), this.ar);
     if (this.revealStage !== this.stage) { this.revealStage = this.stage; this.revealT = 3.5; this.beatT = 9; }
     this.revealT = Math.max(0, (this.revealT || 0) - dt);
     const rev = this.revealT > 0, per = rev ? 0.5 : open ? 1.1 : 1.9;
     this.beatT = (this.beatT || 0) + dt;
     if (this.beatT >= per) {
       this.beatT = 0;
-      const p = this.uvToWorld(c[0], c[1]), s = this.h * (c[2] ?? 0.11), col = U.coreCol.value, n = rev ? 18 : open ? 12 : 7;
+      const p = this.uvToWorld(c[0], c[1]), s = this.coreR(), col = U.coreCol.value, n = rev ? 18 : open ? 12 : 7;
       for (let i = 0; i < n; i++) {
         const a = i / n * Math.PI * 2 + rnd(-0.15, 0.15), v = s * rnd(1.4, 2.2) * (rev ? 1.4 : 1);
         g.fx.wAdd.emit({ x: p.x, y: p.y, z: p.z, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vz: 0, drag: 2.2, life: rnd(0.45, 0.7), size: s * rnd(0.1, 0.18), size1: s * 0.03,
@@ -347,9 +359,38 @@ export class TheThing extends Actor {
     this.strobeT = Math.max(0, (this.strobeT || 0) - dt);
     U.coreHit.value = this.strobeT > 0 && Math.floor(this.strobeT * 30) % 2 === 0 ? 1 : 0;
   }
+  // her weak point pointed at on the screen while it is open (src/ui/weakMark.js: chevrons jabbing at its glitter from off her side - user
+  // 2026-10-23); not in a close look, a storyboard, her change or her end
+  weakTick(dt, t, open) {
+    const g = this.game, c = this.core();
+    if (!this.weakMark) { if (!c || !g.hud?.root) return; this.weakMark = new WeakMark(g.hud.root); }
+    const on = !!c && open && this.alive && !g.cineOn && !g.board && !g.vigOn && !this.mutating && !this.grief && g.combat;
+    let x = -9999, y = -9999, rr = 0;
+    if (c) {
+      const p = this.uvToWorld(c[0], c[1]), s = g.world.project(p), e = g.world.project(p.clone().add(new THREE.Vector3(0, this.coreR(), 0)));
+      if (s.z < 1) { x = s.x; y = s.y; rr = Math.abs(e.y - s.y); }
+    }
+    const box = g.box(this);
+    this.weakMark.set(dt, t, on && x > -9999, x, y, rr, (px, py) => this.solidAt(px, py, box), g.W, g.H, g.G.renderer?.getPixelRatio?.() ?? 1);
+  }
+  // is her picture there at this point of the screen (px, y down)? - its alpha (her frame now, facing the camera: its screen box is it)
+  solidAt(px, py, box) {
+    const im = this.mesh?.material.uniforms?.map?.value?.image; if (!im?.width || !box) return false;
+    const u = (px - box.x0) / (box.x1 - box.x0), v = (py - box.y0) / (box.y1 - box.y0);
+    if (!(u >= 0 && u < 1 && v >= 0 && v < 1)) return false;
+    let A = ALPHA.get(im);
+    if (!A) {
+      const n = 64, h = Math.max(1, Math.round(n * im.height / im.width)), cv = document.createElement('canvas'); cv.width = n; cv.height = h;
+      const c = cv.getContext('2d', { willReadFrequently: true }); c.drawImage(im, 0, 0, n, h);
+      const d = c.getImageData(0, 0, n, h).data; A = { n, h, a: new Uint8Array(n * h) };
+      for (let i = 0; i < n * h; i++) A.a[i] = d[i * 4 + 3];
+      ALPHA.set(im, A);
+    }
+    return A.a[Math.floor(v * A.h) * A.n + Math.floor(u * A.n)] > 60;
+  }
   // a hit on the core: a spray of blood mist (her own blood colours: def.coreSmoke.blood) and a few drops
   mist(p) {
-    const g = this.game, S = this.def.coreSmoke || {}, s = this.h * ((this.core()?.[2]) ?? 0.11), cols = (S.blood || ['#c8102e', '#ff3b5c', '#7a0018']).map((h) => new THREE.Color(h));
+    const g = this.game, S = this.def.coreSmoke || {}, s = this.coreR() || this.h * 0.11, cols = (S.blood || ['#c8102e', '#ff3b5c', '#7a0018']).map((h) => new THREE.Color(h));
     if ((this.mistT || 0) > 0) return; this.mistT = 0.07;
     for (let i = 0; i < 4; i++) { const col = cols[i % cols.length], a = rnd(0, 6.28), v = rnd(0.6, 1.6) * s;
       g.fx.wNorm.emit({ x: p.x, y: p.y, z: p.z, vx: Math.cos(a) * v, vy: Math.sin(a) * v, vz: rnd(0, 0.6), drag: 2.5, life: rnd(0.5, 0.9), size: s * 0.35, size1: s * rnd(1.2, 1.8),
@@ -368,12 +409,14 @@ export class TheThing extends Actor {
     this.shadowM.position.set(P.x, 0.03, P.z);
     // attacking: the outline goes hard white (nothing gets through); otherwise its usual white, and the core is ringed
     const wk = this.weakNow();
+    this.coreK = this.coreScale();
     this.u.outlineCol.value.setRGB(1, 1, 1);
     this.tickT = (this.tickT || 0) - dt;
     this.markCore(wk && this.core() && !g.cineOn); this.mistT = (this.mistT || 0) - dt; this.u.time.value = t;
     if (this.def.coreTrail && this.core() && !g.cineOn && !this.mutating && !this.grief) this.trailTick(dt, wk ? 1 : 0.35); else this.trailAt = null;
     if (this.def.coreGlow && this.core() && !g.cineOn && !this.mutating && !this.grief) this.motesTick(dt, t, wk);
     this.beatTick(dt, wk);
+    this.weakTick(dt, t, wk);
     this.exposedT = Math.max(0, (this.exposedT || 0) - dt);
     const H = this.def.heal, on = (this.healers || []).filter((e) => e.alive && e.attached).length;
     if (H && on && !this.mutating && this.hp < this.maxHp) {
@@ -486,7 +529,7 @@ export class TheThing extends Actor {
     this.pose(pose || 'windup', 'windup');
     this.markUp(threat, slot, time);
     g.fx.charge(this, threat === 'hide' ? 0xff4fc8 : 0xffb04a);
-    sfx.warn();
+    sound('windupWarn', { rate: 0.9 }) || sfx.warn();   // (over everything for a moment: audio.js alert)
     this.later(time, () => { this.endWindup(); then(); });
   }
   attackPose(dur, pose) {
@@ -638,7 +681,8 @@ export class TheThing extends Actor {
   slideBack(home, time) {   // (straight back to where she started; her core still open on the way)
     const g = this.game, P = this.root.position;
     this.state = 'back'; this.play('move', 4); this.timer = 99;
-    g.etw.to(P, { x: home.x, z: home.z }, time, { ease: Ease.outCubic, onDone: () => { if (!this.alive) return; if (this.state === 'back') { this.state = 'idle'; this.play('idle', 3); } this.timer = rr(this.def.rest); } });
+    // (back home she stands still a while, open: S.restOpen seconds - user 2026-10-23, open only while she slid about fast, no one could hit it)
+    g.etw.to(P, { x: home.x, z: home.z }, time, { ease: Ease.outCubic, onDone: () => { if (!this.alive) return; if (this.state === 'back') { this.state = 'idle'; this.play('idle', 3); } this.timer = this.S.restOpen ?? rr(this.def.rest); } });
   }
   repel() {   // (knocked back home in the middle of its rush)
     const g = this.game, Z = this.zz; this.zz = null; this.seq++; this.endWindup();
@@ -743,6 +787,7 @@ export class TheThing extends Actor {
 
   // ---------------------------------------------------------------- purified
   die(calm) {   // (calm: laid to rest - her child back with her - not torn apart)
+    this.weakMark?.remove(); this.weakMark = null;
     this.alive = false; this.seq++; this.endWindup(); this.markCore(false);
     for (const o of this.keeps || []) if (o.alive) o.act({ gone: true });
     const g = this.game;
@@ -766,6 +811,7 @@ export class TheThing extends Actor {
     if (!calm && this.game.hud.gl.stickers.D.bosses?.[this.id]?.end) this.closeUp('end', { dist: this.S.h * 1.1, v: 0.6, min: 3.4, orbit: 0.4, dolly: -8 });   // (the room closing in on her)   // (her last words, up close)
     g.onBossDead(this);
   }
+  dispose() { this.weakMark?.remove(); this.weakMark = null; super.dispose(); }
 }
 
 // one of her child's things (TheThing.ritual): swings before her, guards her core now and then, counts down to its blow; can't be hurt

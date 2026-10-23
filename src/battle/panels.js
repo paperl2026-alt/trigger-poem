@@ -345,6 +345,7 @@ export class PanelWorld {
       if (tex[`${bk}_x`]) this.flips.push({ m: t, key: bk, alt: `${bk}_x`, side: 0, p: 0, d: 0, floor: true });
       this.tiles.push({ g, t, x: xa + tw / 2, z: za - tl / 2 });
     }
+    if (Hd.heave) this.heave(Hd.heave);
     // holes there from the start (hall.holes: { on, z, y, size }: a spawner pours monsters out of one)
     for (const o of Hd.holes || []) this.addHole(o.on, new THREE.Vector3(o.x ?? 0, o.y ?? 1.1, o.z), o.size ?? 1.6, false, true);   // (built with the place: no burst)
     // (the drawbridge's gap: no floor there)
@@ -765,6 +766,36 @@ export class PanelWorld {
       tw.to(t.t.rotation, { x: Math.PI / 2 - rnd(0.35, 0.9) }, 0.45, { delay, ease: Ease.outBack, onDone: () => { if (i % 3 === 0) { sfx.thud(0); g.post.shake(0.4); } } });
     });
     tw.wait((F.time ?? 1.6) + 0.3, () => then && then());
+  }
+
+  // the place left wrenched out of shape (hall.heave: { line: [[x, z], ...], off, every, share, w, l, ang, ceil } - the prologue's chase
+  // after the corridor folded up: user 2026-10-23, the chase did not show it): along each straight of the line (where the girls run),
+  // slabs of floor heaved up at its sides like the fold's ridges, a dark gap where each was, and here and there a slab of ceiling hanging
+  // down - off both sides by `off` metres, never in the middle where the girls run and the monsters come; the same every time (seeded)
+  heave(V) {
+    const Hd = this.set.hall, FL = [].concat(Hd.floor), CL = [].concat(Hd.ceil || []), R = this.root;
+    let s = (V.seed ?? 11) >>> 0; const rn = (a, b) => { s = (s * 1664525 + 1013904223) >>> 0; return a + (s / 4294967296) * (b - a); };
+    const gapM = new THREE.MeshBasicMaterial({ color: new THREE.Color(this.set.void || '#1c0a22'), side: THREE.DoubleSide, fog: true, polygonOffset: true, polygonOffsetFactor: -1 });
+    for (let i = 0; i + 1 < V.line.length; i++) {
+      const [ax, az] = V.line[i], [bx, bz] = V.line[i + 1], L = Math.hypot(bx - ax, bz - az); if (L < 4) continue;   // (the corners: none)
+      const ux = (bx - ax) / L, uz = (bz - az) / L, yaw = Math.atan2(ux, uz);
+      for (let d = 1.5; d < L - 1.5; d += (V.every ?? 2.2) * rn(0.7, 1.3)) {
+        const side = rn(0, 1) < 0.5 ? -1 : 1, off = (V.off ?? 1.3) + rn(-0.05, 0.1), x = ax + ux * d - uz * side * off, z = az + uz * d + ux * side * off;
+        if (rn(0, 1) < (V.share ?? 0.6)) {   // (a floor slab heaved up: pivoted on one end, the other lifted - facing one way or the other along the run)
+          const w = (V.w ?? 0.6) * rn(0.85, 1.15), l = (V.l ?? 1.1) * rn(0.8, 1.25), bk = FL[Math.floor(rn(0, FL.length))];
+          const t = board(bk, w, l, { uv: [w / Hd.tile, l / Hd.tile], uv0: [rn(0, 3), rn(0, 3)] }); t.geometry.translate(0, l / 2, 0);
+          t.rotation.x = Math.PI / 2 - (V.ang ?? 0.9) * rn(0.55, 1.15); t.rotation.y = rn(-0.15, 0.15);
+          const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = yaw + (rn(0, 1) < 0.5 ? 0 : Math.PI); g.add(t); R.add(g);
+          const gap = new THREE.Mesh(new THREE.PlaneGeometry(w * 1.05, l * 1.02), gapM); gap.rotation.x = -Math.PI / 2; gap.position.set(0, 0.012, l / 2); g.add(gap);
+        }
+        if (CL.length && rn(0, 1) < (V.ceil ?? 0.25)) {   // (a slab of ceiling hanging down from one end)
+          const w = (V.w ?? 0.6) * rn(1.1, 1.5), l = (V.l ?? 1.1) * rn(0.8, 1.1), ck = CL[Math.floor(rn(0, CL.length))];
+          const t = board(ck, w, l, { uv: [w / Hd.tile, l / Hd.tile], uv0: [rn(0, 3), rn(0, 3)] }); t.geometry.translate(0, l / 2, 0);
+          t.rotation.x = Math.PI / 2 + (V.ang ?? 0.9) * rn(0.4, 0.8);
+          const g = new THREE.Group(); g.position.set(x - uz * side * 0.1, Hd.h - 0.02, z + ux * side * 0.1); g.rotation.y = yaw + (rn(0, 1) < 0.5 ? 0 : Math.PI); g.add(t); R.add(g);
+        }
+      }
+    }
   }
 
   // ---------------------------------------------------------------- camera rail (as World)

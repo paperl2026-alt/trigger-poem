@@ -108,7 +108,10 @@ def entrances(waves, doors, flyX):
 
 def corridor(S):
     H = S["hall"]
-    H.update({"x0": -2.5, "x1": 2.5, "z0": 6, "z1": -28, "h": 3.4, "tilesX": 4})
+    H.update({"x0": -2.5, "x1": 2.5, "z0": 6, "z1": -34, "h": 3.4, "tilesX": 4})
+    # (where it folds up: far enough off that the monsters stand on the flat in front of the ridges, the third door too - user 2026-10-23,
+    # the fold was so near that the monsters stood in it; the part that bends up longer, so the bend shows)
+    H.update({"foldZ": -25, "fold": {"bend": 26, "time": 1.6, "ridgeFrom": -22, "ridgeShare": 0.5}})
     for k in ("outside", "outsideAt", "outsideX"): H.pop(k, None)
     door = {"kind": "slide", "k": ["ep0/cls_door"], "side": 1}
     # three classroom doors in the left wall (the classroom side), the windows on the right (panels.js: left = classrooms, right = windows)
@@ -127,6 +130,7 @@ def corridor(S):
     # 2: against the classroom side, across to the windows and the far end (where the corridor folds up when it turns)
     st["cor2"].update({"via": [[0, 1.35, -2.5], [-0.6, 1.3, -8.5]], "cam": [-1.6, 1.75, -9.6], "look": [1.4, -0.4, -26], "shot": {"kind": "cover", "cam": {"zoom": 10}}})
     entrances(st["cor2"]["waves"], ["c3"], 2.0)
+    st["cor2"]["monsterFar"] = 10.5   # (they stand no further than this: in front of the ridges, -22 on)
 
 def corridor_walls(rects, h, keys_in, keys_out, force=None, cell=0.2, thick=0.24):
     """the walls round a corridor made of axis-aligned rectangles (x0, x1, z0, z1), as scenery boxes: the union rasterised in cell-metre
@@ -186,6 +190,10 @@ def dash(S):
     S["scenery"] = corridor_walls(R, h, CLS, WIN, force={(-81.6, "front"): "st3/wallW", (4.0, "back"): "st3/end"})
     # (the hall itself: its floor and ceiling over the whole of it, its own walls just outside the corridor's, hidden)
     S["hall"].update({"x0": -1.75, "x1": 29.75, "z0": 4.15, "z1": -81.75, "tilesX": 10})
+    # (the corridor folded up just before: here it is wrenched out of shape - slabs of floor heaved up along its sides, slabs of ceiling
+    # hanging; user 2026-10-23, the chase did not show it: panels.js heave)
+    S["hall"]["heave"] = {"line": [[0, -2], [0, -24.6], [1.4, -26], [26.6, -26], [28, -27.4], [28, -54.6], [26.6, -56], [1.4, -56], [0, -57.4], [0, -79]],
+                          "off": 1.35, "every": 2.0, "share": 0.75, "w": 0.65, "l": 1.3, "ang": 0.9, "ceil": 0.35}
     for k in ("open", "ways", "outside", "outsideX", "outsideAt"): S["hall"].pop(k, None)
     S["decals"] = [d for d in S.get("decals", []) if d["on"] in ("floor", "hang")]   # (the wall ones were on the old straight hall's walls)
     st = S["stations"]["ds1"]
@@ -213,27 +221,31 @@ def dash(S):
         # (she stands there: they talk back, try their guns on her - nothing gets through - and fall back for now; user 2026-10-21)
         {"t": 1.5, "foe": {"k": "boss/qq_s1_idle0", "at": [0, 2.0], "h": 3.3, "life": 12.4, "step": 0.12}},
         {"t": 1.6, "bossSay": {"who": "qq", "kind": "intro"}},
+        # (both open up on her - sparks, clangs, a "0" - and again, harder, before she shrugs: user 2026-10-23, show her shrugging a hail of
+        # shots off, then they run)
+        {"t": 4.6, "volley": {"n": 10, "every": 0.1}},
+        {"t": 9.0, "volley": {"n": 16, "every": 0.08}},
         {"t": 5.6, "say": "retort", "who": "pink", **({"insert": {"k": cut("pink", "retort"), "side": -1, "life": 1.7}} if cut("pink", "retort") else {})},
         {"t": 8.0, "say": "retort", "who": "cat", **({"insert": {"k": cut("cat", "retort", "c"), "side": 1, "life": 1.7}} if cut("cat", "retort", "c") else {})},
         {"t": 10.4, "bossSay": {"who": "qq", "kind": "shrug"}, "shake": 0.8, "sfx": "roar"},
         {"t": 13.0, "say": "retreat"},
         {"t": 13.9, "cut": {"face": "fwd", "whip": True}, "speed": 7},
+        # the small fry: out of the ceiling, up out of the floor - each lot well ahead in the same straight as the camera (13 m or more
+        # and short of the next corner: user 2026-10-23, they came out round the corners or right in front of the camera, no time to react;
+        # metres along: the straights run 0-22.6, 24.8-50, 52.2-79.4, 81.6-106.8, 109-130), and the run slows for it (hold) a while; what is
+        # left when they look back is lost behind them (Ride.leave); none just after a look back (the view still turning round)
+        {"at": 3, "hold": 2.5, "spawn": [ceil("paper", 13, -0.6), ceil("paper", 14.5, 0.6), ceil("paper", 16, 0.0), ceil("paper", 17, -0.3)]},
         {"at": 6, "say": "flee"},
-        # the small fry: out of the ceiling, up out of the floor, waiting round the corners
-        {"at": 5, "spawn": [ceil("paper", 14, -0.6), ceil("paper", 16, 0.7), ceil("paper", 18, 0.0)]},
-        {"at": 12, "spawn": [pop("shoe", 11, -0.8), pop("shoe", 12, 0.8), pop("shoe", 13.5, 0.0)]},
-        {"at": 20, "spawn": [ceil("book", 10, 0.0), ceil("book", 12, 0.5), ceil("book", 13, -0.5)]},
-        {"at": 28, "spawn": [burrow("chair", 11, 0.6), pop("shoe", 12, -0.6), ceil("paper", 14, 0.0)]},
-        {"at": 43, "spawn": [pop("shoe", 9, -0.7), pop("shoe", 10, 0.7), ceil("paper", 11.5, 0.0), ceil("paper", 13, 0.4)]},
+        {"at": 7, "hold": 2.5, "spawn": [pop("shoe", 13, -0.7), pop("shoe", 13.2, 0.7), pop("shoe", 13.5, 0.0), ceil("book", 13.4, 0.4)]},
+        {"at": 25.5, "hold": 2.5, "spawn": [burrow("chair", 13, 0.6), pop("shoe", 13.5, -0.6), ceil("paper", 14.5, 0.0), ceil("book", 15, -0.4)]},
+        {"at": 31, "hold": 2.5, "spawn": [ceil("book", 13, 0.0), ceil("book", 14, 0.5), ceil("book", 15, -0.5), pop("shoe", 15.5, 0.3)]},
         {"at": 46, "say": "flee"},
-        {"at": 55, "spawn": [ceil("book", 11, -0.5), ceil("book", 12.5, 0.5), burrow("chair", 13, 0.0)]},
-        {"at": 68, "spawn": [pop("shoe", 9, -0.8), pop("shoe", 10, 0.0), pop("shoe", 11, 0.8), ceil("paper", 12.5, 0.3)]},
+        {"at": 53, "hold": 2.5, "spawn": [pop("shoe", 13, -0.7), pop("shoe", 14, 0.7), ceil("paper", 15, 0.0), ceil("paper", 16, 0.4), burrow("chair", 16.5, -0.3)]},
+        {"at": 56, "hold": 2.5, "spawn": [ceil("book", 13, -0.5), ceil("book", 13.8, 0.5), burrow("chair", 14.5, 0.0), ceil("paper", 15.5, 0.3)]},
         {"at": 72, "say": "flee"},
-        {"at": 76, "spawn": [ceil("paper", 9, -0.5), ceil("book", 11, 0.5)]},
-        {"at": 84, "spawn": [burrow("chair", 10, 0.0), pop("shoe", 11, 0.7)]},
-        {"at": 95, "spawn": [pop("shoe", 9, -0.8), pop("shoe", 10, 0.0), pop("shoe", 11, 0.8), ceil("paper", 11, -0.4), ceil("paper", 12, 0.4)]},
+        {"at": 82, "hold": 2.5, "spawn": [pop("shoe", 13, -0.7), pop("shoe", 13.5, 0.0), pop("shoe", 14, 0.7), ceil("paper", 15, -0.4), ceil("paper", 16, 0.4)]},
+        {"at": 85, "hold": 2.5, "spawn": [burrow("chair", 13, 0.0), pop("shoe", 13.5, 0.6), ceil("paper", 14.5, -0.5), ceil("book", 15.5, 0.3)]},
         {"at": 98, "say": "flee"},
-        {"at": 103, "spawn": [ceil("book", 9, 0.0), ceil("book", 10.5, -0.6), ceil("book", 12, 0.6)]},
     ]
     # after each corner, a look back: she comes round it, nearer every time; she says a line of hers, and on they run
     # (round the corner first - half of her out from behind it, on the side the corridor came from - then at them; the last time she is
@@ -282,7 +294,8 @@ def yard(S, B):
     S2["pattern"] = ["throw", "throw", "drift", "throw"]; S2["guarded"] = True
     # (3: sliding steps at 1P from the far end of her ground, her core open; enough damage throws her back to the start - user 2026-10-21,
     # with a drawing; thing.js slide)
-    S3["pattern"] = ["slide"]; S3["open"] = ["slide", "windup", "hurt", "back"]
+    # (2026-10-23: open only once she is back home and stands still, restOpen s; not while sliding about - nobody could hit it)
+    S3["pattern"] = ["slide"]; S3["open"] = ["slide", "idle", "windup", "hurt", "back"]; S3["restOpen"] = 5.0   # (the slide slower: B["slide"])
     # (how long each form lasts: about 40 to 70 s each - its share of the health, the whole a little under 6000)
     # (measured on the auto-player: about 15, 19, 17, 7.5 and 15.6 damage a second in each form -> 45, 45, 50, 55 and 60 s)
     # (user 2026-10-20: "too short - at least double each form": twice that, the same shares -> about 90 to 120 s a form)
@@ -298,23 +311,23 @@ def yard(S, B):
     S5["pattern"] = ["charge", "drift"]
     S5["cores"] = [[0.32, 0.65, 0.09], [0.73, 0.46, 0.09], [0.39, 0.82, 0.08], [0.19, 0.37, 0.08], [0.69, 0.27, 0.08]]
     B["approach"] = {"speed": 0.9, "speedUp": 3.0, "near": 9.5, "topY": 0.1, "windup": 2.8, "slams": 3, "gap": 0.55, "dmg": 14, "back": 2.2}
-    B["throw"] = {"shots": [2, 4], "gap": 1.0, "expose": 1.3, "after": 1.5, "exposedMul": 2.0, "flight": 2.1, "dmg": 14}
+    B["throw"] = {"shots": [2, 4], "gap": 1.0, "expose": 1.3, "after": 5.0, "exposedMul": 2.0, "flight": 2.1, "dmg": 14}   # (after: open and still 5 s - user 2026-10-23)
     B["zigzag"] = {"windup": 0.9, "legs": 5, "lateral": 2.8, "time": 3.4, "stop": 2.0, "poise": 110, "dmg": 26}
     # (between attacks only a quick slide aside where she stands - user 2026-10-21: not the small monsters' zigzag, not to and fro)
     B.pop("weave", None); B["drift"] = "slide"
-    B["slide"] = {"legs": 6, "lateral": 3.2, "time": 0.42, "pause": 0.38, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26}
+    B["slide"] = {"legs": 4, "lateral": 2.0, "time": 0.9, "pause": 1.0, "near": 7.0, "windup": 0.9, "poise": 220, "dmg": 26}   # (slower: user 2026-10-23, not darting about)
     # (her core: a ribbon of golden light streams off it as she moves, and it lights up in bright, shifting colours the more it is hurt;
     # a hit there sprays blood mist - user 2026-10-21: the watercolour smoke alone was too vague)
     B.pop("coreSmoke", None); B["coreTrail"] = {"colors": ["#ffd27a", "#ffb347", "#fff2c0", "#ffe08a"], "perM": 48, "idle": 26}; B["coreGlow"] = True
-    B["charge"] = {"time": 4.6, "shifts": 3, "poise": 150, "dmg": 34}
+    B["charge"] = {"time": 5.5, "shifts": 0, "poise": 150, "dmg": 34}   # (its weak point stays put the whole charge - user 2026-10-23)
     B["summonMax"] = 6
     B["texts"].update({
         "h1": {"zh": "她越挨打走得越快——砸过来时躲进掩体！", "en": "THE MORE YOU HIT HER, THE FASTER SHE COMES - TAKE COVER WHEN SHE POUNDS!", "ja": "撃つほど速く迫ってくる──叩きつけてきたら隠れて!"},
-        "h2": {"zh": "她只在扔东西的一瞬露出弱点：打掉飞来的东西，趁机打弱点！", "en": "HER WEAK POINT OPENS ONLY AS SHE THROWS - SHOOT DOWN WHAT FLIES, THEN HIT IT!", "ja": "投げる瞬間だけ弱点が開く──飛んでくる物を落として狙え!"},
-        "h3": {"zh": "她左右滑步逼近，核心一直露着：打够伤害就把她打回起点！", "en": "SHE SLIDES IN SIDE TO SIDE, CORE OPEN - HIT IT HARD ENOUGH TO THROW HER BACK!", "ja": "左右に滑りながら迫ってくる──コアを削りきれば振り出しに戻せる!"},
+        "h2": {"zh": "她扔完东西会停下来、露出弱点好几秒：先打掉飞来的东西，再打弱点！", "en": "AFTER SHE THROWS SHE STOPS, WEAK POINT OPEN FOR A WHILE - SHOOT DOWN WHAT FLIES, THEN HIT IT!", "ja": "投げ終わると止まって数秒弱点が開く──飛んでくる物を落としてから狙え!"},
+        "h3": {"zh": "她慢慢左右滑步逼近，弱点一直露着；滑回原地后还会停下几秒：打够伤害就把她打回起点！", "en": "SHE SLIDES IN SLOWLY, WEAK POINT OPEN - AND STOPS A WHILE BACK HOME: HIT IT HARD ENOUGH TO THROW HER BACK!", "ja": "ゆっくり左右に滑って迫る、弱点は開いたまま──戻ったら数秒止まる、削りきれば振り出しに戻せる!"},
         "h4": {"zh": "点滴瓶在给她回血：先打掉它们！血回满她会退回上一形态！", "en": "THE DRIPS ARE HEALING HER - SHOOT THEM DOWN, OR SHE HEALS BACK TO HER LAST FORM!", "ja": "点滴が回復させてる──先に落とせ! 回復しきると前の形態に戻る!"},
         "regress": {"zh": "她恢复了！", "en": "SHE HEALED BACK!", "ja": "回復された!"},
-        "h5": {"zh": "蓄力时弱点会换位置：追着打，蓄满之前打爆她！", "en": "HER WEAK POINT MOVES AS SHE CHARGES - CHASE IT AND BREAK HER BEFORE SHE'S FULL!", "ja": "溜めの間に弱点が移る──追いかけて溜め切る前に砕け!"},
+        "h5": {"zh": "她蓄力时弱点一直露着：蓄满之前打爆她！", "en": "HER WEAK POINT STAYS OPEN AS SHE CHARGES - BREAK HER BEFORE SHE'S FULL!", "ja": "溜めの間は弱点が開いたまま──溜め切る前に砕け!"},
     })
 
 def main():

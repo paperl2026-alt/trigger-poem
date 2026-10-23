@@ -210,7 +210,7 @@
       "x0": -2.5,
       "x1": 2.5,
       "z0": 6,
-      "z1": -28,
+      "z1": -34,
       "h": 3.4,
       "bay": 4.5,
       "tile": 3,
@@ -221,8 +221,8 @@
       "floor": ["st3/floor", "st3/floor2", "st3/floor3", "st3/floor4"],
       "ceil": ["st3/ceil", "st3/ceil2", "st3/ceil3", "st3/ceil4"],
       "end": ["st3/end", "st3/end2"],
-      "foldZ": -17,
-      "fold": { "bend": 26, "time": 1.6, "ridgeFrom": -14, "ridgeShare": 0.5 },
+      "foldZ": -25,
+      "fold": { "bend": 26, "time": 1.6, "ridgeFrom": -22, "ridgeShare": 0.5 },
       "ways": [
         {
           "id": "c1",
@@ -372,7 +372,7 @@
             { "t": 3.2, "type": "book", "x": 2.0, "z": -16, "y": 2.6, "from": "outside" }
           ]
         ],
-        "monsterFar": 4.8,
+        "monsterFar": 10.5,
         "lesson": "skill",
         "shot": { "kind": "cover", "cam": { "zoom": 10 } }
       }
@@ -482,7 +482,17 @@
       "right": ["st3/wallW", "st3/wallR1", "st3/wallR2", "st3/wallR3", "st3/wallR4", "st3/wallR5", "st3/wallR6", "st3/wallR7", "st3/wallR8"],
       "floor": ["st3/floor", "st3/floor2", "st3/floor3", "st3/floor4"],
       "ceil": ["st3/ceil", "st3/ceil2", "st3/ceil3", "st3/ceil4"],
-      "end": ["st3/end", "st3/end2"]
+      "end": ["st3/end", "st3/end2"],
+      "heave": {
+        "line": [[0, -2], [0, -24.6], [1.4, -26], [26.6, -26], [28, -27.4], [28, -54.6], [26.6, -56], [1.4, -56], [0, -57.4], [0, -79]],
+        "off": 1.35,
+        "every": 2.0,
+        "share": 0.75,
+        "w": 0.65,
+        "l": 1.3,
+        "ang": 0.9,
+        "ceil": 0.35
+      }
     },
     "decals": [
       { "k": "st3/d_banner1", "on": "hang", "x": 0.7, "z": -7, "w": 0.7 },
@@ -529,42 +539,52 @@
               "foe": { "k": "boss/qq_s1_idle0", "at": [0, 2.0], "h": 3.3, "life": 12.4, "step": 0.12 }
             },
             { "t": 1.6, "bossSay": { "who": "qq", "kind": "intro" } },
+            { "t": 4.6, "volley": { "n": 10, "every": 0.1 } },
             { "t": 5.6, "say": "retort", "who": "pink", "insert": { "k": "ep0/cut_pink_retort_a", "side": -1, "life": 1.7 } },
             { "t": 8.0, "say": "retort", "who": "cat", "insert": { "k": "ep0/cut_cat_retort_c", "side": 1, "life": 1.7 } },
+            { "t": 9.0, "volley": { "n": 16, "every": 0.08 } },
             { "t": 10.4, "bossSay": { "who": "qq", "kind": "shrug" }, "shake": 0.8, "sfx": "roar" },
             { "t": 13.0, "say": "retreat" },
             { "t": 13.9, "cut": { "face": "fwd", "whip": true }, "speed": 7 },
             {
-              "at": 5,
+              "at": 3,
+              "hold": 2.5,
               "spawn": [
-                { "type": "paper", "from": "ceiling", "ahead": 14, "x": -0.6, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 16, "x": 0.7, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 18, "x": 0.0, "hp": 4 }
+                { "type": "paper", "from": "ceiling", "ahead": 13, "x": -0.6, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 14.5, "x": 0.6, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 16, "x": 0.0, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 17, "x": -0.3, "hp": 4 }
               ]
             },
             { "at": 6, "say": "flee" },
             {
-              "at": 12,
+              "at": 7,
+              "hold": 2.5,
               "spawn": [
-                { "type": "shoe", "from": "pop", "ahead": 11, "x": -0.8, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 12, "x": 0.8, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 13.5, "x": 0.0, "hp": 4 }
+                { "type": "shoe", "from": "pop", "ahead": 13, "x": -0.7, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 13.2, "x": 0.7, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 13.5, "x": 0.0, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 13.4, "x": 0.4, "hp": 4 }
               ]
             },
             {
-              "at": 20,
+              "at": 25.5,
+              "hold": 2.5,
               "spawn": [
-                { "type": "book", "from": "ceiling", "ahead": 10, "x": 0.0, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 12, "x": 0.5, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 13, "x": -0.5, "hp": 4 }
+                { "type": "chair", "from": "burrow", "ahead": 13, "x": 0.6, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 13.5, "x": -0.6, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 14.5, "x": 0.0, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 15, "x": -0.4, "hp": 4 }
               ]
             },
             {
-              "at": 28,
+              "at": 31,
+              "hold": 2.5,
               "spawn": [
-                { "type": "chair", "from": "burrow", "ahead": 11, "x": 0.6, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 12, "x": -0.6, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 14, "x": 0.0, "hp": 4 }
+                { "type": "book", "from": "ceiling", "ahead": 13, "x": 0.0, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 14, "x": 0.5, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 15, "x": -0.5, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 15.5, "x": 0.3, "hp": 4 }
               ]
             },
             {
@@ -581,22 +601,26 @@
               "insert": { "k": "ep0/cut_pink_lookback_a", "side": -1, "life": 1.4, "delay": 0.5 }
             },
             { "at": 40.8, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "pink" },
-            {
-              "at": 43,
-              "spawn": [
-                { "type": "shoe", "from": "pop", "ahead": 9, "x": -0.7, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 10, "x": 0.7, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 11.5, "x": 0.0, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 13, "x": 0.4, "hp": 4 }
-              ]
-            },
             { "at": 46, "say": "flee" },
             {
-              "at": 55,
+              "at": 53,
+              "hold": 2.5,
               "spawn": [
-                { "type": "book", "from": "ceiling", "ahead": 11, "x": -0.5, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 12.5, "x": 0.5, "hp": 4 },
-                { "type": "chair", "from": "burrow", "ahead": 13, "x": 0.0, "hp": 4 }
+                { "type": "shoe", "from": "pop", "ahead": 13, "x": -0.7, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 14, "x": 0.7, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 15, "x": 0.0, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 16, "x": 0.4, "hp": 4 },
+                { "type": "chair", "from": "burrow", "ahead": 16.5, "x": -0.3, "hp": 4 }
+              ]
+            },
+            {
+              "at": 56,
+              "hold": 2.5,
+              "spawn": [
+                { "type": "book", "from": "ceiling", "ahead": 13, "x": -0.5, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 13.8, "x": 0.5, "hp": 4 },
+                { "type": "chair", "from": "burrow", "ahead": 14.5, "x": 0.0, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 15.5, "x": 0.3, "hp": 4 }
               ]
             },
             {
@@ -613,28 +637,26 @@
               "insert": { "k": "ep0/cut_cat_lookback_a", "side": 1, "life": 1.4, "delay": 0.5 }
             },
             { "at": 65.2, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "cat" },
-            {
-              "at": 68,
-              "spawn": [
-                { "type": "shoe", "from": "pop", "ahead": 9, "x": -0.8, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 10, "x": 0.0, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 11, "x": 0.8, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 12.5, "x": 0.3, "hp": 4 }
-              ]
-            },
             { "at": 72, "say": "flee" },
             {
-              "at": 76,
+              "at": 82,
+              "hold": 2.5,
               "spawn": [
-                { "type": "paper", "from": "ceiling", "ahead": 9, "x": -0.5, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 11, "x": 0.5, "hp": 4 }
+                { "type": "shoe", "from": "pop", "ahead": 13, "x": -0.7, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 13.5, "x": 0.0, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 14, "x": 0.7, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 15, "x": -0.4, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 16, "x": 0.4, "hp": 4 }
               ]
             },
             {
-              "at": 84,
+              "at": 85,
+              "hold": 2.5,
               "spawn": [
-                { "type": "chair", "from": "burrow", "ahead": 10, "x": 0.0, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 11, "x": 0.7, "hp": 4 }
+                { "type": "chair", "from": "burrow", "ahead": 13, "x": 0.0, "hp": 4 },
+                { "type": "shoe", "from": "pop", "ahead": 13.5, "x": 0.6, "hp": 4 },
+                { "type": "paper", "from": "ceiling", "ahead": 14.5, "x": -0.5, "hp": 4 },
+                { "type": "book", "from": "ceiling", "ahead": 15.5, "x": 0.3, "hp": 4 }
               ]
             },
             {
@@ -651,25 +673,7 @@
               "insert": { "k": "ep0/cut_pink_lookback_a", "side": -1, "life": 1.4, "delay": 0.5 }
             },
             { "at": 91.6, "cut": { "face": "fwd", "whip": true }, "speed": 7, "say": "lookBack", "who": "pink" },
-            {
-              "at": 95,
-              "spawn": [
-                { "type": "shoe", "from": "pop", "ahead": 9, "x": -0.8, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 10, "x": 0.0, "hp": 4 },
-                { "type": "shoe", "from": "pop", "ahead": 11, "x": 0.8, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 11, "x": -0.4, "hp": 4 },
-                { "type": "paper", "from": "ceiling", "ahead": 12, "x": 0.4, "hp": 4 }
-              ]
-            },
             { "at": 98, "say": "flee" },
-            {
-              "at": 103,
-              "spawn": [
-                { "type": "book", "from": "ceiling", "ahead": 9, "x": 0.0, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 10.5, "x": -0.6, "hp": 4 },
-                { "type": "book", "from": "ceiling", "ahead": 12, "x": 0.6, "hp": 4 }
-              ]
-            },
             {
               "at": 113.0,
               "cut": { "face": "back", "whip": true },

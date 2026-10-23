@@ -153,6 +153,18 @@ export class Player {
     const u = this.mirror ? 1 - mz[0] : mz[0];
     return { x: m.position.x + (u - 0.5) * m.userData.w, y: m.position.y + mz[1] * m.userData.h };
   }
+  // a shot only shown (a scripted volley: ride.js volley) - the tracer, the flash, her kick and its sound from where she is, at (sx, sy)
+  // (screen px, y down); it hits nothing by itself
+  showShot(sx, sy) {
+    const g = this.game, w = this.w, mz = this.muzzlePos();
+    this.recoilT = PL().recoilPose; this.kick = 1;
+    if (w.kind === 'mantra') g.fx.chant.cast(mz.x, mz.y, sx, g.H - sy, this.glyphI++, false, null);
+    else g.fx.tracer(mz.x, mz.y, sx, g.H - sy, w.tracer);
+    this.muzzle.fire(mz.x, mz.y, sx, g.H - sy, false);
+    if (this.hero) this.hero.shoot(false); else this.soft.kick(w.kick);
+    const pan = (sx / g.W - 0.5) * 0.6;
+    if (w.sfx === 'mantra') sfx.cannon(pan); else sfx.gun(pan);
+  }
   outerAim() { return this.side < 0 ? this.aimX < this.baseX + this.W * 0.04 : this.aimX > this.baseX - this.W * 0.04; }
   get activeOn() { return this.activeT > 0; }
   get gatling() { return this.activeT > 0 && this.a.kind === 'gatling'; }
