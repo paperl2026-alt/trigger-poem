@@ -10,8 +10,10 @@
 //   label(text)   a red label bar with white letters racing across ("ネットをやめろ")
 //   tunnel(dur)   hearts rushing out of the middle at the camera (the heart tunnel)
 //   phone(l, r)   the picture squeezed into an upright phone in the middle, huge words down both sides
-// Moments (Game): Fever full -> overdrive (stronger beats, the word wall, the tunnel); a stage starting -> its name slammed in; a boss
-// changing -> her name in a wall and a slam; low HP -> toxic waves (popups of errors, glitches, the colours bleeding); combo milestones.
+// Moments (Game): Fever full -> overdrive (stronger beats, the word wall); a stage starting -> its name slammed in; a boss
+// changing -> her name in a wall and a slam; low HP -> toxic waves (popups of errors, the colours bleeding); combo milestones. Sparingly
+// (user 2026-10-23: hearts, black-and-white twitching, a garbled stutter all the time - taken for dropped frames): no heart tunnel at every
+// stage or Fever (only where a cue asks for one), no glitch bursts while she is low.
 import * as THREE from 'three';
 import { T } from '../core/content.js';
 import { tr, t as ui } from '../core/i18n.js';
@@ -51,7 +53,7 @@ export class MV {
     const low = g.players.some((p) => p.state !== 'away' && p.state !== 'down' && p.hp > 0 && p.hp < p.maxHp * (T.combat.mv?.lowHp ?? 0.25));
     this.toxic += ((low && g.combat ? 1 : 0) - this.toxic) * Math.min(1, dt * 1.5);
     if (this.toxic > 0.5 && (this.toxicT -= dt) <= 0) {
-      this.toxicT = rnd(2.5, 5); post.styleBurst(0.3, [3, 4], 0.1, 0x200018, 0xff2a6a);
+      this.toxicT = rnd(2.5, 5);   // (no glitch burst now and then any more: user 2026-10-23, it looked like the game stuttering)
       const W = ui('mvToxic'); if (Math.random() < 0.6 && Array.isArray(W)) this.popups(W, 3, 0.9);
     }
     this.over = Math.max(0, this.over - dt * (this.overHold > 0 ? 0 : 0.6)); this.overHold = (this.overHold || 0) - dt;
@@ -78,7 +80,7 @@ export class MV {
   }
   // ---- moods
   // (in a fight: one faint hollow wall for a moment and the label - what she shoots at must stay in sight; user 2026-10-20)
-  overdrive(word, s = 6) { this.over = 1; this.overHold = s; this.overWord = word; this.tunnel(0.9); if (this.g.combat) this.wall(word, 0.6, true, 0.18, true); else this.wall(word, 0.8, true); this.label(word); }
+  overdrive(word, s = 6) { this.over = 1; this.overHold = s; this.overWord = word; if (this.g.combat) this.wall(word, 0.6, true, 0.18, true); else this.wall(word, 0.8, true); this.label(word); }
 
   // ---- the pieces
   sparkle(n) {

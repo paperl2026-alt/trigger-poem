@@ -167,7 +167,10 @@ export class Post {
   // a burst of other ways of drawing the picture, cut hard every beat seconds for dur seconds (seq: the styles to cycle through:
   // 1 two colours, 2 line art, 3 glitch, 4 pixels, 5 halftone, 6 negative, 7 datamosh, 8 pixel drag, 9 melt, 10 echoes, 11 kaleidoscope,
   // 12 tear; colours: the two-colour / halftone pair, as hex)
+  // (7 datamosh, 8 pixel drag and 10 echoes are left out wherever they are asked for: they read as the game stuttering, dropped frames -
+  // user 2026-10-23)
   styleBurst(dur = 1.2, seq = [1, 2, 3, 5], beat = 0.15, a = 0x1e0014, b = 0xff7330) {
+    seq = seq.filter((s) => s !== 7 && s !== 8 && s !== 10); if (!seq.length) return;
     this.burst = { t: 0, dur, seq, beat }; this.u.styleA.value.set(a); this.u.styleB.value.set(b);
   }
   flash(a = 0.7, color = 0xffffff) { this.u.flash.value = Math.max(this.u.flash.value, a); this.u.flashColor.value.set(color); }

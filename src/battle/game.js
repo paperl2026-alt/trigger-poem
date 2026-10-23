@@ -210,7 +210,6 @@ export class Game {
       if (this.run.station && st.stations.includes(this.run.station)) { this.stationQ = st.stations.slice(st.stations.indexOf(this.run.station)); this.resumed = true; this.run.station = null; }
       this.mutated = false;
       if (st.name) this.hud.gl.hold('stage', { name: tr(st.name) });   // can't shoot until the first stop: the stage's warning overlay
-      this.mv.tunnel(1.1);   // (in through the heart tunnel: mv.js)
       this.goStation(this.stationQ.shift(), false);
     } else if (st.boss) this.goStation(st.station, true);
   }
@@ -1240,11 +1239,12 @@ export class Game {
       // a heavy hit (the cat's mantra, a crit) stops the whole picture for a blink and shakes it (tuning combat.feel; the gunner's light
       // shots only make the monster itself judder: Enemy.feel)
       const F = T.combat.feel, w = info.weight || 0;
-      if (w >= 0.9 && !by.activeOn) { this.feelStop(info.crit ? F.stop.crit : F.stop.heavy); this.post.shake(info.crit ? F.shake.crit : F.shake.heavy); }
+      if (w >= 0.9 && !by.activeOn) { this.feelStop(info.crit ? F.stop.crit : F.stop.heavy); this.post.shake(info.crit ? F.shake.crit : F.shake.heavy); }   // (stop.heavy 0: the cat girl's every syllable stopped the picture - user 2026-10-23, it looked like dropped frames)
     }
   }
   // the whole picture held for s seconds (G.stop), not more often than every combat.feel.stop.gap (a hail of shots must not stutter)
   feelStop(s, force = false) {
+    if (!(s > 0)) return;
     const now = performance.now() / 1000;
     if (!force && now - (this.stopAt ?? -9) < T.combat.feel.stop.gap) return;
     this.stopAt = now; this.G.stop(s);

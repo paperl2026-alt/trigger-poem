@@ -71,9 +71,9 @@
       "lean": 0.34,
       "tilt": 0.12,
       "freeze": 0.06,
-      "stop": { "heavy": 0.03, "crit": 0.055, "kill": 0.045, "killHeavy": 0.09, "gap": 0.18 },
+      "stop": { "heavy": 0, "crit": 0.04, "kill": 0, "killHeavy": 0.06, "gap": 0.6 },
       "shake": { "heavy": 0.3, "crit": 0.5, "kill": 0.45, "killHeavy": 0.8 },
-      "impact": { "hp": 600, "time": 0.07, "gap": 1.2 },
+      "impact": { "hp": 2500, "time": 0.07, "gap": 8 },
       "comboPitch": { "per": 6, "max": 4 }
     },
     "mv": {

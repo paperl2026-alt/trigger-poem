@@ -224,7 +224,7 @@
 - 女主的动作图（heroine.js `ACTIONS`：blind / sidehide / sidefire / leap / land / aerial）：角色的 `rig` 里有哪张就建哪张，`setOut(out, want)` 按 player.js 的姿势名换图（必杀照旧用射击图 + 光环残影；aerial 是跳跃正中那一帧，给场景里的跳跃用），没有图就照旧 cover / fire；枪口位置用那张图自己的 `muzzle`。
 - 打击感（2026-10-20，数值都在 `tuning/combat.json feel`）：
   - 怪自己（`Enemy.feel`，`baseUpdate` 里三根阻尼弹簧）：按这一下多重（`weight`：枪轻、加特林更轻、咒重、光束每跳很轻，暴击 ×`critMul`）压扁再弹回（`mesh.scale`）、往后仰（`mesh.rotation.x`，3D 里真的倒）、往打中的另一边歪（叠在 boil 的 `rotation.z` 上），被打的那只原地定住 `freeze` 秒（`Game.update` 只给它 6% 的时间、动画停、贴图抖）；连射时幅度有上限。
-  - 整个画面：重的一下（weight ≥ 0.9）和打死时顿帧（`Game.feelStop` → `G.stop`，两次至少隔 `stop.gap`，必杀中不顿），震屏分档；`post.js` 的震屏改成按 trauma² 采几条正弦（平滑，不是每帧随机）并带一点镜头翻滚 `shakeR`（三种镜头都 `rotateZ`）；打死耐打的怪（最大血量 ≥ `impact.hp`，暴击打死门槛减半）插冲击帧 `post.impact()`（前半黑白高反差、后半反相，HUD 不受影响，至少隔 `impact.gap`）。
+  - 整个画面：顿帧（`Game.feelStop` → `G.stop`，值为 0 的不顿，两次至少隔 `stop.gap`，必杀中不顿）现在只给暴击和打死耐打的怪（2026-10-23 用户：猫娘每一发咒文、每次击杀都顿一下，像掉帧；`stop.heavy` / `stop.kill` 为 0），震屏分档；`post.js` 的震屏改成按 trauma² 采几条正弦（平滑，不是每帧随机）并带一点镜头翻滚 `shakeR`（三种镜头都 `rotateZ`）；打死 Boss 级的怪（最大血量 ≥ `impact.hp` 2500，暴击打死门槛减半，至少隔 `impact.gap` 8 秒）插冲击帧 `post.impact()`（前半黑白高反差、后半反相，HUD 不受影响，至少隔 `impact.gap`）。
   - 命中音随连击升调（`Game.comboRate`：每 `comboPitch.per` 下高一个半音，最多 `max` 个；`hitNote` 的 rate）。
 - 裂纹（`paper.js` 的 `crack` 0..1、`crackCol`，原点 `dOrigin`）：两层 fbm 的细线从原点往外爬（`crack` 越大爬得越远，近处多出细支），后面压暗一点；Boss 被打倒（不是安息的那种）时从弱点在 0.5～1.5 秒爬满，1.6 秒起从同一点烧掉（thing.js `die`）。
 - 受伤的样子（`src/core/paper.js` 的 solid 分支，怪和 Boss）：伤害图 R 通道越重的地方越偏淡紫粉、越透明（最多剩 40%，`am`）、透明的边缘发粉光；G 通道（真言 / 镭射的灼烧）偏琥珀色、略透明，不再变黑。
@@ -342,7 +342,7 @@
 - 跟着音乐打拍子：`audio.js musicBeat()`（录好的曲子用 `sounds.json music.<名字>.bpm`，`offset` 第一拍前的秒数；合成曲用自己的 bpm）。每拍一个小脉冲（色差一踢、前景闪粉），每小节强一点；强度乘停留点预设的 `mv`。
 - 零件（画在 overlay 上）：`wall` 一个词一行行重复铺满全屏、每行一种颜色、左右交错滚；`slam` 镀铬 + 糖果色渐变的大标题砸进画面中间、后面两层不动的淡影子，长的缩到屏宽（它画在后期之后的 HUD 场景里：拍子的色差、故障不压在字上——2026-10-22 用户：红蓝的字糊得看不清）；`popups` 假系统弹窗一个叠一个（YAMERO 的弹窗瀑布）；`label` 红底白字标签条横穿；`tunnel` 爱心一层层从中间冲向镜头；`phone` 画面挤成中间一条竖屏、两边黑底上竖排大字。
 - 要读的一段话不用砸字：`hud.gl.note(日期, 文字, 秒)`（glhud.js `Note`）在 HUD 上举起一张纸，深色正文按词 / 按字折行（标点不放行首），默认按字数停 4.5～9 秒（腐蜜夫人日记的真相）。
-- 什么时候：Fever 满 → `overdrive`（几秒内每小节一面字墙、爱心隧道、标签条，脉冲加强）；进新小关 → 爱心隧道；连击每 `comboEvery` → 标签条；有人残血（`lowHp`）→ 毒电波：画面扭曲加强、隔几秒一阵故障 + 像素化、错误弹窗（`text/ui.json mvToxic`）；Boss 变身 → 她名字的字墙；其余由演出指令 `mv` 在关卡数据里写。
+- 什么时候（2026-10-23 用户：动不动爱心、黑白抽搐、乱码似的卡顿，像掉帧 → 收敛）：Fever 满 → `overdrive`（几秒内每小节一面字墙、标签条，脉冲加强）；爱心隧道只在关卡数据的 `mv.tunnel` 写了的地方；连击每 `comboEvery` → 标签条；有人残血（`lowHp`）→ 毒电波：画面扭曲加强、错误弹窗（`text/ui.json mvToxic`），不再隔几秒一阵故障；`styleBurst` 去掉 7 拖帧 / 8 像素拖拽 / 10 残影（看着像卡顿）；Boss 变身 → 她名字的字墙；其余由演出指令 `mv` 在关卡数据里写。
 
 ## 危险提示、预警、挨打残留（DESIGN「攻击分三种」「攻击将至的预警」「挨打留视觉残留」）
 - 3D 提示结构（`src/battle/marks3d.js`，`fx.orbit` 在知道东西世界位置时用它代替平面环和带翅膀的爱心（`crest` / `moons` 隐藏），教学卡图标 `ui/marks.js markIcon` 用同一份边表（`shapes()`）静态画出来）：Boss 的快躲 `bossHide`（三个八面体的复合体 + 里面反转的小八面体 + 到每个目标一道圆锥，`to` 可以是数组）：`thing.js` 自己建（`markUp` / `markTick`，`fx.lock(type, slot, { quiet: true })` 只登记 `fx.live` 里的那条，屏幕边缘、AI 躲避、聚焦照常算），`boss.js` 和追逐的「她」走 `fx.lock(type, slot, { mark: 'bossHide' })`；Boss 的快打没有结构（`thing.js motesTick`）。Boss 预警的进度用自己的钟（`markEl` / `markDur`：招式一开始就把 `timer` 改成下一招的时间，旧的 `1 - timer / timer0` 是负的）。`bossHide` 的粗线下面垫一道深色描边（`ink`），亮粉场景里也看得清。小怪的：快打 = 正二十面体线框笼子（倒计时越近转得越快、收得越紧）；快躲 = 从怪指向被打的人的线框圆锥（一圈圈环往她那边跑）+ 扭歪的无限多面体 {4,6|4}（立方格里「最多一个坐标是奇数」的格子的表面，只取一个球里的，转着）；飞来的东西 = 四面体 + 顶点发光球；护卫目标 = 石墨烯壳（测地球的对偶：六边形 + 十二个五边形），挨打处亮。线是 three/addons 的粗线（LineSegments2，屏幕像素宽），普通混合（在亮粉的房间里叠加发光只会变白），角上的点发光。
