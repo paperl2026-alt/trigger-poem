@@ -1,7 +1,7 @@
 // Everything is synthesized with WebAudio: weapons, paper, monsters, UI and two music loops; a sound with recorded files in content
 // audio/sounds.json plays those instead (at the end of this file).
 import { C } from './content.js';
-let ctx = null, master, sfxBus, fxBus, musBus, musDuck, voiceBus, verb, verbIn, wetSfx, wetVoice, noiseBuf, radio, crackleBuf;
+let ctx = null, master, sfxBus, fxBus, musBus, musDuck, voiceBus, voiceDuck, verb, verbIn, wetSfx, wetVoice, noiseBuf, radio, crackleBuf;
 let muted = false;
 let volume = 0.7;
 let musicVol = 0.7, sfxVol = 0.7, voiceVol = 0.7; // the player's sliders (0..1): 0.7 is the mix as designed (docs/TECH.md「混音」)
@@ -17,9 +17,11 @@ export const sliderGain = (v) => (v <= 0.001 ? 0 : Math.pow(10, (v >= 0.7 ? (v -
 // about as loud as the fight (both near -21 dB RMS; it steps back a little while they talk or the fight is busy), the whole mix low
 // enough that every slider can still go 6 dB up before the limiter has to hold it (at 0.62 a slider at 100% only gained 0.9 dB)
 const NOM = { master: 0.45, music: 0.6, sfx: 0.8, voice: 1.0 };
-const GROUPS = ['ui', 'player', 'hit', 'enemy', 'world', 'amb'], GRP = {};
+// alert: a monster gathering itself for an attack (sounds.json bus "alert": windupWarn) - never ducked itself, and while it sounds the
+// music, the voices and every other group step back (DUCK_ALERT; user 2026-10-23: a warning should cover the BGM and the lines for a moment)
+const GROUPS = ['ui', 'player', 'hit', 'enemy', 'world', 'amb', 'alert'], GRP = {};
 // each group's own level on top of the mix (the sound sandbox's mixer, src/ui/sandbox.js; 1 = as designed): music, voice and the groups
-const GRPU = { music: 1, voice: 1, ui: 1, player: 1, hit: 1, enemy: 1, world: 1, amb: 1 };
+const GRPU = { music: 1, voice: 1, ui: 1, player: 1, hit: 1, enemy: 1, world: 1, amb: 1, alert: 1 };
 export const groupGain = (g) => GRPU[g] ?? 1;
 export function setGroupGain(g, v) { GRPU[g] = v; if (g === 'voice') setVoiceVolume(voiceVol); }
 let curGroup = null;   // (which group a synthesized effect plays in: set by its wrapper below)
@@ -40,7 +42,8 @@ export function initAudio() {
   sfxBus = ctx.createGain(); sfxBus.gain.value = NOM.sfx * sliderGain(sfxVol); sfxBus.connect(master);
   for (const k of GROUPS) { GRP[k] = ctx.createGain(); GRP[k].connect(sfxBus); }
   fxBus = GRP.world;   // (the default for everything that names no group)
-  voiceBus = ctx.createGain(); voiceBus.gain.value = NOM.voice * sliderGain(voiceVol); voiceBus.connect(master);
+  voiceBus = ctx.createGain(); voiceBus.gain.value = NOM.voice * sliderGain(voiceVol);
+  voiceDuck = ctx.createGain(); voiceBus.connect(voiceDuck); voiceDuck.connect(master);   // (an alert steps the voices back: mixTick)
   musBus = ctx.createGain(); musBus.gain.value = NOM.music * sliderGain(musicVol);
   musDuck = ctx.createGain();
   // the music's own treatment (user 2026-10-20: the loud tracks bury the sounds - "the loud ones need a bus of their own"): a dip where
@@ -346,7 +349,10 @@ export function hitNote(who, crit = false, kill = false, pan = 0, rate = 1) {
 const DUCK_V = { music: -5, amb: -8, world: -4, enemy: -4, hit: -3, player: -3, ui: 0 }, BUSY = { amb: -9, music: -2.5 };
 // a boss talking: everything steps right back for her line (user 2026-10-20: "unless a boss's line covers them for a moment")
 const DUCK_BOSS = { music: -9, amb: -12, world: -9, enemy: -9, hit: -8, player: -8, ui: -3 };
-const VERB = { ui: 0, player: 0.05, hit: 0.08, enemy: 0.15, world: 0.2, amb: 0 };   // (how much of each group goes into the place's reverb)
+// an alert sounding (ALERT.until): everything else back, the voices too, for as long as it lasts
+const DUCK_ALERT = { music: -10, voice: -9, amb: -12, world: -8, enemy: -8, hit: -6, player: -6, ui: -3, alert: 0 };
+const ALERT = { until: 0 };
+const VERB = { ui: 0, player: 0.05, hit: 0.08, enemy: 0.15, world: 0.2, amb: 0, alert: 0.05 };   // (how much of each group goes into the place's reverb)
 let act = 0;
 const LOUD = { hit: 0.05, enemy: 0.12, world: 0.06, player: 0.015 }, BIG = /^(slam|roar|shatter|beamFall|woodBreak|bellToll|doorSlam|kaikoWail|sheKnock)/;
 function busy(grp, key = '') { act = Math.min(1, act + (BIG.test(key) ? 0.35 : LOUD[grp] || 0)); }
@@ -357,12 +363,14 @@ function mixTick() {
   if (!ctx) return;
   const t = now(), talk = talking(), k = act, D = talk && !C.characters?.[TALK.who] ? DUCK_BOSS : DUCK_V;   // (not a heroine: a boss)
   act *= 0.94;   // (about a second to fall away)
+  const al = t < ALERT.until;
   for (const g of GROUPS) {
-    const target = db((talk ? D[g] : 0) + (BUSY[g] || 0) * k) * GRPU[g];
+    const target = g === 'alert' ? GRPU.alert : db(Math.min((talk ? D[g] : 0) + (BUSY[g] || 0) * k, al ? DUCK_ALERT[g] : 0)) * GRPU[g];
     GRP[g].gain.setTargetAtTime(target, t, target < GRP[g].gain.value ? 0.03 : 0.3);
   }
-  const m = db((talk ? D.music : 0) + BUSY.music * k) * GRPU.music;
+  const m = db(Math.min((talk ? D.music : 0) + BUSY.music * k, al ? DUCK_ALERT.music : 0)) * GRPU.music;
   musDuck.gain.setTargetAtTime(m, t, m < musDuck.gain.value ? 0.06 : 0.6);
+  voiceDuck?.gain.setTargetAtTime(al ? db(DUCK_ALERT.voice) : 1, t, al ? 0.04 : 0.4);
 }
 // where the camera is (Game every frame): the sounds given a point are heard from here
 const LISTEN = { on: false };
@@ -479,6 +487,7 @@ export function sound(key, opt = {}) {
   const e = C.sounds?.sfx?.[key]; if (!ctx || muted || !e?.files?.length) return false;
   if (e.gap) { if (now() - (LAST.get(key) ?? -9) < e.gap) return true; LAST.set(key, now()); }
   const grp = groupOf(key); busy(grp, key);
+  if (grp === 'alert') ALERT.until = Math.max(ALERT.until, now() + (e.duck ?? 1.4));   // (the rest step back while it sounds)
   return playOne(e.files, { pan: opt.pan || 0, pos: opt.pos || null, vol: (e.vol ?? 1) * (opt.vol ?? 1), rate: (e.rate || 1) * (opt.rate ?? (0.94 + Math.random() * 0.12)), len: e.len || 0, bus: GRP[grp], verbAmt: VERB[grp] });
 }
 // a looping bed (sounds.json sfx entries with loop: true: the clocks ticking, the rain, the fire): on / off with a fade; vol can change

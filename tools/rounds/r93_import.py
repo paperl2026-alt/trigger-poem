@@ -12,10 +12,12 @@ import packs  # noqa: E402
 from job_specs93 import FIX, EP, RAW, boxes, panel_box, orig  # noqa: E402
 from r53_import import put  # noqa: E402
 
-PICK = {"fountain_3": "b", "fall_2": "c", "open_0": "d", "glass_2": "b"}
+PICK = {"fountain_3": "b", "fall_2": "c", "open_0": "d", "glass_2": "b", "mid_3": "f"}
 # (fountain b: the sleeve keeps its mint lining; fall a drew a second gun girl behind her; open: a-c kept the two-paw lump under the girl's
 # hand - three hands (user 2026-10-22) - so d-f asked for exactly two: d; e drew her as the gun girl, f changed the whole panel)
 # (glass: the paw far bigger than she is, user 2026-10-22 - b: about her head's size, its palm and pad toward the viewer; a lost the paw)
+# (mid, the prologue: the paw arm bent up at her shoulder, user 2026-10-23 - a-c kept it and made her other hand a paw too; asked again, f:
+# the arm swinging down as she runs, the paw at her hip; d, e were not made)
 FEATHER = 0.05   # of her box's smaller side
 
 

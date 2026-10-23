@@ -675,7 +675,8 @@ export class Enemy extends Actor {
     this.lock = this.mark ? this.game.fx.lock(this.mark, this.targetSlot) : null;
     if (this.beh !== 'walker' || this.mark) this.game.fx.charge(this, this.blasting ? 0xff4fc8 : this.mark === 'kill' ? 0xff3a5a : 0xffb04a);   // the glow it gathers, the air drawn in (art has no effects drawn in)
     this.glinted = false; this.froze = false;
-    sfx.warn();
+    // (its warning, over everything for a moment - lower for one to hide from: user 2026-10-23, no sound told that it was coming)
+    sound('windupWarn', { pos: this.center(), rate: this.mark === 'hide' || this.blasting ? 0.82 : 1 }) || sfx.warn();
   }
   endWindup() {
     if (this.lock) { this.lock.remove(); this.lock = null; }

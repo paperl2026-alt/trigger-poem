@@ -26,9 +26,12 @@ FIX = {
                "her chin in delight at the same place"),
     # (user 2026-10-22: on the glass page's last panel the paw is far bigger than the cat girl - redrawn its right size: GLASS below)
     "glass_2": ("glass", 2, (0.01, 0.0, 0.6, 1.0), None, None),
+    # (user 2026-10-23: the prologue's page after its first stage, last panel - the cat girl running, her paw arm bent up oddly at her
+    # shoulder, nothing a body does: MID below)
+    "mid_3": ("mid", 3, (0.0, 0.0, 0.56, 1.0), None, None),
 }
 GROW = {"glass_2"}   # (a panel too narrow for the tool's shapes: the crop may reach past it on the page - only her box is pasted back)
-EP = {"fountain": "ep1", "fall": "ep1", "open": "ep2", "glass": "ep1"}   # (which episode's pack each page is in: comic/<ep>p_<page>, comics.json <ep>_<page>)
+EP = {"fountain": "ep1", "fall": "ep1", "open": "ep2", "glass": "ep1", "mid": "ep0"}   # (which episode's pack each page is in: comic/<ep>p_<page>, comics.json <ep>_<page>)
 SHAPES = (2 / 3, 1.0, 3 / 2)   # w / h the image tool makes
 
 
@@ -130,3 +133,30 @@ GLASS = ("Edit reference image 1, a panel from a full-colour manga page of a gam
          "add text, do not add effects.")
 JOBS["R93_glass_2"] = [(f"art/raw/r93/glass_2_{v}.png", [src("glass_2"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
                         GLASS + f" Try {v}.", "OPAQUE") for v in "abc"]
+
+MID = ("Edit reference image 1, a panel from a full-colour manga page of a game. Output the SAME picture at the same framing: keep "
+       "everything exactly as it is (the camera, the composition, the haunted school corridor behind, the speed lines, the colours, the line "
+       "art and screentone style, the lettering) and keep the white-haired cat girl's running pose, legs, position, size, face, hair, glasses, "
+       "clothes and tail exactly as they are (reference image 2 is her design sheet). The black-haired twin-tail girl, where she is in the "
+       "picture, stays exactly as she is (reference images 3 and 4 are her design; " + OUTFIT + "). Change ONLY her right arm (on the viewer's "
+       "LEFT), the one that ends in her big white fluffy ghost-cat paw with red claws: it is now bent up oddly behind her shoulder - redraw it "
+       "the way a running girl's arm really moves: from her shoulder, the arm swinging back and down beside her body, the elbow bent, the "
+       "paw at the height of her hip, curled loosely like a fist, the back of the paw toward the viewer, a faint pale-green ghostly glow "
+       "around it; the wide sleeve following the arm; the paw about the size of her head, no bigger. Her other hand stays an ordinary hand. "
+       "Do not add text, do not add effects.")
+JOBS["R93_mid_3"] = [(f"art/raw/r93/mid_3_{v}.png", [src("mid_3"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
+                      MID + f" Try {v}.", "OPAQUE") for v in "abc"]
+
+# (the first three tries kept the raised paw and turned her other hand into a second paw: asked again, saying what goes where outright)
+MID2 = ("Edit reference image 1, a panel from a full-colour manga page of a game. Output the SAME picture at the same framing, everything "
+        "kept exactly as it is (the corridor, the speed lines, the colours, the line art, the lettering, the black-haired girl on the right, "
+        "the white-haired cat girl's face, hair, glasses, clothes, running legs and tail - reference image 2 is her design sheet), with "
+        "exactly TWO changes, both on the cat girl: (1) the big white furry cat paw held up beside her head on the LEFT side of the picture, "
+        "with its green ghostly flame and the red seal, is REMOVED: paint the corridor wall and the speed lines there instead; (2) her right "
+        "arm (on the LEFT side of the picture) now hangs down along her body swinging back as she runs, the wide white sleeve following it, "
+        "and ENDS IN the same big white furry ghost-cat paw with red claws, now at the height of her hip on the left side, curled like a "
+        "loose fist, a faint pale-green ghostly glow round it, about the size of her head. Her other hand, on the RIGHT side of her body near "
+        "the black-haired girl, stays exactly as it is: an ordinary girl's hand, not a paw. In the whole picture she has exactly ONE paw. "
+        "Do not add text, do not add effects.")
+JOBS["R93_mid_3b"] = [(f"art/raw/r93/mid_3_{v}.png", [src("mid_3"), "art/ref/cat_sheet.png", "art/ref/pink_sheet.png", "art/ref/pink_poses.png"],
+                       MID2 + f" Try {v}.", "OPAQUE") for v in "def"]

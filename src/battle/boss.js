@@ -5,7 +5,7 @@
 import * as THREE from 'three';
 import { meta } from '../core/assets.js';
 import { Ease } from '../core/tween.js';
-import { sfx } from '../core/audio.js';
+import { sfx, sound } from '../core/audio.js';
 import { Actor } from './enemies.js';
 import { COL } from './fx.js';
 import { TheThing } from './thing.js';
@@ -188,7 +188,7 @@ export class MascotFloat extends BossBase {
     this.stompDur = this.ph(S.windup);
     this.stompT = 0;
     this.stompLock = this.lock = g.fx.lock('heavy', -1, { mark: 'bossHide' });   // (a boss's own 3D warning: marks3d.js)
-    sfx.warn(); setTimeout(() => sfx.warn(), 300);
+    sound('windupWarn', { rate: 0.9 }) || (sfx.warn(), setTimeout(() => sfx.warn(), 300));   // (over everything for a moment: audio.js alert)
     g.warnSlam();
     g.etw.to(P, { y: S.height }, this.stompDur * 0.85, { ease: Ease.outCubic });
     this.later(this.stompDur, () => {

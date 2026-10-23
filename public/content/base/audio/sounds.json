@@ -807,6 +807,17 @@
       "files": ["sfx/ai/doorOpen_1.ogg", "sfx/ai/doorOpen_2.ogg", "sfx/ai/doorOpen_3.ogg", "sfx/ai/doorOpen_4.ogg"],
       "from": ["doorOpen_1546187597", "doorOpen_1980903749", "doorOpen_1291385724", "doorOpen_1527783144"],
       "vol": 0.8
+    },
+    "windupWarn": {
+      "when": "怪 / Boss 开始蓄力攻击（要打断的、要躲的）",
+      "want": "一听就知道「它在蓄力、要来了」：上升的充能尖啸，最后一声清脆的警示叮",
+      "src": "ai",
+      "files": ["sfx/ai/windupWarn_1.ogg", "sfx/ai/windupWarn_2.ogg", "sfx/ai/windupWarn_3.ogg", "sfx/ai/windupWarn_4.ogg"],
+      "from": ["windupWarn_1133225209", "windupWarn_1411428380", "windupWarn_1439863111", "windupWarn_1607709185"],
+      "vol": 0.9,
+      "bus": "alert",
+      "duck": 1.4,
+      "gap": 0.6
     }
   },
   "monsters": {
