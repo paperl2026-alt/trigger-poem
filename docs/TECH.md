@@ -93,7 +93,7 @@
 ## 存档
 - git 存档，同步到用户 GitHub 私有仓库 `paperl2026-alt/trigger-poem`。登录走 Git Credential Manager，Claude 不碰密码。
 - 用户在 `开始游戏.bat` 菜单里：4 存一次并同步，列出最近的存档编号；5 把全部历史打包到 `D:\trigger-poem-backup\`，再把 `art/raw/` 拷一份到 `D:\trigger-poem-backup\raw\`（robocopy，只拷新的和改过的，不删）。
-- **原图只在本机**（2026-10-20 用户：raw art 不上传 GitHub，留本地）：`art/raw/`（Codex 出的原图、ACE-Step / Stable Audio / 语音合成出的各版声音、下载的素材包）整个不进 git；游戏只读内容包、不读它（只有开发版的试听页读）。备份靠上面的 5。之前的提交里还留着旧的原图。
+- **原图只在本机**（2026-10-20 用户：raw art 不上传 GitHub，留本地）：`art/raw/`（Codex 出的原图、ACE-Step / Stable Audio / 语音合成出的各版声音、下载的素材包）整个不进 git；游戏只读内容包、不读它（只有开发版的试听页读）。备份靠上面的 5。2026-10-27 用户同意改写历史：旧提交里的原图从全部历史删掉（`git filter-branch` 删 `art/raw`），存档从 5.6 GB 变成 1.3 GB，所有存档编号都变了；改写前的完整历史在 `D:\trigger-poem-backup\trigger-poem_20261027_0855_before-slim.bundle`（含当时两份 KTX2 暂存）。
 - 不进存档（都能重新生成）：
   - `node_modules/`、`dist/`、`release/`；
   - `art/_shots/`；
