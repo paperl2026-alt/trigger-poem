@@ -10,6 +10,8 @@
 #   clock  it is wound up and lets go -> it stands on its spring, the bow is its winding key, the braids are its weight chains,
 #                                        far too many hands grow from the centre pin and it shoots them
 #   board  it spits chalk             -> a three-part folding blackboard = jaws opening sideways, chalk sticks = teeth, eraser = tongue
+# (ext, first wording - "swollen", "sucked in", "wet pink flesh bulges", "froth hangs in strings" - was refused by the image tool as
+#  sexual on the first try; reworded with a crushed can, raw meat and extinguisher foam.)
 # No legs on any of the three, and three different ways of holding itself up: hanging in the air, a spring, a rolling stand.
 MODE = "brief"
 R = "art/raw/r124/"
@@ -23,13 +25,14 @@ Flat colours in big clear areas and few details: no added ornament, engraving, j
 """
 END = "\nNothing of it may be cut off by the picture's edge. No purple."
 DESIGNS = {
-    "ext": (EP0 + "ext_idle.webp", """The enemy: fire extinguishers that have grown into a pair of lungs with a windpipe. It hangs in the air and breathes; what it breathes out is foam. Three-quarter view from the front. Taller than wide.
-- the two lungs: two huge red extinguisher tanks hanging side by side, by far the biggest things in the picture. They are steel, yet they breathe like lungs: the left one is swollen round and tight like a balloon, the right one is sucked in, dented and creased. Black belts go round them like ribs.
-- along one seam of the swollen tank the red steel has split, and wet pink flesh bulges out of the split.
+    "ext": (EP0 + "ext_idle.webp", """The enemy: fire extinguishers that have grown into a pair of lungs with a windpipe. It hangs in the air and breathes; what it breathes out is extinguisher foam. Three-quarter view from the front. Taller than wide.
+- the two lungs: two huge red extinguisher tanks hanging side by side, by far the biggest things in the picture. They are steel, yet they breathe like lungs: the left one is blown up round like a balloon, the right one has caved in, dented and creased like a crushed can. Black belts go round them like ribs.
+- along one seam of the blown-up tank the red steel has torn open, and dark red raw meat shows inside the tear.
 - on top, where the two tanks join: the brass valve block with its red levers and one round pressure gauge, the needle far in the red.
-- out of the valve block rises one thick black ribbed hose - the windpipe. It goes up, bends over forward like a swan's neck and ends in the big black discharge horn, a wide funnel turned toward us: this is its only mouth, and it has no eyes and no face anywhere. Inside the horn there is only the dark ribbed throat going down. Thick pink-white froth hangs from the horn's rim in long strings and drips.
+- out of the valve block rises one thick black ribbed hose - the windpipe. It goes up, bends over forward like the neck of a desk lamp and ends in the big black discharge horn, a wide funnel turned toward us: this is its only mouth, and it has no eyes and no face anywhere. Inside the horn there is only the dark ribbed tube going down. White extinguisher foam streaked with blood spills over the horn's rim and falls in clumps.
 - below the tanks there is nothing: no legs, no arms. Only the pull-pins on their rings and a short chain dangle from the tanks' bottoms.
-- the girl things, all small: one big pink bow tied round the hose just below the horn; the white frill from the reference as a collar round the valve block; the round red alarm bell with the pink heart hanging on the chain like a pendant; two hanks of long dark brown curled hair hanging down behind the tanks, each tied with a pink bow."""),
+- the girl things, all small: one big pink bow tied round the hose just below the horn; the white frill from the reference as a collar round the valve block; the round red alarm bell with the pink heart hanging on the chain like a pendant; two hanks of long dark brown curled hair hanging down behind the tanks, each tied with a pink bow.
+- leave out the reference's lips, legs, socks and shoes."""),
     "clock": (EP0 + "clock_idle.webp", """The enemy: a wall clock that stands up on its own wound-up spring and has far too many hands. Three-quarter view from the front. Tall: about twice as tall as it is wide.
 - at the bottom, standing on the floor: its spring - one thick band of dark blue steel coiled into a cone-shaped spiral spring, wide at the floor and narrowing upward, four turns, like the spring of a jack-in-the-box. This is all it stands on: no legs, no feet, no shoes, no arms.
 - on top of the spring, tipped forward so that it looks down at us: the round clock from the reference - gold rim, pale dial, one red lashed eye at each hour. It is big, a good third of the creature's height.
