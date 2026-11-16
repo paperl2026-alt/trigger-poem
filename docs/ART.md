@@ -82,6 +82,7 @@
 
 ## 怪物和 Boss
 - 方向见 DESIGN「怪物」。
+- 设计怪之前先查两份检索来的材料，不自己原创（2026-11-16 用户）：`tools/rounds/monster_methods.txt`（别人总结的构成公式、分类法、设计者自己说的规矩、现成的形态表，每组带出处）和 `tools/rounds/monster_pool.txt`（原料：一条一个具体的身体特征，带出处）。
 - 小怪：一张 3×2 的六姿势表（`tools/rounds/job_specs23.py`），`tools/rounds/r23_import.py` 按空白带切开，放进同一画布，存成 `enemy/<id>_<姿势>`。
 - Boss（现行做法 R42，规矩见 DESIGN「Boss」）：
   1. 先想每个形态的镜头能看到她哪些部分，每个部分、每种样子单独出一张，每张至少 2 个版本（`_a` / `_b`，游戏里每次出现随机挑），参考定稿主图（`art/raw/r25/master.png`）统一画风；
